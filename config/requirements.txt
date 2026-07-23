@@ -1,0 +1,9 @@
+# OliviaLegal Python dependencies
+# Core libraries are all stdlib. python-docx is used for DOCX context support.
+python-docx>=1.0.0
+pypdf==6.14.2
+# Google Drive integration
+google-api-python-client>=2.0.0
+google-auth>=2.0.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.0.0

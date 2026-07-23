@@ -1,0 +1,41 @@
+appId: com.olivialegal.desktop
+productName: OliviaLegal
+copyright: "Copyright © 2026 OliviaLegal"
+
+directories:
+  output: dist
+  buildResources: build
+
+mac:
+  category: public.app-category.business
+  target:
+    - dmg
+    - zip
+  icon: build/icon.icns
+  hardenedRuntime: true
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+
+win:
+  target:
+    - nsis
+    - portable
+  icon: build/icon.ico
+
+linux:
+  target:
+    - AppImage
+    - deb
+  icon: build/icon.png
+  category: Office
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+
+files:
+  - main.js
+  - preload.js
+  - package.json
+  - src/**/*
+  - node_modules/**/*

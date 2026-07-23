@@ -1,0 +1,124 @@
+{
+  "mcpServers": {
+    "mcp-server-files": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-files",
+        "--root",
+        "/home/disconzi1986_gmail_com/olivia"
+      ]
+    },
+    "torchaudio_tools": {
+      "type": "http",
+      "url": "http://127.0.0.1:9165/mcp",
+      "title": "TorchAudio Tools",
+      "description": "Audio processing and analysis: inspect, resample, slice, extract spectral features, transcribe via greedy ASR decoding. (8 tools)"
+    },
+    "discovery": {
+      "type": "http",
+      "url": "http://127.0.0.1:9115/",
+      "title": "Discovery",
+      "description": "Legal document discovery and intelligence: manage case files, laws, frameworks, entities, timelines, run intelligence analysis. (72 tools)"
+    },
+    "garage_core": {
+      "type": "http",
+      "url": "http://127.0.0.1:9110/mcp",
+      "title": "Garage Core",
+      "description": "AI assistant and LLM management: chat completions, assistants with knowledge bases, deep reasoning, thread-based conversations. (40 tools)"
+    },
+    "garage_files": {
+      "type": "http",
+      "url": "http://127.0.0.1:9111/mcp",
+      "title": "Garage Files",
+      "description": "File management: list, read, upload, summarize, delete files; transcript and legal document handling. (10 tools)"
+    },
+    "garage_ingestion": {
+      "type": "http",
+      "url": "http://127.0.0.1:9113/mcp",
+      "title": "Garage Ingestion",
+      "description": "Document ingestion with semantic search: ingest into vector collections, analyze document structure, search across collections. (18 tools)"
+    },
+    "garage_prompt": {
+      "type": "http",
+      "url": "http://127.0.0.1:9112/mcp",
+      "title": "Garage Prompt",
+      "description": "Prompt engineering toolkit: generate, analyze, create variations, optimize, evaluate, and improve LLM prompts. (7 tools)"
+    },
+    "garage_qdrant": {
+      "type": "http",
+      "url": "http://127.0.0.1:9114/mcp",
+      "title": "Garage Qdrant",
+      "description": "Qdrant vector database: connect, manage collections, semantic search, structured ingestion, embed case directories. (13 tools)"
+    },
+    "juris-brazil": {
+      "type": "http",
+      "url": "http://127.0.0.1:9116/",
+      "title": "Juris Brazil",
+      "description": "Brazilian jurisprudence search: search court decisions (TJRS, TJSP, STF), manage corpora/indexes, citation networks. (44 tools)"
+    },
+    "ocr": {
+      "type": "http",
+      "url": "http://127.0.0.1:9117/mcp",
+      "title": "OCR",
+      "description": "Optical Character Recognition: list images, run OCR with multiple engines, compare results, batch processing. (5 tools)"
+    },
+    "pdf": {
+      "type": "http",
+      "url": "http://127.0.0.1:9118/mcp",
+      "title": "PDF Processing",
+      "description": "PDF document processing: scan, extract text, analyze, convert to CSV, generate renaming plans, run pipelines. (7 tools)"
+    },
+    "argus_law": {
+      "type": "http",
+      "url": "http://127.0.0.1:9119/mcp",
+      "title": "ARGUS Law Frameworks",
+      "description": "Legal framework tools: health check, list frameworks by jurisdiction (BR, CL, INT), get metadata, articles, themes. (6 tools)"
+    },
+    "argus_builder": {
+      "type": "http",
+      "url": "http://127.0.0.1:9120/mcp",
+      "title": "ARGUS Builder",
+      "description": "Framework builder: create/update frameworks, manage articles, themes, entries; ingest laws, generate embeddings. (6 tools)"
+    },
+    "transcription_transcription": {
+      "type": "http",
+      "url": "http://127.0.0.1:9121/mcp",
+      "title": "Transcription Core",
+      "description": "Core transcription tools: health, inspect, transcribe, diarize, manage transcription pipelines. (6 tools)"
+    },
+    "transcription_transcripts": {
+      "type": "http",
+      "url": "http://127.0.0.1:9122/mcp",
+      "title": "Transcription Transcripts",
+      "description": "Transcript management: list, read, search, update, export transcripts; manage segments and metadata. (10 tools)"
+    },
+    "transcription_meta": {
+      "type": "http",
+      "url": "http://127.0.0.1:9123/mcp",
+      "title": "Transcription Meta",
+      "description": "Project metadata: list projects, get project info, manage project settings, track transcription status. (25 tools)"
+    },
+    "violation_pack": {
+      "type": "http",
+      "url": "http://127.0.0.1:9124/mcp",
+      "title": "Violation Pack",
+      "description": "Violation analysis: create, read, update, delete violations; analyze evidence, map to legal frameworks, score severity. (39 tools)"
+    },
+    "meshy": {
+      "type": "http",
+      "url": "http://[IP_ADDRESS]/mcp",
+      "title": "Meshy MCP",
+      "description": "Text to 3D models, 3D model operations, and AI rigging for VTubing"
+    }
+  },
+  "metadata": {
+    "version": "3.0.0",
+    "generated": "2026-05-18",
+    "mode": "nginx-proxy-streamable-http",
+    "vps_host": "127.0.0.1",
+    "proxy_ports": "9110-9124, 9165 => MCP 8110-8124, 8765",
+    "total_servers": 16,
+    "architecture": "nginx reverse proxy rewrites Host header to localhost, fixing the Host validation issue in mcp.server.transport_security"
+  }
+}

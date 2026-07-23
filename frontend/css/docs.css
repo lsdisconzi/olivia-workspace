@@ -1,0 +1,23 @@
+/* ── DOCS BROWSER ── */
+.docs-tree{padding:8px}
+.docs-tree-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--gray-hi);transition:all .15s}
+.docs-tree-item:hover{background:rgba(0,0,0,0.03);color:var(--white)}
+.docs-tree-item i{font-size:11px;color:var(--gray);flex-shrink:0;width:16px;text-align:center}
+.docs-tree-item.dir i{color:var(--amber)}
+.docs-tree-item.file i{color:var(--blue)}
+.docs-tree-children{padding-left:16px}
+.docs-tree-item .docs-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.docs-tree-item .doc-check{width:14px;height:14px;accent-color:var(--amber);cursor:pointer;flex-shrink:0}
+.docs-tree-item.checked{background:rgba(28,69,50,.05);color:var(--white)}
+.docs-tree-item.file{justify-content:space-between;gap:10px;position:relative;padding-right:12px}
+.docs-tree-main{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.docs-tree-item.file .docs-tree-main{padding-right:6px}
+.docs-tree-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.docs-tree-item.file .docs-tree-actions{position:absolute;right:8px;top:50%;transform:translateY(-50%) translateX(4px);opacity:0;pointer-events:none;transition:opacity .18s ease 1.65s,transform .18s ease 1.65s}
+.docs-tree-item.file:hover .docs-tree-actions,.docs-tree-item.file:focus-within .docs-tree-actions{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
+.docs-tree-item.file:focus-within .docs-tree-actions{transition-delay:0s}
+.docs-action-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:1px solid rgba(0,0,0,.08);border-radius:6px;background:rgba(255,255,255,.45);color:var(--gray);text-decoration:none;cursor:pointer;transition:all .15s}
+.docs-action-btn i{width:auto;font-size:10px;color:inherit}
+.docs-action-btn:hover{background:rgba(196,98,45,.12);border-color:rgba(196,98,45,.22);color:var(--amber)}
+.docs-action-btn.pin-btn.active{background:rgba(196,98,45,.16);border-color:rgba(196,98,45,.35);color:var(--amber)}
+.docs-action-btn.danger:hover{background:rgba(220,80,80,.12);border-color:rgba(220,80,80,.35);color:#d45d5d}

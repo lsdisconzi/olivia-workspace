@@ -1,0 +1,16 @@
+{
+  "id": "windmill",
+  "name": "Dutch Windmill",
+  "icon": "🌾",
+  "category": "prop",
+  "tags": ["building", "dutch", "rotating"],
+  "desc": "Windmill with triangular roof and 4 rotating blades",
+  "params": {
+    "x":     { "type": "x",     "default": "w*0.45" },
+    "baseY": { "type": "y",     "default": "bY-80" },
+    "body":  { "type": "color", "default": "#D4A76A" },
+    "roof":  { "type": "color", "default": "#8B7355" },
+    "speed": { "type": "number","default": 1 }
+  },
+  "code": "const cx = ctx.x ?? 200; const baseY = ctx.baseY ?? 180; const body = ctx.body || '#D4A76A'; const roof = ctx.roof || '#8B7355'; const speed = ctx.speed ?? 1;\nconst millW = 60, millH = 80, roofH = 25;\nsvg += `<rect x=\"${cx-30}\" y=\"${baseY}\" width=\"${millW}\" height=\"${millH}\" rx=\"3\" fill=\"${body}\" stroke=\"#3A3228\" stroke-width=\"${ol}\"/>`;\nsvg += `<path d=\"M${cx-30} ${baseY} L${cx} ${baseY-roofH} L${cx+30} ${baseY} Z\" fill=\"${roof}\" stroke=\"#3A3228\" stroke-width=\"${ol}\"/>`;\nconst bl = 35, bw = 8;\nconst rcx = cx, rcy = baseY - roofH/2;\nconst a0 = mt * speed * 2;\nfor (let i = 0; i < 4; i++) {\n  const a = a0 + i * (Math.PI/2);\n  const bx = rcx + Math.cos(a)*bl;\n  const by = rcy + Math.sin(a)*bl;\n  svg += `<line x1=\"${rcx}\" y1=\"${rcy}\" x2=\"${bx}\" y2=\"${by}\" stroke=\"#5D4037\" stroke-width=\"${bw}\" stroke-linecap=\"round\"/>`;\n}\nsvg += `<circle cx=\"${rcx}\" cy=\"${rcy}\" r=\"3\" fill=\"#3A2818\"/>`;"
+}

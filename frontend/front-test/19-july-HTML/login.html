@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>__PAGE_TITLE__</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ── Dark theme (default) ── */
+    [data-theme="dark"] {
+      --bg: #191917;
+      --bg-card: #1f1f1d;
+      --border: #2a2a28;
+      --border-hi: #363634;
+      --amber: #c4622d;
+      --amber-lo: rgba(196, 98, 45, 0.12);
+      --green: #4a9e70;
+      --green-lo: rgba(74, 158, 112, 0.10);
+      --blue: #4A7C9B;
+      --blue-lo: rgba(74, 124, 155, 0.10);
+      --white: #ede8df;
+      /* main text */
+      --gray: #6b6b68;
+      --gray-hi: #9a9a96;
+      --brand-text: var(--white);
+      --btn-bg: var(--white);
+      --btn-text: #191917;
+      --input-bg: var(--bg);
+      --input-border: var(--border-hi);
+      --error-bg: rgba(158, 74, 74, 0.08);
+      --error-border: rgba(158, 74, 74, 0.3);
+      --error-color: #9e4a4a;
+      --hint-bg: var(--amber-lo);
+      --hint-border: rgba(196, 98, 45, 0.25);
+      --hint-text: var(--gray-hi);
+      --hint-strong: var(--amber);
+    }
+
+    /* ── Light theme (clean Olivia style) ── */
+    [data-theme="light"] {
+      --bg: #faf9f6;
+      --bg-card: #fdfcf9;
+      --border: rgba(28, 69, 50, 0.08);
+      --border-hi: rgba(28, 69, 50, 0.22);
+      --amber: #c4622d;
+      --amber-lo: rgba(196, 98, 45, 0.08);
+      --green: #2d785a;
+      --green-lo: rgba(45, 120, 90, 0.08);
+      --blue: #4A7C9B;
+      --blue-lo: rgba(74, 124, 155, 0.08);
+      --white: #1a1814;
+      /* dark text */
+      --gray: #9a9088;
+      --gray-hi: #5a5a5a;
+      --brand-text: var(--green);
+      --btn-bg: #1c4532;
+      --btn-text: #faf9f6;
+      --input-bg: #fff;
+      --input-border: rgba(28, 69, 50, 0.18);
+      --error-bg: rgba(196, 80, 70, 0.06);
+      --error-border: rgba(196, 80, 70, 0.25);
+      --error-color: #b0453c;
+      --hint-bg: rgba(200, 155, 60, 0.08);
+      --hint-border: rgba(200, 155, 60, 0.2);
+      --hint-text: var(--gray-hi);
+      --hint-strong: var(--amber);
+    }
+
+    /* Fallback (dark) if no data-theme set */
+    :root {
+      --bg: #191917;
+      --bg-card: #1f1f1d;
+      --border: #2a2a28;
+      --border-hi: #363634;
+      --amber: #c4622d;
+      --amber-lo: rgba(196, 98, 45, 0.12);
+      --green: #4a9e70;
+      --green-lo: rgba(74, 158, 112, 0.10);
+      --blue: #4A7C9B;
+      --blue-lo: rgba(74, 124, 155, 0.10);
+      --white: #ede8df;
+      --gray: #6b6b68;
+      --gray-hi: #9a9a96;
+      --brand-text: var(--white);
+      --btn-bg: var(--white);
+      --btn-text: #191917;
+      --input-bg: var(--bg);
+      --input-border: var(--border-hi);
+      --error-bg: rgba(158, 74, 74, 0.08);
+      --error-border: rgba(158, 74, 74, 0.3);
+      --error-color: #9e4a4a;
+      --hint-bg: var(--amber-lo);
+      --hint-border: rgba(196, 98, 45, 0.25);
+      --hint-text: var(--gray-hi);
+      --hint-strong: var(--amber);
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--sans);
+      line-height: 1.7;
+      font-size: 15px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 32px;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .login-brand {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .login-brand-name {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--brand-text);
+      letter-spacing: -0.01em;
+      margin-bottom: 2px;
+    }
+
+    .login-brand-name em {
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    #dynamicWord {
+      display: inline-block;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      color: var(--amber);
+    }
+
+    .login-brand-sub {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10px;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .card-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .hint {
+      padding: 10px 14px;
+      border: 1px solid var(--hint-border);
+      border-radius: 8px;
+      background: var(--hint-bg);
+      font-size: 12px;
+      color: var(--hint-text);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+
+    .hint strong {
+      color: var(--hint-strong);
+    }
+
+    .error-msg {
+      border: 1px solid var(--error-border);
+      background: var(--error-bg);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--error-color);
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 10px;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 5px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      color: var(--white);
+      padding: 10px 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.3s ease, color 0.3s ease;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    input[type="password"] {
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.1em;
+    }
+
+    input::placeholder {
+      color: var(--gray);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      letter-spacing: 0;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px var(--amber-lo);
+    }
+
+    .btn-submit {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, color 0.3s ease;
+      margin-top: 2px;
+    }
+
+    .btn-submit:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      transform: none;
+      cursor: not-allowed;
+    }
+
+    .login-meta {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--gray);
+      line-height: 1.8;
+    }
+
+    /* ── Theme toggle button ── */
+    .theme-toggle {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--gray-hi);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      font-size: 16px;
+      backdrop-filter: blur(6px);
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 640px) {
+      .login-card {
+        padding: 24px;
+      }
+
+      .theme-toggle {
+        bottom: 16px;
+        right: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+  <div class="wrap">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="login-brand-name">
+          Olivia <em>×</em> <span id="dynamicWord">Governança</span>
+        </div>
+        <div class="login-brand-sub">Acesso Restrito</div>
+      </div>
+
+      <h2 class="card-title">__CARD_TITLE__</h2>
+      <p class="card-desc">__CARD_DESC__</p>
+
+      <div class="hint">
+        <strong>__AUTH_HINT__</strong><br>
+        Usuários autorizados: __ALLOWED_USERS__
+      </div>
+
+      __ERROR_HTML__
+
+      <form method="POST" action="__FORM_ACTION__" id="loginForm">
+        <input type="hidden" name="next" value="__NEXT__">
+        <div class="field">
+          <label for="username">Email</label>
+          <input id="username" name="username" type="email" autocomplete="username" placeholder="seuemail@gmail.com"
+            value="__USERNAME__" required>
+        </div>
+        <div class="field">
+          <label for="code">Senha</label>
+          <input id="code" name="code" type="password" autocomplete="current-password" placeholder="••••••••" required>
+        </div>
+        <button class="btn-submit" type="submit">__SUBMIT_LABEL__</button>
+      </form>
+
+      <div class="login-meta">
+        Plataforma Olivia · Awareness-AI
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme toggle button -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+    <i class="fas fa-sun"></i>
+  </button>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function () {
+      const btn = this.querySelector('button[type="submit"]');
+      if (!btn) return;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+    });
+  </script>
+
+  <!-- Dynamic word script (unchanged) -->
+  <script>
+    (function () {
+      const words = [
+        "Governança", "Direitos", "Transparência", "Compliance", "Accountability",
+        "Equidade", "Justiça", "Ética", "Legalidade", "Cidadania", "Integridade", "Proteção",
+        "Gobernanza", "Derechos", "Transparencia", "Cumplimiento", "Ley",
+        "Justicia", "Ética", "Integridad", "Protección", "Equidad", "Legalidad", "Rendición",
+        "Governance", "Rights", "Transparency", "Compliance", "Accountability",
+        "Law", "Justice", "Ethics", "Equity", "Integrity", "Protection", "Rule of Law",
+        "Governance", "Diritti", "Trasparenza", "Conformità", "Responsabilità",
+        "Legge", "Giustizia", "Etica", "Equità", "Integrità", "Protezione", "Stato di diritto"
+      ];
+      const span = document.getElementById('dynamicWord');
+      let currentWord = span.textContent.trim();
+      function pickRandom() {
+        if (words.length <= 1) return words[0];
+        let newWord;
+        do {
+          newWord = words[Math.floor(Math.random() * words.length)];
+        } while (newWord === currentWord);
+        return newWord;
+      }
+      function flipWord() {
+        const newWord = pickRandom();
+        span.style.opacity = '0';
+        span.style.transform = 'translateY(-4px)';
+        setTimeout(() => {
+          span.textContent = newWord;
+          currentWord = newWord;
+          span.style.opacity = '1';
+          span.style.transform = 'translateY(0)';
+        }, 200);
+      }
+      setTimeout(() => {
+        flipWord();
+        setInterval(flipWord, 4000);
+      }, 3500);
+    })();
+  </script>
+
+  <!-- Theme toggle logic -->
+  <script>
+    (function () {
+      const body = document.body;
+      const toggleBtn = document.getElementById('themeToggle');
+      const icon = toggleBtn.querySelector('i');
+
+      function setTheme(theme) {
+        body.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          icon.className = 'fas fa-sun';
+        } else {
+          icon.className = 'fas fa-moon';
+        }
+        try {
+          localStorage.setItem('olivia-theme', theme);
+        } catch (e) { }
+      }
+
+      // Load saved preference, default to dark
+      const saved = localStorage.getItem('olivia-theme');
+      if (saved === 'light') {
+        setTheme('light');
+      } else {
+        setTheme('dark');
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        const current = body.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      });
+    })();
+  </script>
+
+  <script src="/frontend/auth/tracker.js"></script>
+</body>
+
+</html>

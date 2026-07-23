@@ -1,0 +1,14 @@
+{
+  "id": "castle_rock",
+  "name": "Edinburgh Castle Rock",
+  "icon": "🏰",
+  "category": "environment",
+  "tags": ["scotland","castle","cliff"],
+  "desc": "Dramatic volcanic crag with castle silhouette",
+  "params": {
+    "x": { "type": "x", "default": "w*0.5" },
+    "y": { "type": "y", "default": "bY-20" },
+    "scale": { "type": "number", "default": 1 }
+  },
+  "code": "const s=ctx.scale||1; const x=ctx.x||0; const y=ctx.y||0; const rockH=200; svg += `<g transform=\"translate(${x},${y}) scale(${s})\">`; svg += `<path d=\"M-80 0 Q-40 -60 -10 -140 Q30 -170 60 -150 Q100 -100 140 0\" fill=\"#4A4A42\" stroke=\"#3A3A32\" stroke-width=\"${ol*0.6}\"/>`; // Castle on top const cx=10; const cy=-140; svg += `<rect x=\"${cx-25}\" y=\"${cy-25}\" width=\"35\" height=\"30\" rx=\"1\" fill=\"#6B5D4F\" stroke=\"#4A4238\" stroke-width=\"${ol}\"/>`; svg += `<rect x=\"${cx+12}\" y=\"${cy-35}\" width=\"20\" height=\"40\" rx=\"1\" fill=\"#5A4F42\" stroke=\"#4A4238\" stroke-width=\"${ol}\"/>`; svg += `<rect x=\"${cx-10}\" y=\"${cy-40}\" width=\"15\" height=\"18\" rx=\"1\" fill=\"#6B5D4F\" stroke=\"#4A4238\" stroke-width=\"${ol}\"/>`; for(let i=0;i<7;i++){ const bx=cx-27+i*8; svg += `<rect x=\"${bx}\" y=\"${cy-29}\" width=\"4\" height=\"4\" fill=\"#6B5D4F\" stroke=\"#4A4238\" stroke-width=\"${ol*0.4}\"/>`; } svg += `<line x1=\"${cx+5}\" y1=\"${cy-40}\" x2=\"${cx+5}\" y2=\"${cy-58}\" stroke=\"#4A4238\" stroke-width=\"1\"/>`; const flagWave=Math.sin(mt*2)*3; svg += `<path d=\"M${cx+5} ${cy-58} L${cx+18+flagWave} ${cy-54} L${cx+5} ${cy-50}\" fill=\"#1A3A8A\" stroke=\"#1A2A5A\" stroke-width=\"${ol*0.3}\"/>`; svg += `</g>`; return svg;"
+}

@@ -1,0 +1,2323 @@
+{
+  "version": "1.0.0",
+  "group": "la8159",
+  "routing": [
+    {
+      "route_id": "la8159_orch_to_br-001",
+      "from": "la8159-orchestrator",
+      "to": "br-cdc",
+      "trigger": "violation_id:BR-001",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-001 → primary specialist(s) ['br-cdc', 'br-anac-r400']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-001"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cdc",
+              "br-anac-r400"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-cc",
+              "br-cba"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-002",
+      "from": "la8159-orchestrator",
+      "to": "br-cba",
+      "trigger": "violation_id:BR-002",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-002 → primary specialist(s) ['br-cba']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-002"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cba"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-cdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-003",
+      "from": "la8159-orchestrator",
+      "to": "br-cdc",
+      "trigger": "violation_id:BR-003",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-003 → primary specialist(s) ['br-cdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-003"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-cba"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-004",
+      "from": "la8159-orchestrator",
+      "to": "br-cdc",
+      "trigger": "violation_id:BR-004",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-004 → primary specialist(s) ['br-cdc', 'br-anac-r400']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-004"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cdc",
+              "br-anac-r400"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-005",
+      "from": "la8159-orchestrator",
+      "to": "br-cdc",
+      "trigger": "violation_id:BR-005",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-005 → primary specialist(s) ['br-cdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-005"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-006",
+      "from": "la8159-orchestrator",
+      "to": "br-cdc",
+      "trigger": "violation_id:BR-006",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-006 → primary specialist(s) ['br-cdc', 'br-cc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-006"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cdc",
+              "br-cc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-007",
+      "from": "la8159-orchestrator",
+      "to": "br-anac-r400",
+      "trigger": "violation_id:BR-007",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-007 → primary specialist(s) ['br-anac-r400']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-007"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-anac-r400"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-cdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-008",
+      "from": "la8159-orchestrator",
+      "to": "br-anac-r400",
+      "trigger": "violation_id:BR-008",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-008 → primary specialist(s) ['br-anac-r400']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-008"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-anac-r400"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-cdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-009",
+      "from": "la8159-orchestrator",
+      "to": "br-cdc",
+      "trigger": "violation_id:BR-009",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-009 → primary specialist(s) ['br-cdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-009"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-010",
+      "from": "la8159-orchestrator",
+      "to": "br-cdc",
+      "trigger": "violation_id:BR-010",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-010 → primary specialist(s) ['br-cdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-010"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-011",
+      "from": "la8159-orchestrator",
+      "to": "br-cdc",
+      "trigger": "violation_id:BR-011",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-011 → primary specialist(s) ['br-cdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-011"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-012",
+      "from": "la8159-orchestrator",
+      "to": "br-anac-r400",
+      "trigger": "violation_id:BR-012",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-012 → primary specialist(s) ['br-anac-r400', 'br-cdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-012"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-anac-r400",
+              "br-cdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-013",
+      "from": "la8159-orchestrator",
+      "to": "br-cba",
+      "trigger": "violation_id:BR-013",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-013 → primary specialist(s) ['br-cba', 'br-cf88', 'br-lei9784']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-013"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cba",
+              "br-cf88",
+              "br-lei9784"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-anac-r400"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-014",
+      "from": "la8159-orchestrator",
+      "to": "br-cf88",
+      "trigger": "violation_id:BR-014",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-014 → primary specialist(s) ['br-cf88', 'br-abear-plus']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-014"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cf88",
+              "br-abear-plus"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-lei9784",
+              "br-conflito-interesses",
+              "meta-revolvingdoor"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-015",
+      "from": "la8159-orchestrator",
+      "to": "int-softlaw",
+      "trigger": "violation_id:BR-015",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-015 → primary specialist(s) ['int-softlaw']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-015"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-softlaw"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-cba"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-016",
+      "from": "la8159-orchestrator",
+      "to": "br-cp",
+      "trigger": "violation_id:BR-016",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-016 → primary specialist(s) ['br-cp', 'br-cc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-016"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cp",
+              "br-cc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-cdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-017",
+      "from": "la8159-orchestrator",
+      "to": "br-lei9784",
+      "trigger": "violation_id:BR-017",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-017 → primary specialist(s) ['br-lei9784', 'br-cf88']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-017"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-lei9784",
+              "br-cf88"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-018",
+      "from": "la8159-orchestrator",
+      "to": "br-cdc",
+      "trigger": "violation_id:BR-018",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-018 → primary specialist(s) ['br-cdc', 'br-sdc-procon-senacon']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-018"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-cdc",
+              "br-sdc-procon-senacon"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-abear-plus"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-019",
+      "from": "la8159-orchestrator",
+      "to": "br-lei9784",
+      "trigger": "violation_id:BR-019",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-019 → primary specialist(s) ['br-lei9784', 'br-cf88']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-019"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-lei9784",
+              "br-cf88"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-lai-transparency",
+              "meta-institutional-silence"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_br-020",
+      "from": "la8159-orchestrator",
+      "to": "br-abear-plus",
+      "trigger": "violation_id:BR-020",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation BR-020 → primary specialist(s) ['br-abear-plus']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "BR-020"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "br-abear-plus"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-cf88",
+              "br-oab-disciplina",
+              "br-anticorrupcao",
+              "meta-personnel-accountability"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-001",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-001",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-001 → primary specialist(s) ['cl-cpcl', 'cl-cach']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-001"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl",
+              "cl-cach"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "cl-lpdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-002",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-002",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-002 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-002"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "cl-lpdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-003",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-003",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-003 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-003"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-004",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-004",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-004 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-004"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-005",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-005",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-005 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-005"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-006",
+      "from": "la8159-orchestrator",
+      "to": "cl-cach",
+      "trigger": "violation_id:CL-006",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-006 → primary specialist(s) ['cl-cach', 'cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-006"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cach",
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "cl-lpdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-007",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-007",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-007 → primary specialist(s) ['cl-cpcl', 'cl-cach']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-007"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl",
+              "cl-cach"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-008",
+      "from": "la8159-orchestrator",
+      "to": "cl-dgac-l16752",
+      "trigger": "violation_id:CL-008",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-008 → primary specialist(s) ['cl-dgac-l16752']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-008"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-dgac-l16752"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "cl-const"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-009",
+      "from": "la8159-orchestrator",
+      "to": "cl-cach",
+      "trigger": "violation_id:CL-009",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-009 → primary specialist(s) ['cl-cach', 'int-chicago-vclt']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-009"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cach",
+              "int-chicago-vclt"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-010",
+      "from": "la8159-orchestrator",
+      "to": "cl-const",
+      "trigger": "violation_id:CL-010",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-010 → primary specialist(s) ['cl-const']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-010"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-const"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "cl-lpdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-011",
+      "from": "la8159-orchestrator",
+      "to": "cl-cach",
+      "trigger": "violation_id:CL-011",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-011 → primary specialist(s) ['cl-cach', 'cl-const']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-011"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cach",
+              "cl-const"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-012",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-012",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-012 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-012"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-013",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-013",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-013 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-013"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-014",
+      "from": "la8159-orchestrator",
+      "to": "cl-cach",
+      "trigger": "violation_id:CL-014",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-014 → primary specialist(s) ['cl-cach', 'cl-lpdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-014"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cach",
+              "cl-lpdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-015",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-015",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-015 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-015"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-016",
+      "from": "la8159-orchestrator",
+      "to": "cl-cach",
+      "trigger": "violation_id:CL-016",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-016 → primary specialist(s) ['cl-cach']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-016"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cach"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "cl-lpdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-017",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-017",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-017 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-017"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "cl-lpdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-018",
+      "from": "la8159-orchestrator",
+      "to": "cl-cach",
+      "trigger": "violation_id:CL-018",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-018 → primary specialist(s) ['cl-cach']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-018"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cach"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-019",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-019",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-019 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-019"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-020",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-020",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-020 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-020"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-021",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-021",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-021 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-021"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-022",
+      "from": "la8159-orchestrator",
+      "to": "cl-cach",
+      "trigger": "violation_id:CL-022",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-022 → primary specialist(s) ['cl-cach']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-022"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cach"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "cl-dgac-l16752"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-023",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-023",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-023 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-023"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-024",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-024",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-024 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-024"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-025",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-025",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-025 → primary specialist(s) ['cl-cpcl', 'cl-lpdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-025"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl",
+              "cl-lpdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-026",
+      "from": "la8159-orchestrator",
+      "to": "cl-lpdc",
+      "trigger": "violation_id:CL-026",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-026 → primary specialist(s) ['cl-lpdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-026"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-lpdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-027",
+      "from": "la8159-orchestrator",
+      "to": "cl-lpdc",
+      "trigger": "violation_id:CL-027",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-027 → primary specialist(s) ['cl-lpdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-027"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-lpdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-028",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-028",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-028 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-028"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-cp"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-029",
+      "from": "la8159-orchestrator",
+      "to": "cl-dgac-l16752",
+      "trigger": "violation_id:CL-029",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-029 → primary specialist(s) ['cl-dgac-l16752']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-029"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-dgac-l16752"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-030",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:CL-030",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-030 → primary specialist(s) ['cl-cpcl']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-030"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-031",
+      "from": "la8159-orchestrator",
+      "to": "cl-lpdc",
+      "trigger": "violation_id:CL-031",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-031 → primary specialist(s) ['cl-lpdc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-031"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-lpdc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_cl-032",
+      "from": "la8159-orchestrator",
+      "to": "cl-transparency-l20285",
+      "trigger": "violation_id:CL-032",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation CL-032 → primary specialist(s) ['cl-transparency-l20285', 'cl-dgac-l16752']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "CL-032"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-transparency-l20285",
+              "cl-dgac-l16752"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-001",
+      "from": "la8159-orchestrator",
+      "to": "int-icao-an9",
+      "trigger": "violation_id:INT-001",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-001 → primary specialist(s) ['int-icao-an9', 'int-chicago-vclt']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-001"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-icao-an9",
+              "int-chicago-vclt"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-002",
+      "from": "la8159-orchestrator",
+      "to": "int-icao-an9",
+      "trigger": "violation_id:INT-002",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-002 → primary specialist(s) ['int-icao-an9']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-002"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-icao-an9"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-003",
+      "from": "la8159-orchestrator",
+      "to": "int-icao-an9",
+      "trigger": "violation_id:INT-003",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-003 → primary specialist(s) ['int-icao-an9']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-003"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-icao-an9"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-004",
+      "from": "la8159-orchestrator",
+      "to": "int-mc99",
+      "trigger": "violation_id:INT-004",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-004 → primary specialist(s) ['int-mc99']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-004"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-mc99"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "int-achr"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-005",
+      "from": "la8159-orchestrator",
+      "to": "int-mc99",
+      "trigger": "violation_id:INT-005",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-005 → primary specialist(s) ['int-mc99']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-005"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-mc99"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-006",
+      "from": "la8159-orchestrator",
+      "to": "int-mc99",
+      "trigger": "violation_id:INT-006",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-006 → primary specialist(s) ['int-mc99']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-006"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-mc99"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "int-icao-an9"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-007",
+      "from": "la8159-orchestrator",
+      "to": "int-mc99",
+      "trigger": "violation_id:INT-007",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-007 → primary specialist(s) ['int-mc99']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-007"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-mc99"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-008",
+      "from": "la8159-orchestrator",
+      "to": "int-achr",
+      "trigger": "violation_id:INT-008",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-008 → primary specialist(s) ['int-achr']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-008"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-achr"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-009",
+      "from": "la8159-orchestrator",
+      "to": "int-achr",
+      "trigger": "violation_id:INT-009",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-009 → primary specialist(s) ['int-achr']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-009"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-achr"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-010",
+      "from": "la8159-orchestrator",
+      "to": "int-achr",
+      "trigger": "violation_id:INT-010",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-010 → primary specialist(s) ['int-achr']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-010"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-achr"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-011",
+      "from": "la8159-orchestrator",
+      "to": "int-iata-gc",
+      "trigger": "violation_id:INT-011",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-011 → primary specialist(s) ['int-iata-gc']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-011"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-iata-gc"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "int-mc99"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-012",
+      "from": "la8159-orchestrator",
+      "to": "int-icao-an17",
+      "trigger": "violation_id:INT-012",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-012 → primary specialist(s) ['int-icao-an17', 'int-chicago-vclt']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-012"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-icao-an17",
+              "int-chicago-vclt"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-013",
+      "from": "la8159-orchestrator",
+      "to": "int-softlaw",
+      "trigger": "violation_id:INT-013",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-013 → primary specialist(s) ['int-softlaw', 'int-mc99']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-013"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-softlaw",
+              "int-mc99"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "br-cdc",
+              "cl-lpdc"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-014",
+      "from": "la8159-orchestrator",
+      "to": "int-achr",
+      "trigger": "violation_id:INT-014",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-014 → primary specialist(s) ['int-achr']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-014"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-achr"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-015",
+      "from": "la8159-orchestrator",
+      "to": "cl-cpcl",
+      "trigger": "violation_id:INT-015",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-015 → primary specialist(s) ['cl-cpcl', 'cl-const']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-015"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "cl-cpcl",
+              "cl-const"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "int-achr"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-016",
+      "from": "la8159-orchestrator",
+      "to": "int-uncrc-hague",
+      "trigger": "violation_id:INT-016",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-016 → primary specialist(s) ['int-uncrc-hague']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-016"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-uncrc-hague"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "int-achr"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-017",
+      "from": "la8159-orchestrator",
+      "to": "int-vccr",
+      "trigger": "violation_id:INT-017",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-017 → primary specialist(s) ['int-vccr']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-017"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-vccr"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-018",
+      "from": "la8159-orchestrator",
+      "to": "int-softlaw",
+      "trigger": "violation_id:INT-018",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-018 → primary specialist(s) ['int-softlaw']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-018"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-softlaw"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": []
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_int-019",
+      "from": "la8159-orchestrator",
+      "to": "int-icao-an6-an13",
+      "trigger": "violation_id:INT-019",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Violation INT-019 → primary specialist(s) ['int-icao-an6-an13']",
+        "artifacts": [
+          {
+            "type": "violation_id",
+            "value": "INT-019"
+          },
+          {
+            "type": "primary_agents",
+            "value": [
+              "int-icao-an6-an13"
+            ]
+          },
+          {
+            "type": "supporting_agents",
+            "value": [
+              "int-chicago-vclt"
+            ]
+          }
+        ],
+        "verification": [
+          "primary specialist NEVER-rules respected",
+          "verification flag preserved",
+          "Tier ordering (1→2→3) applied if multi-framework"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_orch_to_coordinator",
+      "from": "la8159-orchestrator",
+      "to": "la8159-coordinator",
+      "trigger": "governance_or_manifest_update",
+      "priority": "low",
+      "payload_template": {
+        "summary": "Governance task (manifest, policy, knowledge, sync from upstream).",
+        "verification": [
+          "validate-pack.mjs passed"
+        ]
+      }
+    },
+    {
+      "route_id": "la8159_coordinator_to_meta_for_cross_group",
+      "from": "la8159-coordinator",
+      "to": "meta-orchestrator",
+      "trigger": "cross_group_legal_overlap",
+      "priority": "high",
+      "requires_confirmation": true,
+      "payload_template": {
+        "summary": "LA8159 grounding overlap with the legal/government group requires meta-orchestrator coordination.",
+        "verification": [
+          "user confirmed cross-group handoff"
+        ]
+      }
+    }
+  ]
+}

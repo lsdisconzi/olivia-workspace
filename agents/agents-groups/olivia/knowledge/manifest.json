@@ -1,0 +1,89 @@
+{
+  "$schema": "../../../generated/schemas/knowledge-manifest.schema.json",
+  "version": "1.0.0",
+  "group": "olivia",
+  "description": "Olivia platform knowledge. Currently thin — architecture docs and API contracts live in the repo root and in awareness-ai. To be expanded in Phase 3+.",
+  "defaults": { "pii_redaction": true },
+  "entries": [
+    {
+      "id": "olivia.architecture.readme",
+      "title": "Agent Architecture Visualizer README",
+      "path": "README.md",
+      "kind": "doc",
+      "language": "en",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["*"],
+      "tags": ["architecture", "visualizer"],
+      "pii_sensitivity": "none"
+    },
+    {
+      "id": "olivia.architecture.overview",
+      "title": "Project Overview (Phase 0)",
+      "path": "docs/PROJECT_OVERVIEW.md",
+      "kind": "doc",
+      "language": "en",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["*"],
+      "tags": ["architecture", "inventory"],
+      "pii_sensitivity": "none"
+    },
+    {
+      "id": "olivia.architecture.plan",
+      "title": "Development Plan",
+      "path": "docs/DEVELOPMENT_PLAN.md",
+      "kind": "doc",
+      "language": "en",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["*"],
+      "tags": ["architecture", "roadmap"],
+      "pii_sensitivity": "none"
+    },
+    {
+      "id": "olivia.schema.handoff",
+      "title": "Handoff Payload Schema",
+      "path": "generated/schemas/handoff-payload.schema.json",
+      "kind": "schema",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["orchestrator-control-plane"],
+      "tags": ["schema", "handoff"],
+      "notes": "Also consumed by the cross-group meta-orchestrator (validated against agents-groups/_meta)."
+    },
+    {
+      "id": "olivia.group.paths",
+      "title": "Olivia group agent paths",
+      "path": "agents/agents-groups/olivia/agents",
+      "kind": "corpus",
+      "language": "en",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["orchestrator-control-plane", "olivia-coordinator"],
+      "tags": ["olivia", "agents", "paths"]
+    },
+    {
+      "id": "olivia.schema.tool-permissions",
+      "title": "Tool Permissions Schema",
+      "path": "generated/schemas/tool-permissions.schema.json",
+      "kind": "schema",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["*"],
+      "tags": ["schema", "policy"]
+    },
+    {
+      "id": "olivia.schema.group-manifest",
+      "title": "Group Manifest Schema",
+      "path": "generated/schemas/group-manifest.schema.json",
+      "kind": "schema",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["*"],
+      "tags": ["schema", "group"]
+    },
+    {
+      "id": "olivia.schema.knowledge-manifest",
+      "title": "Knowledge Manifest Schema",
+      "path": "generated/schemas/knowledge-manifest.schema.json",
+      "kind": "schema",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["*"],
+      "tags": ["schema", "knowledge"]
+    }
+  ]
+}

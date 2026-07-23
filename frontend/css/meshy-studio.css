@@ -1,0 +1,104 @@
+/* ═══════════════════════════════════════════════════════════════════
+   MESHY STUDIO — in-preview side panel for texture/remesh/rig/animate
+   + a quick chat lane that routes to the shaders brainstorm agent.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.meshy-studio{
+  position:absolute;top:10px;right:10px;bottom:60px;width:320px;max-width:92vw;
+  display:flex;flex-direction:column;
+  background:rgba(14,14,20,.92);backdrop-filter:blur(10px);
+  border:1px solid rgba(232,121,249,.35);border-radius:10px;
+  color:#eee;font-family:var(--sans,system-ui,sans-serif);font-size:12px;
+  box-shadow:0 10px 40px rgba(0,0,0,.55);
+  z-index:55;overflow:hidden;
+}
+.meshy-studio[hidden]{display:none}
+
+.meshy-studio-head{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,rgba(232,121,249,.14),transparent);
+}
+.meshy-studio-head strong{font-size:13px}
+.meshy-studio-model{
+  flex:1;font-size:10px;font-family:var(--mono,monospace);
+  color:rgba(255,255,255,.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+.meshy-studio-tabs{
+  display:flex;gap:2px;padding:6px 8px 0;border-bottom:1px solid rgba(255,255,255,.06);
+  overflow-x:auto;scrollbar-width:thin;
+}
+.meshy-studio-tab{
+  background:transparent;border:1px solid transparent;color:rgba(255,255,255,.6);
+  padding:6px 8px;font-size:11px;cursor:pointer;border-radius:6px 6px 0 0;
+  display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
+}
+.meshy-studio-tab:hover{color:#fff;background:rgba(255,255,255,.04)}
+.meshy-studio-tab.active{color:#E879F9;border-color:rgba(232,121,249,.45);border-bottom-color:transparent;background:rgba(232,121,249,.08)}
+
+.meshy-studio-body{flex:1;overflow-y:auto;padding:12px}
+.meshy-studio-pane{display:flex;flex-direction:column;gap:8px}
+.meshy-studio-pane[hidden]{display:none}
+
+.meshy-studio-lbl{font-size:10px;color:rgba(255,255,255,.5);font-family:var(--mono,monospace)}
+.meshy-studio-input{
+  width:100%;padding:7px 8px;
+  background:rgba(0,0,0,.4);color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:6px;
+  font-family:var(--sans,system-ui,sans-serif);font-size:12px;resize:vertical;
+}
+.meshy-studio-input:focus{outline:none;border-color:rgba(232,121,249,.5);box-shadow:0 0 0 2px rgba(232,121,249,.15)}
+textarea.meshy-studio-input{font-family:var(--sans,system-ui,sans-serif);min-height:60px}
+
+.meshy-studio-anim-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
+  max-height:220px;overflow:auto;padding:2px;border:1px solid rgba(255,255,255,.08);border-radius:8px;
+  background:rgba(0,0,0,.2);
+}
+.meshy-studio-anim-card{
+  border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);color:#fff;
+  border-radius:8px;padding:4px;cursor:pointer;text-align:left;
+}
+.meshy-studio-anim-card:hover{border-color:rgba(232,121,249,.5);background:rgba(232,121,249,.08)}
+.meshy-studio-anim-card.active{border-color:rgba(232,121,249,.75);box-shadow:0 0 0 1px rgba(232,121,249,.35) inset}
+.meshy-studio-anim-card img{
+  width:100%;height:64px;object-fit:cover;display:block;border-radius:6px;
+  border:1px solid rgba(255,255,255,.08);background:#0d0d14;
+}
+.meshy-studio-anim-noimg{
+  width:100%;height:64px;border-radius:6px;border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(135deg,rgba(232,121,249,.15),rgba(78,205,196,.15));
+  color:rgba(255,255,255,.7);font-size:9px;letter-spacing:.04em;
+  display:flex;align-items:center;justify-content:center;
+}
+.meshy-studio-anim-card span{
+  display:block;margin-top:4px;font-size:10px;line-height:1.25;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgba(255,255,255,.88);
+}
+.meshy-studio-anim-meta{font-size:10px;color:rgba(255,255,255,.6)}
+.meshy-studio-anim-meta strong{color:#E879F9}
+
+.meshy-studio-chk{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.75);cursor:pointer}
+.meshy-studio-chk input{accent-color:#E879F9}
+
+.meshy-studio-hint{font-size:10px;color:rgba(255,255,255,.5);margin:4px 0;line-height:1.45}
+.meshy-studio-hint em{color:#E879F9;font-style:normal}
+
+.meshy-studio-go{
+  margin-top:6px;align-self:stretch;
+  background:#E879F9;color:#1a1a2e;border-color:#E879F9;font-weight:600;
+}
+.meshy-studio-go:hover{background:#F0A3FA;border-color:#F0A3FA}
+
+.meshy-studio-foot{
+  padding:6px 12px;border-top:1px solid rgba(255,255,255,.08);
+  min-height:24px;font-size:10px;color:rgba(255,255,255,.6);
+}
+.meshy-studio-status.err{color:#FCA5A5}
+.meshy-studio-status.ok{color:#A7F3D0}
+
+/* Compact layout when preview is narrow or fullscreen */
+.sh-preview-area.fullscreen .meshy-studio{top:60px;right:20px;bottom:80px;width:360px}
+@media (max-width: 900px){
+  .meshy-studio{top:auto;right:6px;left:6px;bottom:6px;width:auto;max-height:55vh}
+}

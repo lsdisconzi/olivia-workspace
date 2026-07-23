@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awareness-AI · Diagnóstico Jurídico-AI</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%231c4532'/><path d='M30 40 Q50 20 70 40 Q50 60 30 40' fill='%23c4622d'/><circle cx='50' cy='45' r='8' fill='%23f8f9f6'/></svg>">
+    <style>
+        :root {
+            --bg: #191917;
+            --bg-card: #1f1f1d;
+            --border: #2a2a28;
+            --border-hi: #363634;
+            --amber: #c4622d;
+            --amber-lo: rgba(196, 98, 45, 0.12);
+            --green: #4a9e70;
+            --green-lo: rgba(74, 158, 112, 0.10);
+            --blue: #4A7C9B;
+            --blue-lo: rgba(74, 124, 155, 0.10);
+            --white: #ede8df;
+            --gray: #6b6b68;
+            --gray-hi: #9a9a96;
+            --serif: 'Fraunces', Georgia, serif;
+            --sans: 'Plus Jakarta Sans', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --r: 10px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--white);
+            line-height: 1.7;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        /* ── AUTH: NAV ── */
+        .auth-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(25, 25, 23, 0.92);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .auth-nav-user {
+            font-size: 12px;
+            color: var(--gray-hi);
+            display: none;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .auth-nav-user.visible {
+            display: flex;
+        }
+
+        .auth-nav-user i {
+            color: var(--amber);
+            font-size: 10px;
+        }
+
+        .auth-nav-logout {
+            font-size: 11px;
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.15s;
+            cursor: pointer;
+        }
+
+        .auth-nav-logout:hover {
+            color: #9e4a4a;
+        }
+
+        .auth-nav-signin {
+            font-size: 12px;
+            padding: 6px 16px;
+            border: 1px solid var(--amber);
+            color: var(--amber);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.15s;
+            cursor: pointer;
+            background: transparent;
+            font-family: var(--sans);
+        }
+
+        .auth-nav-signin:hover {
+            background: var(--amber-lo);
+        }
+
+        /* ── AUTH: LOGIN GATE ── */
+        #loginGate {
+            display: flex;
+            min-height: calc(100vh - 50px);
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            padding-top: 72px;
+        }
+
+        #loginGate.hidden {
+            display: none;
+        }
+
+        #loginGate section {
+            width: 100%;
+            max-width: 420px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 32px;
+        }
+
+        .login-brand {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .login-brand-name {
+            font-family: var(--serif);
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--white);
+            letter-spacing: -0.01em;
+            margin-bottom: 2px;
+        }
+
+        .login-brand-sub {
+            font-family: var(--sans);
+            font-size: 10px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .login-error {
+            border: 1px solid rgba(158, 74, 74, 0.3);
+            background: rgba(158, 74, 74, 0.08);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #9e4a4a;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .login-error.visible {
+            display: block;
+        }
+
+        .login-field {
+            margin-bottom: 14px;
+        }
+
+        .login-field label {
+            display: block;
+            font-size: 10px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 5px;
+            font-family: var(--sans);
+        }
+
+        .login-input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border-hi);
+            border-radius: 8px;
+            color: var(--white);
+            padding: 10px 12px;
+            font-family: var(--sans);
+            font-size: 14px;
+            transition: border-color 0.15s;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--amber);
+            box-shadow: 0 0 0 3px var(--amber-lo);
+        }
+
+        .login-input::placeholder {
+            color: var(--gray);
+        }
+
+        .login-submit {
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background: var(--white);
+            color: #191917;
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            margin-top: 2px;
+        }
+
+        .login-submit:hover {
+            background: #f5f0e8;
+            transform: translateY(-1px);
+        }
+
+        .login-submit:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .login-meta {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--gray);
+            line-height: 1.8;
+        }
+
+        /* ── MAIN CONTENT (onboarding) ── */
+        #mainContent {
+            display: none;
+        }
+
+        #mainContent.visible {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 50px);
+            padding: 80px 24px 48px;
+        }
+
+        .onboarding-container {
+            width: 100%;
+            max-width: 620px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .onboarding-progress {
+            margin-bottom: 32px;
+        }
+
+        .progress-text {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--amber);
+            width: 0%;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+        }
+
+        .step {
+            display: none;
+            animation: fadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-title {
+            font-family: var(--serif);
+            font-size: 26px;
+            font-weight: 500;
+            color: var(--white);
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+            line-height: 1.35;
+        }
+
+        .step-subtitle {
+            font-size: 15px;
+            color: var(--gray-hi);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            color: var(--gray-hi);
+            font-weight: 500;
+            margin-bottom: 8px;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── PILLS AND CUSTOM OPTIONS ── */
+        .pills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .pill-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 22px;
+            background: var(--bg);
+            border: 1px solid var(--border-hi);
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--white);
+            user-select: none;
+        }
+
+        .pill-option:hover {
+            border-color: var(--amber);
+            background: rgba(196, 98, 45, 0.04);
+            transform: translateY(-1px);
+        }
+
+        .pill-option.selected {
+            border-color: var(--amber);
+            background: var(--amber-lo);
+            color: var(--white);
+            box-shadow: 0 0 12px rgba(196, 98, 45, 0.15);
+        }
+
+        .pill-option.selected i {
+            color: var(--amber);
+        }
+
+        .pill-option i {
+            font-size: 12px;
+            color: var(--gray);
+            transition: color 0.2s;
+        }
+
+        .pill-add {
+            border-style: dashed;
+            color: var(--amber);
+            border-color: rgba(196, 98, 45, 0.4);
+        }
+
+        .pill-add:hover {
+            border-color: var(--amber);
+            background: var(--amber-lo);
+        }
+
+        .custom-option-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border-hi);
+            border-radius: 24px;
+            padding: 4px 4px 4px 16px;
+            animation: fadeSlideIn 0.2s ease;
+        }
+
+        .custom-option-wrapper input {
+            background: transparent;
+            border: none;
+            color: var(--white);
+            font-family: var(--sans);
+            font-size: 14px;
+            outline: none;
+            width: 140px;
+        }
+
+        .custom-option-wrapper input::placeholder {
+            color: var(--gray);
+        }
+
+        .custom-option-btn {
+            background: var(--white);
+            border: none;
+            color: var(--bg);
+            border-radius: 18px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .custom-option-btn:hover {
+            background: #f5f0e8;
+        }
+
+        .text-input,
+        .text-area {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border-hi);
+            border-radius: 8px;
+            color: var(--white);
+            padding: 14px 16px;
+            font-family: var(--sans);
+            font-size: 15px;
+            transition: border-color 0.15s;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .text-input:focus,
+        .text-area:focus {
+            outline: none;
+            border-color: var(--amber);
+            box-shadow: 0 0 0 3px var(--amber-lo);
+        }
+
+        /* ── EMAIL CONFIRMATION ── */
+        .email-confirm-box {
+            background: var(--bg);
+            border: 1px solid var(--border-hi);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .email-confirm-address {
+            font-family: var(--mono);
+            font-size: 18px;
+            color: var(--white);
+            margin: 16px 0;
+            word-break: break-all;
+        }
+
+        .email-confirm-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .email-confirm-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid transparent;
+        }
+
+        .email-confirm-yes {
+            background: var(--white);
+            color: #191917;
+            border-color: var(--white);
+        }
+
+        .email-confirm-yes:hover {
+            background: #f5f0e8;
+        }
+
+        .email-confirm-change {
+            background: transparent;
+            color: var(--gray-hi);
+            border-color: var(--border-hi);
+        }
+
+        .email-confirm-change:hover {
+            border-color: var(--amber);
+            color: var(--white);
+        }
+
+        .email-edit-wrapper {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .email-edit-wrapper.visible {
+            display: block;
+        }
+
+        /* ── NAVIGATION BUTTONS ── */
+        .btn-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            gap: 12px;
+        }
+
+        .btn-group-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--white);
+            color: #191917;
+            border-color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: #f5f0e8;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--gray-hi);
+            border-color: var(--border-hi);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--amber);
+            color: var(--white);
+        }
+
+        .btn-skip {
+            background: transparent;
+            color: var(--gray);
+            border: 1px dashed var(--border-hi);
+        }
+
+        .btn-skip:hover {
+            border-color: var(--gray);
+            color: var(--white);
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .completion-message .step-title {
+            margin-bottom: 16px;
+        }
+
+        .completion-message p {
+            color: var(--gray-hi);
+            margin-bottom: 32px;
+        }
+
+        .sending-status {
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--amber);
+            display: none;
+        }
+
+        /* ── VIEW TRANSITIONS (SLIDE ANIMATIONS) ── */
+        @keyframes slide-to-left {
+            to {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slide-from-right {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slide-to-right {
+            to {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slide-from-left {
+            from {
+                transform: translateX(-100px);
+                opacity: 0;
+            }
+        }
+
+        ::view-transition-group(root) {
+            animation: 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        html:active-view-transition-type(forward)::view-transition-old(root) {
+            animation-name: slide-to-left;
+        }
+
+        html:active-view-transition-type(forward)::view-transition-new(root) {
+            animation-name: slide-from-right;
+        }
+
+        html:active-view-transition-type(backward)::view-transition-old(root) {
+            animation-name: slide-to-right;
+        }
+
+        html:active-view-transition-type(backward)::view-transition-new(root) {
+            animation-name: slide-from-left;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            ::view-transition-group(root) {
+                animation: none !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .onboarding-container {
+                padding: 28px;
+            }
+
+            .auth-nav {
+                padding: 10px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ╔══════════════╗ -->
+    <!-- ║  AUTH NAV    ║ -->
+    <!-- ╚══════════════╝ -->
+    <nav class="auth-nav">
+        <span class="auth-nav-user" id="navUser">
+            <i class="fas fa-user-circle"></i><span id="navUserEmail"></span>
+            <span class="auth-nav-logout" onclick="logout()">Sair</span>
+        </span>
+        <span id="navSignin" class="auth-nav-signin" onclick="showLoginGate();return false;">Entrar</span>
+    </nav>
+
+    <!-- ╔══════════════╗ -->
+    <!-- ║  LOGIN GATE  ║ -->
+    <!-- ╚══════════════╝ -->
+    <div id="loginGate">
+        <section>
+            <div class="login-card">
+                <div class="login-brand">
+                    <div class="login-brand-name">Awareness-AI</div>
+                    <div class="login-brand-sub">Accountable by Design</div>
+                </div>
+                <div id="loginError" class="login-error"></div>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="login-field">
+                        <label for="loginEmail">E-mail</label>
+                        <input id="loginEmail" name="email" type="email" class="login-input" placeholder="seu@email.com"
+                            autocomplete="username" required>
+                    </div>
+                    <div class="login-field">
+                        <label for="loginPassword">Senha</label>
+                        <input id="loginPassword" name="password" type="password" class="login-input"
+                            placeholder="••••••••" autocomplete="current-password" required>
+                    </div>
+                    <button class="login-submit" type="submit" id="loginSubmitBtn">
+                        Entrar
+                    </button>
+                </form>
+                <div class="login-meta">
+                    Awareness-AI Platform<br>
+                    Acesso autorizado apenas
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ╔══════════════╗ -->
+    <!-- ║ ONBOARDING   ║ -->
+    <!-- ╚══════════════╝ -->
+    <div id="mainContent">
+        <div class="onboarding-container">
+            <div class="onboarding-progress">
+                <div class="progress-text">
+                    <span>Diagnóstico Jurídico-AI</span>
+                    <span id="stepCounter">1/6</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+                </div>
+            </div>
+            <div id="stepContainer"></div>
+            <div class="btn-row" id="navButtons">
+                <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="visibility:hidden;">←
+                    Anterior</button>
+                <div class="btn-group-right">
+                    <button class="btn btn-skip" id="skipBtn" onclick="skipStep()" style="display:none;">Pular</button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">Próximo →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ══════════════════════════════════════
+           CONFIGURAÇÃO DO BACKEND (troque aqui)
+           ══════════════════════════════════════ */
+        const API_BASE = '/api';   // exemplo: http://localhost:3000/api
+        const LOGIN_ENDPOINT = API_BASE + '/login';
+        const DIAGNOSTICO_ENDPOINT = API_BASE + '/diagnostico';
+
+        /* ══════════════════════════════════════
+           ARMAZENAMENTO LOCAL DE USUÁRIOS
+           ══════════════════════════════════════ */
+        const USERS_STORAGE_KEY = 'awareness_users';
+
+        function getStoredUsers() {
+            try {
+                const raw = localStorage.getItem(USERS_STORAGE_KEY);
+                return raw ? JSON.parse(raw) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveUserCredentials(email, password) {
+            const users = getStoredUsers();
+            users[email] = password;
+            localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+        }
+
+        function verifyCredentials(email, password) {
+            const users = getStoredUsers();
+            // Se o email nunca foi usado, permite qualquer senha e registra
+            if (!users.hasOwnProperty(email)) {
+                saveUserCredentials(email, password);
+                return true;
+            }
+            // Se já existe, verifica a senha
+            return users[email] === password;
+        }
+
+        /* ══════════════════════════════════════
+           AUTENTICAÇÃO
+           ══════════════════════════════════════ */
+        let currentUser = null;
+        // Flag para controlar se o email já foi confirmado na etapa final
+        let emailConfirmed = false;
+
+        function setAuthUI(authenticated, user) {
+            const navUser = document.getElementById('navUser');
+            const navSignin = document.getElementById('navSignin');
+            const navUserEmail = document.getElementById('navUserEmail');
+            const loginGate = document.getElementById('loginGate');
+            const mainContent = document.getElementById('mainContent');
+
+            if (authenticated && user) {
+                currentUser = user;
+                navUser.classList.add('visible');
+                navSignin.style.display = 'none';
+                navUserEmail.textContent = user.email || '';
+                loginGate.classList.add('hidden');
+                mainContent.classList.add('visible');
+                initOnboarding();
+            } else {
+                currentUser = null;
+                navUser.classList.remove('visible');
+                navSignin.style.display = '';
+                loginGate.classList.remove('hidden');
+                mainContent.classList.remove('visible');
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const errorEl = document.getElementById('loginError');
+            const btn = document.getElementById('loginSubmitBtn');
+
+            if (!email || !password) {
+                errorEl.textContent = 'Preencha todos os campos.';
+                errorEl.classList.add('visible');
+                return;
+            }
+
+            errorEl.classList.remove('visible');
+            btn.disabled = true;
+            btn.textContent = 'Entrando...';
+
+            // Simula latência de rede
+            setTimeout(() => {
+                const isValid = verifyCredentials(email, password);
+                if (!isValid) {
+                    errorEl.textContent = 'Senha incorreta para este e-mail.';
+                    errorEl.classList.add('visible');
+                    btn.disabled = false;
+                    btn.textContent = 'Entrar';
+                    return;
+                }
+
+                setAuthUI(true, { email });
+                btn.disabled = false;
+                btn.textContent = 'Entrar';
+            }, 600);
+        }
+
+        function logout() {
+            setAuthUI(false, null);
+            document.getElementById('loginError').classList.remove('visible');
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            emailConfirmed = false;
+        }
+
+        function showLoginGate() {
+            setAuthUI(false, null);
+            document.getElementById('loginGate').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        const steps = [
+            {
+                id: "equipe",
+                title: "Qual o tamanho da sua equipe?",
+                subtitle: "Queremos entender como é dividida a sua estrutura atual.",
+                type: "pills-single",
+                options: [
+                    "Trabalho só (advogado autônomo)",
+                    "Equipe pequena (2-5 pessoas)",
+                    "Equipe média (6-15 pessoas)",
+                    "Grande equipe (mais de 15 pessoas)"
+                ],
+                required: false
+            },
+            {
+                id: "area",
+                title: "Quais são as suas principais áreas de atuação?",
+                subtitle: "Selecione quantas desejar ou adicione outra área.",
+                type: "pills-multiple",
+                options: [
+                    "Cível",
+                    "Trabalhista",
+                    "Criminal",
+                    "Consumidor",
+                    "Família",
+                    "Empresarial",
+                    "Tributário"
+                ],
+                customOptionPlaceholder: "+ Outra área...",
+                required: false
+            },
+            {
+                id: "ia_uso",
+                title: "Você já utiliza inteligência artificial no seu dia a dia profissional?",
+                subtitle: "Isso nos ajuda a entender sua familiaridade com as novas ferramentas.",
+                type: "pills-single",
+                options: [
+                    "Sim, uso frequentemente",
+                    "Não utilizo"
+                ],
+                required: false,
+                branchNext: (val) => {
+                    if (val === "Não utilizo") {
+                        return "expectativa_ia";
+                    }
+                    return "ia_ferramentas";
+                }
+            },
+            {
+                id: "ia_ferramentas",
+                title: "Quais ferramentas ou apps de IA você utiliza?",
+                subtitle: "Selecione as que você mais usa no seu dia a dia.",
+                type: "pills-multiple",
+                options: [
+                    "ChatGPT",
+                    "Claude",
+                    "Copilot",
+                    "Perplexity",
+                    "Jusbrasil AI"
+                ],
+                customOptionPlaceholder: "+ Outra ferramenta...",
+                required: false
+            },
+            {
+                id: "ia_contratacao",
+                title: "Como funciona a contratação dessas ferramentas?",
+                subtitle: "Você utiliza os planos gratuitos ou investe em assinaturas pagas?",
+                type: "pills-single",
+                options: [
+                    "Uso versões gratuitas",
+                    "Pago assinatura mensal/anual (Pro/Plus/etc.)",
+                    "Uso ambos (algumas gratuitas, outras pagas)"
+                ],
+                required: false
+            },
+            {
+                id: "ia_frequencia",
+                title: "Com que frequência você as utiliza no trabalho?",
+                subtitle: "Com qual regularidade essas ferramentas fazem parte da sua rotina?",
+                type: "pills-single",
+                options: [
+                    "Diariamente (várias vezes ao dia)",
+                    "Semanalmente (algumas vezes por semana)",
+                    "Raramente / Testando esporadicamente"
+                ],
+                required: false
+            },
+            {
+                id: "ia_atividades",
+                title: "Para quais atividades você usa a IA atualmente?",
+                subtitle: "Selecione todas as tarefas que costuma delegar para a IA.",
+                type: "pills-multiple",
+                options: [
+                    "Pesquisar jurisprudência",
+                    "Redigir petições e contratos",
+                    "Revisar/corrigir peças jurídicas",
+                    "Resumir processos ou documentos",
+                    "Organizar tarefas ou atendimento"
+                ],
+                customOptionPlaceholder: "+ Outra atividade...",
+                required: false
+            },
+            {
+                id: "ia_melhoria",
+                title: "O que você gostaria de fazer melhor ou diferente com a IA?",
+                subtitle: "Pensando no que já usa (ex: Perplexity para jurisprudência): o que falta para ser o ideal?",
+                type: "textarea",
+                placeholder: "Ex: Gostaria que as buscas fossem automáticas de acordo com os fatos da petição, e que não alucinasse jurisprudência inexistente...",
+                required: false,
+                branchNext: () => "email_contato"
+            },
+            {
+                id: "expectativa_ia",
+                title: "O que você gostaria que uma Inteligência Artificial fizesse?",
+                subtitle: "Descreva que tipo de tarefa, se resolvida com IA, traria mais alívio de tempo na sua rotina.",
+                type: "textarea",
+                placeholder: "Ex: Gostaria que ela fizesse a triagem inicial de mensagens de clientes e rascunhasse respostas rápidas...",
+                required: false,
+                branchNext: () => "email_contato"
+            },
+            {
+                id: "email_contato",
+                title: "Para finalizarmos, confirme seu e-mail",
+                subtitle: "Usaremos o e-mail abaixo para enviar sua pré-análise personalizada.",
+                type: "email_confirm",  // tipo customizado para confirmação
+                placeholder: "seu@email.com",
+                required: true
+            }
+        ];
+
+        let currentStepId = "equipe";
+        let history = [];
+        let responses = {};
+        let customOptions = {};
+        let activeCustomInputStepId = null;
+
+        function getStepMetrics() {
+            const pathMap = {
+                "equipe": { num: 1, total: 9 },
+                "area": { num: 2, total: 9 },
+                "ia_uso": { num: 3, total: 9 },
+                "ia_ferramentas": { num: 4, total: 9 },
+                "ia_contratacao": { num: 5, total: 9 },
+                "ia_frequencia": { num: 6, total: 9 },
+                "ia_atividades": { num: 7, total: 9 },
+                "ia_melhoria": { num: 8, total: 9 },
+                "expectativa_ia": { num: 4, total: 5 },
+                "email_contato": { num: 9, total: 9 }
+            };
+
+            const current = pathMap[currentStepId] || { num: 1, total: 9 };
+            let num = current.num;
+            let total = current.total;
+
+            if (currentStepId === "email_contato" && history.includes("expectativa_ia")) {
+                num = 5;
+                total = 5;
+            }
+
+            return { num, total };
+        }
+
+        function initOnboarding() {
+            currentStepId = "equipe";
+            history = [];
+            responses = {};
+            customOptions = {};
+            activeCustomInputStepId = null;
+            emailConfirmed = false;
+            renderStep();
+            updateProgress();
+            document.getElementById('navButtons').style.display = 'flex';
+        }
+
+        function renderStep() {
+            const container = document.getElementById('stepContainer');
+            const step = steps.find(s => s.id === currentStepId);
+            if (!step) return;
+
+            let html = `<div class="step active">
+                <div class="step-title">${step.title}</div>
+                <div class="step-subtitle">${step.subtitle}</div>
+                <div class="form-group">`;
+
+            if (step.type === 'pills-single' || step.type === 'pills-multiple') {
+                html += `<div class="pills-container">`;
+
+                const allOpts = [...(step.options || [])];
+                if (customOptions[step.id]) {
+                    allOpts.push(...customOptions[step.id]);
+                }
+
+                allOpts.forEach(opt => {
+                    const isSelected = step.type === 'pills-single'
+                        ? (responses[step.id] === opt)
+                        : (Array.isArray(responses[step.id]) && responses[step.id].includes(opt));
+
+                    const selectedClass = isSelected ? 'selected' : '';
+                    const icon = step.type === 'pills-single'
+                        ? (isSelected ? '<i class="fas fa-dot-circle"></i>' : '<i class="far fa-circle"></i>')
+                        : (isSelected ? '<i class="fas fa-check-square"></i>' : '<i class="far fa-square"></i>');
+
+                    html += `
+                        <div class="pill-option ${selectedClass}" onclick="handlePillClick('${step.id}', '${opt}')">
+                            ${icon}
+                            <span>${opt}</span>
+                        </div>
+                    `;
+                });
+
+                if (step.customOptionPlaceholder) {
+                    if (activeCustomInputStepId === step.id) {
+                        html += `
+                            <div class="custom-option-wrapper">
+                                <input type="text" id="customInput" placeholder="Digite aqui..." onkeydown="handleCustomInputKeyDown(event, '${step.id}')" autofocus>
+                                <button class="custom-option-btn" onclick="addCustomOption('${step.id}')">Adicionar</button>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="pill-option pill-add" onclick="showCustomInput('${step.id}')">
+                                <i class="fas fa-plus"></i>
+                                <span>${step.customOptionPlaceholder}</span>
+                            </div>
+                        `;
+                    }
+                }
+
+                html += `</div>`;
+            } else if (step.type === 'textarea') {
+                const val = responses[step.id] || '';
+                html += `<textarea class="text-area" id="${step.id}" placeholder="${step.placeholder || ''}" oninput="handleTextChange('${step.id}', this.value)" rows="4">${val}</textarea>`;
+            } else if (step.type === 'email') {
+                const val = responses[step.id] || '';
+                html += `<input class="text-input" type="email" id="${step.id}" placeholder="${step.placeholder || ''}" value="${val}" oninput="handleTextChange('${step.id}', this.value)" required>`;
+            } else if (step.type === 'email_confirm') {
+                // Etapa de confirmação de email
+                const userEmail = currentUser ? currentUser.email : '';
+                const confirmedEmail = responses[step.id] || userEmail;
+                if (!emailConfirmed) {
+                    html += `
+                        <div class="email-confirm-box">
+                            <p style="color: var(--gray-hi); font-size: 14px;">O e-mail associado ao seu login é:</p>
+                            <div class="email-confirm-address">${userEmail}</div>
+                            <p style="color: var(--gray); font-size: 12px; margin-bottom: 20px;">Usaremos este e-mail para enviar sua pré-análise e comunicações futuras.</p>
+                            <div class="email-confirm-buttons">
+                                <button class="email-confirm-btn email-confirm-yes" onclick="confirmEmail('${step.id}', '${userEmail}')">
+                                    <i class="fas fa-check"></i> Sim, está correto
+                                </button>
+                                <button class="email-confirm-btn email-confirm-change" onclick="showEmailEdit()">
+                                    <i class="fas fa-pen"></i> Alterar e-mail
+                                </button>
+                            </div>
+                            <div class="email-edit-wrapper" id="emailEditWrapper">
+                                <input class="text-input" type="email" id="email_edit_input" placeholder="Digite o novo e-mail" value="${userEmail}">
+                                <button class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="confirmEmailWithEdit('${step.id}')">
+                                    Confirmar novo e-mail
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Já confirmado, mostra resumo
+                    html += `
+                        <div class="email-confirm-box">
+                            <p style="color: var(--gray-hi);">E-mail confirmado:</p>
+                            <div class="email-confirm-address">${confirmedEmail}</div>
+                            <p style="color: var(--green); font-size: 12px; margin-top: 8px;"><i class="fas fa-check-circle"></i> Pronto para envio</p>
+                        </div>
+                    `;
+                }
+            }
+
+            html += `</div></div>`;
+            container.innerHTML = html;
+
+            if (step.type === 'textarea' || step.type === 'email') {
+                const el = document.getElementById(step.id);
+                if (el) el.focus();
+            }
+
+            const prevBtn = document.getElementById('prevBtn');
+            const skipBtn = document.getElementById('skipBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.style.visibility = history.length === 0 ? 'hidden' : 'visible';
+
+            if (step.id === 'email_contato') {
+                skipBtn.style.display = 'none';
+                if (emailConfirmed) {
+                    nextBtn.textContent = 'Concluir ✓';
+                    nextBtn.disabled = false;
+                } else {
+                    nextBtn.textContent = 'Concluir ✓';
+                    nextBtn.disabled = true; // só habilita após confirmar
+                }
+            } else {
+                skipBtn.style.display = 'block';
+                nextBtn.textContent = 'Próximo →';
+            }
+
+            updateButtonStates();
+        }
+
+        // Funções específicas para confirmação de email
+        function confirmEmail(stepId, email) {
+            responses[stepId] = email;
+            emailConfirmed = true;
+            renderStep();
+            // Habilita o botão concluir
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function showEmailEdit() {
+            const wrapper = document.getElementById('emailEditWrapper');
+            if (wrapper) {
+                wrapper.classList.add('visible');
+                const input = document.getElementById('email_edit_input');
+                if (input) input.focus();
+            }
+        }
+
+        function confirmEmailWithEdit(stepId) {
+            const input = document.getElementById('email_edit_input');
+            if (!input) return;
+            const newEmail = input.value.trim();
+            if (!newEmail || !validateEmail(newEmail)) {
+                alert('Por favor, digite um e-mail válido.');
+                return;
+            }
+            responses[stepId] = newEmail;
+            emailConfirmed = true;
+            renderStep();
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function handlePillClick(stepId, option) {
+            const step = steps.find(s => s.id === stepId);
+            if (!step) return;
+
+            if (step.type === 'pills-single') {
+                if (responses[stepId] === option) {
+                    delete responses[stepId];
+                } else {
+                    responses[stepId] = option;
+                    setTimeout(() => {
+                        if (currentStepId === stepId && responses[stepId] === option) {
+                            nextStep();
+                        }
+                    }, 300);
+                }
+            } else if (step.type === 'pills-multiple') {
+                if (!responses[stepId]) {
+                    responses[stepId] = [];
+                }
+                const idx = responses[stepId].indexOf(option);
+                if (idx > -1) {
+                    responses[stepId].splice(idx, 1);
+                } else {
+                    responses[stepId].push(option);
+                }
+            }
+            renderStep();
+        }
+
+        function showCustomInput(stepId) {
+            activeCustomInputStepId = stepId;
+            renderStep();
+            setTimeout(() => {
+                const input = document.getElementById('customInput');
+                if (input) input.focus();
+            }, 50);
+        }
+
+        function addCustomOption(stepId) {
+            const input = document.getElementById('customInput');
+            if (!input) return;
+            const val = input.value.trim();
+            if (val) {
+                if (!customOptions[stepId]) {
+                    customOptions[stepId] = [];
+                }
+                if (!customOptions[stepId].includes(val)) {
+                    customOptions[stepId].push(val);
+                }
+
+                const step = steps.find(s => s.id === stepId);
+                if (step.type === 'pills-single') {
+                    responses[stepId] = val;
+                } else if (step.type === 'pills-multiple') {
+                    if (!responses[stepId]) {
+                        responses[stepId] = [];
+                    }
+                    if (!responses[stepId].includes(val)) {
+                        responses[stepId].push(val);
+                    }
+                }
+            }
+            activeCustomInputStepId = null;
+            renderStep();
+
+            const step = steps.find(s => s.id === stepId);
+            if (step && step.type === 'pills-single' && val) {
+                setTimeout(nextStep, 300);
+            }
+        }
+
+        function handleCustomInputKeyDown(e, stepId) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addCustomOption(stepId);
+            } else if (e.key === 'Escape') {
+                activeCustomInputStepId = null;
+                renderStep();
+            }
+        }
+
+        function handleTextChange(stepId, value) {
+            responses[stepId] = value;
+            updateButtonStates();
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function updateButtonStates() {
+            const step = steps.find(s => s.id === currentStepId);
+            if (!step) return;
+
+            const nextBtn = document.getElementById('nextBtn');
+
+            if (step.type === 'email_confirm') {
+                // O botão já é controlado pela confirmação
+                return;
+            }
+
+            const val = responses[step.id];
+            const hasVal = val && (Array.isArray(val) ? val.length > 0 : val.toString().trim() !== '');
+
+            if (step.type === 'email') {
+                const isValid = hasVal && validateEmail(val);
+                nextBtn.disabled = !isValid;
+            } else {
+                nextBtn.disabled = false;
+            }
+        }
+
+        function navigate(updateDOM, direction) {
+            if (!document.startViewTransition) {
+                updateDOM();
+                return;
+            }
+
+            document.startViewTransition({
+                update: updateDOM,
+                types: [direction]
+            });
+        }
+
+        function nextStep() {
+            const step = steps.find(s => s.id === currentStepId);
+            if (!step) return;
+
+            // Para email_confirm, verifica se está confirmado
+            if (step.type === 'email_confirm') {
+                if (!emailConfirmed || !responses[step.id] || !validateEmail(responses[step.id])) {
+                    alert('Por favor, confirme seu e-mail antes de concluir.');
+                    return;
+                }
+                // Prossegue para conclusão
+                showCompletion();
+                return;
+            }
+
+            if (step.type === 'email') {
+                const val = responses[step.id];
+                if (!val || !validateEmail(val)) {
+                    alert('Por favor, digite um e-mail válido.');
+                    return;
+                }
+            }
+
+            let nextId = null;
+            if (typeof step.branchNext === 'function') {
+                nextId = step.branchNext(responses[step.id]);
+            } else {
+                const currentIndex = steps.findIndex(s => s.id === currentStepId);
+                if (currentIndex < steps.length - 1) {
+                    nextId = steps[currentIndex + 1].id;
+                }
+            }
+
+            if (nextId) {
+                const updateDOM = () => {
+                    history.push(currentStepId);
+                    currentStepId = nextId;
+                    renderStep();
+                    updateProgress();
+                };
+                navigate(updateDOM, 'forward');
+            } else {
+                showCompletion();
+            }
+        }
+
+        function prevStep() {
+            if (history.length === 0) return;
+
+            const prevId = history[history.length - 1];
+            const updateDOM = () => {
+                history.pop();
+                currentStepId = prevId;
+                // Se voltar da confirmação, reseta o estado de confirmado
+                if (prevId !== 'email_contato') {
+                    emailConfirmed = false;
+                }
+                renderStep();
+                updateProgress();
+            };
+            navigate(updateDOM, 'backward');
+        }
+
+        function skipStep() {
+            nextStep();
+        }
+
+        function updateProgress() {
+            const metrics = getStepMetrics();
+            const percent = (metrics.num / metrics.total) * 100;
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('stepCounter').textContent = `${metrics.num}/${metrics.total}`;
+        }
+
+        async function sendDiagnosticData() {
+            const finalEmail = responses['email_contato'] || (currentUser ? currentUser.email : 'anônimo');
+            const payload = {
+                user: finalEmail,
+                responses,
+                timestamp: new Date().toISOString()
+            };
+            try {
+                const res = await fetch(DIAGNOSTICO_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    return true;
+                }
+                console.warn('Backend retornou status', res.status);
+            } catch (err) {
+                console.warn('Falha ao enviar diagnóstico:', err);
+            }
+            return false;
+        }
+
+        function showCompletion() {
+            const finalEmail = responses['email_contato'] || (currentUser ? currentUser.email : '');
+            const container = document.getElementById('stepContainer');
+            container.innerHTML = `
+                <div class="completion-message">
+                    <div class="step-title">Obrigado pelo seu diagnóstico!</div>
+                    <p>Suas respostas foram registradas com sucesso.<br>
+                    Você receberá em breve um e-mail em <strong>${finalEmail}</strong> com uma pré-análise personalizada e as próximas etapas.</p>
+                    <span class="sending-status" id="sendingStatus">Enviando dados...</span>
+                    <button class="btn btn-primary" onclick="location.reload();">Iniciar novamente</button>
+                </div>`;
+            document.getElementById('navButtons').style.display = 'none';
+
+            // Envio assíncrono
+            const statusEl = document.getElementById('sendingStatus');
+            statusEl.style.display = 'block';
+            sendDiagnosticData().then(success => {
+                statusEl.textContent = success ? 'Dados enviados com sucesso.' : 'Dados salvos localmente (offline).';
+                console.log('Respostas finais:', responses);
+                console.log('Email de contato:', finalEmail);
+            });
+        }
+
+        /* ══════════════════════════════════════
+           INICIALIZAÇÃO
+           ══════════════════════════════════════ */
+        (function init() {
+            // Página sempre começa no login (sem verificação automática de sessão)
+            setAuthUI(false, null);
+        })();
+    </script>
+
+</body>
+
+</html>

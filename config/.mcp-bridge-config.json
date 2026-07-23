@@ -1,0 +1,77 @@
+{
+  "_note": "serve.py drives ONLY stdio MCP servers (command+args). The previous type:http entries were ignored. Each server below is bridged to its remote Streamable-HTTP /mcp endpoint via scripts/mcp_bridge/streamable_bridge.py. Public host 34.46.10.126. juris-brazil (8116) is reachable now; garge (8110-8114) are Host-header locked on the VPS; 9115/9119/9122 services are not yet running on the VPS.",
+  "mcpServers": {
+    "mcp-server-files": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-files",
+        "--root",
+        "/home"
+      ]
+    },
+    "discovery": {
+      "command": "python3",
+      "args": [
+        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
+        "http://34.46.10.126:9115/mcp"
+      ]
+    },
+    "garage_core": {
+      "command": "python3",
+      "args": [
+        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
+        "http://34.46.10.126:8110/mcp"
+      ]
+    },
+    "garage_files": {
+      "command": "python3",
+      "args": [
+        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
+        "http://34.46.10.126:8111/mcp"
+      ]
+    },
+    "garage_ingestion": {
+      "command": "python3",
+      "args": [
+        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
+        "http://34.46.10.126:8112/mcp"
+      ]
+    },
+    "garage_prompt": {
+      "command": "python3",
+      "args": [
+        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
+        "http://34.46.10.126:8113/mcp"
+      ]
+    },
+    "garage_qdrant": {
+      "command": "python3",
+      "args": [
+        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
+        "http://34.46.10.126:8114/mcp"
+      ]
+    },
+    "juris-brazil": {
+      "command": "python3",
+      "args": [
+        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
+        "http://34.46.10.126:8116/mcp"
+      ]
+    },
+    "argus_law": {
+      "command": "python3",
+      "args": [
+        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
+        "http://34.46.10.126:9119/mcp"
+      ]
+    },
+    "transcription_transcripts": {
+      "command": "python3",
+      "args": [
+        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
+        "http://34.46.10.126:9122/mcp"
+      ]
+    }
+  }
+}

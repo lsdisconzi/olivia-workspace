@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.2",
+  "last_updated": "2026-04-28",
+  "rules": {
+    "append_only": true,
+    "liability_through_agents": true,
+    "verification_required_for_agent_routing": true
+  },
+  "persons": {
+    "bruno-bartijotto": {
+      "name": "Bruno Bartijotto",
+      "role": "Legal Director, LATAM Brasil; ABEAR speaker at CNJ (May + Nov 2021)",
+      "affiliations": ["LATAM Airlines Brasil", "ABEAR (representação institucional)"],
+      "education": ["UFRJ (Law)", "FGV (MBA Business Law)", "Corporate Law and Governance specialization"],
+      "oab_inscription": { "status": "active", "seccional": "SP or DF (pending)", "number": "pending" },
+      "primary_agents": ["BR_OAB_DISCIPLINA", "BR_ABEAR_PLUS"],
+      "supporting_agents": ["META_RevolvingDoor", "BR_CONFLITO_INTERESSES"],
+      "verification": "pending",
+      "sources": [
+        "branch_documentation/ABEAR_CONTENT_REPORT.md#L125",
+        "branch_documentation/ABEAR_CONTENT_REPORT.md#L142",
+        "branch_documentation/OAB-Etics-Report.md#section-1.1",
+        "branch_documentation/OAB-Etics-Report.md#section-3.1"
+      ]
+    },
+    "rogeria-gieremek": {
+      "name": "Rogeria Gieremek",
+      "role": "Chief Compliance Officer, LATAM Airlines (since 2015); Chair IASP Compliance Committee 2013-2025",
+      "affiliations": ["LATAM Airlines", "IASP (Chair, Comissão de Compliance, 2013-2025)", "Serasa Experian (former)", "Banespa (former)"],
+      "education": ["PUC-SP (Master in Law)", "CCEP (Certified Compliance & Ethics Professional)"],
+      "oab_inscription": { "status": "active", "seccional": "SP", "number": "pending", "basis": "IASP chairmanship requires OAB inscription" },
+      "primary_agents": ["BR_OAB_DISCIPLINA", "BR_ANTICORRUPCAO", "BR_ABEAR_PLUS"],
+      "supporting_agents": ["META_Personnel_Accountability", "META_Institutional_Silence"],
+      "verification": "caveated",
+      "sources": [
+        "branch_documentation/aviation_ethics_institutional_governance.md#L189",
+        "branch_documentation/aviation_ethics_institutional_governance.md#L465",
+        "branch_documentation/OAB-Etics-Report.md#section-1.4",
+        "branch_documentation/linkedin_personnel_extraction.md#section-1.1"
+      ]
+    },
+    "ariel-prado": {
+      "name": "Ariel Prado",
+      "role": "Emergency Response / Crisis Management, LATAM Argentina; DGAC liaison",
+      "affiliations": ["LATAM Airlines Argentina"],
+      "oab_inscription": { "status": "not_applicable", "note": "Argentina-based; Brazilian bar inscription not established" },
+      "primary_agents": ["META_Institutional_Silence", "META_Personnel_Accountability"],
+      "supporting_agents": ["INT_OECD_GUIDELINES (TBD)", "INT_ICAO_AN9"],
+      "verification": "pending",
+      "sources": [
+        "branch_documentation/aviation_ethics_institutional_governance.md#L201",
+        "branch_documentation/aviation_ethics_institutional_governance.md#L71",
+        "branch_documentation/OAB-Etics-Report.md#L36",
+        "branch_documentation/linkedin_data_review_extract_personnel/Archive/defensoria-penal-public-chile/veronica-encina-messages-structured.md#L35"
+      ]
+    },
+    "waleska-fortini": {
+      "name": "Waleska Fortini",
+      "role": "Crisis management consultant; co-author of Gestão de Crises; downstream LinkedIn blocker per Prado instructions",
+      "affiliations": ["crisis management profession (aviation)", "linked to LATAM Argentina ERP via Prado"],
+      "oab_inscription": { "status": "probable", "seccional": "SP (likely)", "basis": "co-authorship of professional book Gestão de Crises", "number": "pending" },
+      "primary_agents": ["BR_OAB_DISCIPLINA", "META_Personnel_Accountability"],
+      "supporting_agents": ["META_Institutional_Silence"],
+      "verification": "pending",
+      "sources": [
+        "branch_documentation/OAB-Etics-Report.md#section-1.3",
+        "branch_documentation/aviation_ethics_institutional_governance.md#L71"
+      ]
+    },
+    "juliano-noman": {
+      "name": "Juliano Noman",
+      "role": "President of ABEAR (Dec 2024-); ex-Secretary SAC/MPOR (Apr 2023-Dec 2024); ex-ANAC Director-President (Jul 2017-Apr 2023)",
+      "affiliations": ["ABEAR", "ANAC (former)", "MPOR / SAC (former)"],
+      "oab_inscription": { "status": "not_established", "note": "ANAC/SAC roles do not require OAB inscription" },
+      "primary_agents": ["META_RevolvingDoor", "BR_CONFLITO_INTERESSES"],
+      "supporting_agents": ["BR_ABEAR_PLUS", "BR_ANTICORRUPCAO"],
+      "verification": "pending",
+      "sources": [
+        "branch_documentation/ABEAR_CONTENT_REPORT.md#L124",
+        "branch_documentation/ABEAR_CONTENT_REPORT.md#L240",
+        "branch_documentation/ABEAR_CONTENT_REPORT.md#L301",
+        "branch_documentation/ABEAR_CONTENT_REPORT.md#L315",
+        "branch_documentation/ABEAR_CONTENT_REPORT.md#L372"
+      ]
+    },
+    "sandra-assali": {
+      "name": "Sandra Assali",
+      "role": "President of ABRAPAVAA (founder, since 1997); Member, OAB Comissão Especial de Direito Aeronáutico, Espacial e Aeroportuário; Director, SENTRA Crisis Management",
+      "affiliations": ["ABRAPAVAA", "OAB-SP (Comissão Especial de Direito Aeronáutico)", "SENTRA Crisis Management"],
+      "oab_inscription": { "status": "active", "seccional": "SP", "number": "pending", "basis": "OAB Comissão Especial membership requires OAB inscription" },
+      "primary_agents": ["BR_OAB_DISCIPLINA", "META_RevolvingDoor", "BR_ABRAPAVAA_SENTRA"],
+      "supporting_agents": ["META_Institutional_Silence"],
+      "verification": "caveated",
+      "sources": [
+        "branch_documentation/ABEAR_CONTENT_REPORT.md#L283",
+        "branch_documentation/ABEAR_CONTENT_REPORT.md#L318",
+        "branch_documentation/ABEAR_CONTENT_REPORT.md#L423",
+        "branch_documentation/OAB-Etics-Report.md#section-1.2"
+      ]
+    },
+    "joaquin-barraza": {
+      "name": "Joaquín Barraza",
+      "role": "Airport Security Agent (Liderman, Santiago Airport contractor); central figure in LA8159 forcible removal Jul 5, 2024; falsely claimed LATAM 'Chief of Security'",
+      "affiliations": ["Liderman (employer)", "NOT a LATAM employee (confirmed)"],
+      "education": ["Universidad Alberto Hurtado (Pedagogía en Inglés, Mar 2016 - Dec 2020)"],
+      "location": "Santiago, Chile",
+      "oab_inscription": { "status": "not_applicable", "note": "Chilean national; not advogado" },
+      "primary_agents": ["CL_CPCL", "CL_DGAC_L16752"],
+      "supporting_agents": ["CL_CACH", "INT_ICAO_AN17", "INT_MC99"],
+      "verification": "caveated",
+      "sources": [
+        "branch_documentation/linkedin_personnel_extraction.md#section-1.5",
+        "branch_documentation/aviation_ethics_institutional_governance.md#L29"
+      ]
+    }
+  }
+}

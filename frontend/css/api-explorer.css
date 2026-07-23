@@ -1,0 +1,1201 @@
+/* ─────────────────────────────────────────────────────────────
+   API Explorer  —  Sidebar Tab Styles
+   Depends on base.css variables: --bg, --bg-card, --bg-code,
+   --border, --border-hi, --amber, --gray, --gray-hi, --green,
+   --red, --blue, --blue-lo, --sans, --mono, --r
+───────────────────────────────────────────────────────────── */
+
+/* Keep default hidden behavior from .sidebar-section until tab is active. */
+.sidebar-section#tab-apiexplorer {
+  display: none;
+}
+
+/* ── Outer wrapper fills the sidebar-section when active ──── */
+.sidebar-section#tab-apiexplorer.active {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+/* When #aexPanel has been moved to main view, collapse the empty host */
+.sidebar-section#tab-apiexplorer:not(:has(#aexPanel)) {
+  display: none !important;
+}
+
+/* ── Sub-tab navigation ───────────────────────────────────── */
+.aex-subtabs {
+  display: flex;
+  gap: 2px;
+  padding: 8px 10px 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.aex-subtab {
+  flex: 1;
+  padding: 5px 4px;
+  font-size: 10px;
+  font-family: var(--sans);
+  color: var(--gray);
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: var(--r) var(--r) 0 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: color .15s, background .15s;
+  white-space: nowrap;
+}
+.aex-subtab i { font-size: 11px; }
+.aex-subtab:hover { color: var(--gray-hi); background: var(--bg-card); }
+.aex-subtab.active {
+  color: var(--amber);
+  background: var(--bg-card);
+  border-color: var(--border);
+}
+
+/* ── Stats bar ────────────────────────────────────────────── */
+.aex-stats {
+  display: flex;
+  gap: 10px;
+  padding: 6px 12px;
+  font-size: 10px;
+  color: var(--gray);
+  font-family: var(--mono);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.aex-stats span::before { content: '·'; margin-right: 6px; color: var(--border-hi); }
+.aex-stats span:first-child::before { content: ''; margin: 0; }
+
+/* ── View containers ──────────────────────────────────────── */
+.aex-view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.aex-view.active { display: flex; }
+
+/* ── FUNCTIONS VIEW ───────────────────────────────────────── */
+.aex-toolbar {
+  display: flex;
+  gap: 6px;
+  padding: 8px 10px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.aex-search {
+  flex: 1;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-family: var(--sans);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--white, #f0ede8);
+  outline: none;
+  transition: border-color .15s;
+}
+.aex-search:focus { border-color: var(--amber); }
+.aex-search::placeholder { color: var(--gray); }
+
+.aex-cat-filter {
+  padding: 5px 6px;
+  font-size: 10px;
+  font-family: var(--sans);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--gray-hi);
+  outline: none;
+  cursor: pointer;
+  max-width: 90px;
+}
+
+/* ── Function list + detail split ────────────────────────── */
+.aex-fn-container {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.aex-fn-list {
+  height: 100%;
+  overflow-y: auto;
+  padding: 6px 6px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.aex-fn-list::-webkit-scrollbar { width: 4px; }
+.aex-fn-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── Function card ────────────────────────────────────────── */
+.aex-fn-card {
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.aex-fn-card:hover {
+  border-color: var(--border-hi);
+  background: var(--bg);
+}
+.aex-fn-card.active {
+  border-color: var(--amber);
+  background: rgba(196,98,45,0.05);
+}
+
+.aex-fn-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+.aex-fn-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--white, #f0ede8);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.aex-fn-url {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--gray);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px;
+}
+.aex-fn-src {
+  font-size: 9px;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 3px;
+}
+.aex-fn-caps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 3px;
+}
+
+/* ── HTTP method badges ───────────────────────────────────── */
+.aex-method {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 3px;
+  letter-spacing: .04em;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+.aex-method-get    { background: rgba(91,143,168,0.18); color: var(--blue); }
+.aex-method-post   { background: rgba(196,98,45,0.15);  color: var(--amber); }
+.aex-method-delete { background: rgba(158,74,74,0.18);  color: var(--red); }
+.aex-method-put    { background: rgba(74,158,112,0.18); color: var(--green); }
+.aex-method-patch  { background: rgba(145,120,74,0.18); color: #b89a50; }
+
+/* ── Capability chips ─────────────────────────────────────── */
+.aex-cap-chip {
+  display: inline-block;
+  font-size: 9px;
+  padding: 1px 5px;
+  background: var(--bg-code, #f3eee6);
+  color: var(--gray-hi);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+
+/* ── Detail slide-in panel ────────────────────────────────── */
+.aex-detail {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 0;
+  overflow: hidden;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border);
+  transition: width .25s ease;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+.aex-detail.open {
+  width: 100%;
+  overflow-y: auto;
+}
+
+.aex-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px 8px;
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 1;
+}
+.aex-detail-header strong {
+  flex: 1;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--white, #f0ede8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.aex-detail-close {
+  background: none;
+  border: none;
+  color: var(--gray);
+  cursor: pointer;
+  padding: 2px 5px;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: color .15s;
+  flex-shrink: 0;
+}
+.aex-detail-close:hover { color: var(--amber); }
+
+.aex-detail-desc {
+  font-size: 11px;
+  color: var(--gray-hi);
+  line-height: 1.6;
+  padding: 8px 12px 4px;
+  margin: 0;
+}
+.aex-detail-url {
+  padding: 4px 12px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.aex-detail-url code {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--amber);
+  word-break: break-all;
+}
+
+.aex-detail-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 12px;
+  font-size: 11px;
+}
+.aex-detail-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--gray);
+  flex-shrink: 0;
+  width: 44px;
+}
+.aex-detail-val {
+  color: var(--gray-hi);
+  font-size: 10px;
+  font-family: var(--mono);
+  word-break: break-all;
+}
+.aex-detail-row code {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--blue);
+}
+
+.aex-detail-section {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+}
+.aex-detail-section-title {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--gray);
+  margin-bottom: 5px;
+}
+.aex-detail-code {
+  font-size: 10px;
+  color: var(--gray-hi);
+  line-height: 1.6;
+  font-family: var(--mono);
+  background: var(--bg);
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  word-break: break-word;
+}
+
+.aex-related-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--gray-hi);
+  transition: background .12s;
+  margin-bottom: 2px;
+}
+.aex-related-item:hover { background: var(--bg); color: var(--amber); }
+
+.aex-detail-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 30px;
+}
+
+/* ── DIAGRAM VIEW ─────────────────────────────────────────── */
+.aex-diagram-wrap {
+  flex: 1;
+  overflow: auto;
+  padding: 10px;
+  background: var(--bg);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.aex-diagram-wrap::-webkit-scrollbar { width: 6px; height: 6px; }
+.aex-diagram-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.aex-diagram {
+  min-width: max-content;
+  padding: 8px;
+}
+.aex-diagram .mermaid svg {
+  max-width: none;
+  height: auto;
+}
+
+.aex-diagram-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  flex-shrink: 0;
+}
+
+#aexMapMode {
+  min-width: 190px;
+  max-width: 260px;
+}
+
+#aexOwnerGroupFilter {
+  min-width: 170px;
+}
+
+/* ── MCP INVENTORY VIEW ─────────────────────────────────── */
+.aex-mcp-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  contain: layout paint;
+}
+.aex-mcp-wrap::-webkit-scrollbar { width: 6px; }
+.aex-mcp-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.aex-mcp-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.aex-mcp-summary-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.aex-mcp-summary-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--gray);
+  margin-bottom: 3px;
+}
+
+.aex-mcp-summary-value {
+  font-size: 14px;
+  font-family: var(--mono);
+  color: var(--amber);
+}
+
+.aex-mcp-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.aex-mcp-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--gray-hi);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.01);
+}
+
+.aex-mcp-section-title i {
+  color: var(--amber);
+  font-size: 10px;
+}
+
+.aex-mcp-table-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.aex-mcp-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.aex-mcp-table thead th {
+  text-align: left;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--gray);
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  background: var(--bg);
+}
+
+.aex-mcp-table tbody td {
+  font-size: 10px;
+  color: var(--gray-hi);
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.aex-mcp-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.aex-mcp-empty {
+  text-align: center;
+  color: var(--gray);
+  padding: 14px 8px !important;
+}
+
+.aex-mcp-chip {
+  display: inline-block;
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  color: var(--gray-hi);
+  background: var(--bg);
+}
+
+.aex-mcp-chip.ok {
+  border-color: rgba(74,158,112,0.5);
+  color: var(--green);
+}
+
+.aex-mcp-chip.warn {
+  border-color: rgba(196,98,45,0.5);
+  color: var(--amber);
+}
+
+.aex-mcp-filters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.aex-mcp-view-toggle {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.aex-mcp-view-btn {
+  border: 0;
+  border-radius: 0;
+  min-width: 52px;
+  padding: 4px 8px;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--gray);
+  background: transparent;
+}
+
+.aex-mcp-view-btn + .aex-mcp-view-btn {
+  border-left: 1px solid var(--border);
+}
+
+.aex-mcp-view-btn.is-active {
+  color: var(--white, #f0ede8);
+  background: rgba(196,98,45,0.14);
+}
+
+.aex-mcp-tools-meta-wrap {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aex-mcp-filters .aex-search {
+  min-width: 130px;
+  font-size: 10px;
+  padding: 4px 7px;
+}
+
+.aex-mcp-filters .aex-cat-filter {
+  max-width: 170px;
+  font-size: 10px;
+  padding: 4px 6px;
+}
+
+.aex-mcp-risk-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--gray-hi);
+  font-family: var(--mono);
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+
+.aex-mcp-risk-toggle input {
+  margin: 0;
+  accent-color: #c4622d;
+}
+
+.aex-mcp-stale-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(158,74,74,0.55);
+  color: var(--red);
+  background: rgba(158,74,74,0.12);
+  font-family: var(--mono);
+}
+
+.aex-mcp-row-stale td {
+  background: rgba(158,74,74,0.06);
+}
+
+.aex-mcp-tools-meta {
+  font-size: 9px;
+  color: var(--gray);
+  font-family: var(--mono);
+}
+
+.aex-mcp-pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.aex-mcp-page-btn {
+  font-size: 9px;
+  padding: 3px 6px;
+  min-width: 24px;
+}
+
+.aex-mcp-page-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.aex-mcp-page-info {
+  font-size: 9px;
+  color: var(--gray);
+  font-family: var(--mono);
+  min-width: 66px;
+  text-align: center;
+}
+
+.aex-mcp-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.aex-mcp-list-wrap,
+.aex-mcp-detail-wrap {
+  min-height: 0;
+}
+
+.aex-mcp-table-mode-wrap {
+  display: none;
+  min-height: 0;
+}
+
+.aex-mcp-tools-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.aex-mcp-workspace.is-table-mode .aex-mcp-table-mode-wrap {
+  display: block;
+}
+
+.aex-mcp-workspace.is-table-mode .aex-mcp-list-wrap,
+.aex-mcp-workspace.is-table-mode .aex-mcp-detail-wrap {
+  display: none;
+}
+
+.aex-mcp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
+}
+
+.aex-mcp-tool-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  transition: border-color .12s, background .12s;
+}
+
+.aex-mcp-tool-card:hover {
+  border-color: var(--border-hi);
+}
+
+.aex-mcp-tool-card.is-selected {
+  border-color: rgba(196,98,45,0.45);
+  background: rgba(196,98,45,0.08);
+}
+
+.aex-mcp-tool-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aex-mcp-tool-name {
+  font-size: 10px;
+  color: var(--white, #f0ede8);
+  font-family: var(--mono);
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aex-mcp-tool-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.aex-mcp-tool-endpoint {
+  font-size: 10px;
+  color: var(--gray-hi);
+  font-family: var(--mono);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.aex-mcp-tool-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aex-mcp-tool-source {
+  font-size: 9px;
+  color: var(--gray);
+  font-family: var(--mono);
+}
+
+.aex-mcp-detail-empty {
+  border: 1px dashed var(--border-hi);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--gray-hi);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aex-mcp-detail-empty i {
+  color: var(--amber);
+}
+
+.aex-mcp-detail-panel {
+  height: 100%;
+}
+
+.aex-mcp-detail-panel .aex-mcp-exec-wrap {
+  min-height: 0;
+}
+
+.aex-mcp-table tbody tr {
+  transition: background .12s;
+}
+
+.aex-mcp-table tbody tr[data-tool-key] {
+  cursor: pointer;
+}
+
+.aex-mcp-table tbody tr[data-tool-key]:hover td {
+  background: rgba(196,98,45,0.04);
+}
+
+.aex-mcp-row-selected td {
+  background: rgba(196,98,45,0.08);
+}
+
+.aex-mcp-action {
+  font-size: 9px;
+  padding: 4px 7px;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.aex-mcp-error {
+  color: var(--red);
+  font-size: 9px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.aex-mcp-exec-wrap {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aex-mcp-exec-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.aex-mcp-exec-header strong {
+  font-size: 11px;
+  color: var(--white, #f0ede8);
+}
+
+.aex-mcp-exec-header span {
+  font-size: 10px;
+  color: var(--gray-hi);
+  font-family: var(--mono);
+  word-break: break-all;
+}
+
+.aex-mcp-exec-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--gray);
+}
+
+.aex-mcp-exec-input {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  font-size: 10px;
+  line-height: 1.45;
+  font-family: var(--mono);
+  color: var(--gray-hi);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  outline: none;
+}
+
+.aex-mcp-exec-input:focus {
+  border-color: var(--amber);
+}
+
+.aex-mcp-exec-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.aex-mcp-exec-status {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--gray);
+}
+
+.aex-mcp-exec-status.is-ok {
+  color: var(--green);
+}
+
+.aex-mcp-exec-status.is-error {
+  color: var(--red);
+}
+
+.aex-mcp-exec-result {
+  margin: 0;
+  min-height: 80px;
+  max-height: 320px;
+  overflow: auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 10px;
+  line-height: 1.45;
+  color: var(--gray-hi);
+  font-family: var(--mono);
+}
+
+.aex-panel.aex-main-mode .aex-mcp-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 36%);
+  align-items: start;
+}
+
+.aex-panel.aex-main-mode .aex-mcp-workspace.is-table-mode {
+  display: block;
+}
+
+@media (max-width: 1100px) {
+  .aex-mcp-tools-meta-wrap {
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+  }
+
+  .aex-mcp-view-toggle {
+    margin-left: auto;
+  }
+
+  .aex-panel.aex-main-mode .aex-mcp-workspace {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* ── AGENT CHAT VIEW ──────────────────────────────────────── */
+.aex-chat-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.aex-chat-header {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--white, #f0ede8);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.aex-panel-context-pill {
+  margin-left: auto;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(196,98,45,0.28);
+  background: rgba(196,98,45,0.1);
+  color: var(--amber);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .02em;
+  max-width: 56%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aex-panel-context-pill.is-empty {
+  border-color: var(--border);
+  background: rgba(255,255,255,0.03);
+  color: var(--gray);
+}
+
+.aex-chat-msgs {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.aex-chat-msgs::-webkit-scrollbar { width: 4px; }
+.aex-chat-msgs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.aex-chat-msg {
+  font-size: 11px;
+  line-height: 1.65;
+  border-radius: 6px;
+  padding: 7px 10px;
+  max-width: 92%;
+  word-break: break-word;
+}
+.aex-msg-user {
+  background: rgba(196,98,45,0.10);
+  border: 1px solid rgba(196,98,45,0.2);
+  color: var(--white, #f0ede8);
+  align-self: flex-end;
+}
+.aex-msg-assistant {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--gray-hi);
+  align-self: flex-start;
+}
+
+.aex-chat-thinking {
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.aex-chat-input-row {
+  display: flex;
+  gap: 6px;
+  padding: 8px 10px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.aex-chat-input {
+  flex: 1;
+  padding: 6px 9px;
+  font-size: 11px;
+  font-family: var(--sans);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--white, #f0ede8);
+  outline: none;
+  transition: border-color .15s;
+}
+.aex-chat-input:focus { border-color: var(--amber); }
+.aex-chat-input::placeholder { color: var(--gray); }
+
+.aex-chat-send {
+  padding: 6px 10px;
+  background: rgba(196,98,45,0.12);
+  border: 1px solid rgba(196,98,45,0.3);
+  border-radius: 5px;
+  color: var(--amber);
+  cursor: pointer;
+  font-size: 12px;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.aex-chat-send:hover { background: rgba(196,98,45,0.22); }
+
+/* ── Empty state ──────────────────────────────────────────── */
+.aex-empty {
+  text-align: center;
+  padding: 24px 16px;
+  color: var(--gray);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.aex-empty i { display: block; font-size: 20px; margin-bottom: 8px; opacity: .4; }
+
+/* ─────────────────────────────────────────────────────────────
+   API Explorer — Portable panel + Main Area View
+───────────────────────────────────────────────────────────── */
+
+/* The portable container — lives inside sidebar or main view */
+.aex-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Expand/compress toggle button in the subtabs row */
+.aex-expand-btn {
+  flex: 0 0 auto !important;
+  padding: 5px 8px !important;
+  margin-left: auto;
+  opacity: .55;
+  border-left: 1px solid var(--border) !important;
+  border-radius: 0 var(--r) 0 0 !important;
+}
+.aex-expand-btn:hover { opacity: 1; color: var(--amber) !important; }
+
+/* ── Main area view container (sibling to .main-content) ── */
+.aex-main-view {
+  display: none;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+}
+.aex-main-view.active { display: flex; }
+
+/* Header bar of the main view */
+.aex-main-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg-card);
+}
+.aex-main-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--white, #f0ede8);
+  font-family: var(--sans);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Main mode layout overrides ─────────────────────────── */
+
+/* Slightly larger subtabs */
+.aex-panel.aex-main-mode .aex-subtab { font-size: 11px; padding: 7px 14px; }
+.aex-panel.aex-main-mode .aex-expand-btn { padding: 7px 11px !important; }
+.aex-panel.aex-main-mode .aex-stats { font-size: 11px; padding: 8px 16px; gap: 16px; }
+
+/* Search bar */
+.aex-panel.aex-main-mode .aex-toolbar { padding: 10px 16px; gap: 8px; }
+.aex-panel.aex-main-mode .aex-search { font-size: 12px; padding: 7px 10px; }
+.aex-panel.aex-main-mode .aex-cat-filter { font-size: 11px; max-width: 160px; padding: 7px 8px; }
+
+/* Function cards */
+.aex-panel.aex-main-mode .aex-fn-card { padding: 10px 14px; }
+.aex-panel.aex-main-mode .aex-fn-name { font-size: 12px; }
+
+/* Side-by-side list + detail split */
+.aex-panel.aex-main-mode .aex-fn-container {
+  display: flex;
+  flex-direction: row;
+  position: static !important;
+}
+.aex-panel.aex-main-mode .aex-fn-list {
+  width: 320px;
+  flex-shrink: 0;
+  height: auto;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  padding-bottom: 24px;
+}
+/* Detail panel — always visible in main mode, no sliding */
+.aex-panel.aex-main-mode .aex-detail {
+  position: relative !important;
+  flex: 1;
+  width: auto !important;
+  overflow-y: auto;
+  display: flex !important;
+  flex-direction: column;
+  border-left: none;
+  background: var(--bg);
+  transition: none !important;
+}
+/* Close button not needed in main mode (the panel is always visible) */
+.aex-panel.aex-main-mode .aex-detail-close { display: none !important; }
+
+/* Placeholder when no function is selected yet */
+.aex-panel.aex-main-mode .aex-detail:not(.open) {
+  align-items: center;
+  justify-content: center;
+}
+.aex-panel.aex-main-mode .aex-detail:not(.open)::after {
+  content: 'Selecione uma fun\E7\E3o para ver os detalhes';
+  font-size: 12px;
+  color: var(--gray);
+  font-family: var(--sans);
+  text-align: center;
+  padding: 32px 24px;
+  opacity: .7;
+}
+
+/* Chat view — constrain width for readability */
+.aex-panel.aex-main-mode .aex-chat-wrap {
+  max-width: 840px;
+  width: 100%;
+  margin: 0 auto;
+}
+.aex-panel.aex-main-mode .aex-chat-input { font-size: 12px; padding: 8px 12px; }
+.aex-panel.aex-main-mode .aex-chat-msg { font-size: 12px; }
+.aex-panel.aex-main-mode .aex-chat-msgs { gap: 10px; padding: 16px; }
+
+/* Diagram view — more room to breathe */
+.aex-panel.aex-main-mode .aex-diagram-actions { padding: 8px 16px; }
+.aex-panel.aex-main-mode .aex-diagram-wrap { padding: 16px; }

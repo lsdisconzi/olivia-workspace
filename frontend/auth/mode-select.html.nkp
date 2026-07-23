@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OliviaLegal · Escolha o modo</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #191917;
+      --bg-card: #1f1f1d;
+      --border: #2a2a28;
+      --border-hi: #363634;
+      --amber: #c4622d;
+      --amber-lo: rgba(196, 98, 45, 0.12);
+      --green: #4a9e70;
+      --green-lo: rgba(74, 158, 112, 0.10);
+      --blue: #4A7C9B;
+      --blue-lo: rgba(74, 124, 155, 0.10);
+      --white: #ede8df;
+      --gray: #6b6b68;
+      --gray-hi: #9a9a96;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --r: 10px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--sans);
+      line-height: 1.7;
+      font-size: 15px;
+      padding: 40px 24px;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .header-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--amber);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 6px 18px;
+      border: 1px solid rgba(196, 98, 45, 0.25);
+      border-radius: 24px;
+      background: var(--amber-lo);
+      margin-bottom: 20px;
+    }
+
+    .live-dot {
+      position: relative;
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    .live-dot::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--amber);
+      animation: pulse-ring 1.8s ease-out infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(1);
+        opacity: .6;
+      }
+
+      100% {
+        transform: scale(1.7);
+        opacity: 0;
+      }
+    }
+
+    .header-title {
+      font-family: var(--serif);
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 400;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      line-height: 1.15;
+    }
+
+    .header-title em {
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .header-desc {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .user-chip {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid var(--border-hi);
+      background: var(--bg-card);
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gray-hi);
+      text-transform: lowercase;
+      letter-spacing: 0.02em;
+    }
+
+    .user-chip i {
+      color: var(--amber);
+      font-size: 11px;
+    }
+
+    /* Mode cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .mode-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 28px 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      display: block;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+      border-color: var(--amber);
+    }
+
+    /* Border-top accent colors */
+    .mode-card.hl-verde {
+      border-top: 3px solid var(--green);
+    }
+
+    .mode-card.hl-terra {
+      border-top: 3px solid var(--amber);
+    }
+
+    .mode-card.hl-azul {
+      border-top: 3px solid var(--blue);
+    }
+
+    .mode-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .mode-icon.verde {
+      background: var(--green-lo);
+      color: var(--green);
+    }
+
+    .mode-icon.terra {
+      background: var(--amber-lo);
+      color: var(--amber);
+    }
+
+    .mode-icon.azul {
+      background: var(--blue-lo);
+      color: var(--blue);
+    }
+
+    .mode-title {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .mode-desc {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    /* Notifications area – also a card */
+    .notifications {
+      margin: 8px 0 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 24px;
+    }
+
+    .notifications-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .notifications-title {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+
+    .notif-btn {
+      border: 1px solid var(--border-hi);
+      background: transparent;
+      color: var(--gray-hi);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-family: var(--sans);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .notif-btn:hover {
+      border-color: var(--amber);
+      color: var(--white);
+    }
+
+    .notif-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .notif-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--bg);
+    }
+
+    .notif-item.unread {
+      border-color: var(--amber);
+      background: var(--amber-lo);
+    }
+
+    .notif-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .notif-label {
+      font-size: 10px;
+      font-family: var(--mono);
+      color: var(--gray-hi);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .notif-mark {
+      border: none;
+      background: transparent;
+      color: var(--amber);
+      font-size: 11px;
+      cursor: pointer;
+      font-family: var(--sans);
+    }
+
+    .notif-msg {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .foot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .foot-link {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .foot-link:hover {
+      color: var(--amber);
+    }
+
+    .foot-link i {
+      font-size: 10px;
+    }
+
+    /* Subtle adaptions */
+    .mode-desc.loading {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="header-kicker">
+        <span class="live-dot"></span>
+        Sessão ativa · Olivia + Governança 2026
+      </div>
+      <h1 class="header-title">
+        Olivia <em>×</em> <span style="color:var(--amber);">Governança</span>
+      </h1>
+      <p class="header-desc">Escolha como você quer iniciar sua interação nesta sessão.</p>
+      <div class="user-chip">
+        <i class="fas fa-user-circle"></i>
+        __USER_DISPLAY__ · __EMAIL__
+      </div>
+    </div>
+
+    <div class="grid">
+      <a class="mode-card hl-verde" href="/OliviaLegal/olivia">
+        <div class="mode-icon verde"><i class="fas fa-table-columns"></i></div>
+        <div class="mode-title">Workspace</div>
+        <div class="mode-desc">Experiência completa: orquestração de agentes, projetos, memória, arquivos e ferramentas.
+        </div>
+      </a>
+
+      <a class="mode-card hl-azul" href="/OliviaLegal/residente">
+        <div class="mode-icon azul"><i class="fas fa-mobile-screen-button"></i></div>
+        <div class="mode-title">Mobile Remote</div>
+        <div class="mode-desc">Controles rápidos e operação remota, ideal para uso leve em tela pequena ou movimento.
+        </div>
+      </a>
+
+      <a class="mode-card hl-terra" href="/OliviaLegal/agent">
+        <div class="mode-icon terra"><i class="fas fa-comments"></i></div>
+        <div class="mode-title">Agent Mobile</div>
+        <div class="mode-desc">Fluxo de conversa dedicado com interface otimizada para leitura e interação em
+          dispositivos móveis.</div>
+      </a>
+    </div>
+
+    <section class="notifications" aria-live="polite">
+      <div class="notifications-head">
+        <h2 class="notifications-title">Notificações <span id="notifCount" class="user-chip"
+            style="padding:4px 10px;font-size:10px;">0</span></h2>
+        <button id="markAllNotifBtn" class="notif-btn" type="button">Marcar todas como lidas</button>
+      </div>
+      <div id="notifList" class="notif-list">
+        <div class="mode-desc">Carregando notificações...</div>
+      </div>
+    </section>
+
+    <div class="foot">
+      <a class="foot-link" href="/OliviaLegal/olivia">
+        <i class="fas fa-arrow-left"></i> Página inicial
+      </a>
+      <a class="foot-link" href="/OliviaLegal/logout">
+        <i class="fas fa-sign-out-alt"></i> Sair
+      </a>
+      __ADMIN_LINK__
+    </div>
+  </div>
+
+  <script>
+    async function loadNotifications() {
+      const list = document.getElementById('notifList');
+      const count = document.getElementById('notifCount');
+      try {
+        const res = await fetch('/OliviaLegal/admin/notifications?limit=20');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'falha ao carregar');
+        const items = Array.isArray(data.notifications) ? data.notifications : [];
+        const unread = Number(data.unread_count || 0);
+        count.textContent = String(unread);
+        if (!items.length) {
+          list.innerHTML = '<div class="mode-desc">Nenhuma notificação no momento.</div>';
+          return;
+        }
+        list.innerHTML = items.map((item) => {
+          const unreadClass = item.unread ? ' unread' : '';
+          const markBtn = item.unread ? `<button class="notif-mark" data-id="${item.id}">Marcar lida</button>` : '';
+          const title = String(item.title || 'Notificação');
+          const message = String(item.message || '');
+          return `<article class="notif-item${unreadClass}">
+          <div class="notif-top"><div class="notif-label">${title}</div>${markBtn}</div>
+          <div class="notif-msg">${message}</div>
+        </article>`;
+        }).join('');
+        list.querySelectorAll('.notif-mark').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            if (!id) return;
+            await fetch(`/OliviaLegal/admin/notifications/${encodeURIComponent(id)}/read`, { method: 'POST' });
+            loadNotifications();
+          });
+        });
+      } catch (err) {
+        list.innerHTML = '<div class="mode-desc">Não foi possível carregar notificações.</div>';
+        count.textContent = '0';
+      }
+    }
+
+    document.getElementById('markAllNotifBtn').addEventListener('click', async () => {
+      await fetch('/OliviaLegal/admin/notifications/read-all', { method: 'POST' });
+      loadNotifications();
+    });
+
+    loadNotifications();
+  </script>
+  <script src="/OliviaLegal/auth-activity/tracker.js"></script>
+</body>
+
+</html>

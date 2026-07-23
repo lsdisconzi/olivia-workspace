@@ -1,0 +1,767 @@
+/* =====================================================================
+   responsive-mobile.css — Mobile enhancements for OliviaLegal Workspace
+   Source: projects/frontend-mobile/writer/Current Mobile Implementation Analysis.md
+   Applied via: frontend/index.html (loaded after responsive.css)
+   ===================================================================== */
+
+/* ── 1. Mobile Menu Improvements ── */
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mobile-menu-btn .dot {
+    width: 18px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.25s ease;
+  }
+  .mobile-menu-btn.active .dot:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+  .mobile-menu-btn.active .dot:nth-child(2) { opacity: 0; }
+  .mobile-menu-btn.active .dot:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+  .mobile-dropdown {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px 16px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.25s ease;
+    opacity: 0;
+    padding: 0 16px;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .mobile-dropdown.open {
+    display: flex;
+    max-height: 80vh;
+    opacity: 1;
+    padding: 12px 16px 16px;
+  }
+  .mobile-dropdown a {
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    text-decoration: none;
+    transition: background 0.15s;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mobile-dropdown a:active {
+    background: var(--bg-hover);
+  }
+  .mobile-dropdown .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 6px 0;
+  }
+  .mobile-dropdown .mode-toggle-row {
+    padding: 10px 14px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+}
+
+/* ── 2. Sidebar Mobile Overhaul ── */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 86vw;
+    max-width: 340px;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1100;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
+    box-shadow: 4px 0 32px rgba(0,0,0,0.4);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  body.sidebar-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+
+  /* Companion lock for any code that toggles .no-scroll directly */
+  body.no-scroll {
+    overflow: hidden;
+  }
+
+  .mobile-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1050;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .mobile-sidebar-overlay.open {
+    display: block;
+    opacity: 1;
+  }
+
+  .sidebar-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-header-inner p {
+    font-size: 12px;
+    margin: 2px 0 0;
+  }
+
+  .sidebar-tabs-dock {
+    display: flex;
+    overflow-x: auto;
+    gap: 2px;
+    padding: 6px 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .sidebar-tabs-dock::-webkit-scrollbar { display: none; }
+  .sidebar-tabs-dock .tab-btn {
+    flex: 0 0 auto;
+    padding: 6px 12px;
+    font-size: 11px;
+    white-space: nowrap;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--gray);
+    touch-action: manipulation;
+  }
+  .sidebar-tabs-dock .tab-btn.active {
+    background: var(--bg-hover);
+    color: var(--text);
+    border-color: var(--amber);
+  }
+
+  .sidebar-body {
+    padding: 8px 12px 80px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(100vh - 140px);
+  }
+
+  .agent-list .agent-item {
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    touch-action: manipulation;
+  }
+  .agent-list .agent-item:active {
+    background: var(--bg-hover);
+  }
+
+  .sidebar-collapsed-strip {
+    display: none;
+  }
+  .sidebar-expand-btn {
+    display: none;
+  }
+}
+
+/* ── 3. Chat Mobile Improvements ── */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .chat-header {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: 48px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .chat-header-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+  .mobile-sidebar-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+  }
+  .mobile-sidebar-btn:active {
+    background: var(--bg-hover);
+  }
+  .chat-agent-name {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chat-header-right {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+  .chat-header-right .btn {
+    padding: 4px 8px;
+    font-size: 12px;
+    min-height: 32px;
+    min-width: 32px;
+    border-radius: 6px;
+  }
+  .header-opt { display: none; }
+  .header-opt.visible-mobile { display: inline-flex; }
+
+  .chat-log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 12px 8px;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .chat-log .message {
+    padding: 12px 14px;
+    border-radius: 14px;
+    max-width: 92%;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+    position: relative;
+  }
+  .chat-log .message.user {
+    background: var(--amber);
+    color: var(--bg);
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .chat-log .message.assistant {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+
+  .chat-compose {
+    padding: 8px 12px 12px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .compose-row {
+    display: flex;
+    gap: 6px;
+    align-items: flex-end;
+  }
+  .compose-textarea {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 44px;
+    max-height: 120px;
+    border-radius: 22px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    resize: none;
+    touch-action: manipulation;
+    -webkit-appearance: none;
+    appearance: none;
+    font-family: var(--sans);
+    transition: border-color 0.2s;
+  }
+  .compose-textarea:focus {
+    outline: none;
+    border-color: var(--amber);
+  }
+
+  .compose-send,
+  .compose-voice-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .compose-send {
+    background: var(--amber);
+    color: var(--bg);
+  }
+  .compose-send:active { transform: scale(0.94); }
+  .compose-voice-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .compose-voice-btn.recording {
+    border-color: #e74c3c;
+    color: #e74c3c;
+    animation: pulse-rec 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse-rec {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(231, 76, 60, 0); }
+  }
+
+  .chat-toolbar {
+    padding: 6px 12px;
+    gap: 4px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+  }
+  .chat-toolbar::-webkit-scrollbar { display: none; }
+  .chat-toolbar .tbtn {
+    flex: 0 0 auto;
+    padding: 6px 10px;
+    font-size: 12px;
+    min-height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    touch-action: manipulation;
+  }
+  .chat-toolbar .tbtn:active { background: var(--bg-hover); }
+}
+
+/* ── 4. Welcome/Hints Carousel — Touch-Swipe Support ── */
+@media (max-width: 768px) {
+  .welcome-state {
+    padding: 20px 12px 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+  }
+
+  .welcome-logo {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 12px;
+  }
+  .welcome-title {
+    font-size: 24px;
+    letter-spacing: -0.02em;
+  }
+  .welcome-sub {
+    font-size: 13px;
+    color: var(--gray);
+    text-align: center;
+    padding: 0 16px;
+  }
+
+  .welcome-hints {
+    display: none;
+  }
+
+  .hints-carousel {
+    display: block !important;
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  .hints-carousel-track {
+    display: flex;
+    gap: 8px;
+    padding: 4px 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+  .hints-carousel-track::-webkit-scrollbar { display: none; }
+  .hints-carousel-track .welcome-hint {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    padding: 10px 16px;
+    font-size: 13px;
+    border-radius: 20px;
+    white-space: nowrap;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+  }
+  .hints-carousel-track .welcome-hint:active {
+    transform: scale(0.96);
+    background: var(--bg-hover);
+  }
+
+  .hints-carousel-arrows {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .hints-carousel-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    font-size: 12px;
+  }
+  .hints-carousel-arrow:active {
+    background: var(--bg-hover);
+  }
+}
+
+/* ── 6. Panel Mobile Adaptations ── */
+@media (max-width: 768px) {
+  .output-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 55vh;
+    max-height: 70vh;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    border-radius: 16px 16px 0 0;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
+    z-index: 900;
+    background: var(--bg-card);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .output-panel.open {
+    transform: translateY(0);
+  }
+
+  .output-panel-edge-toggle {
+    display: none;
+  }
+
+  .browser-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 950;
+    background: var(--bg);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    border-radius: 0;
+  }
+  .browser-panel.open {
+    transform: translateY(0);
+  }
+
+  .browser-header {
+    padding: 10px 12px;
+    gap: 6px;
+    flex-wrap: nowrap;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+  }
+  .browser-url-bar {
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 20px;
+  }
+  .browser-nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 14px;
+  }
+  .browser-frame {
+    flex: 1;
+    border: none;
+  }
+
+  .preview-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60vh;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 800;
+    background: var(--bg-card);
+    border-radius: 16px 16px 0 0;
+    border-top: 1px solid var(--border);
+  }
+  .preview-panel.open {
+    transform: translateY(0);
+  }
+
+  .output-resize-handle {
+    display: none;
+  }
+
+  .studio-view {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    background: var(--bg);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .studio-top-bar {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: 48px;
+  }
+  .studio-top-bar .btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    min-height: 32px;
+  }
+  .studio-workspace {
+    flex-direction: column;
+    height: calc(100% - 52px);
+  }
+  .studio-editor-panel {
+    height: 45vh;
+    flex: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .studio-preview-panel {
+    height: 55vh;
+    flex: none;
+  }
+  .studio-ai-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50vh;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    border-radius: 16px 16px 0 0;
+    z-index: 850;
+  }
+  .studio-ai-panel.open {
+    transform: translateY(0);
+  }
+  .studio-side-drag { display: none; }
+  .studio-restore-strip { display: none; }
+
+  .shaders-view {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    background: var(--bg);
+    padding-top: env(safe-area-inset-top);
+  }
+  .sh-hbar {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: 48px;
+  }
+  .sh-hbar .btn {
+    padding: 4px 10px;
+    font-size: 11px;
+    min-height: 30px;
+  }
+  .sh-layout {
+    flex-direction: column;
+    height: calc(100% - 56px);
+  }
+  .sh-sidebar {
+    width: 100% !important;
+    max-height: 30vh;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    flex: none;
+  }
+  .sh-main {
+    flex: 1;
+    min-height: 0;
+  }
+  .sh-preview-area {
+    height: 50vh;
+  }
+  .sh-preview-controls {
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px 8px;
+  }
+  .sh-preview-controls .sh-ctrl-slider {
+    flex: 1;
+    min-width: 80px;
+  }
+  .sh-content-tabs .sh-content-tab {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  .sh-editor-layout {
+    flex-direction: column;
+    height: 100%;
+  }
+  .sh-editor-pane { height: 50vh; }
+  .sh-editor-preview { height: 50vh; }
+  .sh-splitter { display: none; }
+  .sh-brain-layout { flex-direction: column; }
+  .sh-brain-chat { height: 40vh; border-left: none; border-top: 1px solid var(--border); }
+
+  .disc-view {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    background: var(--bg);
+  }
+  .disc-hbar {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    min-height: 48px;
+  }
+  .disc-hbar-copy h1 { font-size: 16px; }
+  .disc-hbar-copy p { font-size: 11px; }
+  .disc-body { padding: 10px 12px 80px; }
+  .dsc-stats-grid { gap: 6px; }
+  .dsc-stat-card { padding: 8px; }
+  .dsc-stat-num { font-size: 18px; }
+  .dsc-card-head { flex-wrap: wrap; gap: 6px; }
+  .dsc-card-head h2 { font-size: 14px; }
+  .dsc-upload-zone { padding: 20px 12px; }
+  .dsc-upload-title { font-size: 14px; }
+
+  .listening-view {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    background: var(--bg);
+  }
+  .ls-hbar {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    min-height: 48px;
+  }
+  .ls-hbar h1 { font-size: 16px; }
+  .ls-body { padding: 10px 12px 80px; }
+  .ls-card-head { flex-wrap: wrap; }
+  .ls-card-head h2 { font-size: 14px; }
+  .ls-provider-toggle .ls-provider-btn { padding: 4px 10px; font-size: 11px; }
+  #lsConfigPanel { padding: 10px; }
+  #lsConfigPanel > div { grid-template-columns: 1fr 1fr; }
+  .ls-upload-zone { padding: 24px 16px; }
+
+  .memory-view {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    background: var(--bg);
+  }
+  .memory-view > div:first-child {
+    padding: 6px 12px;
+    flex-wrap: wrap;
+  }
+  .mv-subnav-tab { padding: 4px 10px; font-size: 11px; }
+  .mv-panel { padding: 10px 12px 80px; }
+  .memory-ingest-row { flex-wrap: wrap; }
+  .memory-ingest-collection { width: 100%; }
+
+  .spaces-view {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    background: var(--bg);
+  }
+  .sp-hbar {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    min-height: 48px;
+  }
+  .sp-hbar h1 { font-size: 16px; }
+  .sp-layout { flex-direction: column; }
+  .sp-sidebar {
+    width: 100% !important;
+    max-height: 35vh;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .sp-main { flex: 1; min-height: 0; }
+  .sp-chat { max-height: 30vh; }
+  .sp-resize-handle { display: none; }
+}

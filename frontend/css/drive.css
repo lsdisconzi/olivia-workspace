@@ -1,0 +1,709 @@
+/* ============================================================================
+   Drive — Google Drive manager inside Olivia Workspace.
+   Uses workspace CSS variables.
+   ============================================================================ */
+
+.drive-view {
+    display: none;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg);
+}
+
+.drive-view.active {
+    display: flex;
+}
+
+.workspace.dr-open>.main-content {
+    display: none !important;
+}
+
+/* ── Cabeçalho ─────────────────────────────────────────────────────────── */
+.dr-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-card);
+}
+
+.dr-head-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+}
+
+.dr-logo {
+    width: 20px;
+    height: 20px;
+    color: var(--amber);
+    display: flex;
+}
+
+.dr-logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.dr-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.01em;
+}
+
+.dr-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+}
+
+/* ── Header actions ─────────────────────────────────────────────────── */
+.dr-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.dr-auth-status {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--bg-code);
+    color: var(--gray);
+}
+
+.dr-auth-status.dr-auth-on {
+    background: rgba(34, 197, 94, 0.12);
+    color: #4caf50;
+}
+
+.dr-auth-status.dr-auth-off {
+    background: rgba(158, 74, 74, 0.10);
+    color: var(--red);
+}
+
+/* ── Sub-navegação ─────────────────────────────────────────────────────── */
+.dr-subnav {
+    display: flex;
+    gap: 2px;
+    padding: 6px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-card);
+    overflow-x: auto;
+}
+
+.dr-tab {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .15s, border-color .15s;
+}
+
+.dr-tab:hover {
+    color: var(--white);
+}
+
+.dr-tab.active {
+    color: var(--amber);
+    border-bottom-color: var(--amber);
+}
+
+/* ── Painéis ───────────────────────────────────────────────────────────── */
+.dr-panels {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+}
+
+.dr-panel {
+    display: none;
+    flex: 1;
+    min-height: 0;
+}
+
+.dr-panel.active {
+    display: flex;
+    flex-direction: column;
+}
+
+#drPanel-overview {
+    overflow-y: auto;
+    padding: 28px 24px 48px;
+}
+
+#drPanel-overview>* {
+    width: 100%;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dr-hero {
+    text-align: center;
+    padding: 12px 0 26px;
+}
+
+.dr-hero-logo {
+    display: inline-flex;
+    width: 64px;
+    height: 64px;
+    color: var(--amber);
+    margin-bottom: 14px;
+}
+
+.dr-hero-logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.dr-hero-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+}
+
+.dr-hero-tag {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--gray-hi);
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.dr-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 24px 0;
+}
+
+.dr-stat {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px 12px;
+    text-align: center;
+}
+
+.dr-stat-num {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 26px;
+    color: var(--amber);
+    line-height: 1;
+}
+
+.dr-stat-label {
+    font-size: 10px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 6px;
+}
+
+.dr-cta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.dr-guard {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--gray-hi);
+    background: var(--amber-lo, rgba(196, 98, 45, 0.10));
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r);
+    padding: 12px 14px;
+    margin: 22px 0;
+}
+
+.dr-guard i {
+    color: var(--amber);
+    margin-top: 2px;
+}
+
+/* ── Files panel ────────────────────────────────────────────────────────── */
+#drPanel-files {
+    padding: 0;
+    flex-direction: column;
+}
+
+.dr-files-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+    flex-shrink: 0;
+}
+
+.dr-breadcrumb {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 13px;
+    color: var(--gray-hi);
+}
+
+.dr-bread-item {
+    cursor: pointer;
+    color: var(--amber);
+}
+
+.dr-bread-item.active {
+    font-weight: 600;
+    color: var(--white);
+    pointer-events: none;
+}
+
+.dr-files-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.dr-files-list {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--bg);
+    padding: 8px 0;
+}
+
+.dr-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--gray);
+    gap: 10px;
+    font-size: 14px;
+}
+
+.dr-empty i {
+    font-size: 36px;
+    opacity: 0.4;
+}
+
+.dr-empty.dr-error {
+    color: var(--red);
+}
+
+.dr-file-header {
+    display: grid;
+    grid-template-columns: 1fr 120px 120px 80px 80px;
+    padding: 8px 14px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--gray);
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.04em;
+}
+
+.dr-file-row {
+    display: grid;
+    grid-template-columns: 1fr 120px 120px 80px 80px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    font-size: 13px;
+    color: var(--white);
+    transition: background .1s;
+}
+
+.dr-file-row:hover {
+    background: var(--bg-card);
+}
+
+.dr-file-row .dr-file-link {
+    color: var(--amber);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.dr-file-actions {
+    white-space: nowrap;
+}
+
+.dr-file-actions .btn {
+    margin-right: 4px;
+}
+
+/* ── Chat ──────────────────────────────────────────────────────────────── */
+#drPanel-chat {
+    padding: 0;
+}
+
+.dr-chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.dr-chat-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.dr-chat-bar-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dr-chat-bar-label i {
+    color: var(--amber);
+}
+
+.dr-chat-log {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--bg);
+}
+
+.dr-chat-empty {
+    margin: auto;
+    text-align: center;
+    color: var(--gray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.dr-chat-empty svg {
+    width: 44px;
+    height: 44px;
+    color: var(--amber);
+    opacity: 0.7;
+}
+
+.dr-chat-empty p {
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.dr-msg {
+    max-width: 86%;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.dr-msg-user {
+    align-self: flex-end;
+    background: var(--amber);
+    color: #fff;
+    border-radius: var(--r) var(--r) 4px var(--r);
+    padding: 10px 14px;
+}
+
+.dr-msg-agent {
+    align-self: flex-start;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r) var(--r) var(--r) 4px;
+    padding: 9px 14px 11px;
+}
+
+.dr-msg-tag {
+    font-family: var(--mono);
+    font-size: 8.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--amber);
+    margin-bottom: 5px;
+}
+
+.dr-msg-body {
+    word-wrap: break-word;
+}
+
+.dr-md p {
+    margin: 0 0 8px;
+}
+
+.dr-md p:last-child {
+    margin-bottom: 0;
+}
+
+.dr-md ul,
+.dr-md ol {
+    margin: 6px 0 10px 20px;
+}
+
+.dr-md li {
+    margin-bottom: 4px;
+}
+
+.dr-md h1,
+.dr-md h2,
+.dr-md h3 {
+    font-family: var(--serif);
+    color: var(--white);
+    font-size: 15px;
+    margin: 12px 0 6px;
+}
+
+.dr-md code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--bg-code);
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: var(--amber);
+}
+
+.dr-md pre {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 10px 12px;
+    overflow-x: auto;
+}
+
+.dr-md pre code {
+    background: none;
+    padding: 0;
+    color: var(--white);
+}
+
+.dr-md a {
+    color: var(--amber);
+    text-decoration: underline;
+}
+
+.dr-chat-error {
+    align-self: stretch;
+    font-size: 12px;
+    color: var(--red);
+    background: rgba(158, 74, 74, 0.10);
+    border: 1px solid rgba(158, 74, 74, 0.3);
+    border-radius: var(--r);
+    padding: 10px 12px;
+}
+
+/* Processing indicator */
+.dr-proc {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--gray-hi);
+}
+
+.dr-proc-spin {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border-hi);
+    border-top-color: var(--amber);
+    border-radius: 50%;
+    animation: drSpin 0.9s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes drSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Composer */
+.dr-chat-compose {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-card);
+    flex-shrink: 0;
+}
+
+.dr-chat-input {
+    flex: 1;
+    resize: none;
+    min-height: 42px;
+    max-height: 140px;
+    padding: 11px 13px;
+    background: var(--bg);
+    color: var(--white);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color .15s;
+}
+
+.dr-chat-input:focus {
+    border-color: var(--amber);
+}
+
+.dr-chat-input::placeholder {
+    color: var(--gray);
+}
+
+.dr-chat-send {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: var(--r);
+    background: var(--amber);
+    color: #fff;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dr-chat-send:hover:not(:disabled) {
+    background: var(--amber-hi, #d4732d);
+}
+
+.dr-chat-send:active:not(:disabled) {
+    transform: scale(0.94);
+}
+
+.dr-chat-send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.dr-chat-send.dr-busy {
+    opacity: 0.6;
+}
+
+/* ── Responsivo ────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+    .dr-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #drPanel-overview {
+        padding: 20px 14px 40px;
+    }
+
+    .dr-hero-title {
+        font-size: 27px;
+    }
+
+    .dr-file-header,
+    .dr-file-row {
+        grid-template-columns: 1fr 80px 80px 60px;
+    }
+
+    .dr-file-type {
+        display: none;
+    }
+}
+
+/* ── Folder filter dropdown ───────────────────────────────────────────── */
+
+.dr-filter-dropdown {
+    position: relative;
+    display: inline-flex;
+}
+
+.dr-filter-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    min-width: 200px;
+    max-height: 260px;
+    overflow-y: auto;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    z-index: 100;
+    padding: 4px 0;
+}
+
+.dr-filter-item {
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--gray-hi);
+}
+
+.dr-filter-item:hover {
+    background: var(--bg);
+}
+
+.dr-filter-item label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    margin: 0;
+    font-weight: 400;
+}
+
+.dr-filter-item input[type="checkbox"] {
+    margin: 0;
+    accent-color: var(--accent);
+}
+
+.dr-filter-empty {
+    padding: 8px 12px;
+    font-size: 11px;
+    color: var(--gray-lo);
+    font-style: italic;
+}
+
+/* ── Nav buttons in toolbar ──────────────────────────────────────────── */
+
+.dr-files-toolbar .btn-xs {
+    font-size: 11px;
+    padding: 4px 8px;
+}

@@ -1,0 +1,875 @@
+{
+  "version": "1.0.0",
+  "group": "la8159",
+  "default_policy": {
+    "mode": "deny-by-default",
+    "require_confirmation_for": [
+      "cross_group_write",
+      "destructive_file_delete",
+      "personnel_dossier_overwrite",
+      "verification_flag_upgrade"
+    ]
+  },
+  "agents": {
+    "la8159-orchestrator": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Runtime router. Always cite verification status from upstream specs."
+      ]
+    },
+    "la8159-coordinator": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "personnel_dossier_overwrite",
+        "verification_flag_upgrade",
+        "cross_group_write"
+      ],
+      "notes": [
+        "Governance + sync from upstream 0_agents.",
+        "Personnel registry is append-only."
+      ]
+    },
+    "br-abear-plus": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-abrapavaa-sentra": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-anac-r400": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-anticorrupcao": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-cba": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-cc": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-cdc": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-cf88": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-conflito-interesses": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-cp": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-improbidade": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-lai-transparency": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-lei9784": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-oab-comissao-aero": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-oab-disciplina": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "br-sdc-procon-senacon": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "cl-cach": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "cl-const": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "cl-contraloria-indh": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "cl-cpcl": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "cl-dgac-l16752": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "cl-lpdc": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "cl-transparency-l20285": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "int-achr": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "int-chicago-vclt": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "int-iata-gc": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "int-icao-an17": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "int-icao-an6-an13": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "int-icao-an9": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "int-mc99": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "int-softlaw": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "int-uncrc-hague": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "int-vccr": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "meta-adversarial": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "meta-evidence-mapper": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "meta-institutional-silence": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "meta-personnel-accountability": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "meta-prescription-forum": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    },
+    "meta-revolvingdoor": {
+      "allowed_tools": [
+        "str_replace_editor",
+        "bash",
+        "python_execute",
+        "context_assemble",
+        "qdrant_search",
+        "neo4j_query",
+        "terminate"
+      ],
+      "denied_tools": [
+        "qdrant_ingest"
+      ],
+      "require_confirmation_for": [
+        "cross_group_write"
+      ],
+      "notes": [
+        "Read-only against source caches; never modify upstream spec files.",
+        "Never silently upgrade a verification flag (✅/⏳/⚠️/❌)."
+      ]
+    }
+  }
+}

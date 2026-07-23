@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Olivia · Admin — File Browser</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231c4532'/><g transform='translate(6,7) scale(0.31)'><path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23faf9f6' stroke-width='2.5' stroke-linecap='round' opacity='.6'/><path d='M28 36 Q20 26,16 18 Q24 24,28 36Z' fill='%23faf9f6' opacity='.4'/><path d='M30 34 Q38 24,44 18 Q38 28,30 34Z' fill='%23faf9f6' opacity='.35'/><path d='M42 24 Q36 14,34 8 Q40 14,42 24Z' fill='%23faf9f6' opacity='.35'/><ellipse cx='22' cy='42' rx='4' ry='5' fill='%23c4622d'/></g></svg>">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --white: #ffffff;
+            --black: #1a1a1a;
+            --green-dark: #1c4532;
+            --green-mid: #2d785a;
+            --amber: #c4622d;
+            --amber-light: #d4733e;
+            --gray: #9a9088;
+            --gray-hi: #5a5a5a;
+
+            --font-serif: 'Fraunces', Georgia, serif;
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition: .3s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--white);
+            color: var(--black);
+            padding: 2rem 6vw;
+            line-height: 1.6;
+        }
+        h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 400;
+            color: var(--green-dark);
+            margin-bottom: 0.5rem;
+        }
+        h1 em { color: var(--amber); font-style: italic; }
+        .sub {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--gray);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid rgba(28,69,50,0.12);
+            padding-bottom: 1.5rem;
+        }
+        .folder {
+            margin-bottom: 2.5rem;
+        }
+        .folder-title {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: var(--green-dark);
+            border-left: 4px solid var(--amber);
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .folder-title i { color: var(--amber); font-size: 1rem; }
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.6rem;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.65rem 1rem;
+            border: 1px solid rgba(28,69,50,0.12);
+            border-radius: 12px;
+            background: #fafaf9;
+            font-size: 0.88rem;
+            color: var(--black);
+            text-decoration: none;
+            transition: all var(--transition);
+        }
+        .file-item:hover {
+            border-color: var(--amber);
+            box-shadow: 0 4px 12px rgba(28,69,50,0.06);
+            transform: translateY(-1px);
+        }
+        .file-item i {
+            color: var(--amber);
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+        .file-item .size {
+            margin-left: auto;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--gray);
+            opacity: 0.7;
+        }
+        @media (max-width: 600px) {
+            .file-list { grid-template-columns: 1fr; }
+            body { padding: 1.5rem 4vw; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Olivia <em>Admin</em></h1>
+    <div class="sub">Front‑end file browser · front‑test directory</div>
+
+    <!-- ROOT FILES -->
+    <div class="folder">
+        <div class="folder-title"><i class="fas fa-folder-open"></i> root (front-test)</div>
+        <div class="file-list" id="root-files"></div>
+    </div>
+
+    <!-- 19-july-HTML -->
+    <div class="folder">
+        <div class="folder-title"><i class="fas fa-folder-open"></i> 19-july-HTML</div>
+        <div class="file-list" id="july-files"></div>
+    </div>
+
+    <!-- landing -->
+    <div class="folder">
+        <div class="folder-title"><i class="fas fa-folder-open"></i> landing</div>
+        <div class="file-list" id="landing-files"></div>
+    </div>
+
+    <!-- olivia-havan -->
+    <div class="folder">
+        <div class="folder-title"><i class="fas fa-folder-open"></i> olivia-havan</div>
+        <div class="file-list" id="havan-files"></div>
+    </div>
+
+    <script>
+        // Static file listing based on directory tree
+        const BASE = '/olivia/front-test/';
+        const files = {
+            root: [
+                { name: 'chat-1.html', path: BASE + 'chat-1.html' },
+                { name: 'chat-2.html', path: BASE + 'chat-2.html' },
+                { name: 'chat-3.html', path: BASE + 'chat-3.html' }
+            ],
+            july: [
+                { name: '1 - Juliana Nunes Pereira.html', path: BASE + '19-july-HTML/1 - Juliana Nunes Pereira.html' },
+                { name: '2 - Andre Gomes.html', path: BASE + '19-july-HTML/2 - Andre Gomes.html' },
+                { name: '3 - Edson Diegoli.html', path: BASE + '19-july-HTML/3 - Edson Diegoli.html' },
+                { name: '4 - Lucas Hang.html', path: BASE + '19-july-HTML/4 - Lucas Hang.html' },
+                { name: '5 - Sam Araujo.html', path: BASE + '19-july-HTML/5 - Sam Araujo.html' },
+                { name: '6 - Luciano Hang.html', path: BASE + '19-july-HTML/6 - Luciano Hang.html' },
+                { name: '7 - Jose Luiz Paza.html', path: BASE + '19-july-HTML/7 - Jose Luiz Paza.html' },
+                { name: 'Proposta Temas HAVAN.html', path: BASE + '19-july-HTML/Proposta Temas HAVAN.html' },
+                { name: 'ScottishHospitality.html', path: BASE + '19-july-HTML/ScottishHospitality.html' },
+                { name: 'admin-activity.html', path: BASE + '19-july-HTML/admin-activity.html' },
+                { name: 'admin-users.html', path: BASE + '19-july-HTML/admin-users.html' },
+                { name: 'change-password.html', path: BASE + '19-july-HTML/change-password.html' },
+                { name: 'havan-index.html', path: BASE + '19-july-HTML/havan-index.html' },
+                { name: 'hospitality.html', path: BASE + '19-july-HTML/hospitality.html' },
+                { name: 'index 2.html', path: BASE + '19-july-HTML/index 2.html' },
+                { name: 'index 3.html', path: BASE + '19-july-HTML/index 3.html' },
+                { name: 'index 4.html', path: BASE + '19-july-HTML/index 4.html' },
+                { name: 'index 5.html', path: BASE + '19-july-HTML/index 5.html' },
+                { name: 'index 6.html', path: BASE + '19-july-HTML/index 6.html' },
+                { name: 'index 7.html', path: BASE + '19-july-HTML/index 7.html' },
+                { name: 'index-el.html', path: BASE + '19-july-HTML/index-el.html' },
+                { name: 'index-en.html', path: BASE + '19-july-HTML/index-en.html' },
+                { name: 'index-it.html', path: BASE + '19-july-HTML/index-it.html' },
+                { name: 'index-pl.html', path: BASE + '19-july-HTML/index-pl.html' },
+                { name: 'index-sq.html', path: BASE + '19-july-HTML/index-sq.html' },
+                { name: 'index.html', path: BASE + '19-july-HTML/index.html' },
+                { name: 'itslian-hospitality-index.html', path: BASE + '19-july-HTML/itslian-hospitality-index.html' },
+                { name: 'jurisprudence.html', path: BASE + '19-july-HTML/jurisprudence.html' },
+                { name: 'login.html', path: BASE + '19-july-HTML/login.html' },
+                { name: 'mode-select.html', path: BASE + '19-july-HTML/mode-select.html' },
+                { name: 'olivia-2.html', path: BASE + '19-july-HTML/olivia-2.html' },
+                { name: 'olivia-3.html', path: BASE + '19-july-HTML/olivia-3.html' },
+                { name: 'olivia-4.html', path: BASE + '19-july-HTML/olivia-4.html' },
+                { name: 'olivia-scottish-hospitality-pastel.html', path: BASE + '19-july-HTML/olivia-scottish-hospitality-pastel.html' },
+                { name: 'olivia-scottish-hospitality.html', path: BASE + '19-july-HTML/olivia-scottish-hospitality.html' },
+                { name: 'olivia-workspace-feature-guide-br.html', path: BASE + '19-july-HTML/olivia-workspace-feature-guide-br.html' },
+                { name: 'olivia-workspace-feature-guide-en.html', path: BASE + '19-july-HTML/olivia-workspace-feature-guide-en.html' },
+                { name: 'olivia-workspace-feature-guide-it.html', path: BASE + '19-july-HTML/olivia-workspace-feature-guide-it.html' },
+                { name: 'olivia-workspace-feature-guide.html', path: BASE + '19-july-HTML/olivia-workspace-feature-guide.html' },
+                { name: 'olivia_workspace_complete_feature_guide.html', path: BASE + '19-july-HTML/olivia_workspace_complete_feature_guide.html' },
+                { name: 'shaderbench.html', path: BASE + '19-july-HTML/shaderbench.html' }
+            ],
+            landing: [
+                { name: 'Proposta Temas HAVAN.html', path: BASE + 'landing/Proposta Temas HAVAN.html' },
+                { name: 'index.html', path: BASE + 'landing/index.html' },
+                { name: 'olivia-2.html', path: BASE + 'landing/olivia-2.html' },
+                { name: 'olivia-3.html', path: BASE + 'landing/olivia-3.html' },
+                { name: 'olivia-4.html', path: BASE + 'landing/olivia-4.html' }
+            ],
+            havan: [
+                { name: 'Proposta Temas HAVAN.html', path: BASE + 'olivia-havan/Proposta Temas HAVAN.html' },
+                { name: 'index.html', path: BASE + 'olivia-havan/index.html' },
+                { name: 'olivia-2.html', path: BASE + 'olivia-havan/olivia-2.html' },
+                { name: 'olivia-3.html', path: BASE + 'olivia-havan/olivia-3.html' },
+                { name: 'olivia-4.html', path: BASE + 'olivia-havan/olivia-4.html' }
+            ]
+        };
+
+        function renderFiles(containerId, fileArray) {
+            const container = document.getElementById(containerId);
+            fileArray.sort((a, b) => a.name.localeCompare(b.name)).forEach(file => {
+                const a = document.createElement('a');
+                a.href = file.path;
+                a.className = 'file-item';
+                a.target = '_blank';
+                const icon = file.name.endsWith('.html') ? 'fa-file-code' : 'fa-file';
+                a.innerHTML = `<i class="fas ${icon}"></i>${file.name}<span class="size">.html</span>`;
+                container.appendChild(a);
+            });
+        }
+
+        renderFiles('root-files', files.root);
+        renderFiles('july-files', files.july);
+        renderFiles('landing-files', files.landing);
+        renderFiles('havan-files', files.havan);
+    </script>
+</body>
+</html>

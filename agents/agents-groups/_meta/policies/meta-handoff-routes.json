@@ -1,0 +1,151 @@
+{
+  "version": "1.0.0",
+  "description": "Cross-group routes handled by the meta-orchestrator. Intra-group routing lives in each group's handoff-routes.json.",
+  "routing": [
+    {
+      "route_id": "meta_to_olivia_platform_task",
+      "from": "meta-orchestrator",
+      "to": "orchestrator-control-plane",
+      "trigger": "platform_task_detected",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Platform / workspace task routed to Olivia control plane",
+        "artifacts": [
+          { "type": "target_group", "value": "olivia" }
+        ],
+        "verification": ["scope restricted to agents-groups/olivia/**"]
+      }
+    },
+    {
+      "route_id": "meta_to_legal_case_analysis",
+      "from": "meta-orchestrator",
+      "to": "legal-orchestrator",
+      "trigger": "legal_domain_detected",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Legal / aviation-law request routed to legal orchestrator",
+        "artifacts": [
+          { "type": "target_group", "value": "legal" },
+          { "type": "advisory_tag", "value": "advisory only — confirm with qualified professional" }
+        ],
+        "verification": ["scope restricted to agents-groups/legal/**"]
+      }
+    },
+    {
+      "route_id": "meta_to_government_procurement",
+      "from": "meta-orchestrator",
+      "to": "government-orchestrator",
+      "trigger": "public_sector_detected",
+      "priority": "high",
+      "payload_template": {
+        "summary": "Public-sector / innovation procurement request",
+        "artifacts": [
+          { "type": "target_group", "value": "government" },
+          { "type": "advisory_tag", "value": "advisory only — final decision with municipal Procuradoria" }
+        ],
+        "verification": ["scope restricted to agents-groups/government/**"]
+      }
+    },
+    {
+      "route_id": "meta_to_coremu_program",
+      "from": "meta-orchestrator",
+      "to": "coremu-orchestrator",
+      "trigger": "residency_program_detected",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "COREMU / RMISFC residency request",
+        "artifacts": [
+          { "type": "target_group", "value": "coremu" }
+        ],
+        "verification": ["scope restricted to agents-groups/coremu/**"]
+      }
+    },
+    {
+      "route_id": "meta_to_la8159_grounding",
+      "from": "meta-orchestrator",
+      "to": "la8159-orchestrator",
+      "trigger": "la8159_violation_id_or_article_grounding_detected",
+      "priority": "high",
+      "payload_template": {
+        "summary": "LA8159 article-level legal grounding (BR/CL/INT statutes + verification flags)",
+        "artifacts": [
+          { "type": "target_group", "value": "la8159" },
+          { "type": "advisory_tag", "value": "advisory only — confirm with qualified professional" }
+        ],
+        "verification": ["scope restricted to agents-groups/la8159/**", "verification flag preserved"]
+      }
+    },
+    {
+      "route_id": "meta_legal_to_government_bridge",
+      "from": "legal-orchestrator",
+      "to": "government-orchestrator",
+      "trigger": "public_procurement_angle_in_legal_case",
+      "priority": "high",
+      "requires_confirmation": true,
+      "payload_template": {
+        "summary": "Legal case with public procurement implications — bridge to government",
+        "artifacts": [
+          { "type": "source_group", "value": "legal" },
+          { "type": "target_group", "value": "government" }
+        ],
+        "verification": ["user confirmed cross-group write", "both groups' owned_paths listed"]
+      }
+    },
+    {
+      "route_id": "meta_coremu_to_legal_malpractice",
+      "from": "coremu-orchestrator",
+      "to": "legal-orchestrator",
+      "trigger": "clinical_malpractice_or_compliance_risk",
+      "priority": "high",
+      "requires_confirmation": true,
+      "payload_template": {
+        "summary": "Residency case escalated to legal review",
+        "artifacts": [
+          { "type": "source_group", "value": "coremu" },
+          { "type": "target_group", "value": "legal" }
+        ],
+        "verification": ["PII redaction applied", "user confirmed cross-group escalation"]
+      }
+    },
+    {
+      "route_id": "meta_legal_to_la8159_grounding_bridge",
+      "from": "legal-orchestrator",
+      "to": "la8159-orchestrator",
+      "trigger": "needs_article_level_grounding",
+      "priority": "high",
+      "requires_confirmation": false,
+      "payload_template": {
+        "summary": "Legal jurisdiction expert needs article-by-article grounding (verification ✅/⏳/⚠️/❌, NEVER-rules, source caches).",
+        "artifacts": [
+          { "type": "source_group", "value": "legal" },
+          { "type": "target_group", "value": "la8159" }
+        ],
+        "verification": [
+          "violation_id or instrument supplied",
+          "la8159 specialist's NEVER-rules respected",
+          "verification flags preserved verbatim"
+        ]
+      }
+    },
+    {
+      "route_id": "meta_la8159_to_legal_drafting_bridge",
+      "from": "la8159-orchestrator",
+      "to": "legal-orchestrator",
+      "trigger": "needs_jurisdiction_strategy_or_drafting",
+      "priority": "high",
+      "requires_confirmation": true,
+      "payload_template": {
+        "summary": "Grounded la8159 specialist output handed off to legal-orchestrator for drafting/strategy/3-file-loop work.",
+        "artifacts": [
+          { "type": "source_group", "value": "la8159" },
+          { "type": "target_group", "value": "legal" }
+        ],
+        "verification": [
+          "advisory tag attached",
+          "verification flags carried through",
+          "user confirmed cross-group write"
+        ]
+      }
+    }
+  ]
+}

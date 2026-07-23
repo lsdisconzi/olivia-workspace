@@ -1,0 +1,466 @@
+/* ============================================================================
+   Writer — Markdown / plain-text editor inside Olivia Workspace.
+   Uses workspace CSS variables.
+   v2 – added chat panel styles.
+   ============================================================================ */
+
+.writer-view {
+    display: none;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg);
+}
+
+.writer-view.active {
+    display: flex;
+}
+
+.workspace.wr-open > .main-content {
+    display: none !important;
+}
+
+/* ---------- Cabeçalho ---------- */
+.wr-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-card);
+}
+
+.wr-head-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+}
+
+.wr-logo {
+    width: 20px;
+    height: 20px;
+    color: var(--blue, #3b82f6);
+    display: flex;
+}
+
+.wr-logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.wr-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.01em;
+}
+
+.wr-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+}
+
+.wr-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ---------- Sub-navegação ---------- */
+.wr-subnav {
+    display: flex;
+    gap: 2px;
+    padding: 6px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-card);
+    overflow-x: auto;
+}
+
+.wr-tab {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .15s, border-color .15s;
+}
+
+.wr-tab:hover {
+    color: var(--white);
+}
+
+.wr-tab.active {
+    color: var(--blue, #3b82f6);
+    border-bottom-color: var(--blue, #3b82f6);
+}
+
+/* ---------- Painéis ---------- */
+.wr-panels {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+}
+
+.wr-panel {
+    display: none;
+    flex: 1;
+    min-height: 0;
+}
+
+.wr-panel.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Editor panel ---------- */
+#wrPanel-editor {
+    flex-direction: column;
+}
+
+.wr-editor-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.wr-tool-group {
+    display: flex;
+    gap: 4px;
+}
+
+.wr-editor-area {
+    flex: 1;
+    min-height: 0;
+    background: var(--bg);
+    color: var(--white);
+    border: none;
+    outline: none;
+    padding: 16px 20px;
+    font-family: var(--mono);
+    font-size: 15px;
+    line-height: 1.7;
+    resize: none;
+    overflow-y: auto;
+}
+
+.wr-editor-area::placeholder {
+    color: var(--gray);
+    opacity: 0.7;
+}
+
+    .wr-md-view-panel {
+        display: none;
+        flex-direction: column;
+        border-top: 1px solid var(--border);
+        background: var(--bg2);
+        padding: 10px 14px;
+        gap: 8px;
+    }
+
+    .wr-md-view-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        color: var(--white);
+        font-weight: 600;
+    }
+
+    .wr-md-view-area {
+        width: 100%;
+        min-height: 180px;
+        background: var(--bg);
+        color: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 10px;
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.5;
+        resize: vertical;
+        overflow: auto;
+    }
+
+    .wr-md-view-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
+    }
+    .position {position: relative;
+    display: inline-flex;}
+
+.wr-export-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    z-index: 100;
+    min-width: 160px;
+    padding: 4px 0;
+}
+
+.wr-export-menu .btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+/* HAVAN branded export submenu */
+.wr-export-divider {
+    height: 1px;
+    background: var(--border, #30363d);
+    margin: 4px 8px;
+}
+.wr-export-label {
+    padding: 4px 12px 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #E2231A; /* HAVAN vermelho — marca promocional */
+}
+.wr-export-menu .btn[onclick^="writerExportHavan"] {
+    color: #003DA5; /* HAVAN azul — navegação/dominante */
+    font-weight: 600;
+}
+.wr-export-menu .btn[onclick^="writerExportHavan"]:hover {
+    background: rgba(0, 61, 165, 0.12);
+}
+
+/* ---------- Documents panel ---------- */
+#wrPanel-documents {
+    flex-direction: column;
+}
+
+.wr-docs-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+    flex-shrink: 0;
+}
+
+.wr-docs-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+}
+
+.wr-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--gray);
+    gap: 10px;
+    font-size: 14px;
+}
+
+.wr-empty i {
+    font-size: 36px;
+    opacity: 0.4;
+}
+
+.wr-doc-header {
+    display: grid;
+    grid-template-columns: 1fr 120px 80px;
+    padding: 8px 14px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--gray);
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.04em;
+}
+
+.wr-doc-row {
+    display: grid;
+    grid-template-columns: 1fr 120px 80px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    font-size: 13px;
+    color: var(--white);
+    transition: background .1s;
+}
+
+.wr-doc-row:hover {
+    background: var(--bg-card);
+}
+
+.wr-doc-row.wr-doc-active {
+    background: rgba(59,130,246,0.1);
+}
+
+.wr-doc-name a {
+    color: var(--blue, #3b82f6);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.wr-doc-actions {
+    white-space: nowrap;
+}
+
+/* ---------- About panel ---------- */
+#wrPanel-about {
+    overflow-y: auto;
+    padding: 28px 24px 48px;
+    align-items: center;
+}
+
+.wr-hero {
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.wr-hero-logo {
+    display: inline-flex;
+    width: 64px;
+    height: 64px;
+    color: var(--blue, #3b82f6);
+    margin-bottom: 14px;
+}
+
+.wr-hero-logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.wr-hero-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+}
+
+.wr-hero-tag {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--gray-hi);
+    margin: 0 auto 8px;
+}
+
+/* ---------- NEW: Chat panel styles ---------- */
+.wr-chat-panel {
+    display: flex;
+    flex-direction: column;
+    height: 200px;                /* fixed height; scrolls inside */
+    min-height: 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+    flex-shrink: 0;
+}
+
+.wr-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.wr-chat-msg {
+    max-width: 80%;
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.wr-chat-msg-user {
+    align-self: flex-end;
+    background: var(--blue, #3b82f6);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.wr-chat-msg-agent {
+    align-self: flex-start;
+    background: var(--bg-card);
+    color: var(--white);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+}
+
+.wr-chat-input-area {
+    display: flex;
+    align-items: center;
+    padding: 6px 8px;
+    gap: 6px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.wr-chat-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--white);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 6px 8px;
+}
+
+.wr-chat-input::placeholder {
+    color: var(--gray);
+    opacity: 0.8;
+}
+
+.wr-chat-input-area .btn {
+    flex-shrink: 0;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 720px) {
+    .wr-editor-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .wr-doc-header,
+    .wr-doc-row {
+        grid-template-columns: 1fr 80px 60px;
+    }
+
+    .wr-chat-panel {
+        height: 160px;
+    }
+}

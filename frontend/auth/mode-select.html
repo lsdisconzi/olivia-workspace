@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>OliviaLegal · Escolha o modo</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%237FA98E'/><g transform='translate(6,7) scale(0.31)'><path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23FAF6EF' stroke-width='2.6' stroke-linecap='round' opacity='.75'/><ellipse cx='22' cy='42' rx='4.4' ry='5.5' fill='%23D98A5E'/></g></svg>">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ═══════════════════════════════════════════
+           DARK THEME (fallback)
+           ═══════════════════════════════════════════ */
+        [data-theme="dark"] {
+            --bg: #191917;
+            --bg-card: #1f1f1d;
+            --bg-card-hover: #252523;
+            --border: #2a2a28;
+            --border-medium: #363634;
+            --border-strong: #444442;
+            --amber: #D98A5E;
+            --amber-light: #E7A67D;
+            --amber-lo: rgba(217, 138, 94, .12);
+            --amber-bg: rgba(217, 138, 94, .06);
+            --green-dark: #7FA98E;
+            --green-mid: #A9CBB7;
+            --green-light: #C5DDCE;
+            --green-lo: rgba(127, 169, 142, .10);
+            --green-bg: rgba(127, 169, 142, .05);
+            --blue: #7AAFC5;
+            --blue-light: #9CC5D6;
+            --blue-lo: rgba(122, 175, 197, .10);
+            --blue-bg: rgba(122, 175, 197, .05);
+            --golden: #D6B87A;
+            --white: #ede8df;
+            --gray: #6b6b68;
+            --gray-hi: #9a9a96;
+            --cream: #242422;
+            --brand-text: var(--white);
+            --btn-bg: #ede8df;
+            --btn-text: #191917;
+            --btn-hover-bg: #d6d0c6;
+            --input-bg: #191917;
+            --input-border: #363634;
+            --shadow: 0 6px 24px rgba(0, 0, 0, .22);
+            --shadow-hover: 0 14px 36px rgba(0, 0, 0, .30);
+            --notif-unread-bg: rgba(217, 138, 94, .08);
+            --notif-unread-border: rgba(217, 138, 94, .25);
+            --footer-border: #2a2a28;
+            --rail-opacity: .28;
+            --body-glow-1: rgba(214, 184, 122, .03);
+            --body-glow-2: rgba(217, 138, 94, .02);
+            --kicker-bg: #242422;
+            --kicker-border: #2a2a28;
+            --icon-verde-border: rgba(127, 169, 142, .20);
+            --icon-verde-bg: rgba(127, 169, 142, .08);
+            --icon-terra-border: rgba(217, 138, 94, .20);
+            --icon-terra-bg: rgba(217, 138, 94, .08);
+            --icon-azul-border: rgba(122, 175, 197, .18);
+            --icon-azul-bg: rgba(122, 175, 197, .06);
+            --toggle-shadow: 0 4px 12px rgba(0, 0, 0, .18);
+            --lang-menu-bg: #1f1f1d;
+            --lang-menu-border: #363634;
+        }
+
+        /* ═══════════════════════════════════════════
+           LIGHT THEME
+           ═══════════════════════════════════════════ */
+        [data-theme="light"] {
+            --bg: #FAF6EF;
+            --bg-card: #FFFFFF;
+            --bg-card-hover: #fdfdfb;
+            --border: rgba(63, 97, 82, .10);
+            --border-medium: rgba(63, 97, 82, .18);
+            --border-strong: rgba(63, 97, 82, .28);
+            --amber: #D98A5E;
+            --amber-light: #E7A67D;
+            --amber-lo: rgba(217, 138, 94, .08);
+            --amber-bg: rgba(217, 138, 94, .05);
+            --green-dark: #3F6152;
+            --green-mid: #7FA98E;
+            --green-light: #A9CBB7;
+            --green-lo: rgba(127, 169, 142, .08);
+            --green-bg: rgba(127, 169, 142, .05);
+            --blue: #5A8DA6;
+            --blue-light: #7AAFC5;
+            --blue-lo: rgba(90, 141, 166, .08);
+            --blue-bg: rgba(90, 141, 166, .05);
+            --golden: #D6B87A;
+            --white: #34302A;
+            --gray: #ADA396;
+            --gray-hi: #6B6458;
+            --cream: #F2ECDE;
+            --brand-text: var(--green-dark);
+            --btn-bg: #3F6152;
+            --btn-text: #FAF6EF;
+            --btn-hover-bg: #345545;
+            --input-bg: #FFFFFF;
+            --input-border: rgba(63, 97, 82, .18);
+            --shadow: 0 6px 24px rgba(63, 97, 82, .05);
+            --shadow-hover: 0 14px 36px rgba(63, 97, 82, .10);
+            --notif-unread-bg: rgba(217, 138, 94, .06);
+            --notif-unread-border: rgba(217, 138, 94, .22);
+            --footer-border: rgba(63, 97, 82, .10);
+            --rail-opacity: .35;
+            --body-glow-1: rgba(214, 184, 122, .04);
+            --body-glow-2: rgba(217, 138, 94, .03);
+            --kicker-bg: #F2ECDE;
+            --kicker-border: rgba(63, 97, 82, .08);
+            --icon-verde-border: rgba(127, 169, 142, .22);
+            --icon-verde-bg: rgba(127, 169, 142, .06);
+            --icon-terra-border: rgba(217, 138, 94, .22);
+            --icon-terra-bg: rgba(217, 138, 94, .06);
+            --icon-azul-border: rgba(90, 141, 166, .18);
+            --icon-azul-bg: rgba(90, 141, 166, .05);
+            --toggle-shadow: 0 4px 12px rgba(0, 0, 0, .07);
+            --lang-menu-bg: #FFFFFF;
+            --lang-menu-border: rgba(63, 97, 82, .18);
+        }
+
+        :root {
+            --bg: #191917;
+            --bg-card: #1f1f1d;
+            --bg-card-hover: #252523;
+            --border: #2a2a28;
+            --border-medium: #363634;
+            --border-strong: #444442;
+            --amber: #D98A5E;
+            --amber-light: #E7A67D;
+            --amber-lo: rgba(217, 138, 94, .12);
+            --amber-bg: rgba(217, 138, 94, .06);
+            --green-dark: #7FA98E;
+            --green-mid: #A9CBB7;
+            --green-light: #C5DDCE;
+            --green-lo: rgba(127, 169, 142, .10);
+            --green-bg: rgba(127, 169, 142, .05);
+            --blue: #7AAFC5;
+            --blue-light: #9CC5D6;
+            --blue-lo: rgba(122, 175, 197, .10);
+            --blue-bg: rgba(122, 175, 197, .05);
+            --golden: #D6B87A;
+            --white: #ede8df;
+            --gray: #6b6b68;
+            --gray-hi: #9a9a96;
+            --cream: #242422;
+            --brand-text: var(--white);
+            --btn-bg: #ede8df;
+            --btn-text: #191917;
+            --btn-hover-bg: #d6d0c6;
+            --input-bg: #191917;
+            --input-border: #363634;
+            --shadow: 0 6px 24px rgba(0, 0, 0, .22);
+            --shadow-hover: 0 14px 36px rgba(0, 0, 0, .30);
+            --notif-unread-bg: rgba(217, 138, 94, .08);
+            --notif-unread-border: rgba(217, 138, 94, .25);
+            --footer-border: #2a2a28;
+            --rail-opacity: .28;
+            --body-glow-1: rgba(214, 184, 122, .03);
+            --body-glow-2: rgba(217, 138, 94, .02);
+            --kicker-bg: #242422;
+            --kicker-border: #2a2a28;
+            --icon-verde-border: rgba(127, 169, 142, .20);
+            --icon-verde-bg: rgba(127, 169, 142, .08);
+            --icon-terra-border: rgba(217, 138, 94, .20);
+            --icon-terra-bg: rgba(217, 138, 94, .08);
+            --icon-azul-border: rgba(122, 175, 197, .18);
+            --icon-azul-bg: rgba(122, 175, 197, .06);
+            --toggle-shadow: 0 4px 12px rgba(0, 0, 0, .18);
+            --lang-menu-bg: #1f1f1d;
+            --lang-menu-border: #363634;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(ellipse 50% 40% at 50% 0%, var(--body-glow-1) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 80% 90%, var(--body-glow-2) 0%, transparent 55%),
+                var(--bg);
+            color: var(--white);
+            line-height: 1.7;
+            font-size: 15px;
+            padding: 40px 24px;
+            position: relative;
+            overflow-x: hidden;
+            transition: background .35s ease, color .35s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image: radial-gradient(circle at 20% 30%, rgba(127, 169, 142, .018) 1px, transparent 1px),
+                radial-gradient(circle at 75% 65%, rgba(217, 138, 94, .018) 1px, transparent 1px);
+            background-size: 56px 56px;
+            opacity: .45;
+            transition: opacity .35s ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        .rail {
+            position: fixed;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .rail::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 72px;
+            bottom: 72px;
+            width: 1px;
+            background: linear-gradient(var(--green-mid), var(--border) 40%, var(--border) 60%, var(--amber));
+            opacity: var(--rail-opacity);
+            transition: opacity .35s ease, background .35s ease;
+        }
+
+        .rail .dot {
+            position: absolute;
+            left: -2.5px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            transition: background .35s ease;
+        }
+
+        .rail .dot.top {
+            top: 68px;
+            background: var(--green-mid);
+        }
+
+        .rail .dot.bottom {
+            bottom: 68px;
+            background: var(--amber);
+        }
+
+        @media (max-width: 900px) {
+            .rail {
+                display: none;
+            }
+        }
+
+        .wrap {
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 52px;
+        }
+
+        .header-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .68rem;
+            color: var(--amber);
+            text-transform: uppercase;
+            letter-spacing: .16em;
+            padding: 7px 18px;
+            border-radius: 999px;
+            background: var(--kicker-bg);
+            border: 1px solid var(--kicker-border);
+            margin-bottom: 28px;
+            transition: all .35s ease;
+        }
+
+        .header-kicker .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--amber);
+            animation: subtle-pulse 2.2s ease-in-out infinite;
+        }
+
+        .header-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(34px, 4.5vw, 44px);
+            font-weight: 400;
+            color: var(--green-dark);
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            line-height: 1.14;
+            transition: color .35s ease;
+        }
+
+        .header-title em {
+            font-style: italic;
+            color: var(--amber);
+            font-weight: 300;
+        }
+
+        .header-title .accent {
+            color: var(--amber);
+        }
+
+        #dynamicIndustry {
+            display: inline-block;
+            transition: opacity .25s ease, transform .25s ease;
+            color: var(--amber);
+        }
+
+        .header-desc {
+            font-size: .94rem;
+            color: var(--gray-hi);
+            line-height: 1.7;
+            margin-bottom: 22px;
+            max-width: 440px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: color .35s ease;
+        }
+
+        .user-chip {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            border: 1px solid var(--border-medium);
+            background: var(--bg-card);
+            border-radius: 999px;
+            padding: 9px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .7rem;
+            color: var(--gray-hi);
+            letter-spacing: .03em;
+            transition: all .35s ease;
+        }
+
+        .user-chip:hover {
+            border-color: var(--border-strong);
+            box-shadow: var(--shadow);
+        }
+
+        .user-chip i {
+            color: var(--amber);
+            font-size: .88rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 18px;
+            margin-bottom: 36px;
+        }
+
+        .mode-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px 26px 26px;
+            text-decoration: none;
+            color: inherit;
+            transition: all .35s ease;
+            box-shadow: var(--shadow);
+            display: block;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-medium);
+            box-shadow: var(--shadow-hover);
+            background: var(--bg-card-hover);
+        }
+
+        .mode-card:focus-visible {
+            outline: 2px solid var(--amber);
+            outline-offset: 4px;
+            border-radius: 16px;
+        }
+
+        .mode-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            background: var(--cream);
+            transition: all .35s ease;
+        }
+
+        .mode-card:hover .mode-icon {
+            transform: scale(1.04);
+        }
+
+        .mode-icon.verde {
+            color: var(--green-mid);
+            border-color: var(--icon-verde-border);
+            background: var(--icon-verde-bg);
+        }
+
+        .mode-icon.terra {
+            color: var(--amber);
+            border-color: var(--icon-terra-border);
+            background: var(--icon-terra-bg);
+        }
+
+        .mode-icon.azul {
+            color: var(--blue);
+            border-color: var(--icon-azul-border);
+            background: var(--icon-azul-bg);
+        }
+
+        .mode-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--green-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+            transition: color .35s ease;
+        }
+
+        .mode-desc {
+            font-size: .82rem;
+            color: var(--gray-hi);
+            line-height: 1.6;
+            transition: color .35s ease;
+        }
+
+        .mode-card .mode-arrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .62rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--gray);
+            transition: color .35s ease;
+        }
+
+        .mode-card:hover .mode-arrow {
+            color: var(--amber);
+        }
+
+        .mode-card .mode-arrow i {
+            font-size: .6rem;
+            transition: transform .35s ease;
+        }
+
+        .mode-card:hover .mode-arrow i {
+            transform: translateX(3px);
+        }
+
+        .notifications {
+            margin: 8px 0 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px 28px;
+            box-shadow: var(--shadow);
+            transition: all .35s ease;
+        }
+
+        .notifications-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .notifications-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--green-dark);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color .35s ease;
+        }
+
+        .notif-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .64rem;
+            background: var(--cream);
+            border: 1px solid var(--border-medium);
+            border-radius: 20px;
+            padding: 3px 13px;
+            color: var(--gray-hi);
+            letter-spacing: .04em;
+            transition: all .35s ease;
+        }
+
+        .notif-btn {
+            border: 1px solid var(--border-medium);
+            background: var(--cream);
+            color: var(--gray-hi);
+            border-radius: 8px;
+            padding: 7px 16px;
+            font-size: .7rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .35s ease;
+            letter-spacing: .02em;
+        }
+
+        .notif-btn:hover {
+            border-color: var(--amber);
+            color: var(--amber);
+            background: var(--amber-bg);
+        }
+
+        .notif-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .notif-item {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px 16px;
+            background: var(--bg);
+            transition: all .35s ease;
+        }
+
+        .notif-item.unread {
+            border-color: var(--notif-unread-border);
+            background: var(--notif-unread-bg);
+            box-shadow: 0 2px 10px rgba(217, 138, 94, .06);
+        }
+
+        .notif-item:hover {
+            border-color: var(--border-medium);
+        }
+
+        .notif-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notif-label {
+            font-size: .62rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            transition: color .35s ease;
+        }
+
+        .notif-mark {
+            border: none;
+            background: transparent;
+            color: var(--amber);
+            font-size: .7rem;
+            cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 500;
+            transition: opacity .35s ease;
+            letter-spacing: .02em;
+        }
+
+        .notif-mark:hover {
+            opacity: .7;
+            text-decoration: underline;
+        }
+
+        .notif-msg {
+            margin-top: 7px;
+            font-size: .82rem;
+            color: var(--gray-hi);
+            line-height: 1.6;
+            transition: color .35s ease;
+        }
+
+        .notif-empty {
+            text-align: center;
+            padding: 14px;
+            font-size: .82rem;
+            color: var(--gray);
+            transition: color .35s ease;
+        }
+
+        .foot {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 28px;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--footer-border);
+            padding-top: 22px;
+            transition: border-color .35s ease;
+        }
+
+        .foot-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .64rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            text-decoration: none;
+            transition: color .35s ease;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .foot-link:hover {
+            color: var(--amber);
+        }
+
+        .foot-link i {
+            font-size: .7rem;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity .7s ease, transform .7s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ═══ THEME & LANGUAGE CONTROLS ═══ */
+        .controls-bar {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .theme-toggle,
+        .lang-toggle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--border-medium);
+            background: var(--bg-card);
+            color: var(--gray-hi);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .35s ease;
+            box-shadow: var(--toggle-shadow);
+            font-size: 17px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            position: relative;
+        }
+
+        .theme-toggle:hover,
+        .lang-toggle:hover {
+            border-color: var(--amber);
+            color: var(--amber);
+            transform: scale(1.06);
+        }
+
+        .lang-menu {
+            position: absolute;
+            bottom: 50px;
+            right: 0;
+            background: var(--lang-menu-bg);
+            border: 1px solid var(--lang-menu-border);
+            border-radius: 12px;
+            padding: 6px 0;
+            min-width: 130px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: all .25s ease;
+            z-index: 1001;
+        }
+
+        .lang-menu.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-option {
+            display: block;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--gray-hi);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: .78rem;
+            padding: 8px 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .lang-option:hover {
+            background: var(--amber-bg);
+            color: var(--amber);
+        }
+
+        .lang-option.active {
+            color: var(--amber);
+            font-weight: 600;
+        }
+
+        @media (max-width: 640px) {
+            .controls-bar {
+                bottom: 16px;
+                right: 16px;
+                gap: 8px;
+            }
+
+            .theme-toggle,
+            .lang-toggle {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+        }
+
+        @keyframes subtle-pulse {
+
+            0%,
+            100% {
+                opacity: .45;
+            }
+
+            50% {
+                opacity: .75;
+            }
+        }
+    </style>
+</head>
+
+<body data-theme="light">
+
+    <div class="rail"><span class="dot top"></span><span class="dot bottom"></span></div>
+
+    <!-- ═══ FLOATING CONTROLS ═══ -->
+    <div class="controls-bar">
+        <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema claro/escuro">
+            <i class="fas fa-moon"></i>
+        </button>
+        <div style="position:relative;">
+            <button class="lang-toggle" id="langToggle" aria-label="Selecionar idioma">
+                <i class="fas fa-globe"></i>
+            </button>
+            <div class="lang-menu" id="langMenu">
+                <button class="lang-option active" data-lang="pt">Português</button>
+                <button class="lang-option" data-lang="en">English</button>
+                <button class="lang-option" data-lang="es">Español</button>
+                <button class="lang-option" data-lang="it">Italiano</button>
+                <button class="lang-option" data-lang="pl">Polski</button>
+                <button class="lang-option" data-lang="el">Ελληνικά</button>
+                <button class="lang-option" data-lang="sq">Shqip</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrap">
+
+        <!-- ═══ HEADER ═══ -->
+        <header class="header reveal">
+            <div class="header-kicker" data-i18n="kicker">
+                <span class="pulse-dot"></span> Sessão ativa · OliviaLegal
+            </div>
+            <h1 class="header-title" data-i18n="title">
+                Olivia <em>×</em> <span class="accent"><span id="dynamicIndustry">Direito</span></span>
+            </h1>
+            <p class="header-desc" data-i18n="desc">Escolha o ambiente de trabalho adequado para esta sessão.</p>
+            <div class="user-chip">
+                <i class="fas fa-user-circle"></i>
+                __USER_DISPLAY__ · __EMAIL__
+            </div>
+        </header>
+
+        <!-- ═══ MODE CARDS ═══ -->
+        <div class="grid reveal">
+            <a class="mode-card" href="/OliviaLegal/olivia">
+                <div class="mode-icon verde"><i class="fas fa-table-columns"></i></div>
+                <div class="mode-title" data-i18n="workspaceTitle">Workspace</div>
+                <div class="mode-desc" data-i18n="workspaceDesc">Ambiente completo para análise jurídica, agentes de IA,
+                    projetos, documentos, memória e ferramentas.</div>
+                <span class="mode-arrow" data-i18n="access">Acessar <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a class="mode-card" href="/OliviaLegal/residente">
+                <div class="mode-icon azul"><i class="fas fa-mobile-screen-button"></i></div>
+                <div class="mode-title" data-i18n="mobileTitle">Mobile Remote</div>
+                <div class="mode-desc" data-i18n="mobileDesc">Acesso simplificado para acompanhamento, consultas rápidas
+                    e operação remota.</div>
+                <span class="mode-arrow" data-i18n="access">Acessar <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a class="mode-card" href="/OliviaLegal/agent">
+                <div class="mode-icon terra"><i class="fas fa-comments"></i></div>
+                <div class="mode-title" data-i18n="agentTitle">Agent Mobile</div>
+                <div class="mode-desc" data-i18n="agentDesc">Assistente conversacional otimizado para análise, consultas
+                    e interações jurídicas.</div>
+                <span class="mode-arrow" data-i18n="access">Acessar <i class="fas fa-arrow-right"></i></span>
+            </a>
+        </div>
+
+        <!-- ═══ NOTIFICATIONS ═══ -->
+        <section class="notifications reveal" aria-live="polite">
+            <div class="notifications-head">
+                <h2 class="notifications-title">
+                    <i class="fas fa-bell" style="color:var(--amber);font-size:.95rem;"></i>
+                    <span data-i18n="notifTitle">Notificações</span>
+                    <span id="notifCount" class="notif-badge">0</span>
+                </h2>
+                <button id="markAllNotifBtn" class="notif-btn" type="button" data-i18n="markAllRead">
+                    <i class="fas fa-check-double"></i> Marcar todas como lidas
+                </button>
+            </div>
+            <div id="notifList" class="notif-list">
+                <div class="notif-empty" data-i18n="loadingNotif">Carregando notificações...</div>
+            </div>
+        </section>
+
+        <!-- ═══ FOOTER ═══ -->
+        <div class="foot reveal">
+            <a class="foot-link" href="/OliviaLegal/olivia" data-i18n="homeLink">
+                <i class="fas fa-arrow-left"></i> Página inicial
+            </a>
+            <a class="foot-link" href="/OliviaLegal/logout" data-i18n="logoutLink">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
+            __ADMIN_LINK__
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════
+        // MULTILINGUAL TRANSLATIONS
+        // ═══════════════════════════════════════════
+        const translations = {
+            pt: {
+                kicker: '<span class="pulse-dot"></span> Sessão ativa · OliviaLegal',
+                title: 'Olivia <em>×</em> <span class="accent"><span id="dynamicIndustry">Direito</span></span>',
+                desc: 'Escolha o ambiente de trabalho adequado para esta sessão. Cada modo foi projetado para um contexto diferente — da análise profunda à operação remota.',
+                workspaceTitle: 'Workspace',
+                workspaceDesc: 'Ambiente completo para análise jurídica, agentes de IA, projetos, documentos, memória e ferramentas integradas.',
+                mobileTitle: 'Mobile Remote',
+                mobileDesc: 'Acesso simplificado para acompanhamento, consultas rápidas e operação remota — otimizado para telas menores.',
+                agentTitle: 'Agent Mobile',
+                agentDesc: 'Assistente conversacional otimizado para análise, consultas e interações jurídicas em qualquer dispositivo.',
+                access: 'Acessar <i class="fas fa-arrow-right"></i>',
+                notifTitle: 'Notificações',
+                markAllRead: '<i class="fas fa-check-double"></i> Marcar todas como lidas',
+                loadingNotif: 'Carregando notificações...',
+                noNotif: 'Nenhuma notificação no momento.',
+                errorNotif: 'Não foi possível carregar notificações.',
+                homeLink: '<i class="fas fa-arrow-left"></i> Página inicial',
+                logoutLink: '<i class="fas fa-sign-out-alt"></i> Sair',
+                markRead: 'Marcar lida'
+            },
+            en: {
+                kicker: '<span class="pulse-dot"></span> Active session · OliviaLegal',
+                title: 'Olivia <em>×</em> <span class="accent"><span id="dynamicIndustry">Law</span></span>',
+                desc: 'Choose the suitable workspace for this session. Each mode is designed for a different context — from deep analysis to remote operation.',
+                workspaceTitle: 'Workspace',
+                workspaceDesc: 'Full environment for legal analysis, AI agents, projects, documents, memory and integrated tools.',
+                mobileTitle: 'Mobile Remote',
+                mobileDesc: 'Simplified access for monitoring, quick queries and remote operation — optimized for smaller screens.',
+                agentTitle: 'Agent Mobile',
+                agentDesc: 'Conversational assistant optimized for legal analysis, queries and interactions on any device.',
+                access: 'Access <i class="fas fa-arrow-right"></i>',
+                notifTitle: 'Notifications',
+                markAllRead: '<i class="fas fa-check-double"></i> Mark all as read',
+                loadingNotif: 'Loading notifications...',
+                noNotif: 'No notifications at the moment.',
+                errorNotif: 'Could not load notifications.',
+                homeLink: '<i class="fas fa-arrow-left"></i> Home',
+                logoutLink: '<i class="fas fa-sign-out-alt"></i> Logout',
+                markRead: 'Mark read'
+            },
+            es: {
+                kicker: '<span class="pulse-dot"></span> Sesión activa · OliviaLegal',
+                title: 'Olivia <em>×</em> <span class="accent"><span id="dynamicIndustry">Derecho</span></span>',
+                desc: 'Elige el entorno de trabajo adecuado para esta sesión. Cada modo está pensado para un contexto diferente — del análisis profundo a la operación remota.',
+                workspaceTitle: 'Workspace',
+                workspaceDesc: 'Entorno completo para análisis jurídico, agentes de IA, proyectos, documentos, memoria y herramientas integradas.',
+                mobileTitle: 'Mobile Remote',
+                mobileDesc: 'Acceso simplificado para seguimiento, consultas rápidas y operación remota — optimizado para pantallas pequeñas.',
+                agentTitle: 'Agent Mobile',
+                agentDesc: 'Asistente conversacional optimizado para análisis, consultas e interacciones jurídicas en cualquier dispositivo.',
+                access: 'Acceder <i class="fas fa-arrow-right"></i>',
+                notifTitle: 'Notificaciones',
+                markAllRead: '<i class="fas fa-check-double"></i> Marcar todas como leídas',
+                loadingNotif: 'Cargando notificaciones...',
+                noNotif: 'No hay notificaciones por el momento.',
+                errorNotif: 'No se pudieron cargar las notificaciones.',
+                homeLink: '<i class="fas fa-arrow-left"></i> Inicio',
+                logoutLink: '<i class="fas fa-sign-out-alt"></i> Salir',
+                markRead: 'Marcar leída'
+            },
+            it: {
+                kicker: '<span class="pulse-dot"></span> Sessione attiva · OliviaLegal',
+                title: 'Olivia <em>×</em> <span class="accent"><span id="dynamicIndustry">Diritto</span></span>',
+                desc: 'Scegli l\'ambiente di lavoro adatto a questa sessione. Ogni modalità è progettata per un contesto diverso — dall\'analisi approfondita all\'operatività remota.',
+                workspaceTitle: 'Workspace',
+                workspaceDesc: 'Ambiente completo per analisi giuridica, agenti IA, progetti, documenti, memoria e strumenti integrati.',
+                mobileTitle: 'Mobile Remote',
+                mobileDesc: 'Accesso semplificato per monitoraggio, consultazioni rapide e operatività remota — ottimizzato per schermi ridotti.',
+                agentTitle: 'Agent Mobile',
+                agentDesc: 'Assistente conversazionale ottimizzato per analisi, consultazioni e interazioni giuridiche su qualsiasi dispositivo.',
+                access: 'Accedi <i class="fas fa-arrow-right"></i>',
+                notifTitle: 'Notifiche',
+                markAllRead: '<i class="fas fa-check-double"></i> Segna tutte come lette',
+                loadingNotif: 'Caricamento notifiche...',
+                noNotif: 'Nessuna notifica al momento.',
+                errorNotif: 'Impossibile caricare le notifiche.',
+                homeLink: '<i class="fas fa-arrow-left"></i> Home',
+                logoutLink: '<i class="fas fa-sign-out-alt"></i> Esci',
+                markRead: 'Segna come letta'
+            },
+            pl: {
+                kicker: '<span class="pulse-dot"></span> Aktywna sesja · OliviaLegal',
+                title: 'Olivia <em>×</em> <span class="accent"><span id="dynamicIndustry">Prawo</span></span>',
+                desc: 'Wybierz odpowiednie środowisko pracy dla tej sesji. Każdy tryb został zaprojektowany z myślą o innym kontekście – od głębokiej analizy po zdalną obsługę.',
+                workspaceTitle: 'Workspace',
+                workspaceDesc: 'Kompletne środowisko do analizy prawnej, agentów AI, projektów, dokumentów, pamięci i zintegrowanych narzędzi.',
+                mobileTitle: 'Mobile Remote',
+                mobileDesc: 'Uproszczony dostęp do monitorowania, szybkich zapytań i zdalnej obsługi – zoptymalizowany pod kątem mniejszych ekranów.',
+                agentTitle: 'Agent Mobile',
+                agentDesc: 'Asystent konwersacyjny zoptymalizowany pod kątem analiz prawnych, zapytań i interakcji na dowolnym urządzeniu.',
+                access: 'Dostęp <i class="fas fa-arrow-right"></i>',
+                notifTitle: 'Powiadomienia',
+                markAllRead: '<i class="fas fa-check-double"></i> Oznacz wszystkie jako przeczytane',
+                loadingNotif: 'Ładowanie powiadomień...',
+                noNotif: 'Brak powiadomień w tej chwili.',
+                errorNotif: 'Nie udało się załadować powiadomień.',
+                homeLink: '<i class="fas fa-arrow-left"></i> Strona główna',
+                logoutLink: '<i class="fas fa-sign-out-alt"></i> Wyloguj się',
+                markRead: 'Oznacz jako przeczytane'
+            },
+            el: {
+                kicker: '<span class="pulse-dot"></span> Ενεργή συνεδρία · OliviaLegal',
+                title: 'Olivia <em>×</em> <span class="accent"><span id="dynamicIndustry">Δίκαιο</span></span>',
+                desc: 'Επιλέξτε το κατάλληλο περιβάλλον εργασίας για αυτή τη συνεδρία. Κάθε λειτουργία έχει σχεδιαστεί για διαφορετικό πλαίσιο — από βαθιά ανάλυση έως απομακρυσμένη λειτουργία.',
+                workspaceTitle: 'Workspace',
+                workspaceDesc: 'Πλήρες περιβάλλον για νομική ανάλυση, πράκτορες τεχνητής νοημοσύνης, έργα, έγγραφα, μνήμη και ενσωματωμένα εργαλεία.',
+                mobileTitle: 'Mobile Remote',
+                mobileDesc: 'Απλοποιημένη πρόσβαση για παρακολούθηση, γρήγορες αναζητήσεις και απομακρυσμένη λειτουργία — βελτιστοποιημένη για μικρότερες οθόνες.',
+                agentTitle: 'Agent Mobile',
+                agentDesc: 'Βοηθός συνομιλίας βελτιστοποιημένος για νομική ανάλυση, ερωτήματα και αλληλεπιδράσεις σε οποιαδήποτε συσκευή.',
+                access: 'Πρόσβαση <i class="fas fa-arrow-right"></i>',
+                notifTitle: 'Ειδοποιήσεις',
+                markAllRead: '<i class="fas fa-check-double"></i> Σήμανση όλων ως αναγνωσμένων',
+                loadingNotif: 'Φόρτωση ειδοποιήσεων...',
+                noNotif: 'Καμία ειδοποίηση προς το παρόν.',
+                errorNotif: 'Δεν ήταν δυνατή η φόρτωση των ειδοποιήσεων.',
+                homeLink: '<i class="fas fa-arrow-left"></i> Αρχική',
+                logoutLink: '<i class="fas fa-sign-out-alt"></i> Αποσύνδεση',
+                markRead: 'Σήμανση ως αναγνωσμένο'
+            },
+            sq: {
+                kicker: '<span class="pulse-dot"></span> Sesion aktiv · OliviaLegal',
+                title: 'Olivia <em>×</em> <span class="accent"><span id="dynamicIndustry">Drejtësi</span></span>',
+                desc: 'Zgjidhni mjedisin e duhur të punës për këtë sesion. Çdo mënyrë është projektuar për një kontekst të ndryshëm — nga analiza e thellë deri te operimi në distancë.',
+                workspaceTitle: 'Workspace',
+                workspaceDesc: 'Mjedis i plotë për analiza juridike, agjentë të AI, projekte, dokumente, memorie dhe mjete të integruara.',
+                mobileTitle: 'Mobile Remote',
+                mobileDesc: 'Qasje e thjeshtuar për monitorim, kërkime të shpejta dhe operim në distancë — e optimizuar për ekrane më të vegjël.',
+                agentTitle: 'Agent Mobile',
+                agentDesc: 'Asistent bisedor i optimizuar për analiza, këshillime dhe ndërveprime juridike në çdo pajisje.',
+                access: 'Qasje <i class="fas fa-arrow-right"></i>',
+                notifTitle: 'Njoftimet',
+                markAllRead: '<i class="fas fa-check-double"></i> Shënoji të gjitha si të lexuara',
+                loadingNotif: 'Duke ngarkuar njoftimet...',
+                noNotif: 'Asnjë njoftim për momentin.',
+                errorNotif: 'Nuk mund të ngarkoheshin njoftimet.',
+                homeLink: '<i class="fas fa-arrow-left"></i> Kryefaqja',
+                logoutLink: '<i class="fas fa-sign-out-alt"></i> Dilni',
+                markRead: 'Shënoje të lexuar'
+            }
+        };
+
+        // ═══════════════════════════════════════════
+        // INDUSTRY WORD LISTS PER LANGUAGE
+        // ═══════════════════════════════════════════
+        const industryWords = {
+            pt: ["Direito", "Varejo", "Lojas", "Construção", "Educação", "Saúde", "Logística", "Finanças", "Tecnologia", "Indústria", "Alimentação", "Farmacêutica", "Consultoria", "Agronegócio", "Energia", "Transportes", "Imobiliário", "Turismo", "Telecom", "E-commerce", "Atacado", "Franquias", "Cooperativas", "ONGs", "Governança", "Compliance"],
+            en: ["Law", "Retail", "Shops", "Construction", "Education", "Healthcare", "Logistics", "Finance", "Technology", "Industry", "Food", "Pharma", "Consulting", "Agribusiness", "Energy", "Transport", "Real Estate", "Tourism", "Telecom", "E-commerce", "Wholesale", "Franchises", "Cooperatives", "NGOs", "Governance", "Compliance"],
+            es: ["Derecho", "Minorista", "Tiendas", "Construcción", "Educación", "Salud", "Logística", "Finanzas", "Tecnología", "Industria", "Alimentación", "Farmacéutica", "Consultoría", "Agronegocio", "Energía", "Transporte", "Inmobiliario", "Turismo", "Telecomunicaciones", "E-commerce", "Mayorista", "Franquicias", "Cooperativas", "ONGs", "Gobernanza", "Cumplimiento"],
+            it: ["Diritto", "Vendita al dettaglio", "Negozi", "Costruzione", "Istruzione", "Sanità", "Logistica", "Finanza", "Tecnologia", "Industria", "Alimentare", "Farmaceutica", "Consulenza", "Agroalimentare", "Energia", "Trasporti", "Immobiliare", "Turismo", "Telecomunicazioni", "E-commerce", "Ingrosso", "Franchising", "Cooperative", "ONG", "Governance", "Compliance"],
+            pl: ["Prawo", "Handel detaliczny", "Sklepy", "Budownictwo", "Edukacja", "Ochrona zdrowia", "Logistyka", "Finanse", "Technologia", "Przemysł", "Żywność", "Farmacja", "Doradztwo", "Agrobiznes", "Energia", "Transport", "Nieruchomości", "Turystyka", "Telekomunikacja", "E-commerce", "Hurt", "Franczyzy", "Spółdzielnie", "ONG", "Ład korporacyjny", "Zgodność"],
+            el: ["Δίκαιο", "Λιανική", "Καταστήματα", "Κατασκευές", "Εκπαίδευση", "Υγεία", "Εφοδιαστική", "Χρηματοοικονομικά", "Τεχνολογία", "Βιομηχανία", "Τρόφιμα", "Φαρμακευτική", "Συμβουλευτική", "Αγροτική οικονομία", "Ενέργεια", "Μεταφορές", "Ακίνητα", "Τουρισμός", "Τηλεπικοινωνίες", "Ηλεκτρονικό εμπόριο", "Χονδρική", "Δικαιόχρηση", "Συνεταιρισμοί", "ΜΚΟ", "Διακυβέρνηση", "Συμμόρφωση"],
+            sq: ["Drejtësi", "Shitje me pakicë", "Dyqane", "Ndërtim", "Arsim", "Shëndetësi", "Logjistikë", "Financa", "Teknologji", "Industri", "Ushqim", "Farmaci", "Konsulencë", "Agrobiznes", "Energji", "Transport", "Pasuri të paluajtshme", "Turizëm", "Telekomunikacion", "E-commerce", "Shumicë", "Franchising", "Kooperativa", "OJQ", "Qeverisje", "Pajtueshmëri"]
+        };
+
+        // ═══════════════════════════════════════════
+        // STATE
+        // ═══════════════════════════════════════════
+        let currentLang = 'pt';
+        let industryInterval = null;
+
+        // ═══════════════════════════════════════════
+        // APPLY LANGUAGE
+        // ═══════════════════════════════════════════
+        function applyLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            const dict = translations[lang];
+
+            // Update all data-i18n elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    // Use innerHTML because some strings contain HTML (like icons, dynamicIndustry span)
+                    el.innerHTML = dict[key];
+                }
+            });
+
+            // Update dynamic industry span (it got recreated because of innerHTML on title)
+            const dynSpan = document.getElementById('dynamicIndustry');
+            if (dynSpan && industryWords[lang] && industryWords[lang].length > 0) {
+                dynSpan.textContent = industryWords[lang][0];
+            }
+
+            // Restart industry rotator with new language
+            startIndustryRotator();
+
+            // Update language menu active state
+            document.querySelectorAll('.lang-option').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+            });
+
+            // Save preference
+            try {
+                localStorage.setItem('olivia-lang', lang);
+            } catch (e) { /* ignore */ }
+        }
+
+        // ═══════════════════════════════════════════
+        // INDUSTRY WORD ROTATOR
+        // ═══════════════════════════════════════════
+        function startIndustryRotator() {
+            if (industryInterval) clearInterval(industryInterval);
+            const words = industryWords[currentLang] || industryWords['pt'];
+            const span = document.getElementById('dynamicIndustry');
+            if (!span || words.length === 0) return;
+
+            let currentWord = span.textContent.trim();
+            if (!words.includes(currentWord)) {
+                span.textContent = words[0];
+                currentWord = words[0];
+            }
+
+            function pickRandom() {
+                if (words.length <= 1) return words[0];
+                let next;
+                do {
+                    next = words[Math.floor(Math.random() * words.length)];
+                } while (next === currentWord && words.length > 1);
+                return next;
+            }
+
+            function flip() {
+                const next = pickRandom();
+                span.style.opacity = '0';
+                span.style.transform = 'translateY(-4px)';
+                setTimeout(() => {
+                    span.textContent = next;
+                    currentWord = next;
+                    span.style.opacity = '1';
+                    span.style.transform = 'translateY(0)';
+                }, 250);
+            }
+
+            // First flip after 3.5s, then every 4s
+            setTimeout(() => {
+                flip();
+                industryInterval = setInterval(flip, 4000);
+            }, 3500);
+        }
+
+        // ═══════════════════════════════════════════
+        // INITIAL LANGUAGE DETECTION
+        // ═══════════════════════════════════════════
+        function detectLanguage() {
+            const saved = localStorage.getItem('olivia-lang');
+            if (saved && translations[saved]) return saved;
+            const browser = navigator.language.slice(0, 2);
+            if (translations[browser]) return browser;
+            return 'pt';
+        }
+
+        // ═══════════════════════════════════════════
+        // THEME TOGGLE
+        // ═══════════════════════════════════════════
+        function initTheme() {
+            const body = document.body;
+            const toggleBtn = document.getElementById('themeToggle');
+            const icon = toggleBtn.querySelector('i');
+
+            function setTheme(theme) {
+                body.setAttribute('data-theme', theme);
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                try {
+                    localStorage.setItem('olivia-theme', theme);
+                } catch (e) { }
+            }
+
+            const savedTheme = localStorage.getItem('olivia-theme');
+            if (savedTheme === 'dark') setTheme('dark');
+            else if (savedTheme === 'light') setTheme('light');
+            else setTheme('light');
+
+            toggleBtn.addEventListener('click', () => {
+                const current = body.getAttribute('data-theme');
+                setTheme(current === 'dark' ? 'light' : 'dark');
+            });
+        }
+
+        // ═══════════════════════════════════════════
+        // LANGUAGE MENU
+        // ═══════════════════════════════════════════
+        function initLanguageMenu() {
+            const langToggle = document.getElementById('langToggle');
+            const langMenu = document.getElementById('langMenu');
+
+            langToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                langMenu.classList.toggle('open');
+            });
+
+            document.addEventListener('click', () => {
+                langMenu.classList.remove('open');
+            });
+
+            langMenu.addEventListener('click', (e) => {
+                const option = e.target.closest('.lang-option');
+                if (!option) return;
+                const lang = option.getAttribute('data-lang');
+                if (lang && translations[lang]) {
+                    applyLanguage(lang);
+                    langMenu.classList.remove('open');
+                }
+            });
+        }
+
+        // ═══════════════════════════════════════════
+        // NOTIFICATIONS (unchanged, but uses translated strings)
+        // ═══════════════════════════════════════════
+        async function loadNotifications() {
+            const list = document.getElementById('notifList');
+            const count = document.getElementById('notifCount');
+            const dict = translations[currentLang];
+            try {
+                const res = await fetch('/OliviaLegal/admin/notifications?limit=20');
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'falha ao carregar');
+                const items = Array.isArray(data.notifications) ? data.notifications : [];
+                const unread = Number(data.unread_count || 0);
+                count.textContent = String(unread);
+                if (!items.length) {
+                    list.innerHTML = `<div class="notif-empty">${dict.noNotif}</div>`;
+                    return;
+                }
+                list.innerHTML = items.map((item) => {
+                    const unreadClass = item.unread ? ' unread' : '';
+                    const markBtn = item.unread ?
+                        `<button class="notif-mark" data-id="${item.id}">${dict.markRead}</button>` :
+                        '';
+                    const title = String(item.title || 'Notificação');
+                    const message = String(item.message || '');
+                    return `<article class="notif-item${unreadClass}">
+                    <div class="notif-top">
+                      <div class="notif-label">${title}</div>
+                      ${markBtn}
+                    </div>
+                    <div class="notif-msg">${message}</div>
+                  </article>`;
+                }).join('');
+                list.querySelectorAll('.notif-mark').forEach((btn) => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.getAttribute('data-id');
+                        if (!id) return;
+                        await fetch(`/OliviaLegal/admin/notifications/${encodeURIComponent(id)}/read`, { method: 'POST' });
+                        loadNotifications();
+                    });
+                });
+            } catch (err) {
+                list.innerHTML = `<div class="notif-empty">${dict.errorNotif}</div>`;
+                count.textContent = '0';
+            }
+        }
+
+        document.getElementById('markAllNotifBtn').addEventListener('click', async () => {
+            await fetch('/OliviaLegal/admin/notifications/read-all', { method: 'POST' });
+            loadNotifications();
+        });
+
+        // ═══════════════════════════════════════════
+        // INIT
+        // ═══════════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', () => {
+            // Reveal animation
+            document.querySelectorAll('.reveal').forEach(el => {
+                new IntersectionObserver((entries) => {
+                    entries.forEach(e => {
+                        if (e.isIntersecting) e.target.classList.add('in');
+                    });
+                }, { threshold: .08 }).observe(el);
+            });
+
+            // Theme
+            initTheme();
+
+            // Language
+            initLanguageMenu();
+            const lang = detectLanguage();
+            applyLanguage(lang);
+
+            // Notifications
+            loadNotifications();
+        });
+    </script>
+    <script src="/OliviaLegal/auth-activity/tracker.js"></script>
+</body>
+
+</html>

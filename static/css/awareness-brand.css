@@ -1,0 +1,9 @@
+/*
+ * OliviaLegal brand overrides.
+ * Keep this file intentionally light so base workspace styles remain authoritative.
+ */
+
+:root {
+  --OliviaLegal-brand-accent: #c4622d;
+  --OliviaLegal-brand-forest: #1c4532;
+}

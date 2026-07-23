@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Olivia Workspace · Complete Feature Guide</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%237FA98E'/><g transform='translate(6,7) scale(0.31)'><path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23FAF6EF' stroke-width='2.6' stroke-linecap='round' opacity='.75'/><ellipse cx='22' cy='42' rx='4.4' ry='5.5' fill='%23D98A5E'/></g></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ══════════════════════════════════════════════════════════════
+           OLIVIA · FEATURE GUIDE — pastel token system
+           ══════════════════════════════════════════════════════════════ */
+        :root {
+            --white: #FAF6EF;
+            --paper: #FFFFFF;
+            --cream: #F2ECDE;
+            --black: #34302A;
+            --green-dark: #3F6152;
+            --green-mid: #7FA98E;
+            --green-light: #A9CBB7;
+            --amber: #D98A5E;
+            --amber-light: #E7A67D;
+            --golden: #D6B87A;
+            --gray: #ADA396;
+            --gray-hi: #6B6458;
+            --color-text-primary: var(--black);
+            --color-text-secondary: var(--gray-hi);
+            --color-text-tertiary: var(--gray);
+            --color-border-light: rgba(63, 97, 82, .12);
+            --color-border-medium: rgba(63, 97, 82, .20);
+            --color-border-strong: rgba(63, 97, 82, .30);
+            --font-serif: 'Fraunces', Georgia, serif;
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition: .35s cubic-bezier(.4, 0, .2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.65;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; text-decoration: none; }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+        /* ── Rail ── */
+        .rail { position: fixed; left: 20px; top: 0; bottom: 0; width: 1px; z-index: 5; pointer-events: none; }
+        .rail::before {
+            content: ''; position: absolute; left: 0; top: 64px; bottom: 64px; width: 1px;
+            background: linear-gradient(var(--green-mid), var(--color-border-light) 40%, var(--color-border-light) 60%, var(--amber)); opacity: .4;
+        }
+        .rail .dot { position: absolute; left: -2.5px; width: 6px; height: 6px; border-radius: 50%; }
+        .rail .dot.top { top: 60px; background: var(--green-mid); }
+        .rail .dot.bottom { bottom: 60px; background: var(--amber); }
+        @media (max-width: 900px) { .rail { display: none; } }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.2rem 2.6rem; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            background: color-mix(in srgb, var(--white) 80%, transparent); border-bottom: 1px solid transparent; transition: border-color var(--transition);
+        }
+        nav.scrolled { border-bottom-color: var(--color-border-light); }
+        .logo { display: flex; align-items: baseline; gap: .5rem; font-family: var(--font-serif); font-size: 1.22rem; font-weight: 500; color: var(--green-dark); letter-spacing: -0.01em; }
+        .logo .tag { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .16em; color: var(--gray); text-transform: uppercase; font-weight: 400; }
+        .nav-links { display: flex; align-items: center; gap: 1.4rem; flex-wrap: wrap; }
+        .nav-links a { font-size: .82rem; color: var(--color-text-secondary); transition: color var(--transition); font-weight: 500; white-space: nowrap; }
+        .nav-links a:hover { color: var(--amber); }
+        .agent-badge {
+            display: inline-flex; align-items: center; gap: .4rem; font-size: .7rem; font-family: var(--font-mono);
+            letter-spacing: .04em; padding: .38rem .8rem; border-radius: 2rem;
+            border: 1px solid var(--color-border-medium); color: var(--color-text-secondary); background: var(--paper); cursor: default; white-space: nowrap;
+        }
+        .agent-badge .d { width: 5px; height: 5px; border-radius: 50%; background: var(--amber); animation: subtle-pulse 2s ease-in-out infinite; }
+        @media (max-width: 860px) {
+            .nav-links a:not(.agent-badge) { display: none; } nav { padding: 1rem 1.4rem; }
+        }
+
+        /* ── Hero ── */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 7rem 6vw 3rem; text-align: center; position: relative; }
+        .hero-kicker { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--amber); margin-bottom: 2rem; }
+        .stage-view { position: relative; width: 280px; height: 280px; }
+        .morph-scene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .85s ease, transform .85s ease; transform: scale(.94); pointer-events: none; }
+        .morph-scene.active { opacity: 1; transform: scale(1); pointer-events: auto; }
+        .morph-label { font-family: var(--font-serif); font-size: 1.65rem; font-weight: 400; color: var(--color-text-primary); margin-top: .5rem; transition: opacity .35s; letter-spacing: -0.01em; }
+        .morph-sub { font-family: var(--font-sans); font-size: .88rem; color: var(--color-text-tertiary); max-width: 460px; line-height: 1.6; min-height: 42px; margin-top: .4rem; transition: opacity .35s; }
+        .pills { display: flex; gap: .45rem; justify-content: center; flex-wrap: wrap; margin-top: 1.6rem; }
+        .pill {
+            font-family: var(--font-sans); font-size: .74rem; font-weight: 500; padding: .5rem 1.1rem; border-radius: 20px;
+            border: 1px solid var(--color-border-light); background: var(--paper); color: var(--color-text-secondary);
+            cursor: pointer; transition: all var(--transition); display: inline-flex; align-items: center; gap: .4rem;
+        }
+        .pill:hover { border-color: var(--color-border-medium); color: var(--color-text-primary); }
+        .pill.active { background: var(--green-dark); border-color: var(--green-dark); color: var(--white); }
+        .pill i { font-size: .68rem; }
+        .compose-mock {
+            margin-top: 2.8rem; display: flex; align-items: center; gap: .6rem; width: min(460px, 88vw);
+            background: var(--paper); border: 1px solid var(--color-border-light); border-radius: 2rem;
+            padding: .45rem .55rem .45rem 1.2rem; box-shadow: 0 10px 28px rgba(63, 97, 82, .08);
+            cursor: pointer; transition: all var(--transition);
+        }
+        .compose-mock:hover { border-color: var(--color-border-medium); box-shadow: 0 14px 34px rgba(63, 97, 82, .13); transform: translateY(-1px); }
+        .compose-mock span { flex: 1; text-align: left; font-size: .82rem; color: var(--color-text-tertiary); }
+        .compose-mock .send-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--amber); color: #fff; display: grid; place-items: center; cursor: pointer; transition: all var(--transition); flex-shrink: 0; }
+        .compose-mock:hover .send-btn { background: var(--amber-light); transform: translateY(-1px); }
+        .compose-mock .send-btn i { font-size: .72rem; }
+        .scroll-hint { margin-top: 3rem; font-family: var(--font-mono); font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: var(--color-text-tertiary); opacity: .65; animation: subtle-pulse 2.5s ease-in-out infinite; }
+
+        /* ── Reveal ── */
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity .8s ease, transform .8s cubic-bezier(.4, 0, .2, 1); }
+        .reveal.in { opacity: 1; transform: translateY(0); }
+
+        /* ── Sections ── */
+        section.quiet { padding: 5.5rem 6vw; max-width: 720px; margin: 0 auto; }
+        section.quiet+section.quiet { border-top: 1px solid var(--color-border-light); }
+        section.wide { padding: 5.5rem 6vw; max-width: 1080px; margin: 0 auto; }
+        section.wide+section.wide { border-top: 1px solid var(--color-border-light); }
+        .kicker { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .16em; text-transform: uppercase; color: var(--amber); margin-bottom: 1.1rem; display: block; }
+        h2 { font-family: var(--font-serif); font-weight: 400; font-size: clamp(1.7rem, 3vw, 2.3rem); color: var(--green-dark); line-height: 1.22; max-width: 22ch; letter-spacing: -0.015em; }
+        h2 em { font-style: italic; color: var(--amber); font-weight: 300; }
+        .lede { margin-top: 1.1rem; font-size: .98rem; color: var(--color-text-secondary); max-width: 58ch; line-height: 1.75; }
+        .quote {
+            font-family: var(--font-serif); font-style: italic; font-size: 1.15rem; line-height: 1.6; color: var(--green-dark);
+            border-left: 2px solid var(--amber); padding-left: 1.3rem; margin: 1.8rem 0; max-width: 50ch;
+        }
+        .wide-pills { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1.8rem; }
+
+        /* ── Feature grid ── */
+        .feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.4rem; margin-top: 2rem; }
+        .feat-card {
+            background: var(--paper); border: 1px solid var(--color-border-light); border-radius: 16px; padding: 1.6rem 1.5rem;
+            transition: all var(--transition); display: flex; flex-direction: column; gap: .9rem;
+        }
+        .feat-card:hover { box-shadow: 0 12px 32px rgba(63, 97, 82, .08); border-color: var(--color-border-medium); transform: translateY(-2px); }
+        .feat-card h3 { font-family: var(--font-serif); font-size: 1.15rem; font-weight: 500; color: var(--green-dark); letter-spacing: -0.01em; }
+        .feat-card .desc { font-size: .82rem; color: var(--color-text-secondary); line-height: 1.6; }
+        .feat-card ul { list-style: none; margin-top: .3rem; display: flex; flex-direction: column; gap: .35rem; }
+        .feat-card li { font-size: .78rem; color: var(--color-text-secondary); display: flex; align-items: baseline; gap: .45rem; }
+        .feat-card li .icon { color: var(--amber); font-size: .68rem; width: 1.1rem; text-align: center; flex-shrink: 0; }
+        .feat-card .chip {
+            font-family: var(--font-mono); font-size: .58rem; letter-spacing: .05em; text-transform: uppercase;
+            color: var(--amber); background: rgba(217, 138, 94, .08); padding: .2rem .65rem; border-radius: 20px; align-self: flex-start;
+        }
+
+        /* ── Footer ── */
+        footer { border-top: 1px solid var(--color-border-light); padding: 1.8rem 6vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .8rem; font-family: var(--font-mono); font-size: .66rem; color: var(--gray); }
+        footer .flinks { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+        footer a:hover { color: var(--amber); }
+
+        /* ── Keyframes ── */
+        @keyframes sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.4deg); } }
+        @keyframes sway-r { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.1deg); } }
+        @keyframes fruit-glow { 0%, 100% { opacity: .8; } 50% { opacity: 1; } }
+        @keyframes subtle-pulse { 0%, 100% { opacity: .45; } 50% { opacity: .7; } }
+        @keyframes float-up { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="rail"><span class="dot top"></span><span class="dot bottom"></span></div>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+    <a href="#" class="logo">Olivia <span class="tag">Feature Guide</span></a>
+    <div class="nav-links">
+        <a href="#vision">Vision</a>
+        <a href="#core">Core</a>
+        <a href="#agents">Agents</a>
+        <a href="#creativity">Creativity</a>
+        <a href="#data">Data</a>
+        <a href="#legal">Legal</a>
+        <a href="#media">Media</a>
+        <a href="#connectors">Connectors</a>
+        <a href="#ui">UI</a>
+        <span class="agent-badge"><span class="d"></span> Guide</span>
+    </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+    <div class="hero-kicker">Complete Feature Reference</div>
+
+    <div class="stage-view">
+        <!-- SCENE: base tree (Olivia's mark) -->
+        <div class="morph-scene active" id="scene-tree">
+            <svg width="260" height="280" viewBox="0 0 260 280">
+                <g style="transform-origin:130px 150px;animation:sway 7s ease-in-out infinite">
+                    <path d="M130 270 Q128 240,127 210 Q126 180,128 155 Q130 135,132 118 Q134 105,133 94" fill="none" stroke="var(--green-dark)" stroke-width="3.5" stroke-linecap="round" opacity=".6"/>
+                    <path d="M90 268 Q130 274,170 268" fill="none" stroke="var(--green-dark)" stroke-width="1" stroke-linecap="round" opacity=".12"/>
+                    <g style="transform-origin:130px 140px;animation:sway 7s ease-in-out infinite">
+                        <g style="transform-origin:126px 160px;animation:sway-r 6s ease-in-out .3s infinite">
+                            <path d="M126 160 Q108 148,82 140" fill="none" stroke="var(--green-dark)" stroke-width="1.6" stroke-linecap="round" opacity=".45"/>
+                            <ellipse cx="88" cy="148" rx="4.5" ry="5.5" fill="var(--amber)" opacity=".85" transform="rotate(-8 88 148)" style="animation:fruit-glow 4s ease-in-out infinite"/>
+                        </g>
+                        <g style="transform-origin:134px 152px;animation:sway 5.5s ease-in-out .6s infinite">
+                            <path d="M134 152 Q152 142,172 138" fill="none" stroke="var(--green-dark)" stroke-width="1.4" stroke-linecap="round" opacity=".4"/>
+                        </g>
+                        <g style="transform-origin:128px 130px;animation:sway-r 5s ease-in-out .9s infinite">
+                            <path d="M128 130 Q114 118,98 112" fill="none" stroke="var(--green-dark)" stroke-width="1.2" stroke-linecap="round" opacity=".38"/>
+                        </g>
+                        <g style="transform-origin:134px 115px;animation:sway 5.8s ease-in-out .4s infinite">
+                            <path d="M134 115 Q150 104,164 98" fill="none" stroke="var(--green-dark)" stroke-width="1.1" stroke-linecap="round" opacity=".35"/>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <div id="morphLabel" class="morph-label">Olivia Workspace</div>
+    <div id="morphSub" class="morph-sub">Every module, every capability — a clean canvas already wired to think, learn, and build alongside you.</div>
+
+    <div class="pills">
+        <button class="pill active" onclick="morph('tree')"><i class="fas fa-seedling"></i> Overview</button>
+    </div>
+
+    <div class="scroll-hint">Scroll to explore</div>
+</header>
+
+<!-- ═══ VISION ═══ -->
+<section class="quiet reveal" id="vision">
+    <div class="kicker">The Vision</div>
+    <h2>Technology has always asked people to learn software. <em>Olivia asks software to learn people.</em></h2>
+    <p class="lede">Olivia is not a single-purpose application. She is a shared, intelligent workspace that any team can shape to its own world — a blank canvas already equipped with the ability to think, learn, and build alongside the people who use it.</p>
+</section>
+
+<!-- ═══ CORE RUNTIME ═══ -->
+<section class="wide reveal" id="core">
+    <span class="kicker">Core Runtime & Infrastructure</span>
+    <h2>The foundation <em>every other module</em> rests on.</h2>
+    <p class="lede">Global configuration, a unified API client, structured logging, application initialisation, and shared utilities — all designed to keep the workspace fast, observable, and consistent.</p>
+    <div class="feat-grid">
+        <div class="feat-card">
+            <span class="chip">config.js</span>
+            <h3>Configuration</h3>
+            <p class="desc">Environment base for the entire application — global variables, API base, and shared state (agents, history, artefacts).</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-globe"></i></span> Auto-resolves local/remote API endpoint</li>
+                <li><span class="icon"><i class="fas fa-database"></i></span> Global state: agents, session, token counters</li>
+                <li><span class="icon"><i class="fas fa-code"></i></span> Exports agents, selectedAgent, chatHistory, outputArtifacts</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">api-client.js</span>
+            <h3>Unified API Client</h3>
+            <p class="desc">Single source of truth for all HTTP/SSE calls — 33+ functions across 9 groups.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-comments"></i></span> assistant.chat — SSE streaming with smart timeout</li>
+                <li><span class="icon"><i class="fas fa-robot"></i></span> agents.* — full CRUD (create, list, activate, deactivate)</li>
+                <li><span class="icon"><i class="fas fa-brain"></i></span> memory.* — Qdrant + Neo4j collections, search, ingest, graph</li>
+                <li><span class="icon"><i class="fas fa-share-alt"></i></span> shared.* — scopes, shared files, transcriptions</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">logger.js</span>
+            <h3>Interactive Debugging</h3>
+            <p class="desc">Intercepts all fetch() calls, providing structured, collapsible logs with colour coding and filters.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-paper-plane"></i></span> Requests in blue with sanitised body & headers</li>
+                <li><span class="icon"><i class="fas fa-check-circle"></i></span> Responses with timing in ms</li>
+                <li><span class="icon"><i class="fas fa-sliders-h"></i></span> Config: verbose, filter, noisy, enabled flags</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">core.js</span>
+            <h3>Application Initialisation</h3>
+            <p class="desc">Entry point for the workspace — mobile layout, sidebar, panels, agent loading, and settings restoration.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-play"></i></span> DOMContentLoaded with embed-mode detection</li>
+                <li><span class="icon"><i class="fas fa-tools"></i></span> Helpers: escapeHtml, formatBytes, toast, autoGrow</li>
+                <li><span class="icon"><i class="fas fa-window-maximize"></i></span> Async custom prompts and confirm modals</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">state.js + utils.js</span>
+            <h3>Global Utilities</h3>
+            <p class="desc">Helper functions for trees, files, and state — stubs ready for future integration.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ AGENTS & ORCHESTRATION ═══ -->
+<section class="wide reveal" id="agents">
+    <span class="kicker">Agents & Orchestration</span>
+    <h2>Manage, route, and <em>orchestrate</em> intelligent agents.</h2>
+    <p class="lede">Create OpenClaude agents, assign them to workspace sections, and let them collaborate across chats and background tasks.</p>
+    <div class="feat-grid">
+        <div class="feat-card">
+            <span class="chip">agents.js</span>
+            <h3>Agent Management</h3>
+            <p class="desc">Full lifecycle: create, list, edit, delete, export/import agent bundles, and manage background reference collection.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-list"></i></span> Grouped listing with active/inactive badges</li>
+                <li><span class="icon"><i class="fas fa-pen"></i></span> Modal editor with workspace, Qdrant, Neo4j, skills, MCP</li>
+                <li><span class="icon"><i class="fas fa-file-export"></i></span> Export agent + tools + chats + logs as .agent.md bundle</li>
+                <li><span class="icon"><i class="fas fa-sync-alt"></i></span> Background reference collection (start/pause/resume)</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">agent-orchestration.js</span>
+            <h3>Section Routing</h3>
+            <p class="desc">Each workspace section (Studio, Shaders, Discovery, etc.) can have its own dedicated agent, with fallback and preferences.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-bullseye"></i></span> Per-section agent assignment</li>
+                <li><span class="icon"><i class="fas fa-comment-dots"></i></span> Primary + secondary chat tracks</li>
+                <li><span class="icon"><i class="fas fa-sliders-h"></i></span> Orchestration UI with selector and status badges</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ CREATIVITY & STUDIO ═══ -->
+<section class="wide reveal" id="creativity">
+    <span class="kicker">Creativity & Studio</span>
+    <h2>Build, edit, and refine <em>interfaces and 3D scenes</em> with AI assistance.</h2>
+    <p class="lede">From live HTML/CSS/JS editing to SVG shader compositions and full 3D environments — all with integrated agents that understand your code.</p>
+    <div class="feat-grid">
+        <div class="feat-card">
+            <span class="chip">studio.js</span>
+            <h3>HTML/CSS/JS Editor</h3>
+            <p class="desc">Triple-pane editor with live preview, AI assistant, and multi‑file project support.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-code"></i></span> HTML, CSS, JS tabs with smart parsing</li>
+                <li><span class="icon"><i class="fas fa-eye"></i></span> Live preview with asset support</li>
+                <li><span class="icon"><i class="fas fa-magic"></i></span> AI actions: replace, append, prepend, snippet</li>
+                <li><span class="icon"><i class="fas fa-folder-open"></i></span> Import/export projects (folder/zip)</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">shaders.js</span>
+            <h3>SVG Scene Composer</h3>
+            <p class="desc">Create animated 2D/3D scenes with deterministic loops, palettes, and post‑processing effects.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-palette"></i></span> Scene gallery with predefined and custom compositions</li>
+                <li><span class="icon"><i class="fas fa-globe-americas"></i></span> World controls: time of day, era, weather, rotation</li>
+                <li><span class="icon"><i class="fas fa-magic"></i></span> PostFX: bloom, vignette, grain, chromatic aberration, sepia</li>
+                <li><span class="icon"><i class="fas fa-brain"></i></span> AI brainstorming chat for scene generation</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">scene3d.js</span>
+            <h3>Three.js Engine</h3>
+            <p class="desc">Load GLTF/GLB models, control animations, apply environments, and export USDZ.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-cube"></i></span> GLB upload with local preview</li>
+                <li><span class="icon"><i class="fas fa-film"></i></span> Animation mixer with multiple clips</li>
+                <li><span class="icon"><i class="fas fa-sun"></i></span> 6 environment presets (Studio, Outdoor, Night, etc.)</li>
+                <li><span class="icon"><i class="fas fa-mouse-pointer"></i></span> Transform gizmo with click selection</li>
+                <li><span class="icon"><i class="fas fa-file-export"></i></span> Export USDZ (main + extras, with/without background)</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">preview-recorder.js</span>
+            <h3>Preview Recorder</h3>
+            <p class="desc">Record the preview canvas (SVG or 3D) as WebM/MP4 video.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-record-vinyl"></i></span> Start/stop real‑time canvas recording</li>
+                <li><span class="icon"><i class="fas fa-clock"></i></span> Live duration timer</li>
+                <li><span class="icon"><i class="fas fa-download"></i></span> Download as .webm or .mp4</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ DATA & ANALYSIS ═══ -->
+<section class="wide reveal" id="data">
+    <span class="kicker">Data & Analysis</span>
+    <h2>Vector memory, knowledge graphs, <em>document intelligence</em>.</h2>
+    <p class="lede">Semantic search, chat history, document pipelines, and shared resources — turning raw information into actionable context.</p>
+    <div class="feat-grid">
+        <div class="feat-card">
+            <span class="chip">memory.js</span>
+            <h3>Memory (Qdrant + Neo4j)</h3>
+            <p class="desc">Manage vector collections and knowledge graphs. Ingest text, legal articles, violations, and structured data.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-layer-group"></i></span> Collection list with stats</li>
+                <li><span class="icon"><i class="fas fa-search"></i></span> Semantic search with collection filter</li>
+                <li><span class="icon"><i class="fas fa-upload"></i></span> Ingest: free text, JSON articles, violations, graph</li>
+                <li><span class="icon"><i class="fas fa-chart-pie"></i></span> Memory quadrant distribution & AI analysis</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">history.js</span>
+            <h3>Chat History & Settings</h3>
+            <p class="desc">Saved conversations, model catalogue, temperature, tokens, and persistence.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-save"></i></span> Save chats locally or to an agent</li>
+                <li><span class="icon"><i class="fas fa-thermometer-half"></i></span> Adjustable temperature slider</li>
+                <li><span class="icon"><i class="fas fa-chart-line"></i></span> Input/output token counter with cost estimate</li>
+                <li><span class="icon"><i class="fas fa-cogs"></i></span> Model catalogue (DeepSeek, Anthropic, OpenRouter, etc.)</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">discovery.js</span>
+            <h3>NLP & Intelligence Pipeline</h3>
+            <p class="desc">Document ingestion → entity extraction → violation detection → gap report → timeline → narrative.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-file-alt"></i></span> Preview documents (PDF, DOCX, audio, image)</li>
+                <li><span class="icon"><i class="fas fa-lightbulb"></i></span> LLM‑powered corpus overview & group descriptions</li>
+                <li><span class="icon"><i class="fas fa-exclamation-triangle"></i></span> Violations, gaps, timeline, case state</li>
+                <li><span class="icon"><i class="fas fa-search-plus"></i></span> Enriched semantic search over processed docs</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">docs.js</span>
+            <h3>Document Browser</h3>
+            <p class="desc">Tree view of the active project with preview, output panel, and built‑in browser.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-sitemap"></i></span> Expandable directory tree with file counts</li>
+                <li><span class="icon"><i class="fas fa-eye"></i></span> Preview PDF, HTML, Markdown, JSON, audio, image</li>
+                <li><span class="icon"><i class="fas fa-external-link-alt"></i></span> Open in integrated browser</li>
+                <li><span class="icon"><i class="fas fa-thumbtack"></i></span> Pin absolute paths for agent context</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">shared.js</span>
+            <h3>Shared Resources</h3>
+            <p class="desc">Manage _shared files, import contexts, image attachments, and case pipelines.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-folder"></i></span> Browse scopes and shared files</li>
+                <li><span class="icon"><i class="fas fa-paperclip"></i></span> Context files (text & image)</li>
+                <li><span class="icon"><i class="fas fa-image"></i></span> Attach images via clipboard, upload, or paste</li>
+                <li><span class="icon"><i class="fas fa-balance-scale"></i></span> Case pipeline: 7 stages with progress bar</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ LEGAL & COMPLIANCE ═══ -->
+<section class="wide reveal" id="legal">
+    <span class="kicker">Legal & Compliance</span>
+    <h2>Navigate legal sources, resolve violations, <em>attach context instantly</em>.</h2>
+    <div class="feat-grid">
+        <div class="feat-card">
+            <span class="chip">law_library.js</span>
+            <h3>Legal Library (LA8159)</h3>
+            <p class="desc">Browse legal sources (BR, CL, INT) with ELI metadata, SHA‑256, and full article text.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-book"></i></span> Jurisdiction index with source counts</li>
+                <li><span class="icon"><i class="fas fa-file-contract"></i></span> Rendered Markdown with frontmatter</li>
+                <li><span class="icon"><i class="fas fa-link"></i></span> Attach sources to chat context</li>
+                <li><span class="icon"><i class="fas fa-filter"></i></span> Filter by jurisdiction and text search</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">legal-router.js</span>
+            <h3>Legal Router</h3>
+            <p class="desc">Resolve violation IDs, frameworks, and persons — auto‑attaches relevant files to the chat.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-search"></i></span> Search by violation, framework, or person</li>
+                <li><span class="icon"><i class="fas fa-file-code"></i></span> Resolved files with snippets and action buttons</li>
+                <li><span class="icon"><i class="fas fa-paperclip"></i></span> Auto‑attach after resolution</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">violations.js</span>
+            <h3>Violation Explorer</h3>
+            <p class="desc">Navigate the LA8159 corpus of validated violations (BR, CL, INT) with severity and legal basis.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-tree"></i></span> Jurisdiction tree with .violation.json files</li>
+                <li><span class="icon"><i class="fas fa-gavel"></i></span> Formatted JSON with severity, legal_basis</li>
+                <li><span class="icon"><i class="fas fa-search"></i></span> Search by ID, category, or text</li>
+                <li><span class="icon"><i class="fas fa-thumbtack"></i></span> Attach violation with inline text to chat</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ COMMUNICATION & MEDIA ═══ -->
+<section class="wide reveal" id="media">
+    <span class="kicker">Communication & Media</span>
+    <h2>Transcribe audio, edit spreadsheets, <em>compose documents</em> — all with agent assistance.</h2>
+    <div class="feat-grid">
+        <div class="feat-card">
+            <span class="chip">listening.js</span>
+            <h3>Audio Transcription</h3>
+            <p class="desc">Upload, diarise, transcribe with Whisper/RunPod, and ask questions about the content.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-microphone"></i></span> Supports M4A, MP3, WAV, FLAC, OGG</li>
+                <li><span class="icon"><i class="fas fa-users"></i></span> Speaker diarisation</li>
+                <li><span class="icon"><i class="fas fa-cloud-upload-alt"></i></span> RunPod GPU support</li>
+                <li><span class="icon"><i class="fas fa-brain"></i></span> AI analysis: ask about transcript content</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">sheets.js</span>
+            <h3>Spreadsheet Editor</h3>
+            <p class="desc">Interactive grid for CSV/XLSX with import/export, agent chat, and "HAVAN document" export.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-table"></i></span> Cell editor with Tab/Enter navigation</li>
+                <li><span class="icon"><i class="fas fa-file-import"></i></span> Import CSV & XLSX (SheetJS)</li>
+                <li><span class="icon"><i class="fas fa-file-export"></i></span> Export CSV, XLSX, DOCX, PDF, HTML</li>
+                <li><span class="icon"><i class="fas fa-comment-dots"></i></span> Ask the agent about the spreadsheet</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">writer.js</span>
+            <h3>Markdown / Text Editor</h3>
+            <p class="desc">Write with markdown shortcuts, import DOCX/PDF, and chat with the agent about your document.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-pencil-alt"></i></span> Bold, italic, headings, lists shortcuts</li>
+                <li><span class="icon"><i class="fas fa-file-import"></i></span> Import DOCX (mammoth), PDF (pdf.js), TXT, MD, HTML</li>
+                <li><span class="icon"><i class="fas fa-copy"></i></span> Copy/paste rendered Markdown</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ CONNECTORS & EXTENSIONS ═══ -->
+<section class="wide reveal" id="connectors">
+    <span class="kicker">Connectors & Extensions</span>
+    <h2>Integrate Google Drive, multi‑jurisdictional litigation, <em>and 3D generation</em>.</h2>
+    <div class="feat-grid">
+        <div class="feat-card">
+            <span class="chip">drive.js</span>
+            <h3>Google Drive Manager</h3>
+            <p class="desc">Browse, upload, download, and chat with an assistant about your Drive files.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-key"></i></span> OAuth2 and rclone‑style auth</li>
+                <li><span class="icon"><i class="fas fa-folder-open"></i></span> Folder navigation with back/forward history</li>
+                <li><span class="icon"><i class="fas fa-robot"></i></span> Agent chat for Drive operations</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">craudio.js</span>
+            <h3>Multi‑Jurisdictional Litigation</h3>
+            <p class="desc">24 workflows and 8 specialised agents for civil litigation (BR, CL, international).</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-tasks"></i></span> Workflows: configuration, analysis, drafting, review</li>
+                <li><span class="icon"><i class="fas fa-user-tie"></i></span> Agents for deadlines, evidence integrity, jurisprudence</li>
+                <li><span class="icon"><i class="fas fa-project-diagram"></i></span> Pipeline: evidence → norms → nexus → confidence → jurisprudence</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">meshy-ui.js</span>
+            <h3>Meshy 3D Interface</h3>
+            <p class="desc">Generate 3D models from text or images via the Meshy MCP agent.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-font"></i></span> Text → 3D with options (lowpoly, PBR, rigging)</li>
+                <li><span class="icon"><i class="fas fa-images"></i></span> Image → 3D (up to 4 views)</li>
+                <li><span class="icon"><i class="fas fa-download"></i></span> Import existing tasks by ID</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ UI & NAVIGATION ═══ -->
+<section class="wide reveal" id="ui">
+    <span class="kicker">UI & Navigation</span>
+    <h2>The shell that holds <em>every workspace together</em>.</h2>
+    <div class="feat-grid">
+        <div class="feat-card">
+            <span class="chip">tabs.js</span>
+            <h3>Sidebar & Tabs</h3>
+            <p class="desc">Dock with hover/click, collapse toggle, resize handle, and cross‑section sync.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-th-large"></i></span> Expandable icon + label dock</li>
+                <li><span class="icon"><i class="fas fa-exchange-alt"></i></span> Switch sections with auto‑close</li>
+                <li><span class="icon"><i class="fas fa-mobile-alt"></i></span> Mobile overlay & strip</li>
+                <li><span class="icon"><i class="fas fa-arrows-alt-h"></i></span> Resizable sidebar via drag</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">trunk.js</span>
+            <h3>Profile Navigation</h3>
+            <p class="desc">Loads section-registry.json and renders the navigation tree based on user permissions.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-user-check"></i></span> Data‑driven from /api/user/me</li>
+                <li><span class="icon"><i class="fas fa-code-branch"></i></span> Collapsed branch icons</li>
+                <li><span class="icon"><i class="fas fa-play"></i></span> Auto‑activates the first available section</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">modals.js</span>
+            <h3>Modals & Forms</h3>
+            <p class="desc">Creation, confirmation, alert, loading, and file‑selection dialogs.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-edit"></i></span> Agent/project/collection creation forms</li>
+                <li><span class="icon"><i class="fas fa-check-circle"></i></span> Confirmation with callbacks</li>
+                <li><span class="icon"><i class="fas fa-spinner"></i></span> Loading modal with message</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">fullscreen-controls.js</span>
+            <h3>Fullscreen Overlay</h3>
+            <p class="desc">Floating controls for 3D scenes — play, wireframe, environment, exposure, record, chat.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-play-circle"></i></span> Play/Pause, Wireframe, Reset</li>
+                <li><span class="icon"><i class="fas fa-sun"></i></span> Environment selector</li>
+                <li><span class="icon"><i class="fas fa-adjust"></i></span> Exposure slider</li>
+                <li><span class="icon"><i class="fas fa-record-vinyl"></i></span> REC status indicator</li>
+            </ul>
+        </div>
+        <div class="feat-card">
+            <span class="chip">nav.js</span>
+            <h3>Mobile Menu</h3>
+            <p class="desc">Responsive hamburger menu, mobile sidebar toggle, and tab navigation.</p>
+            <ul>
+                <li><span class="icon"><i class="fas fa-bars"></i></span> Dropdown with navigation items</li>
+                <li><span class="icon"><i class="fas fa-arrow-right"></i></span> Mobile overlay toggle</li>
+                <li><span class="icon"><i class="fas fa-link"></i></span> Active link highlight</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ CLOSING ═══ -->
+<section class="quiet reveal" style="text-align: center;">
+    <div class="kicker" style="display: flex; justify-content: center;">Summary</div>
+    <h2 style="margin: 0 auto; max-width: 22ch;">Every module. <em>One ecosystem.</em></h2>
+    <p class="lede" style="margin-left: auto; margin-right: auto;">From agents and memory to legal libraries and 3D studios — Olivia turns operational expertise into working, AI‑assisted tools. No single‑purpose apps. One living workspace.</p>
+    <div class="wide-pills" style="justify-content: center; margin-top: 1.8rem;">
+        <span class="pill">Agents</span>
+        <span class="pill">Creativity</span>
+        <span class="pill">Data</span>
+        <span class="pill">Legal</span>
+        <span class="pill">Media</span>
+        <span class="pill">Connectors</span>
+        <span class="pill">UI</span>
+    </div>
+</section>
+
+<footer>
+    <span>© Olivia Ecosystem</span>
+    <div class="flinks">
+        <a href="#vision">Vision</a>
+        <a href="#core">Core</a>
+        <a href="#agents">Agents</a>
+        <a href="#creativity">Creativity</a>
+        <a href="#data">Data</a>
+        <a href="#legal">Legal</a>
+        <a href="#media">Media</a>
+        <a href="#connectors">Connectors</a>
+        <a href="#ui">UI</a>
+    </div>
+</footer>
+
+<script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 12), { passive: true });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+        new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+        }, { threshold: .1 }).observe(el);
+    });
+
+    function morph(id) {
+        document.querySelectorAll('.morph-scene').forEach(s => s.classList.remove('active'));
+        const sceneEl = document.getElementById('scene-' + id);
+        if (sceneEl) sceneEl.classList.add('active');
+        document.querySelectorAll('.pills .pill').forEach(p => p.classList.remove('active'));
+        const pillEl = document.querySelector(".pills .pill[onclick*='" + id + "']");
+        if (pillEl) pillEl.classList.add('active');
+    }
+
+    console.log('Olivia Workspace · Complete Feature Guide');
+</script>
+</body>
+</html>

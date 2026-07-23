@@ -1,0 +1,20 @@
+<svg width="280" height="260" viewBox="0 0 280 260">
+  <g style="transform-origin: 140px 130px;">
+    <path d="M140 230 Q140 180, 140 130 Q140 100, 140 75" fill="none" stroke="var(--eco-verde-3)" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+    <g style="animation: scale-balance 6s ease-in-out infinite; transform-origin: 140px 75px;">
+      <path d="M60 85 Q100 72, 140 75 Q180 72, 220 85" fill="none" stroke="var(--eco-verde-3)" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+      <path d="M70 88 L70 120" fill="none" stroke="var(--eco-verde-3)" stroke-width="1" opacity="0.4"/>
+      <path d="M60 85 L55 118" fill="none" stroke="var(--eco-verde-3)" stroke-width="1" opacity="0.35"/>
+      <ellipse cx="62" cy="125" rx="22" ry="6" fill="none" stroke="var(--eco-verde-3)" stroke-width="1.2" opacity="0.45"/>
+      <path d="M210 88 L210 120" fill="none" stroke="var(--eco-verde-3)" stroke-width="1" opacity="0.4"/>
+      <path d="M220 85 L225 118" fill="none" stroke="var(--eco-verde-3)" stroke-width="1" opacity="0.35"/>
+      <ellipse cx="218" cy="125" rx="22" ry="6" fill="none" stroke="var(--eco-verde-3)" stroke-width="1.2" opacity="0.45"/>
+      <ellipse cx="55" cy="118" rx="5" ry="6" fill="var(--eco-terra)" opacity="0.85" style="animation: fruit-glow 4s ease-in-out infinite"/>
+      <ellipse cx="218" cy="117" rx="5" ry="6" fill="var(--eco-terra)" opacity="0.85" style="animation: fruit-glow 4s ease-in-out 0.6s infinite"/>
+    </g>
+    <ellipse cx="140" cy="65" rx="6" ry="7.5" fill="var(--eco-terra)" opacity="0.9" style="animation: fruit-glow 4s ease-in-out 0.5s infinite"/>
+    <path d="M132 70 Q125 62, 120 58" fill="none" stroke="var(--eco-verde-3)" stroke-width="0.8" opacity="0.3" stroke-linecap="round"/>
+    <path d="M148 70 Q155 62, 160 58" fill="none" stroke="var(--eco-verde-3)" stroke-width="0.8" opacity="0.3" stroke-linecap="round"/>
+    <path d="M115 232 Q140 238, 165 232" fill="none" stroke="var(--eco-verde-3)" stroke-width="1.5" opacity="0.35" stroke-linecap="round"/>
+  </g>
+</svg>

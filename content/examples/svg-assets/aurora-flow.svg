@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-label="Aurora flow arcs">
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#09152F"/>
+      <stop offset="100%" stop-color="#1B2A4A"/>
+    </linearGradient>
+    <linearGradient id="arcA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#49D4B9"/>
+      <stop offset="100%" stop-color="#5B8EC4"/>
+    </linearGradient>
+    <linearGradient id="arcB" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C4862D"/>
+      <stop offset="100%" stop-color="#7B5EA7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#night)"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M-30 510 C 230 340, 480 630, 810 420 C 1010 300, 1180 470, 1260 420" stroke="url(#arcA)" stroke-width="34" opacity="0.45"/>
+    <path d="M-30 570 C 240 390, 500 650, 840 470 C 1030 360, 1160 540, 1260 470" stroke="url(#arcB)" stroke-width="20" opacity="0.4"/>
+    <path d="M-30 620 C 200 500, 460 700, 760 560 C 980 460, 1130 620, 1260 560" stroke="#6EC6CA" stroke-width="11" opacity="0.55"/>
+  </g>
+  <g fill="#E5EDF8" opacity="0.8">
+    <circle cx="120" cy="90" r="1.5"/>
+    <circle cx="220" cy="140" r="1.2"/>
+    <circle cx="330" cy="70" r="1.6"/>
+    <circle cx="470" cy="120" r="1.1"/>
+    <circle cx="610" cy="85" r="1.5"/>
+    <circle cx="760" cy="130" r="1.3"/>
+    <circle cx="910" cy="95" r="1.4"/>
+    <circle cx="1040" cy="140" r="1.2"/>
+  </g>
+  <path d="M0 640 C 180 610, 340 670, 520 640 C 700 610, 900 680, 1200 640 L1200 700 L0 700 Z" fill="#1F3D34"/>
+</svg>

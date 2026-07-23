@@ -1,0 +1,915 @@
+{
+  "$schema": "../../generated/schemas/group-manifest.schema.json",
+  "version": "1.0.0",
+  "group": "la8159",
+  "label": "LA8159 Grounding",
+  "icon": "🛬",
+  "color": "#7d4ea8",
+  "description": "LA8159 incident legal grounding library: 33 jurisdiction specialists (BR / CL / INT) plus 6 META cross-framework agents, backed by 59 cached source files. Promoted from /Users/dev/LA8159-incident/0_agents.",
+  "language_focus": [
+    "pt-BR",
+    "es-CL",
+    "en"
+  ],
+  "source": {
+    "manifest": "agents-groups/la8159/source/INDEX.md",
+    "project_id": "la8159-grounding",
+    "project_name": "LA8159 Legal Grounding Library",
+    "workspace": "LA8159-incident",
+    "upstream_path": "/Users/dev/LA8159-incident/0_agents"
+  },
+  "orchestrator": {
+    "slug": "la8159-orchestrator",
+    "name": "LA8159 Orchestrator",
+    "agent_file": "agents-groups/la8159/agents/la8159-orchestrator.agent.md"
+  },
+  "coordinator": {
+    "slug": "la8159-coordinator",
+    "name": "LA8159 Coordinator",
+    "agent_file": "agents-groups/la8159/agents/la8159-coordinator.agent.md"
+  },
+  "agents": [
+    {
+      "slug": "la8159-orchestrator",
+      "name": "LA8159 Orchestrator",
+      "role": "orchestrator",
+      "agent_file": "agents-groups/la8159/agents/la8159-orchestrator.agent.md",
+      "bundle_file": "generated/la8159/bundles/la8159-orchestrator.bundle.import.json",
+      "tags": [
+        "promoted-from:META_Orchestrator"
+      ]
+    },
+    {
+      "slug": "la8159-coordinator",
+      "name": "LA8159 Coordinator",
+      "role": "coordinator",
+      "agent_file": "agents-groups/la8159/agents/la8159-coordinator.agent.md",
+      "bundle_file": "generated/la8159/bundles/la8159-coordinator.bundle.import.json"
+    },
+    {
+      "slug": "br-abear-plus",
+      "agent_id": "BR_ABEAR_PLUS",
+      "name": "BR_ABEAR_PLUS — ABEAR Code + Lei 12.846/2013 + Decreto 11.129/2022 (PNDH-3)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_ABEAR_PLUS",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-abear-plus.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-abear-plus.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_ABEAR_PLUS/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-abrapavaa-sentra",
+      "agent_id": "BR_ABRAPAVAA_SENTRA",
+      "name": "BR_ABRAPAVAA_SENTRA — ABRAPAVAA / Vítimas de Acidentes Aéreos (governança institucional)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_ABRAPAVAA_SENTRA",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-abrapavaa-sentra.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-abrapavaa-sentra.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_ABRAPAVAA_SENTRA/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-anac-r400",
+      "agent_id": "BR_ANAC_R400",
+      "name": "BR_ANAC_R400 — ANAC Resolução 400/2016",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_ANAC_R400",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-anac-r400.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-anac-r400.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_ANAC_R400/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-anticorrupcao",
+      "agent_id": "BR_ANTICORRUPCAO",
+      "name": "BR_ANTICORRUPCAO — Anticorrupção Empresarial e Compliance Aplicado (Lei 12.846 + Decreto 11.129)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_ANTICORRUPCAO",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-anticorrupcao.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-anticorrupcao.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_ANTICORRUPCAO/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-cba",
+      "agent_id": "BR_CBA",
+      "name": "BR_CBA — Código Brasileiro de Aeronáutica",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_CBA",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-cba.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-cba.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_CBA/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-cc",
+      "agent_id": "BR_CC",
+      "name": "BR_CC — Brazilian Civil Code",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_CC",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-cc.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-cc.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_CC/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-cdc",
+      "agent_id": "BR_CDC",
+      "name": "BR_CDC — Brazilian Consumer Defense Code",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_CDC",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-cdc.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-cdc.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_CDC/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-cf88",
+      "agent_id": "BR_CF88",
+      "name": "BR_CF88 — Constituição Federal 1988",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_CF88",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-cf88.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-cf88.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_CF88/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-conflito-interesses",
+      "agent_id": "BR_CONFLITO_INTERESSES",
+      "name": "BR_CONFLITO_INTERESSES — Conflito de Interesses (Lei 12.813/2013 + Decreto 7.203/2010 + Lei 14.133/2021)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_CONFLITO_INTERESSES",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-conflito-interesses.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-conflito-interesses.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_CONFLITO_INTERESSES/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-cp",
+      "agent_id": "BR_CP",
+      "name": "BR_CP — Brazilian Penal Code (civil/factual support only)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_CP",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-cp.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-cp.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_CP/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-improbidade",
+      "agent_id": "BR_IMPROBIDADE",
+      "name": "BR_IMPROBIDADE — Improbidade Administrativa (Lei 8.429/1992 + Lei 14.230/2021)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_IMPROBIDADE",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-improbidade.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-improbidade.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_IMPROBIDADE/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-lai-transparency",
+      "agent_id": "BR_LAI_TRANSPARENCY",
+      "name": "BR_LAI_TRANSPARENCY — Lei de Acesso à Informação (Lei 12.527/2011)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_LAI_TRANSPARENCY",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-lai-transparency.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-lai-transparency.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_LAI_TRANSPARENCY/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-lei9784",
+      "agent_id": "BR_LEI9784",
+      "name": "BR_LEI9784 — Lei 9.784/1999 (Processo Administrativo Federal)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_LEI9784",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-lei9784.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-lei9784.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_LEI9784/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-oab-comissao-aero",
+      "agent_id": "BR_OAB_COMISSAO_AERO",
+      "name": "BR_OAB_COMISSAO_AERO — OAB Comissão de Direito Aeronáutico (advocacy especializada e prerrogativas no setor aéreo)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_OAB_COMISSAO_AERO",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-oab-comissao-aero.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-oab-comissao-aero.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_OAB_COMISSAO_AERO/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-oab-disciplina",
+      "agent_id": "BR_OAB_DISCIPLINA",
+      "name": "BR_OAB_DISCIPLINA — Disciplina Profissional do Advogado (Estatuto + CED)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_OAB_DISCIPLINA",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-oab-disciplina.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-oab-disciplina.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_OAB_DISCIPLINA/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "br-sdc-procon-senacon",
+      "agent_id": "BR_SDC_PROCON_SENACON",
+      "name": "BR_SDC_PROCON_SENACON — Defesa do Consumidor / Aviação Civil (CDC + SENACON + ANAC consumidor)",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazil — BR_SDC_PROCON_SENACON",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:brazil"
+      ],
+      "agent_file": "agents-groups/la8159/agents/br-sdc-procon-senacon.agent.md",
+      "bundle_file": "generated/la8159/bundles/br-sdc-procon-senacon.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/BR/BR_SDC_PROCON_SENACON/agent.md",
+      "tags": [
+        "category:br"
+      ]
+    },
+    {
+      "slug": "cl-cach",
+      "agent_id": "CL_CACH",
+      "name": "CL_CACH — Chilean Aeronautical Code (Ley 18.916)",
+      "role": "specialist",
+      "specialty": "🇨🇱 Chile — CL_CACH",
+      "language_focus": [
+        "es-CL",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:chile"
+      ],
+      "agent_file": "agents-groups/la8159/agents/cl-cach.agent.md",
+      "bundle_file": "generated/la8159/bundles/cl-cach.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/CL/CL_CACH/agent.md",
+      "tags": [
+        "category:cl"
+      ]
+    },
+    {
+      "slug": "cl-const",
+      "agent_id": "CL_CONST",
+      "name": "CL_CONST — Chilean Constitution",
+      "role": "specialist",
+      "specialty": "🇨🇱 Chile — CL_CONST",
+      "language_focus": [
+        "es-CL",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:chile"
+      ],
+      "agent_file": "agents-groups/la8159/agents/cl-const.agent.md",
+      "bundle_file": "generated/la8159/bundles/cl-const.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/CL/CL_CONST/agent.md",
+      "tags": [
+        "category:cl"
+      ]
+    },
+    {
+      "slug": "cl-contraloria-indh",
+      "agent_id": "CL_CONTRALORIA_INDH",
+      "name": "CL_CONTRALORIA_INDH — Contraloría General de la República + INDH (Chile)",
+      "role": "specialist",
+      "specialty": "🇨🇱 Chile — CL_CONTRALORIA_INDH",
+      "language_focus": [
+        "es-CL",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:chile"
+      ],
+      "agent_file": "agents-groups/la8159/agents/cl-contraloria-indh.agent.md",
+      "bundle_file": "generated/la8159/bundles/cl-contraloria-indh.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/CL/CL_CONTRALORIA_INDH/agent.md",
+      "tags": [
+        "category:cl"
+      ]
+    },
+    {
+      "slug": "cl-cpcl",
+      "agent_id": "CL_CPCL",
+      "name": "CL_CPCL — Chilean Penal Code",
+      "role": "specialist",
+      "specialty": "🇨🇱 Chile — CL_CPCL",
+      "language_focus": [
+        "es-CL",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:chile"
+      ],
+      "agent_file": "agents-groups/la8159/agents/cl-cpcl.agent.md",
+      "bundle_file": "generated/la8159/bundles/cl-cpcl.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/CL/CL_CPCL/agent.md",
+      "tags": [
+        "category:cl"
+      ]
+    },
+    {
+      "slug": "cl-dgac-l16752",
+      "agent_id": "CL_DGAC_L16752",
+      "name": "CL_DGAC_L16752 — Ley 16.752 (Dirección General de Aeronáutica Civil)",
+      "role": "specialist",
+      "specialty": "🇨🇱 Chile — CL_DGAC_L16752",
+      "language_focus": [
+        "es-CL",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:chile"
+      ],
+      "agent_file": "agents-groups/la8159/agents/cl-dgac-l16752.agent.md",
+      "bundle_file": "generated/la8159/bundles/cl-dgac-l16752.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/CL/CL_DGAC_L16752/agent.md",
+      "tags": [
+        "category:cl"
+      ]
+    },
+    {
+      "slug": "cl-lpdc",
+      "agent_id": "CL_LPDC",
+      "name": "CL_LPDC — Chilean Consumer Protection (Ley 19.496)",
+      "role": "specialist",
+      "specialty": "🇨🇱 Chile — CL_LPDC",
+      "language_focus": [
+        "es-CL",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:chile"
+      ],
+      "agent_file": "agents-groups/la8159/agents/cl-lpdc.agent.md",
+      "bundle_file": "generated/la8159/bundles/cl-lpdc.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/CL/CL_LPDC/agent.md",
+      "tags": [
+        "category:cl"
+      ]
+    },
+    {
+      "slug": "cl-transparency-l20285",
+      "agent_id": "CL_TRANSPARENCY_L20285",
+      "name": "CL_TRANSPARENCY_L20285 — Ley 20.285 (Acceso a Información Pública)",
+      "role": "specialist",
+      "specialty": "🇨🇱 Chile — CL_TRANSPARENCY_L20285",
+      "language_focus": [
+        "es-CL",
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:chile"
+      ],
+      "agent_file": "agents-groups/la8159/agents/cl-transparency-l20285.agent.md",
+      "bundle_file": "generated/la8159/bundles/cl-transparency-l20285.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/CL/CL_TRANSPARENCY_L20285/agent.md",
+      "tags": [
+        "category:cl"
+      ]
+    },
+    {
+      "slug": "int-achr",
+      "agent_id": "INT_ACHR",
+      "name": "INT_ACHR — American Convention on Human Rights",
+      "role": "specialist",
+      "specialty": "🌐 International — INT_ACHR",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:international"
+      ],
+      "agent_file": "agents-groups/la8159/agents/int-achr.agent.md",
+      "bundle_file": "generated/la8159/bundles/int-achr.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/INT/INT_ACHR/agent.md",
+      "tags": [
+        "category:int"
+      ]
+    },
+    {
+      "slug": "int-chicago-vclt",
+      "agent_id": "INT_CHICAGO_VCLT",
+      "name": "INT_CHICAGO_VCLT — Chicago Convention 1944 + Vienna Convention on Law of Treaties",
+      "role": "specialist",
+      "specialty": "🌐 International — INT_CHICAGO_VCLT",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:international"
+      ],
+      "agent_file": "agents-groups/la8159/agents/int-chicago-vclt.agent.md",
+      "bundle_file": "generated/la8159/bundles/int-chicago-vclt.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/INT/INT_CHICAGO_VCLT/agent.md",
+      "tags": [
+        "category:int"
+      ]
+    },
+    {
+      "slug": "int-iata-gc",
+      "agent_id": "INT_IATA_GC",
+      "name": "INT_IATA_GC — IATA General Conditions of Carriage",
+      "role": "specialist",
+      "specialty": "🌐 International — INT_IATA_GC",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:international"
+      ],
+      "agent_file": "agents-groups/la8159/agents/int-iata-gc.agent.md",
+      "bundle_file": "generated/la8159/bundles/int-iata-gc.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/INT/INT_IATA_GC/agent.md",
+      "tags": [
+        "category:int"
+      ]
+    },
+    {
+      "slug": "int-icao-an17",
+      "agent_id": "INT_ICAO_AN17",
+      "name": "INT_ICAO_AN17 — ICAO Annex 17 (Aviation Security)",
+      "role": "specialist",
+      "specialty": "🌐 International — INT_ICAO_AN17",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:international"
+      ],
+      "agent_file": "agents-groups/la8159/agents/int-icao-an17.agent.md",
+      "bundle_file": "generated/la8159/bundles/int-icao-an17.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/INT/INT_ICAO_AN17/agent.md",
+      "tags": [
+        "category:int"
+      ]
+    },
+    {
+      "slug": "int-icao-an6-an13",
+      "agent_id": "INT_ICAO_AN6_AN13",
+      "name": "INT_ICAO_AN6_AN13 — ICAO Annex 6 (Operations) + Annex 13 (Investigation)",
+      "role": "specialist",
+      "specialty": "🌐 International — INT_ICAO_AN6_AN13",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:international"
+      ],
+      "agent_file": "agents-groups/la8159/agents/int-icao-an6-an13.agent.md",
+      "bundle_file": "generated/la8159/bundles/int-icao-an6-an13.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/INT/INT_ICAO_AN6_AN13/agent.md",
+      "tags": [
+        "category:int"
+      ]
+    },
+    {
+      "slug": "int-icao-an9",
+      "agent_id": "INT_ICAO_AN9",
+      "name": "INT_ICAO_AN9 — ICAO Annex 9 (Facilitation)",
+      "role": "specialist",
+      "specialty": "🌐 International — INT_ICAO_AN9",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:international"
+      ],
+      "agent_file": "agents-groups/la8159/agents/int-icao-an9.agent.md",
+      "bundle_file": "generated/la8159/bundles/int-icao-an9.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/INT/INT_ICAO_AN9/agent.md",
+      "tags": [
+        "category:int"
+      ]
+    },
+    {
+      "slug": "int-mc99",
+      "agent_id": "INT_MC99",
+      "name": "INT_MC99 — Montreal Convention 1999",
+      "role": "specialist",
+      "specialty": "🌐 International — INT_MC99",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:international"
+      ],
+      "agent_file": "agents-groups/la8159/agents/int-mc99.agent.md",
+      "bundle_file": "generated/la8159/bundles/int-mc99.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/INT/INT_MC99/agent.md",
+      "tags": [
+        "category:int"
+      ]
+    },
+    {
+      "slug": "int-softlaw",
+      "agent_id": "INT_SOFTLAW",
+      "name": "INT_SOFTLAW — UNGCP + Customary PIL + BR-CL Joint Declaration 2024",
+      "role": "specialist",
+      "specialty": "🌐 International — INT_SOFTLAW",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:international"
+      ],
+      "agent_file": "agents-groups/la8159/agents/int-softlaw.agent.md",
+      "bundle_file": "generated/la8159/bundles/int-softlaw.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/INT/INT_SOFTLAW/agent.md",
+      "tags": [
+        "category:int"
+      ]
+    },
+    {
+      "slug": "int-uncrc-hague",
+      "agent_id": "INT_UNCRC_HAGUE",
+      "name": "INT_UNCRC_HAGUE — UN Convention on the Rights of the Child + Hague 1980",
+      "role": "specialist",
+      "specialty": "🌐 International — INT_UNCRC_HAGUE",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:international"
+      ],
+      "agent_file": "agents-groups/la8159/agents/int-uncrc-hague.agent.md",
+      "bundle_file": "generated/la8159/bundles/int-uncrc-hague.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/INT/INT_UNCRC_HAGUE/agent.md",
+      "tags": [
+        "category:int"
+      ]
+    },
+    {
+      "slug": "int-vccr",
+      "agent_id": "INT_VCCR",
+      "name": "INT_VCCR — Vienna Convention on Consular Relations (1963)",
+      "role": "specialist",
+      "specialty": "🌐 International — INT_VCCR",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:international"
+      ],
+      "agent_file": "agents-groups/la8159/agents/int-vccr.agent.md",
+      "bundle_file": "generated/la8159/bundles/int-vccr.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/INT/INT_VCCR/agent.md",
+      "tags": [
+        "category:int"
+      ]
+    },
+    {
+      "slug": "meta-adversarial",
+      "agent_id": "META_Adversarial",
+      "name": "META_Adversarial — Opposing-Counsel Vulnerability Auditor",
+      "role": "specialist",
+      "specialty": "🧭 Meta / cross-framework — META_Adversarial",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:cross-framework"
+      ],
+      "agent_file": "agents-groups/la8159/agents/meta-adversarial.agent.md",
+      "bundle_file": "generated/la8159/bundles/meta-adversarial.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/meta/META_Adversarial/agent.md",
+      "tags": [
+        "category:meta"
+      ]
+    },
+    {
+      "slug": "meta-evidence-mapper",
+      "agent_id": "META_Evidence_Mapper",
+      "name": "META_Evidence_Mapper — Evidence-to-Article-to-Violation Mapper",
+      "role": "specialist",
+      "specialty": "🧭 Meta / cross-framework — META_Evidence_Mapper",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:cross-framework"
+      ],
+      "agent_file": "agents-groups/la8159/agents/meta-evidence-mapper.agent.md",
+      "bundle_file": "generated/la8159/bundles/meta-evidence-mapper.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/meta/META_Evidence_Mapper/agent.md",
+      "tags": [
+        "category:meta"
+      ]
+    },
+    {
+      "slug": "meta-institutional-silence",
+      "agent_id": "META_Institutional_Silence",
+      "name": "META_Institutional_Silence — Institutional Silence Pattern (Cross-Jurisdictional Meta-Agent)",
+      "role": "specialist",
+      "specialty": "🧭 Meta / cross-framework — META_Institutional_Silence",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:cross-framework"
+      ],
+      "agent_file": "agents-groups/la8159/agents/meta-institutional-silence.agent.md",
+      "bundle_file": "generated/la8159/bundles/meta-institutional-silence.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/meta/META_Institutional_Silence/agent.md",
+      "tags": [
+        "category:meta"
+      ]
+    },
+    {
+      "slug": "meta-personnel-accountability",
+      "agent_id": "META_Personnel_Accountability",
+      "name": "META_Personnel_Accountability — Personnel Accountability Pattern (Cross-Jurisdictional Meta-Agent)",
+      "role": "specialist",
+      "specialty": "🧭 Meta / cross-framework — META_Personnel_Accountability",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:cross-framework"
+      ],
+      "agent_file": "agents-groups/la8159/agents/meta-personnel-accountability.agent.md",
+      "bundle_file": "generated/la8159/bundles/meta-personnel-accountability.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/meta/META_Personnel_Accountability/agent.md",
+      "tags": [
+        "category:meta"
+      ]
+    },
+    {
+      "slug": "meta-prescription-forum",
+      "agent_id": "META_Prescription_Forum",
+      "name": "META_Prescription_Forum — Statute-of-Limitations & Forum-Strategy Tracker",
+      "role": "specialist",
+      "specialty": "🧭 Meta / cross-framework — META_Prescription_Forum",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:cross-framework"
+      ],
+      "agent_file": "agents-groups/la8159/agents/meta-prescription-forum.agent.md",
+      "bundle_file": "generated/la8159/bundles/meta-prescription-forum.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/meta/META_Prescription_Forum/agent.md",
+      "tags": [
+        "category:meta"
+      ]
+    },
+    {
+      "slug": "meta-revolvingdoor",
+      "agent_id": "META_RevolvingDoor",
+      "name": "META_RevolvingDoor — Revolving Door Pattern (Cross-Jurisdictional Meta-Agent)",
+      "role": "specialist",
+      "specialty": "🧭 Meta / cross-framework — META_RevolvingDoor",
+      "language_focus": [
+        "en"
+      ],
+      "shared_scopes": [
+        "la8159",
+        "legal-grounding",
+        "jurisdiction:cross-framework"
+      ],
+      "agent_file": "agents-groups/la8159/agents/meta-revolvingdoor.agent.md",
+      "bundle_file": "generated/la8159/bundles/meta-revolvingdoor.bundle.import.json",
+      "source_file": "agents-groups/la8159/source/meta/META_RevolvingDoor/agent.md",
+      "tags": [
+        "category:meta"
+      ]
+    }
+  ],
+  "knowledge": {
+    "folder": "agents-groups/la8159/knowledge",
+    "manifest": "agents-groups/la8159/knowledge/manifest.json",
+    "description": "Source caches (BR/CL/INT statutes), personnel dossiers, and routing tables imported from /Users/dev/LA8159-incident/0_agents."
+  },
+  "memory_defaults": {
+    "qdrant_collections": [
+      "la8159_grounding"
+    ],
+    "neo4j_labels": [
+      "MemoryEntry",
+      "LegalArticle",
+      "ViolationID",
+      "PersonnelDossier"
+    ],
+    "neo4j_databases": [
+      "la8159"
+    ]
+  },
+  "policies": {
+    "tool_permissions": "agents-groups/la8159/policies/tool-permissions.by-agent.json",
+    "handoff_routes": "agents-groups/la8159/policies/handoff-routes.json"
+  }
+}

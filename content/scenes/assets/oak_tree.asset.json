@@ -1,0 +1,17 @@
+{
+  "id": "oak_tree",
+  "name": "Oak Tree (large)",
+  "icon": "🌳",
+  "category": "prop",
+  "tags": ["forest", "tree", "plant"],
+  "desc": "Large deciduous tree with curved trunk, root hints, and leaf clusters",
+  "params": {
+    "x":     { "type": "x",     "default": "w*0.2" },
+    "y":     { "type": "y",     "default": "bY-3" },
+    "height":{ "type": "number","default": 110 },
+    "leafColor":   { "type": "color", "default": "#2A5A2A" },
+    "leafStroke":  { "type": "color", "default": "#1A4A1A" },
+    "seed":  { "type": "number","default": 0 }
+  },
+  "code": "const tx = ctx.x ?? 100; const ty = ctx.y ?? 257; const th = ctx.height ?? 110; const seed = ctx.seed ?? 0; const leaf = ctx.leafColor || (isN?'#0E2A0E':'#2A5A2A'); const stroke = ctx.leafStroke || (isN?'#0A1A0A':'#1A4A1A');\nconst tsw = Math.sin(mt*0.35+seed*1.2)*3;\nsvg += `<path d=\"M${tx-6} ${ty} Q${tx-3+tsw*0.3} ${ty-th*0.5} ${tx+tsw} ${ty-th}\" fill=\"none\" stroke=\"#4A3020\" stroke-width=\"${11+(seed%3)}\" stroke-linecap=\"round\"/>`;\nfor (let r = 0; r < 3; r++) {\n  const rd = r-1;\n  svg += `<path d=\"M${tx+rd*4} ${ty} Q${tx+rd*16} ${ty+5} ${tx+rd*20} ${ty+7}\" fill=\"none\" stroke=\"#3A2818\" stroke-width=\"2.5\" stroke-linecap=\"round\" opacity=\"0.5\"/>`;\n}\nfor (let c = 0; c < 5; c++) {\n  const lcx = tx + Math.sin(c*1.1+seed)*25 + tsw;\n  const lcy = ty - th - 3 + Math.cos(c*0.9+seed)*15;\n  const lcr = 16 + Math.sin(c*2.3+seed*0.7)*7;\n  svg += `<circle cx=\"${lcx}\" cy=\"${lcy}\" r=\"${lcr}\" fill=\"${leaf}\" stroke=\"${stroke}\" stroke-width=\"${ol*0.3}\" opacity=\"0.75\"/>`;\n}"
+}

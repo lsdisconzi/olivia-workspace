@@ -1,0 +1,9 @@
+/* Theme: B · HAVAN Pastel (Azul/Amarelo/Verde) — LIGHT
+   Applies when <html data-theme="b-light">. Project: havana. */
+[data-theme="b-light"]{
+  --bg:#f8fafc; --card:#fdfefe; --border:#e6eef5;
+  --blue:#7fa8d6; --blue-deep:#5b86b3; --yellow:#f7d98a; --green:#8fc3a6; --red:#e69a9f;
+  --text:#3f4a5c; --muted:#8693a5; --header-text:#ffffff;
+  --wash-blue:rgba(127,168,214,.16); --wash-green:rgba(143,195,166,.20); --wash-yellow:rgba(247,217,138,.34);
+  color-scheme: light;
+}

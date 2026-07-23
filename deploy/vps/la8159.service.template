@@ -1,0 +1,17 @@
+[Unit]
+Description=OliviaLegal Unified Agent Server
+After=network.target
+
+[Service]
+Type=simple
+User={{SERVICE_USER}}
+WorkingDirectory={{APP_DIR}}
+EnvironmentFile={{APP_DIR}}/.env.service
+ExecStart={{APP_DIR}}/.venv/bin/python -u {{APP_DIR}}/serve.py --port ${OliviaLegal_PORT}
+Restart=always
+RestartSec=3
+KillSignal=SIGINT
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

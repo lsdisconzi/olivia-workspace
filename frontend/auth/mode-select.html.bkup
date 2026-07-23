@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OliviaLegal · Escolha o modo</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --white: #f8fafc;
+            --gray: #94a3b8;
+            --gray-hi: #cbd5e1;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-medium: rgba(255, 255, 255, 0.12);
+            --card-bg-start: rgba(255, 255, 255, 0.06);
+            --card-bg-end: rgba(255, 255, 255, 0.025);
+            --serif: 'Fraunces', Georgia, serif;
+            --sans: 'Plus Jakarta Sans', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --r: 18px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 20% 10%, rgba(74, 124, 155, 0.15), transparent 35%),
+                radial-gradient(circle at 80% 80%, rgba(196, 98, 45, 0.10), transparent 35%),
+                linear-gradient(135deg, #090f18 0%, #111827 45%, #0b1220 100%);
+            color: var(--white);
+            font-family: var(--sans);
+            line-height: 1.7;
+            font-size: 15px;
+            padding: 40px 24px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Static AI grid – structural inspiration, no animation */
+        .ai-grid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.35;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 45px 45px;
+            z-index: 0;
+        }
+
+        /* Main wrapper */
+        .wrap {
+            width: 100%;
+            max-width: 1080px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .header-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 6px 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .header-title {
+            font-family: var(--serif);
+            font-size: 46px;
+            font-weight: 400;
+            background: linear-gradient(90deg, #f8fafc, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            line-height: 1.15;
+        }
+
+        .header-title em {
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .header-desc {
+            font-size: 15px;
+            color: var(--gray);
+            line-height: 1.75;
+            margin-bottom: 24px;
+        }
+
+        .user-chip {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--gray-hi);
+            text-transform: lowercase;
+            letter-spacing: 0.02em;
+        }
+
+        .user-chip i {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* Glass effect cards – unified */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .mode-card {
+            background: linear-gradient(145deg, var(--card-bg-start), var(--card-bg-end));
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: var(--r);
+            padding: 32px 28px;
+            text-decoration: none;
+            color: inherit;
+            backdrop-filter: blur(12px);
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            display: block;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        /* Uniform icon block */
+        .mode-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .mode-title {
+            font-family: var(--serif);
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--white);
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
+        }
+
+        .mode-desc {
+            font-size: 13px;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* Notifications – glass */
+        .notifications {
+            margin: 8px 0 32px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--r);
+            padding: 28px;
+            backdrop-filter: blur(10px);
+        }
+
+        .notifications-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .notifications-title {
+            font-family: var(--serif);
+            font-size: 22px;
+            color: var(--white);
+            letter-spacing: -0.01em;
+        }
+
+        .notif-btn {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: transparent;
+            color: var(--gray-hi);
+            border-radius: 8px;
+            padding: 6px 14px;
+            font-size: 11px;
+            font-family: var(--sans);
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s;
+        }
+
+        .notif-btn:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        .notif-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .notif-item {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .notif-item.unread {
+            border-color: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .notif-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notif-label {
+            font-size: 10px;
+            font-family: var(--mono);
+            color: var(--gray-hi);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .notif-mark {
+            border: none;
+            background: transparent;
+            color: #c4622d;
+            font-size: 11px;
+            cursor: pointer;
+            font-family: var(--sans);
+        }
+
+        .notif-msg {
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .foot {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+        }
+
+        .foot-link {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            transition: color 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .foot-link:hover {
+            color: #f8fafc;
+        }
+
+        .foot-link i {
+            font-size: 11px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- AI grid background (static, subtle) -->
+    <div class="ai-grid"></div>
+
+    <div class="wrap">
+        <div class="header">
+            <div class="header-kicker">
+                Sessão ativa · Olivia + Direito 2026
+            </div>
+            <h1 class="header-title">
+                Olivia <em>×</em> Direito
+            </h1>
+            <p class="header-desc">Escolha o ambiente de trabalho adequado para esta sessão.</p>
+            <div class="user-chip">
+                <i class="fas fa-user-circle"></i>
+                __USER_DISPLAY__ · __EMAIL__
+            </div>
+        </div>
+
+        <div class="grid">
+            <a class="mode-card" href="/OliviaLegal/olivia">
+                <div class="mode-icon"><i class="fas fa-table-columns"></i></div>
+                <div class="mode-title">Workspace</div>
+                <div class="mode-desc">Ambiente completo para análise jurídica, agentes de IA, projetos, documentos,
+                    memória e ferramentas.</div>
+            </a>
+
+            <a class="mode-card" href="/OliviaLegal/residente">
+                <div class="mode-icon"><i class="fas fa-mobile-screen-button"></i></div>
+                <div class="mode-title">Mobile Remote</div>
+                <div class="mode-desc">Acesso simplificado para acompanhamento, consultas rápidas e operação remota.
+                </div>
+            </a>
+
+            <a class="mode-card" href="/OliviaLegal/agent">
+                <div class="mode-icon"><i class="fas fa-comments"></i></div>
+                <div class="mode-title">Agent Mobile</div>
+                <div class="mode-desc">Assistente conversacional otimizado para análise, consultas e interações
+                    jurídicas.</div>
+            </a>
+        </div>
+
+        <section class="notifications" aria-live="polite">
+            <div class="notifications-head">
+                <h2 class="notifications-title">Notificações <span id="notifCount" class="user-chip"
+                        style="padding:4px 12px; font-size:10px;">0</span></h2>
+                <button id="markAllNotifBtn" class="notif-btn" type="button">Marcar todas como lidas</button>
+            </div>
+            <div id="notifList" class="notif-list">
+                <div class="mode-desc">Carregando notificações...</div>
+            </div>
+        </section>
+
+        <div class="foot">
+            <a class="foot-link" href="/OliviaLegal/olivia">
+                <i class="fas fa-arrow-left"></i> Página inicial
+            </a>
+            <a class="foot-link" href="/OliviaLegal/logout">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
+            __ADMIN_LINK__
+        </div>
+    </div>
+
+    <script>
+        // Notification loader – unchanged logic
+        async function loadNotifications() {
+            const list = document.getElementById('notifList');
+            const count = document.getElementById('notifCount');
+            try {
+                const res = await fetch('/OliviaLegal/admin/notifications?limit=20');
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'falha ao carregar');
+                const items = Array.isArray(data.notifications) ? data.notifications : [];
+                const unread = Number(data.unread_count || 0);
+                count.textContent = String(unread);
+                if (!items.length) {
+                    list.innerHTML = '<div class="mode-desc">Nenhuma notificação no momento.</div>';
+                    return;
+                }
+                list.innerHTML = items.map((item) => {
+                    const unreadClass = item.unread ? ' unread' : '';
+                    const markBtn = item.unread ? `<button class="notif-mark" data-id="${item.id}">Marcar lida</button>` : '';
+                    const title = String(item.title || 'Notificação');
+                    const message = String(item.message || '');
+                    return `<article class="notif-item${unreadClass}">
+                        <div class="notif-top"><div class="notif-label">${title}</div>${markBtn}</div>
+                        <div class="notif-msg">${message}</div>
+                    </article>`;
+                }).join('');
+                list.querySelectorAll('.notif-mark').forEach((btn) => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.getAttribute('data-id');
+                        if (!id) return;
+                        await fetch(`/OliviaLegal/admin/notifications/${encodeURIComponent(id)}/read`, { method: 'POST' });
+                        loadNotifications();
+                    });
+                });
+            } catch (err) {
+                list.innerHTML = '<div class="mode-desc">Não foi possível carregar notificações.</div>';
+                count.textContent = '0';
+            }
+        }
+
+        document.getElementById('markAllNotifBtn').addEventListener('click', async () => {
+            await fetch('/OliviaLegal/admin/notifications/read-all', { method: 'POST' });
+            loadNotifications();
+        });
+
+        loadNotifications();
+    </script>
+    <script src="/OliviaLegal/auth-activity/tracker.js"></script>
+</body>
+
+</html>

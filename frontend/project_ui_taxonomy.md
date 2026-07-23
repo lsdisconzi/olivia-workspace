@@ -1,0 +1,982 @@
+# Olivia Project UI Taxonomy
+
+This document is auto-generated from the i18n translation keys.
+
+## Chat
+
+| Key | Default English |
+| --- | --- |
+| `chat.thinking.1` | Pensando |
+| `chat.thinking.2` | Analisando |
+| `chat.thinking.3` | Verificando |
+| `chat.thinking.4` | Processando |
+| `chatAgentName` | Assistant Olivia |
+| `chatBadgeIdle` | idle |
+| `chatRuntimeRoute` | route: detecting |
+| `chatThinking` | Thinking |
+| `chat_context` | Chat context |
+| `chat_context_1` | Chat context |
+| `chat_context_2` | Chat context |
+| `chat_with_the_shaders_agent_about_the_loaded_model` | Chat with the shaders agent about the loaded model. Context (URL,                         task ID when known) is included automatically. |
+
+
+## General
+
+| Key | Default English |
+| --- | --- |
+| `${_sharedJsQuote(filePath)}` | ${_sharedJsQuote(article.article_number)} |
+| `${_sharedJsQuote(fullPath)}` | ${_sharedJsQuote(fileName)} |
+| `0` | (0) |
+| `000` | 0.00 |
+| `0000` | 0.000 |
+| `0000_1` | 0.000 |
+| `000_1` | 0.00 |
+| `000_10` | 0.00 |
+| `000_11` | 0.00 |
+| `000_12` | 0.00 |
+| `000_13` | 0.00 |
+| `000_14` | 0.00 |
+| `000_2` | 0.00 |
+| `000_3` | 0.00 |
+| `000_4` | 0.00 |
+| `000_5` | 0.00 |
+| `000_6` | 0.00 |
+| `000_7` | 0.00 |
+| `000_8` | 0.00 |
+| `000_9` | 0.00 |
+| `008` | 0.08 |
+| `008_1` | 0.08 |
+| `015` | 0.15 |
+| `015_1` | 0.15 |
+| `020` | 0.20 |
+| `020_1` | 0.20 |
+| `028` | 0.28 |
+| `030` | 0.30 |
+| `030_1` | 0.30 |
+| `030_2` | 0.30 |
+| `040` | 0.40 |
+| `040_1` | 0.40 |
+| `050` | 0.50 |
+| `050_1` | 0.50 |
+| `050_2` | 0.50 |
+| `050_3` | 0.50 |
+| `0_1` | (0) |
+| `0_2` | (0) |
+| `0_3` | 0° |
+| `0_4` | 0° |
+| `0_5` | (0) |
+| `0_items` | 0 items |
+| `1` | 1× |
+| `100` | 1.00× |
+| `100_1` | 1.00 |
+| `100_10` | 1.00 |
+| `100_11` | 1.00 |
+| `100_2` | 1.00 |
+| `100_3` | 1.00 |
+| `100_4` | 1.00 |
+| `100_5` | 1.00 |
+| `100_6` | 1.00 |
+| `100_7` | 1.00 |
+| `100_8` | 1.00 |
+| `100_9` | 1.00 |
+| `1200` | 12:00 |
+| `1200_1` | 12:00 |
+| `1200_2` | 12:00 |
+| `1750` | 1750 |
+| `1750_1` | 1750 |
+| `1750_2` | 1750 |
+| `21_panoramas_become_hdr_equirectangular_automatica` | 2:1 panoramas become HDR equirectangular automatically. |
+| `25` | 2.5 |
+| `2d` | 2D |
+| `2d_svg_scene` | 2D · SVG Scene |
+| `2dsvg_3dwebgl_vfx_glb_models` | 2D/SVG · 3D/WebGL · VFX · GLB Models |
+| `3d` | 3D |
+| `3d_webgl` | 3D · WebGL |
+| `4273` | :4273 |
+| `6500` | 6500 |
+| `6500_1` | 6500 |
+| `8120` | :8120 |
+| `Agente vinculado ao projeto` | success |
+| `Arquivo removido` | success |
+| `Falha ao arquivar projeto` | error |
+| `Falha ao carregar arquivos do projeto` | error |
+| `Falha ao carregar projetos` | error |
+| `Falha ao criar projeto` | error |
+| `Falha ao excluir arquivo` | error |
+| `Falha ao excluir projeto` | error |
+| `Falha ao vincular agente ao projeto` | error |
+| `Falha ao vincular projeto ao agente` | error |
+| `Falha no upload para projeto` | error |
+| `GET` | /comprehend/groups |
+| `Nao foi possivel resolver path absoluto` | warning |
+| `POST` | /index-section |
+| `Path anexado ao contexto do agente` | success |
+| `Projeto vinculado ao agente` | success |
+| `Selecione um agente primeiro` | error |
+| `Selecione um projeto antes de enviar arquivos` | error |
+| `Selecione um projeto primeiro` | error |
+| `absolute` | Absolute: |
+| `abstract` | Abstract |
+| `abstract_1` | Abstract |
+| `acc` | Acc |
+| `action` | Action |
+| `action_1` | Action |
+| `active_context_html_with_current_document` | Active context: HTML with current document |
+| `active_project_none` | Active project: none |
+| `active_project_root_uploadsprojectsproject_id` | Active project root (uploads/projects/<project_id>/) |
+| `active_session_context` | Active session context |
+| `addContextLabel` | Add Context |
+| `agentActionsTitle` | Agent Actions |
+| `agent_outputs_will_appear_here` | Agent outputs will appear here. |
+| `agentarchitecture` | agent-architecture |
+| `agentmanaged_with_limit` | Agent-managed (with limit) |
+| `agentmd` | .agent.md |
+| `agents_configuration_memory` | Agents · Configuration · Memory |
+| `agents_source` | Agents                   Source |
+| `ai_transcription_diarization_multispeaker_support_` | AI transcription &                 diarization. Multi-speaker support, emotion analysis, and export. |
+| `align_output` | Align                       Output |
+| `all_agents` | All agents |
+| `all_owner_groups` | All owner groups |
+| `all_roles` | All                   roles |
+| `all_serviceport` | All service.port |
+| `all_sources` | All sources |
+| `all_statuses` | All statuses |
+| `analysis_not_run` | Analysis not run |
+| `animated` | Animated |
+| `animated_illustration_papercut_storybook` | Animated illustration, paper-cut, storybook |
+| `animation_engine` | // Animation engine |
+| `anime` | Anime |
+| `anime_1` | Anime |
+| `apiAgent` | Agent |
+| `apiAgentChat` | API Agent |
+| `apiAgentChatPlaceholder` | Ask about any endpoint… |
+| `apiAgentSend` | Send |
+| `apiDiagram` | Map |
+| `apiDiagramActions` | Diagram Actions |
+| `apiExpand` | Expand |
+| `apiFilterCategory` | Category |
+| `apiFilterOwnerGroup` | Owner Group |
+| `apiFilterServicePort` | Service Port |
+| `apiFilterStatus` | Status |
+| `apiFunctionDetail` | Detail |
+| `apiFunctionList` | Function list |
+| `apiFunctions` | Functions |
+| `apiKeyLabel` | API Key |
+| `apiKeyPlaceholder` | Uses server variable if empty |
+| `apiMCP` | MCP |
+| `apiMCPClearResult` | Clear result |
+| `apiMCPExecute` | Execute |
+| `apiMCPHideStale` | Hide likely stale |
+| `apiMCPInventory` | MCP Inventory |
+| `apiMCPServerFilter` | All servers |
+| `apiMCPServers` | MCP Servers |
+| `apiMCPToolSearch` | Search tool, server, route... |
+| `apiMCPToolTest` | MCP Tool Test |
+| `apiMCPTools` | MCP Tools |
+| `apiMCPViewList` | List |
+| `apiMCPViewTable` | Table |
+| `apiMapMode` | Map Mode |
+| `apiReloadDiagram` | Reload |
+| `apiSearchFunctions` | Search functions… |
+| `apiStats` | Stats |
+| `api_endpoint` | API                   Endpoint |
+| `apiarchitectureagents` | /api/architecture/agents |
+| `apiarchitecturebundles` | /api/architecture/bundles |
+| `apiarchitectureskills` | /api/architecture/skills |
+| `approximate_height_m` | Approximate height (m) |
+| `arabic` | Arabic |
+| `architectureAgentMap` | Open Agent Map |
+| `architectureApiEndpoints` | API endpoints |
+| `architectureConsoleLA8159` | Open LA8159 Ops Console (8120) |
+| `architectureReloadSpecs` | Reload specs |
+| `architectureTitle` | Agent Architecture |
+| `archive_longterm` | Archive / Long-term |
+| `arguments_json` | Arguments (JSON) |
+| `artifact` | Artifact |
+| `assigned_qdrant_collections` | Assigned Qdrant Collections |
+| `assigned_skills` | Assigned Skills |
+| `assistant` | Assistant |
+| `assistant_1` | Assistant |
+| `atmospheric_dynamic` | atmospheric dynamic |
+| `audio` | audio |
+| `audio_transcription_and_diarization` | Audio transcription and diarization |
+| `auto_backend_default_collection` | (auto: backend default collection) |
+| `auto_daynight` | Auto                         day/night |
+| `auto_daynight_cycle` | Auto day/night cycle |
+| `auto_erasepia` | Auto era-sepia |
+| `auto_erasepia_1` | Auto era-sepia |
+| `auto_tries_endpoint_and_fallback_proxy` | Auto (tries endpoint and fallback proxy) |
+| `autoanimate_preview` | Auto-animate preview |
+| `autorig` | Auto-rig |
+| `autorotate_3d` | Auto-rotate                         (3D) |
+| `autorotate_camera_3d` | Auto-rotate camera (3D) |
+| `available` | Available |
+| `awa_conversations` | awa_conversations |
+| `awa_documents` | awa_documents |
+| `awa_violations` | awa_violations |
+| `awa_violations_1` | awa_violations |
+| `bld` | Bld |
+| `brandName` | Olivia |
+| `browserPanelTitle` | Browser Panel |
+| `browserUrlPlaceholder` | URL to load... |
+| `calculating` | calculating... |
+| `canonical_resolution` | Canonical Resolution |
+| `captures_the_current_state_base_svg_added_3d_model` | Captures the current state (base SVG + added 3D models + environment +                   background + hybrid) into a reusable custom scene. |
+| `cartoon` | Cartoon |
+| `cartoon_1` | Cartoon |
+| `cartoon_2` | Cartoon |
+| `caseBuilderTitle` | Case Builder |
+| `caseDestinationLabel` | Destination inside Case |
+| `caseDossierDesc` | Consolidated case documentation for LA8159: master index, violations, evidence, narratives, and legal foundations. |
+| `caseDossierOpen` | Open dossier |
+| `caseDossierTitle` | Case Dossier |
+| `caseScanExtract` | Scan & Extract |
+| `caseSelectFiles` | Select Files |
+| `caseSelectFolder` | Select Folder |
+| `caseUploadHint` | PDFs · document photos · emails · contracts Any format. Any amount. Any level of organization. |
+| `caseUploadReassure` | No minimum. 1 file or 1,000 — we organize it for you. |
+| `caseUploadSub` | Drag files or a folder, or use the buttons below |
+| `caseUploadZoneTitle` | Start here — upload your data |
+| `case_dossier_la8159` | Case Dossier · LA8159 |
+| `case_intelligence` | Case Intelligence |
+| `castle` | 🏰                       Castle |
+| `castle_city_ruins` | castle, city,                               ruins |
+| `character` | Character |
+| `check_what_appears_over_the_preview_in_fullscreen_` | Check what appears over the preview in fullscreen and (optionally) set                     a key. In fullscreen: press the key → </> adjusts · Shift = ×10 · Esc closes. State saved in                     browser. |
+| `checking` | checking... |
+| `checking_1` | checking... |
+| `chinese_simplified` | Chinese (Simplified) |
+| `choose_below_and_the_olivia_shaders_agent_leads_th` | Choose                         below and the Olivia Shaders Agent leads the process — you decide, it implements. |
+| `cinematic` | Cinematic |
+| `cinematic_1` | Cinematic |
+| `click` | click |
+| `click_a_document_in_the_sidebar_to_visualize_its_c` | Click a document in the sidebar to               visualize its content here. |
+| `clip` | Clip |
+| `close` | Close |
+| `close_1` | Close |
+| `cloud` | Cloud |
+| `cloud_1` | Cloud |
+| `cloud_only` | (cloud only) |
+| `cloudy` | Cloudy |
+| `cloudy_1` | Cloudy |
+| `codes_laws_and_treaties_br_cl_int` | Codes, laws, and treaties (BR · CL · INT) |
+| `collection_auto` | collection: auto |
+| `color` | Color |
+| `confirm` | Confirm |
+| `confirm_1` | Confirm |
+| `confirmation` | Confirmation |
+| `consolidated_case_documentation_for_la8159_master_` | Consolidated case documentation for LA8159: master index, violations, evidence, narratives, and legal                 foundations. |
+| `consolidated_documentation_master_report_indexes_f` | Consolidated documentation: master report, indexes, final exhibits, frameworks, and timelines |
+| `consolidated_search_statistics_and_indexed_documen` | Consolidated search, statistics, and indexed documents |
+| `contain` | contain |
+| `context_shortterm` | Context / Short-term |
+| `corpus_comprehension` | Corpus Comprehension |
+| `cors_mode` | CORS                   Mode |
+| `costBadge` | Session cost |
+| `cover` | cover |
+| `craudioDescription` | Multi-jurisdictional civil litigation — 24 workflows, 8 scheduled agents, and a dedicated case chat. |
+| `craudioTitle` | Craudio |
+| `create_` | create_* |
+| `create_dedicated_collection` | Create dedicated                 collection |
+| `create_dedicated_database` | Create dedicated database |
+| `create_edit_and_preview_animated_svg_scenes_for_th` | Create, edit, and preview animated SVG scenes for the Edinburgh Storytelling Workbench. |
+| `create_new_agent` | Create New Agent |
+| `critical` | Critical |
+| `critical_shortterm` | Critical / Short-term |
+| `css` | CSS |
+| `ctxdbg_off` | CtxDbg off |
+| `current_max_tokens_8192` | Current max                     tokens: 8192 |
+| `current_project_none` | Current project: none |
+| `current_temperature_07` | Current                     temperature: 0.7 |
+| `current_window_24h` | Current                     window: 24h |
+| `custom` | Custom |
+| `cyber` | Cyber |
+| `cyberpunk` | cyberpunk |
+| `cyberpunk_1` | Cyberpunk |
+| `data_not_available` | Data not available |
+| `data_not_available_1` | Data not available |
+| `data_not_available_2` | Data not available |
+| `data_not_available_3` | Data not available |
+| `dates` | Dates |
+| `deepseek_v4_flash` | DeepSeek V4 Flash |
+| `deepseek_v4_pro` | DeepSeek V4 Pro |
+| `define_which_collections_can_be_readwritten_and_wh` | Define which collections can be read/written and which Qdrant each collection should point to. |
+| `descobertaAllFiles` | All Files |
+| `descobertaAnalytics` | Analytics |
+| `descobertaApiEndpoints` | API & Endpoints |
+| `descobertaCaseState` | Case State |
+| `descobertaCategories` | Categories |
+| `descobertaDeepAI` | Deep IA |
+| `descobertaEntities` | Entities |
+| `descobertaEvents` | Events |
+| `descobertaGaps` | Gaps |
+| `descobertaInput` | INPUT |
+| `descobertaInsights` | INSIGHTS |
+| `descobertaIntegration` | INTEGRATION |
+| `descobertaIntelligence` | INTELLIGENCE |
+| `descobertaNarrative` | Narrative |
+| `descobertaOrganization` | ORGANIZATION |
+| `descobertaPipeline` | Pipeline |
+| `descobertaTimeline` | Timeline |
+| `descobertaTitle` | Discovery |
+| `descobertaUploadData` | Upload Data |
+| `descobertaViolations` | Violations |
+| `description` | Description |
+| `desktop` | desktop |
+| `direct_no_fallback` | Direct (no fallback) |
+| `docsContextBar` | files as context |
+| `document_analysis_insights_and_intelligence` | Document analysis, insights, and intelligence |
+| `documents_conversations_and_code_indexed_by_semant` | Documents, conversations, and code indexed                 by semantic similarity. Never expires. Search by meaning. |
+| `documents_spreadsheets_contracts_evidence_and_audi` | Documents, spreadsheets, contracts, evidence, and audio |
+| `drag_files_or_click_to_select` | Drag files or click to select |
+| `driveAuthStatus` | Loading… |
+| `driveConnectButton` | Connect |
+| `driveDescription` | Manage your Google Drive files directly from the Olivia Workspace — browse, upload, download, and chat with the Drive assistant. |
+| `driveGoogleAccount` | Google Account |
+| `driveOpenDrive` | Open Drive |
+| `driveTitle` | Drive |
+| `drivefile` | drive.file |
+| `drop_the_agentbundlejson_here` | Drop the .agent-bundle.json here |
+| `duration_s` | Duration (s) |
+| `endpoint` | Endpoint |
+| `english_uk` | English (UK) |
+| `english_us` | English (US) |
+| `enter_an_id_or_term_above` | Enter an ID or term above. |
+| `entities_causal_relationships_decision_chains_exce` | Entities, causal relationships, decision                 chains. Excellent for reasoning about connections and dependencies. |
+| `environment` | Environment |
+| `error` | Error |
+| `esc` | Esc |
+| `examplesgblassets` | examples/gbl-assets/ |
+| `explore_query_and_configure_all_olivialegal_memory` | Explore, query, and configure all OliviaLegal memory. Vector, semantic, graph, short-term, and                 long-term. |
+| `exportButton` | Export |
+| `exposure` | Exposure |
+| `extra` | +Extra |
+| `false` | false |
+| `false_1` | false |
+| `false_2` | false |
+| `false_3` | false |
+| `false_4` | false |
+| `false_5` | false |
+| `fast` | Fast |
+| `files` | Files |
+| `filesClearAll` | Clear All |
+| `filesGenerated` | Generated Artifacts |
+| `filesImported` | Imported Files |
+| `filesTitle` | Session Files |
+| `filesTranscriptions` | Saved Transcriptions |
+| `final_project_destination_case_files` | Final                     project destination: case_files/ |
+| `final_project_destination_uploads` | Final                   project destination: uploads/ |
+| `fit` | Fit |
+| `fix` | 🛠                           Fix |
+| `flora` | Flora |
+| `focusMode` | Focus Mode |
+| `fog` | Fog |
+| `foghaar` | Fog/Haar |
+| `framework_code` | framework_code |
+| `french` | French |
+| `full_function_registry` | — full function registry |
+| `gemini_25_flash` | Gemini 2.5 Flash |
+| `gemini_25_pro` | Gemini 2.5 Pro |
+| `generate_neo4j_graph_for_this_section` | Generate Neo4j graph for this                 section |
+| `generate_neo4j_graph_for_this_section_1` | Generate Neo4j graph for                 this section |
+| `german` | German |
+| `glass` | glass |
+| `glb_extra` | +GLB extra |
+| `glb_model` | GLB Model |
+| `glb_model_or_2d_silhouette` | GLB model or 2D                               silhouette |
+| `glb_models_volumetric_lighting_free_camera` | GLB models, volumetric lighting, free camera |
+| `global_uploads_root_uploads` | Global uploads root (uploads/) |
+| `gnd` | Gnd |
+| `golden_case_suite_contracts_ontology_v24_and_analy` | Golden Case suite                 contracts,                 ontology v2.4, and analysis tools. |
+| `gradientparticles` | gradient/particles |
+| `graph_neo4j` | 🟢 Graph (Neo4j) |
+| `group` | Group |
+| `guarulhos_br` | Guarulhos · BR |
+| `guarulhos_br_1` | Guarulhos · BR |
+| `harbor_river_wave_mist` | harbor, river, wave,                               mist |
+| `headerDots` | More options |
+| `hello_im_the_api_specialist_agent_for_olivialegal_` | Hello! I'm the API specialist agent for OliviaLegal. I can help you understand any function,                       endpoint, request schema, or relationship between functions. What would you like to know? |
+| `high` | High |
+| `highend` | high-end |
+| `historyEmpty` | Select an agent to see saved conversations. |
+| `historySave` | Save Current Conversation |
+| `historyTitle` | Saved Conversations |
+| `holistic_view_generated_via_apibridgecomprehend` | Holistic view generated via /api/bridge/comprehend/* |
+| `hover` | hover |
+| `html` | HTML |
+| `html_view_visible_structure_with_css_and_js_collap` | HTML view · visible structure, with CSS and JS                 collapsed in markers |
+| `huggingface_token` | HuggingFace                       Token |
+| `humanoid` | Humanoid |
+| `imageto3d` | image-to-3d |
+| `import` | Import |
+| `improve` | ✨ Improve |
+| `initial_prompt_optional` | Initial Prompt                     (optional) |
+| `input` | Input |
+| `investigationRangeLabel` | Investigation Operations: activity window (hours) |
+| `investigationRangeStatus` | Current window: |
+| `investigation_operations_activity_window_hours` | Investigation Operations: activity window                     (hours) |
+| `isolated_agent_workspace_uploadsprojectsproject_id` | Isolated agent workspace               (uploads/projects/<project_id>/agents/<agent>/workspace/) |
+| `italian` | Italian |
+| `items_added_via_chat_ongoing_tasks_recent_decision` | Items added via chat, ongoing tasks,                 recent decisions. Cleared when session ends. |
+| `japanese` | Japanese |
+| `js` | JS |
+| `json_file` | JSON File |
+| `json_or_text` | (JSON or text) |
+| `knows_the_full_registry` | · knows the full                       registry |
+| `korean` | Korean |
+| `l1l4_nlp_entities_timeline_relationships` | L1–L4 — NLP, entities, timeline,                     relationships |
+| `l5l7_narrative_violations_case_graph_requires_anth` | L5–L7 — Narrative, violations, case                     graph (requires Anthropic key) |
+| `landscape` | Landscape |
+| `last_updated` | Last updated |
+| `lawLibDesc` | 59 legal sources (codes, laws, regulations, treaties) with verbatim text and SHA-256. |
+| `lawLibOpen` | Open full view |
+| `lawLibTitle` | OliviaLegal Law Library |
+| `layer_c_corpus_comprehension_by_groups_requires_an` | Layer C — Corpus comprehension by                     groups (requires Anthropic key) |
+| `legalRouterDesc` | Resolves violation IDs, frameworks, and person dossiers from Agents Source. |
+| `legalRouterTitle` | Legal Router OliviaLegal |
+| `listeningAdvancedParams` | Advanced Endpoint Parameters |
+| `listeningAiAnalysis` | AI Analysis |
+| `listeningAiEndpoint` | Default endpoint |
+| `listeningAiModel` | Default model |
+| `listeningAiPrompt` | Analysis prompt |
+| `listeningAlignOutput` | Align Output |
+| `listeningAudioUpload` | Audio |
+| `listeningBatchSize` | Batch Size |
+| `listeningBeamSize` | Beam Size |
+| `listeningBestOf` | Best Of |
+| `listeningChunkSize` | Chunk Size |
+| `listeningClearContext` | Clear |
+| `listeningConfig` | Configuration |
+| `listeningContext` | Context (Qdrant + Transcriptions) |
+| `listeningCorsMode` | CORS Mode |
+| `listeningDiarizationStage` | Diarization |
+| `listeningDragDrop` | Drag or click to select |
+| `listeningEndpoint` | API Endpoint |
+| `listeningHfToken` | HuggingFace Token |
+| `listeningInitialPrompt` | Initial Prompt (optional) |
+| `listeningLanguage` | Language |
+| `listeningMaxSpeakers` | Max Speakers |
+| `listeningMinSpeakers` | Min Speakers |
+| `listeningModel` | Model |
+| `listeningNoiseReduce` | Noise Reduce |
+| `listeningPreprocessStage` | Preprocess |
+| `listeningProgress` | Progress |
+| `listeningProviderLocal` | Local |
+| `listeningProviderRunpod` | RunPod |
+| `listeningQdrantCollection` | Qdrant Collection (optional) |
+| `listeningQdrantCollections` | Qdrant Collections |
+| `listeningQdrantIndexing` | Qdrant Indexing (parameters + segments) |
+| `listeningRemoveSilence` | Remove Silence |
+| `listeningRunpodApiKey` | RunPod API Key |
+| `listeningRunpodEndpointId` | Endpoint ID |
+| `listeningRunpodExecMode` | Exec Mode |
+| `listeningRunpodFields` | RunPod Configuration |
+| `listeningRunpodPoll` | Poll (ms) |
+| `listeningRunpodTimeout` | Timeout (s) |
+| `listeningSaveSelection` | Save selection |
+| `listeningSaveToQdrant` | Save to Qdrant |
+| `listeningSavedTranscripts` | Saved Transcripts |
+| `listeningSpeakers` | Speakers |
+| `listeningStop` | Stop |
+| `listeningTestHealth` | Test |
+| `listeningTitle` | Olivia Listens |
+| `listeningTranscribe` | Transcribe |
+| `listeningTranscript` | Transcription |
+| `listeningUploadStage` | Upload |
+| `listeningVadThreshold` | VAD Threshold |
+| `listeningVoiceEnhance` | Voice Enhance |
+| `listeningWhisperTemp` | Whisper Temp |
+| `listeningWordTimestamps` | Word Timestamps |
+| `listening_space` | Listening                 Space |
+| `load_the_directory_to_see_already_uploaded_models` | Load the directory to see already uploaded models. |
+| `loading` | Loading... |
+| `loading_1` | Loading... |
+| `loading_2` | Loading... |
+| `loading_3` | Loading... |
+| `loading_4` | Loading... |
+| `loading__shared` | Loading _shared… |
+| `loading_agents` | Loading agents… |
+| `loading_bundle_catalog` | Loading bundle catalog... |
+| `loading_collections` | Loading collections... |
+| `loading_collections_1` | Loading collections... |
+| `loading_contracts` | Loading contracts... |
+| `loading_documents` | Loading documents… |
+| `loading_functions` | Loading functions… |
+| `loading_links` | Loading links... |
+| `loading_links_1` | Loading links... |
+| `loading_mcp_inventory` | Loading MCP                     inventory… |
+| `loading_mcp_servers` | Loading MCP servers… |
+| `loading_mcp_tools` | Loading MCP tools… |
+| `loading_mcp_tools_1` | Loading MCP tools… |
+| `loading_models` | Loading models... |
+| `loading_projects` | Loading                 projects... |
+| `loading_routing_rules` | Loading routing rules... |
+| `loading_scenes` | Loading scenes... |
+| `loading_transcriptions` | Loading transcriptions... |
+| `log` | LOG |
+| `longterm` | Long-term: |
+| `lsAlignOutput` | true |
+| `lsDiarization` | true |
+| `lsNoiseReduce` | true |
+| `lsRemoveSilence` | true |
+| `lsVoiceEnhance` | true |
+| `lsWordTimestamps` | false |
+| `main` | Main |
+| `manage_your_google_drive_files_directly_from_the_o` | Manage your Google Drive files directly from the Olivia Workspace — browse, upload, download, and chat                 with the Drive assistant. |
+| `manageable_subfolder` | Manageable Subfolder |
+| `managed_root` | Managed root: |
+| `map_functions` | Map: Functions |
+| `map_functions_vps_mcp` | Map: Functions + VPS MCP |
+| `map_ownership` | Map: Ownership |
+| `map_vps_mcp` | Map: VPS MCP |
+| `markdown_pdf_docx_rendered_with_quality` | Markdown, PDF, DOCX — rendered with quality. |
+| `master_jurisprudence_index` | Master Jurisprudence Index |
+| `maxTokensLabel` | Max response tokens |
+| `maxTokensStatus` | Current max tokens: |
+| `mb_total` | MB Total |
+| `medium` | Medium |
+| `memoryAnalyzeWithAI` | Analyze with AI |
+| `memoryChat` | Chat |
+| `memoryCollections` | Collections |
+| `memoryConfig` | Config |
+| `memoryCreateCollection` | New Collection |
+| `memoryDesc` | Explore, query, and configure all OliviaLegal memory. Vector, semantic, graph, short-term, and long-term. |
+| `memoryGraphStat` | Graph Nodes |
+| `memoryIngest` | Ingest |
+| `memoryIngestArticles` | Law Articles |
+| `memoryIngestFreeText` | Free Text |
+| `memoryIngestGraph` | Graph |
+| `memoryIngestViolation` | Violation |
+| `memoryNeo4jConfig` | Neo4j |
+| `memoryOpen` | Open Memory Space |
+| `memoryOverview` | Overview |
+| `memoryQdrantConfig` | Qdrant |
+| `memoryQuadrants` | Quadrants |
+| `memoryRedistribute` | Redistribute |
+| `memoryRefresh` | Refresh |
+| `memoryRoutingConfig` | Routing and Access |
+| `memorySaveConfig` | Save Config |
+| `memorySearch` | Search |
+| `memorySearchPlaceholder` | Search memory... |
+| `memoryShortTermStat` | Short-term |
+| `memoryTitle` | OliviaLegal Memory |
+| `memoryVectorStat` | Vectors |
+| `meshy_ai_3d_generation` | Meshy AI — 3D Generation |
+| `meshy_api_key` | MESHY_API_KEY |
+| `meshy_studio` | Meshy Studio |
+| `meshy_task_id_uuid` | Meshy Task ID (UUID) |
+| `method` | Method |
+| `minimal` | minimal |
+| `mobile` | mobile |
+| `modelSelection` | Model Selection |
+| `model_exports_only_main_glb_extras_background_incl` | Model exports only main GLB + extras. +Background includes 3D                   environment/background when supported by the exporter/viewer. |
+| `mousereactive` | Mouse-reactive |
+| `mousereactive_particles` | Mouse-reactive particles |
+| `movement_meshy_catalog` | Movement (Meshy catalog) |
+| `mp3_wav_m4a_flac_ogg_webm` | MP3, WAV, M4A, FLAC, OGG, WEBM |
+| `multiimageto3d` | multi-image-to-3d |
+| `multijurisdictional_civil_litigation_24_workflows_` | Multi-jurisdictional                 civil                 litigation — 24 workflows, 8 scheduled agents, and a dedicated case chat. |
+| `mvStatNodes` | — |
+| `mvStatVectors` | — |
+| `navAgent` | Mobile Agent |
+| `navHome` | Home |
+| `navWorkspace` | Workspace |
+| `neutral_hdri` | neutral HDRI |
+| `night` | Night |
+| `night_1` | Night |
+| `night_2` | Night |
+| `night_mode_default` | Night mode default |
+| `no_active_selection` | No active                 selection |
+| `no_agent` | No agent |
+| `no_animations` | — no animations — |
+| `no_backend_local_only` | no (backend local only) |
+| `no_context_selected` | no context                   selected |
+| `no_entities` | No entities |
+| `no_events` | No events |
+| `no_events_recorded` | No events recorded |
+| `no_files_upload_or_refresh` | No files. Upload or refresh. |
+| `no_findings` | No findings |
+| `no_generated_artifacts_yet` | No                     generated artifacts yet |
+| `no_group_data` | No group data |
+| `no_imported_files_yet` | No                     imported files yet |
+| `no_items_in_context` | No items in context |
+| `no_mapping` | No mapping |
+| `no_recommendations` | No recommendations |
+| `no_violations_identified` | No violations identified |
+| `nodes` | nodes |
+| `noir` | Noir |
+| `noir_1` | Noir |
+| `noise_reduce` | Noise                       Reduce |
+| `none` | none |
+| `olivia_workspace` | Olivia · Workspace |
+| `olivialegal_legal_router` | OliviaLegal Legal Router |
+| `olivialegalenv` | OliviaLegal/.env |
+| `one_per_line` | (one per line) |
+| `one_per_line_1` | (one per line) |
+| `one_sentence_is_enough_the_agent_fills_in_technica` | One sentence is enough — the agent fills in technical details. |
+| `only_for_3d_scenes_background_model_layers` | Only for 3D scenes: background, model, layers. |
+| `ontology_contracts_and_compliance_analysis` | Ontology, contracts, and compliance analysis |
+| `ontology_v24` | Ontology v2.4 |
+| `opacity` | Opacity |
+| `optional` | (optional) |
+| `optional_groups_in_sidebar` | (optional           — groups in sidebar) |
+| `or_click_to_select` | or click to select |
+| `or_custom_prompt` | Or custom prompt |
+| `organic` | organic |
+| `organizations` | Organizations |
+| `outdoor` | Outdoor |
+| `outdoor_1` | Outdoor |
+| `outputPanel` | Output Panel |
+| `output_folder` | Output Folder |
+| `own` | own |
+| `page_11` | Page 1/1 |
+| `panel_context_00` | Panel context: 0/0 |
+| `panel_context_00_1` | Panel context: 0/0 |
+| `panel_context_00_2` | Panel context: 0/0 |
+| `parsing_comparison` | Parsing Comparison |
+| `password` | Password |
+| `pdf_docx_xlsx_csv_txt_json_html_mp3_wav_m4a` | PDF · DOCX · XLSX · CSV · TXT · JSON · HTML · MP3 · WAV · M4A |
+| `people` | People |
+| `permissions` | Permissions |
+| `personnel` | Personnel |
+| `places` | Places |
+| `plugins` | Plugins |
+| `populated_by_trunkjs_from_apiuserme` | populated by trunk.js from /api/user/me |
+| `populated_by_trunkjs_from_apiuserme_1` | populated by trunk.js from /api/user/me |
+| `portuguese_brazil` | Portuguese (Brazil) |
+| `preferred_model` | Preferred Model |
+| `preparing_reading` | Preparing reading... |
+| `preview` | preview |
+| `primary` | Primary |
+| `product` | Product |
+| `product_1` | Product |
+| `project_files` | Project Files |
+| `project_shared_workspace_uploadsprojectsproject_id` | Project shared workspace (uploads/projects/<project_id>/workspace/) |
+| `projectsCurrent` | Current project: |
+| `projectsDestination` | Project Destination |
+| `projectsReload` | Reload projects |
+| `projectsTitle` | Projects |
+| `projectsUpload` | Upload to Project |
+| `projectsViewFiles` | View Files |
+| `prompt_max_600` | Prompt (max 600) |
+| `provider` | Provider |
+| `providerAnthropic` | Anthropic |
+| `providers` | Providers |
+| `proxy_sameorigin_api` | Proxy same-origin (/api/...) |
+| `prune_framework` | true |
+| `public_image_url_or_24_urls_one_per_line_for_multi` | Public image URL (or 2–4 URLs,                 one per line, for multi-view) |
+| `qdrant_collection` | Qdrant Collection |
+| `qdrant_collection_1` | Qdrant Collection |
+| `qdrant_collection_optional` | Qdrant Collection                       (optional) |
+| `quadruped` | Quadruped |
+| `quads_riganimfriendly` | Quads (rig/anim-friendly) |
+| `query` | Query |
+| `quick_search` | Quick Search |
+| `rain` | Rain |
+| `rain_1` | Rain |
+| `read_and_write_recommended` | Read and Write (recommended) |
+| `read_only` | Read Only |
+| `ready` | Ready |
+| `ready_to_execute` | Ready to execute. |
+| `realistic` | Realistic |
+| `recent_contracts` | Recent Contracts |
+| `reference_longterm` | Reference / Long-term |
+| `relationships` | Relationships: |
+| `relationships_1` | relationships |
+| `relationships_and_structural_knowledge` | Relationships and structural                     knowledge |
+| `remesh` | remesh |
+| `remove_silence` | Remove                       Silence |
+| `required` | Required |
+| `required_1` | Required |
+| `required_ok` | Required OK |
+| `resolution_result_appears_here` | Resolution result appears here. |
+| `resolves_violation_ids_frameworks_and_personnel` | Resolves violation IDs, frameworks, and personnel |
+| `resource_family` | Resource family |
+| `restrictions_disabled` | Restrictions:           disabled |
+| `retrieve_` | retrieve_* |
+| `retrieve__task` | retrieve_*_task |
+| `rig` | Rig |
+| `rigging` | rigging |
+| `root_directory` | Root Directory |
+| `route_detecting` | route:               detecting |
+| `router` | Router |
+| `rules` | // Rules |
+| `runIntelligence` | Run Deep Intelligence (L5-L7) |
+| `run_async` | run (async) |
+| `run_comprehension_in_the_pipeline_tab_to_generate` | Run Comprehension in the Pipeline tab to generate. |
+| `run_intelligence_to_see_the_phase` | Run intelligence to see the phase |
+| `runpod_api_key` | RunPod API                       Key |
+| `runsync` | runsync |
+| `russian` | Russian |
+| `santiago_cl` | Santiago · CL |
+| `santiago_cl_1` | Santiago · CL |
+| `scene_schema` | // Scene schema |
+| `scenes` | Scenes |
+| `scroll_to_explore` | Scroll to explore                     → |
+| `sculpture` | Sculpture |
+| `sectionGeneratorButton` | Generate new section |
+| `sectionGeneratorDesc` | Quickly create a new sidebar tab with auto-generated JS/CSS. |
+| `sectionGeneratorTitle` | Section Generator |
+| `section_folder_in_project` | Section folder in project |
+| `section_folder_in_project_1` | Section folder in project |
+| `select_a_collection_to_see_details_and_samples_scr` | Select a collection to see details and samples (scroll). |
+| `select_a_document_from_the_sidebar` | Select a document from the sidebar. |
+| `select_a_file_to_preview` | Select a file to preview |
+| `select_a_group` | Select a group |
+| `select_a_main_theme_you_can_combine_multiple_later` | Select a main theme. You can combine multiple later. |
+| `select_a_project_to_view_files` | Select a project to view files. |
+| `select_a_skill` | Select a skill... |
+| `select_a_source_from_the_tree` | Select a source from the tree. |
+| `select_a_violation_from_the_tree` | Select a violation from the tree. |
+| `select_an_agent_to_see_saved_conversations` | Select an agent to see                   saved conversations. |
+| `select_an_entry_from_the_sidebar` | Select an entry from the sidebar. |
+| `select_qdrant_collections_and_saved_transcripts_to` | Select Qdrant collections and saved                 transcripts to use as context for this agent (or other Olivia agents). |
+| `select_which_mcp_servers_this_agent_can_use_eg_mes` | Select which MCP servers this agent can use           (e.g., meshy-ai). |
+| `selected_file_editor` | Selected file editor |
+| `semantic_longterm_memory` | Semantic long-term memory |
+| `sendToAgent` | Send to Agent for Analysis |
+| `server` | Server |
+| `server_1` | Server |
+| `servers` | Servers |
+| `severity_all` | Severity:                   all |
+| `shadersBrainstorm` | Brainstorm |
+| `shadersCapturePNG` | Capture PNG |
+| `shadersCatalog` | Catalog |
+| `shadersCreateScene` | New Scene |
+| `shadersDayNightToggle` | Day/Night |
+| `shadersEditor` | Editor |
+| `shadersFullscreenConfig` | Configure Fullscreen |
+| `shadersImportScene` | Import Scene |
+| `shadersMorphSlider` | Morph |
+| `shadersOutlineSlider` | Outline |
+| `shadersPreview` | Preview |
+| `shadersSceneGallery` | Scene Gallery |
+| `shadersSettings` | Settings |
+| `shadersTimeSlider` | Time |
+| `shadersTitle` | Shaders Space |
+| `shadersWorkbench` | Workbench |
+| `shapes_light_particles` | shapes, light,                               particles |
+| `sharedCompareParsing` | Compare Parsing |
+| `sharedSearchPlaceholder` | Search _shared... |
+| `sharedSyncLaw` | Sync Law |
+| `shortterm` | ⚡ Short-term |
+| `show_hud_overlay` | Show HUD overlay |
+| `showing_00_tools` | Showing 0/0 tools |
+| `single_mode_agent_openclaude` | Single mode: Agent (OpenClaude) |
+| `skeleton_type` | Skeleton type |
+| `sky` | Sky |
+| `sky1` | Sky1 |
+| `sky2` | Sky2 |
+| `sky_terrain_horizon` | sky, terrain,                               horizon |
+| `snow` | Snow |
+| `snow_1` | Snow |
+| `source` | Source |
+| `source_1` | Source |
+| `spacesAnalysis` | Analysis |
+| `spacesChatContracts` | Contract Chat |
+| `spacesContractSpace` | Golden Case suite contracts, ontology v2.4, and analysis tools. |
+| `spacesContractTree` | Contract Tree |
+| `spacesFilterAll` | All |
+| `spacesFilterEvidence` | Evidence |
+| `spacesFilterFramework` | Framework |
+| `spacesFilterSpec` | Spec |
+| `spacesSearchContracts` | Search contracts... |
+| `spacesStatsContext` | Context |
+| `spacesStatsLayers` | Layers |
+| `spacesStatsTotal` | Total |
+| `spacesTitle` | Contract Space |
+| `span_datai18nolivia_workspaceolivia_workspacespan` | <span data-i18n="olivia_workspace">Olivia · Workspace</span> |
+| `span_datai18nunnamed_6span` | <span data-i18n="unnamed_6">{}</span> |
+| `spanish` | Spanish |
+| `specific_folders` | Specific folders... |
+| `speed` | Speed |
+| `stageBuild` | Case state — findings & next steps |
+| `stageGaps` | Intelligence — L5-L7 deep analysis |
+| `stageGoal` | Relationships — L4 graph between files |
+| `stageIntake` | Intake — submit your data |
+| `stageOrganize` | Indexing — L0 ingest & hash |
+| `stageOutput` | Ready — agent can query results |
+| `stageTrackerTitle` | Pipeline Progress |
+| `stageUnderstand` | Extraction — L1-L3 metadata & entities |
+| `starfield_neon` | starfield + neon |
+| `statussucceeded` | status=SUCCEEDED |
+| `storage` | Storage |
+| `storm` | Storm |
+| `storm_1` | Storm |
+| `storybook` | Storybook |
+| `storybook_1` | Storybook |
+| `stream_` | stream_* |
+| `strict_fixed_structure` | Strict (fixed structure) |
+| `structure_strategy` | Structure Strategy |
+| `structured_analysis_via_apibridgeintelligence_and_` | Structured analysis via /api/bridge/intelligence/* and /case-state/* |
+| `style` | Style |
+| `supporting` | Supporting |
+| `system` | Relatório consolidado gerado para revisão. |
+| `tap_the_microphone_to_start` | Tap the microphone to start |
+| `target_polycount` | Target polycount |
+| `temperature` | Temperature |
+| `temperatureLabel` | Model Temperature |
+| `temperatureStatus` | Current temperature: |
+| `tested` | Tested |
+| `tested_failed` | Tested failed |
+| `tested_ok` | Tested OK |
+| `textto3d` | text-to-3d |
+| `texture_prompt_eg_brushed_gold_metal_light_wear` | Texture prompt (e.g. "brushed gold                         metal, light wear") |
+| `texture_prompt_optional` | Texture prompt                 (optional) |
+| `the_backend_always_saves_the_file_this_option_cont` | The backend always saves the file. This                   option controls whether the execution is also indexed in Qdrant for context search / configuration                   comparison. |
+| `the_choice_defines_the_rendering_engine_and_accept` | The choice defines the rendering engine and accepted asset types. |
+| `title` | Title |
+| `tool` | Tool |
+| `tool_1` | Tool |
+| `tools` | Tools |
+| `tools_1` | Tools |
+| `topology` | Topology |
+| `transparent_3d_canvas_over_the_2d_svg_scene_useful` | Transparent 3D canvas over the 2D SVG scene — useful for placing a GLB model                   inside an illustrated setting. |
+| `treaties_int` | Treaties · INT |
+| `treaties_int_1` | Treaties · INT |
+| `trees_foliage_wind` | trees, foliage,                               wind |
+| `triangles` | Triangles |
+| `true` | true |
+| `true_1` | true |
+| `true_2` | true |
+| `true_3` | true |
+| `true_4` | true |
+| `true_5` | true |
+| `tweak_here_applies_in_real_time_to_preview_click_t` | Tweak here ↔ applies in real time to Preview. Click ▾ to collapse a section. |
+| `type_to_search` | Type to search |
+| `unnamed` | ••• |
+| `unnamed_1` | 🇬🇧 |
+| `unnamed_2` | 🇮🇹 |
+| `unnamed_3` | 🇬🇷 |
+| `unnamed_4` | 🇵🇱 |
+| `unnamed_5` | 🇦🇱 |
+| `unnamed_6` | {} |
+| `unnamed_7` | ••• |
+| `unrestricted_tool_access_disables_restrictive_poli` | Unrestricted tool access (disables restrictive policy) |
+| `untested` | Untested |
+| `uploads` | uploads/ |
+| `uri` | URI |
+| `url` | URL |
+| `usdz_background` | USDZ + Background |
+| `usdz_model` | USDZ Model |
+| `use_existing_collection` | Use existing collection |
+| `use_shared_collection` | Use shared collection |
+| `use_shared_database` | Use shared database |
+| `use_the_microphone_button_in_chat_to_start_and_sto` | Use the microphone button in chat to start and stop. Transcription appears live in the message                       field. |
+| `user` | User |
+| `using_server_configuration_for_active_provider` | Using server                     configuration for active provider |
+| `vad_threshold` | VAD                       Threshold |
+| `validated_corpus_br_cl_int` | Validated corpus: BR · CL · INT |
+| `variations` | 🎲 Variations |
+| `vector_qdrant` | 🔵 Vector (Qdrant) |
+| `verifyApiKey` | Verify key |
+| `violationsDesc` | 71 validated violations (BR/CL/INT) with legal basis, actors, and incident segments. |
+| `violationsTitle` | OliviaLegal Violations |
+| `voiceConfigTitle` | Voice Configuration |
+| `voiceContinuousLabel` | Continuous mode (auto-restart) |
+| `voiceHint` | Use the microphone button in chat to start and stop. Transcription appears live in the message field. |
+| `voiceLangLabel` | Transcription language |
+| `voice_enhance` | Voice                       Enhance |
+| `voice_recognition_not_available` | Voice recognition not available |
+| `voice_settings_have_been_moved_to_the_configuratio` | Voice settings have been moved to the Configuration tab in the sidebar.         Here you can only follow the capture and send the text. |
+| `waiting` | waiting... |
+| `walking` | Walking |
+| `warm` | Warm |
+| `warm_1` | Warm |
+| `water` | Water |
+| `watercolor` | Watercolor |
+| `watercolor_1` | Watercolor |
+| `what_do_you_want_to_create_today` | What do                         you want to create today? |
+| `whisper_temp` | Whisper                       Temp |
+| `word_timestamps` | Word                       Timestamps |
+| `workspace` | workspace |
+| `workspace_1` | Workspace: |
+| `yes_parameters_segments` | yes (parameters + segments) |
+
+
+## Sidebar
+
+| Key | Default English |
+| --- | --- |
+| `sidebar.agents` | Agents |
+| `sidebar.apiexplorer` | API Explorer |
+| `sidebar.casebuilder` | Case Builder |
+| `sidebar.config` | Configuration |
+| `sidebar.craudio` | Craudio |
+| `sidebar.descoberta` | Discovery |
+| `sidebar.docs` | Documents |
+| `sidebar.drive` | Drive |
+| `sidebar.files` | Session Files |
+| `sidebar.history` | History |
+| `sidebar.lawlib` | Law Library |
+| `sidebar.legalrouter` | Legal Router |
+| `sidebar.listening` | Listening |
+| `sidebar.masterindex` | Jurisprudence |
+| `sidebar.memory` | Memory |
+| `sidebar.projects` | Projects |
+| `sidebar.shaders` | Shaders Space |
+| `sidebar.shared` | Shared Data |
+| `sidebar.spaces` | Contract Space |
+| `sidebar.studio` | Studio |
+| `sidebar.violations` | Violations |
+| `sidebar.writer` | Writer |
+| `sidebarAPIExplorer` | API Explorer |
+| `sidebarAgents` | Agents |
+| `sidebarArchitecture` | Architecture |
+| `sidebarDescoberta` | Descoberta |
+| `sidebarDocs` | Documents |
+| `sidebarHistory` | History |
+| `sidebarLawLib` | Law Library |
+| `sidebarLegalRouter` | Legal Router |
+| `sidebarListening` | Listening |
+| `sidebarMemory` | Memory |
+| `sidebarShaders` | Shaders |
+| `sidebarShared` | Shared Data (_shared) |
+| `sidebarSpaces` | Spaces |
+| `sidebarStudio` | Studio |
+
+
+## Studio
+
+| Key | Default English |
+| --- | --- |
+| `studio.default.desc` | This is the Olivia Studio — a living canvas where you describe a world and it comes to life. Edit the code on the left, see the result transform instantly on the right. |
+| `studio.default.h1` | Your story <em>begins here</em> |
+| `studio.default.placeholder` | Describe a scene, a story, a world… |
+| `studio.default.tagline` | Powered by Olivia · From imagination to living worlds |
+| `studioAiAssistant` | OliviaLegal Assistant |
+| `studioApiKeyOptional` | API Key (optional) |
+| `studioApiKeyPlaceholder` | sk-... (leave empty to use server key) |
+| `studioBadge` | LLM Assisted |
+| `studioBlog` | Blog |
+| `studioBlogDesc` | Article layout |
+| `studioCancel` | Cancel |
+| `studioCards` | Card Grid |
+| `studioCardsDesc` | Card grid |
+| `studioComponents` | Components |
+| `studioConfigAssistant` | Configure AI Assistant |
+| `studioDashboard` | Dashboard |
+| `studioDashboardDesc` | Admin panel |
+| `studioFooter` | Footer |
+| `studioFooterDesc` | Full footer |
+| `studioHero` | Hero Section |
+| `studioHeroDesc` | Feature banner |
+| `studioImportHtml` | Import HTML |
+| `studioImportHtmlDesc` | Load local file |
+| `studioLandingDesc` | Conversion page |
+| `studioLandingPage` | Landing Page |
+| `studioNavbar` | Navbar |
+| `studioNavbarDesc` | Responsive navigation |
+| `studioNewProject` | New Project |
+| `studioNewProjectDesc` | Start from scratch |
+| `studioPortfolio` | Portfolio |
+| `studioPortfolioDesc` | Personal showcase |
+| `studioProviderClaude` | Claude |
+| `studioProviderDeepSeek` | DeepSeek |
+| `studioProviderOllama` | Ollama |
+| `studioProviderOpenAI` | OpenAI |
+| `studioProviderOpenRouter` | OpenRouter |
+| `studioSave` | Save |
+| `studioTemplates` | Templates |
+| `studioTitle` | Web Builder |
+

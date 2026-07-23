@@ -1,0 +1,10 @@
+{
+  "skills": [
+    "code-generation",
+    "file-system",
+    "refactoring",
+    "testing",
+    "vite-builder",
+    "vue3-migration"
+  ]
+}

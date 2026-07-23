@@ -1,0 +1,38 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node.js
+node_modules/
+.obsidian/plugins/*/node_modules/
+
+# Local/Environment configs
+.env
+.env.*
+.openclaude-runtime/
+
+# IDE/Editor configs
+.vscode/
+.idea/
+
+# OS/System files
+.DS_Store
+Thumbs.db
+
+# Project-specific large/temp dirs
+uploads/
+outputs/
+data/
+_shared/
+.env
+.openclaude/
+content/archived_projects/
+config/client_secret_*.json

@@ -1,0 +1,14 @@
+{
+  "id": "moon",
+  "name": "Moon",
+  "icon": "🌙",
+  "category": "sky",
+  "tags": ["night", "sky", "light"],
+  "desc": "Crescent moon (overlayed disc) with subtle glow; usually used when isN=true",
+  "params": {
+    "x": { "type": "x", "default": "w*0.78" },
+    "y": { "type": "y", "default": "h*0.12" },
+    "r": { "type": "number", "default": 18 }
+  },
+  "code": "const mx = ctx.x ?? 320; const my = ctx.y ?? 60; const r = ctx.r ?? 18;\nsvg += `<ellipse cx=\"${mx}\" cy=\"${my}\" rx=\"${r*3}\" ry=\"${r*2}\" fill=\"rgba(237,232,223,0.04)\"/>`;\nsvg += `<circle cx=\"${mx}\" cy=\"${my}\" r=\"${r}\" fill=\"#EDE8DF\" opacity=\"0.9\"/>`;\nsvg += `<circle cx=\"${mx+r*0.28}\" cy=\"${my-r*0.18}\" r=\"${r*0.82}\" fill=\"#0A0520\" opacity=\"0.9\"/>`;"
+}

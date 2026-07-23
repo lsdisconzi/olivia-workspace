@@ -1,0 +1,17 @@
+/* ── CHAT HISTORY LIST ── */
+.chat-history-list{padding:8px}
+.chat-history-item{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;transition:all .15s;font-size:12px}
+.chat-history-item:hover{border-color:var(--border-hi);background:rgba(255,255,255,0.03)}
+.chat-history-item.active{border-color:var(--amber);background:rgba(196,134,45,0.06)}
+/* Info area (clickable) */
+.chat-history-item .ch-info{flex:1;min-width:0;cursor:pointer}
+.chat-history-item .ch-name{color:var(--white);font-family:var(--mono);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-history-item .ch-size{color:var(--gray);font-size:10px;margin-top:1px}
+/* Action buttons */
+.chat-history-item .ch-actions{display:flex;gap:2px;flex-shrink:0;opacity:0;transition:opacity .15s}
+.chat-history-item:hover .ch-actions{opacity:1}
+.ch-btn{border:none;background:transparent;color:var(--gray);cursor:pointer;padding:3px 5px;border-radius:4px;font-size:11px;line-height:1;transition:color .12s,background .12s}
+.ch-btn:hover{color:var(--white);background:rgba(255,255,255,0.07)}
+.ch-btn.danger:hover{color:#e05555;background:rgba(224,85,85,0.12)}
+/* Inline rename input */
+.ch-rename-input{flex:1;min-width:0;background:var(--bg2);border:1px solid var(--amber);border-radius:3px;color:var(--white);font-size:11px;font-family:var(--mono);padding:2px 6px;outline:none}

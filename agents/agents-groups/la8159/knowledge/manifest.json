@@ -1,0 +1,297 @@
+{
+  "$schema": "../../../generated/schemas/knowledge-manifest.schema.json",
+  "version": "1.0.0",
+  "group": "la8159",
+  "description": "LA8159 source-cache manifest: per-jurisdiction statutory caches plus personnel registry.",
+  "defaults": {
+    "pii_redaction": true
+  },
+  "entries": [
+    {
+      "id": "la8159.index",
+      "title": "LA8159 grounding library — INDEX.md",
+      "path": "agents-groups/la8159/source/INDEX.md",
+      "kind": "doc",
+      "language": "en",
+      "owner_agents": [
+        "la8159-coordinator"
+      ],
+      "consumer_agents": [
+        "la8159-orchestrator"
+      ],
+      "tags": [
+        "la8159",
+        "inventory"
+      ]
+    },
+    {
+      "id": "la8159.plan",
+      "title": "LA8159 grounding plan",
+      "path": "agents-groups/la8159/source/PLAN.md",
+      "kind": "doc",
+      "language": "en",
+      "owner_agents": [
+        "la8159-coordinator"
+      ],
+      "consumer_agents": [
+        "la8159-orchestrator"
+      ],
+      "tags": [
+        "la8159",
+        "plan"
+      ]
+    },
+    {
+      "id": "la8159.routing",
+      "title": "Violation-ID routing table (mapping.json)",
+      "path": "agents-groups/la8159/source/mapping.json",
+      "kind": "data",
+      "language": "en",
+      "owner_agents": [
+        "la8159-coordinator"
+      ],
+      "consumer_agents": [
+        "la8159-orchestrator",
+        "meta-adversarial",
+        "meta-evidence-mapper",
+        "meta-institutional-silence",
+        "meta-personnel-accountability",
+        "meta-prescription-forum",
+        "meta-revolvingdoor"
+      ],
+      "tags": [
+        "la8159",
+        "routing"
+      ]
+    },
+    {
+      "id": "la8159.violations.validated",
+      "title": "Validated violations corpus (canonical)",
+      "path": "agents-groups/la8159/source/10_violations_json/validated",
+      "kind": "corpus",
+      "language": "en",
+      "owner_agents": [
+        "la8159-coordinator"
+      ],
+      "consumer_agents": [
+        "la8159-orchestrator",
+        "meta-adversarial",
+        "meta-evidence-mapper",
+        "meta-institutional-silence",
+        "meta-personnel-accountability",
+        "meta-prescription-forum",
+        "meta-revolvingdoor"
+      ],
+      "tags": [
+        "la8159",
+        "violations",
+        "validated",
+        "canonical"
+      ]
+    },
+    {
+      "id": "la8159.violations.reports",
+      "title": "Authoritative verification and strategic reports",
+      "path": "agents-groups/la8159/source/10_violations_json/validated",
+      "kind": "corpus",
+      "language": "en",
+      "owner_agents": [
+        "la8159-coordinator"
+      ],
+      "consumer_agents": [
+        "la8159-orchestrator",
+        "meta-adversarial",
+        "meta-evidence-mapper",
+        "meta-prescription-forum"
+      ],
+      "tags": [
+        "la8159",
+        "reports",
+        "verification",
+        "strategic-narrative"
+      ]
+    },
+    {
+      "id": "la8159.case_data",
+      "title": "LA8159 incident case folder (transcripts, evidence, emails, audio, video, narratives)",
+      "path": "agents-groups/la8159/source/la8159",
+      "kind": "corpus",
+      "language": "en",
+      "owner_agents": [
+        "la8159-coordinator"
+      ],
+      "consumer_agents": [
+        "la8159-orchestrator",
+        "meta-evidence-mapper",
+        "meta-institutional-silence",
+        "meta-personnel-accountability",
+        "meta-prescription-forum",
+        "meta-revolvingdoor"
+      ],
+      "tags": [
+        "la8159",
+        "case_data",
+        "evidence"
+      ]
+    },
+    {
+      "id": "la8159.sources.br",
+      "title": "Brazil statutory source caches",
+      "path": "agents-groups/la8159/source/sources/BR",
+      "kind": "corpus",
+      "language": "pt-BR",
+      "owner_agents": [
+        "br-abear-plus",
+        "br-abrapavaa-sentra",
+        "br-anac-r400",
+        "br-anticorrupcao",
+        "br-cba",
+        "br-cc",
+        "br-cdc",
+        "br-cf88",
+        "br-conflito-interesses",
+        "br-cp",
+        "br-improbidade",
+        "br-lai-transparency",
+        "br-lei9784",
+        "br-oab-comissao-aero",
+        "br-oab-disciplina",
+        "br-sdc-procon-senacon"
+      ],
+      "consumer_agents": [
+        "la8159-orchestrator",
+        "meta-adversarial",
+        "meta-evidence-mapper",
+        "meta-institutional-silence",
+        "meta-personnel-accountability",
+        "meta-prescription-forum",
+        "meta-revolvingdoor"
+      ],
+      "tags": [
+        "la8159",
+        "sources",
+        "brazil"
+      ]
+    },
+    {
+      "id": "la8159.sources.cl",
+      "title": "Chile statutory source caches",
+      "path": "agents-groups/la8159/source/sources/CL",
+      "kind": "corpus",
+      "language": "es-CL",
+      "owner_agents": [
+        "cl-cach",
+        "cl-const",
+        "cl-contraloria-indh",
+        "cl-cpcl",
+        "cl-dgac-l16752",
+        "cl-lpdc",
+        "cl-transparency-l20285"
+      ],
+      "consumer_agents": [
+        "la8159-orchestrator",
+        "meta-adversarial",
+        "meta-evidence-mapper",
+        "meta-institutional-silence",
+        "meta-personnel-accountability",
+        "meta-prescription-forum",
+        "meta-revolvingdoor"
+      ],
+      "tags": [
+        "la8159",
+        "sources",
+        "chile"
+      ]
+    },
+    {
+      "id": "la8159.sources.int",
+      "title": "International instrument source caches",
+      "path": "agents-groups/la8159/source/sources/INT",
+      "kind": "corpus",
+      "language": "en",
+      "owner_agents": [
+        "int-achr",
+        "int-chicago-vclt",
+        "int-iata-gc",
+        "int-icao-an17",
+        "int-icao-an6-an13",
+        "int-icao-an9",
+        "int-mc99",
+        "int-softlaw",
+        "int-uncrc-hague",
+        "int-vccr"
+      ],
+      "consumer_agents": [
+        "la8159-orchestrator",
+        "meta-adversarial",
+        "meta-evidence-mapper",
+        "meta-institutional-silence",
+        "meta-personnel-accountability",
+        "meta-prescription-forum",
+        "meta-revolvingdoor"
+      ],
+      "tags": [
+        "la8159",
+        "sources",
+        "international"
+      ]
+    },
+    {
+      "id": "la8159.personnel",
+      "title": "Personnel registry + dossiers (append-only)",
+      "path": "agents-groups/la8159/source/personnel",
+      "kind": "registry",
+      "language": "en",
+      "owner_agents": [
+        "la8159-coordinator"
+      ],
+      "consumer_agents": [
+        "br-abear-plus",
+        "br-abrapavaa-sentra",
+        "br-anac-r400",
+        "br-anticorrupcao",
+        "br-cba",
+        "br-cc",
+        "br-cdc",
+        "br-cf88",
+        "br-conflito-interesses",
+        "br-cp",
+        "br-improbidade",
+        "br-lai-transparency",
+        "br-lei9784",
+        "br-oab-comissao-aero",
+        "br-oab-disciplina",
+        "br-sdc-procon-senacon",
+        "cl-cach",
+        "cl-const",
+        "cl-contraloria-indh",
+        "cl-cpcl",
+        "cl-dgac-l16752",
+        "cl-lpdc",
+        "cl-transparency-l20285",
+        "int-achr",
+        "int-chicago-vclt",
+        "int-iata-gc",
+        "int-icao-an17",
+        "int-icao-an6-an13",
+        "int-icao-an9",
+        "int-mc99",
+        "int-softlaw",
+        "int-uncrc-hague",
+        "int-vccr",
+        "meta-adversarial",
+        "meta-evidence-mapper",
+        "meta-institutional-silence",
+        "meta-personnel-accountability",
+        "meta-prescription-forum",
+        "meta-revolvingdoor"
+      ],
+      "tags": [
+        "la8159",
+        "personnel",
+        "append-only"
+      ],
+      "pii_sensitivity": "high"
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+/* ── AURA WORKSPACE · RESPONSIVE ── */
+/* Mobile-first breakpoints for the unified workspace */
+
+/* Tablet & narrow viewports (≤900px) */
+@media (max-width: 900px) {
+  :root {
+    --max: 100%;
+  }
+
+  /* Collapse tree-branch sidebar into horizontal strips */
+  .trunk {
+    display: none;
+  }
+
+  .tree-branches {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px 10px;
+  }
+
+  .tree-branch {
+    height: auto;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* Chat panels go full-width */
+  .chat-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Agent orchestration panels stack */
+  .agent-orch-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Sidebar collapses to overlay or hidden */
+  .sidebar {
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 2px 0 24px rgba(0, 0, 0, 0.18);
+  }
+
+  /* Docs: tree + viewer stack */
+  .docs-tree-main {
+    flex-direction: column;
+  }
+}
+
+/* Small tablet / large phone (≤768px) */
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+
+  /* Chat messages use less horizontal padding */
+  .msg {
+    max-width: 92%;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  /* Output panel slides up from bottom */
+  .output-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 50vh;
+    border-radius: 14px 14px 0 0;
+    z-index: 90;
+  }
+
+  /* Modals use nearly full screen */
+  .modal-content {
+    width: 94vw;
+    max-width: 94vw;
+    margin: 2vh auto;
+    border-radius: 12px;
+  }
+
+  /* Spaces cards go single-column */
+  .spaces-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* History / file panels use full width */
+  .history-panel,
+  .files-panel {
+    width: 100%;
+  }
+
+  /* API explorer stacks vertically */
+  .api-explorer-row {
+    flex-direction: column;
+  }
+
+  /* Browser panel (TheBridge) full-width */
+  .browser-panel {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Memory panel adjustments */
+  .memory-layout {
+    flex-direction: column;
+  }
+}
+
+/* Phone (≤480px) */
+@media (max-width: 480px) {
+  :root {
+    --r: 6px;
+  }
+
+  html,
+  body {
+    font-size: 14px;
+  }
+
+  /* Tree branches become icon-only or hidden */
+  .tree-branches {
+    gap: 2px;
+    padding: 6px;
+  }
+
+  .tree-branch {
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: var(--r);
+  }
+
+  /* Nav bar compact */
+  .nav-bar {
+    padding: 6px 8px;
+    gap: 4px;
+  }
+
+  /* Compose area stacks */
+  .compose-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* Chat log tighter spacing */
+  #chatLog {
+    padding: 8px 6px 4px;
+    gap: 6px;
+  }
+
+  .msg {
+    max-width: 96%;
+    font-size: 12px;
+  }
+
+  /* Touch-friendly buttons */
+  button,
+  .btn,
+  [role="button"] {
+    min-height: 38px;
+    min-width: 38px;
+  }
+
+  /* Auth pages */
+  .auth-card {
+    width: 94%;
+    padding: 20px 16px;
+  }
+
+  /* Endpoint widget full-width */
+  .endpoint-widget {
+    width: 100%;
+    margin: 0;
+  }
+
+  /* Studio panels single-column */
+  .studio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Meshy studio controls collapse */
+  .meshy-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Landscape phone / very short viewports */
+@media (max-height: 500px) and (orientation: landscape) {
+  header {
+    padding: 4px 10px;
+  }
+
+  .nav-bar {
+    padding: 4px 6px;
+  }
+
+  .tree-branches {
+    display: none;
+  }
+
+  #chatCompose {
+    padding: 4px 8px;
+  }
+
+  .output-panel {
+    max-height: 70vh;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 85vw;
+  }
+
+  .sidebar-header {
+    font-size: 14px;
+  }
+
+  .chat-header-right .header-opt {
+    display: none;
+  }
+
+  .chat-header-right .header-dots-btn {
+    display: inline-block;
+  }
+
+  .compose-row {
+    flex-wrap: nowrap;
+  }
+
+  .compose-textarea {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .compose-send {
+    width: 48px;
+    height: 48px;
+  }
+
+  .output-panel,
+  .browser-panel {
+    width: 100%;
+    height: 60vh;
+    bottom: 0;
+  }
+
+  .modal {
+    width: 94vw;
+    max-width: 94vw;
+  }
+
+  .vw-lang-flags {
+    display: none;
+  }
+
+  /* move to sidebar */
+  .desktop-mode-toggle {
+    display: none;
+  }
+}

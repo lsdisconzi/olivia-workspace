@@ -1,0 +1,138 @@
+/* Agent Architecture view */
+.architecture-view {
+  display: none;
+  position: fixed;
+  inset: 60px 0 0 0;
+  background: var(--bg, #0c0c0c);
+  color: var(--white, #f5f5f5);
+  z-index: 40;
+  overflow: auto;
+}
+.architecture-view.active { display: block; }
+.architecture-view .arch-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border, #2a2a2a);
+  position: sticky; top: 0; background: var(--bg, #0c0c0c); z-index: 2;
+}
+.architecture-view .arch-header h1 {
+  font-size: 16px; font-weight: 500; margin: 0;
+}
+.architecture-view .arch-header .arch-status {
+  font-size: 11px; color: var(--gray, #888); margin-left: auto;
+}
+.architecture-view .arch-header .btn { padding: 6px 12px; font-size: 12px; }
+.architecture-view .arch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+  padding: 18px 22px 40px;
+}
+.arch-card {
+  background: var(--bg-soft, #141414);
+  border: 1px solid var(--border, #2a2a2a);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: border-color .2s, transform .2s;
+}
+.arch-card:hover { border-color: var(--amber, #c4622d); transform: translateY(-1px); }
+.arch-card-head { display: flex; align-items: center; gap: 10px; }
+.arch-card-head i { font-size: 20px; color: var(--amber, #c4622d); flex-shrink: 0; }
+.arch-card-name { font-size: 14px; font-weight: 600; color: var(--white, #f5f5f5); }
+.arch-card-domain { font-size: 11px; color: var(--gray, #888); font-family: var(--mono, monospace); }
+.arch-card-desc { font-size: 12px; color: var(--gray-hi, #bbb); line-height: 1.5; }
+.arch-card-caps { margin: 0; padding-left: 18px; font-size: 11px; color: var(--gray-hi, #bbb); line-height: 1.55; }
+.arch-card-meta {
+  display: flex; gap: 10px; font-size: 10px; color: var(--gray, #888);
+  text-transform: uppercase; letter-spacing: .06em;
+  border-top: 1px solid var(--border, #2a2a2a); padding-top: 8px;
+}
+.arch-card-actions { display: flex; gap: 8px; margin-top: auto; flex-wrap: wrap; }
+.arch-card-actions .btn { flex: 1 1 120px; justify-content: center; font-size: 12px; padding: 6px 10px; }
+.arch-empty { padding: 40px; text-align: center; color: var(--gray, #888); font-size: 13px; grid-column: 1 / -1; }
+.arch-empty.arch-error { color: var(--red, #d97857); }
+.arch-mono { font-family: var(--mono, monospace); font-size: 11px; }
+.arch-mono li { margin: 2px 0; }
+
+.arch-deploy-panel {
+  grid-column: 1 / -1;
+  background: var(--bg-soft, #141414);
+  border: 1px solid var(--border, #2a2a2a);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.arch-deploy-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--gray-hi, #bbb);
+}
+
+.arch-deploy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 8px;
+}
+
+.arch-deploy-row {
+  border: 1px solid var(--border, #2a2a2a);
+  border-radius: 8px;
+  padding: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.arch-deploy-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.arch-deploy-group {
+  font-size: 12px;
+  color: var(--white, #f5f5f5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arch-deploy-meta {
+  font-size: 10px;
+  color: var(--gray, #888);
+}
+
+.arch-modal {
+  display: none; position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,.65); align-items: center; justify-content: center;
+}
+.arch-modal.open, .arch-modal[style*="flex"] { display: flex; }
+.arch-modal-inner {
+  background: var(--bg-soft, #141414);
+  border: 1px solid var(--border, #2a2a2a);
+  border-radius: 10px;
+  width: min(720px, 92vw);
+  max-height: 85vh; overflow: auto;
+  padding: 22px;
+}
+.arch-modal-inner h3 {
+  font-size: 13px; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--amber, #c4622d); margin: 16px 0 6px;
+}
+.arch-modal-inner ul { margin: 0; padding-left: 20px; font-size: 12px; line-height: 1.6; color: var(--gray-hi, #bbb); }
+.arch-modal-close {
+  position: sticky; top: -22px; float: right;
+  background: transparent; border: 0; color: var(--gray, #888);
+  font-size: 18px; cursor: pointer;
+}
+.arch-modal-close:hover { color: var(--white, #f5f5f5); }

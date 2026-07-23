@@ -1,0 +1,57 @@
+{
+  "$schema": "../../generated/schemas/group-manifest.schema.json",
+  "version": "1.0.0",
+  "generated_at": "2026-04-23T00:00:00Z",
+  "description": "Top-level registry of agent groups known to the architecture. Consumed by the meta-orchestrator and by the data-driven front-end.",
+  "meta_orchestrator": {
+    "slug": "meta-orchestrator",
+    "name": "Meta-Orchestrator",
+    "agent_file": "agents-groups/_meta/meta-orchestrator.agent.md",
+    "policies": {
+      "handoff_routes": "agents-groups/_meta/policies/meta-handoff-routes.json",
+      "tool_permissions": "agents-groups/_meta/policies/meta-tool-permissions.json"
+    }
+  },
+  "groups": [
+    {
+      "group": "olivia",
+      "label": "Olivia",
+      "icon": "🟢",
+      "color": "#4a9e70",
+      "description": "Platform agents owning the Olivia workspace: scenes, discovery, listening, memory, studio, qdrant, api-explorer, plus the control plane.",
+      "manifest": "agents-groups/olivia/index.json"
+    },
+    {
+      "group": "legal",
+      "label": "Legal",
+      "icon": "⚖️",
+      "color": "#d97745",
+      "description": "LATAM LA8159 aviation legal pack: per-jurisdiction experts plus cross-border coordinators.",
+      "manifest": "agents-groups/legal/index.json"
+    },
+    {
+      "group": "government",
+      "label": "Government",
+      "icon": "🏛️",
+      "color": "#2f6f9d",
+      "description": "Public-sector / innovation procurement agents. CPSI (LC 182/2021) and future public-sector verticals.",
+      "manifest": "agents-groups/government/index.json"
+    },
+    {
+      "group": "coremu",
+      "label": "COREMU",
+      "icon": "🏥",
+      "color": "#1c4532",
+      "description": "RMISFC residency network at UnirG Gurupi — 10 residents across 5 specialties, plus NDAE coordinator and program orchestrator.",
+      "manifest": "agents-groups/coremu/index.json"
+    },
+    {
+      "group": "la8159",
+      "label": "LA8159 Grounding",
+      "icon": "🛬",
+      "color": "#7d4ea8",
+      "description": "LA8159 incident legal grounding library: 33 jurisdiction specialists (BR / CL / INT) plus 6 META cross-framework agents, backed by 59 cached source files. Promoted from /Users/dev/LA8159-incident/0_agents.",
+      "manifest": "agents-groups/la8159/index.json"
+    }
+  ]
+}

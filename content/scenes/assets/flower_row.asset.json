@@ -1,0 +1,15 @@
+{
+  "id": "flower_row",
+  "name": "Flower Row",
+  "icon": "🌸",
+  "category": "prop",
+  "tags": ["plant", "nature", "color"],
+  "desc": "Row of pastel flowers on thin stems; gentle breeze sway",
+  "params": {
+    "x":     { "type": "x",     "default": 0 },
+    "y":     { "type": "y",     "default": "bY-1" },
+    "w":     { "type": "number","default": "w" },
+    "count": { "type": "number","default": 10 }
+  },
+  "code": "const ax = ctx.x ?? 0; const ay = ctx.y ?? 260; const aw = ctx.w ?? 400; const count = ctx.count ?? 10;\nconst cols = ['#FF69B4','#DDA0DD','#87CEEB','#98FB98','#FFB6C1','#E6E6FA','#FFA07A','#20B2AA','#F0E68C','#DB7093'];\nfor (let i = 0; i < count; i++) {\n  const flx = ax + (i+0.5)*(aw/count);\n  const fly = ay + Math.sin(i*1.8)*4;\n  const sway = Math.sin(mt*0.9+i*0.7)*2;\n  const c = cols[i % cols.length];\n  svg += `<line x1=\"${flx}\" y1=\"${fly}\" x2=\"${flx+sway}\" y2=\"${fly-7}\" stroke=\"#2A5A2A\" stroke-width=\"1\" stroke-linecap=\"round\"/>`;\n  svg += `<circle cx=\"${flx+sway}\" cy=\"${fly-8}\" r=\"2.5\" fill=\"${c}\" opacity=\"0.85\"/>`;\n}"
+}
