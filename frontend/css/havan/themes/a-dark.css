@@ -1,0 +1,10 @@
+/* Theme: A · HAVAN Azul/Amarelo/Verde — DARK
+   Applies when <html data-theme="a-dark">. Project: havana.
+   Dark surfaces with lifted brand hues for accessible contrast. */
+[data-theme="a-dark"]{
+  --bg:#0c1722; --card:#13202e; --border:#21384e;
+  --blue:#4f9bdc; --blue-deep:#7fb8e6; --yellow:#ffcf4d; --green:#54c290; --red:#ff5b61;
+  --text:#e7eef6; --muted:#9fb1c4; --header-text:#04101b;
+  --wash-blue:rgba(79,155,220,.16); --wash-green:rgba(84,194,144,.18); --wash-yellow:rgba(255,207,77,.22);
+  color-scheme: dark;
+}

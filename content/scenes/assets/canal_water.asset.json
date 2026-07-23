@@ -1,0 +1,15 @@
+{
+  "id": "canal_water",
+  "name": "Canal Water (rippling)",
+  "icon": "💧",
+  "category": "environment",
+  "tags": ["water", "canal", "reflection"],
+  "desc": "Horizontal water band with oscillating ripples; place below a scene element",
+  "params": {
+    "x": { "type": "x", "default": 0 },
+    "y": { "type": "y", "default": "bY+20" },
+    "w": { "type": "number", "default": "w" },
+    "h": { "type": "number", "default": 18 }
+  },
+  "code": "const ax = ctx.x ?? 0; const ay = ctx.y ?? 280; const aw = ctx.w ?? 400; const ah = ctx.h ?? 18;\nsvg += `<defs><linearGradient id=\"lg-canal-${Math.floor(ay)}\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"${isN?'#2A4F6E':'#4A8BB3'}\"/><stop offset=\"100%\" stop-color=\"${isN?'#1A3F5E':'#3A7BA3'}\"/></linearGradient></defs>`;\nsvg += `<rect x=\"${ax}\" y=\"${ay}\" width=\"${aw}\" height=\"${ah}\" fill=\"url(#lg-canal-${Math.floor(ay)})\"/>`;\nconst count = 6;\nfor (let i = 0; i < count; i++) {\n  const rx = ax + (i+0.5)*(aw/count) + w3*10;\n  const ry = ay + ah*0.4 + Math.sin(mt*1.2+i*0.9)*2;\n  svg += `<ellipse cx=\"${rx}\" cy=\"${ry}\" rx=\"${5+w2*2}\" ry=\"${2+w2}\" fill=\"none\" stroke=\"${isN?'#4A8BB3':'#6EC6CA'}\" stroke-width=\"1\" opacity=\"0.6\"/>`;\n}"
+}

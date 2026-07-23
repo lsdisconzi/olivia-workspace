@@ -1,0 +1,29 @@
+# Findings
+
+## Discoveries
+
+### Caso: Anselmo Disconzi & Desconsi & Salton LTDA vs. Alver Klein Industrial LTDA
+- Processo principal: 5005352-27.2025.8.24.0067 (TJSC, 1ª Vara Cível, SM do Oeste, Juiz Augusto Cesar Becker)
+- Incidente: Embargos à Execução 5001225-12.2026.8.24.0067 (mesma Vara, AGUARDA DESPACHO)
+- Origem: Execução em TO (Gurupi, juiz Gerson Fernandes Azevedo), recurso de competência pendente/suspenso
+
+### Entidades
+- Exequentes: Anselmo Disconzi (CPF 208.980.960-49), Desconsi & Salton LTDA
+- Executado: Alver Klein Industrial LTDA (Elson Luiz Klein excluído do polo em 30/07/2025)
+- Adv. exequente: Verônica Silva do Prado Disconzi (OAB/TO 2052) — ainda ativa, NÃO substituída
+- Adv. executado: Cleiton Fernando Barroni (OAB/PR 081044) via Slongo & Seibel (substabelecimentos 25-31, jun/2026)
+- Obrigação: distrato 30/06/2023, R$ 63.000,00; valor da causa SC R$ 76.732,80; justiça gratuita deferida
+
+### Riscos críticos
+- R1 (P0): Prazo do Evento 20 VENCE HOJE 13/07/2026 23:59:59 — exequente deve comprovar recurso TO ou processo é extinto. Intimação (Eventos 22-23) ABERTA; executado já cumpriu (Evento 32, 07/07).
+- R2: Falha ética Verônica (Arts. 2º, 3º VIII, 34 IV, 44 X) — e-mail inválido (bounce 550 5.1.2 Domain not found, Evento 12), ofício direto à parte (Evento 13).
+- R3: Representação da exequente NÃO regularizada no eproc-SC.
+- R4: Loop procedimental TO<->SC dependente de recurso pendente.
+- R5: Assimetria de diligência a favor do executado.
+
+### Próximos passos
+- P0: Cumprir Evento 20 hoje (comprovar recurso TO).
+- P1: Constituir advogado cadastrado no eproc-SC.
+- P2: Impugnar Embargos à Execução.
+- P3: Pressionar desfecho do recurso no TO.
+- P4: Avaliar representação ética OAB contra Verônica.

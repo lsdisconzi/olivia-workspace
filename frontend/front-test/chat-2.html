@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awareness-AI · Platform Services</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%231c4532'/><path d='M30 40 Q50 20 70 40 Q50 60 30 40' fill='%23c4622d'/><circle cx='50' cy='45' r='8' fill='%23f8f9f6'/></svg>">
+    <style>
+        :root {
+            --bg: #191917;
+            --bg-card: #1f1f1d;
+            --border: #2a2a28;
+            --border-hi: #363634;
+            --amber: #c4622d;
+            --amber-lo: rgba(196, 98, 45, 0.12);
+            --green: #4a9e70;
+            --green-lo: rgba(74, 158, 112, 0.10);
+            --blue: #4A7C9B;
+            --blue-lo: rgba(74, 124, 155, 0.10);
+            --white: #ede8df;
+            --gray: #6b6b68;
+            --gray-hi: #9a9a96;
+            --serif: 'Fraunces', Georgia, serif;
+            --sans: 'Plus Jakarta Sans', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --r: 10px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--white);
+            line-height: 1.7;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            text-align: center;
+            padding: 72px 24px 48px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--gray-hi);
+            text-transform: uppercase;
+            letter-spacing: .14em;
+            padding: 5px 16px;
+            border: 1px solid var(--border-hi);
+            border-radius: 24px;
+            margin-bottom: 24px;
+        }
+
+        .brand i {
+            color: var(--amber);
+            font-size: 8px;
+        }
+
+        .hero-title {
+            font-family: var(--serif);
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 500;
+            color: var(--white);
+            letter-spacing: -0.01em;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--amber);
+        }
+
+        .hero-sub {
+            font-size: 15px;
+            color: var(--gray);
+            max-width: 520px;
+            margin: 0 auto 24px;
+            line-height: 1.7;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 36px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .stat-num {
+            font-family: var(--serif);
+            font-size: 28px;
+            color: var(--white);
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 4px;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 56px 24px 72px;
+        }
+
+        .section-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--gray-hi);
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 14px;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color .18s, transform .18s, box-shadow .18s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-card:hover {
+            border-color: var(--border-hi);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .service-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .service-icon.amber {
+            background: var(--amber-lo);
+            color: var(--amber);
+        }
+
+        .service-icon.green {
+            background: var(--green-lo);
+            color: var(--green);
+        }
+
+        .service-icon.blue {
+            background: var(--blue-lo);
+            color: var(--blue);
+        }
+
+        .service-header h3 {
+            font-family: var(--serif);
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--white);
+            margin-bottom: 2px;
+            letter-spacing: -0.01em;
+        }
+
+        .service-route {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--gray);
+            letter-spacing: 0.04em;
+        }
+
+        .service-desc {
+            font-size: 13px;
+            color: var(--gray-hi);
+            line-height: 1.65;
+            margin-bottom: 12px;
+            flex: 1;
+        }
+
+        .service-features {
+            list-style: none;
+            padding: 0;
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+        }
+
+        .service-features li {
+            font-size: 11px;
+            color: var(--gray);
+            line-height: 1.6;
+            padding: 2px 0;
+            display: flex;
+            gap: 6px;
+            align-items: baseline;
+        }
+
+        .service-features li::before {
+            content: '·';
+            color: var(--amber);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .service-tag {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            padding: 3px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 36px 24px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        footer a {
+            color: var(--gray-hi);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--white);
+        }
+
+        .auth-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(25, 25, 23, 0.92);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .auth-nav-user {
+            font-size: 12px;
+            color: var(--gray-hi);
+            display: none;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .auth-nav-user.visible {
+            display: flex;
+        }
+
+        .auth-nav-user i {
+            color: var(--amber);
+            font-size: 10px;
+        }
+
+        .auth-nav-logout {
+            font-size: 11px;
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .auth-nav-logout:hover {
+            color: #9e4a4a;
+        }
+
+        .auth-nav-signin {
+            font-size: 12px;
+            padding: 6px 16px;
+            border: 1px solid var(--amber);
+            color: var(--amber);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.15s;
+            cursor: pointer;
+            background: transparent;
+            font-family: var(--sans);
+        }
+
+        .auth-nav-signin:hover {
+            background: var(--amber-lo);
+        }
+
+        #loginGate {
+            display: flex;
+            min-height: calc(100vh - 50px);
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        #loginGate.hidden {
+            display: none;
+        }
+
+        #loginGate section {
+            width: 100%;
+            max-width: 420px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 32px;
+        }
+
+        .login-brand {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .login-brand-name {
+            font-family: var(--serif);
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--white);
+            letter-spacing: -0.01em;
+            margin-bottom: 2px;
+        }
+
+        .login-brand-sub {
+            font-family: var(--sans);
+            font-size: 10px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .login-error {
+            border: 1px solid rgba(158, 74, 74, 0.3);
+            background: rgba(158, 74, 74, 0.08);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #9e4a4a;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .login-error.visible {
+            display: block;
+        }
+
+        .login-field {
+            margin-bottom: 14px;
+        }
+
+        .login-field label {
+            display: block;
+            font-size: 10px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 5px;
+            font-family: var(--sans);
+        }
+
+        .login-input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border-hi);
+            border-radius: 8px;
+            color: var(--white);
+            padding: 10px 12px;
+            font-family: var(--sans);
+            font-size: 14px;
+            transition: border-color 0.15s;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--amber);
+            box-shadow: 0 0 0 3px var(--amber-lo);
+        }
+
+        .login-input::placeholder {
+            color: var(--gray);
+        }
+
+        .login-submit {
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background: var(--white);
+            color: #191917;
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            margin-top: 2px;
+        }
+
+        .login-submit:hover {
+            background: #f5f0e8;
+            transform: translateY(-1px);
+        }
+
+        .login-submit:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .login-meta {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--gray);
+            line-height: 1.8;
+        }
+
+        #mainContent {
+            display: none;
+        }
+
+        #mainContent.visible {
+            display: block;
+        }
+
+        /* ── DIAGNOSTIC MODAL ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-hi);
+            border-radius: 12px;
+            max-width: 680px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 28px 28px 24px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+
+        .modal-close:hover {
+            color: var(--white);
+        }
+
+        .modal h2 {
+            font-family: var(--serif);
+            font-size: 22px;
+            color: var(--white);
+            margin-bottom: 6px;
+        }
+
+        .modal .step-indicator {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--amber);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 20px;
+        }
+
+        .modal .question-block {
+            margin-bottom: 20px;
+        }
+
+        .modal label {
+            display: block;
+            font-size: 13px;
+            color: var(--gray-hi);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .modal textarea,
+        .modal input[type="text"],
+        .modal select {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border-hi);
+            border-radius: 8px;
+            color: var(--white);
+            padding: 10px 12px;
+            font-family: var(--sans);
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .modal textarea:focus,
+        .modal input:focus,
+        .modal select:focus {
+            outline: none;
+            border-color: var(--amber);
+            box-shadow: 0 0 0 3px var(--amber-lo);
+        }
+
+        .modal .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .modal .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--white);
+            cursor: pointer;
+        }
+
+        .modal .checkbox-group input[type="checkbox"] {
+            accent-color: var(--amber);
+            width: 16px;
+            height: 16px;
+        }
+
+        .modal .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+        }
+
+        .modal button {
+            background: transparent;
+            border: 1px solid var(--border-hi);
+            border-radius: 8px;
+            color: var(--white);
+            padding: 10px 20px;
+            font-family: var(--sans);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .modal button:hover:not(:disabled) {
+            border-color: var(--white);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .modal button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .modal button.primary {
+            background: var(--amber);
+            border-color: var(--amber);
+            color: #191917;
+            font-weight: 600;
+        }
+
+        .modal button.primary:hover:not(:disabled) {
+            background: #d16a2e;
+            border-color: #d16a2e;
+        }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: var(--amber);
+            border: none;
+            color: #191917;
+            font-family: var(--sans);
+            font-weight: 600;
+            padding: 14px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s, background 0.2s;
+            z-index: 1500;
+            display: none;
+        }
+
+        .floating-btn.visible {
+            display: block;
+        }
+
+        .floating-btn:hover {
+            background: #d16a2e;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 640px) {
+            header {
+                padding: 48px 16px 36px;
+            }
+
+            main {
+                padding: 36px 16px 48px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .login-card {
+                padding: 24px;
+            }
+
+            .auth-nav {
+                padding: 10px 16px;
+            }
+
+            .modal {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="auth-nav">
+        <span class="auth-nav-user" id="navUser">
+            <i class="fas fa-user-circle"></i><span id="navUserEmail"></span>
+            <a href="/olivia/auth/logout?next=/" class="auth-nav-logout">Logout</a>
+        </span>
+        <a id="navSignin" class="auth-nav-signin" onclick="showLoginGate();return false;" href="#">Sign in</a>
+    </nav>
+
+    <div id="loginGate">
+        <section>
+            <div class="login-card">
+                <div class="login-brand">
+                    <div class="login-brand-name">Awareness-AI</div>
+                    <div class="login-brand-sub">Accountable by Design</div>
+                </div>
+                <div id="loginError" class="login-error"></div>
+                <form id="loginForm" method="POST" action="/olivia/auth/login" onsubmit="handleLoginSubmit(event)">
+                    <input type="hidden" name="next" id="loginNext" value="/">
+                    <div class="login-field">
+                        <label for="loginEmail">Email</label>
+                        <input id="loginEmail" name="username" type="email" class="login-input"
+                            placeholder="your@email.com" autocomplete="username" required>
+                    </div>
+                    <div class="login-field">
+                        <label for="loginPassword">Password</label>
+                        <input id="loginPassword" name="code" type="password" class="login-input"
+                            placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                            autocomplete="current-password" required>
+                    </div>
+                    <button class="login-submit" type="submit" id="loginSubmitBtn">
+                        Sign in
+                    </button>
+                </form>
+                <div class="login-meta">
+                    Awareness-AI Platform<br>
+                    Authorized access only
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="mainContent">
+
+        <header>
+            <div class="brand"><i class="fas fa-circle"></i> Awareness-AI Platform</div>
+            <h1 class="hero-title">Structured Operational<br><em>Intelligence</em></h1>
+            <p class="hero-sub">
+                A constellation of integrated AI services — agent orchestration, legal analysis,
+                transcription, framework generation, and vector knowledge infrastructure —
+                served from a single domain.
+            </p>
+            <div class="hero-stats">
+                <div>
+                    <div class="stat-num">11</div>
+                    <div class="stat-label">Services</div>
+                </div>
+                <div>
+                    <div class="stat-num">8</div>
+                    <div class="stat-label">MCP Servers</div>
+                </div>
+                <div>
+                    <div class="stat-num">PT-BR</div>
+                    <div class="stat-label">Primary locale</div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="section-label">Platform Services</div>
+            <div class="services-grid">
+
+                <a class="service-card" href="/olivia/">
+                    <div class="service-card-top">
+                        <div class="service-icon amber"><i class="fas fa-table-columns"></i></div>
+                        <div class="service-header">
+                            <h3>Olivia Workspace</h3>
+                            <span class="service-route">/olivia/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        Central multi-agent orchestration console. SSE streaming chat, MCP tool bridge,
+                        case context injection, and planning continuity across sessions. Auth-gated with
+                        user management.
+                    </p>
+                    <ul class="service-features">
+                        <li>Multi-agent orchestration with SSE streaming</li>
+                        <li>MCP bridge exposing VPS API endpoints as tools</li>
+                        <li>Case context injection into every agent run</li>
+                        <li>User auth, admin panel, activity tracking</li>
+                        <li>Desktop + mobile + resident interfaces</li>
+                    </ul>
+                    <span class="service-tag">Python · port 3229</span>
+                </a>
+
+                <a class="service-card" href="/olivia/craudio/">
+                    <div class="service-card-top">
+                        <div class="service-icon blue"><i class="fas fa-globe"></i></div>
+                        <div class="service-header">
+                            <h3>Craudio</h3>
+                            <span class="service-route">/olivia/craudio/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        Multi-jurisdiction litigation intelligence UI. Cross-border legal analysis
+                        with jurisdiction-aware framework mapping and structured document processing.
+                        Embedded within Olivia workspace.
+                    </p>
+                    <ul class="service-features">
+                        <li>Multi-jurisdiction (BR, CL, INT) support</li>
+                        <li>Framework-aware legal document processing</li>
+                        <li>Integrated with Olivia auth and agent runtime</li>
+                    </ul>
+                    <span class="service-tag">Olivia sub-app</span>
+                </a>
+
+                <a class="service-card" href="/agent/">
+                    <div class="service-card-top">
+                        <div class="service-icon amber"><i class="fas fa-comments"></i></div>
+                        <div class="service-header">
+                            <h3>Agent-MCP</h3>
+                            <span class="service-route">/agent/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        Human-guided autonomous agent platform with MCP tool orchestration. Chat-and-cards
+                        UI with SSE streaming, step-level observability, and trajectory logging for
+                        progressive workflow learning.
+                    </p>
+                    <ul class="service-features">
+                        <li>Service gallery of MCP-exposed capabilities</li>
+                        <li>11 structured step types (Say, Ask, ToolCall, Done...)</li>
+                        <li>SSE streaming with cost tracking per session</li>
+                        <li>JSONL trajectory logging for workflow learning</li>
+                        <li>React SPA + FastAPI backend</li>
+                    </ul>
+                    <span class="service-tag">Python · React · port 3220</span>
+                </a>
+
+                <a class="service-card" href="/ops/">
+                    <div class="service-card-top">
+                        <div class="service-icon green"><i class="fas fa-server"></i></div>
+                        <div class="service-header">
+                            <h3>Ops Dashboard</h3>
+                            <span class="service-route">/ops/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        Platform nerve centre. Monitor ~30 services, control Docker containers and host
+                        processes, tail logs, run API test suites, deploy pages, and collect network
+                        telemetry — all from one panel.
+                    </p>
+                    <ul class="service-features">
+                        <li>Service registry &amp; start/stop/restart controls</li>
+                        <li>Docker + filesystem + journalctl log viewer</li>
+                        <li>API test suite (~75 endpoint definitions)</li>
+                        <li>Network telemetry capture &amp; analysis</li>
+                        <li>VPS page deployer + endpoint mapper</li>
+                    </ul>
+                    <span class="service-tag">Flask · port 9000</span>
+                </a>
+
+                <a class="service-card" href="/audio/">
+                    <div class="service-card-top">
+                        <div class="service-icon blue"><i class="fas fa-waveform-lines"></i></div>
+                        <div class="service-header">
+                            <h3>Audio Webapp</h3>
+                            <span class="service-route">/audio/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        Browser-based audio processing suite wrapping PyTorch torchaudio. Filter,
+                        enhance, analyze, and separate audio with 24 REST endpoints — no desktop
+                        software needed.
+                    </p>
+                    <ul class="service-features">
+                        <li>Biquad filters (8 types), audio effects (8 types)</li>
+                        <li>Voice enhancement (7 types), spectral analysis (6 types)</li>
+                        <li>HDemucs source separation</li>
+                        <li>Voice activity detection + resampling</li>
+                        <li>wav2vec2 ASR via MCP server (8 tools)</li>
+                    </ul>
+                    <span class="service-tag">PyTorch · FastAPI · port 8777</span>
+                </a>
+
+                <a class="service-card" href="/juris/">
+                    <div class="service-card-top">
+                        <div class="service-icon amber"><i class="fas fa-scale-balanced"></i></div>
+                        <div class="service-header">
+                            <h3>Juris Search</h3>
+                            <span class="service-route">/juris/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        Multi-tribunal jurisprudência search assistant powered by DeepSeek AI.
+                        Chat interface with intelligent field extraction, automated scraping of
+                        TJRS, TJSP, and STF, and structured result download.
+                    </p>
+                    <ul class="service-features">
+                        <li>AI-assisted search form — upload a document, get fields</li>
+                        <li>Automated scraping: TJRS, TJSP, STF (Selenium)</li>
+                        <li>Chat interface with DeepSeek (v4-pro / v4-flash)</li>
+                        <li>Progress polling &amp; structured result download</li>
+                        <li>Inteiro teor PDF download for selected results</li>
+                    </ul>
+                    <span class="service-tag">FastAPI · React · port 8000</span>
+                </a>
+
+                <a class="service-card" href="/argus/">
+                    <div class="service-card-top">
+                        <div class="service-icon green"><i class="fas fa-file-contract"></i></div>
+                        <div class="service-header">
+                            <h3>Argus</h3>
+                            <span class="service-route">/argus/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        AI-powered legal framework analyzer generator. Transforms PDFs and legal
+                        text into interactive JavaScript analyzers that detect violations in
+                        transcripts and conversations.
+                    </p>
+                    <ul class="service-features">
+                        <li>Upload legal frameworks → generate JS analyzers</li>
+                        <li>Law corpus registry (BR, CL, INT jurisdictions)</li>
+                        <li>v2.4 ontology analyzer pack builder</li>
+                        <li>Multi-language UI (5 languages)</li>
+                        <li>MCP servers: law lookup + builder tools</li>
+                    </ul>
+                    <span class="service-tag">Flask · port 8029</span>
+                </a>
+
+                <a class="service-card" href="/brdge/">
+                    <div class="service-card-top">
+                        <div class="service-icon blue"><i class="fas fa-folder-tree"></i></div>
+                        <div class="service-header">
+                            <h3>BRDGE</h3>
+                            <span class="service-route">/brdge/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        Point it at any folder — get a fully categorized, searchable, API-ready
+                        file organization dashboard with a layered intelligence pipeline from
+                        ingestion through legal verification.
+                    </p>
+                    <ul class="service-features">
+                        <li>L0–L8 pipeline: Ingest → Classify → Analyze → Verify</li>
+                        <li>SHA-256 deduplication + Jaccard near-dup detection</li>
+                        <li>LLM entity extraction &amp; chronological narrative synthesis</li>
+                        <li>Neo4j graph + Qdrant vector knowledge base</li>
+                        <li>MCP server with 68 tools + Electron desktop app</li>
+                    </ul>
+                    <span class="service-tag">Node.js · Express · port 3010</span>
+                </a>
+
+                <a class="service-card" href="/garge/">
+                    <div class="service-card-top">
+                        <div class="service-icon amber"><i class="fas fa-database"></i></div>
+                        <div class="service-header">
+                            <h3>Garge</h3>
+                            <span class="service-route">/garge/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        AI Tools &amp; Services Hub. Wraps Ollama local LLMs, Qdrant vector database,
+                        and ingestion pipelines into a unified OpenAI-compatible REST API with
+                        assistant management and prompt engineering.
+                    </p>
+                    <ul class="service-features">
+                        <li>Ollama LLM wrapping + Qdrant vector operations</li>
+                        <li>OpenAI-compatible chat completions API</li>
+                        <li>Legal &amp; transcript ingestion pipelines</li>
+                        <li>Prompt engineering lab + assistant CRUD</li>
+                        <li>5 MCP servers (core, files, ingestion, prompt, qdrant)</li>
+                    </ul>
+                    <span class="service-tag">FastAPI · port 8066</span>
+                </a>
+
+                <a class="service-card" href="/transcripts/">
+                    <div class="service-card-top">
+                        <div class="service-icon green"><i class="fas fa-clock"></i></div>
+                        <div class="service-header">
+                            <h3>Transcript Timeline</h3>
+                            <span class="service-route">/transcripts/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        Rendered shared transcript timelines. Browse and access processed audio
+                        transcript outputs with speaker diarization, timestamps, and structured
+                        analysis — served as static HTML with directory listing.
+                    </p>
+                    <ul class="service-features">
+                        <li>Auto-indexed directory of rendered transcripts</li>
+                        <li>Speaker-separated with timestamps</li>
+                        <li>Structured legal analysis output from Pinocchio</li>
+                        <li>Served directly by nginx from shared storage</li>
+                    </ul>
+                    <span class="service-tag">Static · nginx</span>
+                </a>
+
+                <a class="service-card" href="/transcripts/">
+                    <div class="service-card-top">
+                        <div class="service-icon blue"><i class="fas fa-microphone-lines"></i></div>
+                        <div class="service-header">
+                            <h3>Pinocchio · Transcription</h3>
+                            <span class="service-route">/transcripts/</span>
+                        </div>
+                    </div>
+                    <p class="service-desc">
+                        Chilean Spanish audio transcription and speaker diarization service.
+                        Combines OpenAI Whisper ASR with Pyannote diarization, optimized for legal
+                        and evidentiary audio analysis with Qdrant semantic search.
+                    </p>
+                    <ul class="service-features">
+                        <li>Whisper ASR + Pyannote speaker diarization</li>
+                        <li>Chilean Spanish colloquial normalization</li>
+                        <li>AI transcript analysis (Claude/DeepSeek)</li>
+                        <li>Reference-guided transcription with LLM reconciliation</li>
+                        <li>Qdrant vector search + project management</li>
+                    </ul>
+                    <span class="service-tag">Python · Clean Architecture · port 8000</span>
+                </a>
+
+            </div>
+        </main>
+
+        <footer>
+            <p>
+                <strong>Awareness-AI</strong> ·
+                <a href="https://www.awareness-ai.com.br">www.awareness-ai.com.br</a> ·
+                <a href="mailto:contato@awareness-ai.com.br">contato@awareness-ai.com.br</a>
+            </p>
+            <p style="margin-top:6px;font-size:11px;">
+                Structured Operational Intelligence · 2026
+            </p>
+        </footer>
+
+    </div><!-- /#mainContent -->
+
+    <!-- ╔═════════════════════════════════════
+     ║  DIAGNOSTIC ONBOARDING MODAL
+     ╚═════════════════════════════════════ -->
+    <div class="modal-overlay" id="diagnosticModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeDiagnostic()">&times;</button>
+            <h2>Diagnóstico de Produtividade Jurídica</h2>
+            <div class="step-indicator" id="stepIndicator">Passo 1 de 5</div>
+            <form id="diagnosticForm" onsubmit="submitDiagnostic(event)">
+                <!-- Step 1 -->
+                <div class="step" data-step="1">
+                    <div class="question-block">
+                        <label>Qual é a sua área principal de atuação?</label>
+                        <input type="text" name="area" placeholder="Ex: Consumidor, Família, Cível...">
+                    </div>
+                    <div class="question-block">
+                        <label>Volume de trabalho: Contencioso vs Consultivo (%)</label>
+                        <input type="text" name="volume" placeholder="Ex: 70% contencioso, 30% consultivo">
+                    </div>
+                    <div class="question-block">
+                        <label>Trabalha sozinho, com sócios ou equipe? Quantas pessoas?</label>
+                        <input type="text" name="equipe"
+                            placeholder="Ex: Escritório solo, ou 3 advogados e 1 estagiário">
+                    </div>
+                    <div class="question-block">
+                        <label>Quais tarefas mais consomem seu tempo semanal?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="tarefas" value="pesquisa"> Pesquisa
+                                jurisprudencial</label>
+                            <label><input type="checkbox" name="tarefas" value="redacao"> Redação de petições</label>
+                            <label><input type="checkbox" name="tarefas" value="revisao"> Revisão de documentos</label>
+                            <label><input type="checkbox" name="tarefas" value="atendimento"> Atendimento ao
+                                cliente</label>
+                            <label><input type="checkbox" name="tarefas" value="prazos"> Gestão de prazos</label>
+                            <label><input type="checkbox" name="tarefas" value="outros"> Outros</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="step" data-step="2" style="display:none;">
+                    <div class="question-block">
+                        <label>Quais softwares ou plataformas você mais usa no dia a dia?</label>
+                        <textarea name="softwares" rows="3"
+                            placeholder="Ex: PJe, ESAJ, Google Drive, Word, Astrea..."></textarea>
+                    </div>
+                    <div class="question-block">
+                        <label>Como você organiza seus modelos de petição e base de conhecimento?</label>
+                        <select name="organizacao">
+                            <option value="">Selecione...</option>
+                            <option value="pastas">Pastas no computador / Drive</option>
+                            <option value="sistema">Sistema jurídico específico</option>
+                            <option value="nenhum">Nada estruturado</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="question-block">
+                        <label>Você já usa algum assistente de IA? (ChatGPT, Claude, Copilot...)</label>
+                        <input type="text" name="ia_atual" placeholder="Descreva como usa, ou 'nenhum'">
+                    </div>
+                    <div class="question-block">
+                        <label>Quando pesquisa jurisprudência, quanto tempo leva em média para achar algo realmente
+                            útil?</label>
+                        <input type="text" name="tempo_juris" placeholder="Ex: 30 minutos, 2 horas...">
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="step" data-step="3" style="display:none;">
+                    <div class="question-block">
+                        <label>O que você quis dizer exatamente com “melhorias na minha IA”?</label>
+                        <textarea name="ia_significado" rows="3"
+                            placeholder="Ex: Um assistente que eu já uso, uma ideia de algo novo, a pasta no Drive..."></textarea>
+                    </div>
+                    <div class="question-block">
+                        <label>Se a IA ideal resolvesse UMA tarefa chata todo dia, qual seria?</label>
+                        <textarea name="ia_tarefa" rows="2"
+                            placeholder="Ex: Preparar uma impugnação com jurisprudência do TJRS automaticamente"></textarea>
+                    </div>
+                    <div class="question-block">
+                        <label>Qual o primeiro problema que, se resolvido, te traria alívio imediato de tempo?</label>
+                        <input type="text" name="primeiro_alivio" placeholder="Descreva em poucas palavras">
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="step" data-step="4" style="display:none;">
+                    <div class="question-block">
+                        <label>Quão importante é que as respostas/textos gerados sejam validados com fontes
+                            exatas?</label>
+                        <select name="validacao">
+                            <option value="">Selecione...</option>
+                            <option value="essencial">Essencial – sem fontes não serve</option>
+                            <option value="importante">Importante, mas pode ser ajustado depois</option>
+                            <option value="desejavel">Desejável, não obrigatório</option>
+                        </select>
+                    </div>
+                    <div class="question-block">
+                        <label>Precisa que a ferramenta funcione offline ou com máxima segurança de dados?</label>
+                        <select name="seguranca">
+                            <option value="">Selecione...</option>
+                            <option value="offline">Sim, offline/local obrigatório</option>
+                            <option value="nuvem_restrita">Nuvem com acesso restrito é aceitável</option>
+                            <option value="nuvem">Nuvem padrão serve</option>
+                        </select>
+                    </div>
+                    <div class="question-block">
+                        <label>Interação preferida:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="interacao" value="texto"> Texto</label>
+                            <label><input type="checkbox" name="interacao" value="voz"> Voz (áudios)</label>
+                            <label><input type="checkbox" name="interacao" value="ambos"> Ambos</label>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <label>Dispositivos principais:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="dispositivos" value="computador"> Computador</label>
+                            <label><input type="checkbox" name="dispositivos" value="celular"> Celular</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Step 5 -->
+                <div class="step" data-step="5" style="display:none;">
+                    <div class="question-block">
+                        <label>Quanto tempo você estaria disposto a dedicar para “ensinar” a IA (explicar seu estilo,
+                            organizar materiais)?</label>
+                        <input type="text" name="tempo_ensinar"
+                            placeholder="Ex: 2 horas por semana, ou só uma vez e pronto">
+                    </div>
+                    <div class="question-block">
+                        <label>Se essa IA te devolvesse, em média, 5 horas por semana, o que você faria com esse
+                            tempo?</label>
+                        <textarea name="tempo_extra" rows="2"
+                            placeholder="Ex: Focar em novos clientes, descansar..."></textarea>
+                    </div>
+                    <div class="question-block">
+                        <label>Expectativa de investimento ou modelo de parceria para construir essa melhoria?</label>
+                        <input type="text" name="investimento"
+                            placeholder="Ex: Troca de serviços, valor mensal, a definir...">
+                    </div>
+                </div>
+                <div class="nav-buttons">
+                    <button type="button" id="prevBtn" onclick="prevStep()" disabled>← Anterior</button>
+                    <button type="button" id="nextBtn" onclick="nextStep()" class="primary">Próximo →</button>
+                    <button type="submit" id="submitBtn" style="display:none;" class="primary">Enviar
+                        Diagnóstico</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating button to trigger diagnostic -->
+    <button class="floating-btn" id="floatingDiagBtn" onclick="openDiagnostic()">
+        <i class="fas fa-stethoscope"></i> Iniciar Diagnóstico
+    </button>
+
+    <script>
+        /* ══════════════════════════════════════
+           AUTH — session check & login gate
+           ══════════════════════════════════════ */
+        window.__awarenessAuth = { checked: false, user: null };
+
+        function setAuthUI(authenticated, user) {
+            var navUser = document.getElementById('navUser');
+            var navSignin = document.getElementById('navSignin');
+            var navUserEmail = document.getElementById('navUserEmail');
+            var loginGate = document.getElementById('loginGate');
+            var mainContent = document.getElementById('mainContent');
+            var floatBtn = document.getElementById('floatingDiagBtn');
+
+            if (authenticated && user) {
+                window.__awarenessAuth.user = user;
+                window.__awarenessAuth.checked = true;
+                navUser.classList.add('visible');
+                if (navSignin) navSignin.style.display = 'none';
+                if (navUserEmail) navUserEmail.textContent = user.email || '';
+                loginGate.classList.add('hidden');
+                mainContent.classList.add('visible');
+                if (floatBtn) floatBtn.classList.add('visible');
+                loadActivityTracker();
+                return true;
+            } else {
+                window.__awarenessAuth.user = null;
+                window.__awarenessAuth.checked = true;
+                navUser.classList.remove('visible');
+                if (navSignin) navSignin.style.display = '';
+                loginGate.classList.remove('hidden');
+                mainContent.classList.remove('visible');
+                if (floatBtn) floatBtn.classList.remove('visible');
+                return false;
+            }
+        }
+
+        var _trackerLoaded = false;
+        function loadActivityTracker() {
+            if (_trackerLoaded) return;
+            _trackerLoaded = true;
+            var s = document.createElement('script');
+            s.src = '/olivia/auth-activity/tracker.js';
+            s.async = true;
+            document.head.appendChild(s);
+        }
+
+        function checkAuth() {
+            return fetch('/olivia/api/me', { credentials: 'same-origin' })
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (data) {
+                    if (data && data.authenticated) {
+                        return setAuthUI(true, data);
+                    }
+                    return setAuthUI(false, null);
+                })
+                .catch(function () {
+                    return setAuthUI(false, null);
+                });
+        }
+
+        function showLoginGate() {
+            setAuthUI(false, null);
+            document.getElementById('loginGate').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function handleLoginSubmit(e) {
+            var btn = document.getElementById('loginSubmitBtn');
+            if (btn) { btn.disabled = true; btn.textContent = 'Signing in...'; }
+        }
+
+        (function checkLoginError() {
+            var params = new URLSearchParams(window.location.search);
+            var error = params.get('error');
+            if (error) {
+                setAuthUI(false, null);
+                var errorEl = document.getElementById('loginError');
+                if (errorEl) {
+                    errorEl.textContent = decodeURIComponent(error);
+                    errorEl.classList.add('visible');
+                }
+                if (window.history.replaceState) {
+                    window.history.replaceState({}, '', window.location.pathname);
+                }
+            }
+        })();
+
+        /* Auth guard for service card clicks */
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.service-card').forEach(function (card) {
+                card.addEventListener('click', function (e) {
+                    if (!window.__awarenessAuth.user) {
+                        e.preventDefault();
+                        showLoginGate();
+                    }
+                });
+            });
+        });
+
+        /* ── INIT ── */
+        (function init() {
+            checkAuth().then(function (ok) {
+                if (!ok) {
+                    document.getElementById('loginGate').classList.remove('hidden');
+                    return;
+                }
+                document.getElementById('loginGate').classList.add('hidden');
+                document.getElementById('mainContent').classList.add('visible');
+                document.getElementById('floatingDiagBtn').classList.add('visible');
+            });
+        })();
+
+        /* ══════════════════════════════════════
+           DIAGNOSTIC MULTI-STEP LOGIC
+           ══════════════════════════════════════ */
+        var currentStep = 1;
+        var totalSteps = 5;
+
+        function openDiagnostic() {
+            document.getElementById('diagnosticModal').classList.add('active');
+            showStep(1);
+        }
+
+        function closeDiagnostic() {
+            document.getElementById('diagnosticModal').classList.remove('active');
+        }
+
+        function showStep(step) {
+            var steps = document.querySelectorAll('#diagnosticForm .step');
+            steps.forEach(function (s) { s.style.display = 'none'; });
+            var target = document.querySelector('#diagnosticForm .step[data-step="' + step + '"]');
+            if (target) target.style.display = 'block';
+
+            document.getElementById('stepIndicator').textContent = 'Passo ' + step + ' de ' + totalSteps;
+
+            var prevBtn = document.getElementById('prevBtn');
+            var nextBtn = document.getElementById('nextBtn');
+            var submitBtn = document.getElementById('submitBtn');
+
+            prevBtn.disabled = (step === 1);
+            if (step === totalSteps) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+            }
+            currentStep = step;
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) showStep(currentStep + 1);
+        }
+
+        function prevStep() {
+            if (currentStep > 1) showStep(currentStep - 1);
+        }
+
+        function submitDiagnostic(e) {
+            e.preventDefault();
+            var form = document.getElementById('diagnosticForm');
+            var formData = new FormData(form);
+            var data = {};
+            formData.forEach(function (val, key) {
+                if (data[key]) {
+                    if (Array.isArray(data[key])) data[key].push(val);
+                    else data[key] = [data[key], val];
+                } else {
+                    data[key] = val;
+                }
+            });
+            console.log('Diagnostic data:', data);
+            // Here you could POST to an API endpoint, e.g., /olivia/api/diagnostic
+            alert('Diagnóstico enviado com sucesso! Entraremos em contato em breve.');
+            closeDiagnostic();
+            form.reset();
+            showStep(1);
+        }
+    </script>
+
+</body>
+
+</html>

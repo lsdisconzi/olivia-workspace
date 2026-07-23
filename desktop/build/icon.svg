@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Scales of justice — OliviaLegal icon -->
+  <circle cx="256" cy="256" r="240" fill="#0d1117" stroke="#d4a72c" stroke-width="8"/>
+  <!-- Central pillar -->
+  <line x1="256" y1="140" x2="256" y2="360" stroke="#d4a72c" stroke-width="8" stroke-linecap="round"/>
+  <!-- Crossbar -->
+  <line x1="180" y1="220" x2="332" y2="220" stroke="#d4a72c" stroke-width="7" stroke-linecap="round"/>
+  <!-- Left scale -->
+  <path d="M180 220 C160 180, 130 165, 110 170" stroke="#d4a72c" stroke-width="5" fill="none"/>
+  <path d="M100 170 Q95 155 110 160 Q125 155 120 170" stroke="#d4a72c" stroke-width="3" fill="none"/>
+  <!-- Right scale -->
+  <path d="M332 220 C352 180, 382 165, 402 170" stroke="#d4a72c" stroke-width="5" fill="none"/>
+  <path d="M412 170 Q417 155 402 160 Q387 155 392 170" stroke="#d4a72c" stroke-width="3" fill="none"/>
+  <!-- Base -->
+  <rect x="226" y="355" width="60" height="12" rx="4" fill="#d4a72c" opacity="0.7"/>
+  <!-- Text -->
+  <text x="256" y="420" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="28" font-weight="300" letter-spacing="6">OL</text>
+</svg>

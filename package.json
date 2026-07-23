@@ -1,0 +1,12 @@
+{
+  "name": "olivia-workspace-tools",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "generate-skill-index": "python3 scripts/generate_skill_index.py",
+    "generate-skill-index:watch": "nodemon --watch agents/skills -e md --exec \"python3 scripts/generate_skill_index.py\""
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,0 +1,62 @@
+/* ── OUTPUT PANEL RESIZE HANDLE ── */
+.output-resize-handle{width:5px;cursor:col-resize;background:transparent;flex-shrink:0;position:relative;z-index:20;display:none}
+.output-resize-handle::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3px;height:40px;border-radius:2px;background:var(--border-hi);opacity:0;transition:opacity .2s}
+.output-resize-handle:hover::after,.output-resize-handle.dragging::after{opacity:1}
+.output-resize-handle.visible{display:block}
+body.is-panel-resizing{cursor:col-resize;user-select:none}
+body.is-panel-resizing iframe{pointer-events:none !important}
+
+/* ── OUTPUT PANEL (side panel for rendered artifacts) ── */
+.output-panel{width:0;min-width:0;background:var(--bg-card);border-left:1px solid var(--border);display:flex;flex-direction:column;min-height:0;overflow:hidden;flex-shrink:0}
+.output-panel.open{width:440px;min-width:240px;max-width:min(72vw,920px);transition:none}
+.output-panel.resizing{transition:none}
+.workspace.resizing-output{cursor:col-resize;user-select:none}
+.output-header{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.output-header h3{font-family:var(--serif);font-size:15px;font-weight:500}
+.output-body{flex:1;overflow-y:auto;padding:16px;min-height:0}
+.output-body .answer-md{font-size:14px;color:var(--white);line-height:1.8}
+.output-body iframe{width:100%;height:100%;border:none;border-radius:6px;background:#fff}
+.output-rich-scroll{height:100%;overflow:auto;padding:14px;box-sizing:border-box}
+.OliviaLegal-doc-rich{border:1px solid var(--border);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));box-shadow:0 8px 24px rgba(0,0,0,.12);overflow:hidden}
+.OliviaLegal-doc-rich-head{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+.OliviaLegal-doc-rich-label{font-size:10px;font-family:var(--mono);letter-spacing:.05em;color:var(--gray-hi);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.OliviaLegal-doc-rich-body{padding:14px 16px;color:var(--white);line-height:1.75}
+.OliviaLegal-doc-rich-body p{margin:0 0 10px}
+.OliviaLegal-doc-rich-body p:last-child{margin-bottom:0}
+.OliviaLegal-doc-rich-body h1,.OliviaLegal-doc-rich-body h2,.OliviaLegal-doc-rich-body h3{margin:10px 0 10px;color:var(--white)}
+.OliviaLegal-doc-rich-body blockquote{margin:10px 0;padding:8px 12px;border-left:3px solid var(--amber);background:rgba(196,98,45,.08);color:var(--gray-hi)}
+.OliviaLegal-doc-rich-body table{width:100%;border-collapse:collapse;margin:10px 0}
+.OliviaLegal-doc-rich-body th,.OliviaLegal-doc-rich-body td{padding:7px 8px;border:1px solid var(--border);text-align:left}
+.OliviaLegal-doc-rich-body th{background:rgba(255,255,255,.04)}
+.OliviaLegal-doc-pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--gray-hi)}
+.OliviaLegal-doc-pre.is-json{color:#9cc0ff}
+.docx-preview-shell{height:100%;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--border);border-radius:12px;background:#ece9e3;box-shadow:0 8px 24px rgba(0,0,0,.16)}
+.docx-preview-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #d2ccc3;background:linear-gradient(180deg,#f6f3ee,#efeae2)}
+.docx-preview-badge{font-size:10px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#6c6258}
+.docx-preview-name{font-size:11px;color:#3f3a34;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.docx-preview-stage{flex:1;overflow:auto;padding:14px 0 22px;box-sizing:border-box}
+.docx-preview-stage .docx-wrapper{background:transparent;padding:0 14px 18px}
+.docx-preview-stage .docx{box-shadow:0 10px 32px rgba(0,0,0,.2);margin:0 auto 16px;background:#fff;color:#1a1a1a}
+.docx-preview-stage .docx p,.docx-preview-stage .docx span,.docx-preview-stage .docx td,.docx-preview-stage .docx th{color:inherit}
+.output-empty{text-align:center;padding:40px 20px;color:var(--gray)}
+.output-tabs{display:flex;gap:4px;padding:8px 18px;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+.output-tab{padding:5px 12px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--gray-hi);cursor:pointer;font-family:var(--mono);font-size:11px;transition:all .15s;white-space:nowrap}
+.output-tab:hover{border-color:var(--border-hi);color:var(--white)}
+.output-tab.active{border-color:var(--amber);color:var(--white);background:rgba(28,69,50,.06)}
+
+/* ── XLSX Viewer ── */
+.xlsx-viewer{overflow:hidden;display:flex;flex-direction:column;height:100%}
+.xlsx-tabs{display:flex;gap:2px;padding:6px 12px;flex-wrap:wrap;flex-shrink:0;border-bottom:1px solid var(--border)}
+.xlsx-tab{background:var(--bg-glass);color:var(--gray-hi);border:1px solid var(--border);padding:4px 14px;border-radius:6px 6px 0 0;cursor:pointer;font-family:var(--mono);font-size:11px;transition:all .15s}
+.xlsx-tab:hover{border-color:var(--border-hi);color:var(--white)}
+.xlsx-tab.active{background:#1D6F42;color:#fff;border-color:#1D6F42;font-weight:600}
+.xlsx-sheets{flex:1;overflow:hidden}
+.xlsx-sheet{display:none;height:100%;flex-direction:column}
+.xlsx-sheet.active{display:flex}
+.xlsx-info{padding:6px 12px;font-size:11px;color:var(--gray);flex-shrink:0}
+.xlsx-table-wrap{overflow:auto;flex:1}
+.xlsx-table{border-collapse:collapse;font-size:11px;font-family:var(--mono);width:max-content;min-width:100%}
+.xlsx-table th{background:#1D6F42;color:#fff;padding:5px 12px;border:1px solid #2a8a55;white-space:nowrap;position:sticky;top:0;z-index:1;font-weight:600;text-align:left}
+.xlsx-table td{padding:4px 12px;border:1px solid var(--border);white-space:nowrap;color:var(--white)}
+.xlsx-table tbody tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.xlsx-table tbody tr:hover td{background:rgba(29,111,66,.12)}

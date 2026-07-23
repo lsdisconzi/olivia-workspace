@@ -1,0 +1,99 @@
+/* ── OliviaLegal Desktop — Title Bar ────────────────────────────────── */
+#ol-titlebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  background: #0d1117;
+  border-bottom: 1px solid #21262d;
+  -webkit-app-region: no-drag;
+}
+
+#ol-titlebar[data-platform="darwin"] .ol-titlebar-controls {
+  display: none;
+}
+#ol-titlebar[data-platform="darwin"] .ol-titlebar-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ol-titlebar-drag {
+  position: absolute;
+  inset: 0;
+  -webkit-app-region: drag;
+}
+
+.ol-titlebar-title {
+  flex: 1;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #8b949e;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ol-titlebar-controls {
+  display: flex;
+  align-items: center;
+  z-index: 1;
+  margin-right: 4px;
+}
+
+.ol-titlebar-btn {
+  width: 36px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #8b949e;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background .15s, color .15s;
+  -webkit-app-region: no-drag;
+}
+.ol-titlebar-btn:hover {
+  background: #21262d;
+  color: #e6edf3;
+}
+.ol-titlebar-btn--close:hover {
+  background: #da3633;
+  color: #fff;
+}
+
+#ol-titlebar[data-platform="darwin"] .ol-titlebar-controls {
+  gap: 6px;
+}
+#ol-titlebar[data-platform="darwin"] .ol-titlebar-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  padding: 0;
+}
+#ol-titlebar[data-platform="darwin"] .ol-titlebar-btn svg {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+#ol-titlebar[data-platform="darwin"] .ol-titlebar-btn:hover svg {
+  width: 8px;
+  height: 8px;
+  opacity: 1;
+}
+#ol-titlebar[data-platform="darwin"] #ol-titlebar-minimize {
+  background: #f5c542;
+}
+#ol-titlebar[data-platform="darwin"] #ol-titlebar-maximize {
+  background: #54ae60;
+}
+#ol-titlebar[data-platform="darwin"] #ol-titlebar-close {
+  background: #ed6a5e;
+}

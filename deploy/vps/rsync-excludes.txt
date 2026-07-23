@@ -1,0 +1,9 @@
+.git/
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+openclaude/node_modules/
+uploads/runtime/
+outputs/
+docx_reports/

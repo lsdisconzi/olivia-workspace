@@ -1,0 +1,47 @@
+{
+  "$schema": "../../generated/schemas/group-manifest.schema.json",
+  "version": "1.0.0",
+  "group": "olivia",
+  "label": "Olivia",
+  "icon": "🟢",
+  "color": "#4a9e70",
+  "description": "Platform agents owning the Olivia workspace: scenes, discovery, listening, memory, studio, qdrant, api-explorer, plus the control-plane orchestrator and the governance coordinator.",
+  "language_focus": ["en", "pt-BR"],
+  "orchestrator": {
+    "slug": "orchestrator-control-plane",
+    "name": "Olivia Orchestrator Control Plane",
+    "agent_file": "agents/agents-groups/olivia/agents/orchestrator-control-plane.agent.md"
+  },
+  "coordinator": {
+    "slug": "olivia-coordinator",
+    "name": "Olivia Coordinator",
+    "agent_file": "agents-groups/olivia/agents/olivia-coordinator.agent.md"
+  },
+  "agents": [
+    { "slug": "orchestrator-control-plane", "name": "Orchestrator Control Plane", "role": "orchestrator", "agent_file": "agents-groups/olivia/agents/orchestrator-control-plane.agent.md" },
+    { "slug": "olivia-coordinator", "name": "Olivia Coordinator", "role": "coordinator", "agent_file": "agents/agents-groups/olivia/agents/olivia-coordinator.agent.md" },
+    { "slug": "shaders", "name": "Shaders Agent", "role": "specialist", "specialty": "2D SVG + 3D WebGL scenes", "agent_file": "agents/agents-groups/olivia/agents/olivia-shaders-proactive.agent.md" },
+    { "slug": "discovery", "name": "Discovery Agent", "role": "specialist", "specialty": "Document intelligence / NLP pipeline", "agent_file": "agents/agents-groups/olivia/agents/olivia-discovery-intelligence.agent.md" },
+    { "slug": "listening", "name": "Listening Agent", "role": "specialist", "specialty": "Audio capture + transcription", "agent_file": "agents/agents-groups/olivia/agents/olivia-listening-operations.agent.md" },
+    { "slug": "memory", "name": "Memory Graph Agent", "role": "specialist", "specialty": "Qdrant + Neo4j memory plane", "agent_file": "agents/agents-groups/olivia/agents/olivia-memory-graph.agent.md" },
+    { "slug": "studio", "name": "Studio UI Agent", "role": "specialist", "specialty": "UI components + preview", "agent_file": "agents/agents-groups/olivia/agents/olivia-studio-ui.agent.md" },
+    { "slug": "qdrant", "name": "Qdrant Manager", "role": "specialist", "specialty": "Standalone Qdrant ops", "agent_file": "agents/agents-groups/olivia/agents/olivia-qdrant-manager.agent.md" },
+    { "slug": "olivia-ecosystem-coordinator", "name": "Ecosystem Coordinator", "role": "specialist", "specialty": "Mission, history, and platform narrative", "agent_file": "agents/agents-groups/olivia/agents/olivia-ecosystem-coordinator.agent.md" },
+    { "slug": "frontend-engineer", "name": "Frontend Migration Engineer", "role": "specialist", "specialty": "senior frontend architect and migration specialist", "agent_file": "agents/agents-groups/olivia/agents/frontend-migration-engineer-agent.md" }
+  ],
+  "knowledge": {
+    "folder": "agents-groups/olivia/knowledge",
+    "manifest": "agents-groups/olivia/knowledge/manifest.json",
+    "description": "Architecture docs, API contract snippets, MCP catalog excerpts (to be populated in Phase 3)."
+  },
+  "memory_defaults": {
+    "qdrant_collections": [],
+    "neo4j_labels": ["MemoryEntry"],
+    "neo4j_databases": []
+  },
+  "policies": {
+    "tool_permissions": "generated/policies/tool-permissions.by-agent.json",
+    "handoff_routes": "generated/policies/handoff-routes.json",
+    "orchestrator_policy": "generated/policies/orchestrator-policy.yaml"
+  }
+}

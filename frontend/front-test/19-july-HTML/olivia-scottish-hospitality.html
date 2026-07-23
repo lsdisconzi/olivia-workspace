@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Olivia · Scottish Hospitality — A Chance to Do Good</title>
+<link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%237FA98E'/><g transform='translate(6,7) scale(0.31)'><path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23FAF6EF' stroke-width='2.6' stroke-linecap='round' opacity='.75'/><ellipse cx='22' cy='42' rx='4.4' ry='5.5' fill='%23D98A5E'/></g></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   OLIVIA · SCOTTISH HOSPITALITY — pastel token system
+   A lighter, softer evolution of the sage / peach / gold brand.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+    --white:#FAF6EF;         /* linen page background */
+    --paper:#FFFFFF;         /* crisp card surface */
+    --cream:#F2ECDE;         /* deeper tinted panel */
+    --black:#34302A;         /* soft ink — primary text */
+
+    --green-dark:#3F6152;    /* sage-deep — headings, filled buttons */
+    --green-mid:#7FA98E;     /* sage — accents, lines, icons */
+    --green-light:#A9CBB7;   /* pale sage — tints */
+
+    --amber:#D98A5E;         /* soft terracotta — kickers, CTAs */
+    --amber-light:#E7A67D;   /* peach — hovers */
+    --golden:#D6B87A;        /* pale gold — tertiary accent */
+
+    --gray:#ADA396;          /* tertiary text */
+    --gray-hi:#6B6458;       /* secondary text */
+
+    --color-text-primary:var(--black);
+    --color-text-secondary:var(--gray-hi);
+    --color-text-tertiary:var(--gray);
+    --color-border-light:rgba(63,97,82,.12);
+    --color-border-medium:rgba(63,97,82,.20);
+    --color-border-strong:rgba(63,97,82,.30);
+
+    --font-serif:'Fraunces',Georgia,serif;
+    --font-sans:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
+    --transition:.35s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    font-family:var(--font-sans);
+    background:var(--white);
+    color:var(--black);
+    line-height:1.65;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ── Rail ── */
+.rail{position:fixed;left:20px;top:0;bottom:0;width:1px;z-index:5;pointer-events:none}
+.rail::before{
+    content:'';position:absolute;left:0;top:64px;bottom:64px;width:1px;
+    background:linear-gradient(var(--green-mid),var(--color-border-light) 40%,var(--color-border-light) 60%,var(--amber));
+    opacity:.4;
+}
+.rail .dot{position:absolute;left:-2.5px;width:6px;height:6px;border-radius:50%}
+.rail .dot.top{top:60px;background:var(--green-mid)}
+.rail .dot.bottom{bottom:60px;background:var(--amber)}
+@media (max-width:900px){.rail{display:none}}
+
+/* ── Nav ── */
+nav{
+    position:fixed;top:0;left:0;right:0;z-index:40;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.2rem 2.6rem;
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    background:color-mix(in srgb, var(--white) 80%, transparent);
+    border-bottom:1px solid transparent;
+    transition:border-color var(--transition);
+}
+nav.scrolled{border-bottom-color:var(--color-border-light)}
+.logo{display:flex;align-items:baseline;gap:.5rem;font-family:var(--font-serif);font-size:1.22rem;font-weight:500;color:var(--green-dark);letter-spacing:-0.01em}
+.logo .tag{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.16em;color:var(--gray);text-transform:uppercase;font-weight:400}
+.nav-links{display:flex;align-items:center;gap:1.9rem}
+.nav-links a{font-size:.82rem;color:var(--color-text-secondary);transition:color var(--transition);font-weight:500}
+.nav-links a:hover{color:var(--amber)}
+.agent-badge{
+    display:inline-flex;align-items:center;gap:.4rem;font-size:.7rem;font-family:var(--font-mono);
+    letter-spacing:.04em;padding:.38rem .8rem;border-radius:2rem;
+    border:1px solid var(--color-border-medium);color:var(--color-text-secondary);background:var(--paper);cursor:default;
+}
+.agent-badge .d{width:5px;height:5px;border-radius:50%;background:var(--amber);animation:subtle-pulse 2s ease-in-out infinite}
+@media (max-width:860px){.nav-links a:not(.agent-badge){display:none}nav{padding:1rem 1.4rem}}
+
+/* ── Hero ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7rem 6vw 3rem;text-align:center;position:relative}
+.hero-kicker{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:2rem}
+.stage-view{position:relative;width:280px;height:280px}
+.morph-scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .85s ease,transform .85s ease;transform:scale(.94);pointer-events:none}
+.morph-scene.active{opacity:1;transform:scale(1);pointer-events:auto}
+.morph-label{font-family:var(--font-serif);font-size:1.65rem;font-weight:400;color:var(--color-text-primary);margin-top:.5rem;transition:opacity .35s;letter-spacing:-0.01em}
+.morph-sub{font-family:var(--font-sans);font-size:.88rem;color:var(--color-text-tertiary);max-width:460px;line-height:1.6;min-height:42px;margin-top:.4rem;transition:opacity .35s}
+.pills{display:flex;gap:.45rem;justify-content:center;flex-wrap:wrap;margin-top:1.6rem}
+.pill{
+    font-family:var(--font-sans);font-size:.74rem;font-weight:500;padding:.5rem 1.1rem;border-radius:20px;
+    border:1px solid var(--color-border-light);background:var(--paper);color:var(--color-text-secondary);
+    cursor:pointer;transition:all var(--transition);display:inline-flex;align-items:center;gap:.4rem;
+}
+.pill:hover{border-color:var(--color-border-medium);color:var(--color-text-primary)}
+.pill.active{background:var(--green-dark);border-color:var(--green-dark);color:var(--white)}
+.pill i{font-size:.68rem}
+.compose-mock{
+    margin-top:2.8rem;display:flex;align-items:center;gap:.6rem;width:min(460px,88vw);
+    background:var(--paper);border:1px solid var(--color-border-light);border-radius:2rem;
+    padding:.45rem .55rem .45rem 1.2rem;box-shadow:0 10px 28px rgba(63,97,82,.08);
+    cursor:pointer;transition:all var(--transition);
+}
+.compose-mock:hover{border-color:var(--color-border-medium);box-shadow:0 14px 34px rgba(63,97,82,.13);transform:translateY(-1px)}
+.compose-mock span{flex:1;text-align:left;font-size:.82rem;color:var(--color-text-tertiary)}
+.compose-mock .send-btn{width:32px;height:32px;border-radius:50%;border:none;background:var(--amber);color:#fff;display:grid;place-items:center;cursor:pointer;transition:all var(--transition);flex-shrink:0}
+.compose-mock:hover .send-btn{background:var(--amber-light);transform:translateY(-1px)}
+.compose-mock .send-btn i{font-size:.72rem}
+.scroll-hint{margin-top:3rem;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--color-text-tertiary);opacity:.65;animation:subtle-pulse 2.5s ease-in-out infinite}
+
+/* ── Reveal ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s cubic-bezier(.4,0,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ── Sections ── */
+section.quiet{padding:5.5rem 6vw;max-width:720px;margin:0 auto}
+section.quiet+section.quiet{border-top:1px solid var(--color-border-light)}
+section.wide{padding:5.5rem 6vw;max-width:1080px;margin:0 auto}
+section.wide+section.wide{border-top:1px solid var(--color-border-light)}
+section.quiet+section.wide,section.wide+section.quiet{border-top:1px solid var(--color-border-light)}
+.kicker{font-family:var(--font-mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:1.1rem;display:block}
+h2{font-family:var(--font-serif);font-weight:400;font-size:clamp(1.7rem,3vw,2.3rem);color:var(--green-dark);line-height:1.22;max-width:22ch;letter-spacing:-0.015em}
+h2 em{font-style:italic;color:var(--amber);font-weight:300}
+.lede{margin-top:1.1rem;font-size:.98rem;color:var(--color-text-secondary);max-width:58ch;line-height:1.75}
+.quote{
+    font-family:var(--font-serif);font-style:italic;font-size:1.15rem;line-height:1.6;color:var(--green-dark);
+    border-left:2px solid var(--amber);padding-left:1.3rem;margin:1.8rem 0;max-width:50ch;
+}
+.flow{display:flex;flex-wrap:wrap;gap:.4rem 0;align-items:center;font-family:var(--font-mono);font-size:.74rem;color:var(--color-text-tertiary);margin-top:1.6rem;letter-spacing:.02em}
+.flow span:not(.arrow){color:var(--green-dark)}
+.flow .arrow{color:var(--amber);margin:0 .55rem}
+.wide-pills{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.8rem}
+.principle-list{list-style:none;margin-top:1.8rem}
+.principle-list li{display:grid;grid-template-columns:2.2rem 1fr;gap:.6rem;padding:1rem 0;border-top:1px solid var(--color-border-light);font-size:.92rem;color:var(--color-text-secondary)}
+.principle-list li:last-child{border-bottom:1px solid var(--color-border-light)}
+.principle-list .n{font-family:var(--font-mono);font-size:.72rem;color:var(--amber);padding-top:.15rem}
+.principle-list strong{color:var(--green-dark);font-weight:600}
+.wm{display:flex;align-items:baseline;gap:.5rem;margin-top:2.4rem}
+.wm-n{font-family:var(--font-serif);font-size:1.15rem;color:var(--green-dark);letter-spacing:-0.01em}
+.wm-s{font-family:var(--font-mono);font-size:.6rem;color:var(--gray);letter-spacing:.1em;text-transform:uppercase}
+
+/* ── Workbench demo (dashboard) ── */
+.workbench-frame{background:var(--paper);border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(63,97,82,.10);border:1px solid var(--color-border-light);margin-top:2rem}
+.wb-titlebar{background:var(--cream);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--color-border-light)}
+.wb-dot{width:9px;height:9px;border-radius:50%}
+.wb-dot.r{background:#E2A899}.wb-dot.y{background:var(--golden)}.wb-dot.g{background:var(--green-light)}
+.wb-title{font-family:var(--font-mono);font-size:.66rem;color:var(--gray-hi);margin-left:8px;letter-spacing:.03em}
+.wb-body{display:grid;grid-template-columns:1fr 1fr;min-height:340px}
+@media (max-width:760px){.wb-body{grid-template-columns:1fr}}
+.wb-chat{padding:16px;display:flex;flex-direction:column;gap:9px;border-right:1px solid var(--color-border-light);font-size:.82rem;max-height:400px;overflow-y:auto}
+.wb-msg{padding:9px 13px;border-radius:12px;max-width:88%;line-height:1.5;animation:float-up .4s ease-out}
+.wb-msg.user{align-self:flex-end;background:var(--green-light);color:var(--green-dark);border:1px solid var(--color-border-light)}
+.wb-msg.olivia{align-self:flex-start;background:var(--cream);border:1px solid var(--color-border-light);color:var(--color-text-primary)}
+.wb-msg.system{align-self:center;background:transparent;color:var(--gray);font-size:.68rem;font-family:var(--font-mono);letter-spacing:.03em}
+.wb-preview{padding:14px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:linear-gradient(180deg,#F2ECDE 0%,#EAE1CC 30%,#E0D4BB 60%,#D3C4A5 100%);border-radius:0 0 16px 0}
+.scene-dash{width:100%;height:100%;min-height:260px;position:relative;border-radius:10px;overflow:hidden;transition:all 1s ease;background:var(--paper);border:1px solid var(--color-border-light);display:flex;flex-direction:column;padding:16px;gap:10px}
+.dash-row{display:flex;gap:10px;flex:1}
+.dash-card{flex:1;background:var(--white);border-radius:10px;border:1px solid var(--color-border-light);padding:10px 12px;display:flex;flex-direction:column;gap:4px;transition:all .5s ease}
+.dash-card .dash-val{font-family:var(--font-serif);font-size:1.45rem;font-weight:500;color:var(--green-dark);letter-spacing:-0.01em}
+.dash-card .dash-lbl{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gray)}
+.dash-card .dash-bar{height:4px;border-radius:2px;background:var(--color-border-light);margin-top:4px;overflow:hidden}
+.dash-card .dash-bar-fill{height:100%;border-radius:2px;background:var(--green-mid);transition:width 1s ease}
+.dash-card .dash-bar-fill.amber{background:var(--amber)}
+.dash-card .dash-bar-fill.golden{background:var(--golden)}
+.wb-controls{display:flex;flex-wrap:wrap;gap:10px;padding:10px 14px;border-top:1px solid var(--color-border-light);background:var(--cream);align-items:center}
+.wb-slider-group{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:.62rem;color:var(--gray-hi)}
+.wb-slider-group input[type="range"]{width:70px;accent-color:var(--amber);height:3px}
+.wb-slider-group span{color:var(--amber);min-width:30px;text-align:center;font-weight:500;font-size:.64rem}
+.wb-pill-sm{font-family:var(--font-mono);font-size:.6rem;padding:4px 9px;border-radius:10px;cursor:pointer;border:1px solid var(--color-border-light);background:var(--paper);color:var(--gray-hi);transition:all .25s;letter-spacing:.03em;white-space:nowrap}
+.wb-pill-sm:hover,.wb-pill-sm.active{background:var(--green-dark);border-color:var(--green-dark);color:#fff}
+
+/* ── Operational views (shader bars) ── */
+.shader-box{background:var(--paper);border:1px solid var(--color-border-light);border-radius:16px;overflow:hidden;margin-top:2rem;box-shadow:0 14px 40px rgba(63,97,82,.06)}
+.shader-scene{height:220px;position:relative;overflow:hidden;transition:all 1.2s ease;background:linear-gradient(180deg,#EEE6D4 0%,#E5D9BF 30%,#DACBA6 60%,#C8B98D 100%);border-radius:16px 16px 0 0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:30px}
+.shader-scene.night{filter:brightness(.55) saturate(.55) hue-rotate(150deg)}
+.shader-scene.rain{filter:brightness(.75) saturate(.6)}
+.shader-scene.fog{filter:brightness(.85) contrast(.7) blur(.8px)}
+.shader-scene.winter{filter:brightness(.9) saturate(.4) hue-rotate(20deg)}
+.shader-scene.sunset{filter:brightness(.95) saturate(1.2) hue-rotate(-8deg)}
+.shader-scene-inner{display:flex;gap:20px;align-items:flex-end}
+.shader-bar{width:28px;border-radius:5px 5px 0 0;background:var(--green-mid);transition:all 1.2s ease;opacity:.88}
+.shader-bar:nth-child(2){background:var(--amber)}
+.shader-bar:nth-child(3){background:var(--golden)}
+.shader-bar:nth-child(4){background:var(--green-light)}
+.shader-bar:nth-child(5){background:var(--amber-light)}
+.shader-controls{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px;border-top:1px solid var(--color-border-light);background:var(--cream)}
+.shader-btn{font-family:var(--font-mono);font-size:.6rem;padding:5px 11px;border-radius:14px;cursor:pointer;border:1px solid var(--color-border-light);background:var(--paper);color:var(--gray-hi);transition:all .25s;letter-spacing:.03em;white-space:nowrap}
+.shader-btn:hover,.shader-btn.active{background:var(--green-dark);border-color:var(--green-dark);color:#fff}
+
+/* ── Operators / network grid ── */
+.op-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:
+
+[Prompt compactado automaticamente: 40065 chars omitidos entre inicio e fim para estabilidade]
+
+owth — rather than a threat to jobs.</p>
+                <hr class="out-hr">
+                <p><strong>Venue:</strong> Ronzio Restaurant &amp; Bar Broomhill (2025). <strong>Style:</strong> Brunch, speciality coffee, Italian-inspired café, cocktails.</p>
+                <hr class="out-hr">
+                <p>Warm regards, [sender name] [sender email]<br><em>Olivia — The AI Operating Environment</em></p>
+            </div>
+            <a class="out-pdf" href="outreach/pdf/5 - Chris Gaz (Ronzio).pdf" target="_blank" rel="noopener"><i class="fas fa-file-arrow-down"></i> Download branded PDF</a>
+        </article>
+
+    </div>
+</section>
+
+<!-- ═══ HISTORY ═══ -->
+<section class="quiet reveal" id="history">
+    <div class="kicker">History</div>
+    <h2>It began as a series of <em>questions</em>.</h2>
+    <p class="lede">The earliest conversations centred on a narrow legal tool. But the real problem was far larger: every industry holds immense operational knowledge inside its people, yet almost none of it ever becomes software — because the people who hold it aren't programmers, and the software they're offered forces them to adapt to someone else's idea of how their work should be done.</p>
+    <p class="lede">The turning point was recognising that organisations don't need another single-purpose application. They need an <strong style="color:var(--green-dark)">environment</strong> where their own expertise can meet AI — one that produces tools, workflows, and automations that fit their real daily routines. The legal-specific logic was stripped away. What remained was a clean canvas, already wired with the ability to think, learn, and build alongside the people who use it.</p>
+</section>
+
+<!-- ═══ MISSION ═══ -->
+<section class="quiet reveal" id="mission">
+    <div class="kicker">Mission</div>
+    <h2>Democratise the creation of AI-powered <em>capability</em>.</h2>
+    <p class="lede">We exist so that every business, charity, team, and individual worker can translate their operational expertise into practical, AI-assisted systems — without having to become software engineers.</p>
+    <ul class="principle-list">
+        <li><span class="n">01</span><span><strong>Adapts to the organisation</strong>, not the other way around — learning from the people who know the work best.</span></li>
+        <li><span class="n">02</span><span><strong>Turns knowledge into working software</strong>, with domain experts collaborating directly with AI agents.</span></li>
+        <li><span class="n">03</span><span><strong>Enables learning while building</strong> — every interaction builds both capability and skill.</span></li>
+        <li><span class="n">04</span><span><strong>Unites the organisation</strong> in one living ecosystem, turning isolated efforts into shared intelligence.</span></li>
+        <li><span class="n">05</span><span><strong>Grows with the people who use it</strong> — never limited to predefined features.</span></li>
+        <li><span class="n">06</span><span><strong>Keeps people at the centre</strong> — AI accelerates implementation, people provide context, judgment, and priorities.</span></li>
+    </ul>
+    <div class="wm"><span class="wm-n">Olivia</span><span class="wm-s">Awareness · AI</span></div>
+</section>
+
+<!-- ═══ CLOSING CTA ═══ -->
+<section class="closing reveal" id="demo">
+    <div class="kicker" style="justify-content:center;display:flex">Book a demonstration</div>
+    <h2>Where hospitality doesn't just use AI. <em>It grows with it.</em></h2>
+    <p class="lede">Technology has always asked people to learn software. Olivia asks software to learn people.</p>
+    <div class="compose-mock" style="margin-top:2.4rem">
+        <span>Tell us about your team…</span>
+        <button class="send-btn" tabindex="-1"><i class="fas fa-arrow-up"></i></button>
+    </div>
+</section>
+
+<footer>
+    <span>© Olivia Ecosystem</span>
+    <div class="flinks">
+        <a href="#what">What it is</a>
+        <a href="#operators">The network</a>
+        <a href="#operations">Operations</a>
+        <a href="#outreach">Outreach</a>
+        <a href="#mission">Mission</a>
+        <a href="#demo">Book a demonstration</a>
+    </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 12), { passive: true });
+
+document.querySelectorAll('.reveal').forEach(el => {
+    new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: .1 }).observe(el);
+});
+
+const meta = {
+    tree: { label: 'Olivia', sub: 'The trunk and its first branches — the same shape that grows into every venue in the network.' },
+    table: { label: 'Every venue, its own shape', sub: 'Kitchen, bar, front desk — Olivia sits inside each one and learns how that team actually works.' },
+    network: { label: 'One connected network', sub: 'Glasgow to St Andrews — five operators, one living workspace where every team\u2019s learning strengthens the whole group.' }
+};
+
+function morph(id) {
+    document.querySelectorAll('.morph-scene').forEach(s => s.classList.remove('active'));
+    const sceneEl = document.getElementById('scene-' + id);
+    if (sceneEl) sceneEl.classList.add('active');
+    document.querySelectorAll('.pills .pill').forEach(p => p.classList.remove('active'));
+    const pillEl = document.querySelector(".pills .pill[onclick*='" + id + "']");
+    if (pillEl) pillEl.classList.add('active');
+    const m = meta[id] || meta.tree;
+    const lbl = document.getElementById('morphLabel');
+    const sub = document.getElementById('morphSub');
+    if (!lbl || !sub) return;
+    lbl.style.opacity = '0'; sub.style.opacity = '0';
+    setTimeout(() => { lbl.textContent = m.label; sub.textContent = m.sub; lbl.style.opacity = '1'; sub.style.opacity = '1'; }, 220);
+}
+
+const dashData = {
+    sales: { rev: '£4,280', cov: '94', gp: '63.7%', var: '-1.2%', revPct: 78, covPct: 65, gpPct: 63, varPct: 12 },
+    stock: { rev: '£3,910', cov: '88', gp: '61.2%', var: '-2.8%', revPct: 71, covPct: 60, gpPct: 61, varPct: 28 },
+    pnl:   { rev: '£4,550', cov: '102', gp: '65.1%', var: '-0.7%', revPct: 83, covPct: 71, gpPct: 65, varPct: 7 }
+};
+
+function updateDash() {
+    const slider = document.getElementById('dateSlider'); if (!slider) return;
+    const val = parseInt(slider.value);
+    document.getElementById('dateVal').textContent = val + ' Jul';
+    const active = document.querySelector('.wb-pill-sm.active')?.id;
+    const view = active === 'dashStock' ? 'stock' : active === 'dashPnl' ? 'pnl' : 'sales';
+    applyDash(view);
+}
+
+function setDashView(view, btn) {
+    document.querySelectorAll('.wb-pill-sm').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    applyDash(view);
+}
+
+function applyDash(view) {
+    const d = dashData[view];
+    document.getElementById('dashRev').textContent = d.rev;
+    document.getElementById('dashCov').textContent = d.cov;
+    document.getElementById('dashGP').textContent = d.gp;
+    document.getElementById('dashVar').textContent = d.var;
+    const fills = document.querySelectorAll('.dash-bar-fill');
+    if (fills.length >= 4) {
+        fills[0].style.width = d.revPct + '%';
+        fills[1].style.width = d.covPct + '%';
+        fills[2].style.width = d.gpPct + '%';
+        fills[3].style.width = d.varPct + '%';
+    }
+}
+
+function opPreset(preset, btn) {
+    const scene = document.getElementById('shaderScene'); if (!scene) return;
+    const bars = scene.querySelectorAll('.shader-bar');
+    document.querySelectorAll('.shader-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    scene.classList.remove('night', 'rain', 'fog', 'winter', 'sunset');
+    const heights = {
+        day:    [100,160,130,180,110,150,140],
+        sunset: [140,190,160,200,150,180,170],
+        night:  [40,60,35,55,30,50,45],
+        rain:   [50,70,45,65,40,60,55],
+        fog:    [30,40,25,35,20,45,38],
+        winter: [160,200,180,210,170,195,190]
+    };
+    const h = heights[preset] || heights.day;
+    bars.forEach((bar, i) => { bar.style.height = h[i] + 'px'; });
+    if (['sunset','night','rain','fog','winter'].includes(preset)) scene.classList.add(preset);
+}
+
+console.log('Olivia · Scottish Hospitality — pastel merged edition');
+</script>
+</body>
+</html>

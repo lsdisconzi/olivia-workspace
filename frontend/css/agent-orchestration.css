@@ -1,0 +1,346 @@
+/* Section-agent orchestration UI */
+.olivia-runtime-bar {
+  padding: NONE;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.olivia-runtime-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.olivia-runtime-title {
+  font-size: 8px;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  opacity: 0.82;
+  transition: color 160ms ease, font-size 160ms ease, font-weight 160ms ease,
+    opacity 160ms ease, transform 160ms ease;
+}
+
+.olivia-runtime-bar.is-collapsed .olivia-runtime-title {
+  font-size: 7px;
+  opacity: 0.62;
+  letter-spacing: 0.1em;
+}
+
+.olivia-runtime-bar.is-collapsed:hover .olivia-runtime-title,
+.olivia-runtime-bar.is-collapsed:focus-within .olivia-runtime-title {
+  color: var(--green);
+  font-size: 9px;
+  font-weight: 700;
+  opacity: 1;
+  transform: translateY(-0.5px);
+}
+
+.olivia-runtime-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.olivia-runtime-toggle i {
+  font-size: 10px;
+}
+
+.olivia-runtime-body {
+  display: block;
+}
+
+.olivia-runtime-body.is-collapsed {
+  display: none;
+}
+
+.olivia-runtime-bar.is-collapsed {
+  gap: 0;
+}
+
+.olivia-runtime-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.olivia-runtime-label {
+  font-size: 10px;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.olivia-runtime-select {
+  min-width: 180px;
+  max-width: 260px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--white);
+  font-size: 11px;
+}
+
+.olivia-runtime-btn {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--gray-hi);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.olivia-runtime-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.olivia-secondary-chat {
+  display: none;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.olivia-secondary-chat.open {
+  display: block;
+}
+
+.olivia-secondary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.olivia-secondary-title {
+  font-size: 12px;
+  color: var(--white);
+  font-weight: 500;
+}
+
+.olivia-secondary-status {
+  font-size: 10px;
+  color: var(--gray);
+}
+
+.olivia-secondary-log {
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.olivia-secondary-msg {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 9px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.olivia-secondary-msg.user {
+  background: rgba(196, 98, 45, 0.12);
+  border-color: rgba(196, 98, 45, 0.35);
+  color: var(--text2);
+  align-self: flex-end;
+  max-width: 82%;
+}
+
+.olivia-secondary-msg.agent {
+  background: var(--bg2);
+  color: var(--text2);
+  max-width: 94%;
+}
+
+.olivia-secondary-msg.system {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--gray-hi);
+  border-style: dashed;
+}
+
+.olivia-secondary-compose {
+  padding: 8px 12px 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+}
+
+.olivia-secondary-input {
+  flex: 1;
+  min-height: 34px;
+  max-height: 110px;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg2);
+  color: var(--white);
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.olivia-secondary-send {
+  flex: 0 0 auto;
+  width: 38px;
+  border: 1px solid var(--amber);
+  border-radius: 8px;
+  background: rgba(196, 98, 45, 0.1);
+  color: var(--amber);
+  cursor: pointer;
+}
+
+.olivia-section-agent-map {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg2);
+}
+
+.olivia-section-agent-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.olivia-section-agent-title {
+  font-size: 10px;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0;
+}
+
+.olivia-section-agent-toggle {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--gray-hi);
+  font-size: 10px;
+  line-height: 1;
+  padding: 4px 7px;
+  cursor: pointer;
+}
+
+.olivia-section-agent-toggle:hover {
+  border-color: var(--border-hi);
+  color: var(--white);
+}
+
+.olivia-section-agent-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.olivia-section-agent-grid.is-collapsed {
+  display: none;
+}
+
+.olivia-section-agent-row {
+  display: grid;
+  grid-template-columns: 86px 1fr auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.olivia-section-agent-key {
+  font-size: 10px;
+  color: var(--gray-hi);
+}
+
+.olivia-section-agent-select {
+  width: 100%;
+  padding: 4px 7px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--white);
+  font-size: 11px;
+}
+
+.olivia-section-agent-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.olivia-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gray);
+}
+
+.olivia-status-dot.active {
+  background: var(--green);
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.15);
+}
+
+.olivia-status-dot.inactive {
+  background: var(--red);
+}
+
+.olivia-row-btn {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--gray-hi);
+  font-size: 10px;
+  padding: 3px 7px;
+  cursor: pointer;
+}
+
+.olivia-row-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.olivia-section-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 10px;
+  color: var(--gray-hi);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.olivia-section-header-badge .olivia-status-dot {
+  width: 6px;
+  height: 6px;
+  box-shadow: none;
+}
+
+.olivia-section-header-badge.is-active {
+  border-color: rgba(46, 204, 113, 0.35);
+}
+
+.olivia-section-header-badge.is-inactive {
+  border-color: rgba(235, 87, 87, 0.35);
+}
+
+.olivia-section-header-badge.is-unassigned {
+  border-style: dashed;
+  color: var(--gray);
+}

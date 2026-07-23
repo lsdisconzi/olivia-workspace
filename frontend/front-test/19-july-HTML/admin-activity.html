@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OliviaLegal · Admin Activity</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #191917;
+      --bg-card: #1f1f1d;
+      --border: #2a2a28;
+      --border-hi: #363634;
+      --amber: #c4622d;
+      --amber-lo: rgba(196, 98, 45, 0.12);
+      --green: #4a9e70;
+      --green-lo: rgba(74, 158, 112, 0.10);
+      --blue: #4A7C9B;
+      --blue-lo: rgba(74, 124, 155, 0.10);
+      --white: #ede8df;
+      --gray: #6b6b68;
+      --gray-hi: #9a9a96;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --r: 10px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--sans);
+      line-height: 1.7;
+      font-size: 15px;
+      min-height: 100vh;
+    }
+
+    /* ── cabeçalho fixo ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(25, 25, 23, 0.94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-line {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+
+    .brand-line em {
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .page-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+
+    .links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill-link {
+      text-decoration: none;
+      color: var(--gray-hi);
+      font-size: 12px;
+      border: 1px solid var(--border-hi);
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: transparent;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+
+    .pill-link:hover {
+      border-color: var(--amber);
+      color: var(--white);
+      background: var(--amber-lo);
+    }
+
+    .pill-link.notif-badge {
+      background: var(--amber-lo);
+      border-color: rgba(196, 98, 45, 0.25);
+      color: var(--amber);
+    }
+
+    /* ── conteúdo ── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .filter-btn,
+    .filter-input {
+      border: 1px solid var(--border-hi);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      background: var(--bg);
+      color: var(--gray-hi);
+      font-family: var(--sans);
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+
+    .filter-btn.active {
+      background: var(--amber-lo);
+      color: var(--amber);
+      border-color: var(--amber);
+    }
+
+    .filter-input {
+      min-width: 180px;
+      flex: 1;
+      color: var(--white);
+      outline: none;
+    }
+
+    .filter-input:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px var(--amber-lo);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px;
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stat-value {
+      font-family: var(--serif);
+      font-size: 28px;
+      color: var(--green);
+      margin-top: 6px;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      margin: 28px 0 12px;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      background: var(--bg-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .events-scroll {
+      max-height: 600px;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      background: var(--bg-card);
+    }
+
+    .event-row {
+      display: grid;
+      grid-template-columns: 150px 90px 220px 1fr 90px;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      align-items: center;
+    }
+
+    .event-row.header-row {
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gray);
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-family: var(--mono);
+    }
+
+    .badge.request {
+      background: var(--blue-lo);
+      color: var(--blue);
+    }
+
+    .badge.client {
+      background: var(--green-lo);
+      color: var(--green);
+    }
+
+    .badge.login,
+    .badge.logout {
+      background: var(--amber-lo);
+      color: var(--amber);
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--bg);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--white);
+    }
+
+    @media(max-width:860px) {
+      .event-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .event-row.header-row {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div>
+      <div class="brand-line">Olivia <em>×</em> <span style="color:var(--amber);">Governança</span></div>
+      <div class="page-title">Admin Activity</div>
+    </div>
+    <div class="links">
+      <a class="pill-link" href="/OliviaLegal/mode-select">Mode Select</a>
+      <a class="pill-link" href="/OliviaLegal/olivia.html">Workspace</a>
+      <a class="pill-link" href="/OliviaLegal/admin/users-ui">Users</a>
+      <a class="pill-link notif-badge" id="notifBadge" href="/OliviaLegal/mode-select">Notificações: 0</a>
+      <a class="pill-link" href="/OliviaLegal/logout">Logout</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="filters">
+      <button class="filter-btn active" data-type="" onclick="setType(this,'')">Tudo</button>
+      <button class="filter-btn" data-type="request" onclick="setType(this,'request')">Requests</button>
+      <button class="filter-btn" data-type="client" onclick="setType(this,'client')">Client</button>
+      <button class="filter-btn" data-type="login" onclick="setType(this,'login')">Login</button>
+      <button class="filter-btn" data-type="logout" onclick="setType(this,'logout')">Logout</button>
+      <input class="filter-input" id="userFilter" placeholder="email do usuário" oninput="debouncedLoad()">
+      <input class="filter-input" id="pageFilter" placeholder="filtrar por rota" oninput="debouncedLoad()">
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <h2 class="section-title">Usuários</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Views</th>
+            <th>Agent Qs</th>
+            <th>API Calls</th>
+            <th>Last Seen</th>
+          </tr>
+        </thead>
+        <tbody id="usersRows"></tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">Eventos recentes</h2>
+    <div class="events-scroll" id="events"></div>
+  </main>
+
+  <script>
+    let currentType = '';
+    let timer = null;
+
+    function setType(btn, type) {
+      currentType = type;
+      document.querySelectorAll('.filter-btn[data-type]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      load();
+    }
+
+    function debouncedLoad() {
+      clearTimeout(timer);
+      timer = setTimeout(load, 300);
+    }
+
+    function esc(v) {
+      const el = document.createElement('span');
+      el.textContent = String(v || '');
+      return el.innerHTML;
+    }
+
+    function fmtTime(iso) {
+      if (!iso) return '-';
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return iso;
+      return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    function load() {
+      const user = document.getElementById('userFilter').value.trim();
+      const page = document.getElementById('pageFilter').value.trim();
+      const qs = new URLSearchParams();
+      qs.set('limit', '500');
+      if (currentType) qs.set('type', currentType);
+      if (user) qs.set('user', user);
+      if (page) qs.set('page', page);
+
+      fetch('/OliviaLegal/admin/activity/api?' + qs.toString())
+        .then(r => r.json())
+        .then(render)
+        .catch(err => {
+          document.getElementById('events').innerHTML = '<div class="event-row">Erro ao carregar: ' + esc(err.message || err) + '</div>';
+        });
+    }
+
+    function render(payload) {
+      const summary = (payload && payload.summary) || {};
+      const users = summary.users || {};
+      const events = Array.isArray(payload && payload.events) ? payload.events : [];
+      const totalUsers = Object.keys(users).filter(Boolean).length;
+      const totalRequests = Number(summary.total_requests || 0);
+      const totalEvents = events.length;
+      const totalPages = Object.keys(summary.pages || {}).length;
+
+      document.getElementById('stats').innerHTML =
+        '<div class="stat-card"><div class="stat-label">Usuários ativos</div><div class="stat-value">' + totalUsers + '</div></div>' +
+        '<div class="stat-card"><div class="stat-label">Total requests</div><div class="stat-value">' + totalRequests + '</div></div>' +
+        '<div class="stat-card"><div class="stat-label">Rotas monitoradas</div><div class="stat-value">' + totalPages + '</div></div>' +
+        '<div class="stat-card"><div class="stat-label">Eventos retornados</div><div class="stat-value">' + totalEvents + '</div></div>';
+
+      const userRows = Object.entries(users).map(([email, row]) => {
+        return '<tr>' +
+          '<td><code>' + esc(email) + '</code></td>' +
+          '<td>' + Number(row.page_views || 0) + '</td>' +
+          '<td>' + Number(row.agent_questions || 0) + '</td>' +
+          '<td>' + Number(row.api_calls || 0) + '</td>' +
+          '<td>' + esc(fmtTime(row.last_seen)) + '</td>' +
+          '</tr>';
+      }).join('');
+      document.getElementById('usersRows').innerHTML = userRows || '<tr><td colspan="5">Sem dados</td></tr>';
+
+      let html = '<div class="event-row header-row"><span>Timestamp</span><span>Tipo</span><span>Usuário</span><span>Rota/Detalhe</span><span>Status</span></div>';
+      html += events.map(ev => {
+        const type = String(ev.type || 'request');
+        const detail = (typeof ev.detail === 'string') ? ev.detail : JSON.stringify(ev.detail || {});
+        const path = (ev.method ? ev.method + ' ' : '') + (ev.path || ev.page || '');
+        return '<div class="event-row">' +
+          '<span>' + esc(fmtTime(ev.timestamp)) + '</span>' +
+          '<span><span class="badge ' + esc(type) + '">' + esc(type) + '</span></span>' +
+          '<span><code>' + esc(ev.user_id || '-') + '</code></span>' +
+          '<span><div>' + esc(path) + '</div><div style="font-size:11px;color:var(--gray-hi)">' + esc(detail || '') + '</div></span>' +
+          '<span>' + esc(ev.status || '') + '</span>' +
+          '</div>';
+      }).join('');
+      document.getElementById('events').innerHTML = html;
+    }
+
+    async function loadNotifBadge() {
+      try {
+        const r = await fetch('/OliviaLegal/admin/notifications?unread=1&limit=1');
+        const d = await r.json();
+        const unread = Number(d.unread_count || 0);
+        const badge = document.getElementById('notifBadge');
+        if (badge) badge.textContent = 'Notificações: ' + unread;
+      } catch (_err) { }
+    }
+
+    load();
+    setInterval(load, 30000);
+    loadNotifBadge();
+    setInterval(loadNotifBadge, 30000);
+  </script>
+  <script src="/OliviaLegal/auth-activity/tracker.js"></script>
+</body>
+
+</html>

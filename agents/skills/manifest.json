@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "skills": [
+    {
+      "id": "code-generation",
+      "name": "Code Generation",
+      "description": "Generates clean, idiomatic Vue 3, JavaScript, and CSS code."
+    },
+    {
+      "id": "file-system",
+      "name": "File System",
+      "description": "Reads, writes, and manipulates files and directories."
+    },
+    {
+      "id": "refactoring",
+      "name": "Refactoring",
+      "description": "Restructures legacy code without changing its external behaviour."
+    },
+    {
+      "id": "testing",
+      "name": "Testing",
+      "description": "Writes and runs unit/integration tests using Vitest."
+    },
+    {
+      "id": "vite-builder",
+      "name": "Vite Builder",
+      "description": "Initialises Vite projects, installs dependencies, and runs dev/build commands."
+    },
+    {
+      "id": "vue3-migration",
+      "name": "Vue 3 Migration",
+      "description": "Refactors monolithic HTML/JS into Vue 3 components, composables, and Pinia stores."
+    },
+    {
+      "id": "frontend-design",
+      "name": "Frontend Design",
+      "description": "Designs and implements responsive, accessible frontend interfaces using modern web technologies."
+    }
+  ]
+}

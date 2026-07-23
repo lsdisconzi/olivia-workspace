@@ -1,0 +1,3 @@
+[submodule "pluggins/craudio"]
+	path = pluggins/craudio
+	url = https://github.com/lsdisconzi/craudio-para-adevogados.git

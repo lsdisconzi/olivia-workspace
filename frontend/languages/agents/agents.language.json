@@ -1,0 +1,464 @@
+{
+    "en": {
+        "olivia-coordinator": {
+            "name": "Olivia · Coordinator",
+            "description": "Administrative/program coordinator for the Olivia platform group. Owns policies, schemas, tool-permission bookkeeping, release notes, and artifact regeneration. Pairs with orchestrator-control-plane (runtime routing) — the coordinator handles governance, the orchestrator handles live task routing."
+        },
+        "olivia-discovery-intelligence": {
+            "name": "Olivia Discovery Intelligence Agent v2",
+            "description": "Full Descoberta specialist with proactive pipeline orchestration, structured outputs, and cross-agent handoff readiness."
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · Ecosystem Coordinator",
+            "description": "Guide to the Olivia AI Operating Environment. Explains the platform's philosophy, history, mission, use cases, funding, and core principles. Designed for onboarding, public-facing Q&A, and internal alignment. Not a technical orchestrator."
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "Frontend Migration Engineer",
+            "description": "Incrementally migrates the monolithic index.html codebase to a modular Vue 3 + Vite architecture (Olivia Workspace), following the migration plan in instructions.md."
+        },
+        "olivia-listening-operations": {
+            "name": "Olivia Listening Operations Agent",
+            "description": "Specialist for transcription, diarization, provider setup, and transcript analysis in Listening."
+        },
+        "olivia-memory-graph": {
+            "name": "Olivia Memory Graph Agent",
+            "description": "Specialist for Qdrant/Neo4j memory operations, ingestion, and retrieval workflows."
+        },
+        "olivia-qdrant-manager": {
+            "name": "Olivia Qdrant Manager Agent",
+            "description": "Specialist for deep Qdrant operations including collections, indexes, snapshots, and diagnostics."
+        },
+        "olivia-shaders-proactive": {
+            "name": "Olivia Shaders Agent v2",
+            "description": "Full-stack Shaders specialist for Olivia: scene gallery, preview controls, editor, brainstorm chat, imports/exports, and persistent implementation."
+        },
+        "olivia-studio-ui": {
+            "name": "Olivia Studio UI Agent",
+            "description": "Specialist for Studio code editing, multi‑file project sandbox, and AI‑assisted front‑end restructuring."
+        },
+        "orchestrator-control-plane": {
+            "name": "Olivia Control Plane Orchestrator",
+            "description": "Runtime routing and handoff coordinator for the Olivia platform group. Maintains task routing and cross-agent handoff orchestration."
+        }
+    },
+    "pt": {
+        "olivia-coordinator": {
+            "name": "Olivia · Coordenador",
+            "description": "Coordenador administrativo/programático para o grupo da plataforma Olivia. Gerencia políticas, esquemas, registro de permissões de ferramentas, notas de versão e regeneração de artefatos. Trabalha em par com o orchestrator-control-plane (roteamento em tempo de execução) — o coordenador trata da governança, o orquestrador trata do roteamento de tarefas ao vivo."
+        },
+        "olivia-discovery-intelligence": {
+            "name": "Agente de Inteligência de Descoberta Olivia v2",
+            "description": "Especialista completo em Descoberta com orquestração proativa de pipelines, saídas estruturadas e prontidão para transferência entre agentes."
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · Coordenador de Ecossistema",
+            "description": "Guia para o Ambiente Operacional de IA Olivia. Explica a filosofia, história, missão, casos de uso, financiamento e princípios fundamentais da plataforma. Projetado para integração, perguntas e respostas públicas e alinhamento interno. Não é um orquestrador técnico."
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "Engenheiro de Migração de Frontend",
+            "description": "Migra incrementalmente a base de código monolítica do index.html para uma arquitetura modular Vue 3 + Vite (Olivia Workspace), seguindo o plano de migração em instructions.md."
+        },
+        "olivia-listening-operations": {
+            "name": "Agente de Operações de Escuta Olivia",
+            "description": "Especialista em transcrição, diarização, configuração de provedor e análise de transcrições em Listening."
+        },
+        "olivia-memory-graph": {
+            "name": "Agente de Grafo de Memória Olivia",
+            "description": "Especialista em operações de memória vetorial e de grafo com Qdrant/Neo4j, incluindo ingestão e recuperação."
+        },
+        "olivia-qdrant-manager": {
+            "name": "Agente Gerenciador de Qdrant Olivia",
+            "description": "Especialista em operações avançadas de Qdrant, incluindo coleções, índices, snapshots e diagnósticos."
+        },
+        "olivia-shaders-proactive": {
+            "name": "Agente de Shaders Olivia v2",
+            "description": "Especialista completo em Shaders para Olivia: galeria de cenas, controles de visualização, editor, chat de brainstorming, importações/exportações e implementação persistente."
+        },
+        "olivia-studio-ui": {
+            "name": "Agente de Interface Studio Olivia",
+            "description": "Especialista em edição de código Studio, sandbox de projetos com múltiplos arquivos e reestruturação de front-end assistida por IA."
+        },
+        "orchestrator-control-plane": {
+            "name": "Orquestrador de Plano de Controle Olivia",
+            "description": "Coordenador de roteamento em tempo de execução e transferência para o grupo da plataforma Olivia. Mantém o roteamento de tarefas e a orquestração de transferência entre agentes."
+        }
+    },
+    "es": {
+        "olivia-coordinator": {
+            "name": "Olivia · Coordinador",
+            "description": "Coordinador administrativo/programático para el grupo de la plataforma Olivia. Gestiona políticas, esquemas, registro de permisos de herramientas, notas de versión y regeneración de artefactos. Se combina con orchestrator-control-plane (enrutamiento en tiempo de ejecución) — el coordinador se encarga de la gobernanza, el orquestador del enrutamiento de tareas en vivo."
+        },
+        "olivia-discovery-intelligence": {
+            "name": "Agente de Inteligencia de Descubrimiento Olivia v2",
+            "description": "Especialista completo en Descubrimiento con orquestación proactiva de pipelines, salidas estructuradas y preparación para transferencia entre agentes."
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · Coordinador de Ecosistema",
+            "description": "Guía para el Entorno Operativo de IA Olivia. Explica la filosofía, historia, misión, casos de uso, financiamiento y principios fundamentales de la plataforma. Diseñado para incorporación, preguntas y respuestas públicas y alineación interna. No es un orquestador técnico."
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "Ingeniero de Migración de Frontend",
+            "description": "Migra incrementalmente la base de código monolítica de index.html a una arquitectura modular Vue 3 + Vite (Olivia Workspace), siguiendo el plan de migración en instructions.md."
+        },
+        "olivia-listening-operations": {
+            "name": "Agente de Operaciones de Escucha Olivia",
+            "description": "Especialista en transcripción, diarización, configuración de proveedor y análisis de transcripciones en Listening."
+        },
+        "olivia-memory-graph": {
+            "name": "Agente de Grafo de Memoria Olivia",
+            "description": "Especialista en operaciones de memoria vectorial y de grafo con Qdrant/Neo4j, incluyendo ingestión y recuperación."
+        },
+        "olivia-qdrant-manager": {
+            "name": "Agente Gestor de Qdrant Olivia",
+            "description": "Especialista en operaciones avanzadas de Qdrant, incluyendo colecciones, índices, snapshots y diagnósticos."
+        },
+        "olivia-shaders-proactive": {
+            "name": "Agente de Shaders Olivia v2",
+            "description": "Especialista completo en Shaders para Olivia: galería de escenas, controles de previsualización, editor, chat de lluvia de ideas, importaciones/exportaciones e implementación persistente."
+        },
+        "olivia-studio-ui": {
+            "name": "Agente de Interfaz Studio Olivia",
+            "description": "Especialista en edición de código Studio, sandbox de proyectos con múltiples archivos y reestructuración de front-end asistida por IA."
+        },
+        "orchestrator-control-plane": {
+            "name": "Orquestador de Plano de Control Olivia",
+            "description": "Coordinador de enrutamiento en tiempo de ejecución y transferencia para el grupo de la plataforma Olivia. Mantiene el enrutamiento de tareas y la orquestación de transferencia entre agentes."
+        }
+    },
+    "fr": {
+        "olivia-coordinator": {
+            "name": "Olivia · Coordinateur",
+            "description": "Coordinateur administratif/programmatique pour le groupe de la plateforme Olivia. Gère les politiques, schémas, suivi des permissions d'outils, notes de version et régénération d'artefacts. Fonctionne en tandem avec orchestrator-control-plane (routage en temps d'exécution) — le coordinateur gère la gouvernance, l'orchestrateur gère le routage des tâches en direct."
+        },
+        "olivia-discovery-intelligence": {
+            "name": "Agent d'intelligence de découverte Olivia v2",
+            "description": "Spécialiste complet de la Découverte avec orchestration proactive de pipelines, sorties structurées et préparation à la transmission entre agents."
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · Coordinateur d'Écosystème",
+            "description": "Guide pour l'environnement opérationnel IA Olivia. Explique la philosophie, l'histoire, la mission, les cas d'utilisation, le financement et les principes fondamentaux de la plateforme. Conçu pour l'intégration, les Q&A publics et l'alignement interne. Pas un orchestrateur technique."
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "Ingénieur de migration front-end",
+            "description": "Migre progressivement la base de code monolithique index.html vers une architecture modulaire Vue 3 + Vite (Olivia Workspace), en suivant le plan de migration dans instructions.md."
+        },
+        "olivia-listening-operations": {
+            "name": "Agent d'opérations d'écoute Olivia",
+            "description": "Spécialiste en transcription, diarisation, configuration du fournisseur et analyse des transcriptions dans Listening."
+        },
+        "olivia-memory-graph": {
+            "name": "Agent de graphe de mémoire Olivia",
+            "description": "Spécialiste des opérations de mémoire vectorielle et graphe avec Qdrant/Neo4j, incluant l'ingestion et la récupération."
+        },
+        "olivia-qdrant-manager": {
+            "name": "Agent gestionnaire Qdrant Olivia",
+            "description": "Spécialiste des opérations avancées Qdrant, incluant collections, index, snapshots et diagnostics."
+        },
+        "olivia-shaders-proactive": {
+            "name": "Agent Shaders Olivia v2",
+            "description": "Spécialiste complet des Shaders pour Olivia : galerie de scènes, contrôles de prévisualisation, éditeur, chat de brainstorming, import/export et implémentation persistante."
+        },
+        "olivia-studio-ui": {
+            "name": "Agent d'interface Studio Olivia",
+            "description": "Spécialiste en édition de code Studio, sandbox de projets multi-fichiers et restructuration front-end assistée par IA."
+        },
+        "orchestrator-control-plane": {
+            "name": "Orchestrateur du plan de contrôle Olivia",
+            "description": "Coordinateur de routage en temps d'exécution et de transmission pour le groupe de la plateforme Olivia. Maintient le routage des tâches et l'orchestration de la transmission entre agents."
+        }
+    },
+    "de": {
+        "olivia-coordinator": {
+            "name": "Olivia · Koordinator",
+            "description": "Administrativer/programmatischer Koordinator für die Olivia-Plattformgruppe. Verantwortlich für Richtlinien, Schemas, Tool-Berechtigungsverwaltung, Versionshinweise und Artefaktregenerierung. Arbeitet mit orchestrator-control-plane (Laufzeitrouting) zusammen – der Koordinator übernimmt die Governance, der Orchestrator das Live-Task-Routing."
+        },
+        "olivia-discovery-intelligence": {
+            "name": "Olivia Discovery-Intelligenz-Agent v2",
+            "description": "Spezialist für Discovery mit proaktiver Pipeline-Orchestrierung, strukturierten Ausgaben und Bereitschaft für Agentenübergaben."
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · Ökosystem-Koordinator",
+            "description": "Leitfaden für die Olivia AI-Betriebsumgebung. Erläutert die Philosophie, Geschichte, Mission, Anwendungsfälle, Finanzierung und Kernprinzipien der Plattform. Entwickelt für Onboarding, öffentliche Q&A und interne Abstimmung. Kein technischer Orchestrator."
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "Frontend-Migrationsingenieur",
+            "description": "Migriert schrittweise die monolithische index.html-Codebasis zu einer modularen Vue 3 + Vite-Architektur (Olivia Workspace), gemäß dem Migrationsplan in instructions.md."
+        },
+        "olivia-listening-operations": {
+            "name": "Olivia Listening-Betriebs-Agent",
+            "description": "Spezialist für Transkription, Diarisierung, Provider-Einrichtung und Transkriptanalyse in Listening."
+        },
+        "olivia-memory-graph": {
+            "name": "Olivia Speicher-Graph-Agent",
+            "description": "Spezialist für Qdrant/Neo4j-Speicheroperationen, Aufnahme und Abruf."
+        },
+        "olivia-qdrant-manager": {
+            "name": "Olivia Qdrant-Manager-Agent",
+            "description": "Spezialist für fortgeschrittene Qdrant-Operationen einschließlich Collections, Indizes, Snapshots und Diagnostik."
+        },
+        "olivia-shaders-proactive": {
+            "name": "Olivia Shaders Agent v2",
+            "description": "Full-Stack-Shaders-Spezialist für Olivia: Szenengalerie, Vorschau-Steuerelemente, Editor, Brainstorming-Chat, Importe/Exporte und persistente Implementierung."
+        },
+        "olivia-studio-ui": {
+            "name": "Olivia Studio-Benutzeroberflächen-Agent",
+            "description": "Spezialist für Studio-Codebearbeitung, Multi-Datei-Projekt-Sandbox und KI-gestützte Frontend-Restrukturierung."
+        },
+        "orchestrator-control-plane": {
+            "name": "Olivia Control-Plane-Orchestrator",
+            "description": "Laufzeit-Routing- und Übergabe-Koordinator für die Olivia-Plattformgruppe. Verwaltet Aufgaben-Routing und agentenübergreifende Übergabe-Orchestrierung."
+        }
+    },
+    "it": {
+        "olivia-coordinator": {
+            "name": "Olivia · Coordinatore",
+            "description": "Coordinatore amministrativo/programmatico per il gruppo della piattaforma Olivia. Gestisce policy, schemi, registrazione delle autorizzazioni degli strumenti, note di rilascio e rigenerazione degli artefatti. Lavora in coppia con orchestrator-control-plane (routing in esecuzione) — il coordinatore si occupa della governance, l'orchestratore del routing dei compiti in tempo reale."
+        },
+        "olivia-discovery-intelligence": {
+            "name": "Agente di Intelligenza di Scoperta Olivia v2",
+            "description": "Specialista completo di Scoperta con orchestrazione proattiva di pipeline, output strutturati e prontezza per il passaggio tra agenti."
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · Coordinatore dell'Ecosistema",
+            "description": "Guida all'Ambiente Operativo IA Olivia. Spiega la filosofia, la storia, la missione, i casi d'uso, i finanziamenti e i principi fondamentali della piattaforma. Progettato per l'onboarding, le domande e risposte pubbliche e l'allineamento interno. Non è un orchestratore tecnico."
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "Ingegnere di Migrazione Frontend",
+            "description": "Migra incrementalmente la base di codice monolitica di index.html a un'architettura modulare Vue 3 + Vite (Olivia Workspace), seguendo il piano di migrazione in instructions.md."
+        },
+        "olivia-listening-operations": {
+            "name": "Agente di Operazioni di Ascolto Olivia",
+            "description": "Specialista in trascrizione, diarizzazione, configurazione del provider e analisi delle trascrizioni in Listening."
+        },
+        "olivia-memory-graph": {
+            "name": "Agente di Grafo della Memoria Olivia",
+            "description": "Specialista in operazioni di memoria vettoriale e a grafo con Qdrant/Neo4j, inclusi inserimento e recupero."
+        },
+        "olivia-qdrant-manager": {
+            "name": "Agente Gestore di Qdrant Olivia",
+            "description": "Specialista in operazioni avanzate di Qdrant, inclusi collezioni, indici, snapshot e diagnostica."
+        },
+        "olivia-shaders-proactive": {
+            "name": "Agente Shaders Olivia v2",
+            "description": "Specialista completo di Shaders per Olivia: galleria di scene, controlli di anteprima, editor, chat di brainstorming, import/export e implementazione persistente."
+        },
+        "olivia-studio-ui": {
+            "name": "Agente Interfaccia Studio Olivia",
+            "description": "Specialista in modifica del codice Studio, sandbox di progetti multi-file e ristrutturazione front-end assistita da IA."
+        },
+        "orchestrator-control-plane": {
+            "name": "Orchestratore del Piano di Controllo Olivia",
+            "description": "Coordinatore di routing in esecuzione e passaggio per il gruppo della piattaforma Olivia. Mantiene il routing dei compiti e l'orchestrazione del passaggio tra agenti."
+        }
+    },
+    "el": {
+        "olivia-coordinator": {
+            "name": "Olivia · Συντονιστής",
+            "description": "Διοικητικός/προγραμματικός συντονιστής για την ομάδα της πλατφόρμας Olivia. Διαχειρίζεται πολιτικές, σχήματα, καταγραφή αδειών εργαλείων, σημειώσεις έκδοσης και αναγέννηση τεχνουργημάτων. Συνεργάζεται με τον orchestrator-control-plane (δρομολόγηση κατά την εκτέλεση) — ο συντονιστής ασχολείται με τη διακυβέρνηση, ο orchestrator με τη δρομολόγηση ζωντανών εργασιών."
+        },
+        "olivia-discovery-intelligence": {
+            "name": "Πράκτορας Ευφυούς Ανακάλυψης Olivia v2",
+            "description": "Ειδικός πλήρους φάσματος στην Ανακάλυψη με προληπτική ενορχήστρωση σωλήνων, δομημένες εξόδους και ετοιμότητα για παράδοση μεταξύ πρακτόρων."
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · Συντονιστής Οικοσυστήματος",
+            "description": "Οδηγός για το Λειτουργικό Περιβάλλον ΤΝ Olivia. Εξηγεί τη φιλοσοφία, την ιστορία, την αποστολή, τις περιπτώσεις χρήσης, τη χρηματοδότηση και τις βασικές αρχές της πλατφόρμας. Σχεδιασμένος για ενσωμάτωση, δημόσιες ερωτήσεις/απαντήσεις και εσωτερική ευθυγράμμιση. Δεν είναι τεχνικός ενορχηστρωτής."
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "Μηχανικός Μετεγκατάστασης Frontend",
+            "description": "Μετεγκαθιστά σταδιακά τη μονολιθική βάση κώδικα index.html σε μια αρθρωτή αρχιτεκτονική Vue 3 + Vite (Olivia Workspace), ακολουθώντας το σχέδιο μετεγκατάστασης στο instructions.md."
+        },
+        "olivia-listening-operations": {
+            "name": "Πράκτορας Επιχειρήσεων Ακρόασης Olivia",
+            "description": "Ειδικός σε μεταγραφή, διαχωρισμό ομιλητών, ρύθμιση παρόχου και ανάλυση μεταγραφών στο Listening."
+        },
+        "olivia-memory-graph": {
+            "name": "Πράκτορας Γράφου Μνήμης Olivia",
+            "description": "Ειδικός σε λειτουργίες μνήμης διανυσμάτων και γράφου με Qdrant/Neo4j, συμπεριλαμβανομένων εισαγωγής και ανάκτησης."
+        },
+        "olivia-qdrant-manager": {
+            "name": "Πράκτορας Διαχείρισης Qdrant Olivia",
+            "description": "Ειδικός σε προχωρημένες λειτουργίες Qdrant, συμπεριλαμβανομένων συλλογών, δεικτών, στιγμιότυπων και διαγνωστικών."
+        },
+        "olivia-shaders-proactive": {
+            "name": "Πράκτορας Shaders Olivia v2",
+            "description": "Ειδικός πλήρους φάσματος σε Shaders για την Olivia: γκαλερί σκηνών, έλεγχοι προεπισκόπησης, επεξεργαστής, διάλογος καταιγισμού ιδεών, εισαγωγές/εξαγωγές και επίμονη υλοποίηση."
+        },
+        "olivia-studio-ui": {
+            "name": "Πράκτορας Διεπαφής Studio Olivia",
+            "description": "Ειδικός σε επεξεργασία κώδικα Studio, sandbox πολυ-αρχείων έργων και αναδιάρθρωση front-end με υποβοήθηση ΤΝ."
+        },
+        "orchestrator-control-plane": {
+            "name": "Ενορχηστρωτής Επιπέδου Ελέγχου Olivia",
+            "description": "Συντονιστής δρομολόγησης κατά την εκτέλεση και παράδοσης για την ομάδα της πλατφόρμας Olivia. Διατηρεί τη δρομολόγηση εργασιών και την ενορχήστρωση παράδοσης μεταξύ πρακτόρων."
+        }
+    },
+    "pl": {
+        "olivia-coordinator": {
+            "name": "Olivia · Koordynator",
+            "description": "Koordynator administracyjno-programowy dla grupy platformy Olivia. Zarządza politykami, schematami, ewidencją uprawnień narzędzi, notatkami o wydaniach i regeneracją artefaktów. Współpracuje z orchestrator-control-plane (kierowanie w czasie rzeczywistym) — koordynator odpowiada za zarządzanie, a orkiestrator za kierowanie zadań na żywo."
+        },
+        "olivia-discovery-intelligence": {
+            "name": "Agent Inteligencji Odkrywania Olivia v2",
+            "description": "Specjalista pełny w zakresie Odkrywania z proaktywną orkiestracją potoków, ustrukturyzowanymi wynikami i gotowością do przekazywania między agentami."
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · Koordynator Ekosystemu",
+            "description": "Przewodnik po Środowisku Operacyjnym AI Olivia. Wyjaśnia filozofię, historię, misję, przypadki użycia, finansowanie i podstawowe zasady platformy. Zaprojektowany do wdrażania, publicznych pytań i odpowiedzi oraz wewnętrznego dostosowania. Nie jest technicznym orkiestratorem."
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "Inżynier Migracji Frontendu",
+            "description": "Stopniowo migruje monolityczną bazę kodu index.html do modułowej architektury Vue 3 + Vite (Olivia Workspace), zgodnie z planem migracji w instructions.md."
+        },
+        "olivia-listening-operations": {
+            "name": "Agent Operacji Słuchania Olivia",
+            "description": "Specjalista ds. transkrypcji, diaryzacji, konfiguracji dostawcy i analizy transkrypcji w Listening."
+        },
+        "olivia-memory-graph": {
+            "name": "Agent Grafu Pamięci Olivia",
+            "description": "Specjalista ds. operacji pamięci wektorowej i grafowej z Qdrant/Neo4j, w tym wprowadzania i odzyskiwania."
+        },
+        "olivia-qdrant-manager": {
+            "name": "Agent Zarządzający Qdrant Olivia",
+            "description": "Specjalista ds. zaawansowanych operacji Qdrant, w tym kolekcji, indeksów, snapshotów i diagnostyki."
+        },
+        "olivia-shaders-proactive": {
+            "name": "Agent Shaders Olivia v2",
+            "description": "Specjalista pełny Shaders dla Olivia: galeria scen, kontrolki podglądu, edytor, czat burzy mózgów, import/eksport i trwała implementacja."
+        },
+        "olivia-studio-ui": {
+            "name": "Agent Interfejsu Studio Olivia",
+            "description": "Specjalista ds. edycji kodu Studio, piaskownicy projektów z wieloma plikami i restrukturyzacji front-endu wspomaganej przez AI."
+        },
+        "orchestrator-control-plane": {
+            "name": "Orkiestrator Planu Kontroli Olivia",
+            "description": "Koordynator kierowania w czasie rzeczywistym i przekazywania dla grupy platformy Olivia. Utrzymuje kierowanie zadań i orkiestrację przekazywania między agentami."
+        }
+    },
+    "sq": {
+        "olivia-coordinator": {
+            "name": "Olivia · Koordinator",
+            "description": "Koordinator administrativ/programatik për grupin e platformës Olivia. Menaxhon politikat, skemat, regjistrimin e lejeve të mjeteve, shënimet e lëshimit dhe rigjenerimin e artefakteve. Punon së bashku me orchestrator-control-plane (routing në kohë ekzekutimi) — koordinatori merret me qeverisjen, orkestruesi me routing-in e detyrave të drejtpërdrejta."
+        },
+        "olivia-discovery-intelligence": {
+            "name": "Agjent i Inteligjencës së Zbulimit Olivia v2",
+            "description": "Specialist i plotë i Zbulimit me orkestrim proaktiv të tubacioneve, rezultate të strukturuara dhe gatishmëri për transferim ndër-agjent."
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · Koordinator i Ekosistemit",
+            "description": "Udhëzues për Mjedisin Operativ të AI Olivia. Shpjegon filozofinë, historinë, misionin, rastet e përdorimit, financimin dhe parimet kryesore të platformës. Projektuar për onboarding, pyetje-përgjigje publike dhe harmonizim të brendshëm. Nuk është orkestrues teknik."
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "Inxhinier Migrimi i Frontend-it",
+            "description": "Migron në mënyrë graduale kodin monolit të index.html në një arkitekturë modulare Vue 3 + Vite (Olivia Workspace), duke ndjekur planin e migrimit në instructions.md."
+        },
+        "olivia-listening-operations": {
+            "name": "Agjent Operacionesh Dëgjimi Olivia",
+            "description": "Specialist për transkriptim, ndarje folësish, konfigurim ofruesi dhe analizë transkriptesh në Listening."
+        },
+        "olivia-memory-graph": {
+            "name": "Agjent i Grafikut të Kujtesës Olivia",
+            "description": "Specialist në operacione kujtese vektoriale dhe grafike me Qdrant/Neo4j, përfshirë futjen dhe rikthimin."
+        },
+        "olivia-qdrant-manager": {
+            "name": "Agjent Menaxhues Qdrant Olivia",
+            "description": "Specialist në operacione të avancuara Qdrant, përfshirë koleksione, indekse, snapshot-e dhe diagnostikë."
+        },
+        "olivia-shaders-proactive": {
+            "name": "Agjent Shaders Olivia v2",
+            "description": "Specialist i plotë i Shaders për Olivia: galeri skenash, kontrolle parapamjeje, redaktues, chat brainstorming, import/eksport dhe zbatim i qëndrueshëm."
+        },
+        "olivia-studio-ui": {
+            "name": "Agjent i Ndërfaqes Studio Olivia",
+            "description": "Specialist në redaktimin e kodit Studio, sandbox projektesh me shumë skedarë dhe ristrukturim front-end i ndihmuar nga AI."
+        },
+        "orchestrator-control-plane": {
+            "name": "Orkestrues i Planit të Kontrollit Olivia",
+            "description": "Koordinator i routing-ut në kohë ekzekutimi dhe i transferimit për grupin e platformës Olivia. Mban routing-un e detyrave dhe orkestrimin e transferimit ndër-agjent."
+        }
+    },
+    "cs": {
+        "olivia-coordinator": {
+            "name": "Olivia · Koordinátor",
+            "description": "Administrativní/programový koordinátor pro skupinu platformy Olivia. Spravuje politiky, schémata, evidenci oprávnění nástrojů, poznámky k vydání a regeneraci artefaktů. Spolupracuje s orchestrator-control-plane (směrování za běhu) — koordinátor se stará o správu, orchestrátor o směrování živých úloh."
+        },
+        "olivia-discovery-intelligence": {
+            "name": "Agent Inteligence Objevování Olivia v2",
+            "description": "Specialista na Objevování s proaktivní orchestrací pipeline, strukturovanými výstupy a připraveností na předávání mezi agenty."
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · Koordinátor Ekosystému",
+            "description": "Průvodce provozním prostředím AI Olivia. Vysvětluje filozofii, historii, poslání, případy použití, financování a základní principy platformy. Navržen pro onboarding, veřejné dotazy a odpovědi a vnitřní sladění. Není technickým orchestrátorem."
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "Inženýr migrace frontendu",
+            "description": "Postupně migruje monolitickou základnu kódu index.html na modulární architekturu Vue 3 + Vite (Olivia Workspace) podle plánu migrace v instructions.md."
+        },
+        "olivia-listening-operations": {
+            "name": "Agent Operací Poslechu Olivia",
+            "description": "Specialista na přepis, diarizaci, nastavení poskytovatele a analýzu přepisů v Listening."
+        },
+        "olivia-memory-graph": {
+            "name": "Agent Grafu Paměti Olivia",
+            "description": "Specialista na operace vektorové a grafové paměti s Qdrant/Neo4j, včetně ingestování a vyhledávání."
+        },
+        "olivia-qdrant-manager": {
+            "name": "Agent Správce Qdrant Olivia",
+            "description": "Specialista na pokročilé operace Qdrant, včetně kolekcí, indexů, snapshotů a diagnostiky."
+        },
+        "olivia-shaders-proactive": {
+            "name": "Agent Shaders Olivia v2",
+            "description": "Specialista na Shaders pro Olivia: galerie scén, ovládací prvky náhledu, editor, chat pro brainstorming, import/export a trvalou implementaci."
+        },
+        "olivia-studio-ui": {
+            "name": "Agent Uživatelského Rozhraní Studio Olivia",
+            "description": "Specialista na úpravy kódu Studio, sandbox projektu s více soubory a restrukturalizaci front-endu s podporou AI."
+        },
+        "orchestrator-control-plane": {
+            "name": "Orchestrátor Řídicí Roviny Olivia",
+            "description": "Koordinátor směrování za běhu a předávání pro skupinu platformy Olivia. Udržuje směrování úloh a orchestrací předávání mezi agenty."
+        }
+    },
+    "th": {
+        "olivia-coordinator": {
+            "name": "Olivia · ผู้ประสานงาน",
+            "description": "ผู้ประสานงานด้านการบริหาร/โปรแกรมสำหรับกลุ่มแพลตฟอร์ม Olivia รับผิดชอบนโยบาย โครงร่าง การบันทึกสิทธิ์เครื่องมือ บันทึกการเผยแพร่ และการสร้างอาร์ติแฟกต์ใหม่ ทำงานร่วมกับ orchestrator-control-plane (การกำหนดเส้นทางขณะทำงาน) — ผู้ประสานงานจัดการด้านธรรมาภิบาล ส่วนผู้จัดลำดับจัดการการกำหนดเส้นทางงานสด"
+        },
+        "olivia-discovery-intelligence": {
+            "name": "เอเจนต์ข่าวกรองการค้นพบ Olivia v2",
+            "description": "ผู้เชี่ยวชาญด้านการค้นพบแบบครบวงจรพร้อมการจัดลำดับไปป์ไลน์เชิงรุก ผลลัพธ์ที่มีโครงสร้าง และความพร้อมในการส่งต่อระหว่างเอเจนต์"
+        },
+        "olivia-ecosystem-coordinator": {
+            "name": "Olivia · ผู้ประสานงานระบบนิเวศ",
+            "description": "คู่มือสำหรับสภาพแวดล้อมการทำงานของ AI Olivia อธิบายปรัชญา ประวัติ ภารกิจ กรณีการใช้งาน เงินทุน และหลักการสำคัญของแพลตฟอร์ม ออกแบบมาเพื่อการเริ่มต้นใช้งาน การถาม-ตอบสาธารณะ และการประสานภายใน ไม่ใช่ผู้จัดลำดับทางเทคนิค"
+        },
+        "olivia-frontend-migration-engineer": {
+            "name": "วิศวกรการย้ายระบบส่วนหน้า",
+            "description": "ย้ายฐานโค้ด index.html แบบโมโนลิธิกไปยังสถาปัตยกรรม Vue 3 + Vite แบบโมดูลาร์ (Olivia Workspace) ตามแผนการย้ายใน instructions.md"
+        },
+        "olivia-listening-operations": {
+            "name": "เอเจนต์ปฏิบัติการฟัง Olivia",
+            "description": "ผู้เชี่ยวชาญด้านการถอดเสียง การแยกผู้พูด การตั้งค่าผู้ให้บริการ และการวิเคราะห์การถอดเสียงใน Listening"
+        },
+        "olivia-memory-graph": {
+            "name": "เอเจนต์กราฟหน่วยความจำ Olivia",
+            "description": "ผู้เชี่ยวชาญด้านการดำเนินการหน่วยความจำเวกเตอร์และกราฟด้วย Qdrant/Neo4j รวมถึงการนำเข้าและค้นคืน"
+        },
+        "olivia-qdrant-manager": {
+            "name": "เอเจนต์จัดการ Qdrant Olivia",
+            "description": "ผู้เชี่ยวชาญด้านการดำเนินการ Qdrant ขั้นสูง รวมถึงคอลเลกชัน ดัชนี ภาพรวม และการวินิจฉัย"
+        },
+        "olivia-shaders-proactive": {
+            "name": "เอเจนต์ Shaders Olivia v2",
+            "description": "ผู้เชี่ยวชาญ Shaders แบบครบวงจรสำหรับ Olivia: แกลเลอรีฉาก ตัวควบคุมตัวอย่าง โปรแกรมแก้ไข แชทระดมความคิด การนำเข้า/ส่งออก และการใช้งานแบบคงอยู่"
+        },
+        "olivia-studio-ui": {
+            "name": "เอเจนต์อินเทอร์เฟซ Studio Olivia",
+            "description": "ผู้เชี่ยวชาญด้านการแก้ไขโค้ด Studio, แซนด์บ็อกซ์โปรเจกต์หลายไฟล์ และการปรับโครงสร้างส่วนหน้าโดยใช้ AI ช่วย"
+        },
+        "orchestrator-control-plane": {
+            "name": "ผู้จัดลำดับระนาบควบคุม Olivia",
+            "description": "ผู้ประสานงานการกำหนดเส้นทางขณะทำงานและการส่งต่อสำหรับกลุ่มแพลตฟอร์ม Olivia รักษาการกำหนดเส้นทางงานและการจัดลำดับการส่งต่อระหว่างเอเจนต์"
+        }
+    }
+}

@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Olivia Workspace · Complete Feature Guide — Both Sides</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%237FA98E'/><g transform='translate(6,7) scale(0.31)'><path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23FAF6EF' stroke-width='2.6' stroke-linecap='round' opacity='.75'/><ellipse cx='22' cy='42' rx='4.4' ry='5.5' fill='%23D98A5E'/></g></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ══════════════════════════════════════════════════════════════
+           OLIVIA · FEATURE GUIDE — pastel token system (shared brand)
+           ══════════════════════════════════════════════════════════════ */
+        :root {
+            --white: #FAF6EF;
+            --paper: #FFFFFF;
+            --cream: #F2ECDE;
+            --black: #34302A;
+            --green-dark: #3F6152;
+            --green-mid: #7FA98E;
+            --green-light: #A9CBB7;
+            --amber: #D98A5E;
+            --amber-light: #E7A67D;
+            --golden: #D6B87A;
+            --gray: #ADA396;
+            --gray-hi: #6B6458;
+            --color-text-primary: var(--black);
+            --color-text-secondary: var(--gray-hi);
+            --color-text-tertiary: var(--gray);
+            --color-border-light: rgba(63, 97, 82, .12);
+            --color-border-medium: rgba(63, 97, 82, .20);
+            --color-border-strong: rgba(63, 97, 82, .30);
+            --font-serif: 'Fraunces', Georgia, serif;
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition: .35s cubic-bezier(.4, 0, .2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-sans);
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.65;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; text-decoration: none; }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+        /* ── Rail ── */
+        .rail { position: fixed; left: 20px; top: 0; bottom: 0; width: 1px; z-index: 5; pointer-events: none; }
+        .rail::before {
+            content: ''; position: absolute; left: 0; top: 64px; bottom: 64px; width: 1px;
+            background: linear-gradient(var(--green-mid), var(--color-border-light) 40%, var(--color-border-light) 60%, var(--amber)); opacity: .4;
+        }
+        .rail .dot { position: absolute; left: -2.5px; width: 6px; height: 6px; border-radius: 50%; }
+        .rail .dot.top { top: 60px; background: var(--green-mid); }
+        .rail .dot.bottom { bottom: 60px; background: var(--amber); }
+        @media (max-width: 900px) { .rail { display: none; } }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.2rem 2.6rem; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            background: color-mix(in srgb, var(--white) 80%, transparent); border-bottom: 1px solid transparent; transition: border-color var(--transition);
+        }
+        nav.scrolled { border-bottom-color: var(--color-border-light); }
+        .logo { display: flex; align-items: baseline; gap: .5rem; font-family: var(--font-serif); font-size: 1.22rem; font-weight: 500; color: var(--green-dark); letter-spacing: -0.01em; }
+        .logo .tag { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .16em; color: var(--gray); text-transform: uppercase; font-weight: 400; }
+        .nav-links { display: flex; align-items: center; gap: 1.3rem; flex-wrap: wrap; }
+        .nav-links a { font-size: .8rem; color: var(--color-text-secondary); transition: color var(--transition); font-weight: 500; white-space: nowrap; }
+        .nav-links a:hover { color: var(--amber); }
+        .agent-badge {
+            display: inline-flex; align-items: center; gap: .4rem; font-size: .7rem; font-family: var(--font-mono);
+            letter-spacing: .04em; padding: .38rem .8rem; border-radius: 2rem;
+            border: 1px solid var(--color-border-medium); color: var(--color-text-secondary); background: var(--paper); cursor: default; white-space: nowrap;
+        }
+        .agent-badge .d { width: 5px; height: 5px; border-radius: 50%; background: var(--amber); animation: subtle-pulse 2s ease-in-out infinite; }
+        @media (max-width: 940px) {
+            .nav-links a:not(.agent-badge) { display: none; } nav { padding: 1rem 1.4rem; }
+        }
+
+        /* ── Hero ── */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 7rem 6vw 3rem; text-align: center; position: relative; }
+        .hero-kicker { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--amber); margin-bottom: 2rem; }
+        .stage-view { position: relative; width: 280px; height: 280px; }
+        .morph-scene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .85s ease, transform .85s ease; transform: scale(.94); pointer-events: none; }
+        .morph-scene.active { opacity: 1; transform: scale(1); pointer-events: auto; }
+        .morph-label { font-family: var(--font-serif); font-size: 1.65rem; font-weight: 400; color: var(--color-text-primary); margin-top: .5rem; transition: opacity .35s; letter-spacing: -0.01em; }
+        .morph-sub { font-family: var(--font-sans); font-size: .88rem; color: var(--color-text-tertiary); max-width: 480px; line-height: 1.6; min-height: 42px; margin-top: .4rem; transition: opacity .35s; }
+        .pills { display: flex; gap: .45rem; justify-content: center; flex-wrap: wrap; margin-top: 1.6rem; }
+        .pill {
+            font-family: var(--font-sans); font-size: .74rem; font-weight: 500; padding: .5rem 1.1rem; border-radius: 20px;
+            border: 1px solid var(--color-border-light); background: var(--paper); color: var(--color-text-secondary);
+            cursor: pointer; transition: all var(--transition); display: inline-flex; align-items: center; gap: .4rem;
+        }
+        .pill:hover { border-color: var(--color-border-medium); color: var(--color-text-primary); }
+        .pill.active { background: var(--green-dark); border-color: var(--green-dark); color: var(--white); }
+        .pill i { font-size: .68rem; }
+        .compose-mock {
+            margin-top: 2.8rem; display: flex; align-items: center; gap: .6rem; width: min(460px, 88vw);
+            background: var(--paper); border: 1px solid var(--color-border-light); border-radius: 2rem;
+            padding: .45rem .55rem .45rem 1.2rem; box-shadow: 0 10px 28px rgba(63, 97, 82, .08);
+            cursor: pointer; transition: all var(--transition);
+        }
+        .compose-mock:hover { border-color: var(--color-border-medium); box-shadow: 0 14px 34px rgba(63, 97, 82, .13); transform: translateY(-1px); }
+        .compose-mock span { flex: 1; text-align: left; font-size: .82rem; color: var(--color-text-tertiary); }
+        .compose-mock .send-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--amber); color: #fff; display: grid; place-items: center; cursor: pointer; transition: all var(--transition); flex-shrink: 0; }
+        .compose-mock:hover .send-btn { background: var(--amber-light); transform: translateY(-1px); }
+        .compose-mock .send-btn i { font-size: .72rem; }
+        .scroll-hint { margin-top: 3rem; font-family: var(--font-mono); font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: var(--color-text-tertiary); opacity: .65; animation: subtle-pulse 2.5s ease-in-out infinite; }
+
+        /* ── Reveal ── */
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity .8s ease, transform .8s cubic-bezier(.4, 0, .2, 1); }
+        .reveal.in { opacity: 1; transform: translateY(0); }
+
+        /* ── Sections ── */
+        section.quiet { padding: 5.5rem 6vw; max-width: 720px; margin: 0 auto; }
+        section.quiet+section.quiet { border-top: 1px solid var(--color-border-light); }
+        section.wide { padding: 5.5rem 6vw; max-width: 1080px; margin: 0 auto; }
+        section.wide+section.wide { border-top: 1px solid var(--color-border-light); }
+        section.quiet+section.wide, section.wide+section.quiet { border-top: 1px solid var(--color-border-light); }
+        .kicker { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .16em; text-transform: uppercase; color: var(--amber); margin-bottom: 1.1rem; display: block; }
+        h2 { font-family: var(--font-serif); font-weight: 400; font-size: clamp(1.7rem, 3vw, 2.3rem); color: var(--green-dark); line-height: 1.22; max-width: 22ch; letter-spacing: -0.015em; }
+        h2 em { font-style: italic; color: var(--amber); font-weight: 300; }
+        .lede { margin-top: 1.1rem; font-size: .98rem; color: var(--color-text-secondary); max-width: 58ch; line-height: 1.75; }
+        .quote {
+            font-family: var(--font-serif); font-style: italic; font-size: 1.15rem; line-height: 1.6; color: var(--green-dark);
+            border-left: 2px solid var(--amber); padding-left: 1.3rem; margin: 1.8rem 0; max-width: 50ch;
+        }
+        .flow { display: flex; flex-wrap: wrap; gap: .4rem 0; align-items: center; font-family: var(--font-mono); font-size: .74rem; color: var(--color-text-tertiary); margin-top: 1.6rem; letter-spacing: .02em; }
+        .flow span:not(.arrow) { color: var(--green-dark); }
+        .flow .arrow { color: var(--amber); margin: 0 .55rem; }
+        .wide-pills { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1.8rem; }
+        .principle-list { list-style: none; margin-top: 1.8rem; }
+        .principle-list li { display: grid; grid-template-columns: 2.2rem 1fr; gap: .6rem; padding: 1rem 0; border-top: 1px solid var(--color-border-light); font-size: .92rem; color: var(--color-text-secondary); }
+        .principle-list li:last-child { border-bottom: 1px solid var(--color-border-light); }
+        .principle-list .n { font-family: var(--font-mono); font-size: .72rem; color: var(--amber); padding-top: .15rem; }
+        .principle-list strong { color: var(--green-dark); font-weight: 600; }
+        .wm { display: flex; align-items: baseline; gap: .5rem; margin-top: 2.4rem; }
+        .wm-n { font-family: var(--font-serif); font-size: 1.15rem; color: var(--green-dark); letter-spacing: -0.01em; }
+        .wm-s { font-family: var(--font-mono); font-size: .6rem; color: var(--gray); letter-spacing: .1em; text-transform: uppercase; }
+
+        /* ── Feature grid + double-sided (flip) cards ── */
+        .feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.4rem; margin-top: 2rem; }
+
+        .feat-card {
+            position: relative; perspective: 1600px; height: 100%; min-height: 320px; cursor: pointer;
+            transition: transform var(--transition);
+        }
+        .feat-card:hover { transform: translateY(-2px); }
+        .feat-card:focus-visible { outline: 2px solid var(--amber); outline-offset: 4px; border-radius: 16px; }
+        .feat-card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform .7s cubic-bezier(.4, 0, .2, 1); transform-style: preserve-3d;
+        }
+        .feat-card.flipped .feat-card-inner { transform: rotateY(180deg); }
+
+        .feat-face {
+            position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            background: var(--paper); border: 1px solid var(--color-border-light); border-radius: 14px;
+            padding: 1.4rem 1.35rem 1.2rem; display: flex; flex-direction: column; gap: .7rem;
+            overflow: hidden;
+            transition: box-shadow var(--transition), border-color var(--transition);
+            -webkit-mask-image: linear-gradient(180deg, #000 86%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 86%, transparent 100%);
+        }
+        .feat-card:hover .feat-face { box-shadow: 0 12px 32px rgba(63, 97, 82, .08); border-color: var(--color-border-medium); }
+        .feat-face-back { transform: rotateY(180deg); }
+
+        .feat-card h3 { font-family: var(--font-serif); font-size: 1.05rem; font-weight: 500; color: var(--green-dark); letter-spacing: -0.01em; line-height: 1.25; }
+        .feat-card .desc { font-size: .8rem; color: var(--color-text-secondary); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .feat-card ul { list-style: none; margin-top: .2rem; display: flex; flex-direction: column; gap: .3rem; }
+        .feat-card li { font-size: .76rem; color: var(--color-text-secondary); display: flex; align-items: baseline; gap: .45rem; line-height: 1.4; }
+        .feat-card li .icon { color: var(--amber); font-size: .68rem; width: 1.1rem; text-align: center; flex-shrink: 0; }
+        .feat-card .chip {
+            font-family: var(--font-mono); font-size: .58rem; letter-spacing: .05em; text-transform: uppercase;
+            color: var(--amber); background: rgba(217, 138, 94, .08); padding: .2rem .65rem; border-radius: 20px; align-self: flex-start;
+        }
+        .feat-card .chip.chip-real { color: var(--green-dark); background: rgba(63, 97, 82, .09); }
+
+        .role-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: auto; }
+        .role-tag {
+            font-family: var(--font-mono); font-size: .58rem; letter-spacing: .04em; text-transform: uppercase;
+            color: var(--green-dark); background: rgba(127, 169, 142, .18); border: 1px solid var(--color-border-light);
+            padding: .22rem .6rem; border-radius: 20px; white-space: nowrap;
+        }
+
+        .flip-hint {
+            margin-top: auto; font-family: var(--font-mono); font-size: .58rem; letter-spacing: .03em; color: var(--gray);
+            display: flex; align-items: center; gap: .4rem; opacity: .85;
+        }
+        .flip-hint i { color: var(--amber); font-size: .62rem; }
+        .feat-face-back .flip-hint i { color: var(--green-mid); }
+        .feat-face:not(.feat-face-back) .role-tags,
+        .feat-face-back ul { display: none; }
+
+        /* ── How-to / legend section ── */
+        .flip-legend { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; margin-top: 1.6rem; }
+        .flip-legend .side { display: flex; align-items: center; gap: .5rem; font-size: .8rem; color: var(--color-text-secondary); }
+        .flip-legend .swatch { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+        .flip-legend .swatch.tech { background: var(--amber); }
+        .flip-legend .swatch.real { background: var(--green-mid); }
+        .flip-legend .arrow-icon { color: var(--gray); font-size: .78rem; }
+        .flip-all-btn { font-family: var(--font-sans); }
+        .demo-wrap { max-width: 300px; margin-top: 2.2rem; }
+        .demo-caption { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--gray); margin-bottom: .7rem; }
+
+        /* ── Footer ── */
+        footer { border-top: 1px solid var(--color-border-light); padding: 1.8rem 6vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .8rem; font-family: var(--font-mono); font-size: .66rem; color: var(--gray); }
+        footer .flinks { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+        footer a:hover { color: var(--amber); }
+
+        /* ── Keyframes ── */
+        @keyframes sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.4deg); } }
+        @keyframes sway-r { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.1deg); } }
+        @keyframes fruit-glow { 0%, 100% { opacity: .8; } 50% { opacity: 1; } }
+        @keyframes subtle-pulse { 0%, 100% { opacity: .45; } 50% { opacity: .7; } }
+        @keyframes float-up { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="rail"><span class="dot top"></span><span class="dot bottom"></span></div>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+    <a href="#" class="logo">Olivia <span class="tag">Feature Guide</span></a>
+    <div class="nav-links">
+        <a href="#vision">Vision</a>
+        <a href="#imagine">Imagine</a>
+        <a href="#howto">Guide</a>
+        <a href="#core">Core</a>
+        <a href="#agents">Agents</a>
+        <a href="#creativity">Creativity</a>
+        <a href="#data">Data</a>
+        <a href="#legal">Legal</a>
+        <a href="#media">Media</a>
+        <a href="#connectors">Connectors</a>
+        <a href="#ui">UI</a>
+        <span class="agent-badge"><span class="d"></span> Flip to explore</span>
+    </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+    <div class="hero-kicker">Complete Feature Reference · Two Sides To Every Tool</div>
+
+    <div class="stage-view">
+        <div class="morph-scene active" id="scene-tree">
+            <svg width="260" height="280" viewBox="0 0 260 280">
+                <g style="transform-origin:130px 150px;animation:sway 7s ease-in-out infinite">
+                    <path d="M130 270 Q128 240,127 210 Q126 180,128 155 Q130 135,132 118 Q134 105,133 94" fill="none" stroke="var(--green-dark)" stroke-width="3.5" stroke-linecap="round" opacity=".6"/>
+                    <path d="M90 268 Q130 274,170 268" fill="none" stroke="var(--green-dark)" stroke-width="1" stroke-linecap="round" opacity=".12"/>
+                    <g style="transform-origin:130px 140px;animation:sway 7s ease-in-out infinite">
+                        <g style="transform-origin:126px 160px;animation:sway-r 6s ease-in-out .3s infinite">
+                            <path d="M126 160 Q108 148,82 140" fill="none" stroke="var(--green-dark)" stroke-width="1.6" stroke-linecap="round" opacity=".45"/>
+                            <ellipse cx="88" cy="148" rx="4.5" ry="5.5" fill="var(--amber)" opacity=".85" transform="rotate(-8 88 148)" style="animation:fruit-glow 4s ease-in-out infinite"/>
+                        </g>
+                        <g style="transform-origin:134px 152px;animation:sway 5.5s ease-in-out .6s infinite">
+                            <path d="M134 152 Q152 142,172 138" fill="none" stroke="var(--green-dark)" stroke-width="1.4" stroke-linecap="round" opacity=".4"/>
+                        </g>
+                        <g style="transform-origin:128px 130px;animation:sway-r 5s ease-in-out .9s infinite">
+                            <path d="M128 130 Q114 118,98 112" fill="none" stroke="var(--green-dark)" stroke-width="1.2" stroke-linecap="round" opacity=".38"/>
+                        </g>
+                        <g style="transform-origin:134px 115px;animation:sway 5.8s ease-in-out .4s infinite">
+                            <path d="M134 115 Q150 104,164 98" fill="none" stroke="var(--green-dark)" stroke-width="1.1" stroke-linecap="round" opacity=".35"/>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <div id="morphLabel" class="morph-label">Olivia Workspace</div>
+    <div id="morphSub" class="morph-sub">Every module, every capability — shown two ways. What it is under the hood, and what it actually feels like at the till, behind the bar, or closing the books.</div>
+
+    <div class="pills">
+        <button class="pill active" onclick="morph('tree')"><i class="fas fa-seedling"></i> Overview</button>
+    </div>
+
+    <button class="compose-mock" onclick="document.getElementById('howto').scrollIntoView({behavior:'smooth'})">
+        <span>See how the flip works…</span>
+        <span class="send-btn" tabindex="-1"><i class="fas fa-arrow-down"></i></span>
+    </button>
+
+    <div class="scroll-hint">Scroll to explore</div>
+</header>
+
+<!-- ═══ VISION ═══ -->
+<section class="quiet reveal" id="vision">
+    <div class="kicker">The Vision</div>
+    <h2>Technology has always asked people to learn software. <em>Olivia asks software to learn people.</em></h2>
+    <p class="lede">Olivia is not a single-purpose application. She is a shared, intelligent workspace that any team can shape to its own world — a blank canvas already equipped with the ability to think, learn, and build alongside the people who use it. Everything documented below is real and already built. This guide simply shows it from two angles.</p>
+</section>
+
+<!-- ═══ IMAGINE ═══ -->
+<section class="quiet reveal" id="imagine">
+    <div class="kicker">Imagine</div>
+    <h2>A cashier, a bartender, a financial clerk — <em>all building their own tools</em>.</h2>
+    <p class="lede">None of them have written a line of code. The cashier tells Olivia how the till reconciles at close. The bartender explains how a Friday night rota actually falls apart. The financial clerk describes what a supplier invoice should look like before it's approved. A procurement officer explains why one supplier keeps missing deadlines. A sales rep explains what makes a quote take too long to turn around.</p>
+    <p class="quote">"This is how I do this job today. Here's what goes wrong. Here's what good looks like. How could we make a tool that helps?"</p>
+    <p class="lede">Olivia asks the questions a good colleague would — where do delays happen, what usually goes wrong, who's responsible, how do you know when it's done right. Five minutes later, each of them has built their first AI tool — and learned AI without ever studying it.</p>
+    <div class="flow">
+        <span>Experience</span><span class="arrow">→</span>
+        <span>Conversation</span><span class="arrow">→</span>
+        <span>Understanding</span><span class="arrow">→</span>
+        <span>Creation</span><span class="arrow">→</span>
+        <span>Knowledge</span><span class="arrow">→</span>
+        <span>Organisation evolves</span>
+    </div>
+</section>
+
+<!-- ═══ HOW TO READ THIS GUIDE (flip legend) ═══ -->
+<section class="quiet reveal" id="howto">
+    <div class="kicker">Two sides, one workspace</div>
+    <h2>Every card below has a technical side <em>and a real-world side</em>.</h2>
+    <p class="lede">The technical side is what's already documented — the module, the functions, the mechanics. Flip the card and you'll find the same feature translated into what it actually looks like for the people doing the work: a cashier balancing the till, a bartender running Friday service, a financial clerk closing the books, a procurement officer chasing a supplier, a sales rep pulling a quote together — and everyone else in between.</p>
+
+    <div class="flip-legend">
+        <span class="side"><span class="swatch tech"></span> Technical (module &amp; mechanics)</span>
+        <i class="fas fa-arrows-rotate arrow-icon"></i>
+        <span class="side"><span class="swatch real"></span> Real world (the job it does)</span>
+    </div>
+    <p class="lede" style="margin-top:1.2rem">Click a card, or focus it with Tab and press Enter or Space. Or flip everything at once:</p>
+    <button class="pill flip-all-btn" id="flipAllBtn"><i class="fas fa-arrows-rotate"></i> Flip every card</button>
+
+    <div class="demo-wrap">
+        <div class="demo-caption">Try it — this one's just for practice</div>
+        <div class="feat-card demo-card">
+            <div class="feat-card-inner">
+                <div class="feat-face feat-face-front">
+                    <span class="chip">example.js</span>
+                    <h3>Try flipping this card</h3>
+                    <p class="desc">This is a practice card. Its front reads exactly like the technical cards further down the page.</p>
+                    <ul>
+                        <li><span class="icon"><i class="fas fa-hand-pointer"></i></span> Click anywhere on the card</li>
+                        <li><span class="icon"><i class="fas fa-keyboard"></i></span> Or Tab to it and press Enter</li>
+                    </ul>
+                    <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Tap to see the real-world side</div>
+                </div>
+                <div class="feat-face feat-face-back">
+                    <span class="chip chip-real">In the real world</span>
+                    <h3>Try flipping this card</h3>
+                    <p class="desc">And here's the back — the same idea, in plain language, tied to an actual job on the floor rather than a filename.</p>
+                    <div class="role-tags"><span class="role-tag">Everyone</span></div>
+                    <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Tap to see the technical side</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ CORE RUNTIME ═══ -->
+<section class="wide reveal" id="core">
+    <span class="kicker">Core Runtime &amp; Infrastructure</span>
+    <h2>The foundation <em>every other module</em> rests on.</h2>
+    <p class="lede">Global configuration, a unified API client, structured logging, application initialisation, and shared utilities — all designed to keep the workspace fast, observable, and consistent. None of it is visible day to day. All of it is why nothing breaks.</p>
+    <div class="feat-grid">
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">config.js</span>
+                <h3>Configuration</h3>
+                <p class="desc">Environment base for the entire application — global variables, API base, and shared state (agents, history, artefacts).</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-globe"></i></span> Auto-resolves local/remote API endpoint</li>
+                    <li><span class="icon"><i class="fas fa-database"></i></span> Global state: agents, session, token counters</li>
+                    <li><span class="icon"><i class="fas fa-code"></i></span> Exports agents, selectedAgent, chatHistory, outputArtifacts</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Configuration</h3>
+                <p class="desc">Nothing you'd ever notice — and that's the point. Whether you log in from the till, the office laptop, or your phone on the shop floor, Olivia already knows which branch you're in and what you were doing last. No re-entering settings, no "wrong version" confusion.</p>
+                <div class="role-tags"><span class="role-tag">Everyone</span><span class="role-tag">IT support</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">api-client.js</span>
+                <h3>Unified API Client</h3>
+                <p class="desc">Single source of truth for all HTTP/SSE calls — 33+ functions across 9 groups.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-comments"></i></span> assistant.chat — SSE streaming with smart timeout</li>
+                    <li><span class="icon"><i class="fas fa-robot"></i></span> agents.* — full CRUD (create, list, activate, deactivate)</li>
+                    <li><span class="icon"><i class="fas fa-brain"></i></span> memory.* — Qdrant + Neo4j collections, search, ingest, graph</li>
+                    <li><span class="icon"><i class="fas fa-share-alt"></i></span> shared.* — scopes, shared files, transcriptions</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Unified API Client</h3>
+                <p class="desc">This is the delivery route between whatever you type and Olivia's brain. Ask about today's stock or a customer's order history — this is what carries the question over and brings the answer straight back into the chat, instead of a phone call to another department.</p>
+                <div class="role-tags"><span class="role-tag">Cashier</span><span class="role-tag">Sales</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">logger.js</span>
+                <h3>Interactive Debugging</h3>
+                <p class="desc">Intercepts all fetch() calls, providing structured, collapsible logs with colour coding and filters.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-paper-plane"></i></span> Requests in blue with sanitised body &amp; headers</li>
+                    <li><span class="icon"><i class="fas fa-check-circle"></i></span> Responses with timing in ms</li>
+                    <li><span class="icon"><i class="fas fa-sliders-h"></i></span> Config: verbose, filter, noisy, enabled flags</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Interactive Debugging</h3>
+                <p class="desc">When something doesn't behave the way it should, your IT support person can see exactly what happened, step by step, without you having to describe the problem in technical terms. You just say "this didn't work" — they already have the flight recorder.</p>
+                <div class="role-tags"><span class="role-tag">IT support</span><span class="role-tag">Managers</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">core.js</span>
+                <h3>Application Initialisation</h3>
+                <p class="desc">Entry point for the workspace — mobile layout, sidebar, panels, agent loading, and settings restoration.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-play"></i></span> DOMContentLoaded with embed-mode detection</li>
+                    <li><span class="icon"><i class="fas fa-tools"></i></span> Helpers: escapeHtml, formatBytes, toast, autoGrow</li>
+                    <li><span class="icon"><i class="fas fa-window-maximize"></i></span> Async custom prompts and confirm modals</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Application Initialisation</h3>
+                <p class="desc">Open Olivia on your phone behind the bar, then pick it up again on the office screen at close — your session, your layout, your last conversation are all exactly where you left them. Nobody has to start over because they switched devices.</p>
+                <div class="role-tags"><span class="role-tag">Everyone</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">state.js + utils.js</span>
+                <h3>Global Utilities</h3>
+                <p class="desc">Helper functions for trees, files, and state — stubs ready for future integration.</p>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Global Utilities</h3>
+                <p class="desc">The small consistency you never think about: dates, file sizes, and messages look and behave the same way on every screen, whether you're checking stock or reading a rota. One less thing to relearn each time you open a new part of the workspace.</p>
+                <div class="role-tags"><span class="role-tag">Everyone</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+    </div>
+</section>
+
+<!-- ═══ AGENTS & ORCHESTRATION ═══ -->
+<section class="wide reveal" id="agents">
+    <span class="kicker">Agents &amp; Orchestration</span>
+    <h2>Manage, route, and <em>orchestrate</em> intelligent agents.</h2>
+    <p class="lede">Create OpenClaude agents, assign them to workspace sections, and let them collaborate across chats and background tasks.</p>
+    <div class="feat-grid">
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">agents.js</span>
+                <h3>Agent Management</h3>
+                <p class="desc">Full lifecycle: create, list, edit, delete, export/import agent bundles, and manage background reference collection.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-list"></i></span> Grouped listing with active/inactive badges</li>
+                    <li><span class="icon"><i class="fas fa-pen"></i></span> Modal editor with workspace, Qdrant, Neo4j, skills, MCP</li>
+                    <li><span class="icon"><i class="fas fa-file-export"></i></span> Export agent + tools + chats + logs as .agent.md bundle</li>
+                    <li><span class="icon"><i class="fas fa-sync-alt"></i></span> Background reference collection (start/pause/resume)</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Agent Management</h3>
+                <p class="desc">A procurement officer builds a "check this invoice" assistant once — then hands a working copy to a colleague at another site with one click, instead of explaining the process from scratch. Editing it later doesn't mean starting over.</p>
+                <div class="role-tags"><span class="role-tag">Procurement</span><span class="role-tag">Managers</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">agent-orchestration.js</span>
+                <h3>Section Routing</h3>
+                <p class="desc">Each workspace section (Studio, Shaders, Discovery, etc.) can have its own dedicated agent, with fallback and preferences.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-bullseye"></i></span> Per-section agent assignment</li>
+                    <li><span class="icon"><i class="fas fa-comment-dots"></i></span> Primary + secondary chat tracks</li>
+                    <li><span class="icon"><i class="fas fa-sliders-h"></i></span> Orchestration UI with selector and status badges</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Section Routing</h3>
+                <p class="desc">Ask a till question in the till section and a rota question in the rota section, and each one goes straight to the assistant that actually knows that job — instead of one assistant trying to be an expert in everything at once.</p>
+                <div class="role-tags"><span class="role-tag">Everyone</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+    </div>
+</section>
+
+<!-- ═══ CREATIVITY & STUDIO ═══ -->
+<section class="wide reveal" id="creativity">
+    <span class="kicker">Creativity &amp; Studio</span>
+    <h2>Build, edit, and refine <em>interfaces and 3D scenes</em> with AI assistance.</h2>
+    <p class="lede">From live HTML/CSS/JS editing to SVG shader compositions and full 3D environments — all with integrated agents that understand your code.</p>
+    <div class="feat-grid">
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">studio.js</span>
+                <h3>HTML/CSS/JS Editor</h3>
+                <p class="desc">Triple-pane editor with live preview, AI assistant, and multi‑file project support.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-code"></i></span> HTML, CSS, JS tabs with smart parsing</li>
+                    <li><span class="icon"><i class="fas fa-eye"></i></span> Live preview with asset support</li>
+                    <li><span class="icon"><i class="fas fa-magic"></i></span> AI actions: replace, append, prepend, snippet</li>
+                    <li><span class="icon"><i class="fas fa-folder-open"></i></span> Import/export projects (folder/zip)</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>HTML/CSS/JS Editor</h3>
+                <p class="desc">A sales team builds its own quote form or a simple order page by describing what it needs — no web designer, no ticket to IT, just a conversation that turns into a working page you can use that afternoon.</p>
+                <div class="role-tags"><span class="role-tag">Sales</span><span class="role-tag">Reception</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">shaders.js</span>
+                <h3>SVG Scene Composer</h3>
+                <p class="desc">Create animated 2D/3D scenes with deterministic loops, palettes, and post‑processing effects.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-palette"></i></span> Scene gallery with predefined and custom compositions</li>
+                    <li><span class="icon"><i class="fas fa-globe-americas"></i></span> World controls: time of day, era, weather, rotation</li>
+                    <li><span class="icon"><i class="fas fa-magic"></i></span> PostFX: bloom, vignette, grain, chromatic aberration, sepia</li>
+                    <li><span class="icon"><i class="fas fa-brain"></i></span> AI brainstorming chat for scene generation</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>SVG Scene Composer</h3>
+                <p class="desc">Turn "this is how you should pour a pint" or "this is where the fire exits are" into a short animated diagram new starters can actually follow — without commissioning an illustrator or filming a video.</p>
+                <div class="role-tags"><span class="role-tag">Bartender</span><span class="role-tag">Training &amp; HR</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">scene3d.js</span>
+                <h3>Three.js Engine</h3>
+                <p class="desc">Load GLTF/GLB models, control animations, apply environments, and export USDZ.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-cube"></i></span> GLB upload with local preview</li>
+                    <li><span class="icon"><i class="fas fa-film"></i></span> Animation mixer with multiple clips</li>
+                    <li><span class="icon"><i class="fas fa-sun"></i></span> 6 environment presets (Studio, Outdoor, Night, etc.)</li>
+                    <li><span class="icon"><i class="fas fa-mouse-pointer"></i></span> Transform gizmo with click selection</li>
+                    <li><span class="icon"><i class="fas fa-file-export"></i></span> Export USDZ (main + extras, with/without background)</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Three.js Engine</h3>
+                <p class="desc">Show a supplier or a customer a rotating 3D preview of a product or a layout before committing to an order — spin it round, check the detail, all from a browser tab.</p>
+                <div class="role-tags"><span class="role-tag">Sales</span><span class="role-tag">Procurement</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">preview-recorder.js</span>
+                <h3>Preview Recorder</h3>
+                <p class="desc">Record the preview canvas (SVG or 3D) as WebM/MP4 video.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-record-vinyl"></i></span> Start/stop real‑time canvas recording</li>
+                    <li><span class="icon"><i class="fas fa-clock"></i></span> Live duration timer</li>
+                    <li><span class="icon"><i class="fas fa-download"></i></span> Download as .webm or .mp4</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Preview Recorder</h3>
+                <p class="desc">Instead of explaining "how to close the till" to every new starter in person, record a two-minute screen walkthrough once and hand it to whoever's on shift next.</p>
+                <div class="role-tags"><span class="role-tag">Everyone</span><span class="role-tag">Training &amp; HR</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+    </div>
+</section>
+
+<!-- ═══ DATA & ANALYSIS ═══ -->
+<section class="wide reveal" id="data">
+    <span class="kicker">Data &amp; Analysis</span>
+    <h2>Vector memory, knowledge graphs, <em>document intelligence</em>.</h2>
+    <p class="lede">Semantic search, chat history, document pipelines, and shared resources — turning raw information into actionable context.</p>
+    <div class="feat-grid">
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">memory.js</span>
+                <h3>Memory (Qdrant + Neo4j)</h3>
+                <p class="desc">Manage vector collections and knowledge graphs. Ingest text, legal articles, violations, and structured data.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-layer-group"></i></span> Collection list with stats</li>
+                    <li><span class="icon"><i class="fas fa-search"></i></span> Semantic search with collection filter</li>
+                    <li><span class="icon"><i class="fas fa-upload"></i></span> Ingest: free text, JSON articles, violations, graph</li>
+                    <li><span class="icon"><i class="fas fa-chart-pie"></i></span> Memory quadrant distribution &amp; AI analysis</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Memory (Qdrant + Neo4j)</h3>
+                <p class="desc">A financial clerk asks "what did we agree with this supplier back in March?" and gets a straight answer — because Olivia remembers every price list, note, and past decision, not just the last conversation.</p>
+                <div class="role-tags"><span class="role-tag">Financial clerk</span><span class="role-tag">Procurement</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">history.js</span>
+                <h3>Chat History &amp; Settings</h3>
+                <p class="desc">Saved conversations, model catalogue, temperature, tokens, and persistence.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-save"></i></span> Save chats locally or to an agent</li>
+                    <li><span class="icon"><i class="fas fa-thermometer-half"></i></span> Adjustable temperature slider</li>
+                    <li><span class="icon"><i class="fas fa-chart-line"></i></span> Input/output token counter with cost estimate</li>
+                    <li><span class="icon"><i class="fas fa-cogs"></i></span> Model catalogue (DeepSeek, Anthropic, OpenRouter, etc.)</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Chat History &amp; Settings</h3>
+                <p class="desc">Go back to "how we fixed the stock count problem last month" instead of solving the same issue from scratch every time it comes up — your past conversations with Olivia are saved and searchable.</p>
+                <div class="role-tags"><span class="role-tag">Everyone</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">discovery.js</span>
+                <h3>NLP &amp; Intelligence Pipeline</h3>
+                <p class="desc">Document ingestion → entity extraction → violation detection → gap report → timeline → narrative.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-file-alt"></i></span> Preview documents (PDF, DOCX, audio, image)</li>
+                    <li><span class="icon"><i class="fas fa-lightbulb"></i></span> LLM‑powered corpus overview &amp; group descriptions</li>
+                    <li><span class="icon"><i class="fas fa-exclamation-triangle"></i></span> Violations, gaps, timeline, case state</li>
+                    <li><span class="icon"><i class="fas fa-search-plus"></i></span> Enriched semantic search over processed docs</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>NLP &amp; Intelligence Pipeline</h3>
+                <p class="desc">Hand over a stack of invoices, delivery notes, or incident reports, and Olivia reads through all of them — flagging a missing signature, an odd number, or a gap in the story, the way a sharp-eyed clerk would with unlimited time and patience.</p>
+                <div class="role-tags"><span class="role-tag">Financial clerk</span><span class="role-tag">Compliance</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">docs.js</span>
+                <h3>Document Browser</h3>
+                <p class="desc">Tree view of the active project with preview, output panel, and built‑in browser.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-sitemap"></i></span> Expandable directory tree with file counts</li>
+                    <li><span class="icon"><i class="fas fa-eye"></i></span> Preview PDF, HTML, Markdown, JSON, audio, image</li>
+                    <li><span class="icon"><i class="fas fa-external-link-alt"></i></span> Open in integrated browser</li>
+                    <li><span class="icon"><i class="fas fa-thumbtack"></i></span> Pin absolute paths for agent context</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Document Browser</h3>
+                <p class="desc">A filing cabinet you can actually search. Open any receipt, contract, or spreadsheet straight in the browser, and pin the ones you're actively working on so Olivia keeps them close at hand in the conversation.</p>
+                <div class="role-tags"><span class="role-tag">Financial clerk</span><span class="role-tag">Procurement</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">shared.js</span>
+                <h3>Shared Resources</h3>
+                <p class="desc">Manage _shared files, import contexts, image attachments, and case pipelines.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-folder"></i></span> Browse scopes and shared files</li>
+                    <li><span class="icon"><i class="fas fa-paperclip"></i></span> Context files (text &amp; image)</li>
+                    <li><span class="icon"><i class="fas fa-image"></i></span> Attach images via clipboard, upload, or paste</li>
+                    <li><span class="icon"><i class="fas fa-balance-scale"></i></span> Case pipeline: 7 stages with progress bar</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Shared Resources</h3>
+                <p class="desc">The shared drawer everyone on the team can see — supplier lists, a photo of damaged stock, this week's price sheet — so procurement, sales, and finance are always looking at the same version of the truth.</p>
+                <div class="role-tags"><span class="role-tag">Procurement</span><span class="role-tag">Sales</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+    </div>
+</section>
+
+<!-- ═══ LEGAL & COMPLIANCE ═══ -->
+<section class="wide reveal" id="legal">
+    <span class="kicker">Legal &amp; Compliance</span>
+    <h2>Navigate legal sources, resolve violations, <em>attach context instantly</em>.</h2>
+    <div class="feat-grid">
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">law_library.js</span>
+                <h3>Legal Library (LA8159)</h3>
+                <p class="desc">Browse legal sources (BR, CL, INT) with ELI metadata, SHA‑256, and full article text.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-book"></i></span> Jurisdiction index with source counts</li>
+                    <li><span class="icon"><i class="fas fa-file-contract"></i></span> Rendered Markdown with frontmatter</li>
+                    <li><span class="icon"><i class="fas fa-link"></i></span> Attach sources to chat context</li>
+                    <li><span class="icon"><i class="fas fa-filter"></i></span> Filter by jurisdiction and text search</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Legal Library (LA8159)</h3>
+                <p class="desc">A compliance officer checks the actual wording of a regulation, verified and sourced, instead of relying on "someone told me it says that." No guessing, no outdated PDF passed around by email.</p>
+                <div class="role-tags"><span class="role-tag">Compliance</span><span class="role-tag">HR</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">legal-router.js</span>
+                <h3>Legal Router</h3>
+                <p class="desc">Resolve violation IDs, frameworks, and persons — auto‑attaches relevant files to the chat.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-search"></i></span> Search by violation, framework, or person</li>
+                    <li><span class="icon"><i class="fas fa-file-code"></i></span> Resolved files with snippets and action buttons</li>
+                    <li><span class="icon"><i class="fas fa-paperclip"></i></span> Auto‑attach after resolution</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Legal Router</h3>
+                <p class="desc">Type in a case number, a person's name, or a rule reference, and every related file lands in the conversation at once — like having an assistant who never forgets where anything was filed.</p>
+                <div class="role-tags"><span class="role-tag">Compliance</span><span class="role-tag">Managers</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">violations.js</span>
+                <h3>Violation Explorer</h3>
+                <p class="desc">Navigate the LA8159 corpus of validated violations (BR, CL, INT) with severity and legal basis.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-tree"></i></span> Jurisdiction tree with .violation.json files</li>
+                    <li><span class="icon"><i class="fas fa-gavel"></i></span> Formatted JSON with severity, legal_basis</li>
+                    <li><span class="icon"><i class="fas fa-search"></i></span> Search by ID, category, or text</li>
+                    <li><span class="icon"><i class="fas fa-thumbtack"></i></span> Attach violation with inline text to chat</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Violation Explorer</h3>
+                <p class="desc">A tidy, searchable record of every compliance issue found, with the reasoning and severity already attached — useful when someone needs to write a report and doesn't have a week to dig through folders.</p>
+                <div class="role-tags"><span class="role-tag">Compliance</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+    </div>
+</section>
+
+<!-- ═══ COMMUNICATION & MEDIA ═══ -->
+<section class="wide reveal" id="media">
+    <span class="kicker">Communication &amp; Media</span>
+    <h2>Transcribe audio, edit spreadsheets, <em>compose documents</em> — all with agent assistance.</h2>
+    <div class="feat-grid">
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">listening.js</span>
+                <h3>Audio Transcription</h3>
+                <p class="desc">Upload, diarise, transcribe with Whisper/RunPod, and ask questions about the content.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-microphone"></i></span> Supports M4A, MP3, WAV, FLAC, OGG</li>
+                    <li><span class="icon"><i class="fas fa-users"></i></span> Speaker diarisation</li>
+                    <li><span class="icon"><i class="fas fa-cloud-upload-alt"></i></span> RunPod GPU support</li>
+                    <li><span class="icon"><i class="fas fa-brain"></i></span> AI analysis: ask about transcript content</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Audio Transcription</h3>
+                <p class="desc">Record a supplier call or a team briefing, and get a written, speaker-by-speaker transcript back in minutes — then ask Olivia what was actually agreed, instead of relying on someone's memory of the call.</p>
+                <div class="role-tags"><span class="role-tag">Procurement</span><span class="role-tag">Managers</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">sheets.js</span>
+                <h3>Spreadsheet Editor</h3>
+                <p class="desc">Interactive grid for CSV/XLSX with import/export, agent chat, and "HAVAN document" export.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-table"></i></span> Cell editor with Tab/Enter navigation</li>
+                    <li><span class="icon"><i class="fas fa-file-import"></i></span> Import CSV &amp; XLSX (SheetJS)</li>
+                    <li><span class="icon"><i class="fas fa-file-export"></i></span> Export CSV, XLSX, DOCX, PDF, HTML</li>
+                    <li><span class="icon"><i class="fas fa-comment-dots"></i></span> Ask the agent about the spreadsheet</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Spreadsheet Editor</h3>
+                <p class="desc">A financial clerk opens the stock or sales spreadsheet and just asks: "which supplier line has the biggest markup?" No formulas to remember, no separate export — the answer comes back in the same chat.</p>
+                <div class="role-tags"><span class="role-tag">Financial clerk</span><span class="role-tag">Procurement</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">writer.js</span>
+                <h3>Markdown / Text Editor</h3>
+                <p class="desc">Write with markdown shortcuts, import DOCX/PDF, and chat with the agent about your document.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-pencil-alt"></i></span> Bold, italic, headings, lists shortcuts</li>
+                    <li><span class="icon"><i class="fas fa-file-import"></i></span> Import DOCX (mammoth), PDF (pdf.js), TXT, MD, HTML</li>
+                    <li><span class="icon"><i class="fas fa-copy"></i></span> Copy/paste rendered Markdown</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Markdown / Text Editor</h3>
+                <p class="desc">Draft a staff notice, a supplier email, or a policy update with help getting the wording right — and pull in an existing Word document or PDF to work from, instead of starting from a blank page.</p>
+                <div class="role-tags"><span class="role-tag">HR</span><span class="role-tag">Managers</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+    </div>
+</section>
+
+<!-- ═══ CONNECTORS & EXTENSIONS ═══ -->
+<section class="wide reveal" id="connectors">
+    <span class="kicker">Connectors &amp; Extensions</span>
+    <h2>Integrate Google Drive, multi‑jurisdictional litigation, <em>and 3D generation</em>.</h2>
+    <div class="feat-grid">
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">drive.js</span>
+                <h3>Google Drive Manager</h3>
+                <p class="desc">Browse, upload, download, and chat with an assistant about your Drive files.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-key"></i></span> OAuth2 and rclone‑style auth</li>
+                    <li><span class="icon"><i class="fas fa-folder-open"></i></span> Folder navigation with back/forward history</li>
+                    <li><span class="icon"><i class="fas fa-robot"></i></span> Agent chat for Drive operations</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Google Drive Manager</h3>
+                <p class="desc">Pull up last month's rota or a supplier contract sitting in the team's Google Drive without leaving Olivia or hunting through nested folders on someone else's laptop.</p>
+                <div class="role-tags"><span class="role-tag">Everyone</span><span class="role-tag">Managers</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">craudio.js</span>
+                <h3>Multi‑Jurisdictional Litigation</h3>
+                <p class="desc">24 workflows and 8 specialised agents for civil litigation (BR, CL, international).</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-tasks"></i></span> Workflows: configuration, analysis, drafting, review</li>
+                    <li><span class="icon"><i class="fas fa-user-tie"></i></span> Agents for deadlines, evidence integrity, jurisprudence</li>
+                    <li><span class="icon"><i class="fas fa-project-diagram"></i></span> Pipeline: evidence → norms → nexus → confidence → jurisprudence</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Multi‑Jurisdictional Litigation</h3>
+                <p class="desc">When a dispute with a supplier or a customer escalates, a team of specialist assistants tracks deadlines, evidence, and precedent automatically — the legwork a paralegal team would normally do by hand.</p>
+                <div class="role-tags"><span class="role-tag">Compliance</span><span class="role-tag">Procurement</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">meshy-ui.js</span>
+                <h3>Meshy 3D Interface</h3>
+                <p class="desc">Generate 3D models from text or images via the Meshy MCP agent.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-font"></i></span> Text → 3D with options (lowpoly, PBR, rigging)</li>
+                    <li><span class="icon"><i class="fas fa-images"></i></span> Image → 3D (up to 4 views)</li>
+                    <li><span class="icon"><i class="fas fa-download"></i></span> Import existing tasks by ID</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Meshy 3D Interface</h3>
+                <p class="desc">Describe a product, or upload two photos of it, and get a 3D model back — useful for an online listing or a training visual, without needing a design department.</p>
+                <div class="role-tags"><span class="role-tag">Sales</span><span class="role-tag">Marketing</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+    </div>
+</section>
+
+<!-- ═══ UI & NAVIGATION ═══ -->
+<section class="wide reveal" id="ui">
+    <span class="kicker">UI &amp; Navigation</span>
+    <h2>The shell that holds <em>every workspace together</em>.</h2>
+    <div class="feat-grid">
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">tabs.js</span>
+                <h3>Sidebar &amp; Tabs</h3>
+                <p class="desc">Dock with hover/click, collapse toggle, resize handle, and cross‑section sync.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-th-large"></i></span> Expandable icon + label dock</li>
+                    <li><span class="icon"><i class="fas fa-exchange-alt"></i></span> Switch sections with auto‑close</li>
+                    <li><span class="icon"><i class="fas fa-mobile-alt"></i></span> Mobile overlay &amp; strip</li>
+                    <li><span class="icon"><i class="fas fa-arrows-alt-h"></i></span> Resizable sidebar via drag</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Sidebar &amp; Tabs</h3>
+                <p class="desc">The side menu only shows the tools that actually matter to your job — tidy, collapsible, and it remembers how you like it arranged, whether that's four tabs or fourteen.</p>
+                <div class="role-tags"><span class="role-tag">Everyone</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">trunk.js</span>
+                <h3>Profile Navigation</h3>
+                <p class="desc">Loads section-registry.json and renders the navigation tree based on user permissions.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-user-check"></i></span> Data‑driven from /api/user/me</li>
+                    <li><span class="icon"><i class="fas fa-code-branch"></i></span> Collapsed branch icons</li>
+                    <li><span class="icon"><i class="fas fa-play"></i></span> Auto‑activates the first available section</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Profile Navigation</h3>
+                <p class="desc">Your own front door into Olivia. A cashier sees till tools, a procurement officer sees supplier tools — automatically, based on what you actually do, not a menu everyone has to wade through.</p>
+                <div class="role-tags"><span class="role-tag">Cashier</span><span class="role-tag">Procurement</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">modals.js</span>
+                <h3>Modals &amp; Forms</h3>
+                <p class="desc">Creation, confirmation, alert, loading, and file‑selection dialogs.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-edit"></i></span> Agent/project/collection creation forms</li>
+                    <li><span class="icon"><i class="fas fa-check-circle"></i></span> Confirmation with callbacks</li>
+                    <li><span class="icon"><i class="fas fa-spinner"></i></span> Loading modal with message</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Modals &amp; Forms</h3>
+                <p class="desc">The simple "are you sure?" pop-up before anything important happens, so nobody accidentally deletes a shift, cancels an order, or wipes a rota by mistake.</p>
+                <div class="role-tags"><span class="role-tag">Everyone</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">fullscreen-controls.js</span>
+                <h3>Fullscreen Overlay</h3>
+                <p class="desc">Floating controls for 3D scenes — play, wireframe, environment, exposure, record, chat.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-play-circle"></i></span> Play/Pause, Wireframe, Reset</li>
+                    <li><span class="icon"><i class="fas fa-sun"></i></span> Environment selector</li>
+                    <li><span class="icon"><i class="fas fa-adjust"></i></span> Exposure slider</li>
+                    <li><span class="icon"><i class="fas fa-record-vinyl"></i></span> REC status indicator</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Fullscreen Overlay</h3>
+                <p class="desc">When you're showing a 3D preview to a customer or a supplier, a clean set of controls stays on screen — play, reset, lighting — without cluttering the view they're actually looking at.</p>
+                <div class="role-tags"><span class="role-tag">Sales</span><span class="role-tag">Procurement</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+        <div class="feat-card"><div class="feat-card-inner">
+            <div class="feat-face feat-face-front">
+                <span class="chip">nav.js</span>
+                <h3>Mobile Menu</h3>
+                <p class="desc">Responsive hamburger menu, mobile sidebar toggle, and tab navigation.</p>
+                <ul>
+                    <li><span class="icon"><i class="fas fa-bars"></i></span> Dropdown with navigation items</li>
+                    <li><span class="icon"><i class="fas fa-arrow-right"></i></span> Mobile overlay toggle</li>
+                    <li><span class="icon"><i class="fas fa-link"></i></span> Active link highlight</li>
+                </ul>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> See it in the real world</div>
+            </div>
+            <div class="feat-face feat-face-back">
+                <span class="chip chip-real">In the real world</span>
+                <h3>Mobile Menu</h3>
+                <p class="desc">Everything above, built to actually work from your phone — behind the bar, on the shop floor, mid-shift — not just from a desk with a big screen.</p>
+                <div class="role-tags"><span class="role-tag">Bartender</span><span class="role-tag">Cashier</span></div>
+                <div class="flip-hint"><i class="fas fa-arrows-rotate"></i> Back to the technical side</div>
+            </div>
+        </div></div>
+
+    </div>
+</section>
+
+<!-- ═══ CLOSING SUMMARY ═══ -->
+<section class="quiet reveal" style="text-align: center;">
+    <div class="kicker" style="display: flex; justify-content: center;">Summary</div>
+    <h2 style="margin: 0 auto; max-width: 24ch;">Every module. One ecosystem. <em>Every job, both sides.</em></h2>
+    <p class="lede" style="margin-left: auto; margin-right: auto;">From agents and memory to legal libraries and 3D studios — Olivia turns operational expertise into working, AI‑assisted tools. Flip any card above and it stops being a module name and starts being someone's Tuesday afternoon.</p>
+    <div class="wide-pills" style="justify-content: center; margin-top: 1.8rem;">
+        <span class="pill">Cashiers</span>
+        <span class="pill">Bartenders</span>
+        <span class="pill">Financial clerks</span>
+        <span class="pill">Procurement</span>
+        <span class="pill">Sales</span>
+        <span class="pill">Warehouse &amp; stock</span>
+        <span class="pill">Reception</span>
+        <span class="pill">Compliance &amp; HR</span>
+        <span class="pill">Managers</span>
+    </div>
+</section>
+
+<!-- ═══ MISSION ═══ -->
+<section class="quiet reveal" id="mission">
+    <div class="kicker">Mission</div>
+    <h2>Democratise the creation of AI-powered <em>capability</em>.</h2>
+    <p class="lede">We exist so that every business, charity, team, and individual worker can translate their operational expertise into practical, AI-assisted systems — without having to become software engineers.</p>
+    <ul class="principle-list">
+        <li><span class="n">01</span><span><strong>Adapts to the organisation</strong>, not the other way around — learning from the people who know the work best.</span></li>
+        <li><span class="n">02</span><span><strong>Turns knowledge into working software</strong>, with domain experts collaborating directly with AI agents.</span></li>
+        <li><span class="n">03</span><span><strong>Enables learning while building</strong> — every interaction builds both capability and skill.</span></li>
+        <li><span class="n">04</span><span><strong>Unites the organisation</strong> in one living ecosystem, turning isolated efforts into shared intelligence.</span></li>
+        <li><span class="n">05</span><span><strong>Grows with the people who use it</strong> — never limited to predefined features.</span></li>
+        <li><span class="n">06</span><span><strong>Keeps people at the centre</strong> — AI accelerates implementation, people provide context, judgment, and priorities.</span></li>
+    </ul>
+    <div class="wm"><span class="wm-n">Olivia</span><span class="wm-s">Awareness · AI</span></div>
+</section>
+
+<!-- ═══ CLOSING CTA ═══ -->
+<section class="quiet reveal" id="cta" style="text-align:center;">
+    <div class="kicker" style="justify-content:center;display:flex">Book a demonstration</div>
+    <h2 style="margin:0 auto;max-width:22ch">Where every job doesn't just use AI. <em>It grows with it.</em></h2>
+    <p class="lede" style="margin-left:auto;margin-right:auto">Technology has always asked people to learn software. Olivia asks software to learn people.</p>
+    <button class="compose-mock" style="margin-left:auto;margin-right:auto">
+        <span>Tell us about your team…</span>
+        <span class="send-btn" tabindex="-1"><i class="fas fa-arrow-up"></i></span>
+    </button>
+</section>
+
+<footer>
+    <span>© Olivia Ecosystem</span>
+    <div class="flinks">
+        <a href="#vision">Vision</a>
+        <a href="#imagine">Imagine</a>
+        <a href="#howto">Guide</a>
+        <a href="#core">Core</a>
+        <a href="#agents">Agents</a>
+        <a href="#creativity">Creativity</a>
+        <a href="#data">Data</a>
+        <a href="#legal">Legal</a>
+        <a href="#media">Media</a>
+        <a href="#connectors">Connectors</a>
+        <a href="#ui">UI</a>
+        <a href="#mission">Mission</a>
+        <a href="#cta">Demo</a>
+    </div>
+</footer>
+
+<script>
+    const navEl = document.getElementById('nav');
+    window.addEventListener('scroll', () => navEl.classList.toggle('scrolled', window.scrollY > 12), { passive: true });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+        new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+        }, { threshold: .1 }).observe(el);
+    });
+
+    function morph(id) {
+        document.querySelectorAll('.morph-scene').forEach(s => s.classList.remove('active'));
+        const sceneEl = document.getElementById('scene-' + id);
+        if (sceneEl) sceneEl.classList.add('active');
+        document.querySelectorAll('.pills .pill').forEach(p => p.classList.remove('active'));
+        const pillEl = document.querySelector(".pills .pill[onclick*='" + id + "']");
+        if (pillEl) pillEl.classList.add('active');
+    }
+
+    /* ── Double-sided feature cards ── */
+    function initFlipCard(card) {
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-pressed', 'false');
+        function toggle() {
+            const flipped = card.classList.toggle('flipped');
+            card.setAttribute('aria-pressed', String(flipped));
+        }
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+        });
+    }
+    document.querySelectorAll('.feat-card').forEach(initFlipCard);
+
+    const flipAllBtn = document.getElementById('flipAllBtn');
+    let allFlipped = false;
+    if (flipAllBtn) {
+        flipAllBtn.addEventListener('click', () => {
+            allFlipped = !allFlipped;
+            document.querySelectorAll('.feat-grid .feat-card').forEach(card => {
+                card.classList.toggle('flipped', allFlipped);
+                card.setAttribute('aria-pressed', String(allFlipped));
+            });
+            flipAllBtn.innerHTML = allFlipped
+                ? '<i class="fas fa-code"></i> Show technical sides'
+                : '<i class="fas fa-arrows-rotate"></i> Flip every card';
+        });
+    }
+
+    console.log('Olivia Workspace · Complete Feature Guide — Two-Sided Edition');
+</script>
+</body>
+</html>

@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0d12">
+<title>AURA — Remote</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --bg:#0a0a0d; --panel:#14141a; --panel2:#1c1c25; --border:#2a2a33;
+    --text:#ececec; --muted:#9a9aa8; --accent:#E879F9; --accent2:#4ECDC4;
+    --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,Menlo,Consolas,monospace;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;overflow:hidden}
+  body{display:flex;flex-direction:column}
+
+  header{background:linear-gradient(135deg,rgba(232,121,249,.15),rgba(78,205,196,.1));border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:10px}
+  header h1{margin:0;font-size:15px;font-weight:700;flex:1}
+  header .status{font-size:10px;color:var(--muted);display:flex;gap:6px;align-items:center}
+  header .status .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+  header .status.connected .dot{background:var(--ok);box-shadow:0 0 6px var(--ok)}
+  header .status.error .dot{background:var(--err)}
+
+  main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+  .tabs{display:flex;border-bottom:1px solid var(--border);background:var(--panel)}
+  .tabs button{flex:1;background:transparent;color:var(--muted);border:none;padding:12px 8px;font-size:12px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent}
+  .tabs button.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab-panel{flex:1;overflow-y:auto;display:none;padding:14px;-webkit-overflow-scrolling:touch}
+  .tab-panel.active{display:block}
+
+  /* Chat */
+  #chatPanel{display:flex;flex-direction:column;padding:0}
+  #chatLog{flex:1;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:85%;padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.45;word-break:break-word;white-space:pre-wrap}
+  .msg.user{align-self:flex-end;background:linear-gradient(135deg,rgba(232,121,249,.2),rgba(139,92,246,.18));border:1px solid rgba(232,121,249,.3)}
+  .msg.assistant{align-self:flex-start;background:rgba(78,205,196,.08);border:1px solid rgba(78,205,196,.22)}
+  .msg.system{align-self:center;background:transparent;color:var(--muted);font-size:11px;font-style:italic;max-width:100%}
+  .msg.error{align-self:center;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#fecaca;font-size:12px}
+  #chatCompose{border-top:1px solid var(--border);padding:8px;display:flex;gap:8px;background:var(--panel);padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+  #chatInput{flex:1;background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:22px;padding:10px 14px;font-family:inherit;font-size:14px;resize:none;max-height:120px;min-height:40px;outline:none}
+  #chatInput:focus{border-color:var(--accent)}
+  #chatSend{background:var(--accent);color:#111;border:none;border-radius:50%;width:40px;height:40px;font-size:15px;cursor:pointer;flex:0 0 40px}
+  #chatSend:disabled{opacity:.4}
+
+  /* Controls */
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px}
+  .card h3{margin:0 0 8px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .row.stack{flex-direction:column;align-items:stretch}
+  .btn{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;-webkit-tap-highlight-color:transparent}
+  .btn:active{transform:scale(.97)}
+  .btn.primary{background:var(--accent);color:#111;border-color:var(--accent);font-weight:600}
+  .btn.accent{background:var(--accent2);color:#111;border-color:var(--accent2);font-weight:600}
+  .btn.danger{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:#fca5a5}
+  .btn.full{width:100%}
+  .btn.sm{padding:6px 10px;min-height:32px;font-size:12px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  label.lbl{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  input[type=color]{width:44px;height:36px;padding:0;border:1px solid var(--border);border-radius:6px;background:var(--panel2)}
+  input[type=text],input[type=number],textarea,select{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:9px 10px;font-family:inherit;font-size:13px;outline:none}
+  input[type=text]:focus,textarea:focus,select:focus{border-color:var(--accent)}
+  .chip{font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--muted);display:inline-flex;align-items:center;gap:4px}
+  .chip.ok{color:var(--ok);background:rgba(34,197,94,.1)}
+
+  /* Meshy modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:none;align-items:flex-end;justify-content:center}
+  .modal.open{display:flex}
+  .modal .sheet{background:var(--panel);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;border-radius:14px 14px 0 0;padding:18px;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+  .modal h2{margin:0 0 6px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .modal .close{background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;margin-left:auto}
+
+  footer{padding:6px 14px;font-size:10px;color:var(--muted);text-align:center;border-top:1px solid var(--border);padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+  .snapshot{font-family:var(--mono);font-size:10px;color:var(--muted);background:rgba(0,0,0,.3);padding:6px 8px;border-radius:6px;margin-top:8px;white-space:pre-wrap}
+
+  /* Collapsible cards */
+  details.card{padding:0}
+  details.card>summary{list-style:none;cursor:pointer;padding:12px;display:flex;align-items:center;gap:6px;user-select:none}
+  details.card>summary::-webkit-details-marker{display:none}
+  details.card>summary::after{content:'▸';margin-left:auto;color:var(--muted);font-size:10px;transition:transform .15s}
+  details.card[open]>summary::after{transform:rotate(90deg)}
+  details.card>summary h3{margin:0}
+  details.card>*:not(summary){padding:0 12px 12px}
+  details.card>summary+*{padding-top:0}
+  .btn[data-mode-btn].active{background:var(--accent);color:#111;border-color:var(--accent)}
+  #hybridToggle.active{background:var(--accent2);color:#111;border-color:var(--accent2)}
+  .chip.on{color:var(--ok);background:rgba(34,197,94,.15)}
+
+  /* Model list */
+  .model-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto}
+  .model-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .model-item.selected{border-color:var(--accent);background:rgba(232,121,249,.08)}
+  .model-item .mi-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .model-item .mi-tag{font-size:10px;color:var(--muted);background:rgba(255,255,255,.05);padding:2px 6px;border-radius:10px;flex:0 0 auto}
+  .model-item .mi-tag.main{color:var(--accent);background:rgba(232,121,249,.12)}
+  .model-item .mi-tag.glb{color:var(--accent2);background:rgba(78,205,196,.12)}
+  .model-item input[type=radio]{accent-color:var(--accent);flex:0 0 auto}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style>
+</head>
+<body>
+
+<header>
+  <i class="fas fa-mobile-screen-button" style="color:var(--accent)"></i>
+  <h1>OliviaLegal Remote</h1>
+  <div class="status" id="status"><span class="dot"></span><span id="statusText">conectando…</span></div>
+</header>
+
+<nav class="tabs">
+  <button class="active" data-tab="chat"><i class="fas fa-comments"></i> Chat</button>
+  <button data-tab="controls"><i class="fas fa-sliders"></i> Controles</button>
+  <button data-tab="meshy"><i class="fas fa-cube"></i> Meshy</button>
+</nav>
+
+<main>
+  <!-- ═══ CHAT ═══ -->
+  <section class="tab-panel active" id="chatPanel" data-tab="chat">
+    <div id="chatLog">
+      <div class="msg system">Conectado à agente OliviaLegal. As mensagens usam o mesmo pipeline do chat principal (tools + Meshy MCP).</div>
+    </div>
+    <div id="chatCompose">
+      <label for="chatInput" class="sr-only">Mensagem para a agente</label>
+      <textarea id="chatInput" name="chatInput" rows="1" placeholder="Pergunte à agente…"></textarea>
+      <button id="chatSend" title="Enviar"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </section>
+
+  <!-- ═══ CONTROLES ═══ -->
+  <section class="tab-panel" data-tab="controls">
+
+    <!-- Preview + scene mode (2D / 3D / Hybrid) -->
+    <div class="card">
+      <h3><i class="fas fa-desktop"></i> Preview no desktop</h3>
+      <div class="grid3">
+        <button class="btn sm" data-mode-btn="2d" onclick="setSceneMode('2d')"><i class="fas fa-vector-square"></i> 2D</button>
+        <button class="btn sm" data-mode-btn="3d" onclick="setSceneMode('3d')"><i class="fas fa-cube"></i> 3D</button>
+        <button class="btn sm" data-mode-btn="hybrid" onclick="setSceneMode('hybrid')"><i class="fas fa-layer-group"></i> Híbrido</button>
+      </div>
+      <div class="grid3" style="margin-top:8px">
+        <button class="btn" onclick="remote({kind:'fullscreen',action:'toggle'})"><i class="fas fa-expand"></i> FS</button>
+        <button class="btn danger" onclick="remote({kind:'rec',action:'toggle'})"><i class="fas fa-record-vinyl"></i> REC</button>
+        <button class="btn accent" onclick="remote({kind:'sh-call',name:'shCapturePNG'})"><i class="fas fa-camera"></i> PNG</button>
+      </div>
+      <div id="snapshotBox" class="snapshot">Aguardando snapshot do desktop…</div>
+    </div>
+
+    <!-- Models in the scene (radio selector) -->
+    <div class="card">
+      <h3><i class="fas fa-diagram-project"></i> Modelos na cena <span id="modelCountChip" class="chip" style="margin-left:6px">0</span></h3>
+      <div id="modelList" class="model-list">
+        <div style="color:var(--muted);font-size:12px">Carregue um GLB ou adicione primitivas no desktop para ver a lista aqui.</div>
+      </div>
+      <div class="row" style="margin-top:8px;gap:6px;flex-wrap:wrap">
+        <button class="btn sm" onclick="refreshModels()"><i class="fas fa-sync"></i> Atualizar</button>
+        <button class="btn sm" onclick="setTransformMode('translate')"><i class="fas fa-arrows-up-down-left-right"></i> Mover</button>
+        <button class="btn sm" onclick="setTransformMode('rotate')"><i class="fas fa-rotate"></i> Rotacionar</button>
+        <button class="btn sm" onclick="setTransformMode('scale')"><i class="fas fa-up-right-and-down-left-from-center"></i> Escalar</button>
+      </div>
+      <div class="snapshot" id="selectionHint">Nada selecionado — ações 3D afetam o modelo principal.</div>
+    </div>
+
+    <!-- 3D — animation + camera -->
+    <details class="card" open>
+      <summary><h3 style="display:inline"><i class="fas fa-cube"></i> 3D — Animação & câmera</h3></summary>
+      <div class="grid3" style="margin-top:8px">
+        <button class="btn" onclick="remote({kind:'sh3d-call',name:'sh3dToggleAnimation'})"><i class="fas fa-play"></i></button>
+        <button class="btn" onclick="remote({kind:'sh3d-call',name:'sh3dToggleWireframe'})"><i class="fas fa-bezier-curve"></i></button>
+        <button class="btn" onclick="remote({kind:'sh3d-call',name:'sh3dResetCamera'})"><i class="fas fa-crosshairs"></i></button>
+      </div>
+      <label class="lbl" for="speedSlider" style="margin-top:10px">Velocidade <span id="speedVal">1.00×</span></label>
+      <input type="range" min="0.1" max="3" step="0.05" value="1" id="speedSlider" name="speedSlider">
+    </details>
+
+    <!-- 3D — environment + background + hybrid -->
+    <details class="card" open>
+      <summary><h3 style="display:inline"><i class="fas fa-image"></i> 3D — Ambiente</h3></summary>
+      <div class="grid3" style="margin-top:8px">
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dSetEnvironment',args:['studio']})">Studio</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dSetEnvironment',args:['outdoor']})">Outdoor</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dSetEnvironment',args:['night']})">Night</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dSetEnvironment',args:['cyberpunk']})">Cyber</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dSetEnvironment',args:['warm']})">Warm</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dSetEnvironment',args:['product']})">Product</button>
+      </div>
+      <label class="lbl" for="exposureSlider" style="margin-top:10px">Exposição <span id="exposureVal">1.00</span></label>
+      <input type="range" min="0.1" max="4" step="0.05" value="1" id="exposureSlider" name="exposureSlider">
+      <label class="lbl" for="bgColor" style="margin-top:10px">Background</label>
+      <div class="row">
+        <input type="color" id="bgColor" name="bgColor" value="#1a1a2e">
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dToggleGrid'})">Grid</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dToggleGround'})">Ground</button>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn sm" id="hybridToggle" onclick="toggleHybrid()"><i class="fas fa-object-group"></i> Híbrido 2D+3D</button>
+        <span class="chip" id="hybridChip">off</span>
+      </div>
+    </details>
+
+    <!-- 3D — objects / primitives -->
+    <details class="card">
+      <summary><h3 style="display:inline"><i class="fas fa-cubes-stacked"></i> 3D — Objetos</h3></summary>
+      <div class="grid3" style="margin-top:8px">
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dAddPrimitive',args:['box']})"><i class="fas fa-cube"></i> Box</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dAddPrimitive',args:['sphere']})"><i class="fas fa-circle"></i> Sph</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dAddPrimitive',args:['plane']})"><i class="fas fa-square"></i> Plane</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dAddPrimitive',args:['cylinder']})"><i class="fas fa-database"></i> Cyl</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dAddPrimitive',args:['cone']})"><i class="fas fa-caret-up"></i> Cone</button>
+        <button class="btn sm" onclick="remote({kind:'sh3d-call',name:'sh3dAddPrimitive',args:['torus']})"><i class="fas fa-ring"></i> Torus</button>
+      </div>
+      <button class="btn full danger sm" style="margin-top:8px" onclick="remote({kind:'sh3d-call',name:'sh3dClearExtras'})"><i class="fas fa-broom"></i> Limpar extras</button>
+    </details>
+
+    <!-- 2D — World (day/night, time, weather, era) -->
+    <details class="card">
+      <summary><h3 style="display:inline"><i class="fas fa-cloud-sun"></i> 2D — Mundo</h3></summary>
+      <label class="lbl" for="dayNightSlider" style="margin-top:8px">Dia ↔ Noite <span id="dayNightVal">0.50</span></label>
+      <input type="range" min="0" max="1" step="0.01" value="0.5" id="dayNightSlider" name="dayNightSlider">
+      <label class="lbl" for="timeSpeedSlider" style="margin-top:8px">Velocidade do tempo <span id="timeSpeedVal">1.00×</span></label>
+      <input type="range" min="0.2" max="4" step="0.05" value="1" id="timeSpeedSlider" name="timeSpeedSlider">
+      <label class="lbl" for="weatherSlider" style="margin-top:8px">Clima (intensidade) <span id="weatherVal">0.00</span></label>
+      <input type="range" min="0" max="1" step="0.01" value="0" id="weatherSlider" name="weatherSlider">
+      <label class="lbl" for="eraSlider" style="margin-top:8px">Era <span id="eraVal">1750</span></label>
+      <input type="range" min="1200" max="2025" step="1" value="1750" id="eraSlider" name="eraSlider">
+      <div class="lbl" id="weatherTypeLabel" style="margin-top:8px">Tipo de clima</div>
+      <div class="grid3">
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shSetWeatherType',args:['clear']})">Clear</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shSetWeatherType',args:['cloudy']})">Cloudy</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shSetWeatherType',args:['rain']})">Rain</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shSetWeatherType',args:['fog']})">Fog</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shSetWeatherType',args:['snow']})">Snow</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shSetWeatherType',args:['storm']})">Storm</button>
+      </div>
+      <button class="btn full sm" style="margin-top:8px" onclick="remote({kind:'sh-call',name:'shToggleNight'})"><i class="fas fa-moon"></i> Toggle Night</button>
+    </details>
+
+    <!-- 2D — Visual Effects (PostFX) -->
+    <details class="card">
+      <summary><h3 style="display:inline"><i class="fas fa-magic"></i> PostFX</h3></summary>
+      <div id="postfxSliders"></div>
+      <button class="btn full sm danger" style="margin-top:8px" onclick="remote({kind:'sh-call',name:'shResetPostFx'})"><i class="fas fa-undo"></i> Reset PostFX</button>
+    </details>
+
+    <!-- Environment & Particles -->
+    <details class="card">
+      <summary><h3 style="display:inline"><i class="fas fa-wind"></i> Partículas & ambiente</h3></summary>
+      <div id="envfxSliders"></div>
+      <div class="row stack" style="margin-top:8px;gap:4px">
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shToggleEnvFlag',args:['autoRotate']})">Auto-rotate 3D</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shToggleEnvFlag',args:['autoCycleDayNight']})">Auto day/night</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shToggleEnvFlag',args:['mouseReactive']})">Mouse-reactive</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shToggleEnvFlag',args:['autoEraSepia']})">Auto era-sepia</button>
+      </div>
+    </details>
+
+    <!-- Style Presets -->
+    <details class="card">
+      <summary><h3 style="display:inline"><i class="fas fa-paint-brush"></i> Style Presets</h3></summary>
+      <div class="grid3" style="margin-top:8px">
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shApplyPreset',args:['cartoon']})">Cartoon</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shApplyPreset',args:['anime']})">Anime</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shApplyPreset',args:['storybook']})">Storybook</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shApplyPreset',args:['watercolor']})">Watercolor</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shApplyPreset',args:['noir']})">Noir</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shApplyPreset',args:['cinematic']})">Cinematic</button>
+      </div>
+    </details>
+
+    <!-- Capture & Export -->
+    <details class="card">
+      <summary><h3 style="display:inline"><i class="fas fa-download"></i> Capturar & Exportar</h3></summary>
+      <div class="grid2" style="margin-top:8px">
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shCapturePNG'})"><i class="fas fa-camera"></i> PNG</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shExportScene'})"><i class="fas fa-file-export"></i> Cena JSON</button>
+        <button class="btn sm" onclick="remote({kind:'sh-call',name:'shExportFxPreset'})"><i class="fas fa-floppy-disk"></i> FX preset</button>
+        <button class="btn sm" onclick="remote({kind:'request-snapshot'})"><i class="fas fa-sync"></i> Snapshot</button>
+      </div>
+    </details>
+
+    <!-- Agent shortcuts -->
+    <div class="card">
+      <h3><i class="fas fa-wand-magic-sparkles"></i> Agente (atalhos)</h3>
+      <div class="row stack">
+        <button class="btn full primary" onclick="agentShortcut('Descreva o estado atual da cena 3D (baseado no snapshot) e sugira três ajustes para melhorar a apresentação.')"><i class="fas fa-eye"></i> Analisar preview</button>
+        <button class="btn full accent" onclick="agentShortcut('Usando as ferramentas sh3dSetEnvironment, sh3dSetExposure e sh3dSetBgColor via o remote-bus, ajuste a cena para um look cinemático noturno.')"><i class="fas fa-film"></i> Look cinemático</button>
+        <button class="btn full" onclick="agentShortcut('Ative o modo híbrido 2D+3D (remote_bus__invoke kind=sh3d-call name=sh3dSetHybrid2D args=[true]) e proponha ajustes para que o GLB se integre à ilustração.')"><i class="fas fa-layer-group"></i> Sugerir híbrido</button>
+        <button class="btn full" onclick="agentShortcut('Liste minhas últimas tarefas Meshy via meshy__list_tasks e mostre os IDs/status.')"><i class="fas fa-list"></i> Listar tarefas Meshy</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MESHY ═══ -->
+  <section class="tab-panel" data-tab="meshy">
+    <div class="card">
+      <h3><i class="fas fa-font"></i> Texto → 3D</h3>
+      <label for="meshyPrompt" class="sr-only">Prompt Meshy texto → 3D</label>
+      <textarea id="meshyPrompt" name="meshyPrompt" rows="3" placeholder="ex.: low-poly monster mask, stylised, dark fantasy"></textarea>
+      <div class="row" style="margin-top:8px;font-size:12px">
+        <label><input type="checkbox" id="meshyLow" name="meshyLow"> Low-poly</label>
+        <label><input type="checkbox" id="meshyPBR" name="meshyPBR" checked> PBR</label>
+        <label><input type="checkbox" id="meshyRig" name="meshyRig"> Rig</label>
+      </div>
+      <button class="btn full primary" style="margin-top:10px" onclick="meshyText()"><i class="fas fa-paper-plane"></i> Delegar à agente</button>
+    </div>
+
+    <div class="card">
+      <h3><i class="fas fa-image"></i> Imagem(ns) → 3D</h3>
+      <label for="meshyImgs" class="sr-only">URLs de imagens Meshy</label>
+      <textarea id="meshyImgs" name="meshyImgs" rows="3" placeholder="https://.../front.png&#10;https://.../side.png"></textarea>
+      <label for="meshyTex" class="sr-only">Prompt de textura Meshy</label>
+      <input type="text" id="meshyTex" name="meshyTex" placeholder="texture prompt (opcional)" style="margin-top:8px">
+      <div class="row" style="margin-top:8px;font-size:12px">
+        <label><input type="checkbox" id="meshyImgPBR" name="meshyImgPBR" checked> PBR</label>
+        <label><input type="checkbox" id="meshyImgRemesh" name="meshyImgRemesh"> Remesh</label>
+      </div>
+      <button class="btn full accent" style="margin-top:10px" onclick="meshyImg()"><i class="fas fa-paper-plane"></i> Delegar à agente</button>
+    </div>
+
+    <div class="card">
+      <h3><i class="fas fa-download"></i> Importar task existente</h3>
+      <label for="meshyId" class="sr-only">Meshy task ID</label>
+      <input type="text" id="meshyId" name="meshyId" placeholder="task ID (UUID)">
+      <label for="meshyRes" class="sr-only">Tipo de recurso Meshy</label>
+      <select id="meshyRes" name="meshyRes" style="margin-top:8px">
+        <option value="text-to-3d">text-to-3d</option>
+        <option value="image-to-3d">image-to-3d</option>
+        <option value="multi-image-to-3d">multi-image-to-3d</option>
+        <option value="remesh">remesh</option>
+        <option value="rigging">rigging</option>
+      </select>
+      <button class="btn full" style="margin-top:10px" onclick="meshyImport()"><i class="fas fa-paper-plane"></i> Delegar à agente</button>
+    </div>
+  </section>
+</main>
+
+<footer>Remote conectado via <code>/api/OliviaLegal/remote-bus</code>. Desktop deve estar aberto em <code>/OliviaLegal/</code>.</footer>
+
+<script>
+/* ═════════ Tabs ═════════ */
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('active', x === b));
+  const t = b.dataset.tab;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.tab === t));
+});
+
+/* ═════════ Remote bus ═════════ */
+const ROLE = 'mobile';
+// Derive API base from the page URL so we work in every deployment:
+//   • direct:  http://host:3229/olivia/mobile.html        → base ''
+//   • nginx A: https://…/api/OliviaLegal/olivia/mobile.html      → base '/api/OliviaLegal'
+//   • nginx B: https://…/OliviaLegal/mobile.html   (rewrites to /olivia/)
+//                                                                 → base '/api/OliviaLegal'
+//     (that public vhost exposes the OliviaLegal backend only under /api/OliviaLegal/, so
+//      /run + /remote-bus must go through that prefix even when the HTML
+//      itself is served from the short /OliviaLegal/ alias).
+const API_BASE = (function () {
+  const p = location.pathname;
+  if (/^\/api\/OliviaLegal(\/|$)/.test(p)) return '/api/OliviaLegal';
+  let i = p.indexOf('/olivia/');
+  if (i > 0) return p.slice(0, i);
+  // Short "/OliviaLegal/" alias served by the public gateway → backend lives at /api/OliviaLegal
+  if (/^\/OliviaLegal(\/|$)/.test(p)) return '/api/OliviaLegal';
+  // When served on public hosts behind gateway rewrites, prefer the stable prefixed API.
+  if (!location.port || location.port === '80' || location.port === '443') return '/api/OliviaLegal';
+  return '';
+})();
+let since = 0;
+let lastSnapshot = null;
+const statusEl = document.getElementById('status');
+const statusText = document.getElementById('statusText');
+
+async function remote(payload) {
+  try {
+    const r = await fetch(API_BASE + '/remote-bus', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({role: ROLE, payload})
+    });
+    if (!r.ok) toast('Falha ao enviar (' + r.status + ')');
+  } catch (e) { toast('Sem conexão: ' + e.message); }
+}
+
+async function busLoop() {
+  while (true) {
+    try {
+      const r = await fetch(API_BASE + '/remote-bus?role=' + ROLE + '&since=' + since + '&wait=25');
+      if (!r.ok) { setStatus('error', 'HTTP ' + r.status); await sleep(2000); continue; }
+      const data = await r.json();
+      since = data.next || since;
+      setStatus('connected', 'conectado');
+      (data.messages || []).forEach(m => {
+        if (!m || m.role === ROLE) return;
+        const p = m.payload || {};
+        if (p.kind === 'snapshot') { lastSnapshot = p; renderSnapshot(); }
+        if (p.kind === 'ack') renderAck(p);
+      });
+    } catch (e) { setStatus('error', 'offline'); await sleep(2000); }
+  }
+}
+
+function sleep(ms) { return new Promise(res => setTimeout(res, ms)); }
+function setStatus(cls, text) { statusEl.className = 'status ' + cls; statusText.textContent = text; }
+
+function renderSnapshot() {
+  const s = lastSnapshot; if (!s) return;
+  const box = document.getElementById('snapshotBox');
+  box.textContent =
+    'mode: ' + (s.sceneMode || (s.is3d ? '3D' : '2D')) +
+    '  ·  fullscreen: ' + (s.fullscreen ? 'on' : 'off') +
+    '  ·  hybrid: ' + (s.hybrid ? 'on' : 'off') +
+    (s.modelName ? '\nmodel: ' + s.modelName : '') +
+    (s.activeScene ? '\nscene: ' + s.activeScene : '') +
+    (s.fps ? '\nfps: ' + s.fps + '  tri: ' + s.tri : '');
+  // Sync UI state
+  const mode = s.sceneMode || (s.is3d ? '3d' : '2d');
+  currentMode = mode;
+  document.querySelectorAll('[data-mode-btn]').forEach(b => b.classList.toggle('active', b.dataset.modeBtn === mode));
+  setHybridUI(!!s.hybrid);
+  renderModelList(s.objects || [], s.selected || null);
+}
+
+/* ═════════ Model list (selection) ═════════ */
+let selectedModel = null;   // desktop's sh3dSelect name; 'main' or sh3dExtra_*/sh3dPrim_*
+let modelsCache = [];
+
+function renderModelList(objects, serverSelected) {
+  modelsCache = objects || [];
+  const host = document.getElementById('modelList');
+  const chip = document.getElementById('modelCountChip');
+  const hint = document.getElementById('selectionHint');
+  chip.textContent = String(modelsCache.length);
+  if (!modelsCache.length) {
+    host.innerHTML = '<div style="color:var(--muted);font-size:12px">Carregue um GLB ou adicione primitivas no desktop para ver a lista aqui.</div>';
+    selectedModel = null;
+    hint.textContent = 'Nenhum modelo na cena.';
+    return;
+  }
+  // Reconcile our local selection with what the desktop reports
+  if (serverSelected && modelsCache.some(m => m.name === serverSelected)) {
+    selectedModel = serverSelected;
+  } else if (!modelsCache.some(m => m.name === selectedModel)) {
+    selectedModel = null;
+  }
+  host.innerHTML = '';
+  modelsCache.forEach(m => {
+    const row = document.createElement('label');
+    const radioId = 'modelPick_' + m.name.replace(/[^a-zA-Z0-9_-]/g, '_');
+    row.className = 'model-item' + (m.name === selectedModel ? ' selected' : '');
+    row.setAttribute('for', radioId);
+    const tagClass = m.type === 'main' ? 'main' : (m.type === 'glb' ? 'glb' : '');
+    row.innerHTML =
+      '<input type="radio" id="' + radioId + '" name="mobileModelPick" value="' + m.name + '"' +
+        (m.name === selectedModel ? ' checked' : '') + '>' +
+      '<span class="mi-name">' + escapeHtml(m.label || m.name) + '</span>' +
+      (m.hasAnimations ? '<i class="fas fa-person-running" style="color:var(--accent2);font-size:11px" title="com animações"></i>' : '') +
+      '<span class="mi-tag ' + tagClass + '">' + (m.type || '') + '</span>';
+    row.onclick = () => pickModel(m.name);
+    host.appendChild(row);
+  });
+  const cur = modelsCache.find(m => m.name === selectedModel);
+  hint.textContent = cur
+    ? ('Selecionado: ' + (cur.label || cur.name) + ' · ações 3D e o agente agirão sobre esse alvo.')
+    : 'Nada selecionado — ações 3D afetam o modelo principal.';
+}
+
+function pickModel(name) {
+  selectedModel = name;
+  // Tell the desktop to highlight + attach the gizmo to this target
+  remote({kind:'sh3d-call', name:'sh3dSelect', args:[name === 'main' ? null : name]});
+  // Optimistically refresh UI
+  document.querySelectorAll('.model-item').forEach(el => {
+    const radio = el.querySelector('input[type=radio]');
+    const isSel = radio && radio.value === name;
+    el.classList.toggle('selected', isSel);
+    if (radio) radio.checked = isSel;
+  });
+  const cur = modelsCache.find(m => m.name === name);
+  const hint = document.getElementById('selectionHint');
+  if (hint && cur) hint.textContent = 'Selecionado: ' + (cur.label || cur.name) + ' · ações 3D e o agente agirão sobre esse alvo.';
+}
+
+function refreshModels() { remote({kind:'request-snapshot'}); }
+function setTransformMode(m) {
+  remote({kind:'sh3d-call', name:'sh3dSetTransformMode', args:[m]});
+}
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderAck(p) {
+  if (!p.result || p.result.ok) return;
+  toast('⚠ desktop: ' + (p.result.error || 'erro'));
+}
+
+/* Request initial snapshot */
+setTimeout(() => remote({kind:'request-snapshot'}), 500);
+
+/* ═════════ Slider → bus (debounced) ═════════ */
+function debouncedSlider(id, valueId, fmt, sender) {
+  const el = document.getElementById(id), lab = document.getElementById(valueId);
+  let t;
+  el.oninput = () => {
+    if (lab) lab.textContent = fmt(el.value);
+    clearTimeout(t); t = setTimeout(() => sender(el.value), 120);
+  };
+}
+debouncedSlider('speedSlider', 'speedVal', v => parseFloat(v).toFixed(2) + '×',
+  v => remote({kind:'sh3d-call', name:'sh3dSetAnimSpeed', args:[v]}));
+debouncedSlider('exposureSlider', 'exposureVal', v => parseFloat(v).toFixed(2),
+  v => remote({kind:'sh3d-call', name:'sh3dSetExposure', args:[v]}));
+document.getElementById('bgColor').oninput = e => remote({kind:'sh3d-call', name:'sh3dSetBgColor', args:[e.target.value]});
+
+/* World sliders (2D) */
+debouncedSlider('dayNightSlider', 'dayNightVal', v => parseFloat(v).toFixed(2),
+  v => remote({kind:'sh-call', name:'shSetDayNightCycle', args:[v]}));
+debouncedSlider('timeSpeedSlider', 'timeSpeedVal', v => parseFloat(v).toFixed(2) + '×',
+  v => remote({kind:'sh-call', name:'shSetWorldTimeSpeed', args:[v]}));
+debouncedSlider('weatherSlider', 'weatherVal', v => parseFloat(v).toFixed(2),
+  v => remote({kind:'sh-call', name:'shSetWorldWeather', args:[v]}));
+debouncedSlider('eraSlider', 'eraVal', v => parseInt(v, 10).toString(),
+  v => remote({kind:'sh-call', name:'shSetEra', args:[v]}));
+
+/* ═════════ Scene mode (2D / 3D / Hybrid) ═════════ */
+let currentMode = '2d';
+function setSceneMode(m){
+  currentMode = m;
+  document.querySelectorAll('[data-mode-btn]').forEach(b => b.classList.toggle('active', b.dataset.modeBtn === m));
+  if (m === '2d') {
+    remote({kind:'sh3d-call', name:'sh3dSetHybrid2D', args:[false]});
+    remote({kind:'sh-call',   name:'shSetSceneMode', args:['2d']});
+    setHybridUI(false);
+  } else if (m === '3d') {
+    remote({kind:'sh-call',   name:'shSetSceneMode', args:['3d']});
+    remote({kind:'sh3d-call', name:'sh3dSetHybrid2D', args:[false]});
+    setHybridUI(false);
+  } else { // hybrid
+    remote({kind:'sh-call',   name:'shSetSceneMode', args:['3d']});
+    remote({kind:'sh3d-call', name:'sh3dSetHybrid2D', args:[true]});
+    setHybridUI(true);
+  }
+}
+function toggleHybrid(){
+  const btn = document.getElementById('hybridToggle');
+  const on = !btn.classList.contains('active');
+  remote({kind:'sh3d-call', name:'sh3dSetHybrid2D', args:[on]});
+  setHybridUI(on);
+  if (on) setSceneMode('hybrid');
+}
+function setHybridUI(on){
+  const btn = document.getElementById('hybridToggle');
+  const chip = document.getElementById('hybridChip');
+  if (btn) btn.classList.toggle('active', !!on);
+  if (chip) { chip.textContent = on ? 'on' : 'off'; chip.classList.toggle('on', !!on); }
+}
+
+/* ═════════ PostFX sliders (built dynamically) ═════════ */
+const POSTFX = [
+  {k:'bloom',       min:0,    max:1,    step:0.01, val:0.08,  dec:2, label:'Bloom'},
+  {k:'vignette',    min:0,    max:1,    step:0.01, val:0.15,  dec:2, label:'Vignette'},
+  {k:'grain',       min:0,    max:0.6,  step:0.01, val:0,     dec:2, label:'Grain'},
+  {k:'brightness',  min:0.3,  max:2,    step:0.01, val:1,     dec:2, label:'Brightness'},
+  {k:'saturation',  min:0.2,  max:2,    step:0.01, val:1,     dec:2, label:'Saturation'},
+  {k:'contrast',    min:0.5,  max:2,    step:0.01, val:1,     dec:2, label:'Contrast'},
+  {k:'hueShift',    min:-180, max:180,  step:1,    val:0,     dec:0, label:'Hue Shift°'},
+  {k:'warmth',      min:-1,   max:1,    step:0.02, val:0,     dec:2, label:'Warmth'},
+  {k:'temperature', min:2000, max:10000,step:50,   val:6500,  dec:0, label:'Color Temp K'},
+  {k:'sepia',       min:0,    max:1,    step:0.01, val:0,     dec:2, label:'Sepia'},
+  {k:'lensFlare',   min:0,    max:1,    step:0.01, val:0,     dec:2, label:'Lens Flare'},
+  {k:'celShading',  min:0,    max:1,    step:0.01, val:0,     dec:2, label:'Cel Shading'},
+  {k:'chromaticAberration', min:0, max:0.03, step:0.001, val:0, dec:3, label:'Chromatic'},
+  {k:'blur',        min:0,    max:6,    step:0.1,  val:0,     dec:1, label:'Blur'}
+];
+function buildFxSliders(containerId, items, sender){
+  const host = document.getElementById(containerId);
+  items.forEach(it => {
+    const inputId = containerId + '_' + it.k;
+    const wrap = document.createElement('div');
+    wrap.innerHTML =
+      '<label class="lbl" for="' + inputId + '" style="margin-top:6px">' + it.label +
+        ' <span id="' + inputId + '_v">' + it.val.toFixed(it.dec) + '</span></label>' +
+      '<input type="range" id="' + inputId + '" name="' + inputId + '" min="' + it.min + '" max="' + it.max +
+        '" step="' + it.step + '" value="' + it.val + '">';
+    host.appendChild(wrap);
+    const el = document.getElementById(containerId + '_' + it.k);
+    const lab = document.getElementById(containerId + '_' + it.k + '_v');
+    let t;
+    el.oninput = () => {
+      lab.textContent = parseFloat(el.value).toFixed(it.dec);
+      clearTimeout(t);
+      t = setTimeout(() => sender(it.k, el.value), 120);
+    };
+  });
+}
+buildFxSliders('postfxSliders', POSTFX,
+  (k, v) => remote({kind:'sh-call', name:'shSetPostFxSlider', args:[k, v]}));
+
+const ENVFX = [
+  {k:'wind',            min:0, max:2, step:0.02, val:0.30, dec:2, label:'Wind'},
+  {k:'fogDensity',      min:0, max:1, step:0.01, val:0,    dec:2, label:'Fog Density'},
+  {k:'turbulence',      min:0, max:1, step:0.01, val:0.20, dec:2, label:'Turbulence'},
+  {k:'gravity',         min:0, max:2, step:0.02, val:1,    dec:2, label:'Gravity'},
+  {k:'particleDensity', min:0, max:1, step:0.01, val:0.50, dec:2, label:'Particle Density'},
+  {k:'particleGlow',    min:0, max:1, step:0.01, val:0.40, dec:2, label:'Particle Glow'}
+];
+buildFxSliders('envfxSliders', ENVFX,
+  (k, v) => remote({kind:'sh-call', name:'shSetEnvFx', args:[k, v]}));
+
+/* ═════════ Chat (direct /run SSE) ═════════ */
+const chatLog = document.getElementById('chatLog');
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+
+function addMsg(role, text) {
+  const d = document.createElement('div');
+  d.className = 'msg ' + role;
+  d.textContent = text;
+  chatLog.appendChild(d);
+  chatLog.scrollTop = chatLog.scrollHeight;
+  return d;
+}
+
+chatInput.addEventListener('input', () => {
+  chatInput.style.height = 'auto';
+  chatInput.style.height = Math.min(120, chatInput.scrollHeight) + 'px';
+});
+chatInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+});
+chatSend.onclick = sendChat;
+
+async function sendChat(presetText) {
+  const raw = (presetText || chatInput.value || '').trim();
+  if (!raw) return;
+  chatInput.value = ''; chatInput.style.height = 'auto';
+  addMsg('user', raw);
+  chatSend.disabled = true;
+
+  // Prepend context header so the server-side agent knows this is the phone
+  // and include the latest preview snapshot when available.
+  const ctx = [];
+  ctx.push('[source: OliviaLegal mobile remote]');
+  if (lastSnapshot) {
+    ctx.push('[desktop preview snapshot: mode=' + (lastSnapshot.sceneMode || (lastSnapshot.is3d ? '3D' : '2D')) +
+             ', fullscreen=' + lastSnapshot.fullscreen +
+             ', hybrid=' + !!lastSnapshot.hybrid +
+             (lastSnapshot.modelName ? ', model=' + lastSnapshot.modelName : '') +
+             (lastSnapshot.activeScene ? ', scene=' + lastSnapshot.activeScene : '') + ']');
+  }
+  if (modelsCache && modelsCache.length) {
+    const listLine = modelsCache.map(m =>
+      (m.name === selectedModel ? '▶ ' : '  ') + m.name + ' (' + (m.label || m.name) + ', ' + m.type + (m.hasAnimations ? ', animated' : '') + ')'
+    ).join('\n');
+    ctx.push('[scene objects — prefix ▶ = user-selected target; pass name to sh3dSelect before acting]\n' + listLine);
+  }
+  if (selectedModel) {
+    const cur = (modelsCache || []).find(m => m.name === selectedModel);
+    ctx.push('[user selected target: name=' + selectedModel +
+             (cur ? ', label=' + (cur.label || selectedModel) + ', type=' + cur.type : '') +
+             '. Any "this model"/"esse modelo" refers to this.]');
+  }
+  ctx.push('[you can drive the desktop shaders preview by invoking remote_bus__invoke — ' +
+           'use kind=sh3d-call name=sh3dSelect args=["<name>"] to retarget, then the other sh3d* functions. meshy__* tools are available.]');
+  const userPrompt = ctx.join('\n') + '\n\n' + raw;
+
+  const bubble = addMsg('assistant', '…');
+  try {
+    const r = await fetch(API_BASE + '/run', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ userPrompt })
+    });
+    if (!r.ok || !r.body) { bubble.className = 'msg error'; bubble.textContent = 'HTTP ' + r.status; chatSend.disabled = false; return; }
+    const reader = r.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '', acc = '';
+    bubble.textContent = '';
+    while (true) {
+      const {value, done} = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, {stream: true});
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        const raw = line.slice(5).trim();
+        if (!raw || raw === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(raw);
+          // Server emits {type:'token', content} as the main stream.
+          const delta = (evt.type === 'token' || evt.type === 'text_delta' || evt.type === 'delta')
+            ? (evt.content || evt.text || '') : '';
+          if (delta) { acc += delta; bubble.textContent = acc; chatLog.scrollTop = chatLog.scrollHeight; }
+          else if (evt.type === 'tool_call' || evt.type === 'tool') {
+            addMsg('system', '→ ' + (evt.name || evt.tool || 'tool'));
+          }
+          else if (evt.type === 'status' && evt.message) {
+            addMsg('system', evt.message);
+          }
+          else if (evt.type === 'error') { addMsg('error', evt.message || evt.error || 'erro'); }
+          else if (evt.type === 'final' && !acc) { bubble.textContent = (evt.text || evt.content || ''); }
+          else if (evt.type === 'done') { /* terminator */ }
+        } catch (_) { /* non-JSON keep-alive */ }
+      }
+    }
+    if (!acc && bubble.textContent === '') bubble.textContent = '(sem resposta)';
+  } catch (e) {
+    bubble.className = 'msg error'; bubble.textContent = 'erro: ' + e.message;
+  } finally {
+    chatSend.disabled = false;
+  }
+}
+
+function agentShortcut(text) {
+  document.querySelector('.tabs button[data-tab=chat]').click();
+  sendChat(text);
+}
+
+/* ═════════ Meshy delegation ═════════ */
+function meshyText() {
+  const prompt = document.getElementById('meshyPrompt').value.trim();
+  if (!prompt) return toast('Prompt vazio.');
+  const low = document.getElementById('meshyLow').checked;
+  const pbr = document.getElementById('meshyPBR').checked;
+  const rig = document.getElementById('meshyRig').checked;
+  const body = {prompt, model_type: low ? 'lowpoly' : 'standard', target_formats:['glb']};
+  if (rig) body.pose_mode = 'a-pose';
+  const steps = [
+    'Call meshy__text_to_3d_preview with ' + JSON.stringify(body) + '.',
+    'Poll meshy__get_task (resource="text-to-3d") every 5s until SUCCEEDED.'
+  ];
+  if (pbr) steps.push('Call meshy__text_to_3d_refine with {preview_task_id:<id>,enable_pbr:true,target_formats:["glb"]} and poll again.');
+  if (rig) steps.push('Call meshy__rigging with that id and poll resource="rigging".');
+  steps.push('Return the GLB URL so I can import it.');
+  agentShortcut('Generate via Meshy:\n\n- ' + steps.join('\n- '));
+}
+function meshyImg() {
+  const raw = document.getElementById('meshyImgs').value.trim();
+  const urls = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  if (!urls.length) return toast('Informe ao menos uma URL.');
+  const tex = document.getElementById('meshyTex').value.trim();
+  const pbr = document.getElementById('meshyImgPBR').checked;
+  const remesh = document.getElementById('meshyImgRemesh').checked;
+  const payload = {enable_pbr:!!pbr,should_remesh:!!remesh,topology:remesh?'quad':'triangle',target_formats:['glb']};
+  if (tex) payload.texture_prompt = tex;
+  let call;
+  if (urls.length === 1) { payload.image_url = urls[0]; call = 'meshy__image_to_3d'; }
+  else { payload.image_urls = urls.slice(0,4); call = 'meshy__multi_image_to_3d'; }
+  agentShortcut('Reconstruct from image(s) via Meshy:\n\n- Call ' + call + ' with ' + JSON.stringify(payload) +
+    '.\n- Poll meshy__get_task (resource="' + (urls.length===1?'image-to-3d':'multi-image-to-3d') + '") until SUCCEEDED.\n- Return GLB URL.');
+}
+function meshyImport() {
+  const id = document.getElementById('meshyId').value.trim();
+  const res = document.getElementById('meshyRes').value;
+  if (!id) return toast('Informe o task ID.');
+  agentShortcut('Import Meshy task:\n\n- Call meshy__get_task with {resource:"' + res + '", id:"' + id + '"}.\n- Poll until SUCCEEDED and return the GLB URL.');
+}
+
+/* ═════════ Toast ═════════ */
+function toast(msg) {
+  const d = document.createElement('div');
+  d.textContent = msg;
+  d.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:8px 14px;border-radius:20px;font-size:12px;z-index:10000;opacity:0;transition:opacity .2s';
+  document.body.appendChild(d);
+  requestAnimationFrame(() => d.style.opacity = '1');
+  setTimeout(() => { d.style.opacity = '0'; setTimeout(() => d.remove(), 300); }, 2400);
+}
+
+busLoop();
+</script>
+</body>
+</html>

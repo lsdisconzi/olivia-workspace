@@ -1,0 +1,79 @@
+/* ── CASE BUILDER TAB ── */
+.case-builder{padding:14px 18px}
+.case-upload-zone{border:2px dashed var(--border-hi);border-radius:10px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .25s;background:rgba(0,0,0,0.01)}
+.case-upload-zone:hover,.case-upload-zone.dragover{border-color:var(--amber);background:rgba(28,69,50,.04)}
+.case-upload-zone .upload-icon{font-size:36px;color:var(--amber);margin-bottom:12px;display:block}
+.case-upload-zone .upload-title{font-family:var(--serif);font-size:16px;font-weight:500;color:var(--white);margin-bottom:6px}
+.case-upload-zone .upload-sub{font-size:13px;color:var(--gray-hi);margin-bottom:4px}
+.case-upload-zone .upload-hint{font-size:11px;color:var(--gray);line-height:1.6}
+.case-upload-zone .upload-reassure{font-size:12px;color:var(--green);margin-top:12px;font-style:italic}
+.case-file-list{margin-top:14px;display:flex;flex-direction:column;gap:4px;max-height:200px;overflow-y:auto}
+.case-file-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--bg)}
+.case-file-item .file-icon{color:var(--amber);font-size:11px;flex-shrink:0}
+.case-file-item .file-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gray-hi);font-family:var(--mono)}
+.case-file-item .file-size{color:var(--gray);font-size:10px;flex-shrink:0}
+.case-file-item .file-status{font-size:9px;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.case-file-item .file-status.pending{background:rgba(184,150,46,.1);color:var(--yellow);border:1px solid rgba(184,150,46,.2)}
+.case-file-item .file-status.done{background:rgba(74,158,112,.1);color:var(--green);border:1px solid rgba(74,158,112,.2)}
+.case-file-item .file-remove{background:none;border:none;color:var(--gray);cursor:pointer;font-size:10px;padding:2px}
+.case-file-item .file-remove:hover{color:var(--red)}
+.case-file-remove{background:none;border:none;color:var(--gray);cursor:pointer;font-size:10px;padding:2px}
+.case-file-remove:hover{color:var(--red)}
+.case-file-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:var(--gray-hi)}
+.case-file-size{font-size:10px;color:var(--gray);flex-shrink:0}
+.case-stage-tracker{margin-top:18px;padding:14px;border:1px solid var(--border);border-radius:8px;background:var(--bg)}
+.case-stage-tracker .stage-title{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--gray);margin-bottom:10px}
+.case-stage{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px}
+.case-stage .stage-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;border:1.5px solid var(--border-hi);background:transparent}
+.case-stage .stage-dot.active{border-color:var(--amber);background:var(--amber);box-shadow:0 0 6px rgba(28,69,50,.3)}
+.case-stage .stage-dot.done{border-color:var(--green);background:var(--green)}
+.case-stage .stage-label{color:var(--gray-hi)}
+.case-stage .stage-label.active{color:var(--white);font-weight:500}
+.case-stage .stage-label.done{color:var(--green)}
+.case-actions{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+.btn-ai{background:var(--amber) !important;color:var(--bg) !important;font-weight:600}
+.btn-ai:hover{filter:brightness(1.1)}
+.studio-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    padding: 16px;
+    top: auto;
+    left: auto;
+    transform: none;
+    border: none;
+    border-radius: 0;
+    max-width: none;
+    width: auto;
+    max-height: none;
+    box-shadow: none;
+    background: rgba(0,0,0,0.4);
+}
+.studio-modal.open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    pointer-events: auto;
+}
+.studio-modal-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    width: min(520px,100%);
+    max-height: calc(85vh - 32px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+.studio-modal-close { position: absolute; right: 15px; top: 10px; font-size: 24px; cursor: pointer; }
+.studio-file-tree { list-style: none; padding-left: 16px; }
+.studio-file-tree li { cursor: pointer; padding: 2px 0; }
+.studio-file-tree li.selected { background: var(--amber-light, #fdebd3); }
+.studio-file-tree .folder::before { content: '\f07b'; font-family: 'Font Awesome 5 Free'; margin-right: 4px; }
+.studio-file-tree .file::before { content: '\f15b'; font-family: 'Font Awesome 5 Free'; margin-right: 4px; }
+

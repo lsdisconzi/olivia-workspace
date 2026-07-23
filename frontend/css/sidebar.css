@@ -1,0 +1,75 @@
+/* ── WORKSPACE LAYOUT ── */
+main{padding-top:56px;display:flex;flex-direction:column;height:100vh;min-height:0}
+.workspace{flex:1;display:flex;min-height:0;position:relative}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:300px;min-width:220px;max-width:520px;
+  background:var(--bg-card);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;min-height:0;flex-shrink:0;
+  position:relative;transition:width .28s ease,min-width .28s ease;
+}
+/* Resize handle */
+.sidebar-resize-handle{
+  position:absolute;top:0;right:-3px;width:6px;height:100%;
+  cursor:col-resize;z-index:20;
+}
+.sidebar-resize-handle::after{
+  content:'';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:2px;height:36px;border-radius:2px;
+  background:var(--border-hi);opacity:0;transition:opacity .2s;
+}
+.sidebar-resize-handle:hover::after,.sidebar-resize-handle.dragging::after{opacity:1}
+
+/* Collapsed strip */
+.sidebar.collapsed{width:44px!important;min-width:44px!important;overflow:visible;background:transparent;border-right:none}
+.sidebar.collapsed .sidebar-header-inner,
+.sidebar.collapsed .sidebar-tabs,
+.sidebar.collapsed .sidebar-body,
+.sidebar.collapsed .sidebar-session{display:none}
+
+/* ── TREE TRUNK (collapsed sidebar) ── */
+.sidebar-collapsed-strip{
+  display:none;flex-direction:column;align-items:center;
+  padding:0;height:100%;position:relative;
+}
+.sidebar.collapsed .sidebar-collapsed-strip{display:flex}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    bottom: 0;
+    width: 85vw !important;
+    max-width: 320px !important;
+    min-width: 0 !important;
+    transform: translateX(-100%);
+    z-index: 400;
+    box-shadow: none;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, .5);
+  }
+
+  .sidebar.collapsed {
+    width: 85vw !important;
+    min-width: 0 !important;
+  }
+
+  .sidebar-collapsed-strip,
+  .sidebar.collapsed .sidebar-collapsed-strip {
+    display: flex;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    bottom: 0;
+    width: 46px;
+    height: auto;
+    padding: 8px 0;
+    z-index: 390;
+  }
+}

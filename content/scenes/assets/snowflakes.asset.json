@@ -1,0 +1,14 @@
+{
+  "id": "snowflakes",
+  "name": "Snowflakes",
+  "icon": "❄️",
+  "category": "fx",
+  "tags": ["winter","snow"],
+  "desc": "Gentle falling snowflakes",
+  "params": {
+    "w": { "type": "number", "default": 1 },
+    "h": { "type": "number", "default": 1 },
+    "count": { "type": "number", "default": 30 }
+  },
+  "code": "const count=ctx.count||30; const sw=ctx.w||w; const sh=ctx.h||h; for(let i=0;i<count;i++){ const sfx = (Math.sin(i*73.1+5.3)*0.5+0.5)*sw + Math.sin(mt*0.5+i*0.4)*12; const sfy = ((mt*5+i*(sh/count))%(sh+20))-10; const sfr = 1.2 + Math.sin(i*2.3)*0.7; const sfop = 0.3 + Math.sin(mt*1.5+i*0.7)*0.2; svg += `<circle cx=\"${sfx%sw}\" cy=\"${sfy}\" r=\"${sfr}\" fill=\"#FFF\" opacity=\"${sfop}\"/>`; } return svg;"
+}

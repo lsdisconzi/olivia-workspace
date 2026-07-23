@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="light dark">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OliviaLegal · Acesso</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%237FA98E'/><g transform='translate(6,7) scale(0.31)'><path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23FAF6EF' stroke-width='2.6' stroke-linecap='round' opacity='.75'/><ellipse cx='22' cy='42' rx='4.4' ry='5.5' fill='%23D98A5E'/></g></svg>">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ═══════════════════════════════════════════
+           DARK THEME
+           ═══════════════════════════════════════════ */
+    [data-theme="dark"] {
+      --bg: #191917;
+      --bg-card: #1f1f1d;
+      --border: #2a2a28;
+      --border-hi: #363634;
+      --amber: #D98A5E;
+      --amber-lo: rgba(217, 138, 94, .12);
+      --green: #7FA98E;
+      --green-lo: rgba(127, 169, 142, .10);
+      --blue: #7AAFC5;
+      --blue-lo: rgba(122, 175, 197, .10);
+      --white: #ede8df;
+      --gray: #6b6b68;
+      --gray-hi: #9a9a96;
+      --brand-text: var(--white);
+      --btn-bg: #ede8df;
+      --btn-text: #191917;
+      --btn-hover-opacity: .88;
+      --input-bg: #191917;
+      --input-border: #363634;
+      --error-bg: rgba(217, 100, 90, .08);
+      --error-border: rgba(217, 100, 90, .28);
+      --error-color: #d96a5a;
+      --hint-bg: var(--amber-lo);
+      --hint-border: rgba(217, 138, 94, .25);
+      --hint-text: var(--gray-hi);
+      --hint-strong: var(--amber);
+      --toggle-shadow: 0 4px 12px rgba(0, 0, 0, .22);
+      --lang-menu-bg: #1f1f1d;
+      --lang-menu-border: #363634;
+    }
+
+    /* ═══════════════════════════════════════════
+           LIGHT THEME
+           ═══════════════════════════════════════════ */
+    [data-theme="light"] {
+      --bg: #FAF6EF;
+      --bg-card: #FFFFFF;
+      --border: rgba(63, 97, 82, .10);
+      --border-hi: rgba(63, 97, 82, .22);
+      --amber: #D98A5E;
+      --amber-lo: rgba(217, 138, 94, .08);
+      --green: #3F6152;
+      --green-lo: rgba(63, 97, 82, .08);
+      --blue: #5A8DA6;
+      --blue-lo: rgba(90, 141, 166, .08);
+      --white: #34302A;
+      --gray: #ADA396;
+      --gray-hi: #6B6458;
+      --brand-text: var(--green);
+      --btn-bg: #3F6152;
+      --btn-text: #FAF6EF;
+      --btn-hover-opacity: .9;
+      --input-bg: #FFFFFF;
+      --input-border: rgba(63, 97, 82, .20);
+      --error-bg: rgba(196, 80, 70, .06);
+      --error-border: rgba(196, 80, 70, .25);
+      --error-color: #b0453c;
+      --hint-bg: rgba(200, 155, 60, .08);
+      --hint-border: rgba(200, 155, 60, .22);
+      --hint-text: var(--gray-hi);
+      --hint-strong: var(--amber);
+      --toggle-shadow: 0 4px 12px rgba(0, 0, 0, .07);
+      --lang-menu-bg: #FFFFFF;
+      --lang-menu-border: rgba(63, 97, 82, .18);
+    }
+
+    :root {
+      --bg: #191917;
+      --bg-card: #1f1f1d;
+      --border: #2a2a28;
+      --border-hi: #363634;
+      --amber: #D98A5E;
+      --amber-lo: rgba(217, 138, 94, .12);
+      --green: #7FA98E;
+      --green-lo: rgba(127, 169, 142, .10);
+      --blue: #7AAFC5;
+      --blue-lo: rgba(122, 175, 197, .10);
+      --white: #ede8df;
+      --gray: #6b6b68;
+      --gray-hi: #9a9a96;
+      --brand-text: var(--white);
+      --btn-bg: #ede8df;
+      --btn-text: #191917;
+      --btn-hover-opacity: .88;
+      --input-bg: #191917;
+      --input-border: #363634;
+      --error-bg: rgba(217, 100, 90, .08);
+      --error-border: rgba(217, 100, 90, .28);
+      --error-color: #d96a5a;
+      --hint-bg: var(--amber-lo);
+      --hint-border: rgba(217, 138, 94, .25);
+      --hint-text: var(--gray-hi);
+      --hint-strong: var(--amber);
+      --toggle-shadow: 0 4px 12px rgba(0, 0, 0, .22);
+      --lang-menu-bg: #1f1f1d;
+      --lang-menu-border: #363634;
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse 50% 40% at 50% 0%, rgba(214, 184, 122, .025) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 80% 90%, rgba(217, 138, 94, .02) 0%, transparent 50%),
+        var(--bg);
+      color: var(--white);
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      line-height: 1.7;
+      font-size: 15px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      transition: background .35s ease, color .35s ease;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(circle at 20% 30%, rgba(127, 169, 142, .015) 1px, transparent 1px),
+        radial-gradient(circle at 75% 65%, rgba(217, 138, 94, .015) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: .4;
+      transition: opacity .35s ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* ═══ RAIL ═══ */
+    .rail {
+      position: fixed;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .rail::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 72px;
+      bottom: 72px;
+      width: 1px;
+      background: linear-gradient(var(--green), var(--border) 40%, var(--border) 60%, var(--amber));
+      opacity: .3;
+      transition: opacity .35s ease, background .35s ease;
+    }
+
+    .rail .dot {
+      position: absolute;
+      left: -2.5px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      transition: background .35s ease;
+    }
+
+    .rail .dot.top {
+      top: 68px;
+      background: var(--green);
+    }
+
+    .rail .dot.bottom {
+      bottom: 68px;
+      background: var(--amber);
+    }
+
+    @media (max-width: 900px) {
+      .rail {
+        display: none;
+      }
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 34px 30px;
+      transition: background .35s ease, border-color .35s ease;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, .06);
+    }
+
+    .login-brand {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .login-brand-name {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 25px;
+      font-weight: 500;
+      color: var(--brand-text);
+      letter-spacing: -0.015em;
+      margin-bottom: 4px;
+      transition: color .35s ease;
+    }
+
+    .login-brand-name em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--amber);
+    }
+
+    #dynamicWord {
+      display: inline-block;
+      transition: opacity .25s ease, transform .25s ease;
+      color: var(--amber);
+    }
+
+    .login-brand-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      transition: color .35s ease;
+    }
+
+    .card-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+      transition: color .35s ease;
+    }
+
+    .card-desc {
+      font-size: .82rem;
+      color: var(--gray-hi);
+      line-height: 1.7;
+      margin-bottom: 22px;
+      transition: color .35s ease;
+    }
+
+    .hint {
+      padding: 12px 16px;
+      border: 1px solid var(--hint-border);
+      border-radius: 10px;
+      background: var(--hint-bg);
+      font-size: .78rem;
+      color: var(--hint-text);
+      line-height: 1.65;
+      margin-bottom: 22px;
+      transition: all .35s ease;
+    }
+
+    .hint strong {
+      color: var(--hint-strong);
+    }
+
+    .error-msg {
+      border: 1px solid var(--error-border);
+      background: var(--error-bg);
+      border-radius: 10px;
+      padding: 11px 15px;
+      color: var(--error-color);
+      font-size: .82rem;
+      margin-bottom: 18px;
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      line-height: 1.55;
+      transition: all .35s ease;
+    }
+
+    .error-msg i {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: .64rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      transition: color .35s ease;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 9px;
+      color: var(--white);
+      padding: 11px 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .9rem;
+      transition: border-color .2s ease, box-shadow .2s ease, background .35s ease, color .35s ease;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    input[type="password"] {
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .08em;
+    }
+
+    input::placeholder {
+      color: var(--gray);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      letter-spacing: 0;
+      font-size: .82rem;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px var(--amber-lo);
+    }
+
+    .btn-submit {
+      width: 100%;
+      border: none;
+      border-radius: 9px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      padding: 12px;
+      cursor: pointer;
+      transition: background .25s ease, transform .15s ease, opacity .25s ease, color .35s ease;
+      margin-top: 4px;
+      letter-spacing: .02em;
+    }
+
+    .btn-submit:hover {
+      opacity: var(--btn-hover-opacity);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: .55;
+      transform: none;
+      cursor: not-allowed;
+    }
+
+    .login-meta {
+      margin-top: 20px;
+      text-align: center;
+      font-size: .68rem;
+      color: var(--gray);
+      line-height: 1.8;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .04em;
+      transition: color .35s ease;
+    }
+
+    /* ═══ THEME & LANGUAGE CONTROLS ═══ */
+    .controls-bar {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .theme-toggle,
+    .lang-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border-hi);
+      background: var(--bg-card);
+      color: var(--gray-hi);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .35s ease;
+      box-shadow: var(--toggle-shadow);
+      font-size: 16px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      position: relative;
+    }
+
+    .theme-toggle:hover,
+    .lang-toggle:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+      transform: scale(1.06);
+    }
+
+    .lang-menu {
+      position: absolute;
+      bottom: 50px;
+      right: 0;
+      background: var(--lang-menu-bg);
+      border: 1px solid var(--lang-menu-border);
+      border-radius: 12px;
+      padding: 6px 0;
+      min-width: 130px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, .12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: all .25s ease;
+      z-index: 1001;
+    }
+
+    .lang-menu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .lang-option {
+      display: block;
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--gray-hi);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .78rem;
+      padding: 8px 18px;
+      text-align: left;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .lang-option:hover {
+      background: var(--amber-lo);
+      color: var(--amber);
+    }
+
+    .lang-option.active {
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    @media (max-width: 640px) {
+      .login-card {
+        padding: 26px 22px;
+      }
+
+      .controls-bar {
+        bottom: 16px;
+        right: 16px;
+        gap: 8px;
+      }
+
+      .theme-toggle,
+      .lang-toggle {
+        width: 37px;
+        height: 37px;
+        font-size: 15px;
+      }
+    }
+
+    @keyframes subtle-pulse {
+
+      0%,
+      100% {
+        opacity: .4;
+      }
+
+      50% {
+        opacity: .7;
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+
+  <div class="rail"><span class="dot top"></span><span class="dot bottom"></span></div>
+
+  <!-- ═══ FLOATING CONTROLS ═══ -->
+  <div class="controls-bar">
+    <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema claro/escuro">
+      <i class="fas fa-sun"></i>
+    </button>
+    <div style="position:relative;">
+      <button class="lang-toggle" id="langToggle" aria-label="Selecionar idioma">
+        <i class="fas fa-globe"></i>
+      </button>
+      <div class="lang-menu" id="langMenu">
+        <button class="lang-option active" data-lang="pt">Português</button>
+        <button class="lang-option" data-lang="en">English</button>
+        <button class="lang-option" data-lang="es">Español</button>
+        <button class="lang-option" data-lang="it">Italiano</button>
+        <button class="lang-option" data-lang="pl">Polski</button>
+        <button class="lang-option" data-lang="el">Ελληνικά</button>
+        <button class="lang-option" data-lang="sq">Shqip</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="login-card">
+      <!-- ═══ BRAND ═══ -->
+      <div class="login-brand">
+        <div class="login-brand-name">
+          Olivia <em>×</em> <span id="dynamicWord">Governança</span>
+        </div>
+        <div class="login-brand-sub" data-i18n="brandSub">Acesso Restrito</div>
+      </div>
+
+      <!-- ═══ CARD TITLE & DESCRIPTION ═══ -->
+      <h2 class="card-title" data-i18n="cardTitle">__CARD_TITLE__</h2>
+      <p class="card-desc" data-i18n="cardDesc">__CARD_DESC__</p>
+
+      <!-- ═══ HINT ═══ -->
+      <div class="hint">
+        <strong data-i18n="authHint">__AUTH_HINT__</strong><br>
+        <span data-i18n="allowedUsers">Usuários autorizados: __ALLOWED_USERS__</span>
+      </div>
+
+      <!-- ═══ ERROR MESSAGE ═══ -->
+      <div class="error-msg" id="errorMsg" style="display:none;">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="errorText"></span>
+      </div>
+
+      <!-- ═══ LOGIN FORM ═══ -->
+      <form method="POST" action="__FORM_ACTION__" id="loginForm">
+        <input type="hidden" name="next" value="__NEXT__">
+        <div class="field">
+          <label for="username" data-i18n="emailLabel">Email</label>
+          <input id="username" name="username" type="email" autocomplete="username"
+            data-i18n-placeholder="emailPlaceholder" placeholder="seuemail@gmail.com" value="__USERNAME__" required>
+        </div>
+        <div class="field">
+          <label for="code" data-i18n="passwordLabel">Senha</label>
+          <input id="code" name="code" type="password" autocomplete="current-password"
+            data-i18n-placeholder="passwordPlaceholder" placeholder="••••••••" required>
+        </div>
+        <button class="btn-submit" type="submit" data-i18n="submitLabel">__SUBMIT_LABEL__</button>
+      </form>
+
+      <div class="login-meta" data-i18n="metaFooter">Plataforma Olivia · Awareness-AI</div>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════
+    // TRANSLATIONS (pt, en, es, it, pl, el, sq)
+    // ═══════════════════════════════════════════
+    const translations = {
+      pt: {
+        brandSub: 'Acesso Restrito',
+        cardTitle: '__CARD_TITLE__',
+        cardDesc: '__CARD_DESC__',
+        authHint: '__AUTH_HINT__',
+        allowedUsers: 'Usuários autorizados: __ALLOWED_USERS__',
+        emailLabel: 'Email',
+        emailPlaceholder: 'seuemail@gmail.com',
+        passwordLabel: 'Senha',
+        passwordPlaceholder: '••••••••',
+        submitLabel: '__SUBMIT_LABEL__',
+        submitting: '<i class="fas fa-spinner fa-spin"></i> Processando...',
+        metaFooter: 'Plataforma Olivia · Awareness-AI',
+        errorGeneric: 'Ocorreu um erro. Tente novamente.',
+        errorInvalid: 'Email ou senha inválidos.',
+      },
+      en: {
+        brandSub: 'Restricted Access',
+        cardTitle: '__CARD_TITLE__',
+        cardDesc: '__CARD_DESC__',
+        authHint: '__AUTH_HINT__',
+        allowedUsers: 'Authorized users: __ALLOWED_USERS__',
+        emailLabel: 'Email',
+        emailPlaceholder: 'youremail@gmail.com',
+        passwordLabel: 'Password',
+        passwordPlaceholder: '••••••••',
+        submitLabel: '__SUBMIT_LABEL__',
+        submitting: '<i class="fas fa-spinner fa-spin"></i> Processing...',
+        metaFooter: 'Olivia Platform · Awareness-AI',
+        errorGeneric: 'An error occurred. Please try again.',
+        errorInvalid: 'Invalid email or password.',
+      },
+      es: {
+        brandSub: 'Acceso Restringido',
+        cardTitle: '__CARD_TITLE__',
+        cardDesc: '__CARD_DESC__',
+        authHint: '__AUTH_HINT__',
+        allowedUsers: 'Usuarios autorizados: __ALLOWED_USERS__',
+        emailLabel: 'Correo electrónico',
+        emailPlaceholder: 'tucorreo@gmail.com',
+        passwordLabel: 'Contraseña',
+        passwordPlaceholder: '••••••••',
+        submitLabel: '__SUBMIT_LABEL__',
+        submitting: '<i class="fas fa-spinner fa-spin"></i> Procesando...',
+        metaFooter: 'Plataforma Olivia · Awareness-AI',
+        errorGeneric: 'Ocurrió un error. Inténtelo de nuevo.',
+        errorInvalid: 'Correo o contraseña inválidos.',
+      },
+      it: {
+        brandSub: 'Accesso Riservato',
+        cardTitle: '__CARD_TITLE__',
+        cardDesc: '__CARD_DESC__',
+        authHint: '__AUTH_HINT__',
+        allowedUsers: 'Utenti autorizzati: __ALLOWED_USERS__',
+        emailLabel: 'Email',
+        emailPlaceholder: 'tuaemail@gmail.com',
+        passwordLabel: 'Password',
+        passwordPlaceholder: '••••••••',
+        submitLabel: '__SUBMIT_LABEL__',
+        submitting: '<i class="fas fa-spinner fa-spin"></i> Elaborazione...',
+        metaFooter: 'Piattaforma Olivia · Awareness-AI',
+        errorGeneric: 'Si è verificato un errore. Riprova.',
+        errorInvalid: 'Email o password non validi.',
+      },
+      pl: {
+        brandSub: 'Dostęp Zastrzeżony',
+        cardTitle: '__CARD_TITLE__',
+        cardDesc: '__CARD_DESC__',
+        authHint: '__AUTH_HINT__',
+        allowedUsers: 'Upoważnieni użytkownicy: __ALLOWED_USERS__',
+        emailLabel: 'Email',
+        emailPlaceholder: 'twojemail@gmail.com',
+        passwordLabel: 'Hasło',
+        passwordPlaceholder: '••••••••',
+        submitLabel: '__SUBMIT_LABEL__',
+        submitting: '<i class="fas fa-spinner fa-spin"></i> Przetwarzanie...',
+        metaFooter: 'Platforma Olivia · Awareness-AI',
+        errorGeneric: 'Wystąpił błąd. Spróbuj ponownie.',
+        errorInvalid: 'Nieprawidłowy email lub hasło.',
+      },
+      el: {
+        brandSub: 'Περιορισμένη Πρόσβαση',
+        cardTitle: '__CARD_TITLE__',
+        cardDesc: '__CARD_DESC__',
+        authHint: '__AUTH_HINT__',
+        allowedUsers: 'Εξουσιοδοτημένοι χρήστες: __ALLOWED_USERS__',
+        emailLabel: 'Email',
+        emailPlaceholder: 'toemail@gmail.com',
+        passwordLabel: 'Κωδικός πρόσβασης',
+        passwordPlaceholder: '••••••••',
+        submitLabel: '__SUBMIT_LABEL__',
+        submitting: '<i class="fas fa-spinner fa-spin"></i> Επεξεργασία...',
+        metaFooter: 'Πλατφόρμα Olivia · Awareness-AI',
+        errorGeneric: 'Παρουσιάστηκε σφάλμα. Δοκιμάστε ξανά.',
+        errorInvalid: 'Μη έγκυρο email ή κωδικός πρόσβασης.',
+      },
+      sq: {
+        brandSub: 'Qasje e Kufizuar',
+        cardTitle: '__CARD_TITLE__',
+        cardDesc: '__CARD_DESC__',
+        authHint: '__AUTH_HINT__',
+        allowedUsers: 'Përdorues të autorizuar: __ALLOWED_USERS__',
+        emailLabel: 'Email',
+        emailPlaceholder: 'emailjuaj@gmail.com',
+        passwordLabel: 'Fjalëkalimi',
+        passwordPlaceholder: '••••••••',
+        submitLabel: '__SUBMIT_LABEL__',
+        submitting: '<i class="fas fa-spinner fa-spin"></i> Duke përpunuar...',
+        metaFooter: 'Platforma Olivia · Awareness-AI',
+        errorGeneric: 'Ndodhi një gabim. Ju lutemi provoni përsëri.',
+        errorInvalid: 'Email ose fjalëkalim i pavlefshëm.',
+      },
+    };
+
+    // ═══════════════════════════════════════════
+    // DYNAMIC WORD LISTS PER LANGUAGE
+    // ═══════════════════════════════════════════
+    const dynamicWords = {
+      pt: ["Governança", "Direitos", "Transparência", "Compliance", "Accountability", "Equidade", "Justiça",
+        "Ética", "Legalidade", "Cidadania", "Integridade", "Proteção", "Varejo", "Construção", "Educação",
+        "Saúde", "Logística", "Finanças", "Tecnologia", "Indústria"
+      ],
+      en: ["Governance", "Rights", "Transparency", "Compliance", "Accountability", "Equity", "Justice", "Ethics",
+        "Law", "Integrity", "Protection", "Retail", "Construction", "Education", "Healthcare", "Logistics",
+        "Finance", "Technology", "Industry", "Rule of Law"
+      ],
+      es: ["Gobernanza", "Derechos", "Transparencia", "Cumplimiento", "Equidad", "Justicia", "Ética", "Legalidad",
+        "Integridad", "Protección", "Minorista", "Construcción", "Educación", "Salud", "Logística", "Finanzas",
+        "Tecnología", "Industria", "Rendición", "Estado de derecho"
+      ],
+      it: ["Governance", "Diritti", "Trasparenza", "Conformità", "Responsabilità", "Equità", "Giustizia", "Etica",
+        "Legalità", "Integrità", "Protezione", "Vendita al dettaglio", "Costruzione", "Istruzione", "Sanità",
+        "Logistica", "Finanza", "Tecnologia", "Industria", "Stato di diritto"
+      ],
+      pl: ["Ład korporacyjny", "Prawa", "Przejrzystość", "Zgodność", "Rozliczalność", "Równość",
+        "Sprawiedliwość", "Etyka", "Legalność", "Integralność", "Ochrona", "Handel detaliczny",
+        "Budownictwo", "Edukacja", "Ochrona zdrowia", "Logistyka", "Finanse", "Technologia", "Przemysł",
+        "Praworządność"
+      ],
+      el: ["Διακυβέρνηση", "Δικαιώματα", "Διαφάνεια", "Συμμόρφωση", "Λογοδοσία", "Ισότητα", "Δικαιοσύνη",
+        "Ηθική", "Νομιμότητα", "Ακεραιότητα", "Προστασία", "Λιανική", "Κατασκευές", "Εκπαίδευση",
+        "Υγεία", "Εφοδιαστική", "Χρηματοοικονομικά", "Τεχνολογία", "Βιομηχανία", "Κράτος δικαίου"
+      ],
+      sq: ["Qeverisje", "Të drejtat", "Transparencë", "Pajtueshmëri", "Përgjegjshmëri", "Barazi", "Drejtësi",
+        "Etikë", "Ligjshmëri", "Integritet", "Mbrojtje", "Shitje me pakicë", "Ndërtim", "Arsim",
+        "Shëndetësi", "Logjistikë", "Financa", "Teknologji", "Industri", "Sundimi i ligjit"
+      ],
+    };
+
+    // ═══════════════════════════════════════════
+    // STATE
+    // ═══════════════════════════════════════════
+    let currentLang = 'pt';
+    let wordInterval = null;
+
+    // ═══════════════════════════════════════════
+    // APPLY LANGUAGE
+    // ═══════════════════════════════════════════
+    function applyLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      const dict = translations[lang];
+
+      // Text content
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.innerHTML = dict[key];
+      });
+
+      // Placeholders
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key]) el.setAttribute('placeholder', dict[key]);
+      });
+
+      // Dynamic word reset
+      const dynSpan = document.getElementById('dynamicWord');
+      if (dynSpan && dynamicWords[lang] && dynamicWords[lang].length > 0) {
+        dynSpan.textContent = dynamicWords[lang][0];
+      }
+
+      startWordRotator();
+
+      // Menu active
+      document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+
+      try { localStorage.setItem('olivia-lang', lang); } catch (e) { }
+    }
+
+    // ═══════════════════════════════════════════
+    // WORD ROTATOR
+    // ═══════════════════════════════════════════
+    function startWordRotator() {
+      if (wordInterval) clearInterval(wordInterval);
+      const words = dynamicWords[currentLang] || dynamicWords['pt'];
+      const span = document.getElementById('dynamicWord');
+      if (!span || words.length === 0) return;
+
+      let currentWord = span.textContent.trim();
+      if (!words.includes(currentWord)) {
+        span.textContent = words[0];
+        currentWord = words[0];
+      }
+
+      function pickRandom() {
+        if (words.length <= 1) return words[0];
+        let next;
+        do { next = words[Math.floor(Math.random() * words.length)]; }
+        while (next === currentWord && words.length > 1);
+        return next;
+      }
+
+      function flip() {
+        const next = pickRandom();
+        span.style.opacity = '0';
+        span.style.transform = 'translateY(-4px)';
+        setTimeout(() => {
+          span.textContent = next;
+          currentWord = next;
+          span.style.opacity = '1';
+          span.style.transform = 'translateY(0)';
+        }, 200);
+      }
+
+      setTimeout(() => {
+        flip();
+        wordInterval = setInterval(flip, 4000);
+      }, 3500);
+    }
+
+    // ═══════════════════════════════════════════
+    // THEME TOGGLE
+    // ═══════════════════════════════════════════
+    function initTheme() {
+      const body = document.body;
+      const toggleBtn = document.getElementById('themeToggle');
+      const icon = toggleBtn.querySelector('i');
+
+      function setTheme(theme) {
+        body.setAttribute('data-theme', theme);
+        icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        try { localStorage.setItem('olivia-theme', theme); } catch (e) { }
+      }
+
+      const saved = localStorage.getItem('olivia-theme');
+      if (saved === 'light') setTheme('light');
+      else setTheme('dark');
+
+      toggleBtn.addEventListener('click', () => {
+        const current = body.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      });
+    }
+
+    // ═══════════════════════════════════════════
+    // LANGUAGE MENU
+    // ═══════════════════════════════════════════
+    function initLanguageMenu() {
+      const langToggle = document.getElementById('langToggle');
+      const langMenu = document.getElementById('langMenu');
+
+      langToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        langMenu.classList.toggle('open');
+      });
+
+      document.addEventListener('click', () => langMenu.classList.remove('open'));
+
+      langMenu.addEventListener('click', (e) => {
+        const option = e.target.closest('.lang-option');
+        if (!option) return;
+        const lang = option.getAttribute('data-lang');
+        if (lang && translations[lang]) {
+          applyLanguage(lang);
+          langMenu.classList.remove('open');
+        }
+      });
+    }
+
+    // ═══════════════════════════════════════════
+    // LANGUAGE DETECTION
+    // ═══════════════════════════════════════════
+    function detectLanguage() {
+      const saved = localStorage.getItem('olivia-lang');
+      if (saved && translations[saved]) return saved;
+      const browser = navigator.language.slice(0, 2);
+      if (translations[browser]) return browser;
+      return 'pt';
+    }
+
+    // ═══════════════════════════════════════════
+    // SHOW ERROR
+    // ═══════════════════════════════════════════
+    function showError(key) {
+      const errorDiv = document.getElementById('errorMsg');
+      const errorText = document.getElementById('errorText');
+      const dict = translations[currentLang];
+      errorText.textContent = dict[key] || dict.errorGeneric;
+      errorDiv.style.display = 'flex';
+    }
+
+    function hideError() {
+      document.getElementById('errorMsg').style.display = 'none';
+    }
+
+    // ═══════════════════════════════════════════
+    // FORM SUBMISSION
+    // ═══════════════════════════════════════════
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      const btn = this.querySelector('button[type="submit"]');
+      if (!btn) return;
+      hideError();
+      btn.disabled = true;
+      btn.innerHTML = translations[currentLang].submitting;
+    });
+
+    // ═══════════════════════════════════════════
+    // INIT
+    // ═══════════════════════════════════════════
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initLanguageMenu();
+      const lang = detectLanguage();
+      applyLanguage(lang);
+
+      // Expose showError globally for backend error injection
+      window.showLoginError = showError;
+      window.hideLoginError = hideError;
+    });
+  </script>
+  <script src="/frontend/auth/tracker.js"></script>
+</body>
+
+</html>

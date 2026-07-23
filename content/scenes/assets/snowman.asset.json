@@ -1,0 +1,15 @@
+{
+  "id": "snowman",
+  "name": "Snowman",
+  "icon": "☃️",
+  "category": "character",
+  "tags": ["winter","snow","fun"],
+  "desc": "Classic snowman with hat, scarf, and optional waving arm",
+  "params": {
+    "x": { "type": "x", "default": "w*0.5" },
+    "y": { "type": "y", "default": "bY-5" },
+    "scale": { "type": "number", "default": 1 },
+    "waving": { "type": "boolean", "default": false }
+  },
+  "code": "const s=ctx.scale||1; const x=ctx.x||0; const y=ctx.y||0; const waving=ctx.waving||false; svg += `<g transform=\"translate(${x},${y}) scale(${s})\">`; svg += `<circle cx=\"0\" cy=\"0\" r=\"14\" fill=\"#F8F8FF\" stroke=\"#C8D8E8\" stroke-width=\"${ol*0.5}\"/>`; svg += `<circle cx=\"0\" cy=\"-20\" r=\"10\" fill=\"#F8F8FF\" stroke=\"#C8D8E8\" stroke-width=\"${ol*0.5}\"/>`; svg += `<circle cx=\"0\" cy=\"-36\" r=\"8\" fill=\"#F8F8FF\" stroke=\"#C8D8E8\" stroke-width=\"${ol*0.5}\"/>`; svg += `<circle cx=\"-3\" cy=\"-38\" r=\"1.5\" fill=\"#222\"/>`; svg += `<circle cx=\"3\" cy=\"-38\" r=\"1.5\" fill=\"#222\"/>`; svg += `<polygon points=\"0,-35 7,-34 0,-33\" fill=\"#FF8C42\"/>`; svg += `<path d=\"M-3 -31 Q0 -29 3 -31\" fill=\"none\" stroke=\"#222\" stroke-width=\"1\"/>`; for(let i=0;i<3;i++) svg += `<circle cx=\"0\" cy=\"${-14+i*6}\" r=\"1.5\" fill=\"#222\"/>`; if(waving){ const wave = Math.sin(mt*3)*15; svg += `<line x1=\"10\" y1=\"-22\" x2=\"26\" y2=\"${-33+wave}\" stroke=\"#6B4F2A\" stroke-width=\"2\" stroke-linecap=\"round\"/>`; svg += `<line x1=\"-10\" y1=\"-22\" x2=\"-24\" y2=\"-30\" stroke=\"#6B4F2A\" stroke-width=\"2\" stroke-linecap=\"round\"/>`; } else { svg += `<line x1=\"12\" y1=\"-22\" x2=\"22\" y2=\"-28\" stroke=\"#6B4F2A\" stroke-width=\"2\" stroke-linecap=\"round\"/>`; svg += `<line x1=\"-12\" y1=\"-22\" x2=\"-22\" y2=\"-28\" stroke=\"#6B4F2A\" stroke-width=\"2\" stroke-linecap=\"round\"/>`; } svg += `<rect x=\"-6\" y=\"-48\" width=\"12\" height=\"10\" rx=\"1\" fill=\"#2A2A3A\"/>`; svg += `<rect x=\"-9\" y=\"-39\" width=\"18\" height=\"3\" rx=\"1\" fill=\"#2A2A3A\"/>`; svg += `</g>`; return svg;"
+}

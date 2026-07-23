@@ -1,0 +1,13 @@
+{
+  "id": "fawn",
+  "name": "Fawn (baby deer)",
+  "icon": "🦌",
+  "category": "character",
+  "tags": ["forest", "animal", "baby", "cute"],
+  "desc": "Baby deer with white spots, often placed next to parent deer",
+  "params": {
+    "x": { "type": "x", "default": "w*0.68" },
+    "y": { "type": "y", "default": "bY-2" }
+  },
+  "code": "const fwX = ctx.x ?? 250; const fwY = ctx.y ?? 205; const bob = Math.sin(mt*0.6)*2;\nsvg += `<ellipse cx=\"${fwX}\" cy=\"${fwY+bob}\" rx=\"9\" ry=\"6\" fill=\"#D4A050\" stroke=\"#A07830\" stroke-width=\"${ol*0.3}\"/>`;\nsvg += `<circle cx=\"${fwX+5}\" cy=\"${fwY-7+bob}\" r=\"4\" fill=\"#D4A050\" stroke=\"#A07830\" stroke-width=\"${ol*0.3}\"/>`;\nsvg += `<circle cx=\"${fwX+7}\" cy=\"${fwY-8+bob}\" r=\"1\" fill=\"#222\"/>`;\nfor (let i = 0; i < 3; i++) svg += `<circle cx=\"${fwX-4+i*4}\" cy=\"${fwY-1+bob}\" r=\"1\" fill=\"#FFF\" opacity=\"0.6\"/>`;"
+}

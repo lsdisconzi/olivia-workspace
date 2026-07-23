@@ -1,0 +1,15 @@
+{
+  "id": "stroller",
+  "name": "Buggy/Stroller",
+  "icon": "👶",
+  "category": "prop",
+  "tags": ["baby","park","city"],
+  "desc": "Modern stroller with hood and wheels",
+  "params": {
+    "x": { "type": "x", "default": "w*0.5" },
+    "y": { "type": "y", "default": "bY" },
+    "scale": { "type": "number", "default": 1 },
+    "color": { "type": "color", "default": "#6A9A8A" }
+  },
+  "code": "const s=ctx.scale||1; const x=ctx.x||0; const y=ctx.y||0; const col=ctx.color||'#6A9A8A'; svg += `<g transform=\"translate(${x},${y}) scale(${s})\">`; svg += `<circle cx=\"-6\" cy=\"10\" r=\"3.5\" fill=\"#222\"/>`; svg += `<circle cx=\"8\" cy=\"10\" r=\"3.5\" fill=\"#222\"/>`; svg += `<line x1=\"-6\" y1=\"10\" x2=\"0\" y2=\"-3\" stroke=\"#222\" stroke-width=\"2\"/>`; svg += `<line x1=\"8\" y1=\"10\" x2=\"4\" y2=\"-3\" stroke=\"#222\" stroke-width=\"2\"/>`; svg += `<rect x=\"-4\" y=\"-5\" width=\"12\" height=\"10\" rx=\"3\" fill=\"#2A2A2A\"/>`; svg += `<path d=\"M-4 -8 Q2 -18 10 -8\" fill=\"${col}\" stroke=\"#5A8A7A\" stroke-width=\"1\"/>`; svg += `</g>`; return svg;"
+}

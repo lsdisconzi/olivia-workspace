@@ -1,0 +1,15 @@
+{
+  "id": "street_lamp",
+  "name": "Street Lamp",
+  "icon": "💡",
+  "category": "prop",
+  "tags": ["city","light","night"],
+  "desc": "Classic street lamp with warm glow",
+  "params": {
+    "x": { "type": "x", "default": "w*0.1" },
+    "y": { "type": "y", "default": "bY" },
+    "scale": { "type": "number", "default": 1 },
+    "lit": { "type": "boolean", "default": true }
+  },
+  "code": "const s=ctx.scale||1; const x=ctx.x||0; const y=ctx.y||0; const lit=ctx.lit!==false; svg += `<g transform=\"translate(${x},${y}) scale(${s})\">`; svg += `<line x1=\"0\" y1=\"15\" x2=\"0\" y2=\"-30\" stroke=\"#3A3A3A\" stroke-width=\"2.5\"/>`; svg += `<path d=\"M0 -30 Q8 -32 10 -28\" fill=\"none\" stroke=\"#3A3A3A\" stroke-width=\"2\"/>`; if(lit){ const glow = isN ? 0.6 : 0.15; svg += `<circle cx=\"10\" cy=\"-26\" r=\"4\" fill=\"#FFE088\" opacity=\"${glow}\"/>`; if(isN) svg += `<circle cx=\"10\" cy=\"-26\" r=\"20\" fill=\"#FFE088\" opacity=\"0.04\"/>`; } else { svg += `<circle cx=\"10\" cy=\"-26\" r=\"4\" fill=\"#555\"/>`; } svg += `</g>`; return svg;"
+}

@@ -1,0 +1,10 @@
+/* Theme: A · HAVAN Azul/Amarelo/Verde — LIGHT (cores plenas)
+   Applies when <html data-theme="a-light">. Project: havana.
+   Reference palette: blue #0b5cab · yellow #f4b400 · green #1f7a4d · red #d8232a (detalhe). */
+[data-theme="a-light"]{
+  --bg:#f5f8fc; --card:#ffffff; --border:#d7e3f2;
+  --blue:#0b5cab; --blue-deep:#093f78; --yellow:#f4b400; --green:#1f7a4d; --red:#d8232a;
+  --text:#243042; --muted:#5e6b7d; --header-text:#ffffff;
+  --wash-blue:rgba(11,92,171,.10); --wash-green:rgba(31,122,77,.12); --wash-yellow:rgba(244,180,0,.18);
+  color-scheme: light;
+}

@@ -1,0 +1,24 @@
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:2000}
+.modal-overlay.show{display:block}
+.modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:28px;max-width:560px;width:92%;max-height:85vh;overflow-y:auto;z-index:2001}
+.modal.show{display:block}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-title{font-family:var(--serif);font-size:18px;font-weight:500}
+.modal-close{font-size:16px;cursor:pointer;color:var(--gray-hi);background:none;border:none;padding:4px;border-radius:4px;transition:all .15s}
+.modal-close:hover{background:rgba(0,0,0,0.05);color:var(--white)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+
+/* ── ARTIFACT MODAL (fullscreen viewer) ── */
+.artifact-modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:3000;backdrop-filter:blur(8px)}
+.artifact-modal-overlay.show{display:block}
+.artifact-modal{display:none;position:fixed;top:24px;left:24px;right:24px;bottom:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;z-index:3001;flex-direction:column;overflow:hidden}
+.artifact-modal.show{display:flex}
+.artifact-modal-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+.artifact-modal-header h3{font-family:var(--serif);font-size:16px;font-weight:500;display:flex;align-items:center;gap:10px}
+.artifact-modal-header h3 .output-filename{max-width:400px}
+.artifact-modal-actions{display:flex;gap:8px;align-items:center}
+.artifact-modal-body{flex:1;overflow:auto;padding:0;min-height:0;display:flex;flex-direction:column}
+.artifact-modal-body .answer-md{padding:24px 32px;font-size:15px;line-height:1.85}
+.artifact-modal-body iframe{flex:1;width:100%;height:100%;border:none;min-height:0}
+.artifact-modal-body pre{padding:24px 32px;margin:0;flex:1}

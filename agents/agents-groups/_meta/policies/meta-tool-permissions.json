@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "default_policy": {
+    "mode": "deny-by-default",
+    "require_confirmation_for": [
+      "cross_group_write",
+      "destructive_file_delete",
+      "production_endpoint_write",
+      "collection_delete"
+    ]
+  },
+  "agents": {
+    "meta-orchestrator": {
+      "allowed_tools": ["context_assemble", "str_replace_editor", "terminate"],
+      "denied_tools": ["bash", "python_execute", "browser_use", "neo4j_query", "qdrant_ingest", "qdrant_search"],
+      "require_confirmation_for": ["cross_group_write"],
+      "notes": [
+        "The meta-orchestrator only routes and annotates. It does not perform filesystem, shell, or memory actions directly.",
+        "All execution must be delegated to a group orchestrator."
+      ]
+    }
+  }
+}

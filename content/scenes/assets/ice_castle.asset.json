@@ -1,0 +1,15 @@
+{
+  "id": "ice_castle",
+  "name": "Ice Castle",
+  "icon": "🏰",
+  "category": "environment",
+  "tags": ["winter","frozen","magic"],
+  "desc": "Frozen castle with glowing windows and shimmering aura",
+  "params": {
+    "x": { "type": "x", "default": "w*0.5" },
+    "y": { "type": "y", "default": "bY-20" },
+    "scale": { "type": "number", "default": 1 },
+    "glow": { "type": "number", "default": 0.5 }
+  },
+  "code": "const s=ctx.scale||1; const x=ctx.x||0; const y=ctx.y||0; const glow=ctx.glow||0.5; const castH=130; svg += `<g transform=\"translate(${x},${y}) scale(${s})\">`; const col = isN ? '#70A8D8' : '#C0E0FF'; const strokeCol = '#80B0D0'; svg += `<rect x=\"-45\" y=\"${-castH*0.5}\" width=\"90\" height=\"${castH*0.5+8}\" rx=\"3\" fill=\"${col}\" stroke=\"${strokeCol}\" stroke-width=\"${ol}\"/>`; svg += `<path d=\"M-12 0 L-12 -18 Q0 -28 12 -18 L12 0\" fill=\"rgba(125,249,255,0.45)\" stroke=\"${strokeCol}\" stroke-width=\"${ol*0.5}\"/>`; svg += `<rect x=\"-68\" y=\"${-castH*0.7}\" width=\"28\" height=\"${castH*0.7+8}\" rx=\"2\" fill=\"${col}\" stroke=\"${strokeCol}\" stroke-width=\"${ol}\"/>`; svg += `<polygon points=\"-68,${-castH*0.7} -54,${-castH*0.7-25} -40,${-castH*0.7}\" fill=\"#A0D8F0\" stroke=\"${strokeCol}\" stroke-width=\"${ol*0.6}\"/>`; svg += `<rect x=\"40\" y=\"${-castH*0.8}\" width=\"28\" height=\"${castH*0.8+8}\" rx=\"2\" fill=\"${col}\" stroke=\"${strokeCol}\" stroke-width=\"${ol}\"/>`; svg += `<polygon points=\"40,${-castH*0.8} 54,${-castH*0.8-30} 68,${-castH*0.8}\" fill=\"#A0D8F0\" stroke=\"${strokeCol}\" stroke-width=\"${ol*0.6}\"/>`; for(let i=0;i<8;i++) svg += `<rect x=\"${-42+i*11}\" y=\"${-castH*0.5-8}\" width=\"6\" height=\"8\" rx=\"1\" fill=\"${col}\" stroke=\"${strokeCol}\" stroke-width=\"${ol*0.4}\"/>`; // windows const wpos = [[-54,-castH*0.55],[-54,-castH*0.35],[-25,-castH*0.35],[0,-castH*0.3],[25,-castH*0.35],[54,-castH*0.65],[54,-castH*0.45],[54,-castH*0.25]]; for(let i=0;i<8;i++){ const pulse=Math.sin(mt*1.8+i*1.3)*0.5+0.5; const op=0.3+pulse*0.4; svg += `<rect x=\"${wpos[i][0]-3}\" y=\"${wpos[i][1]}\" width=\"6\" height=\"9\" rx=\"3\" fill=\"rgba(125,249,255,${op})\" stroke=\"${strokeCol}\" stroke-width=\"${ol*0.3}\"/>`; } // crystal glow const crysY = -castH*0.8-32; svg += `<polygon points=\"54,${crysY} 50,${crysY+10} 58,${crysY+10}\" fill=\"${sc.acc}\" opacity=\"${0.5+Math.sin(mt*1.5)*0.3}\"/>`; svg += `<circle cx=\"54\" cy=\"${crysY+5}\" r=\"${20+10*glow}\" fill=\"${sc.acc}\" opacity=\"${0.04+0.04*glow}\"/>`; svg += `</g>`; return svg;"
+}

@@ -1,0 +1,23 @@
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;border-bottom:1px solid var(--border);padding:0 48px;height:56px;display:flex;align-items:center;justify-content:space-between;z-index:1000;backdrop-filter:blur(20px)}
+.nav-inner{width:100%;max-width:var(--max);margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-family:var(--serif);font-size:17px;font-weight:500;color:var(--white);text-decoration:none;letter-spacing:0.01em;display:flex;align-items:baseline;gap:14px}
+.nav-logo-sub{font-family:var(--mono);font-size:10px;font-weight:400;color:var(--gray);letter-spacing:0.1em;text-transform:uppercase;transition:color .2s}
+.nav-logo-sub.replied{color:var(--green);cursor:pointer}
+.nav-logo-sub.replied:hover{color:#3d8a60}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-link{font-size:13px;color:var(--gray-hi);text-decoration:none;transition:color .15s;letter-spacing:.01em}
+.nav-link:hover,.nav-link.active{color:var(--white)}
+.nav-cta{font-size:13px;padding:7px 18px;border:1px solid var(--border-hi);color:var(--white);text-decoration:none;border-radius:6px;transition:all .15s}
+.nav-cta:hover{border-color:var(--amber);background:var(--amber-lo)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;z-index:1100}
+.hamburger span{display:block;width:22px;height:2px;background:var(--white);border-radius:2px;transition:all .25s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-drawer{display:none;position:fixed;top:56px;left:0;right:0;background:rgba(255,255,255,0.98);border-bottom:1px solid var(--border);padding:16px 28px 28px;z-index:999;backdrop-filter:blur(20px);flex-direction:column;gap:0}
+body.dark .mobile-drawer,html.dark body .mobile-drawer{background:rgba(24,23,21,0.98)}
+.mobile-drawer.open{display:flex}
+.mobile-drawer a{display:block;padding:13px 0;font-size:16px;font-weight:500;color:var(--gray-hi);text-decoration:none;border-bottom:1px solid var(--border);transition:color .15s}
+.mobile-drawer a:last-child{border:none}
+.mobile-drawer a:hover{color:var(--white)}

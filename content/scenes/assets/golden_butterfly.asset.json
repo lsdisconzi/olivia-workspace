@@ -1,0 +1,15 @@
+{
+  "id": "golden_butterfly",
+  "name": "Golden Butterfly",
+  "icon": "🦋",
+  "category": "character",
+  "tags": ["insect","magic","forest"],
+  "desc": "Glowing golden butterfly with flapping wings and sparkle trail",
+  "params": {
+    "x": { "type": "x", "default": "w*0.5" },
+    "y": { "type": "y", "default": "bY-60" },
+    "scale": { "type": "number", "default": 1 },
+    "trail": { "type": "boolean", "default": true }
+  },
+  "code": "const s=ctx.scale||1; const x=ctx.x||0; const y=ctx.y||0; const trail=ctx.trail!==false; const wFlap=Math.sin(mt*7)*5; svg += `<g transform=\"translate(${x},${y}) scale(${s})\">`; svg += `<ellipse cx=\"-3\" cy=\"0\" rx=\"${4+wFlap*0.3}\" ry=\"5\" fill=\"#FFD700\" opacity=\"0.85\" transform=\"rotate(${-wFlap*2} -3 0)\"/>`; svg += `<ellipse cx=\"3\" cy=\"0\" rx=\"${4+wFlap*0.3}\" ry=\"5\" fill=\"#FFD700\" opacity=\"0.85\" transform=\"rotate(${wFlap*2} 3 0)\"/>`; svg += `<ellipse cx=\"0\" cy=\"0\" rx=\"1\" ry=\"3.5\" fill=\"#8B6914\"/>`; if(trail){ for(let i=0;i<8;i++){ const trx = -Math.sin(mt*0.7+i*0.3)*12 - i*4; const tri = i*1.5 + Math.cos(mt*0.6+i*0.4)*3; svg += `<circle cx=\"${trx}\" cy=\"${tri}\" r=\"${1.8-i*0.2}\" fill=\"#FFD700\" opacity=\"${0.25-i*0.025}\"/>`; } } svg += `</g>`; return svg;"
+}

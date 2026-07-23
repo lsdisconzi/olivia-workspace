@@ -1,0 +1,207 @@
+{
+  "added": [
+    {
+      "id": "nvidia/llama-nemotron-embed-vl-1b-v2:free",
+      "name": "Llama Nemotron Embed VL 1B V2 (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "The Llama Nemotron Embed VL 1B V2 embedding model is optimized for multimodal question-answering retrieval. The model can embed 'documents' in the form of image, text, or image and text combined. Documents can be retrieved given a user query in text form. The model supports images containing text, tables, charts, and infographics.",
+      "context_window": 131,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": false
+    },
+    {
+      "id": "nousresearch/hermes-3-llama-3.1-405b:free",
+      "name": "Nous: Hermes 3 405B Instruct (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "Hermes 3 is a generalist language model with many improvements over Hermes 2, including advanced agentic capabilities, m",
+      "context_window": 131072,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": false
+    },
+    {
+      "id": "google/gemma-4-31b-it:free",
+      "name": "Google: Gemma 4 31B (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "Gemma 4 31B Instruct is Google DeepMind's 30.7B dense multimodal model supporting text and image input with text output.",
+      "context_window": 262144,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": true,
+      "supports_thinking": false
+    },
+    {
+      "id": "google/lyria-3-pro-preview",
+      "name": "Google: Lyria 3 Pro Preview",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "Full-length songs are priced at $0.08 per song. Lyria 3 is Google's family of music generation models, available through",
+      "context_window": 1048576,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": true,
+      "supports_thinking": false
+    },
+    {
+      "id": "google/gemma-4-26b-a4b-it:free",
+      "name": "Google: Gemma 4 26B A4B  (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total para",
+      "context_window": 262144,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": true,
+      "supports_thinking": false
+    },
+    {
+      "id": "liquid/lfm-2.5-1.2b-thinking:free",
+      "name": "LiquidAI: LFM2.5-1.2B-Thinking (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "LFM2.5-1.2B-Thinking is a lightweight reasoning-focused model optimized for agentic tasks, data extraction, and RAG—whil",
+      "context_window": 32768,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": false
+    },
+    {
+      "id": "nvidia/nemotron-3-nano-30b-a3b:free",
+      "name": "NVIDIA: Nemotron 3 Nano 30B A3B (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "NVIDIA Nemotron 3 Nano 30B A3B is a small language MoE model with highest compute efficiency and accuracy for developers",
+      "context_window": 256000,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": false
+    },
+    {
+      "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "name": "NVIDIA: Nemotron 3 Ultra (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "NVIDIA Nemotron 3 Ultra is an open frontier-reasoning and orchestration model from NVIDIA, with 55B active parameters ou",
+      "context_window": 1000000,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": true
+    },
+    {
+      "id": "poolside/laguna-xs-2.1:free",
+      "name": "Poolside: Laguna XS 2.1 (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "Laguna XS 2.1 is the latest coding agent model in the 33B-A3B category from [Poolside](https://poolside.ai/) and a step",
+      "context_window": 262144,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": true
+    },
+    {
+      "id": "openai/gpt-oss-20b:free",
+      "name": "OpenAI: gpt-oss-20b (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "gpt-oss-20b is an open-weight 21B parameter model released by OpenAI under the Apache 2.0 license. It uses a Mixture-of-",
+      "context_window": 131072,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": true
+    },
+    {
+      "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+      "name": "NVIDIA: Nemotron 3 Nano Omni (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "NVIDIA Nemotron™ 3 Nano Omni is a 30B-A3B open multimodal model designed to function as a perception and context sub-age",
+      "context_window": 256000,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": true,
+      "supports_thinking": true
+    },
+    {
+      "id": "nvidia/nemotron-3-super-120b-a12b:free",
+      "name": "NVIDIA: Nemotron 3 Super (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "NVIDIA Nemotron 3 Super is a 120B-parameter open hybrid MoE model, activating just 12B parameters for maximum compute ef",
+      "context_window": 262144,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": true
+    },
+    {
+      "id": "accounts/fireworks/models/deepseek-v4-flash",
+      "name": "DeepSeek-V4-Flash",
+      "provider": "fireworks",
+      "tier": "paid",
+      "best_for": "",
+      "context_window": 1048576,
+      "input_cost_per_1m": 0.14,
+      "output_cost_per_1m": 0.28,
+      "supports_vision": false,
+      "supports_thinking": false
+    },
+    {
+      "id": "accounts/fireworks/models/deepseek-v4-pro",
+      "name": "DeepSeek-V4-Pro",
+      "provider": "fireworks",
+      "tier": "paid",
+      "best_for": "",
+      "context_window": 1048576,
+      "input_cost_per_1m": 1.74,
+      "output_cost_per_1m": 3.48,
+      "supports_vision": false,
+      "supports_thinking": false
+    },
+    {
+      "id": "accounts/fireworks/models/nemotron-3-ultra-nvfp4",
+      "name": "NVIDIA Nemotron 3 Ultra NVFP4",
+      "provider": "fireworks",
+      "tier": "paid",
+      "best_for": "",
+      "context_window": 262144,
+      "input_cost_per_1m": 0.6,
+      "output_cost_per_1m": 2.4,
+      "supports_vision": false,
+      "supports_thinking": false
+    }
+  ],
+  "overrides": {
+    "deepseek-v4-flash": {
+      "hidden": false
+    },
+    "openrouter/free": {
+      "hidden": true
+    },
+    "gemini-2.5-pro": {
+      "hidden": true
+    },
+    "gemini-2.5-flash": {
+      "hidden": true
+    },
+    "deepseek-v4-pro": {
+      "hidden": true
+    },
+    "google/gemma-4-31b-it:free": {
+      "hidden": false
+    },
+    "nousresearch/hermes-3-llama-3.1-405b:free": {
+      "hidden": true
+    }
+  }
+}

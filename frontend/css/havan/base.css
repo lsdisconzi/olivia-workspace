@@ -1,0 +1,39 @@
+/* ============================================================
+   HAVAN · project-scoped base.css
+   Loads the project's own themes from ./themes/.
+   When this project is active, the Olivia runtime applies this
+   file and the theme toggle (koutDarkModeToggle) cycles through
+   the themes defined in studio_files/themes/index.json.
+   ------------------------------------------------------------
+   Path referenced by the proposal: frontend/css/base.css
+   This file mirrors that contract for the HAVAN project.
+   ============================================================ */
+
+/* Olivia base tokens (shared, project-independent) */
+:root{
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --havan-blue:#0b5cab; --havan-blue-deep:#093f78;
+  --havan-yellow:#f4b400; --havan-green:#1f7a4d; --havan-red:#d8232a;
+}
+
+/* Project themes — imported from ./themes/ (relative to this file).
+   Each file scopes its variables under [data-theme="…"]. */
+@import "./themes/a-light.css";
+@import "./themes/a-dark.css";
+@import "./themes/b-light.css";
+@import "./themes/b-dark.css";
+
+/* Default document theme when no data-theme is set explicitly */
+:root:not([data-theme]){
+  --bg:#f5f8fc; --card:#ffffff; --border:#d7e3f2;
+  --blue:#0b5cab; --blue-deep:#093f78; --yellow:#f4b400; --green:#1f7a4d; --red:#d8232a;
+  --text:#243042; --muted:#5e6b7d; --header-text:#ffffff;
+  --wash-blue:rgba(11,92,171,.10); --wash-green:rgba(31,122,77,.12); --wash-yellow:rgba(244,180,0,.18);
+  color-scheme: light;
+}
+
+/* Smooth theme transition across surfaces */
+body, header.top, .card, .closing, .mock{
+  transition: background .25s ease, color .25s ease, border-color .25s ease;
+}

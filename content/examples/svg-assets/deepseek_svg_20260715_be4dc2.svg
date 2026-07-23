@@ -1,0 +1,17 @@
+<svg width="280" height="260" viewBox="0 0 280 260">
+  <g style="transform-origin: 140px 130px; animation: sway 10s ease-in-out infinite">
+    <path d="M95 220 Q100 190, 110 165 Q125 130, 145 105 Q165 80, 190 60 Q210 45, 225 38" fill="none" stroke="var(--eco-verde-3)" stroke-width="3.5" stroke-linecap="round" opacity="0.65"/>
+    <path d="M225 38 L240 28 L232 42 Z" fill="var(--eco-verde)" opacity="0.7"/>
+    <path d="M232 35 L240 28" stroke="var(--eco-tinta)" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <path d="M98 215 Q103 188, 112 162" fill="none" stroke="var(--eco-verde)" stroke-width="0.5" opacity="0.2" stroke-linecap="round"/>
+    <ellipse cx="92" cy="222" rx="8" ry="6" fill="var(--eco-terra)" opacity="0.85" transform="rotate(55 92 222)"/>
+    <path d="M96 214 Q100 208, 104 204" fill="none" stroke="var(--eco-claro)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+    <g opacity="0.4">
+      <path d="M180 72 Q175 80, 168 85" fill="none" stroke="var(--eco-verde)" stroke-width="1" stroke-linecap="round"/>
+      <path d="M160 92 Q152 98, 148 106" fill="none" stroke="var(--eco-verde)" stroke-width="0.8" stroke-linecap="round"/>
+      <path d="M135 118 Q128 126, 124 132" fill="none" stroke="var(--eco-verde)" stroke-width="0.6" stroke-linecap="round"/>
+    </g>
+    <ellipse cx="175" cy="78" rx="4" ry="5" fill="var(--eco-terra)" opacity="0.7" style="animation: fruit-glow 4s ease-in-out infinite"/>
+    <ellipse cx="148" cy="108" rx="3.5" ry="4.5" fill="var(--eco-terra)" opacity="0.6" style="animation: fruit-glow 4s ease-in-out 0.6s infinite"/>
+  </g>
+</svg>

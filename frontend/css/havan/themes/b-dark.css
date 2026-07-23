@@ -1,0 +1,10 @@
+/* Theme: B · HAVAN Pastel (Azul/Amarelo/Verde) — DARK
+   Applies when <html data-theme="b-dark">. Project: havana.
+   Dark surfaces with soft pastel lifts for low-eye-strain reading. */
+[data-theme="b-dark"]{
+  --bg:#101a24; --card:#16242f; --border:#26394a;
+  --blue:#9cc0e4; --blue-deep:#bcd6ef; --yellow:#ffe0a1; --green:#a9d6c0; --red:#f0afb3;
+  --text:#e3ebf2; --muted:#a3b2c2; --header-text:#0a141d;
+  --wash-blue:rgba(156,192,228,.16); --wash-green:rgba(169,214,192,.20); --wash-yellow:rgba(255,224,161,.24);
+  color-scheme: dark;
+}

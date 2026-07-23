@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Olivia · Ambiente de Trabalho</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231c4532'/><g transform='translate(6,7) scale(0.31)'><path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23faf9f6' stroke-width='2.5' stroke-linecap='round' opacity='.6'/><path d='M28 36 Q20 26,16 18 Q24 24,28 36Z' fill='%23faf9f6' opacity='.4'/><path d='M30 34 Q38 24,44 18 Q38 28,30 34Z' fill='%23faf9f6' opacity='.35'/><path d='M42 24 Q36 14,34 8 Q40 14,42 24Z' fill='%23faf9f6' opacity='.35'/><ellipse cx='22' cy='42' rx='4' ry='5' fill='%23c4622d'/></g></svg>">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --white: #faf9f6;
+            --black: #1a1a1a;
+            --green-dark: #1c4532;
+            --green-mid: #2d785a;
+            --amber: #c4622d;
+            --amber-light: #d4733e;
+            --gray: #9a9088;
+            --gray-hi: #5a5a5a;
+
+            --color-text-primary: var(--black);
+            --color-text-secondary: var(--gray-hi);
+            --color-text-tertiary: var(--gray);
+            --color-border-secondary: rgba(28, 69, 50, .22);
+            --color-border-tertiary: rgba(28, 69, 50, .12);
+
+            --font-serif: 'Fraunces', Georgia, serif;
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition: .3s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --white: #121412;
+                --black: #efece5;
+                --green-dark: #2c5a44;
+                --green-mid: #48a97a;
+                --amber: #e07b42;
+                --amber-light: #ef8f58;
+                --gray: #6b6560;
+                --gray-hi: #b7b3aa;
+                --color-border-tertiary: rgba(255, 255, 255, .1);
+                --color-border-secondary: rgba(255, 255, 255, .18);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* ── decorative trunk rail (echoes the collapsed sidebar strip) ── */
+        .rail {
+            position: fixed;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .rail::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 64px;
+            bottom: 64px;
+            width: 1px;
+            background: linear-gradient(var(--green-mid), var(--color-border-tertiary) 40%, var(--color-border-tertiary) 60%, var(--amber));
+            opacity: .35;
+        }
+
+        .rail .dot {
+            position: absolute;
+            left: -2.5px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .rail .dot.top {
+            top: 60px;
+            background: var(--green-mid);
+        }
+
+        .rail .dot.bottom {
+            bottom: 60px;
+            background: var(--amber);
+        }
+
+        @media (max-width:900px) {
+            .rail {
+                display: none;
+            }
+        }
+
+        /* ── nav ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.3rem 2.6rem;
+            backdrop-filter: blur(14px);
+            background: color-mix(in srgb, var(--white) 80%, transparent);
+            border-bottom: 1px solid transparent;
+            transition: border-color var(--transition);
+        }
+
+        nav.scrolled {
+            border-bottom-color: var(--color-border-tertiary);
+        }
+
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: .55rem;
+            font-family: var(--font-serif);
+            font-size: 1.24rem;
+            color: var(--green-dark);
+        }
+
+        .logo .tag {
+            font-family: var(--font-mono);
+            font-size: .62rem;
+            letter-spacing: .16em;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2.2rem;
+        }
+
+        .nav-links a {
+            font-size: .85rem;
+            color: var(--color-text-secondary);
+            transition: color var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--amber);
+        }
+
+        .nav-links a.active {
+            color: var(--green-dark);
+            font-weight: 500;
+        }
+
+        .agent-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            font-size: .74rem;
+            font-family: var(--font-mono);
+            letter-spacing: .04em;
+            padding: .4rem .85rem;
+            border-radius: 2rem;
+            border: 1px solid var(--color-border-tertiary);
+            color: var(--color-text-secondary);
+        }
+
+        .agent-badge .d {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--amber);
+        }
+
+        @media (max-width:820px) {
+            .nav-links a:not(.agent-badge) {
+                display: none;
+            }
+        }
+
+        /* ═══ HERO — the morph stage ═══ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 7rem 6vw 3rem;
+            text-align: center;
+        }
+
+        .hero-kicker {
+            font-family: var(--font-mono);
+            font-size: .68rem;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--color-text-tertiary);
+            margin-bottom: 2.2rem;
+        }
+
+        .stage-view {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .morph-scene {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity .9s ease, transform .9s ease;
+            transform: scale(.94);
+            pointer-events: none;
+        }
+
+        .morph-scene.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .morph-label {
+            font-family: var(--font-serif);
+            font-size: 1.7rem;
+            font-weight: 400;
+            color: var(--color-text-primary);
+            margin-top: .6rem;
+            transition: opacity .4s;
+        }
+
+        .morph-sub {
+            font-family: var(--font-sans);
+            font-size: .92rem;
+            color: var(--color-text-tertiary);
+            max-width: 380px;
+            line-height: 1.65;
+            min-height: 44px;
+            margin-top: .5rem;
+            transition: opacity .4s;
+        }
+
+        .pills {
+            display: flex;
+            gap: .5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.8rem;
+        }
+
+        .pill {
+            font-family: var(--font-sans);
+            font-size: .78rem;
+            font-weight: 500;
+            padding: .55rem 1.15rem;
+            border-radius: 20px;
+            border: 1px solid var(--color-border-tertiary);
+            background: transparent;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+        }
+
+        .pill:hover {
+            border-color: var(--color-border-secondary);
+            color: var(--color-text-primary);
+        }
+
+        .pill.active {
+            background: var(--green-dark);
+            border-color: var(--green-dark);
+            color: var(--white);
+        }
+
+        .pill i {
+            font-size: .7rem;
+        }
+
+        /* mock compose bar — echoes the real app's chat input, as a CTA */
+        .compose-mock {
+            margin-top: 3.2rem;
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            width: min(480px, 90vw);
+            background: var(--white);
+            border: 1px solid var(--color-border-tertiary);
+            border-radius: 2rem;
+            padding: .5rem .6rem .5rem 1.3rem;
+            box-shadow: 0 12px 30px rgba(28, 69, 50, .06);
+        }
+
+        .compose-mock span {
+            flex: 1;
+            text-align: left;
+            font-size: .86rem;
+            color: var(--color-text-tertiary);
+        }
+
+        .compose-mock button {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: var(--amber);
+            color: var(--white);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: background var(--transition), transform var(--transition);
+        }
+
+        .compose-mock button:hover {
+            background: var(--amber-light);
+            transform: translateY(-1px);
+        }
+
+        .compose-mock button i {
+            font-size: .78rem;
+        }
+
+        .scroll-hint {
+            margin-top: 3.4rem;
+            font-family: var(--font-mono);
+            font-size: .64rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--color-text-tertiary);
+            opacity: .7;
+        }
+
+        /* ═══ reveal ═══ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity .8s ease, transform .8s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ═══ quiet sections ═══ */
+        section.quiet {
+            padding: 6rem 6vw;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        section.quiet+section.quiet {
+            border-top: 1px solid var(--color-border-tertiary);
+        }
+
+        .kicker {
+            font-family: var(--font-mono);
+            font-size: .68rem;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--amber);
+            margin-bottom: 1.1rem;
+        }
+
+        h2 {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            font-size: clamp(1.7rem, 3vw, 2.3rem);
+            color: var(--green-dark);
+            line-height: 1.2;
+            max-width: 18ch;
+        }
+
+        h2 em {
+            font-style: italic;
+            color: var(--amber);
+            font-weight: 300;
+        }
+
+        .lede {
+            margin-top: 1.2rem;
+            font-size: 1rem;
+            color: var(--color-text-secondary);
+            max-width: 58ch;
+        }
+
+        .quote {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.18rem;
+            line-height: 1.6;
+            color: var(--green-dark);
+            border-left: 2px solid var(--amber);
+            padding-left: 1.3rem;
+            margin: 1.8rem 0;
+            max-width: 50ch;
+        }
+
+        .flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem 0;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: .74rem;
+            color: var(--color-text-tertiary);
+            margin-top: 1.6rem;
+            letter-spacing: .02em;
+        }
+
+        .flow span:not(.arrow) {
+            color: var(--green-dark);
+        }
+
+        .flow .arrow {
+            color: var(--amber);
+            margin: 0 .55rem;
+        }
+
+        .wide-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .55rem;
+            margin-top: 1.8rem;
+        }
+
+        .principle-list {
+            list-style: none;
+            margin-top: 1.8rem;
+        }
+
+        .principle-list li {
+            display: grid;
+            grid-template-columns: 2.2rem 1fr;
+            gap: .6rem;
+            padding: 1rem 0;
+            border-top: 1px solid var(--color-border-tertiary);
+            font-size: .92rem;
+            color: var(--color-text-secondary);
+        }
+
+        .principle-list li:last-child {
+            border-bottom: 1px solid var(--color-border-tertiary);
+        }
+
+        .principle-list .n {
+            font-family: var(--font-mono);
+            font-size: .72rem;
+            color: var(--amber);
+            padding-top: .15rem;
+        }
+
+        .principle-list strong {
+            color: var(--green-dark);
+            font-weight: 600;
+        }
+
+        .wm {
+            display: flex;
+            align-items: baseline;
+            gap: .5rem;
+            margin-top: 2.4rem;
+        }
+
+        .wm-n {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            color: var(--green-dark);
+            letter-spacing: -0.01em;
+        }
+
+        .wm-s {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            color: var(--gray);
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        /* ═══ closing — echoes hero compose bar again ═══ */
+        .closing {
+            text-align: center;
+            padding: 6.5rem 6vw 6rem;
+        }
+
+        .closing h2 {
+            margin: 0 auto;
+            max-width: 20ch;
+        }
+
+        .closing .lede {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .closing .compose-mock {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer {
+            border-top: 1px solid var(--color-border-tertiary);
+            padding: 2rem 6vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-family: var(--font-mono);
+            font-size: .72rem;
+            color: var(--gray);
+        }
+
+        footer .flinks {
+            display: flex;
+            gap: 1.4rem;
+        }
+
+        footer a:hover {
+            color: var(--amber);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="rail"><span class="dot top"></span><span class="dot bottom"></span></div>
+
+    <nav id="nav">
+        <a href="#" class="logo">Olivia <span class="tag">Ambiente de Trabalho</span></a>
+        <div class="nav-links">
+            <a href="#what">O que é</a>
+            <a href="#loop">Como funciona</a>
+            <a href="#history">História</a>
+            <a href="#mission">Missão</a>
+            <span class="agent-badge"><span class="d"></span> Agente online</span>
+        </div>
+    </nav>
+
+    <!-- ═══════════════ HERO — MORPH STAGE ═══════════════ -->
+    <header class="hero">
+        <div class="hero-kicker">O Ambiente Operacional de IA</div>
+
+        <div class="stage-view">
+            <!-- SCENE: base tree -->
+            <div class="morph-scene active" id="scene-tree">
+                <svg width="260" height="280" viewBox="0 0 260 280">
+                    <g style="transform-origin:130px 150px;animation:sway 7s ease-in-out infinite">
+                        <path d="M130 270 Q128 240,127 210 Q126 180,128 155 Q130 135,132 118 Q134 105,133 94"
+                            fill="none" stroke="var(--green-dark)" stroke-width="3.5" stroke-linecap="round"
+                            opacity=".6" />
+                        <path d="M90 268 Q130 274,170 268" fill="none" stroke="var(--green-dark)" stroke-width="1"
+                            stroke-linecap="round" opacity=".12" />
+                        <g style="transform-origin:130px 140px;animation:sway 7s ease-in-out infinite">
+                            <g style="transform-origin:126px 160px;animation:sway-r 6s ease-in-out .3s infinite">
+                                <path d="M126 160 Q108 148,82 140" fill="none" stroke="var(--green-dark)"
+                                    stroke-width="1.6" stroke-linecap="round" opacity=".45" />
+                                <path d="M100 146 Q88 136,80 126 Q90 132,100 146Z" fill="var(--green-dark)"
+                                    opacity=".4" />
+                                <path d="M96 148 Q84 152,72 148 Q82 146,96 148Z" fill="var(--green-dark)"
+                                    opacity=".3" />
+                                <path d="M112 150 Q102 140,96 130 Q106 138,112 150Z" fill="var(--green-mid)"
+                                    opacity=".35" />
+                                <ellipse cx="88" cy="148" rx="4.5" ry="5.5" fill="var(--amber)" opacity=".85"
+                                    transform="rotate(-8 88 148)"
+                                    style="animation:fruit-glow 4s ease-in-out infinite" />
+                            </g>
+                            <g style="transform-origin:134px 152px;animation:sway 5.5s ease-in-out .6s infinite">
+                                <path d="M134 152 Q152 142,172 138" fill="none" stroke="var(--green-dark)"
+                                    stroke-width="1.4" stroke-linecap="round" opacity=".4" />
+                                <path d="M156 142 Q168 132,176 124 Q170 136,156 142Z" fill="var(--green-dark)"
+                                    opacity=".35" />
+                                <path d="M148 144 Q158 138,164 130 Q158 140,148 144Z" fill="var(--green-mid)"
+                                    opacity=".3" />
+                            </g>
+                            <g style="transform-origin:128px 130px;animation:sway-r 5s ease-in-out .9s infinite">
+                                <path d="M128 130 Q114 118,98 112" fill="none" stroke="var(--green-dark)"
+                                    stroke-width="1.2" stroke-linecap="round" opacity=".38" />
+                                <path d="M108 118 Q98 108,92 98 Q100 106,108 118Z" fill="var(--green-dark)"
+                                    opacity=".35" />
+                            </g>
+                            <g style="transform-origin:134px 115px;animation:sway 5.8s ease-in-out .4s infinite">
+                                <path d="M134 115 Q150 104,164 98" fill="none" stroke="var(--green-dark)"
+                                    stroke-width="1.1" stroke-linecap="round" opacity=".35" />
+                                <path d="M152 104 Q162 94,168 86 Q162 96,152 104Z" fill="var(--green-dark)"
+                                    opacity=".32" />
+                            </g>
+                            <g style="transform-origin:133px 94px;animation:sway 4.5s ease-in-out 1s infinite">
+                                <path d="M133 94 Q128 78,124 64" fill="none" stroke="var(--green-dark)"
+                                    stroke-width=".9" stroke-linecap="round" opacity=".3" />
+                                <path d="M126 74 Q120 64,116 54 Q122 62,126 74Z" fill="var(--green-mid)" opacity=".3" />
+                                <path d="M128 78 Q134 66,138 56 Q134 68,128 78Z" fill="var(--green-dark)"
+                                    opacity=".25" />
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- SCENE: legal (scale) -->
+            <div class="morph-scene" id="scene-legal">
+                <svg width="260" height="280" viewBox="0 0 260 280">
+                    <g style="transform-origin:130px 130px">
+                        <path d="M130 230 Q130 180,130 130 Q130 100,130 75" fill="none" stroke="var(--green-dark)"
+                            stroke-width="3" stroke-linecap="round" opacity=".6" />
+                        <g style="animation:scale-balance 6s ease-in-out infinite;transform-origin:130px 75px">
+                            <path d="M50 85 Q90 72,130 75 Q170 72,210 85" fill="none" stroke="var(--green-dark)"
+                                stroke-width="2" stroke-linecap="round" opacity=".55" />
+                            <path d="M60 88 L60 120" fill="none" stroke="var(--green-dark)" stroke-width="1"
+                                opacity=".4" />
+                            <path d="M50 85 L45 118" fill="none" stroke="var(--green-dark)" stroke-width="1"
+                                opacity=".35" />
+                            <ellipse cx="52" cy="125" rx="22" ry="6" fill="none" stroke="var(--green-dark)"
+                                stroke-width="1.2" opacity=".45" />
+                            <path d="M200 88 L200 120" fill="none" stroke="var(--green-dark)" stroke-width="1"
+                                opacity=".4" />
+                            <path d="M210 85 L215 118" fill="none" stroke="var(--green-dark)" stroke-width="1"
+                                opacity=".35" />
+                            <ellipse cx="208" cy="125" rx="22" ry="6" fill="none" stroke="var(--green-dark)"
+                                stroke-width="1.2" opacity=".45" />
+                            <ellipse cx="45" cy="118" rx="5" ry="6" fill="var(--amber)" opacity=".85"
+                                style="animation:fruit-glow 4s ease-in-out infinite" />
+                            <ellipse cx="208" cy="117" rx="5" ry="6" fill="var(--amber)" opacity=".85"
+                                style="animation:fruit-glow 4s ease-in-out .6s infinite" />
+                        </g>
+                        <ellipse cx="130" cy="65" rx="6" ry="7.5" fill="var(--amber)" opacity=".9"
+                            style="animation:fruit-glow 4s ease-in-out .5s infinite" />
+                        <path d="M105 232 Q130 238,155 232" fill="none" stroke="var(--green-dark)" stroke-width="1.5"
+                            opacity=".35" stroke-linecap="round" />
+                    </g>
+                </svg>
+            </div>
+
+            <!-- SCENE: knowledge (book) -->
+            <div class="morph-scene" id="scene-book">
+                <svg width="260" height="280" viewBox="0 0 260 280">
+                    <g style="transform-origin:130px 140px;animation:sway 8s ease-in-out infinite">
+                        <path d="M130 240 Q130 200,130 160 Q130 130,130 100" fill="none" stroke="var(--green-dark)"
+                            stroke-width="3" stroke-linecap="round" opacity=".55" />
+                        <g style="animation:page-flutter 5s ease-in-out infinite">
+                            <path d="M130 100 Q100 96,72 110 Q60 116,54 130" fill="none" stroke="var(--green-dark)"
+                                stroke-width="1.4" stroke-linecap="round" opacity=".35" />
+                            <path d="M130 120 Q96 114,66 130 Q56 138,52 150" fill="none" stroke="var(--green-dark)"
+                                stroke-width="1" stroke-linecap="round" opacity=".25" />
+                            <path d="M82 114 Q70 104,62 92 Q72 100,82 114Z" fill="var(--green-dark)" opacity=".3" />
+                            <path d="M72 132 Q60 124,52 114 Q62 122,72 132Z" fill="var(--green-mid)" opacity=".25" />
+                        </g>
+                        <g style="animation:page-flutter 5.5s ease-in-out .3s infinite">
+                            <path d="M130 100 Q160 96,188 110 Q200 116,206 130" fill="none" stroke="var(--green-dark)"
+                                stroke-width="1.4" stroke-linecap="round" opacity=".35" />
+                            <path d="M130 120 Q164 114,194 130 Q204 138,208 150" fill="none" stroke="var(--green-dark)"
+                                stroke-width="1" stroke-linecap="round" opacity=".25" />
+                            <path d="M178 114 Q190 104,198 92 Q188 100,178 114Z" fill="var(--green-dark)"
+                                opacity=".3" />
+                            <path d="M188 132 Q200 124,208 114 Q198 122,188 132Z" fill="var(--green-mid)"
+                                opacity=".25" />
+                        </g>
+                        <ellipse cx="130" cy="88" rx="5" ry="6" fill="var(--amber)" opacity=".85"
+                            style="animation:fruit-glow 4s ease-in-out infinite" />
+                        <line x1="82" y1="200" x2="118" y2="200" stroke="var(--green-dark)" stroke-width=".6"
+                            opacity=".12" stroke-linecap="round" />
+                        <line x1="142" y1="200" x2="178" y2="200" stroke="var(--green-dark)" stroke-width=".6"
+                            opacity=".12" stroke-linecap="round" />
+                    </g>
+                </svg>
+            </div>
+
+            <!-- SCENE: storytelling (network) -->
+            <div class="morph-scene" id="scene-storytelling">
+                <svg width="260" height="280" viewBox="0 0 260 280">
+                    <g style="transform-origin:130px 130px">
+                        <path d="M130 240 Q130 200,130 160 Q130 140,130 130" fill="none" stroke="var(--green-dark)"
+                            stroke-width="3" stroke-linecap="round" opacity=".5" />
+                        <circle cx="130" cy="120" r="12" fill="none" stroke="var(--green-mid)" stroke-width="2"
+                            opacity=".5" />
+                        <ellipse cx="130" cy="120" rx="6" ry="7" fill="var(--amber)" opacity=".85"
+                            style="animation:fruit-glow 4s ease-in-out infinite" />
+                        <path d="M130 120 Q110 100,70 75" fill="none" stroke="var(--green-mid)" stroke-width="1.2"
+                            stroke-linecap="round" opacity=".4" />
+                        <path d="M130 120 Q150 100,190 75" fill="none" stroke="var(--green-mid)" stroke-width="1.2"
+                            stroke-linecap="round" opacity=".4" />
+                        <path d="M130 120 Q90 125,50 140" fill="none" stroke="var(--green-mid)" stroke-width="1.2"
+                            stroke-linecap="round" opacity=".35" />
+                        <path d="M130 120 Q170 125,210 140" fill="none" stroke="var(--green-mid)" stroke-width="1.2"
+                            stroke-linecap="round" opacity=".35" />
+                        <circle cx="70" cy="75" r="8" fill="none" stroke="var(--green-mid)" stroke-width="1.2"
+                            opacity=".4" />
+                        <ellipse cx="70" cy="75" rx="4" ry="5" fill="var(--amber)" opacity=".75"
+                            style="animation:fruit-glow 4s ease-in-out .3s infinite" />
+                        <circle cx="190" cy="75" r="8" fill="none" stroke="var(--green-mid)" stroke-width="1.2"
+                            opacity=".4" />
+                        <ellipse cx="190" cy="75" rx="4" ry="5" fill="var(--amber)" opacity=".75"
+                            style="animation:fruit-glow 4s ease-in-out .6s infinite" />
+                        <circle cx="50" cy="140" r="7" fill="none" stroke="var(--green-mid)" stroke-width="1"
+                            opacity=".35" />
+                        <ellipse cx="50" cy="140" rx="3.5" ry="4.5" fill="var(--amber)" opacity=".65" />
+                        <circle cx="210" cy="140" r="7" fill="none" stroke="var(--green-mid)" stroke-width="1"
+                            opacity=".35" />
+                        <ellipse cx="210" cy="140" rx="3.5" ry="4.5" fill="var(--amber)" opacity=".65" />
+                    </g>
+                </svg>
+            </div>
+
+            <!-- SCENE: finance (lending curve) -->
+            <div class="morph-scene" id="scene-finance">
+                <svg width="260" height="280" viewBox="0 0 260 280">
+                    <g style="transform-origin:130px 150px;animation:sway 8s ease-in-out infinite">
+                        <path d="M80 250 Q82 220,88 190 Q94 160,104 140 Q118 115,140 96 Q160 80,184 70" fill="none"
+                            stroke="var(--green-dark)" stroke-width="2.5" stroke-linecap="round" opacity=".5" />
+                        <ellipse cx="96" cy="176" rx="3.5" ry="4.5" fill="var(--amber)" opacity=".6"
+                            transform="rotate(-5 96 176)" />
+                        <ellipse cx="118" cy="132" rx="4" ry="5" fill="var(--amber)" opacity=".75"
+                            transform="rotate(-8 118 132)" style="animation:fruit-glow 4s ease-in-out .5s infinite" />
+                        <ellipse cx="148" cy="90" rx="4.5" ry="5.5" fill="var(--amber)" opacity=".85"
+                            transform="rotate(-10 148 90)" style="animation:fruit-glow 4s ease-in-out infinite" />
+                        <line x1="60" y1="250" x2="200" y2="250" stroke="var(--green-dark)" stroke-width=".5"
+                            opacity=".08" />
+                        <line x1="60" y1="200" x2="200" y2="200" stroke="var(--green-dark)" stroke-width=".3"
+                            opacity=".06" stroke-dasharray="4 6" />
+                        <line x1="60" y1="150" x2="200" y2="150" stroke="var(--green-dark)" stroke-width=".3"
+                            opacity=".06" stroke-dasharray="4 6" />
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <div id="morphLabel" class="morph-label">Olivia</div>
+        <div id="morphSub" class="morph-sub">O tronco e seus primeiros galhos. A forma original que se adapta a cada domínio do ecossistema.</div>
+
+        <div class="pills">
+            <button class="pill active" onclick="morph('tree')"><i class="fas fa-seedling"></i> Base</button>
+            <button class="pill" onclick="morph('legal')"><i class="fas fa-scale-balanced"></i> Jurídico</button>
+            <button class="pill" onclick="morph('book')"><i class="fas fa-book"></i> Conhecimento</button>
+            <button class="pill" onclick="morph('storytelling')"><i class="fas fa-wand-magic-sparkles"></i> Narrativa</button>
+            <button class="pill" onclick="morph('finance')"><i class="fas fa-chart-line"></i> Finanças</button>
+        </div>
+
+        <button class="compose-mock" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">
+            <span>Envie uma mensagem para Olivia…</span>
+            <button tabindex="-1"><i class="fas fa-arrow-up"></i></button>
+        </button>
+
+        <div class="scroll-hint">Role</div>
+    </header>
+
+    <!-- ═══ WHAT IT IS ═══ -->
+    <section class="quiet reveal" id="what">
+        <div class="kicker">O que é — e o que não é</div>
+        <h2>Não é software que você compra pronto. Um <em>ecossistema</em>.</h2>
+        <p class="lede">Olivia não é mais um chatbot, mais um assistente de IA ou mais um construtor de fluxos de trabalho. É um ambiente de trabalho inteligente e compartilhado que qualquer empresa pode moldar ao seu próprio mundo — uma tela em branco, já equipada com a capacidade de pensar, aprender e construir junto com as pessoas que a utilizam.</p>
+    </section>
+
+    <!-- ═══ HOW IT WORKS ═══ -->
+    <section class="quiet reveal" id="loop">
+        <div class="kicker">Imagine</div>
+        <h2>Maria abre a Olivia. Ela nunca escreveu <em>código</em>.</h2>
+        <p class="lede">Ela trabalha em um restaurante e simplesmente começa a falar: "É assim que preparamos o café da manhã." A Olivia faz as perguntas que um bom colega faria — onde ocorrem os atrasos, o que geralmente dá errado, quem é responsável, como você sabe quando tudo está pronto.</p>
+        <p class="quote">"É assim que eu faço este trabalho hoje. Eis o que dá errado. Eis como é o bom. Como poderíamos criar uma ferramenta que ajude?"</p>
+        <p class="lede">Cinco minutos depois, Maria criou sua primeira ferramenta de IA — e aprendeu IA, sem nunca tê-la estudado.</p>
+        <div class="flow">
+            <span>Experiência</span><span class="arrow">→</span>
+            <span>Conversa</span><span class="arrow">→</span>
+            <span>Compreensão</span><span class="arrow">→</span>
+            <span>Criação</span><span class="arrow">→</span>
+            <span>Conhecimento</span><span class="arrow">→</span>
+            <span>Organização evolui</span>
+        </div>
+    </section>
+
+    <!-- ═══ ONE ECOSYSTEM ═══ -->
+    <section class="quiet reveal">
+        <div class="kicker">Um ecossistema, muitas portas</div>
+        <h2>Cada ambiente de trabalho. <em>Um</em> ecossistema.</h2>
+        <p class="lede">Olivia não tem um setor fixo. Cozinha, bar, recepção, compras, um processo jurídico, um único vendedor ambulante — cada um vê ferramentas e dados diferentes, mas todos habitam o mesmo ambiente de trabalho vivo.</p>
+        <div class="wide-pills">
+            <span class="pill">Jurídico</span>
+            <span class="pill">Narrativa</span>
+            <span class="pill">Conhecimento</span>
+            <span class="pill">Educação</span>
+            <span class="pill">Hotelaria</span>
+            <span class="pill">Finanças</span>
+            <span class="pill">Saúde</span>
+            <span class="pill">Varejo</span>
+            <span class="pill">Governo</span>
+            <span class="pill">Corporativo</span>
+        </div>
+    </section>
+
+    <!-- ═══ HISTORY ═══ -->
+    <section class="quiet reveal" id="history">
+        <div class="kicker">História</div>
+        <h2>Tudo começou como uma série de <em>perguntas</em>.</h2>
+        <p class="lede">As primeiras conversas giravam em torno de uma ferramenta jurídica específica. Mas o problema real era muito maior: cada setor detém um imenso conhecimento operacional dentro de suas pessoas, mas quase nada disso se transforma em software — porque as pessoas que o detêm não são programadoras, e o software que lhes é oferecido as obriga a se adaptar à ideia de outra pessoa sobre como seu trabalho deve ser feito.</p>
+        <p class="lede">O ponto de virada foi reconhecer que as organizações não precisam de mais um aplicativo de propósito único. Elas precisam de um <strong style="color:var(--green-dark)">ambiente</strong> onde sua própria expertise possa encontrar a IA — um ambiente que produza ferramentas, fluxos de trabalho e automações que se encaixem em suas rotinas diárias reais. A lógica específica do setor jurídico foi removida. O que restou foi uma tela limpa, já conectada com a capacidade de pensar, aprender e construir junto com as pessoas que a utilizam.</p>
+    </section>
+
+    <!-- ═══ MISSION ═══ -->
+    <section class="quiet reveal" id="mission">
+        <div class="kicker">Missão</div>
+        <h2>Democratizar a criação de <em>capacidades</em> impulsionadas por IA.</h2>
+        <p class="lede">Existimos para que cada empresa, organização sem fins lucrativos, equipe e trabalhador individual possa traduzir sua expertise operacional em sistemas práticos assistidos por IA — sem precisar se tornar engenheiro de software.</p>
+        <ul class="principle-list">
+            <li><span class="n">01</span><span><strong>Adapta-se à organização</strong>, e não o contrário — aprendendo com as pessoas que melhor conhecem o trabalho.</span></li>
+            <li><span class="n">02</span><span><strong>Transforma conhecimento em software funcional</strong>, com especialistas do domínio colaborando diretamente com agentes de IA.</span></li>
+            <li><span class="n">03</span><span><strong>Permite aprender enquanto constrói</strong> — cada interação desenvolve tanto a capacidade quanto a habilidade.</span></li>
+            <li><span class="n">04</span><span><strong>Une a organização</strong> em um ecossistema vivo, transformando esforços isolados em inteligência compartilhada.</span></li>
+            <li><span class="n">05</span><span><strong>Cresce com as pessoas que o utilizam</strong> — nunca limitado a funcionalidades predefinidas.</span></li>
+            <li><span class="n">06</span><span><strong>Mantém as pessoas no centro</strong> — a IA acelera a implementação, as pessoas fornecem contexto, julgamento e prioridades.</span></li>
+        </ul>
+        <div class="wm"><span class="wm-n">Olivia</span><span class="wm-s">Consciência · IA</span></div>
+    </section>
+
+    <!-- ═══ CLOSING ═══ -->
+    <section class="closing reveal" id="demo">
+        <div class="kicker" style="justify-content:center;display:flex">Agende uma demonstração</div>
+        <h2>Onde as organizações não apenas usam IA. <em>Elas crescem com ela.</em></h2>
+        <p class="lede">A tecnologia sempre pediu que as pessoas aprendessem software. Olivia pede que o software aprenda as pessoas.</p>
+        <div class="compose-mock" style="margin-top:2.4rem">
+            <span>Conte-nos sobre sua equipe…</span>
+            <button><i class="fas fa-arrow-up"></i></button>
+        </div>
+    </section>
+
+    <footer>
+        <span>© Ecossistema Olivia</span>
+        <div class="flinks">
+            <a href="#what">O que é</a>
+            <a href="#history">História</a>
+            <a href="#mission">Missão</a>
+            <a href="#demo">Agende uma demonstração</a>
+        </div>
+    </footer>
+
+    <style>
+        @keyframes sway {
+
+            0%,
+            100% {
+                transform: rotate(0deg)
+            }
+
+            50% {
+                transform: rotate(1.5deg)
+            }
+        }
+
+        @keyframes sway-r {
+
+            0%,
+            100% {
+                transform: rotate(0deg)
+            }
+
+            50% {
+                transform: rotate(-1.2deg)
+            }
+        }
+
+        @keyframes fruit-glow {
+
+            0%,
+            100% {
+                opacity: .8
+            }
+
+            50% {
+                opacity: 1
+            }
+        }
+
+        @keyframes page-flutter {
+
+            0%,
+            100% {
+                transform: skewY(0deg)
+            }
+
+            50% {
+                transform: skewY(-2deg)
+            }
+        }
+
+        @keyframes scale-balance {
+
+            0%,
+            100% {
+                transform: rotate(0deg)
+            }
+
+            50% {
+                transform: rotate(1deg)
+            }
+        }
+    </style>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 12), { passive: true });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+            }, { threshold: .12 }).observe(el);
+        });
+
+        const meta = {
+            tree: { label: 'Olivia', sub: 'O tronco e seus primeiros galhos. A forma original que se adapta a cada domínio do ecossistema.' },
+            legal: { label: 'Olivia — Jurídico', sub: 'Os galhos se equilibram como balanças. O fruto na coroa é o julgamento — evidências ponderadas que se transformam em um caso.' },
+            book: { label: 'Olivia — Conhecimento', sub: 'Os galhos se abrem como páginas. O tronco se torna a lombada. O fruto no topo é o insight que vem da leitura.' },
+            storytelling: { label: 'Olivia — Narrativa', sub: 'Os galhos se tornam uma rede de personagens, lugares e tramas — cada nó uma cena que se conecta de volta à raiz.' },
+            finance: { label: 'Olivia — Finanças', sub: 'O tronco traça uma curva ascendente. Os frutos ao longo do caminho são retornos — cada galho uma decisão que gera valor.' }
+        };
+        function morph(id) {
+            document.querySelectorAll('.morph-scene').forEach(s => s.classList.remove('active'));
+            document.getElementById('scene-' + id).classList.add('active');
+            document.querySelectorAll('.pills .pill').forEach(p => p.classList.remove('active'));
+            document.querySelector('.pills .pill[onclick*="' + id + '"]').classList.add('active');
+            const m = meta[id];
+            const lbl = document.getElementById('morphLabel');
+            const sub = document.getElementById('morphSub');
+            lbl.style.opacity = '0'; sub.style.opacity = '0';
+            setTimeout(() => { lbl.textContent = m.label; sub.textContent = m.sub; lbl.style.opacity = '1'; sub.style.opacity = '1'; }, 250);
+        }
+    </script>
+</body>
+
+</html>

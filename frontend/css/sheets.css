@@ -1,0 +1,517 @@
+/* ============================================================================
+   Sheets — Planilhas editor inside Olivia Workspace.
+   Uses workspace CSS variables.
+   ============================================================================ */
+
+.sheets-view {
+    display: none;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg);
+}
+
+.sheets-view.active {
+    display: flex;
+}
+
+.workspace.sh-open > .main-content {
+    display: none !important;
+}
+
+/* ---------- Cabeçalho ---------- */
+.sh-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-card);
+}
+
+.sh-head-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+}
+
+.sh-logo {
+    width: 20px;
+    height: 20px;
+    color: var(--green, #10b981);   /* green accent for Sheets */
+    display: flex;
+}
+
+.sh-logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.sh-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.01em;
+}
+
+.sh-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+}
+
+.sh-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ---------- Sub-navegação ---------- */
+.sh-subnav {
+    display: flex;
+    gap: 2px;
+    padding: 6px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-card);
+    overflow-x: auto;
+}
+
+.sh-tab {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .15s, border-color .15s;
+}
+
+.sh-tab:hover {
+    color: var(--white);
+}
+
+.sh-tab.active {
+    color: var(--green, #10b981);
+    border-bottom-color: var(--green, #10b981);
+}
+
+/* ---------- Painéis ---------- */
+.sh-panels {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+}
+
+.sh-panel {
+    display: none;
+    flex: 1;
+    min-height: 0;
+}
+
+.sh-panel.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Editor panel ---------- */
+#shPanel-editor {
+    flex-direction: column;
+}
+
+.sh-editor-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.sh-tool-group {
+    display: flex;
+    gap: 4px;
+}
+
+.sh-grid-wrapper {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+    background: var(--bg);
+}
+
+.sh-grid {
+    border-collapse: collapse;
+    width: max-content;
+    min-width: 100%;
+    table-layout: fixed;
+    font-family: var(--mono);
+    font-size: 14px;
+}
+
+.sh-grid th,
+.sh-grid td {
+    border: 1px solid var(--border);
+    padding: 4px 6px;
+    min-width: 80px;
+    max-width: 300px;
+    height: 28px;
+    color: var(--white);
+    background: var(--bg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sh-grid th {
+    background: var(--bg-card);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--gray-hi);
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.sh-row-header {
+    background: var(--bg-card) !important;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--gray-hi);
+    text-align: center;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+}
+
+.sh-cell {
+    outline: none;
+    transition: background .1s;
+}
+
+.sh-cell:focus {
+    background: var(--bg2);
+    box-shadow: inset 0 0 0 1px var(--green, #10b981);
+}
+
+.sh-editor-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 14px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-card);
+    font-size: 11px;
+    color: var(--gray);
+    flex-shrink: 0;
+}
+
+#shChatToggleBtn {
+    margin-left: auto;
+}
+
+/* ---------- Export dropdown ---------- */
+.sh-export-dropdown {
+    position: relative;
+    display: inline-flex;
+}
+
+.sh-export-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    z-index: 100;
+    min-width: 160px;
+    padding: 4px 0;
+}
+
+.sh-export-menu .btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+/* HAVAN branded export submenu */
+.sh-export-divider {
+    height: 1px;
+    background: var(--border, #30363d);
+    margin: 4px 8px;
+}
+.sh-export-label {
+    padding: 4px 12px 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #E2231A; /* HAVAN vermelho */
+}
+.sh-export-menu .btn[onclick^="sheetsExportHavan"] {
+    color: #003DA5; /* HAVAN azul */
+    font-weight: 600;
+}
+.sh-export-menu .btn[onclick^="sheetsExportHavan"]:hover {
+    background: rgba(0, 61, 165, 0.12);
+}
+
+/* ---------- Documents panel ---------- */
+#shPanel-documents {
+    flex-direction: column;
+}
+
+.sh-docs-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+    flex-shrink: 0;
+}
+
+.sh-docs-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+}
+
+.sh-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--gray);
+    gap: 10px;
+    font-size: 14px;
+}
+
+.sh-empty i {
+    font-size: 36px;
+    opacity: 0.4;
+}
+
+.sh-doc-header {
+    display: grid;
+    grid-template-columns: 1fr 120px 80px;
+    padding: 8px 14px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--gray);
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.04em;
+}
+
+.sh-doc-row {
+    display: grid;
+    grid-template-columns: 1fr 120px 80px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    font-size: 13px;
+    color: var(--white);
+    transition: background .1s;
+}
+
+.sh-doc-row:hover {
+    background: var(--bg-card);
+}
+
+.sh-doc-row.sh-doc-active {
+    background: rgba(16,185,129,0.1);   /* green tint */
+}
+
+.sh-doc-name a {
+    color: var(--green, #10b981);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.sh-doc-actions {
+    white-space: nowrap;
+}
+
+/* ---------- About panel ---------- */
+#shPanel-about {
+    overflow-y: auto;
+    padding: 28px 24px 48px;
+    align-items: center;
+}
+
+.sh-hero {
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.sh-hero-logo {
+    display: inline-flex;
+    width: 64px;
+    height: 64px;
+    color: var(--green, #10b981);
+    margin-bottom: 14px;
+}
+
+.sh-hero-logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.sh-hero-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+}
+
+.sh-hero-tag {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--gray-hi);
+    margin: 0 auto 8px;
+}
+
+/* ---------- Chat panel ---------- */
+.sh-chat-panel {
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    min-height: 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+    flex-shrink: 0;
+}
+
+.sh-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sh-chat-msg {
+    max-width: 80%;
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.sh-chat-msg-user {
+    align-self: flex-end;
+    background: var(--green, #10b981);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.sh-chat-msg-agent {
+    align-self: flex-start;
+    background: var(--bg-card);
+    color: var(--white);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
+}
+
+.sh-chat-input-area {
+    display: flex;
+    align-items: center;
+    padding: 6px 8px;
+    gap: 6px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.sh-chat-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--white);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 6px 8px;
+}
+
+.sh-chat-input::placeholder {
+    color: var(--gray);
+    opacity: 0.8;
+}
+
+.sh-chat-input-area .btn {
+    flex-shrink: 0;
+}
+
+
+/* ---------- Toolbar icon-only buttons (expand on hover) ---------- */
+.sh-tool-group .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 28px;               /* just enough to show the icon + padding */
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 0.2s ease;
+    vertical-align: middle;        /* keeps alignment if buttons vary */
+}
+
+.sh-tool-group .btn i {
+    font-size: inherit;            /* ensure icon matches button size */
+    flex-shrink: 0;                /* prevent icon from shrinking */
+    margin-right: 0;               /* remove any default margin from icon */
+}
+
+.sh-tool-group .btn:hover,
+.sh-tool-group .btn:focus-visible {
+    max-width: 180px;              /* expand enough to show "Coluna" etc. */
+}
+
+/* Optional: reduce horizontal padding so the icon sits nicely */
+.sh-tool-group .btn {
+    padding-left: 6px;
+    padding-right: 6px;
+}
+/* ---------- Responsivo ---------- */
+@media (max-width: 720px) {
+    .sh-editor-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sh-doc-header,
+    .sh-doc-row {
+        grid-template-columns: 1fr 80px 60px;
+    }
+
+    .sh-chat-panel {
+        height: 160px;
+    }
+}

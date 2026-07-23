@@ -1,0 +1,277 @@
+/* ═══════════════════════════════════════════════════════════════════
+   SECTION VIEWS — shared two-pane skeleton
+   Used by #violationsView, #lawLibView, #legalRouterView.
+   Skeleton ported from css/spaces.css (.sp-* → .vw-*).
+   ═══════════════════════════════════════════════════════════════════ */
+
+.vw-view{display:none;flex:1;min-height:0;flex-direction:column;overflow:hidden;background:var(--bg);position:relative}
+.vw-view.active{display:flex}
+
+/* ─── Layout: section views (violations / lawlib / etc.) always sit
+   to the LEFT of the side panels (output / preview / browser).
+   Default flex order is 0; raise the side panels to push them right. ─── */
+.workspace > .vw-view.active{order:5}
+.workspace > .output-panel,
+.workspace > .browser-panel,
+.workspace > .output-resize-handle,
+.workspace > .browser-resize-handle{order:10}
+
+/* ─── Chat collapse: when 2+ side panels are open, shrink the main chat
+   to a compact compose-only strip so the panels get real estate. ─── */
+.workspace.panels-busy .main-content{flex:0 0 280px;min-width:0}
+.workspace.panels-busy .main-content > .chat-log,
+.workspace.panels-busy .main-content > #chatLog,
+.workspace.panels-busy .main-content > .chat-header,
+.workspace.panels-busy .main-content > #chatHeader,
+.workspace.panels-busy .main-content > #chatToolbar,
+.workspace.panels-busy .main-content > .welcome-state,
+.workspace.panels-busy .main-content > #welcomeState{display:none !important}
+.workspace.panels-busy .main-content{display:flex;flex-direction:column;justify-content:flex-end}
+.workspace.panels-busy .main-content::before{content:'Chat';display:block;padding:8px 14px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);border-bottom:1px solid var(--border);background:var(--bg-card)}
+
+/* Left-edge resize grip — drag to set the section view's own width when
+   sharing the row with output/preview/browser panels.                  */
+.vw-edge-resize{position:absolute;top:0;bottom:0;left:0;width:6px;cursor:col-resize;background:transparent;z-index:5;transition:background .15s}
+.vw-edge-resize:hover,.vw-edge-resize.dragging{background:var(--amber)}
+.vw-edge-resize::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:2px;height:30px;border-radius:1px;background:var(--border-hi);opacity:.4}
+.vw-edge-resize:hover::after,.vw-edge-resize.dragging::after{opacity:.9}
+
+/* Header */
+.vw-hbar{padding:12px 20px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.vw-hbar-title{display:flex;align-items:center;gap:10px;min-width:0}
+.vw-hbar-icon{width:34px;height:34px;background:linear-gradient(135deg,#2d785a 0%,#c4622d 100%);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0}
+.vw-hbar-title h1{font-family:var(--serif);font-size:16px;font-weight:500;color:var(--white);margin:0}
+.vw-hbar-title p{font-size:11px;color:var(--gray);margin:0}
+.vw-hbar-actions{display:flex;gap:6px;flex-wrap:wrap}
+.vw-hbar-actions .btn{font-size:11px}
+
+/* Layout */
+.vw-layout{flex:1;display:flex;overflow:hidden;min-height:0}
+.vw-sidebar{width:300px;min-width:240px;max-width:380px;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--bg-card);overflow:hidden;flex-shrink:0}
+.vw-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* Sidebar header (search/filter strip) */
+.vw-sidebar-head{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.vw-sidebar-head input[type="search"],
+.vw-sidebar-head input[type="text"]{width:100%;font-size:12px;padding:6px 8px;background:var(--bg);color:var(--white);border:1px solid var(--border);border-radius:5px}
+.vw-chips{display:flex;gap:5px;flex-wrap:wrap}
+.vw-chip{font-size:10px;padding:3px 8px;border-radius:10px;border:1px solid var(--border);color:var(--gray);background:var(--bg);cursor:pointer;user-select:none}
+.vw-chip.active{background:var(--amber-lo);border-color:var(--amber);color:var(--white)}
+
+/* Tree */
+.vw-tree{flex:1;overflow-y:auto;padding:6px 0}
+.vw-tree-section{margin-bottom:2px}
+.vw-tree-section-title{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--gray);padding:10px 14px 4px;display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none}
+.vw-tree-section-title i{font-size:5px;color:var(--amber);transition:transform .2s}
+.vw-tree-section-title.collapsed i{transform:rotate(-90deg)}
+.vw-tree-section-items{overflow:hidden;transition:max-height .3s ease}
+.vw-tree-section-items.collapsed{max-height:0 !important}
+.vw-tree-item{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 20px;cursor:pointer;transition:all .12s;border-left:2px solid transparent;position:relative}
+.vw-tree-item:hover{background:var(--amber-lo)}
+.vw-tree-item.active{background:var(--amber-lo);border-left-color:var(--amber)}
+.vw-tree-item-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--white)}
+.vw-tree-item-meta{font-size:9px;color:var(--gray);flex-shrink:0}
+.vw-tree-empty{padding:14px;font-size:11px;color:var(--gray);text-align:center}
+
+/* Viewer (main pane) */
+.vw-viewer{flex:1;overflow:auto;padding:24px 32px;color:var(--white);font-size:13px;line-height:1.55}
+.vw-viewer h2{font-family:var(--serif);font-size:18px;margin:0 0 12px;color:var(--white)}
+.vw-viewer h3{font-size:14px;margin:18px 0 8px;color:var(--amber)}
+.vw-viewer pre,
+.vw-viewer code{font-family:var(--mono);font-size:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:5px}
+.vw-viewer pre{padding:10px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.vw-viewer code{padding:1px 5px}
+
+/* ── Viewer sections (collapsible) ──
+   Wraps each main section (Legal Basis, Transcript Segments, Probative
+   Chain, Element Grid, …) in a clickable header that toggles its body.
+   Headers follow the active violation language; collapse state is
+   persisted in module state and survives re-renders. */
+.vw-section{margin:14px 0;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);overflow:hidden}
+.vw-section-head{display:flex;align-items:center;gap:9px;padding:10px 14px;cursor:pointer;user-select:none;background:linear-gradient(180deg,var(--bg-elev) 0%,var(--bg-card) 100%)}
+.vw-section-head:hover{background:var(--amber-lo)}
+.vw-section-caret{font-size:10px;color:var(--gray);transition:transform .2s ease;flex-shrink:0}
+.vw-section-caret.collapsed{transform:rotate(0deg)}
+.vw-section-head .vw-section-caret:not(.collapsed){transform:rotate(90deg)}
+.vw-section-icon{font-size:13px;color:var(--amber);flex-shrink:0;width:16px;text-align:center}
+.vw-section-title{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--white);font-weight:600}
+.vw-section-body{padding:4px 16px 14px}
+.vw-section.collapsed .vw-section-body{max-height:0;overflow:hidden;padding-top:0;padding-bottom:0;opacity:0;transition:max-height .28s ease,opacity .2s ease,padding .2s ease}
+.vw-section .vw-section-body{max-height:20000px;transition:max-height .35s ease,opacity .25s ease,padding .2s ease}
+.vw-section.collapsed > .vw-section-head .vw-section-icon,
+.vw-section.collapsed > .vw-section-head .vw-section-title{opacity:.8}
+.vw-viewer .vw-empty{padding:48px 16px;text-align:center;color:var(--gray);font-size:12px}
+.vw-viewer .vw-meta-table{border-collapse:collapse;font-size:11px;margin:8px 0 14px}
+.vw-viewer .vw-meta-table td{padding:3px 10px;border:1px solid var(--border);color:var(--gray);vertical-align:top}
+.vw-viewer .vw-meta-table td:first-child{color:var(--white);font-weight:500;white-space:nowrap}
+
+/* Status banner */
+.vw-status{padding:6px 14px;font-size:10px;color:var(--gray);border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.vw-status #violationsStatus{flex:1}
+
+/* Language flag selector — collapsed: only the selected flag is shown at
+   the right-end; hovering the selector expands the others (fly-out). */
+.vw-lang-flags{display:inline-flex;align-items:center;justify-content:flex-end;flex-shrink:0;gap:0;overflow:visible}
+.vw-lang-flag{font-size:15px;line-height:1;padding:3px 5px;border-radius:5px;cursor:pointer;opacity:.45;filter:grayscale(.7);white-space:nowrap;overflow:hidden;max-width:32px;border:1px solid transparent;transition:opacity .15s,filter .15s,background .15s,max-width .2s ease,padding .2s ease,margin .2s ease,border-width .2s ease}
+.vw-lang-flag:hover{opacity:1;filter:grayscale(0);background:var(--bg-hi)}
+.vw-lang-flag.active{opacity:1;filter:none;background:var(--amber-lo);border-color:var(--amber)}
+
+/* Collapsed state (not hovering): show only the active flag. */
+.vw-lang-flags:not(:hover) .vw-lang-flag:not(.active){max-width:0;padding-left:0;padding-right:0;opacity:0;pointer-events:none;border-width:0}
+/* Expanded (hover): reveal all and add spacing. */
+.vw-lang-flags:hover{gap:4px}
+.vw-lang-flags:hover .vw-lang-flag{max-width:40px;opacity:.85;filter:grayscale(.6)}
+.vw-lang-flags:hover .vw-lang-flag.active{opacity:1;filter:none}
+
+/* Resize handle (between sidebar and main) */
+.vw-resize-handle{width:4px;cursor:col-resize;background:transparent;transition:background .15s;flex-shrink:0;position:relative}
+.vw-resize-handle:hover,.vw-resize-handle.dragging{background:var(--amber)}
+.vw-resize-handle::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:2px;height:20px;border-radius:1px;background:var(--border-hi);opacity:.5}
+@media (max-width:760px){.vw-resize-handle{display:none}}
+
+/* File action pills (Preview / Output / Browser) */
+.vw-file-pills{display:inline-flex;gap:4px;align-items:center}
+.vw-file-pills .btn-xs{font-size:10px;padding:3px 7px;border-radius:5px;background:var(--bg);color:var(--gray-hi);border:1px solid var(--border);cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.vw-file-pills .btn-xs:hover{background:var(--amber-lo);border-color:var(--amber);color:var(--white)}
+.vw-file-pills .btn-xs i{font-size:10px}
+
+/* Article / source card with hover-revealed action pills + collapsible body */
+.vw-art-card{position:relative;border:1px solid var(--border);border-radius:6px;padding:10px 10px 8px;margin-bottom:6px;background:var(--bg);transition:border-color .15s,background .15s}
+.vw-art-card:hover{border-color:var(--amber-lo);background:var(--bg-card)}
+.vw-art-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.vw-art-id{font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);flex:1;min-width:0;word-break:break-all}
+.vw-art-actions{display:inline-flex;gap:3px;flex-shrink:0;opacity:0;transition:opacity .15s;align-items:center}
+.vw-art-card:hover .vw-art-actions,
+.vw-art-card.expanded .vw-art-actions,
+.vw-art-card:focus-within .vw-art-actions{opacity:1}
+.vw-art-actions .btn-xs{font-size:10px;padding:3px 6px;border-radius:5px;background:var(--bg-card);color:var(--gray-hi);border:1px solid var(--border);cursor:pointer;line-height:1}
+.vw-art-actions .btn-xs:hover{background:var(--amber-lo);border-color:var(--amber);color:var(--white)}
+.vw-art-actions .btn-xs i{font-size:10px}
+
+.vw-art-body{font-size:12px;color:var(--gray-hi);line-height:1.55;margin-top:4px;white-space:pre-wrap;overflow:hidden;position:relative;max-height:5.4em;transition:max-height .25s ease}
+.vw-art-card.expanded .vw-art-body{max-height:none}
+.vw-art-body.no-clip{max-height:none}
+.vw-art-body::after{content:'';position:absolute;bottom:0;left:0;right:0;height:24px;background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none}
+.vw-art-card:hover .vw-art-body::after{background:linear-gradient(to bottom,transparent,var(--bg-card))}
+.vw-art-card.expanded .vw-art-body::after,
+.vw-art-body.no-clip::after{display:none}
+
+.vw-art-toggle{margin-top:4px;background:none;border:none;color:var(--amber);font-size:10px;cursor:pointer;padding:2px 0;font-family:var(--sans);text-transform:uppercase;letter-spacing:.08em}
+.vw-art-toggle:hover{color:var(--white)}
+
+/* Article badges (norm_type / duty_bearer / applicability) */
+.vw-art-badges{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 4px}
+.vw-art-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;text-transform:uppercase;letter-spacing:.08em;padding:2px 7px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--gray-hi);font-family:var(--mono)}
+.vw-art-badge.b-prohibition{border-color:#a13a2c;color:#e08770}
+.vw-art-badge.b-duty{border-color:#c4622d;color:#e0a070}
+.vw-art-badge.b-right{border-color:#2d785a;color:#7ad0a8}
+.vw-art-badge.b-permission,.vw-art-badge.b-permissive{border-color:#2d5278;color:#7aaad0}
+.vw-art-badge.b-liability{border-color:#a13a2c;color:#e08770}
+.vw-art-badge.b-exemption{border-color:#5a2d78;color:#b387d0}
+.vw-art-badge.b-criminal{border-color:#a13a2c;color:#e08770}
+.vw-art-badge.b-direct{border-color:var(--amber-lo);color:var(--amber)}
+.vw-art-badge.b-state,.vw-art-badge.b-supplier,.vw-art-badge.b-air_operator{border-color:var(--border-hi);color:var(--gray-hi)}
+.vw-art-meta-row{font-size:10px;color:var(--gray);font-family:var(--mono);margin-bottom:4px;display:flex;flex-wrap:wrap;gap:8px}
+
+/* Toast for copy etc. */
+.vw-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--amber);color:var(--bg);padding:6px 16px;border-radius:20px;font-size:12px;font-family:var(--mono);z-index:9999;display:none;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+.vw-toast.show{display:block}
+
+/* ── Expanded violation viewer (schemas: expanded JSON + legacy) ── */
+.vw-v{display:flex;flex-direction:column;gap:4px}
+.vw-v-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}
+.vw-v-head-l{min-width:0}
+.vw-v-eyebrow{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);font-family:var(--mono)}
+.vw-v-head-r{flex-shrink:0}
+.vw-v-summary{padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--gray-hi);font-size:13px;line-height:1.6;white-space:pre-wrap;margin-bottom:6px}
+.vw-v-theory{padding:10px 14px;border-left:3px solid var(--amber-lo);border-radius:4px;background:var(--bg);color:var(--gray-hi);font-size:12px;line-height:1.5}
+
+/* Actors */
+.vw-actor-label{display:inline-block;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-right:8px}
+.vw-actor{display:inline-block;padding:3px 9px;border-radius:12px;font-size:11px;margin:2px 4px 2px 0;font-family:var(--mono);border:1px solid var(--border);background:var(--bg)}
+.vw-actor-pri{border-color:var(--amber-lo);color:var(--amber)}
+.vw-actor-sup{border-color:var(--border-hi);color:var(--gray-hi)}
+
+/* Transcript segments / key admissions */
+.vw-seg{border-left:2px solid var(--amber);padding:6px 10px;margin-bottom:4px;font-size:12px;color:var(--gray-hi);line-height:1.5;background:var(--bg-card);border-radius:0 4px 4px 0}
+.vw-seg-ts{color:var(--amber);font-family:var(--mono);margin-right:8px}
+.vw-seg-who{color:var(--gray-hi);font-weight:600}
+.vw-seg-play{flex-shrink:0;width:22px;height:22px;margin-right:8px;padding:0;border:1px solid var(--border);border-radius:50%;background:var(--bg);color:var(--amber);cursor:pointer;font-size:10px;line-height:1;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
+.vw-seg-play:hover{border-color:var(--amber);color:var(--white)}
+.vw-seg-play.playing{border-color:var(--amber);color:var(--white);background:var(--amber);background:rgba(255,176,32,.15)}
+
+/* Probative chain */
+.vw-v-chain{white-space:pre-wrap;font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--gray-hi);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin:0}
+
+/* Tables (element grid, authorities, open questions) */
+.vw-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;background:var(--bg)}
+.vw-table{width:100%;border-collapse:collapse;font-size:12px;color:var(--gray-hi)}
+.vw-table th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--gray);background:var(--bg-card);padding:8px 10px;border-bottom:1px solid var(--border);position:sticky;top:0}
+.vw-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.45}
+.vw-table tr:last-child td{border-bottom:none}
+.vw-table code{font-family:var(--mono);font-size:11px;color:var(--amber)}
+.vw-table-mini{font-size:11px}
+.vw-table-mini td{padding:4px 8px}
+.vw-ev{color:var(--gray);font-family:var(--mono);font-size:11px}
+.vw-elem-arg{font-size:11px;color:var(--gray-hi);margin-top:3px;line-height:1.4}
+.vw-elem-weak{font-size:11px;color:#e0a070;margin-top:3px;line-height:1.4}
+.vw-elem-oq{font-size:11px;color:var(--gray);margin-top:3px}
+.vw-oq-tag{display:inline-block;font-size:8px;letter-spacing:.08em;font-family:var(--mono);padding:1px 5px;border-radius:8px;background:var(--amber-lo);color:var(--amber);margin-right:4px;text-transform:uppercase}
+
+/* Status / type badges */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:10px;font-family:var(--mono);border:1px solid var(--border);background:var(--bg-card);color:var(--gray-hi)}
+.badge-ok{border-color:#2d785a;color:#7ad0a8}
+.badge-warn{border-color:#a13a2c;color:#e08770;font-weight:600}
+.badge-info{border-color:var(--amber-lo);color:var(--amber)}
+.badge-dim{border-color:var(--border-hi);color:var(--gray)}
+
+/* Nexus matrix */
+.vw-nexus{display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
+.vw-nexus-row{display:flex;align-items:center;gap:8px;font-size:11px}
+.vw-nexus-key{flex:0 0 200px;color:var(--gray-hi);text-transform:capitalize}
+.vw-nexus-bar{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.vw-nexus-fill{display:block;height:100%;background:linear-gradient(90deg,var(--amber-lo),var(--amber))}
+.vw-nexus-val{flex:0 0 28px;text-align:right;color:var(--gray);font-family:var(--mono)}
+.vw-nexus-list{margin:4px 0 0;padding-left:18px;font-size:11px;color:var(--gray-hi);line-height:1.6}
+.vw-nexus-list code{font-family:var(--mono);color:var(--amber)}
+.vw-str{font-size:9px;text-transform:uppercase;font-family:var(--mono);padding:1px 6px;border-radius:8px;margin-left:4px}
+.vw-str.high{background:#a13a2c;color:#fff}
+
+/* Confidence */
+.vw-confidence{border:1px solid var(--border);border-radius:8px;background:var(--bg);padding:10px 12px}
+.vw-conf-formula{font-size:11px;color:var(--gray-hi);margin-bottom:6px}
+.vw-conf-formula code{font-family:var(--mono);color:var(--amber);font-size:11px}
+.vw-conf-note{font-size:11px;color:var(--gray);margin-top:6px;line-height:1.5}
+.vw-conf-note-alt{color:var(--gray-hi);border-top:1px dashed var(--border);padding-top:6px}
+
+/* Evidence list */
+.vw-ev-list{display:flex;flex-direction:column;gap:5px}
+.vw-ev-item{display:flex;gap:10px;align-items:baseline;font-size:11px;color:var(--gray-hi);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 10px}
+.vw-ev-id{color:var(--amber);font-family:var(--mono);flex-shrink:0}
+.vw-ev-type{color:var(--gray);flex-shrink:0;font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+.vw-ev-src{font-family:var(--mono);color:var(--gray);flex:1;word-break:break-all}
+.vw-ev-rel{color:var(--gray-hi);flex-shrink:0}
+
+/* Cross-references */
+.vw-xref-wrap{display:flex;flex-wrap:wrap;gap:6px}
+.vw-xref-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-family:var(--mono);padding:4px 10px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--gray-hi);cursor:pointer;transition:all .12s}
+.vw-xref-chip:hover{background:var(--amber-lo);border-color:var(--amber);color:var(--white)}
+
+/* File pills container uses .vw-file-pills (defined near tree) */
+.vw-file-pills{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+
+/* Convert action pill + menu (project-default conversions) */
+.vw-convert-btn:hover{background:var(--green-lo,#1c4532);border-color:var(--green,#2D6A4F);color:var(--white)}
+.vw-convert-menu{position:fixed;z-index:9999;min-width:240px;max-width:280px;background:var(--bg-panel,#16140f);border:1px solid var(--border,#444);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.45);padding:0;display:none;overflow:hidden;font-family:var(--font-ui,#Segoe UI,system-ui,sans-serif)}
+.vw-convert-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;background:linear-gradient(90deg,#1c4532,#2D6A4F);color:#fff;font-size:12px;font-weight:600}
+.vw-convert-head .vw-convert-close{background:none;border:none;color:#fff;font-size:16px;line-height:1;cursor:pointer;opacity:.8}
+.vw-convert-head .vw-convert-close:hover{opacity:1}
+.vw-convert-file{padding:8px 12px;font-family:var(--mono,#Consolas),monospace;font-size:10.5px;color:var(--gray-hi,#cfc9bf);border-bottom:1px solid var(--border,#444);word-break:break-all}
+.vw-convert-loading,.vw-convert-empty{padding:12px;font-size:11px;color:var(--gray,#9a9088);text-align:center}
+.vw-convert-action{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.05);color:var(--gray-hi,#cfc9bf);font-size:12px;padding:10px 12px;cursor:pointer;transition:all .12s}
+.vw-convert-action i{width:16px;text-align:center;color:var(--amber,#c4622d)}
+.vw-convert-action:hover{background:rgba(196,98,45,.12);color:#fff}
+.vw-convert-note{padding:7px 12px;font-size:9.5px;color:var(--gray,#9a9088);opacity:.75;border-top:1px solid rgba(255,255,255,.05)}
+.vw-toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#1c4532;color:#fff;font-size:12px;padding:10px 16px;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:all .25s;z-index:10000;max-width:80vw}
+.vw-toast.show{opacity:1;transform:translate(-50%,0)}
+.vw-toast.error{background:#7a2e1e}

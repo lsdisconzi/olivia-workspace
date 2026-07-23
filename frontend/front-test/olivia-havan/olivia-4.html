@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Olivia · Storytelling Workbench</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231c4532'/><g transform='translate(6,7) scale(0.31)'><path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23faf9f6' stroke-width='2.5' stroke-linecap='round' opacity='.6'/><path d='M28 36 Q20 26,16 18 Q24 24,28 36Z' fill='%23faf9f6' opacity='.4'/><path d='M30 34 Q38 24,44 18 Q38 28,30 34Z' fill='%23faf9f6' opacity='.35'/><path d='M42 24 Q36 14,34 8 Q40 14,42 24Z' fill='%23faf9f6' opacity='.35'/><ellipse cx='22' cy='42' rx='4' ry='5' fill='%23c4622d'/></g></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --white: #faf9f6;
+            --black: #1a1a1a;
+            --green-dark: #1c4532;
+            --green-mid: #2d785a;
+            --green-light: #5a8a6e;
+            --amber: #c4622d;
+            --amber-light: #d4733e;
+            --golden: #C89B3C;
+            --gray: #9a9088;
+            --gray-hi: #5a5a5a;
+            --cream: #f8f5ee;
+            --paper: #fdfcf9;
+            --color-text-primary: var(--black);
+            --color-text-secondary: var(--gray-hi);
+            --color-text-tertiary: var(--gray);
+            --color-border-light: rgba(28, 69, 50, .10);
+            --color-border-medium: rgba(28, 69, 50, .18);
+            --color-border-strong: rgba(28, 69, 50, .28);
+            --font-serif: 'Fraunces', Georgia, serif;
+            --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition: .35s cubic-bezier(.4, 0, .2, 1);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font-sans);
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.65;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        @media (prefers-reduced-motion:reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* ── Rail ── */
+        .rail {
+            position: fixed;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .rail::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 64px;
+            bottom: 64px;
+            width: 1px;
+            background: linear-gradient(var(--green-mid), var(--color-border-light) 40%, var(--color-border-light) 60%, var(--amber));
+            opacity: .35;
+        }
+        .rail .dot {
+            position: absolute;
+            left: -2.5px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        .rail .dot.top {
+            top: 60px;
+            background: var(--green-mid);
+        }
+        .rail .dot.bottom {
+            bottom: 60px;
+            background: var(--amber);
+        }
+        @media (max-width:900px) {
+            .rail {
+                display: none;
+            }
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 2.6rem;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            background: color-mix(in srgb, var(--white) 82%, transparent);
+            border-bottom: 1px solid transparent;
+            transition: border-color var(--transition);
+        }
+        nav.scrolled {
+            border-bottom-color: var(--color-border-light);
+        }
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: .5rem;
+            font-family: var(--font-serif);
+            font-size: 1.22rem;
+            font-weight: 500;
+            color: var(--green-dark);
+            letter-spacing: -0.01em;
+        }
+        .logo .tag {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .16em;
+            color: var(--gray);
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        .nav-links a {
+            font-size: .82rem;
+            color: var(--color-text-secondary);
+            transition: color var(--transition);
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            color: var(--amber);
+        }
+        .agent-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            font-size: .7rem;
+            font-family: var(--font-mono);
+            letter-spacing: .04em;
+            padding: .38rem .8rem;
+            border-radius: 2rem;
+            border: 1px solid var(--color-border-medium);
+            color: var(--color-text-secondary);
+            background: transparent;
+            cursor: default;
+        }
+        .agent-badge .d {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--amber);
+            animation: subtle-pulse 2s ease-in-out infinite;
+        }
+        @media (max-width:820px) {
+            .nav-links a:not(.agent-badge) {
+                display: none;
+            }
+            nav {
+                padding: 1rem 1.4rem;
+            }
+        }
+
+        /* ── Hero ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 7rem 6vw 3rem;
+            text-align: center;
+            position: relative;
+        }
+        .hero-kicker {
+            font-family: var(--font-mono);
+            font-size: .66rem;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--color-text-tertiary);
+            margin-bottom: 2rem;
+        }
+        .stage-view {
+            position: relative;
+            width: 280px;
+            height: 280px;
+        }
+        .morph-scene {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity .85s ease, transform .85s ease;
+            transform: scale(.94);
+            pointer-events: none;
+        }
+        .morph-scene.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .morph-label {
+            font-family: var(--font-serif);
+            font-size: 1.65rem;
+            font-weight: 400;
+            color: var(--color-text-primary);
+            margin-top: .5rem;
+            transition: opacity .35s;
+            letter-spacing: -0.01em;
+        }
+        .morph-sub {
+            font-family: var(--font-sans);
+            font-size: .88rem;
+            color: var(--color-text-tertiary);
+            max-width: 400px;
+            line-height: 1.6;
+            min-height: 42px;
+            margin-top: .4rem;
+            transition: opacity .35s;
+        }
+        .pills {
+            display: flex;
+            gap: .45rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.6rem;
+        }
+        .pill {
+            font-family: var(--font-sans);
+            font-size: .74rem;
+            font-weight: 500;
+            padding: .5rem 1.1rem;
+            border-radius: 20px;
+            border: 1px solid var(--color-border-light);
+            background: transparent;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+        }
+        .pill:hover {
+            border-color: var(--color-border-medium);
+            color: var(--color-text-primary);
+        }
+        .pill.active {
+            background: var(--green-dark);
+            border-color: var(--green-dark);
+            color: var(--white);
+        }
+        .pill i {
+            font-size: .68rem;
+        }
+        .compose-mock {
+            margin-top: 2.8rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            width: min(460px, 88vw);
+            background: var(--white);
+            border: 1px solid var(--color-border-light);
+            border-radius: 2rem;
+            padding: .45rem .55rem .45rem 1.2rem;
+            box-shadow: 0 10px 28px rgba(28, 69, 50, .05);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        .compose-mock:hover {
+            border-color: var(--color-border-medium);
+            box-shadow: 0 14px 34px rgba(28, 69, 50, .09);
+            transform: translateY(-1px);
+        }
+        .compose-mock span {
+            flex: 1;
+            text-align: left;
+            font-size: .82rem;
+            color: var(--color-text-tertiary);
+        }
+        .compose-mock .send-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--amber);
+            color: var(--white);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all var(--transition);
+            flex-shrink: 0;
+        }
+        .compose-mock:hover .send-btn {
+            background: var(--amber-light);
+            transform: translateY(-1px);
+        }
+        .compose-mock .send-btn i {
+            font-size: .72rem;
+        }
+        .scroll-hint {
+            margin-top: 3rem;
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--color-text-tertiary);
+            opacity: .6;
+            animation: subtle-pulse 2.5s ease-in-out infinite;
+        }
+
+        /* ── Reveal ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .8s ease, transform .8s cubic-bezier(.4, 0, .2, 1);
+        }
+        .reveal.in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Sections ── */
+        section.quiet {
+            padding: 5.5rem 6vw;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        section.quiet+section.quiet {
+            border-top: 1px solid var(--color-border-light);
+        }
+        section.wide {
+            padding: 5.5rem 6vw;
+            max-width: 1060px;
+            margin: 0 auto;
+        }
+        section.wide+section.wide {
+            border-top: 1px solid var(--color-border-light);
+        }
+        .kicker {
+            font-family: var(--font-mono);
+            font-size: .64rem;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--amber);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        h2 {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+            color: var(--green-dark);
+            line-height: 1.2;
+            max-width: 20ch;
+            letter-spacing: -0.015em;
+        }
+        h2 em {
+            font-style: italic;
+            color: var(--amber);
+            font-weight: 300;
+        }
+        .lede {
+            margin-top: 1rem;
+            font-size: .95rem;
+            color: var(--color-text-secondary);
+            max-width: 58ch;
+            line-height: 1.7;
+        }
+
+        /* ── Intelligence Cards ── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.4rem;
+            margin-top: 2.2rem;
+        }
+        @media (max-width:768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .intel-card {
+            background: var(--paper);
+            border: 1px solid var(--color-border-light);
+            border-radius: 14px;
+            padding: 1.6rem 1.4rem;
+            transition: all var(--transition);
+            position: relative;
+        }
+        .intel-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(28, 69, 50, .07);
+            border-color: var(--color-border-medium);
+        }
+        .intel-card-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: .9rem;
+            font-size: 15px;
+        }
+        .intel-card-icon.conv {
+            background: rgba(200, 155, 60, .12);
+            color: var(--golden);
+        }
+        .intel-card-icon.mem {
+            background: rgba(28, 69, 50, .08);
+            color: var(--green-dark);
+        }
+        .intel-card-icon.agt {
+            background: rgba(196, 98, 45, .08);
+            color: var(--amber);
+        }
+        .intel-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--green-dark);
+            margin-bottom: .2rem;
+            letter-spacing: -0.01em;
+        }
+        .intel-card .tag {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: .6rem;
+        }
+        .intel-card p {
+            font-size: .8rem;
+            color: var(--color-text-secondary);
+            line-height: 1.55;
+        }
+        .intel-card .example {
+            margin-top: .6rem;
+            font-size: .74rem;
+            color: var(--green-light);
+            font-style: italic;
+        }
+
+        /* ── Workbench Preview ── */
+        .workbench-frame {
+            background: var(--paper);
+            border: 1px solid var(--color-border-light);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(28, 69, 50, .06);
+            max-width: 880px;
+            margin: 2rem auto 0;
+        }
+        .wb-titlebar {
+            background: #f5f3ee;
+            padding: 9px 14px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            border-bottom: 1px solid var(--color-border-light);
+        }
+        .wb-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+        .wb-dot.r {
+            background: #e88;
+        }
+        .wb-dot.y {
+            background: #e9b84c;
+        }
+        .wb-dot.g {
+            background: #7cbf7c;
+        }
+        .wb-title {
+            font-family: var(--font-mono);
+            font-size: .62rem;
+            color: var(--gray);
+            margin-left: 8px;
+            letter-spacing: .04em;
+        }
+        .wb-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 340px;
+        }
+        @media (max-width:700px) {
+            .wb-body {
+                grid-template-columns: 1fr;
+            }
+        }
+        .wb-chat {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: .78rem;
+            border-right: 1px solid var(--color-border-light);
+            max-height: 360px;
+            overflow-y: auto;
+            font-family: var(--font-sans);
+        }
+        .wb-msg {
+            padding: 8px 12px;
+            border-radius: 10px;
+            max-width: 88%;
+            line-height: 1.5;
+            animation: float-up 0.4s ease-out;
+        }
+        .wb-msg.user {
+            align-self: flex-end;
+            background: rgba(28, 69, 50, .06);
+            color: var(--green-dark);
+        }
+        .wb-msg.olivia {
+            align-self: flex-start;
+            background: #fff;
+            border: 1px solid var(--color-border-light);
+            color: var(--color-text-primary);
+        }
+        .wb-msg.system {
+            align-self: center;
+            background: transparent;
+            color: var(--gray);
+            font-size: .68rem;
+            font-family: var(--font-mono);
+            letter-spacing: .03em;
+        }
+        .wb-preview {
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, #e8e4da 0%, #dfd9cc 30%, #d5cfc0 60%, #c8c0ae 100%);
+            border-radius: 0 0 8px 0;
+        }
+        .scene-village {
+            width: 100%;
+            height: 100%;
+            min-height: 260px;
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: all 1s ease;
+        }
+        .wb-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 14px;
+            border-top: 1px solid var(--color-border-light);
+            background: #fafaf7;
+            align-items: center;
+        }
+        .wb-slider-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--font-mono);
+            font-size: .62rem;
+            color: var(--gray);
+        }
+        .wb-slider-group input[type="range"] {
+            width: 70px;
+            accent-color: var(--amber);
+            height: 3px;
+        }
+        .wb-slider-group span {
+            color: var(--amber);
+            min-width: 30px;
+            text-align: center;
+            font-weight: 500;
+            font-size: .64rem;
+        }
+        .wb-pill-sm {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            padding: 4px 9px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 1px solid var(--color-border-light);
+            background: #fff;
+            color: var(--gray);
+            transition: all .25s;
+            letter-spacing: .03em;
+            white-space: nowrap;
+        }
+        .wb-pill-sm:hover,
+        .wb-pill-sm.active {
+            background: var(--green-dark);
+            border-color: var(--green-dark);
+            color: var(--white);
+        }
+
+        /* ── Shaders Room ── */
+        .shader-box {
+            background: var(--paper);
+            border: 1px solid var(--color-border-light);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+        .shader-scene {
+            height: 220px;
+            position: relative;
+            overflow: hidden;
+            transition: all 1.2s ease;
+            background: linear-gradient(180deg, #d4c8b0 0%, #c4b898 30%, #b8a880 60%, #a89870 100%);
+            border-radius: 14px 14px 0 0;
+        }
+        .shader-scene.night {
+            filter: brightness(0.3) saturate(0.4) hue-rotate(190deg);
+        }
+        .shader-scene.rain {
+            filter: brightness(0.6) saturate(0.5);
+        }
+        .shader-scene.fog {
+            filter: brightness(0.75) contrast(0.65) blur(0.8px);
+        }
+        .shader-scene.winter {
+            filter: brightness(0.85) saturate(0.3) hue-rotate(15deg);
+        }
+        .shader-scene.sunset {
+            filter: brightness(0.9) saturate(1.3) hue-rotate(-10deg);
+        }
+        .shader-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 14px;
+            border-top: 1px solid var(--color-border-light);
+            background: #fdfdfb;
+        }
+        .shader-btn {
+            font-family: var(--font-mono);
+            font-size: .6rem;
+            padding: 5px 11px;
+            border-radius: 14px;
+            cursor: pointer;
+            border: 1px solid var(--color-border-light);
+            background: #fff;
+            color: var(--gray);
+            transition: all .25s;
+            letter-spacing: .03em;
+            white-space: nowrap;
+        }
+        .shader-btn:hover,
+        .shader-btn.active {
+            background: var(--green-dark);
+            border-color: var(--green-dark);
+            color: var(--white);
+        }
+
+        /* ── Pipeline ── */
+        .pipeline-flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1.8rem;
+        }
+        .pipeline-step {
+            background: var(--paper);
+            border: 1px solid var(--color-border-light);
+            border-radius: 10px;
+            padding: 14px 16px;
+            text-align: center;
+            min-width: 90px;
+            font-weight: 500;
+            font-size: .78rem;
+            color: var(--green-dark);
+            transition: all var(--transition);
+        }
+        .pipeline-step:hover {
+            border-color: var(--amber);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(28, 69, 50, .05);
+        }
+        .pipeline-arrow {
+            color: var(--amber);
+            font-size: 16px;
+            font-weight: 300;
+        }
+        @media (max-width:600px) {
+            .pipeline-arrow {
+                transform: rotate(90deg);
+            }
+            .pipeline-flow {
+                flex-direction: column;
+            }
+        }
+
+        /* ── Use Cases ── */
+        .usecase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .usecase-card {
+            background: var(--paper);
+            border: 1px solid var(--color-border-light);
+            border-radius: 11px;
+            padding: 1.2rem 1.1rem;
+            transition: all var(--transition);
+            cursor: default;
+        }
+        .usecase-card:hover {
+            border-color: var(--color-border-medium);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(28, 69, 50, .04);
+        }
+        .usecase-card .uc-icon {
+            font-size: 18px;
+            margin-bottom: 7px;
+        }
+        .usecase-card h4 {
+            font-family: var(--font-serif);
+            font-size: .95rem;
+            font-weight: 500;
+            color: var(--green-dark);
+            margin-bottom: 3px;
+            letter-spacing: -0.01em;
+        }
+        .usecase-card p {
+            font-size: .72rem;
+            color: var(--color-text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ── Story Tree ── */
+        .story-tree {
+            font-family: var(--font-mono);
+            font-size: .7rem;
+            line-height: 1.8;
+            color: var(--color-text-secondary);
+            background: var(--paper);
+            border: 1px solid var(--color-border-light);
+            border-radius: 11px;
+            padding: 16px 18px;
+            margin-top: 1.5rem;
+        }
+        .story-tree .node {
+            color: var(--green-dark);
+            font-weight: 500;
+        }
+        .story-tree .branch {
+            padding-left: 16px;
+            border-left: 1.5px solid var(--color-border-light);
+            margin-left: 5px;
+        }
+        .story-tree .leaf {
+            color: var(--amber);
+        }
+
+        /* ── CTA ── */
+        .closing {
+            text-align: center;
+            padding: 6rem 6vw 5rem;
+        }
+        .closing h2 {
+            margin: 0 auto;
+            max-width: 22ch;
+        }
+        .closing .lede {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .closing .compose-mock {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ── Footer ── */
+        footer {
+            border-top: 1px solid var(--color-border-light);
+            padding: 1.8rem 6vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .8rem;
+            font-family: var(--font-mono);
+            font-size: .66rem;
+            color: var(--gray);
+        }
+        footer .flinks {
+            display: flex;
+            gap: 1.2rem;
+        }
+        footer a:hover {
+            color: var(--amber);
+        }
+
+        /* ── Keyframes ── */
+        @keyframes sway {
+            0%,
+            100% {
+                transform: rotate(0deg)
+            }
+            50% {
+                transform: rotate(1.4deg)
+            }
+        }
+        @keyframes sway-r {
+            0%,
+            100% {
+                transform: rotate(0deg)
+            }
+            50% {
+                transform: rotate(-1.1deg)
+            }
+        }
+        @keyframes fruit-glow {
+            0%,
+            100% {
+                opacity: .8
+            }
+            50% {
+                opacity: 1
+            }
+        }
+        @keyframes subtle-pulse {
+            0%,
+            100% {
+                opacity: .45
+            }
+            50% {
+                opacity: .7
+            }
+        }
+        @keyframes float-up {
+            0% {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes drift-particle {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            15% {
+                opacity: .6;
+            }
+            85% {
+                opacity: .4;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(.3);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rail"><span class="dot top"></span><span class="dot bottom"></span></div>
+
+    <!-- ═══ NAV ═══ -->
+    <nav id="nav">
+        <a href="#" class="logo">Olivia <span class="tag">Storytelling Workbench</span></a>
+        <div class="nav-links">
+            <a href="#intelligence">Intelligence</a>
+            <a href="#workbench">Workbench</a>
+            <a href="#shaders">Shaders Room</a>
+            <a href="#usecases">Use Cases</a>
+            <span class="agent-badge"><span class="d"></span> Agent online</span>
+        </div>
+    </nav>
+
+    <!-- ═══ HERO ═══ -->
+    <header class="hero">
+        <div class="hero-kicker">The Living Creative Intelligence Environment</div>
+        <div class="stage-view">
+            <!-- Base Tree -->
+            <div class="morph-scene active" id="scene-tree">
+                <svg width="260" height="280" viewBox="0 0 260 280">
+                    <g style="transform-origin:130px 150px;animation:sway 7s ease-in-out infinite">
+                        <path d="M130 270 Q128 240,127 210 Q126 180,128 155 Q130 135,132 118 Q134 105,133 94" fill="none" stroke="var(--green-dark)" stroke-width="3.2" stroke-linecap="round" opacity=".55"/>
+                        <path d="M90 268 Q130 274,170 268" fill="none" stroke="var(--green-dark)" stroke-width=".8" stroke-linecap="round" opacity=".1"/>
+                        <g style="transform-origin:130px 140px;animation:sway 7s ease-in-out infinite">
+                            <g style="transform-origin:126px 160px;animation:sway-r 6s ease-in-out .3s infinite">
+                                <path d="M126 160 Q108 148,82 140" fill="none" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+                                <path d="M100 146 Q88 136,80 126 Q90 132,100 146Z" fill="var(--green-dark)" opacity=".35"/>
+                                <path d="M112 150 Q102 140,96 130 Q106 138,112 150Z" fill="var(--green-mid)" opacity=".3"/>
+                                <ellipse cx="88" cy="148" rx="4" ry="5" fill="var(--amber)" opacity=".82" transform="rotate(-8 88 148)" style="animation:fruit-glow 4s ease-in-out infinite"/>
+                            </g>
+                            <g style="transform-origin:134px 152px;animation:sway 5.5s ease-in-out .6s infinite">
+                                <path d="M134 152 Q152 142,172 138" fill="none" stroke="var(--green-dark)" stroke-width="1.3" stroke-linecap="round" opacity=".35"/>
+                                <path d="M156 142 Q168 132,176 124 Q170 136,156 142Z" fill="var(--green-dark)" opacity=".3"/>
+                            </g>
+                            <g style="transform-origin:128px 130px;animation:sway-r 5s ease-in-out .9s infinite">
+                                <path d="M128 130 Q114 118,98 112" fill="none" stroke="var(--green-dark)" stroke-width="1.1" stroke-linecap="round" opacity=".33"/>
+                                <path d="M108 118 Q98 108,92 98 Q100 106,108 118Z" fill="var(--green-dark)" opacity=".3"/>
+                            </g>
+                            <g style="transform-origin:134px 115px;animation:sway 5.8s ease-in-out .4s infinite">
+                                <path d="M134 115 Q150 104,164 98" fill="none" stroke="var(--green-dark)" stroke-width="1" stroke-linecap="round" opacity=".3"/>
+                            </g>
+                            <g style="transform-origin:133px 94px;animation:sway 4.5s ease-in-out 1s infinite">
+                                <path d="M133 94 Q128 78,124 64" fill="none" stroke="var(--green-dark)" stroke-width=".8" stroke-linecap="round" opacity=".28"/>
+                                <path d="M126 74 Q120 64,116 54 Q122 62,126 74Z" fill="var(--green-mid)" opacity=".28"/>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <!-- Storytelling Network -->
+            <div class="morph-scene" id="scene-storytelling">
+                <svg width="260" height="280" viewBox="0 0 260 280">
+                    <g style="transform-origin:130px 130px">
+                        <path d="M130 240 Q130 200,130 160 Q130 140,130 130" fill="none" stroke="var(--green-dark)" stroke-width="2.8" stroke-linecap="round" opacity=".45"/>
+                        <circle cx="130" cy="120" r="10" fill="none" stroke="var(--green-mid)" stroke-width="1.8" opacity=".45"/>
+                        <ellipse cx="130" cy="120" rx="5" ry="6" fill="var(--amber)" opacity=".82" style="animation:fruit-glow 4s ease-in-out infinite"/>
+                        <path d="M130 120 Q110 100,70 75" fill="none" stroke="var(--green-mid)" stroke-width="1.1" stroke-linecap="round" opacity=".35"/>
+                        <path d="M130 120 Q150 100,190 75" fill="none" stroke="var(--green-mid)" stroke-width="1.1" stroke-linecap="round" opacity=".35"/>
+                        <path d="M130 120 Q90 125,50 140" fill="none" stroke="var(--green-mid)" stroke-width="1" stroke-linecap="round" opacity=".3"/>
+                        <path d="M130 120 Q170 125,210 140" fill="none" stroke="var(--green-mid)" stroke-width="1" stroke-linecap="round" opacity=".3"/>
+                        <circle cx="70" cy="75" r="7" fill="none" stroke="var(--green-mid)" stroke-width="1.1" opacity=".35"/>
+                        <ellipse cx="70" cy="75" rx="3.5" ry="4.5" fill="var(--amber)" opacity=".7" style="animation:fruit-glow 4s ease-in-out .3s infinite"/>
+                        <circle cx="190" cy="75" r="7" fill="none" stroke="var(--green-mid)" stroke-width="1.1" opacity=".35"/>
+                        <ellipse cx="190" cy="75" rx="3.5" ry="4.5" fill="var(--amber)" opacity=".7" style="animation:fruit-glow 4s ease-in-out .6s infinite"/>
+                        <circle cx="50" cy="140" r="6" fill="none" stroke="var(--green-mid)" stroke-width=".9" opacity=".3"/>
+                        <ellipse cx="50" cy="140" rx="3" ry="4" fill="var(--amber)" opacity=".6"/>
+                        <circle cx="210" cy="140" r="6" fill="none" stroke="var(--green-mid)" stroke-width=".9" opacity=".3"/>
+                        <ellipse cx="210" cy="140" rx="3" ry="4" fill="var(--amber)" opacity=".6"/>
+                    </g>
+                </svg>
+            </div>
+            <!-- Shaders / Visual -->
+            <div class="morph-scene" id="scene-visual">
+                <svg width="260" height="280" viewBox="0 0 260 280">
+                    <g style="transform-origin:130px 140px;animation:sway 7s ease-in-out infinite">
+                        <path d="M130 260 Q130 210,130 160 Q130 120,130 90" fill="none" stroke="var(--green-dark)" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+                        <circle cx="130" cy="80" r="20" fill="none" stroke="var(--amber)" stroke-width="2" opacity=".5" style="animation:fruit-glow 3s ease-in-out infinite"/>
+                        <ellipse cx="130" cy="80" rx="8" ry="10" fill="var(--golden)" opacity=".7" style="animation:fruit-glow 4s ease-in-out infinite"/>
+                        <path d="M130 100 Q100 90,70 80" fill="none" stroke="var(--green-mid)" stroke-width="1.2" stroke-linecap="round" opacity=".35"/>
+                        <path d="M130 100 Q160 90,190 80" fill="none" stroke="var(--green-mid)" stroke-width="1.2" stroke-linecap="round" opacity=".35"/>
+                        <rect x="55" y="68" width="24" height="16" rx="3" fill="none" stroke="var(--green-mid)" stroke-width="1" opacity=".35"/>
+                        <rect x="180" y="68" width="24" height="16" rx="3" fill="none" stroke="var(--green-mid)" stroke-width="1" opacity=".35"/>
+                        <line x1="100" y1="200" x2="160" y2="200" stroke="var(--green-dark)" stroke-width=".5" opacity=".08" stroke-linecap="round"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        <div id="morphLabel" class="morph-label">From imagination to living worlds</div>
+        <div id="morphSub" class="morph-sub">The olive tree — roots of memory, branches of agents, leaves of creation, fruits of stories. A living intelligence that grows with every idea.</div>
+        <div class="pills">
+            <button class="pill active" onclick="morph('tree')"><i class="fas fa-seedling"></i> Origin</button>
+            <button class="pill" onclick="morph('storytelling')"><i class="fas fa-wand-magic-sparkles"></i> Storytelling</button>
+            <button class="pill" onclick="morph('visual')"><i class="fas fa-paint-brush"></i> Visual</button>
+        </div>
+        <div class="compose-mock" onclick="document.getElementById('workbench').scrollIntoView({behavior:'smooth'})">
+            <span>Describe a world you want to create…</span>
+            <div class="send-btn"><i class="fas fa-arrow-up"></i></div>
+        </div>
+        <div class="scroll-hint">Discover the workbench</div>
+    </header>
+
+    <!-- ═══ INTELLIGENCE LAYER ═══ -->
+    <section class="wide reveal" id="intelligence">
+        <span class="kicker">The Intelligence Behind Every Creation</span>
+        <h2>Olivia is not a chatbot. <em>It is a creative partner with memory.</em></h2>
+        <p class="lede">Three interconnected systems that make every interaction deeper and every creation more personal.</p>
+        <div class="cards-grid">
+            <div class="intel-card">
+                <div class="intel-card-icon conv"><i class="fas fa-comments"></i></div>
+                <h3>Conversation Engine</h3>
+                <div class="tag">Natural Language Understanding</div>
+                <p>Explain an idea naturally. Olivia interprets intent, tone, and creative ambition — not just keywords.</p>
+                <div class="example">"Create a bedtime story about my daughter and a friendly dragon who bakes bread."</div>
+            </div>
+            <div class="intel-card">
+                <div class="intel-card-icon mem"><i class="fas fa-brain"></i></div>
+                <h3>Memory System</h3>
+                <div class="tag">Persistent World Knowledge</div>
+                <p>Olivia remembers the world you create — characters, places, timelines, preferences, and creative rules.</p>
+                <div class="example">Stores: characters · places · timelines · preferences · rules</div>
+            </div>
+            <div class="intel-card">
+                <div class="intel-card-icon agt"><i class="fas fa-network-wired"></i></div>
+                <h3>Agent Network</h3>
+                <div class="tag">Specialised Creative Minds</div>
+                <p>Story Agent, Visual Agent, Research Agent, World Builder, and Editor — all orchestrated seamlessly.</p>
+                <div class="example">Story → Visual → Research → World Builder → Editor</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ WORKBENCH PREVIEW ═══ -->
+    <section class="wide reveal" id="workbench">
+        <span class="kicker">Interactive Preview</span>
+        <h2>The <em>Storytelling Workbench</em></h2>
+        <p class="lede">Describe your idea in natural language. Olivia understands, remembers your world, and transforms imagination into something visible — instantly.</p>
+        <div class="workbench-frame">
+            <div class="wb-titlebar">
+                <span class="wb-dot r"></span><span class="wb-dot y"></span><span class="wb-dot g"></span>
+                <span class="wb-title">Olivia Storytelling Workbench — Session: Italian Village</span>
+            </div>
+            <div class="wb-body">
+                <div class="wb-chat">
+                    <div class="wb-msg user">Create a story about an Italian village where children discover a magical forest.</div>
+                    <div class="wb-msg olivia">I understand. <strong>Theme:</strong> Italian folklore · <strong>Era:</strong> 1900 · <strong>Mood:</strong> Warm / mysterious. Generating scene…</div>
+                    <div class="wb-msg system">✓ Scene structure created · 3 characters · 2 locations</div>
+                    <div class="wb-msg olivia">The village of <em>San Rocco</em> rests on a hill. Children find an ancient olive grove that glows at twilight. Would you like me to render this?</div>
+                    <div class="wb-msg user">Yes — show me the village at evening with golden light.</div>
+                    <div class="wb-msg system">✓ Rendering scene with evening parameters…</div>
+                </div>
+                <div class="wb-preview">
+                    <div class="scene-village" id="sceneVillage" style="background:linear-gradient(180deg,#c8b898 0%,#b8a480 25%,#a09070 55%,#887860 100%);position:relative;overflow:hidden;">
+                        <div style="position:absolute;bottom:0;left:0;right:0;height:38%;background:linear-gradient(0deg,#6a5a40 0%,#7a6a48 40%,#8a7a55 100%);border-radius:0;"></div>
+                        <div style="position:absolute;bottom:32%;left:-5%;width:55%;height:28%;background:radial-gradient(ellipse at center,#9a8a60 0%,transparent 65%);border-radius:50%;"></div>
+                        <div style="position:absolute;bottom:36%;left:34%;width:6px;height:40px;background:#7a6a48;border-radius:1px;"></div>
+                        <div style="position:absolute;bottom:50%;left:30%;width:14px;height:6px;background:#7a6a48;border-radius:1px;"></div>
+                        <div style="position:absolute;bottom:26%;right:18%;width:36px;height:44px;background:radial-gradient(ellipse at 50% 55%,rgba(200,155,60,.3) 0%,transparent 55%);border-radius:50%;animation:fruit-glow 4s ease-in-out infinite;"></div>
+                        <div style="position:absolute;top:12%;left:22%;width:1.5px;height:1.5px;background:#fff;border-radius:50%;opacity:.5;"></div>
+                        <div style="position:absolute;top:8%;left:48%;width:1px;height:1px;background:#fff;border-radius:50%;opacity:.4;"></div>
+                        <div style="position:absolute;top:16%;left:68%;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.45;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="wb-controls">
+                <div class="wb-slider-group">
+                    <span>⏳ Time</span>
+                    <input type="range" min="0" max="24" value="18" step="0.5" id="timeSliderWb" oninput="updateWbScene()">
+                    <span id="timeValWb">18:30</span>
+                </div>
+                <button class="wb-pill-sm active" onclick="setWbWeather('clear',this)" id="wbClear">☀ Clear</button>
+                <button class="wb-pill-sm" onclick="setWbWeather('rain',this)" id="wbRain">🌧 Rain</button>
+                <button class="wb-pill-sm" onclick="setWbWeather('fog',this)" id="wbFog">🌫 Fog</button>
+                <button class="wb-pill-sm" onclick="setWbWeather('snow',this)" id="wbSnow">❄ Snow</button>
+                <span style="font-family:var(--font-mono);font-size:.6rem;color:var(--gray);margin-left:auto;">Era: 1900 ▸</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ THE STUDIO ═══ -->
+    <section class="wide reveal" id="studio">
+        <span class="kicker">The Studio</span>
+        <h2>Where stories become <em>structures</em></h2>
+        <p class="lede">Before images. Before animation. Every world begins with structure. Olivia creates narrative arcs, characters, relationships, worlds, and timelines — all from conversation.</p>
+        <div class="story-tree">
+            <div class="node">📖 Story: The Olive Grove Mystery</div>
+            <div class="branch">
+                <div class="node">📚 Chapter 1: Discovery</div>
+                <div class="branch">
+                    <div class="leaf">🎬 Scene 01 — The Village Awakens</div>
+                    <div style="padding-left:10px;font-size:.6rem;color:var(--gray);">Characters: Lucia, Marco, Nonna · Location: San Rocco square · Emotion: Curiosity</div>
+                </div>
+            </div>
+            <div class="branch">
+                <div class="node">📚 Chapter 2: Into the Forest</div>
+                <div class="branch"><div class="leaf">🎬 Scene 02 — The Glowing Grove</div></div>
+            </div>
+            <div class="branch">
+                <div class="node">📚 Chapter 3: The Secret</div>
+                <div class="branch"><div class="leaf">🎬 Scene 03 — What the Trees Remember</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ SHADERS ROOM ═══ -->
+    <section class="wide reveal" id="shaders">
+        <span class="kicker">The Shaders Room</span>
+        <h2>A creative laboratory where <em>imagination becomes reality</em></h2>
+        <p class="lede">Describe a scene. Olivia generates the complete visual — composition, lighting, weather, and atmosphere. Then refine it with real-time controls.</p>
+        <div class="shader-box">
+            <div class="shader-scene" id="shaderScene" style="position:relative;overflow:hidden;">
+                <div id="shaderSun" style="position:absolute;top:10%;right:14%;width:44px;height:44px;background:radial-gradient(circle,rgba(255,220,140,.85) 0%,rgba(255,180,70,.25) 50%,transparent 70%);border-radius:50%;transition:all 1.2s ease;"></div>
+                <div style="position:absolute;bottom:28%;left:0;right:0;height:35%;background:linear-gradient(180deg,transparent 0%,rgba(90,70,40,.5) 25%,rgba(70,50,30,.7) 100%);clip-path:polygon(0% 55%,14% 18%,28% 40%,48% 8%,66% 32%,82% 12%,100% 38%,100% 100%,0% 100%);"></div>
+                <div style="position:absolute;bottom:0;left:0;right:0;height:22%;background:linear-gradient(180deg,rgba(80,55,30,.5) 0%,rgba(50,35,18,.85) 100%);"></div>
+                <div style="position:absolute;bottom:20%;left:22%;width:22px;height:38px;background:#7a6a48;border-radius:1px;"></div>
+                <div style="position:absolute;bottom:20%;left:36%;width:16px;height:28px;background:#6a5a3a;border-radius:1px;"></div>
+                <div style="position:absolute;bottom:20%;left:52%;width:20px;height:42px;background:#8a7a52;border-radius:1px;"></div>
+                <div id="rainOverlaySh" style="position:absolute;inset:0;opacity:0;transition:opacity .8s ease;pointer-events:none;background:repeating-linear-gradient(5deg,transparent,transparent 2px,rgba(160,180,200,.12) 2px,rgba(160,180,200,.12) 3px);"></div>
+                <div id="fogOverlaySh" style="position:absolute;inset:0;opacity:0;transition:opacity .8s ease;pointer-events:none;background:radial-gradient(ellipse at 50% 65%,rgba(190,200,210,.45) 0%,transparent 55%);"></div>
+            </div>
+            <div class="shader-controls">
+                <button class="shader-btn active" onclick="shaderPreset('day',this)" id="shDay">☀ Day</button>
+                <button class="shader-btn" onclick="shaderPreset('sunset',this)" id="shSunset">🌅 Sunset</button>
+                <button class="shader-btn" onclick="shaderPreset('night',this)" id="shNight">🌙 Night</button>
+                <button class="shader-btn" onclick="shaderPreset('rain',this)" id="shRain">🌧 Rain</button>
+                <button class="shader-btn" onclick="shaderPreset('fog',this)" id="shFog">🌫 Fog</button>
+                <button class="shader-btn" onclick="shaderPreset('winter',this)" id="shWinter">❄ Winter</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ CREATIVE PIPELINE ═══ -->
+    <section class="wide reveal" style="text-align:center;">
+        <span class="kicker">Creative Pipeline</span>
+        <h2 style="max-width:100%;margin:0 auto;">From <em>idea</em> to <em>experience</em></h2>
+        <p class="lede" style="margin:0.6rem auto 0;">The complete journey — every step powered by Olivia's intelligence.</p>
+        <div class="pipeline-flow">
+            <div class="pipeline-step">💡<br>Idea</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step">💬<br>Conversation</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step">📖<br>Story Structure</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step">🎨<br>Visual Scene</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step">🌍<br>Interactive World</div>
+            <span class="pipeline-arrow">→</span>
+            <div class="pipeline-step">✨<br>Experience</div>
+        </div>
+    </section>
+
+    <!-- ═══ USE CASES ═══ -->
+    <section class="wide reveal" id="usecases">
+        <span class="kicker">Use Cases</span>
+        <h2>Built for <em>human creativity</em></h2>
+        <p class="lede">Not industries — people. Families, teachers, artists, developers, and communities.</p>
+        <div class="usecase-grid">
+            <div class="usecase-card"><div class="uc-icon">👨‍👩‍👧‍👦</div><h4>Children & Family</h4><p>Create stories that preserve imagination and memories. A child describes their grandmother's tales — Olivia transforms them into illustrated storybooks.</p></div>
+            <div class="usecase-card"><div class="uc-icon">📚</div><h4>Education</h4><p>Teachers create historical worlds, science simulations, and interactive lessons. Students explore through living, responsive environments.</p></div>
+            <div class="usecase-card"><div class="uc-icon">🏛️</div><h4>Heritage</h4><p>Preserve languages, traditions, and folklore. Communities record oral histories — Olivia builds interactive cultural archives.</p></div>
+            <div class="usecase-card"><div class="uc-icon">🎮</div><h4>Games & Film</h4><p>Previsualisation of worlds, characters, and environments. Describe a scene — Olivia generates concept art and mood boards instantly.</p></div>
+            <div class="usecase-card"><div class="uc-icon">⚖️</div><h4>Legal Storytelling</h4><p>Transform complex information into understandable narratives. Connect evidence into clear, compelling visual stories.</p></div>
+            <div class="usecase-card"><div class="uc-icon">🏺</div><h4>Museums</h4><p>Create immersive exhibit experiences. Visitors interact with historical scenes that adapt to their questions.</p></div>
+        </div>
+    </section>
+
+    <!-- ═══ CLOSING CTA ═══ -->
+    <section class="closing reveal" id="cta">
+        <span class="kicker" style="display:flex;justify-content:center;">Enter the Workspace</span>
+        <h2>Ready to create <em>living worlds</em>?</h2>
+        <p class="lede">Where imagination meets intelligence. Start building stories that breathe.</p>
+        <div class="compose-mock" style="margin-top:2rem;">
+            <span>Tell Olivia about your world…</span>
+            <div class="send-btn"><i class="fas fa-arrow-up"></i></div>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <span>© Olivia Ecosystem</span>
+        <div class="flinks">
+            <a href="#intelligence">Intelligence</a>
+            <a href="#workbench">Workbench</a>
+            <a href="#shaders">Shaders</a>
+            <a href="#usecases">Use Cases</a>
+        </div>
+    </footer>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 12), { passive: true });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+            }, { threshold: .1 }).observe(el);
+        });
+
+        // ── Morph Stage ──
+        const meta = {
+            tree: { label: 'From imagination to living worlds', sub: 'The olive tree — roots of memory, branches of agents, leaves of creation, fruits of stories. A living intelligence that grows with every idea.' },
+            storytelling: { label: 'Stories that connect', sub: 'Branches become a network of characters, places and threads — every node a scene that connects back to the root. Olivia weaves narrative from conversation.' },
+            visual: { label: 'Worlds you can see', sub: 'The crown opens into a visual engine. Describe any scene — Olivia renders it with light, weather, atmosphere, and era. Then you refine it, like a studio.' }
+        };
+
+        function morph(id) {
+            document.querySelectorAll('.morph-scene').forEach(s => s.classList.remove('active'));
+            const sceneEl = document.getElementById('scene-' + id);
+            if (sceneEl) sceneEl.classList.add('active');
+            document.querySelectorAll('.pills .pill').forEach(p => p.classList.remove('active'));
+            const pillEl = document.querySelector('.pills .pill[onclick*="' + id + '"]');
+            if (pillEl) pillEl.classList.add('active');
+            const m = meta[id] || meta.tree;
+            const lbl = document.getElementById('morphLabel');
+            const sub = document.getElementById('morphSub');
+            lbl.style.opacity = '0';
+            sub.style.opacity = '0';
+            setTimeout(() => { lbl.textContent = m.label;
+                sub.textContent = m.sub;
+                lbl.style.opacity = '1';
+                sub.style.opacity = '1'; }, 220);
+        }
+
+        // ── Workbench Scene ──
+        function updateWbScene() {
+            const slider = document.getElementById('timeSliderWb');
+            const val = parseFloat(slider.value);
+            const hours = Math.floor(val);
+            const mins = Math.round((val - hours) * 60);
+            document.getElementById('timeValWb').textContent =
+                String(hours).padStart(2, '0') + ':' + String(mins).padStart(2, '0');
+            const t = val / 24;
+            const scene = document.getElementById('sceneVillage');
+            const r = Math.round(180 + (100 - 180) * t);
+            const g = Math.round(170 + (140 - 170) * t);
+            const b = Math.round(140 + (100 - 140) * t);
+            const r2 = Math.round(160 + (80 - 160) * t);
+            const g2 = Math.round(150 + (110 - 150) * t);
+            const b2 = Math.round(120 + (80 - 120) * t);
+            scene.style.background = `linear-gradient(180deg,rgb(${r},${g},${b}) 0%,rgb(${r2},${g2},${b2}) 55%,rgb(${Math.round(r2*0.8)},${Math.round(g2*0.8)},${Math.round(b2*0.8)}) 100%)`;
+            scene.style.transition = 'background 0.9s ease';
+        }
+
+        function setWbWeather(weather, btn) {
+            const scene = document.getElementById('sceneVillage');
+            document.querySelectorAll('.wb-pill-sm').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            switch (weather) {
+                case 'rain':
+                    scene.style.filter = 'brightness(0.65) saturate(0.45)';
+                    break;
+                case 'fog':
+                    scene.style.filter = 'brightness(0.7) contrast(0.75) blur(0.4px)';
+                    break;
+                case 'snow':
+                    scene.style.filter = 'brightness(0.8) saturate(0.3) hue-rotate(8deg)';
+                    break;
+                default:
+                    scene.style.filter = 'brightness(1) saturate(1)';
+            }
+        }
+
+        // ── Shaders Presets ──
+        function shaderPreset(preset, btn) {
+            const scene = document.getElementById('shaderScene');
+            const sun = document.getElementById('shaderSun');
+            const rain = document.getElementById('rainOverlaySh');
+            const fog = document.getElementById('fogOverlaySh');
+            document.querySelectorAll('.shader-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            rain.style.opacity = '0';
+            fog.style.opacity = '0';
+            scene.classList.remove('night', 'rain', 'fog', 'winter', 'sunset');
+            switch (preset) {
+                case 'day':
+                    sun.style.opacity = '1';
+                    sun.style.top = '10%';
+                    sun.style.background =
+                        'radial-gradient(circle,rgba(255,220,140,.85) 0%,rgba(255,180,70,.25) 50%,transparent 70%)';
+                    break;
+                case 'sunset':
+                    scene.classList.add('sunset');
+                    sun.style.opacity = '0.85';
+                    sun.style.top = '40%';
+                    sun.style.background =
+                        'radial-gradient(circle,rgba(255,120,30,.85) 0%,rgba(255,50,15,.3) 50%,transparent 70%)';
+                    break;
+                case 'night':
+                    scene.classList.add('night');
+                    sun.style.opacity = '0.2';
+                    sun.style.top = '5%';
+                    sun.style.background =
+                        'radial-gradient(circle,rgba(200,200,220,.5) 0%,rgba(170,180,200,.2) 40%,transparent 60%)';
+                    break;
+                case 'rain':
+                    scene.classList.add('rain');
+                    rain.style.opacity = '1';
+                    sun.style.opacity = '0.25';
+                    break;
+                case 'fog':
+                    scene.classList.add('fog');
+                    fog.style.opacity = '1';
+                    sun.style.opacity = '0.4';
+                    break;
+                case 'winter':
+                    scene.classList.add('winter');
+                    sun.style.opacity = '0.5';
+                    sun.style.top = '18%';
+                    sun.style.background =
+                        'radial-gradient(circle,rgba(220,230,240,.6) 0%,rgba(190,210,230,.25) 50%,transparent 70%)';
+                    break;
+            }
+        }
+
+        console.log('🌿 Olivia Storytelling Workbench — Master Landing Experience');
+        console.log('   From imagination to living worlds. Light, clean, alive.');
+    </script>
+</body>
+</html>

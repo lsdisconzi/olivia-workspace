@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OliviaLegal · Admin Users</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #191917;
+      --bg-card: #1f1f1d;
+      --code-bg: #161614;
+      --border: #2a2a28;
+      --border-hi: #363634;
+      --amber: #c4622d;
+      --amber-lo: rgba(196, 98, 45, 0.12);
+      --green: #4a9e70;
+      --green-lo: rgba(74, 158, 112, 0.10);
+      --blue: #4A7C9B;
+      --blue-lo: rgba(74, 124, 155, 0.10);
+      --white: #ede8df;
+      --gray: #6b6b68;
+      --gray-hi: #9a9a96;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --r: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .brand-line {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+
+    .brand-line em {
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .page-title {
+      font-family: var(--serif);
+      font-size: 28px;
+      color: var(--white);
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .badge-tag {
+      border: 1px solid var(--border-hi);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 11px;
+      color: var(--gray-hi);
+      font-family: var(--sans);
+    }
+
+    .badge-tag strong {
+      color: var(--white);
+      font-family: var(--mono);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      border: 1px solid var(--border-hi);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--gray-hi);
+      text-decoration: none;
+      background: transparent;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+
+    .btn:hover {
+      border-color: var(--amber);
+      background: var(--amber-lo);
+      color: var(--white);
+    }
+
+    .btn i {
+      margin-right: 6px;
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .panel h2 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field label {
+      display: block;
+      color: var(--gray);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field select,
+    .mini-input,
+    .mini-select {
+      width: 100%;
+      border: 1px solid var(--border-hi);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--white);
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: var(--sans);
+    }
+
+    .mini-input,
+    .mini-select {
+      padding: 7px 9px;
+      font-size: 12px;
+    }
+
+    .primary {
+      margin-top: 12px;
+      border: none;
+      border-radius: 8px;
+      background: var(--white);
+      color: #191917;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .primary:hover {
+      background: #f5f0e8;
+      transform: translateY(-1px);
+    }
+
+    .notice {
+      margin-top: 12px;
+      font-size: 13px;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: none;
+    }
+
+    .notice.ok {
+      border: 1px solid rgba(74, 158, 112, 0.5);
+      background: var(--green-lo);
+      color: var(--green);
+    }
+
+    .notice.err {
+      border: 1px solid rgba(158, 74, 74, 0.3);
+      background: rgba(158, 74, 74, 0.08);
+      color: #9e4a4a;
+    }
+
+    .table-wrap {
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    th {
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 11px;
+      font-family: var(--mono);
+    }
+
+    code {
+      font-family: var(--mono);
+      background: var(--code-bg);
+      border: 1px solid var(--border-hi);
+      border-radius: 5px;
+      padding: 2px 6px;
+      color: var(--white);
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(74, 158, 112, 0.45);
+      color: var(--green);
+      background: var(--green-lo);
+      font-family: var(--mono);
+    }
+
+    .icon-btn {
+      border: 1px solid var(--border-hi);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      background: transparent;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .save-btn {
+      border-color: rgba(74, 158, 112, 0.5);
+      background: var(--green-lo);
+      color: var(--green);
+    }
+
+    .reset-btn {
+      border-color: rgba(196, 98, 45, 0.45);
+      background: var(--amber-lo);
+      color: var(--amber);
+    }
+
+    .trash-btn {
+      border-color: rgba(158, 74, 74, 0.4);
+      background: rgba(158, 74, 74, 0.08);
+      color: #9e4a4a;
+    }
+
+    .policy-cell {
+      min-width: 340px;
+    }
+
+    .section-check-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      margin-top: 4px;
+      max-width: 720px;
+    }
+
+    .section-check-grid label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--gray-hi);
+      cursor: pointer;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .section-check-grid input {
+      width: auto;
+    }
+
+    .sections-cell {
+      min-width: 240px;
+      font-size: 12px;
+      color: var(--gray-hi);
+      line-height: 1.5;
+    }
+
+    .policy-grid {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .test-pages-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .test-page-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border: 1px solid var(--border, rgba(0,0,0,.12));
+      border-radius: 10px;
+      color: var(--amber);
+      text-decoration: none;
+      font-weight: 500;
+      transition: background .15s, border-color .15s, transform .1s;
+    }
+
+    .test-page-card:hover {
+      background: rgba(196,98,45,.1);
+      border-color: var(--amber);
+      transform: translateY(-1px);
+    }
+
+    @media(max-width:760px) {
+      body {
+        padding: 14px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <div class="brand-line">Olivia <em>×</em> <span style="color:var(--amber);">Governança</span></div>
+        <div class="page-title">User Management</div>
+        <p style="color:var(--gray);font-size:13px;margin-top:4px;">Gerencie usuários autorizados sem editar código.</p>
+      </div>
+      <div class="badges">
+        <div class="badge-tag">Admin: <strong>__ACTOR_NAME__</strong></div>
+        <div class="badge-tag">ID: <strong>__ACTOR_ID__</strong></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a class="btn" href="/OliviaLegal/mode-select"><i class="fa-solid fa-arrow-left"></i> Mode Select</a>
+      <a class="btn" href="/OliviaLegal/admin/activity"><i class="fa-solid fa-chart-line"></i> Activity</a>
+      <button class="btn" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Atualizar lista</button>
+    </div>
+
+    <div class="panel" id="testPagesPanel">
+      <h2><i class="fa-solid fa-flask-vial"></i> Páginas de teste</h2>
+      <p style="color:var(--gray);font-size:13px;margin-bottom:12px;">Protótipos servidos em <code>/olivia/front-test/</code>. Abertos em nova aba.</p>
+      <div class="test-pages-grid">
+        <a class="test-page-card" href="/olivia/front-test/chat-1.html" target="_blank" rel="noopener">
+          <i class="fa-solid fa-comments"></i><span>Chat 1</span>
+        </a>
+        <a class="test-page-card" href="/olivia/front-test/chat-2.html" target="_blank" rel="noopener">
+          <i class="fa-solid fa-comments"></i><span>Chat 2</span>
+        </a>
+        <a class="test-page-card" href="/olivia/front-test/chat-3.html" target="_blank" rel="noopener">
+          <i class="fa-solid fa-comments"></i><span>Chat 3</span>
+        </a>
+        <a class="test-page-card" href="/olivia/front-test/landing/olivia-landing.html" target="_blank" rel="noopener">
+          <i class="fa-solid fa-window-maximize"></i><span>Landing</span>
+        </a>
+        <a class="test-page-card" href="/olivia/front-test/landing/olivia-landing-1.html" target="_blank" rel="noopener">
+          <i class="fa-solid fa-window-maximize"></i><span>Landing 1</span>
+        </a>
+        <a class="test-page-card" href="/olivia/front-test/landing/olivia-landing-2.html" target="_blank" rel="noopener">
+          <i class="fa-solid fa-window-maximize"></i><span>Landing 2</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><i class="fa-solid fa-user-plus"></i> Adicionar usuário</h2>
+      <form id="addUserForm">
+        <div class="grid">
+          <div class="field">
+            <label for="userId">Email (Google)</label>
+            <input id="userId" name="user_id" type="email" placeholder="usuario@gmail.com" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="displayName">Nome de exibição</label>
+            <input id="displayName" name="display_name" placeholder="Nome completo" required autocomplete="name">
+          </div>
+          <div class="field" style="grid-column:1/-1;">
+            <label for="initialPassword">Senha inicial</label>
+            <input id="initialPassword" name="initial_password" type="password" placeholder="mínimo 8 caracteres"
+              required autocomplete="new-password">
+          </div>
+          <div class="field">
+            <label for="assistantAccessMode">Acesso do assistente</label>
+            <select id="assistantAccessMode" name="assistant_access_mode" autocomplete="off">
+              <option value="read_write" selected>Ler + editar + criar</option>
+              <option value="read_only">Somente leitura</option>
+              <option value="write_new_only">Somente criar novos</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="assistantWriteScope">Escopo de escrita</label>
+            <input id="assistantWriteScope" name="assistant_write_scope" placeholder="uploads/user" autocomplete="off">
+          </div>
+          <div class="field" style="grid-column:1/-1;">
+            <label>Seções visíveis no tronco (deixe em branco = todas)</label>
+            <div id="addSectionsBox" class="section-check-grid"><span style="color:var(--gray)">Carregando seções…</span></div>
+          </div>
+        </div>
+        <div style="margin-top:8px;color:var(--gray-hi);font-size:12px;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input id="forceChangeOnCreate" name="force_change_on_create" type="checkbox" checked style="width:auto;"> Forçar troca de senha no
+            primeiro login
+          </label>
+        </div>
+        <button class="primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Salvar usuário</button>
+      </form>
+      <div id="addNotice" class="notice"></div>
+    </div>
+
+    <div class="panel">
+      <h2><i class="fa-solid fa-bullhorn"></i> Notificação administrativa</h2>
+      <form id="notificationForm">
+        <div class="grid">
+          <div class="field">
+            <label for="notifTitle">Título</label>
+            <input id="notifTitle" name="title" placeholder="Ex: Janela de manutenção" required autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="notifCategory">Categoria</label>
+            <select id="notifCategory" name="category" autocomplete="off">
+              <option value="info" selected>Info</option>
+              <option value="warning">Warning</option>
+              <option value="success">Success</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column:1/-1;">
+            <label for="notifMessage">Mensagem</label>
+            <input id="notifMessage" name="message" placeholder="Mensagem para os usuários" required autocomplete="off">
+          </div>
+        </div>
+        <button class="primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Publicar notificação</button>
+      </form>
+      <div id="notifNotice" class="notice"></div>
+    </div>
+
+    <!-- Seção de modelos (OpenRouter) mantida igual à original, só com estilo adaptado -->
+    <div class="panel">
+      <h2><i class="fa-solid fa-microchip"></i> Provedores / Modelos</h2>
+      <p style="color:var(--gray);font-size:12px;margin-bottom:12px;">
+        Adicione apenas modelos <strong>OpenRouter</strong>. Modelos existentes podem ser ocultados, editados ou
+        removidos (remoção de modelos nativos é restável).
+      </p>
+
+      <div class="panel" style="background:var(--code-bg);border-color:var(--border-hi);">
+        <h2 style="font-size:16px;"><i class="fa-solid fa-magnifying-glass"></i> Buscar modelo no OpenRouter</h2>
+        <div class="actions" style="margin-bottom:8px;">
+          <button class="btn" id="orSearchBtn" type="button"><i class="fa-solid fa-cloud-arrow-down"></i> Carregar
+            modelos</button>
+          <button class="btn" id="orFreeBtn" type="button" data-free="all"><i class="fa-solid fa-tag"></i>
+            Todos</button>
+          <button class="btn" id="orFreeBtnFree" type="button" data-free="free"><i class="fa-solid fa-gift"></i>
+            Grátis</button>
+          <button class="btn" id="orFreeBtnPaid" type="button" data-free="paid"><i class="fa-solid fa-coins"></i>
+            Pagos</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+          <input id="orSearchInput" name="or_search" class="mini-input" style="flex:1;min-width:200px;"
+            placeholder="Filtrar por nome ou id (ex: claude, sonar, hy3)" aria-label="Filtrar modelos do OpenRouter" autocomplete="off">
+          <span id="orCount" style="color:var(--gray-hi);font-size:12px;white-space:nowrap;"></span>
+        </div>
+        <select id="orModelSelect" name="or_model" class="mini-select" size="8"
+          style="width:100%;height:auto;max-height:240px;background:var(--bg-card);" aria-label="Selecionar modelo do OpenRouter" autocomplete="off">
+          <option disabled>Carregue os modelos primeiro…</option>
+        </select>
+        <div id="orDetail" style="margin-top:10px;font-size:13px;color:var(--gray-hi);"></div>
+      </div>
+
+      <form id="addModelForm">
+        <div class="grid">
+          <div class="field">
+            <label for="modelId">ID do modelo (OpenRouter)</label>
+            <input id="modelId" name="id" type="text" placeholder="anthropic/claude-3.5-sonnet" required autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="modelName">Nome de exibição</label>
+            <input id="modelName" name="name" placeholder="Claude 3.5 Sonnet" required autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="modelTier">Tier</label>
+            <input id="modelTier" name="tier" placeholder="free / pro" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="modelContext">Context window (tokens)</label>
+            <input id="modelContext" name="context_window" type="number" placeholder="200000" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="modelInCost">Custo entrada / 1M</label>
+            <input id="modelInCost" name="input_cost_per_1m" type="number" step="any" placeholder="3.0" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="modelOutCost">Custo saída / 1M</label>
+            <input id="modelOutCost" name="output_cost_per_1m" type="number" step="any" placeholder="15.0" autocomplete="off">
+          </div>
+          <div class="field" style="grid-column:1/-1;">
+            <label for="modelBestFor">Melhor para</label>
+            <input id="modelBestFor" name="best_for" placeholder="Raciocínio complexo, código" autocomplete="off">
+          </div>
+          <div class="field" style="grid-column:1/-1;display:flex;gap:18px;flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--gray-hi);font-size:13px;">
+              <input id="modelVision" name="supports_vision" type="checkbox" style="width:auto;"> Suporta visão
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--gray-hi);font-size:13px;">
+              <input id="modelThinking" name="supports_thinking" type="checkbox" style="width:auto;"> Suporta pensamento
+            </label>
+          </div>
+        </div>
+        <button class="primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Adicionar modelo</button>
+      </form>
+      <div id="addModelNotice" class="notice"></div>
+
+      <div class="table-wrap" style="margin-top:16px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Model ID</th>
+              <th>Provedor</th>
+              <th>Nome</th>
+              <th>Fonte</th>
+              <th>Visível</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="modelsTableBody">
+            <tr>
+              <td colspan="6" style="color:var(--gray)">Carregando...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="modelsTableNotice" class="notice"></div>
+    </div>
+
+    <!-- Ollama Servers panel -->
+    <div class="panel" id="ollamaServerPanel">
+      <h2><i class="fa-solid fa-server"></i> Servidores Ollama</h2>
+      <p style="color:var(--gray);font-size:12px;margin-bottom:12px;">
+        Cadastre servidores Ollama acessíveis pela VM (ex: <code>http://192.168.10.101:11434</code>).
+        Ao adicionar, o servidor é salvo em <code>ollama-servers.json</code> e seus modelos ficam
+        disponíveis no catálogo imediatamente sem reiniciar.
+      </p>
+
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+        <input id="ollamaServerUrl" name="ollama_server_url" class="mini-input" style="flex:1;"
+          placeholder="http://192.168.10.101:11434" type="url" aria-label="URL do servidor Ollama" autocomplete="url">
+        <button class="btn" id="ollamaAddBtn" type="button">
+          <i class="fa-solid fa-plus"></i> Adicionar servidor
+        </button>
+        <button class="btn" id="ollamaRefreshBtn" type="button" title="Atualizar lista">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+      </div>
+      <div id="ollamaAddNotice" class="notice"></div>
+
+      <div class="table-wrap" style="margin-top:8px;">
+        <table>
+          <thead>
+            <tr>
+              <th>URL do servidor</th>
+              <th>Status</th>
+              <th>Modelos</th>
+              <th>Persistido</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="ollamaServersBody">
+            <tr><td colspan="5" style="color:var(--gray)">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="ollamaServersNotice" class="notice"></div>
+    </div>
+
+    <div class="panel">
+      <h2><i class="fa-solid fa-users"></i> Usuários cadastrados</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Nome</th>
+              <th>Senha</th>
+              <th>Admin</th>
+              <th>Assistente</th>
+              <th>Seções</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <tr>
+              <td colspan="7" style="color:var(--gray)">Carregando...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="tableNotice" class="notice"></div>
+    </div>
+  </div>
+
+  <script>
+    /* mesmo script original, sem alterações */
+    const currentUserId = '__ACTOR_ID__';
+    const ASSISTANT_MODE_OPTIONS = [
+      { value: 'read_only', label: 'Somente leitura' },
+      { value: 'read_write', label: 'Ler + editar + criar' },
+      { value: 'write_new_only', label: 'Somente criar novos' },
+    ];
+    function setNotice(el, msg, ok) { el.textContent = msg; el.className = 'notice ' + (ok ? 'ok' : 'err'); el.style.display = 'block' }
+    function clearNotice(el) { el.textContent = ''; el.className = 'notice'; el.style.display = 'none' }
+    function assistantModeLabel(mode) { const f = ASSISTANT_MODE_OPTIONS.find(i => i.value === mode); return f ? f.label : mode }
+    function buildAssistantModeSelect(mode, id) {
+      const opts = ASSISTANT_MODE_OPTIONS.map(i => `<option value="${i.value}" ${i.value === mode ? 'selected' : ''}>${i.label}</option>`).join('');
+      return `<select class="mini-select" id="assistant_access_mode_${id}" data-field="assistant_access_mode" data-user-id="${id}" name="assistant_access_mode_${id}" aria-label="Acesso do assistente para ${id}" autocomplete="off">${opts}</select>`;
+    }
+    function buildSectionsLabel(sections) {
+      if (!sections || !sections.length) return '<span style="color:var(--muted)">todas (padrão)</span>';
+      const reg = (window.__SECTION_REGISTRY || []);
+      return sections.map(id => {
+        const r = reg.find(x => x.id === id);
+        return r ? r.label : id;
+      }).join(', ');
+    }
+    function buildSectionsChecklist(containerId, selected) {
+      const box = document.getElementById(containerId);
+      if (!box) return;
+      const reg = window.__SECTION_REGISTRY || [];
+      if (!reg.length) { box.innerHTML = '<span style="color:var(--muted)">Carregando seções…</span>'; return; }
+      const sel = new Set(selected || []);
+      box.innerHTML = reg.map(r =>
+        `<label for="sec-${containerId}-${r.id}"><input id="sec-${containerId}-${r.id}" name="section_${r.id}" type="checkbox" data-section="${r.id}" ${sel.has(r.id) ? 'checked' : ''}> ${r.label}</label>`
+      ).join('');
+    }
+    function collectSections(containerId) {
+      const box = document.getElementById(containerId);
+      if (!box) return [];
+      return Array.from(box.querySelectorAll('input[type=checkbox][data-section]:checked')).map(c => c.dataset.section);
+    }
+    function renderSectionsCell() {
+      // Add-user checklist population happens on init; per-row editing is inline.
+    }
+    async function fetchUsers() {
+      const body = document.getElementById('usersTableBody');
+      const notice = document.getElementById('tableNotice');
+      clearNotice(notice);
+      body.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">Carregando...</td></tr>';
+      try {
+        const res = await fetch('/OliviaLegal/admin/users');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Falha ao carregar usuários.');
+        const users = Array.isArray(data.users) ? data.users : [];
+        const admins = new Set(Array.isArray(data.admins) ? data.admins : []);
+        if (Array.isArray(data.available_sections)) window.__SECTION_REGISTRY = data.available_sections;
+        renderSectionsCell();
+        if (!users.length) { body.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">Nenhum usuário cadastrado.</td></tr>'; return; }
+
+        body.innerHTML = '';
+        users.forEach(user => {
+          const isSelf = user.id === currentUserId;
+          const isAdmin = admins.has(user.id);
+          window.__userSections = window.__userSections || {};
+          window.__userSections[user.id] = user.sections || [];
+          const mode = String(user.assistant_access_mode || 'read_write');
+          const scope = String(user.assistant_write_scope || '');
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+        <td><code>${user.id}</code></td>
+        <td>${user.display_name || user.id}</td>
+        <td>${user.force_change ? '<span class="tag" style="border-color:rgba(196,98,45,.45);background:rgba(196,98,45,.1);color:#e9b08d">troca obrigatória</span>' : 'definida'}</td>
+        <td>${isAdmin ? '<span class="tag">admin</span>' : '-'}</td>
+        <td class="policy-cell">
+          <div class="policy-grid">
+            ${buildAssistantModeSelect(mode, user.id)}
+            <input class="mini-input" id="write_scope_${user.id}" data-field="assistant_write_scope" data-user-id="${user.id}" name="write_scope_${user.id}" value="${scope}" placeholder="uploads/${user.id}" aria-label="Escopo de escrita para ${user.id}" autocomplete="off">
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:5px;">Atual: ${assistantModeLabel(mode)}</div>
+        </td>
+        <td class="sections-cell" data-field="sections" data-user-id="${user.id}">
+          ${buildSectionsLabel(user.sections)}
+        </td>
+        <td>
+          <button class="icon-btn save-btn" data-action="save-policy" data-user-id="${user.id}"><i class="fa-solid fa-floppy-disk"></i></button>
+          <button class="icon-btn reset-btn" data-action="reset" data-user-id="${user.id}"><i class="fa-solid fa-key"></i></button>
+          <button class="icon-btn" data-action="remove" data-user-id="${user.id}" ${isSelf ? 'disabled title="Você não pode remover seu próprio usuário"' : ''}><i class="fa-solid fa-trash"></i></button><button class="icon-btn edit-sections-btn" data-action="edit-sections" data-user-id="${user.id}" title="Editar seções"><i class="fa-solid fa-list"></i></button>
+        </td>`;
+          body.appendChild(tr);
+        });
+
+        body.querySelectorAll('button[data-action]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const action = btn.dataset.action; const id = btn.dataset.userId; if (!id) return;
+            if (action === 'edit-sections') {
+              const cell = document.querySelector('td.sections-cell[data-user-id="' + id + '"]');
+              if (!cell) return;
+              const reg = window.__SECTION_REGISTRY || [];
+              const cur = (window.__userSections && window.__userSections[id]) || [];
+              cell.innerHTML = '<div class="section-check-grid" id="editSectionsBox">' + reg.map(r =>
+                '<label for="sec-edit-' + r.id + '"><input id="sec-edit-' + r.id + '" name="section_' + r.id + '" type="checkbox" data-section="' + r.id + '" ' + (cur.indexOf(r.id) >= 0 ? 'checked' : '') + '> ' + r.label + '</label>'
+              ).join('') + '</div>';
+              setNotice(notice, 'Marque as seções e clique em Salvar (política).', true);
+              return;
+            }
+            if (action === 'save-policy') {
+              const modeEl = body.querySelector(`select[data-user-id="${id}"][data-field="assistant_access_mode"]`);
+              const scopeEl = body.querySelector(`input[data-user-id="${id}"][data-field="assistant_write_scope"]`);
+              btn.disabled = true;
+              try {
+                const r = await fetch(`/OliviaLegal/admin/users/${encodeURIComponent(id)}/assistant-permissions`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ assistant_access_mode: String(modeEl.value || ''), assistant_write_scope: String(scopeEl.value || ''), sections: collectSections('editSectionsBox') }) });
+                const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Falha ao salvar política');
+                setNotice(notice, 'Política atualizada para ' + id, true); await fetchUsers();
+              } catch (err) { setNotice(notice, err.message || 'Erro ao salvar política', false); btn.disabled = false; }
+              return;
+            }
+            if (action === 'reset') {
+              const pwd = prompt(`Nova senha para ${id} (mínimo 8 caracteres):`); if (!pwd) return;
+              if (pwd.length < 8) { setNotice(notice, 'Senha muito curta.', false); return; }
+              btn.disabled = true;
+              try {
+                const r = await fetch(`/OliviaLegal/admin/users/${encodeURIComponent(id)}/reset-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ new_password: pwd, force_change: true }) });
+                const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Falha ao resetar senha');
+                setNotice(notice, 'Senha resetada para ' + id, true); await fetchUsers();
+              } catch (err) { setNotice(notice, err.message || 'Erro ao resetar senha', false); btn.disabled = false; }
+              return;
+            }
+            if (action === 'remove') {
+              if (!confirm('Remover usuário ' + id + '?')) return;
+              btn.disabled = true;
+              try {
+                const r = await fetch(`/OliviaLegal/admin/users/${encodeURIComponent(id)}`, { method: 'DELETE' });
+                const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Falha ao remover usuário');
+                setNotice(notice, 'Usuário removido: ' + id, true); await fetchUsers();
+              } catch (err) { setNotice(notice, err.message || 'Erro ao remover usuário', false); btn.disabled = false; }
+            }
+          });
+        });
+      } catch (err) {
+        body.innerHTML = '<tr><td colspan="7" style="color:#e09090">Erro ao carregar lista.</td></tr>';
+        setNotice(notice, err.message || 'Erro ao carregar usuários', false);
+      }
+    }
+
+    async function addUser(event) {
+      event.preventDefault();
+      const form = document.getElementById('addUserForm');
+      const notice = document.getElementById('addNotice');
+      clearNotice(notice);
+      const fd = new FormData(form);
+      const payload = {
+        user_id: String(fd.get('user_id') || '').trim(),
+        display_name: String(fd.get('display_name') || '').trim(),
+        initial_password: String(fd.get('initial_password') || '').trim(),
+        force_change: document.getElementById('forceChangeOnCreate').checked,
+        assistant_access_mode: String(fd.get('assistant_access_mode') || 'read_write').trim(),
+        assistant_write_scope: String(fd.get('assistant_write_scope') || '').trim(),
+        sections: collectSections('addSectionsBox'),
+      };
+      if (!payload.user_id || !payload.display_name) { setNotice(notice, 'Preencha email e nome.', false); return; }
+      if (!payload.initial_password || payload.initial_password.length < 8) { setNotice(notice, 'Senha inicial deve ter no mínimo 8 caracteres.', false); return; }
+      try {
+        const r = await fetch('/OliviaLegal/admin/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Falha ao adicionar usuário');
+        form.reset(); setNotice(notice, 'Usuário criado com sucesso.', true); await fetchUsers();
+      } catch (err) { setNotice(notice, err.message || 'Erro ao adicionar usuário', false); }
+    }
+
+    async function publishNotification(event) {
+      event.preventDefault();
+      const notice = document.getElementById('notifNotice');
+      clearNotice(notice);
+      const title = String(document.getElementById('notifTitle').value || '').trim();
+      const message = String(document.getElementById('notifMessage').value || '').trim();
+      const category = String(document.getElementById('notifCategory').value || 'info').trim();
+      if (!title || !message) { setNotice(notice, 'Preencha titulo e mensagem.', false); return; }
+      try {
+        const r = await fetch('/OliviaLegal/admin/notifications', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, message, category }) });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Falha ao publicar notificacao');
+        document.getElementById('notificationForm').reset();
+        setNotice(notice, 'Notificacao publicada.', true);
+      } catch (err) {
+        setNotice(notice, err.message || 'Erro ao publicar notificacao', false);
+      }
+    }
+
+    document.getElementById('addUserForm').addEventListener('submit', addUser);
+    document.getElementById('notificationForm').addEventListener('submit', publishNotification);
+    document.getElementById('refreshBtn').addEventListener('click', () => { fetchUsers(); fetchModels(); });
+    fetchUsers();
+      buildSectionsChecklist('addSectionsBox', []);
+    fetchModels();
+
+    // ── Provedores / Modelos ──────────────────────────────────────────────
+    async function fetchModels() {
+      const body = document.getElementById('modelsTableBody');
+      const notice = document.getElementById('modelsTableNotice');
+      clearNotice(notice);
+      body.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">Carregando...</td></tr>';
+      try {
+        const res = await fetch('/OliviaLegal/admin/models');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Falha ao carregar modelos.');
+        const models = Array.isArray(data.models) ? data.models : [];
+        if (!models.length) { body.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">Nenhum modelo.</td></tr>'; return; }
+
+        body.innerHTML = '';
+        models.forEach(m => {
+          const id = String(m.id || '');
+          const isRemoved = m._removed === true;
+          const isHidden = m._hidden === true;
+          const source = String(m._source || 'builtin');
+          const prov = String(m.provider || '');
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><code>${id}</code></td>
+            <td><span class="tag" style="border-color:rgba(120,140,180,.45);color:#a9c0e0;background:rgba(120,140,180,.1)">${prov}</span></td>
+            <td><input class="mini-input" id="model_name_${encodeURIComponent(id)}" name="model_name_${encodeURIComponent(id)}" data-field="name" data-id="${encodeURIComponent(id)}" value="${String(m.name || '').replace(/"/g, '&quot;')}" aria-label="Nome de exibição do modelo ${id}"></td>
+            <td>${source === 'added' ? '<span class="tag">adicionado</span>' : '<span style="color:var(--muted);font-size:11px">nativo</span>'}</td>
+            <td>${isRemoved ? '<span class="tag" style="border-color:rgba(196,96,96,.45);color:#e09090;background:rgba(196,96,96,.12)">removido</span>' : (isHidden ? '<span style="color:#e9b08d;font-size:11px">oculto</span>' : '<span style="color:#8ed3ac;font-size:11px">visível</span>')}</td>
+            <td>
+              <button class="icon-btn save-btn" data-action="save-model" data-id="${encodeURIComponent(id)}" ${isRemoved ? 'disabled' : ''}><i class="fa-solid fa-floppy-disk"></i></button>
+              <button class="icon-btn reset-btn" data-action="toggle-visibility" data-id="${encodeURIComponent(id)}" ${isRemoved ? 'disabled' : ''} title="${isHidden ? 'Mostrar' : 'Ocultar'}"><i class="fa-solid fa-${isHidden ? 'eye' : 'eye-slash'}"></i></button>
+              ${isRemoved
+              ? `<button class="icon-btn save-btn" data-action="restore-model" data-id="${encodeURIComponent(id)}"><i class="fa-solid fa-rotate-left"></i></button>`
+              : `<button class="icon-btn" data-action="delete-model" data-id="${encodeURIComponent(id)}"><i class="fa-solid fa-trash"></i></button>`}
+            </td>`;
+          body.appendChild(tr);
+        });
+
+        body.querySelectorAll('button[data-action]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const action = btn.dataset.action;
+            const rawId = btn.dataset.id;
+            const id = decodeURIComponent(rawId);
+            if (!id) return;
+            if (action === 'save-model') {
+              const nameEl = body.querySelector(`input[data-id="${rawId}"][data-field="name"]`);
+              btn.disabled = true;
+              try {
+                const r = await fetch(`/OliviaLegal/admin/models/${encodeURIComponent(id)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: String(nameEl?.value || '').trim() }) });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.error || 'Falha ao salvar modelo');
+                setNotice(notice, 'Modelo atualizado: ' + id, true);
+                await fetchModels();
+              } catch (err) { setNotice(notice, err.message || 'Erro ao salvar', false); btn.disabled = false; }
+              return;
+            }
+            if (action === 'toggle-visibility') {
+              const currentlyHidden = models.find(x => String(x.id) === id)?._hidden === true;
+              btn.disabled = true;
+              try {
+                const r = await fetch(`/OliviaLegal/admin/models/${encodeURIComponent(id)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hidden: !currentlyHidden }) });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.error || 'Falha ao alterar visibilidade');
+                setNotice(notice, (!currentlyHidden ? 'Oculto: ' : 'Visível: ') + id, true);
+                await fetchModels();
+              } catch (err) { setNotice(notice, err.message || 'Erro', false); btn.disabled = false; }
+              return;
+            }
+            if (action === 'delete-model') {
+              if (!confirm('Remover modelo ' + id + '?')) return;
+              btn.disabled = true;
+              try {
+                const r = await fetch(`/OliviaLegal/admin/models/${encodeURIComponent(id)}`, { method: 'DELETE' });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.error || 'Falha ao remover');
+                setNotice(notice, (d.restorable ? 'Ocultado (restável): ' : 'Removido: ') + id, true);
+                await fetchModels();
+              } catch (err) { setNotice(notice, err.message || 'Erro ao remover', false); btn.disabled = false; }
+              return;
+            }
+            if (action === 'restore-model') {
+              btn.disabled = true;
+              try {
+                const r = await fetch(`/OliviaLegal/admin/models/${encodeURIComponent(id)}/restore`, { method: 'POST' });
+                const d = await r.json();
+                if (!r.ok) throw new Error(d.error || 'Falha ao restaurar');
+                setNotice(notice, 'Restaurado: ' + id, true);
+                await fetchModels();
+              } catch (err) { setNotice(notice, err.message || 'Erro ao restaurar', false); btn.disabled = false; }
+            }
+          });
+        });
+      } catch (err) {
+        body.innerHTML = '<tr><td colspan="7" style="color:#e09090">Erro ao carregar lista.</td></tr>';
+        setNotice(notice, err.message || 'Erro ao carregar modelos', false);
+      }
+    }
+
+    async function addModel(event) {
+      event.preventDefault();
+      const form = document.getElementById('addModelForm');
+      const notice = document.getElementById('addModelNotice');
+      clearNotice(notice);
+      const fd = new FormData(form);
+      const payload = {
+        id: String(fd.get('id') || '').trim(),
+        name: String(fd.get('name') || '').trim(),
+        tier: String(fd.get('tier') || '').trim(),
+        best_for: String(fd.get('best_for') || '').trim(),
+        context_window: String(fd.get('context_window') || '').trim(),
+        input_cost_per_1m: String(fd.get('input_cost_per_1m') || '').trim(),
+        output_cost_per_1m: String(fd.get('output_cost_per_1m') || '').trim(),
+        supports_vision: document.getElementById('modelVision').checked,
+        supports_thinking: document.getElementById('modelThinking').checked,
+      };
+      if (!payload.id || !payload.name) { setNotice(notice, 'Preencha ID e nome.', false); return; }
+      try {
+        const r = await fetch('/OliviaLegal/admin/models', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Falha ao adicionar modelo');
+        form.reset();
+        setNotice(notice, 'Modelo adicionado: ' + payload.id, true);
+        await fetchModels();
+      } catch (err) { setNotice(notice, err.message || 'Erro ao adicionar modelo', false); }
+    }
+
+    document.getElementById('addModelForm').addEventListener('submit', addModel);
+
+    // ── OpenRouter picker: search / filter / select / detail ───────────────
+    let OR_MODELS = [];
+    let OR_FREE_FILTER = 'all';
+
+    function orFiltered() {
+      const q = String(document.getElementById('orSearchInput').value || '').trim().toLowerCase();
+      return OR_MODELS.filter(m => {
+        if (OR_FREE_FILTER === 'free' && !m.free) return false;
+        if (OR_FREE_FILTER === 'paid' && m.free) return false;
+        if (!q) return true;
+        return (m.name + ' ' + m.id).toLowerCase().includes(q);
+      });
+    }
+
+    function orRenderOptions() {
+      const sel = document.getElementById('orModelSelect');
+      const list = orFiltered();
+      document.getElementById('orCount').textContent = list.length + ' de ' + OR_MODELS.length;
+      if (!OR_MODELS.length) {
+        sel.innerHTML = '<option disabled>Carregue os modelos primeiro…</option>';
+        return;
+      }
+      sel.innerHTML = list.map(m => {
+        const label = m.free
+          ? `${m.name}  ·  grátis`
+          : `${m.name}  ·  $${(m.input_cost_per_1m || 0).toFixed(2)}/$${(m.output_cost_per_1m || 0).toFixed(2)}`;
+        const tag = m.free ? '🎁' : '💲';
+        return `<option value="${encodeURIComponent(m.id)}" data-id="${encodeURIComponent(m.id)}">${tag} ${label}</option>`;
+      }).join('');
+    }
+
+    function orRenderDetail(m) {
+      if (!m) { document.getElementById('orDetail').innerHTML = ''; return; }
+      const caps = [];
+      if (m.supports_vision) caps.push('Visão');
+      if (m.supports_thinking) caps.push('Raciocínio');
+      if (m.modality) caps.push(m.modality);
+      const rows = [
+        ['ID', m.id],
+        ['Contexto', m.context_length ? m.context_length.toLocaleString('pt-BR') + ' tokens' : '—'],
+        ['Preço entrada', m.free ? 'Grátis' : '$' + (m.input_cost_per_1m || 0).toFixed(2) + ' / 1M'],
+        ['Preço saída', m.free ? 'Grátis' : '$' + (m.output_cost_per_1m || 0).toFixed(2) + ' / 1M'],
+        ['Capacidades', caps.length ? caps.join(', ') : '—'],
+        ['Knowledge cutoff', m.knowledge_cutoff || '—'],
+      ];
+      const html = rows.map(([k, v]) => `<div style="display:flex;gap:10px;padding:3px 0;border-bottom:1px solid var(--border);"><div style="width:130px;color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:.04em;">${k}</div><div>${v}</div></div>`).join('')
+        + (m.description ? `<div style="margin-top:8px;line-height:1.45;">${String(m.description).slice(0, 400)}${m.description.length > 400 ? '…' : ''}</div>` : '');
+      document.getElementById('orDetail').innerHTML = html;
+    }
+
+    function orPopulateForm(m) {
+      document.getElementById('modelId').value = m.id;
+      document.getElementById('modelName').value = m.name;
+      document.getElementById('modelTier').value = m.tier || (m.free ? 'free' : 'pro');
+      document.getElementById('modelContext').value = m.context_length || '';
+      document.getElementById('modelInCost').value = m.free ? '0' : (m.input_cost_per_1m || '');
+      document.getElementById('modelOutCost').value = m.free ? '0' : (m.output_cost_per_1m || '');
+      document.getElementById('modelBestFor').value = m.description ? m.description.slice(0, 120) : '';
+      document.getElementById('modelVision').checked = !!m.supports_vision;
+      document.getElementById('modelThinking').checked = !!m.supports_thinking;
+      const addNotice = document.getElementById('addModelNotice');
+      setNotice(addNotice, 'Detalhes preenchidos. Revise e clique em "Adicionar modelo".', true);
+      document.getElementById('addModelForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    async function orLoad() {
+      const btn = document.getElementById('orSearchBtn');
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Carregando…';
+      try {
+        const res = await fetch('/OliviaLegal/openrouter/models');
+        const data = await res.json();
+        OR_MODELS = Array.isArray(data.models) ? data.models : [];
+        orRenderOptions();
+        orRenderDetail(null);
+        setNotice(document.getElementById('addModelNotice'), OR_MODELS.length + ' modelos carregados do OpenRouter.', true);
+      } catch (err) {
+        setNotice(document.getElementById('addModelNotice'), 'Falha ao carregar modelos do OpenRouter.', false);
+      } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i> Carregar modelos';
+      }
+    }
+
+    document.getElementById('orSearchBtn').addEventListener('click', orLoad);
+    document.getElementById('orSearchInput').addEventListener('input', orRenderOptions);
+    ['orFreeBtn', 'orFreeBtnFree', 'orFreeBtnPaid'].forEach(id => {
+      document.getElementById(id).addEventListener('click', e => {
+        OR_FREE_FILTER = e.currentTarget.dataset.free;
+        orRenderOptions();
+      });
+    });
+    document.getElementById('orModelSelect').addEventListener('change', e => {
+      const opt = e.currentTarget.selectedOptions[0];
+      if (!opt) return;
+      const id = decodeURIComponent(opt.dataset.id);
+      const m = OR_MODELS.find(x => x.id === id);
+      orRenderDetail(m);
+      if (m) orPopulateForm(m);
+    });
+
+    // ── Ollama Servers ──────────────────────────────────────────────────────
+    async function fetchOllamaServers() {
+      const body = document.getElementById('ollamaServersBody');
+      const notice = document.getElementById('ollamaServersNotice');
+      clearNotice(notice);
+      body.innerHTML = '<tr><td colspan="5" style="color:var(--gray)">Verificando conexões…</td></tr>';
+      try {
+        const res = await fetch('/OliviaLegal/admin/ollama-servers');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erro ao carregar servidores');
+        const servers = data.servers || [];
+        if (!servers.length) {
+          body.innerHTML = '<tr><td colspan="5" style="color:var(--gray)">Nenhum servidor configurado.</td></tr>';
+          return;
+        }
+        body.innerHTML = '';
+        servers.forEach(s => {
+          const tr = document.createElement('tr');
+          const isOk = s.status === 'ok';
+          const statusHtml = isOk
+            ? `<span style="color:var(--green)"><i class="fa-solid fa-circle-check"></i> online</span>`
+            : `<span style="color:#e09090" title="${(s.detail || '').replace(/"/g, '&quot;')}"><i class="fa-solid fa-circle-xmark"></i> offline</span>`;
+          const persistedHtml = s.persisted
+            ? '<span style="color:var(--green);font-size:11px">salvo</span>'
+            : '<span style="color:var(--gray);font-size:11px">apenas .env</span>';
+          tr.innerHTML = `
+            <td><code style="font-size:12px;">${s.url}</code></td>
+            <td>${statusHtml}</td>
+            <td>${isOk ? s.model_count + ' modelo(s)' : '—'}</td>
+            <td>${persistedHtml}</td>
+            <td>${s.persisted ? `<button class="icon-btn" data-url="${encodeURIComponent(s.url)}" data-action="remove-ollama" title="Remover"><i class="fa-solid fa-trash"></i></button>` : ''}</td>`;
+          body.appendChild(tr);
+        });
+        body.querySelectorAll('button[data-action="remove-ollama"]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const url = decodeURIComponent(btn.dataset.url);
+            if (!confirm('Remover servidor Ollama: ' + url + '?')) return;
+            btn.disabled = true;
+            try {
+              const r = await fetch('/OliviaLegal/admin/ollama-servers/' + encodeURIComponent(url), { method: 'DELETE' });
+              const d = await r.json();
+              if (!r.ok) throw new Error(d.error || 'Falha ao remover');
+              setNotice(notice, 'Removido: ' + url, true);
+              await fetchOllamaServers();
+            } catch (err) {
+              setNotice(notice, err.message || 'Erro ao remover', false);
+              btn.disabled = false;
+            }
+          });
+        });
+      } catch (err) {
+        body.innerHTML = '<tr><td colspan="5" style="color:#e09090">Erro ao carregar lista.</td></tr>';
+        setNotice(notice, err.message || 'Erro ao carregar servidores', false);
+      }
+    }
+
+    async function addOllamaServer() {
+      const input = document.getElementById('ollamaServerUrl');
+      const notice = document.getElementById('ollamaAddNotice');
+      clearNotice(notice);
+      const url = (input.value || '').trim();
+      if (!url) { setNotice(notice, 'Informe a URL do servidor.', false); return; }
+      const btn = document.getElementById('ollamaAddBtn');
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Testando…';
+      try {
+        const r = await fetch('/OliviaLegal/admin/ollama-servers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Falha ao adicionar');
+        if (d.status === 'ok') {
+          setNotice(notice, `✅ Servidor adicionado! ${d.model_count} modelos disponíveis.`, true);
+        } else {
+          setNotice(notice, `⚠️ Salvo mas sem conexão: ${d.detail || 'servidor inacessível agora'}`, true);
+        }
+        input.value = '';
+        await fetchOllamaServers();
+      } catch (err) {
+        setNotice(notice, err.message || 'Erro ao adicionar servidor', false);
+      } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-plus"></i> Adicionar servidor';
+      }
+    }
+
+    document.getElementById('ollamaAddBtn').addEventListener('click', addOllamaServer);
+    document.getElementById('ollamaRefreshBtn').addEventListener('click', fetchOllamaServers);
+    document.getElementById('ollamaServerUrl').addEventListener('keydown', e => { if (e.key === 'Enter') addOllamaServer(); });
+    fetchOllamaServers();
+
+  </script>
+  <script src="/OliviaLegal/auth-activity/tracker.js"></script>
+</body>
+
+</html>

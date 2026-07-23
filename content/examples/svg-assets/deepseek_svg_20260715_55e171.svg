@@ -1,0 +1,11 @@
+<svg width="260" height="280" viewBox="0 0 260 280">
+  <g style="transform-origin:130px 140px;animation:sway 8s ease-in-out infinite">
+    <path d="M130 240 Q130 200,130 160 Q130 130,130 100" fill="none" stroke="var(--green-dark)" stroke-width="3" stroke-linecap="round" opacity=".55" />
+    <g style="animation:page-flutter 5s ease-in-out infinite">
+      <path d="M130 100 Q100 96,72 110 Q60 116,54 130" fill="none" stroke="var(--green-dark)" stroke-width="1.4" stroke-linecap="round" opacity=".35" />
+      <!-- ... -->
+    </g>
+    <!-- ... -->
+    <ellipse cx="130" cy="88" rx="5" ry="6" fill="var(--amber)" opacity=".85" style="animation:fruit-glow 4s ease-in-out infinite" />
+  </g>
+</svg>

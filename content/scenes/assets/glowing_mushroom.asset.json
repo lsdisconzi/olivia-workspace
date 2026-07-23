@@ -1,0 +1,15 @@
+{
+  "id": "glowing_mushroom",
+  "name": "Glowing Mushroom",
+  "icon": "🍄",
+  "category": "prop",
+  "tags": ["forest","magic","light"],
+  "desc": "Enchanted mushroom with pulsing glow",
+  "params": {
+    "x": { "type": "x", "default": "w*0.5" },
+    "y": { "type": "y", "default": "bY-5" },
+    "scale": { "type": "number", "default": 1 },
+    "color": { "type": "color", "default": "#FF6B9D" }
+  },
+  "code": "const s=ctx.scale||1; const x=ctx.x||0; const y=ctx.y||0; const col=ctx.color||'#FF6B9D'; const pulse=Math.sin(mt*1.5)*0.5+0.5; const mh=8; svg += `<g transform=\"translate(${x},${y}) scale(${s})\">`; svg += `<rect x=\"-2\" y=\"${-mh}\" width=\"4\" height=\"${mh}\" rx=\"1\" fill=\"#E8D8C0\"/>`; svg += `<ellipse cx=\"0\" cy=\"${-mh}\" rx=\"${7}\" ry=\"${4}\" fill=\"${col}\"/>`; svg += `<circle cx=\"-2\" cy=\"${-mh-1}\" r=\"1\" fill=\"#FFF\" opacity=\"0.5\"/>`; svg += `<circle cx=\"2\" cy=\"${-mh+1}\" r=\"0.8\" fill=\"#FFF\" opacity=\"0.4\"/>`; svg += `<circle cx=\"0\" cy=\"${-mh}\" r=\"${12+pulse*6}\" fill=\"${col}\" opacity=\"${0.03+pulse*0.04}\"/>`; svg += `</g>`; return svg;"
+}
