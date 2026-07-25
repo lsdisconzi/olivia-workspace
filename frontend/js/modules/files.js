@@ -57,7 +57,7 @@ function filesHtml(files) {
 // Tree operations
 function tree(nodes, depth = 0) {
   if (!nodes || !nodes.length) return '';
-  
+
   const indent = '  '.repeat(depth);
   return nodes.map(node => {
     if (node.type === 'dir') {
@@ -70,12 +70,12 @@ function tree(nodes, depth = 0) {
 
 function treeMap(nodes, callback, path = '') {
   if (!nodes || !nodes.length) return [];
-  
+
   const result = [];
   nodes.forEach(node => {
     const nodePath = path ? `${path}/${node.name}` : node.name;
     result.push(callback(node, nodePath));
-    
+
     if (node.type === 'dir' && node.children) {
       result.push(...treeMap(node.children, callback, nodePath));
     }
@@ -132,7 +132,7 @@ async function loadTranscripts() {
     }
     container.innerHTML = list.map(t => {
       const name = t.original_filename || t.filename || 'Transcrição';
-      const dur  = t.duration ? ` · ${Math.round(t.duration)}s` : '';
+      const dur = t.duration ? ` · ${Math.round(t.duration)}s` : '';
       const lang = t.language ? ` · ${t.language}` : '';
       const previewName = (t.path && t.path.split('/').pop()) || `${t.filename || 'transcript'}.json`;
       const previewJs = `previewSavedTranscript(${JSON.stringify(t.path || '')}, ${JSON.stringify(previewName)}, ${JSON.stringify(name)})`;
@@ -152,9 +152,114 @@ async function loadTranscripts() {
   }
 }
 // ── Project Planning Overview (sidebar tab-files) ────────────────────
-// Loads and renders a compact summary of the 4 planning files
+// Loads and renders expandable cards for the 4 planning files
 // (task_plan.md, findings.md, progress.md, memory.md) from the active project.
+// Clicking a card expands it inline in the sidebar to show full file content.
 // Uses window._PLANNING_FILES from projects.js as the canonical definition.
+
+// Track which planning cards are expanded (keyed by filename)
+const _planningExpanded = {};
+
+// Simple markdown-to-HTML converter for inline rendering
+function _planningRenderMD(text) {
+  let html = text
+    // Headers
+    .replace(/^##### (.*$)/gm, '<div style="font-size:10px;font-weight:600;color:var(--gray-hi,#ddd);margin-top:10px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">$1</div>')
+    .replace(/^#### (.*$)/gm, '<div style="font-size:11px;font-weight:600;color:var(--gray-hi,#ddd);margin-top:10px;margin-bottom:3px">$1</div>')
+    .replace(/^### (.*$)/gm, '<div style="font-size:12px;font-weight:600;color:var(--white);margin-top:12px;margin-bottom:4px">$1</div>')
+    .replace(/^## (.*$)/gm, '<div style="font-size:13px;font-weight:700;color:var(--white);margin-top:14px;margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid var(--border)">$1</div>')
+    .replace(/^# (.*$)/gm, '<div style="font-size:14px;font-weight:700;color:var(--accent);margin-top:14px;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border)">$1</div>')
+    // Bold
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // Italic
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    // Inline code
+    .replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.06);padding:1px 4px;border-radius:3px;font-size:10px;font-family:monospace">$1</code>')
+    // Unordered list items
+    .replace(/^- (.*$)/gm, '<div style="display:flex;gap:6px;padding:1px 0"><span style="color:var(--gray);flex-shrink:0">•</span><span>$1</span></div>')
+    // Ordered list items
+    .replace(/^\d+\. (.*$)/gm, '<div style="display:flex;gap:6px;padding:1px 0"><span style="color:var(--gray);flex-shrink:0;font-size:10px">→</span><span>$1</span></div>')
+    // Table rows (simple)
+    .replace(/^\|(.+)\|$/gm, (m) => {
+      const cells = m.split('|').filter(c => c.trim()).map(c => c.trim());
+      if (cells.every(c => /^[-]+$/.test(c.replace(/:/g, '')))) return '<hr style="border-color:var(--border);margin:2px 0">';
+      return '<div style="display:flex;gap:8px;padding:2px 0;font-size:10px">' + cells.map(c => '<span style="flex:1">' + c.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') + '</span>').join('') + '</div>';
+    })
+    // Horizontal rules (preserve as spacer)
+    .replace(/^---+$/gm, '<hr style="border-color:var(--border);margin:6px 0">')
+    // Empty lines become paragraph breaks
+    .replace(/\n\n/g, '<div style="height:4px"></div>');
+
+  // Wrap in container with line-height for readability
+  return '<div style="font-size:11px;line-height:1.5;color:var(--gray-hi,#ccc);overflow-wrap:break-word">' + html + '</div>';
+}
+
+// Toggle a planning card expanded state
+window._togglePlanningCard = async function (filename) {
+  const container = document.getElementById('planningOverviewContent');
+  if (!container) return;
+
+  const pid = (typeof getCurrentProjectId === 'function') ? getCurrentProjectId() : null;
+  if (!pid) return;
+
+  const cardEl = container.querySelector(`[data-planning-file="${CSS.escape(filename)}"]`);
+  if (!cardEl) return;
+
+  const contentArea = cardEl.querySelector('.planning-card-content');
+  const chevronIcon = cardEl.querySelector('.planning-chevron i');
+  const wasExpanded = _planningExpanded[filename];
+
+  if (wasExpanded) {
+    // Collapse
+    _planningExpanded[filename] = false;
+    contentArea.style.maxHeight = '0';
+    contentArea.style.opacity = '0';
+    setTimeout(() => { contentArea.innerHTML = ''; }, 300);
+    if (chevronIcon) chevronIcon.className = 'fas fa-chevron-down';
+    cardEl.classList.remove('expanded');
+    return;
+  }
+
+  // Expand - load content if not already loaded
+  _planningExpanded[filename] = true;
+  cardEl.classList.add('expanded');
+  if (chevronIcon) chevronIcon.className = 'fas fa-chevron-up';
+
+  // If content already loaded, just reveal
+  if (contentArea.dataset.loaded === '1') {
+    contentArea.style.maxHeight = contentArea.scrollHeight + 'px';
+    contentArea.style.opacity = '1';
+    return;
+  }
+
+  // Show loading
+  contentArea.innerHTML = '<div style="padding:8px;text-align:center;color:var(--gray);font-size:10px">Loading...</div>';
+  contentArea.style.maxHeight = '60px';
+  contentArea.style.opacity = '1';
+
+  try {
+    const res = await fetch(`${window.API_BASE || ''}/api/projects/${encodeURIComponent(pid)}/raw?path=${encodeURIComponent(filename)}`);
+    if (res.ok) {
+      const text = await res.text();
+      contentArea.innerHTML = '<div class="planning-scroll-wrap">' + _planningRenderMD(text) + '</div>';
+      contentArea.dataset.loaded = '1';
+      // Let the DOM settle then set max-height for smooth animation
+      requestAnimationFrame(() => {
+        const inner = contentArea.querySelector('.planning-scroll-wrap');
+        if (inner) {
+          contentArea.style.maxHeight = Math.min(inner.scrollHeight + 20, 320) + 'px';
+        }
+      });
+    } else {
+      contentArea.innerHTML = '<div style="padding:8px;text-align:center;color:var(--red);font-size:10px">Failed to load</div>';
+      contentArea.style.maxHeight = '60px';
+    }
+  } catch (e) {
+    contentArea.innerHTML = '<div style="padding:8px;text-align:center;color:var(--red);font-size:10px">Error loading content</div>';
+    contentArea.style.maxHeight = '60px';
+    console.warn('[planning] fetch error:', e);
+  }
+};
 
 async function loadProjectPlanningOverview(force) {
   const container = document.getElementById('planningOverviewContent');
@@ -207,16 +312,27 @@ async function loadProjectPlanningOverview(force) {
         return { ...f, summary };
       }));
 
-      html = '<div style="display:flex;flex-direction:column;gap:5px;">';
+      html = '<div style="display:flex;flex-direction:column;gap:4px;">';
       summaries.forEach(f => {
-        const openJs = `openDocFile(${JSON.stringify(f.name)}, ${JSON.stringify(f.label)}, ${JSON.stringify(pid)})`;
-        html += `<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:rgba(255,255,255,0.02)" onclick="${String(openJs).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}" title="Open ${f.label}">
-          <i class="fas ${f.icon}" style="color:${f.color};width:14px;text-align:center;flex-shrink:0;"></i>
-          <div style="flex:1;min-width:0;">
-            <div style="color:var(--white);font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${String(f.label).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
-            <div style="color:var(--gray);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${(f.summary || '\u2014').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+        const fileName = String(f.name).split('/').pop();
+        const label = String(f.label).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const icon = f.icon || 'fa-file-lines';
+        const color = f.color || 'var(--gray)';
+        const summaryText = (f.summary || '\u2014').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const wasExpanded = !!_planningExpanded[fileName];
+        const chevronClass = wasExpanded ? 'fa-chevron-up' : 'fa-chevron-down';
+
+        html += `<div class="planning-card" data-planning-file="${fileName}" style="border:1px solid var(--border);border-radius:7px;overflow:hidden;background:rgba(255,255,255,0.02)">
+          <div class="planning-card-header" onclick="_togglePlanningCard('${fileName}')" style="display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;user-select:none">
+            <i class="fas ${icon}" style="color:${color};width:14px;text-align:center;flex-shrink:0;"></i>
+            <div style="flex:1;min-width:0;">
+              <div style="color:var(--white);font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${label}</div>
+              <div class="planning-card-preview" style="color:var(--gray);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${summaryText}</div>
+            </div>
+            <span class="planning-chevron" style="font-size:9px;color:var(--gray);flex-shrink:0;transition:transform .2s"><i class="fas ${chevronClass}"></i></span>
           </div>
-          <span style="font-size:9px;color:var(--gray);flex-shrink:0;">↗</span>
+          <div class="planning-card-content" style="max-height:${wasExpanded ? '200px' : '0'};opacity:${wasExpanded ? '1' : '0'};overflow:hidden;transition:max-height .3s ease, opacity .3s ease;border-top:${wasExpanded ? '1px solid var(--border)' : 'none'}">
+          </div>
         </div>`;
       });
       html += '</div>';
@@ -235,11 +351,19 @@ async function loadProjectPlanningOverview(force) {
         } catch (_) { /* ignore */ }
       }
       if (direction) {
-        html += `<div style="margin-top:8px;padding:6px 8px;background:rgba(255,255,255,0.04);border-left:3px solid var(--amber);border-radius:4px;">
+        html += `<div style="margin-top:6px;padding:6px 8px;background:rgba(255,255,255,0.04);border-left:3px solid var(--amber);border-radius:4px;">
           <div style="font-size:9px;color:var(--gray);text-transform:uppercase;letter-spacing:.08em;">Direction</div>
-          <div style="font-size:11px;color:var(--gray-hi, #ddd);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${direction.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+          <div style="font-size:11px;color:var(--gray-hi, #ddd);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${direction.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
         </div>`;
       }
+
+      // Auto-expand previously expanded cards - load content after render
+      setTimeout(() => {
+        const expandedEntries = Object.entries(_planningExpanded).filter(([, v]) => v);
+        expandedEntries.forEach(([fn]) => {
+          _togglePlanningCard(fn);
+        });
+      }, 50);
     }
 
     container.innerHTML = html;
@@ -272,13 +396,13 @@ window.previewSavedTranscript = previewSavedTranscript;
 function mvHandleFileDrop(e) {
   e.preventDefault();
   e.stopPropagation();
-  
+
   const files = e.dataTransfer.files;
   if (files.length) {
     // Process files for memory ingestion
     Array.from(files).forEach(file => {
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         const content = e.target.result;
         const fileInfo = {
           name: file.name,
@@ -286,13 +410,13 @@ function mvHandleFileDrop(e) {
           type: file.type.includes('text') ? 'text' : 'binary',
           content: content
         };
-        
+
         _importedFiles.set(file.name, fileInfo);
         updateComposeContextBar();
         renderSessionFiles();
         addSystemBubble(`Arquivo "${file.name}" pronto para ingestão na memória`);
       };
-      
+
       if (file.type.includes('text')) {
         reader.readAsText(file);
       } else {
@@ -314,7 +438,7 @@ function mvHandleFileDrop(e) {
 // Handle file select for memory
 function mvHandleFileSelect(e) {
   if (e.target.files.length) {
-    mvHandleFileDrop({ dataTransfer: { files: e.target.files }, preventDefault: () => {}, stopPropagation: () => {} });
+    mvHandleFileDrop({ dataTransfer: { files: e.target.files }, preventDefault: () => { }, stopPropagation: () => { } });
   }
 }
 
@@ -322,8 +446,8 @@ function mvHandleFileSelect(e) {
 function fileInputHandler(inputId, callback) {
   const input = document.getElementById(inputId);
   if (!input) return;
-  
-  input.addEventListener('change', function(e) {
+
+  input.addEventListener('change', function (e) {
     if (e.target.files && e.target.files[0]) {
       callback(e.target.files[0]);
     }
@@ -333,24 +457,24 @@ function fileInputHandler(inputId, callback) {
 function dragAndDropHandler(elementId, callback) {
   const element = document.getElementById(elementId);
   if (!element) return;
-  
-  element.addEventListener('dragover', function(e) {
+
+  element.addEventListener('dragover', function (e) {
     e.preventDefault();
     e.stopPropagation();
     element.classList.add('dragover');
   });
-  
-  element.addEventListener('dragleave', function(e) {
+
+  element.addEventListener('dragleave', function (e) {
     e.preventDefault();
     e.stopPropagation();
     element.classList.remove('dragover');
   });
-  
-  element.addEventListener('drop', function(e) {
+
+  element.addEventListener('drop', function (e) {
     e.preventDefault();
     e.stopPropagation();
     element.classList.remove('dragover');
-    
+
     if (e.dataTransfer.files.length) {
       callback(e.dataTransfer.files);
     }
@@ -401,22 +525,22 @@ function validateFile(file, options = {}) {
     allowedTypes: ['text/plain', 'application/pdf', 'image/jpeg', 'image/png'],
     allowedExtensions: ['.txt', '.md', '.pdf', '.jpg', '.jpeg', '.png', '.json']
   };
-  
+
   const config = { ...defaults, ...options };
-  
+
   if (file.size > config.maxSize) {
     return { valid: false, error: `File too large (max ${formatBytes(config.maxSize)})` };
   }
-  
+
   if (config.allowedTypes.length && !config.allowedTypes.includes(file.type) && file.type !== '') {
     return { valid: false, error: `File type not allowed: ${file.type}` };
   }
-  
+
   const ext = '.' + file.name.split('.').pop().toLowerCase();
   if (config.allowedExtensions.length && !config.allowedExtensions.includes(ext)) {
     return { valid: false, error: `File extension not allowed: ${ext}` };
   }
-  
+
   return { valid: true, error: null };
 }
 

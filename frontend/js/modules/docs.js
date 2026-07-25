@@ -1784,13 +1784,27 @@ async function openPreviewUrl(url, name, options) {
     panelTitle.innerHTML = `<i class="fas ${iconCls}" style="margin-right:6px;font-size:12px;color:var(--blue)"></i> ${escapeHtml(displayName || name)}`;
   }
 
-  // Show download + PDF + maximize buttons now that we have a file
-  const dlBtn  = document.getElementById('previewDownloadBtn');
-  const pdfBtn = document.getElementById('previewPdfBtn');
+  // Show download dropdown + maximize buttons now that we have a file
+  const dlDropdown = document.getElementById('previewDownloadDropdown');
   const maxBtn = document.getElementById('previewMaximizeBtn');
-  if (dlBtn)  dlBtn.style.display  = '';
+  if (dlDropdown) {
+    dlDropdown.style.display = '';
+    // Update dropdown button behavior based on file type
+    const dlBtn = document.getElementById('previewDownloadBtn');
+    if (dlBtn) {
+      if (previewType === 'markdown' || previewType === 'md') {
+        // Markdown files: show dropdown with PDF option
+        dlBtn.onclick = (e) => {
+          e.stopPropagation();
+          toggleDownloadDropdown();
+        };
+      } else {
+        // Other files: direct download
+        dlBtn.onclick = () => downloadCurrentPreview();
+      }
+    }
+  }
   if (maxBtn) maxBtn.style.display = '';
-  if (pdfBtn) pdfBtn.style.display = (previewType === 'markdown' || previewType === 'md') ? '' : 'none';
 
   body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:80px"><div class="loading" style="width:24px;height:24px;border-width:3px;border-color:var(--amber) var(--amber) transparent transparent;"></div></div>';
 

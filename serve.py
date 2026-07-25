@@ -1446,6 +1446,7 @@ PROJECT_SECTION_FOLDERS = (
     "tests",
     "data",
     "uploads",
+    "outputs",
     "case_files",
     "discovery_files",
     "listening_files",
@@ -3729,34 +3730,6 @@ def _resolve_planning_dir() -> Path:
     return PLANNING_WORKSPACE_DIR
 
 
-def _ensure_planning_files() -> dict[str, Path]:
-    """Ensure planning files exist and return their resolved paths."""
-    planning_root = _resolve_planning_dir()
-    planning_root.mkdir(parents=True, exist_ok=True)
-
-    defaults = {
-        "task_plan.md": "# Task Plan\n\n## Goal\n- Define the objective for this run.\n\n## Current Phase\n- in_progress\n",
-        "findings.md": "# Findings\n\n## Discoveries\n",
-        "progress.md": "# Progress\n\n## Session Log\n",
-        "memory.md": "# Memory\n\n## Decisions & Conventions (sticky)\n\n## Key Entities / Project Facts\n\n## Open Questions / Parked Ideas\n\n## Do-Not-Redo\n",
-    }
-
-    paths = {
-        "root": planning_root,
-        "task_plan": planning_root / "task_plan.md",
-        "findings": planning_root / "findings.md",
-        "progress": planning_root / "progress.md",
-        "memory": planning_root / "memory.md",
-    }
-
-    for name in PLANNING_FILENAMES:
-        path = planning_root / name
-        if not path.exists():
-            path.write_text(defaults[name], encoding="utf-8")
-
-    return paths
-
-
 def _seed_project_planning_files(pdir: Path, project_name: str) -> dict[str, Path]:
     """Create the 4 planning files at a project's root on creation and
     register them in the project index.json under the 'arquivos' section so
@@ -4707,7 +4680,7 @@ def _uploads_context_roots_meta(project_id: str = "", agent_id: str = "") -> lis
             label = "raiz do projeto"
 
         try:
-            rel = str(root.relative_to(UPLOADS_DIR.resolve())).replace("\\", "/")
+            rel = str(root.relative_to(PROJECT_ROOT.resolve())).replace("\\", "/")
         except Exception:
             rel = ""
 
@@ -4759,6 +4732,15 @@ def _uploads_rel_for_display(root: Path, file_path: Path) -> str:
             return str(Path(root.name) / file_path.relative_to(root))
         except Exception:
             return file_path.name
+
+
+def _uploads_rel_for_agent(file_path: Path) -> str:
+    """Return a file path relative to PROJECT_ROOT so OpenClaude (CWD=PROJECT_ROOT)
+    can Read it directly."""
+    try:
+        return str(file_path.relative_to(PROJECT_ROOT))
+    except Exception:
+        return file_path.name
 
 
 _LEGACY_CONTEXT_LINE_PATTERNS = (
@@ -4991,10 +4973,10 @@ def _build_scoped_uploads_context(max_chars: int = 60000, project_id: str = "", 
     }
     pdf_ext = ".pdf"
 
-    root_labels = ", ".join(str(r.relative_to(UPLOADS_DIR)) if str(r).startswith(str(UPLOADS_DIR.resolve())) else str(r) for r in roots)
+    root_labels = ", ".join(str(r.relative_to(PROJECT_ROOT)) if str(r).startswith(str(PROJECT_ROOT.resolve())) else str(r) for r in roots)
     tree_lines = [f"scoped uploads ({len(files)} files listed{' - truncated scan' if truncated_scan else ''})", f"roots: {root_labels}"]
     for root, file_path in files:
-        rel = _uploads_rel_for_display(root, file_path)
+        rel = _uploads_rel_for_agent(file_path)
         size_kb = file_path.stat().st_size / 1024
         tree_lines.append(f"  {rel}  ({size_kb:.1f} KB)")
     tree = "\n".join(tree_lines)
@@ -5011,7 +4993,7 @@ def _build_scoped_uploads_context(max_chars: int = 60000, project_id: str = "", 
 
     used = 0
     for root, file_path, _size in text_files[:MAX_UPLOAD_TEXT_FILES]:
-        rel = _uploads_rel_for_display(root, file_path)
+        rel = _uploads_rel_for_agent(file_path)
         if used >= budget:
             skipped.append(rel)
             continue
@@ -5830,14 +5812,6 @@ def _is_execution_request(message: str) -> bool:
     return bool(_EXECUTION_RE.search(message))
 
 
-_PROJECT_UPDATE_RE = re.compile(
-    r"\b(update me|project update|status update|progress update|how(?:'| i)?s our project|"
-    r"where are we|status of (?:our|the) project|what(?:'s| is)?(?: the)? status(?: of (?:our|the) project)?|"
-    r"qual o status(?: do projeto)?|"
-    r"status do projeto|atualiza(?:cao|ção)?|andamento do projeto|resumo do projeto|como esta o projeto)\b",
-    re.IGNORECASE,
-)
-
 _WORKDIR_REQUEST_RE = re.compile(
     r"\b(current working directory|working directory|directory you work on|where are you working|"
     r"which directory are you in|what directory are you in|workspace directory|"
@@ -5864,11 +5838,6 @@ _TIMELINE_VERIFY_RE = re.compile(
     r"tem certeza|foi gerad[oa]|gerad[oa]|existe|confirmar|verifica[rc]|status)\b",
     re.IGNORECASE,
 )
-
-
-def _is_project_update_request(message: str) -> bool:
-    """Detect whether the user is asking for a project status update."""
-    return bool(_PROJECT_UPDATE_RE.search((message or "").lower()))
 
 
 def _is_working_directory_request(message: str) -> bool:
@@ -6120,149 +6089,6 @@ def _slice_markdown_section(text: str, heading: str) -> str:
     return text[start:end].strip()
 
 
-def _extract_goal(task_plan_text: str) -> str:
-    section = _slice_markdown_section(task_plan_text, "Goal")
-    if not section:
-        return ""
-    for raw in section.splitlines():
-        line = raw.strip()
-        if not line or line.startswith("<!--"):
-            continue
-        clean = line.lstrip("- ").strip()
-        if clean and not clean.startswith("["):
-            return clean
-    return ""
-
-
-def _extract_phase_statuses(task_plan_text: str) -> list[tuple[str, str]]:
-    """Extract tuples of (phase_title, status)."""
-    task_plan_text = _strip_html_comments(task_plan_text)
-    phases = []
-    matches = list(re.finditer(r"^###\s+(Phase\s+\d+:\s+.+)$", task_plan_text or "", re.MULTILINE))
-    for idx, match in enumerate(matches):
-        start = match.end()
-        end = matches[idx + 1].start() if idx + 1 < len(matches) else len(task_plan_text)
-        block = task_plan_text[start:end]
-        status_match = re.search(r"-\s+\*\*Status:\*\*\s+([a-zA-Z_]+)", block)
-        status = status_match.group(1).strip().lower() if status_match else "unknown"
-        phases.append((match.group(1).strip(), status))
-    return phases
-
-
-def _extract_actions(progress_text: str, max_items: int = 5) -> list[str]:
-    """Extract the first 'Actions taken' bullet list from progress.md."""
-    progress_text = _strip_html_comments(progress_text)
-    lines = (progress_text or "").splitlines()
-    actions = []
-    capture = False
-    for line in lines:
-        stripped = line.strip()
-        lowered = stripped.lower()
-        if lowered.startswith("- actions taken:"):
-            capture = True
-            continue
-        if capture and lowered.startswith("- files created/modified:"):
-            break
-        if not capture:
-            continue
-        if not stripped or stripped.startswith("<!--"):
-            continue
-        if stripped.startswith("-"):
-            item = stripped.lstrip("- ").strip()
-            if item and item != "-":
-                actions.append(item)
-        if len(actions) >= max_items:
-            break
-    return actions
-
-
-def _extract_passed_tests(progress_text: str, max_items: int = 4) -> list[str]:
-    """Extract passed tests from the Test Results markdown table."""
-    progress_text = _strip_html_comments(progress_text)
-    tests = []
-    in_table = False
-    for line in (progress_text or "").splitlines():
-        stripped = line.strip()
-        if stripped.startswith("| Test |"):
-            in_table = True
-            continue
-        if in_table and not stripped.startswith("|"):
-            break
-        if not in_table or not stripped.startswith("|"):
-            continue
-        cells = [cell.strip() for cell in stripped.strip("|").split("|")]
-        if len(cells) < 5:
-            continue
-        if cells[0].lower() in {"test", "------"}:
-            continue
-        if set(cells[0]) == {"-"}:
-            continue
-        status = cells[-1].lower()
-        if "pass" in status:
-            label = cells[0]
-            actual = cells[3]
-            tests.append(f"{label} — {actual}")
-        if len(tests) >= max_items:
-            break
-    return tests
-
-
-def _extract_decisions(findings_text: str, max_items: int = 4) -> list[str]:
-    """Extract technical decisions from findings.md decision table."""
-    findings_text = _strip_html_comments(findings_text)
-    section = _slice_markdown_section(findings_text, "Technical Decisions")
-    if not section:
-        return []
-    decisions = []
-    for line in section.splitlines():
-        stripped = line.strip()
-        if not stripped.startswith("|"):
-            continue
-        cells = [cell.strip() for cell in stripped.strip("|").split("|")]
-        if len(cells) < 2:
-            continue
-        if cells[0].lower() in {"decision", "----------"}:
-            continue
-        if set(cells[0]) == {"-"}:
-            continue
-        if not cells[0] or cells[0].startswith("["):
-            continue
-        if cells[0] and cells[1]:
-            decisions.append(f"{cells[0]} — {cells[1]}")
-        if len(decisions) >= max_items:
-            break
-    return decisions
-
-
-def _extract_next_step(progress_text: str) -> str:
-    progress_text = _strip_html_comments(progress_text)
-    match = re.search(r"\|\s*Where am I going\?\s*\|\s*(.*?)\s*\|", progress_text or "")
-    if not match:
-        return ""
-    value = match.group(1).strip()
-    return "" if value.lower() in {"", "remaining phases"} else value
-
-
-def _collect_output_artifacts(max_items: int = 5) -> list[str]:
-    """Return notable generated artifacts for quick status reporting."""
-    artifacts = []
-    generator = UPLOADS_DIR / "generate_audio_timeline.py"
-    if generator.is_file():
-        artifacts.append("uploads/generate_audio_timeline.py")
-
-    timeline_files = sorted((UPLOADS_DIR / "templates").glob("timeline_*.html"))
-    for path in timeline_files[: max(0, max_items - len(artifacts))]:
-        artifacts.append(str(path.relative_to(PLANNING_DIR)))
-
-    return artifacts[:max_items]
-
-
-_TIMELINE_HTML_REF_RE = re.compile(
-    r"(?:uploads/)?templates/(timeline_[A-Za-z0-9_.@\-]+\.html)|\b(timeline_[A-Za-z0-9_.@\-]+\.html)\b",
-    re.IGNORECASE,
-)
-
-
 def _extract_timeline_file_refs(text: str) -> list[str]:
     refs = []
     seen = set()
@@ -6396,21 +6222,6 @@ def _expected_timeline_refs_from_message(message: str, history: list | None = No
     return refs
 
 
-def _filter_unverified_generation_actions(actions: list[str], missing_refs: list[str]) -> list[str]:
-    if not actions or not missing_refs:
-        return actions
-    missing = set(missing_refs)
-    filtered = []
-    claim_re = re.compile(r"\b(generate|generated|create|created|success|sucesso|gerad[ao]|cri[ao]d[ao])\b", re.IGNORECASE)
-    for action in actions:
-        refs = [_normalize_timeline_rel_path(ref) for ref in _extract_timeline_file_refs(action)]
-        unresolved = [ref for ref in refs if ref in missing]
-        if unresolved and claim_re.search(action):
-            continue
-        filtered.append(action)
-    return filtered
-
-
 def _is_port_open(port: int) -> bool:
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -6418,112 +6229,6 @@ def _is_port_open(port: int) -> bool:
             return sock.connect_ex(("127.0.0.1", int(port))) == 0
     except Exception:
         return False
-
-
-def _build_project_update_markdown(user_message: str, server_port: int | None = None) -> str:
-    """Create a deterministic, high-signal project update from planning files."""
-    paths = _ensure_planning_files()
-    task_text = _read_text_file(paths["task_plan"], 50000)
-    progress_text = _read_text_file(paths["progress"], 70000)
-    findings_text = _read_text_file(paths["findings"], 40000)
-
-    goal = _extract_goal(task_text) or "No explicit goal found in task_plan.md"
-    phases = _extract_phase_statuses(task_text)
-    completed = sum(1 for _, status in phases if status == "complete")
-    total = len(phases)
-    current_phase_match = re.search(r"##\s+Current Phase\s*\n(?:.*\n)*?\s*(Phase\s+\d+)", task_text or "", re.IGNORECASE)
-    current_phase = current_phase_match.group(1) if current_phase_match else "Unknown"
-
-    actions = _extract_actions(progress_text, max_items=5)
-    tests = _extract_passed_tests(progress_text, max_items=4)
-    decisions = _extract_decisions(findings_text, max_items=4)
-    outputs = _collect_output_artifacts(max_items=5)
-    next_step = _extract_next_step(progress_text)
-
-    claimed_refs = _extract_timeline_file_refs("\n".join([task_text, progress_text, findings_text]))
-    verified_refs, missing_refs = _verify_timeline_file_refs(claimed_refs)
-    actions = _filter_unverified_generation_actions(actions, missing_refs)
-    for rel in verified_refs:
-        display = f"uploads/{rel}"
-        if display not in outputs:
-            outputs.append(display)
-    outputs = outputs[:5]
-
-    port = int(server_port) if isinstance(server_port, int) else None
-    runtime_line = ""
-    if port:
-        runtime_line = f"online on port {port}" if _is_port_open(port) else f"not listening on port {port}"
-
-    is_pt = _looks_portuguese(user_message)
-
-    if is_pt:
-        lines = [
-            "Resumo do projeto:",
-            "",
-            f"- Status geral: {completed}/{total} fases concluídas ({current_phase} atual)." if total else f"- Status geral: {current_phase}.",
-            f"- Objetivo: {goal}",
-        ]
-        if runtime_line:
-            lines.append(f"- Runtime do backend: {runtime_line}.")
-
-        if actions:
-            lines.extend(["", "Concluído recentemente:"])
-            lines.extend([f"- {item}" for item in actions])
-
-        if tests:
-            lines.extend(["", "Verificações aprovadas:"])
-            lines.extend([f"- {item}" for item in tests])
-
-        if decisions:
-            lines.extend(["", "Decisões técnicas-chave:"])
-            lines.extend([f"- {item}" for item in decisions])
-
-        if outputs:
-            lines.extend(["", "Arquivos relevantes:"])
-            lines.extend([f"- {item}" for item in outputs])
-
-        if missing_refs:
-            lines.extend(["", "Alertas de verificacao:"])
-            lines.extend([f"- Arquivo citado como gerado, mas nao encontrado em disco: uploads/{item}" for item in missing_refs[:5]])
-
-        if next_step:
-            lines.extend(["", f"Próximo passo sugerido: {next_step}."])
-
-        return "\n".join(lines).strip()
-
-    lines = [
-        "Project update:",
-        "",
-        f"- Overall status: {completed}/{total} phases completed ({current_phase} active)." if total else f"- Overall status: {current_phase}.",
-        f"- Goal: {goal}",
-    ]
-    if runtime_line:
-        lines.append(f"- Backend runtime: {runtime_line}.")
-
-    if actions:
-        lines.extend(["", "Recently completed:"])
-        lines.extend([f"- {item}" for item in actions])
-
-    if tests:
-        lines.extend(["", "Verification passed:"])
-        lines.extend([f"- {item}" for item in tests])
-
-    if decisions:
-        lines.extend(["", "Key technical decisions:"])
-        lines.extend([f"- {item}" for item in decisions])
-
-    if outputs:
-        lines.extend(["", "Relevant files:"])
-        lines.extend([f"- {item}" for item in outputs])
-
-    if missing_refs:
-        lines.extend(["", "Verification alerts:"])
-        lines.extend([f"- File claimed as generated but missing on disk: uploads/{item}" for item in missing_refs[:5]])
-
-    if next_step:
-        lines.extend(["", f"Suggested next step: {next_step}."])
-
-    return "\n".join(lines).strip()
 
 
 def _slug_token(value: str) -> str:
@@ -10562,6 +10267,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         if ollama_server_del_match:
             self._admin_ollama_servers_delete(urllib.parse.unquote(ollama_server_del_match.group(1)))
             return
+        # ── RunPod Workspace API ───────────────────────────────────────────────────
+        if raw_path.startswith("/api/runpod/workspaces/"):
+            self._runpod_workspace_delete(raw_path)
+            return
         if raw_path.startswith("/api/projects/"):
             self._projects_api_delete(raw_path)
         elif raw_path.startswith("/api/agents/"):
@@ -10978,56 +10687,6 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._sse_done()
             elapsed = _time.monotonic() - t0
             print(f"[assistant]   workspace-directory shortcut served in {elapsed:.2f}s")
-            return
-
-        if _is_project_update_request(intent_message):
-            summary = _build_project_update_markdown(
-                intent_message,
-                getattr(self.server, "server_port", None),
-            )
-            shortcut_messages = [
-                {"role": "system", "content": "[project-update-shortcut]"},
-                {"role": "user", "content": intent_message},
-            ]
-            shortcut_preview = _build_assistant_context_preview(
-                context_run_id,
-                message=message,
-                clean_message=clean_message,
-                system_prompt="[project-update-shortcut]",
-                section_system=section_system,
-                project_ctx="",
-                planning_ctx="",
-                uploads_ctx="",
-                messages=shortcut_messages,
-                history=history,
-                files_meta=[],
-                project_id=project_id,
-                agent_id=str(agent_id or ""),
-                provider=str(provider or "auto"),
-                model=str(model or LLM_MODEL),
-                session_id=str(session_id or ""),
-                debug_requested=debug_context_preview,
-                section_key=section_key,
-                panel_context_meta=panel_context_meta,
-                orchestration_probe=orchestration_probe,
-            )
-            shortcut_preview["shortcut"] = "project_update"
-            _assistant_context_preview_store(shortcut_preview)
-            try:
-                if debug_context_preview:
-                    self._sse_send({
-                        "type": "context_preview",
-                        "run_id": context_run_id,
-                        "shortcut": "project_update",
-                        "endpoint": f"/api/assistant/context-preview?run_id={urllib.parse.quote(context_run_id)}",
-                    })
-                self._sse_send({"type": "status", "message": "Preparando resumo do projeto..."})
-                self._sse_send({"type": "token", "content": summary})
-            except BrokenPipeError:
-                return
-            self._sse_done()
-            elapsed = _time.monotonic() - t0
-            print(f"[assistant]   project-update shortcut served in {elapsed:.2f}s")
             return
 
         try:
@@ -14137,6 +13796,28 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._meshy_asset_proxy()
             return
 
+        # ── RunPod Workspace API ───────────────────────────────────────────────────
+        if path == "/api/runpod/workspaces":
+            self._runpod_create_workspace_post()
+            return
+        if path.startswith("/api/runpod/workspaces/") and path.endswith("/status"):
+            self._runpod_workspace_status_get()
+            return
+        if path == "/api/runpod/gpus":
+            self._runpod_list_gpus_get()
+            return
+        if path == "/api/runpod/validate":
+            self._runpod_validate_post()
+            return
+
+        # ── WebSocket Log Receiver ───────────────────────────────────────────────────
+        if path == "/api/runpod/logs":
+            self._runpod_log_post()
+            return
+        if path.startswith("/api/runpod/logs/"):
+            self._runpod_logs_get()
+            return
+
         if path == "/api/proxy":
             self._url_proxy()
             return
@@ -14464,6 +14145,337 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         filtered = [n for n in notes if n.get("id") != note_id]
         self._save_notes(stem, filtered)
         self._json_response({"ok": True})
+
+    # ── RunPod Workspace API ───────────────────────────────────────────────────
+    def _runpod_create_workspace_post(self):
+        """POST /api/runpod/workspaces — Create a GPU workspace on RunPod."""
+        body = self._read_body() or {}
+        api_key = body.get("apiKey") or os.environ.get("RUNPOD_API_KEY", "")
+
+        if not api_key:
+            self._json_response({"error": "apiKey is required"}, 400)
+            return
+
+        spec = body.get("spec") or {}
+        required_fields = ["gitUrl", "buildCommand", "gpuType"]
+        missing = [f for f in required_fields if not spec.get(f)]
+        if missing:
+            self._json_response({"error": f"Missing required fields: {', '.join(missing)}"}, 400)
+            return
+
+        try:
+            # Import the RunPod client
+            from urllib.parse import parse_qs, urlparse
+            qs = parse_qs(urlparse(self.path).query)
+            session_id = qs.get("sessionId", [str(uuid.uuid4())])[0]
+
+            # Build pod creation params
+            pod_params = {
+                "name": f"olivia-ws-{uuid.uuid4()}",
+                "imageName": spec.get("templateId") or "olivia/workspace-base:latest",
+                "cloudType": spec.get("cloudType", "SECURE"),
+                "gpuTypeIds": spec.get("gpuType"),
+                "gpuCount": int(spec.get("gpuCount", 1)),
+                "containerDiskInGb": int(spec.get("diskSizeGb", 20)),
+                "ports": ",".join(spec.get("exposedPorts", [])),
+                "env": {
+                    **(spec.get("envVars") or {}),
+                    "OLIVIA_GIT_URL": spec.get("gitUrl"),
+                    "OLIVIA_GIT_BRANCH": spec.get("branch", "main"),
+                    "OLIVIA_BUILD_COMMAND": spec.get("buildCommand"),
+                    "OLIVIA_WORKSPACE_ID": str(uuid.uuid4()),
+                },
+            }
+
+            if spec.get("region"):
+                pod_params["countryCodes"] = [spec.get("region")]
+
+            # Call MCP tool via HTTP
+            import httpx
+            mcp_url = os.environ.get("MCP_SERVER_RUNPOD_API", "https://mcp.getrunpod.io/")
+
+            async def create_pod():
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    response = await client.post(
+                        mcp_url,
+                        json={
+                            "jsonrpc": "2.0",
+                            "method": "tools/call",
+                            "params": {"name": "create-pod", "arguments": pod_params},
+                            "id": session_id
+                        },
+                        headers={
+                            "Authorization": f"Bearer {api_key}",
+                            "Content-Type": "application/json"
+                        }
+                    )
+                    return response.json()
+
+            loop = asyncio.new_event_loop()
+            try:
+                result = loop.run_until_complete(create_pod())
+                self._json_response({
+                    "providerId": result.get("result", {}).get("id") or result.get("id"),
+                    "state": "provisioning",
+                    "metadata": result,
+                })
+            finally:
+                loop.close()
+
+        except Exception as e:
+            self._json_response({"error": str(e)}, 500)
+
+    def _runpod_workspace_status_get(self):
+        """GET /api/runpod/workspaces/<id>/status — Get workspace pod status."""
+        from urllib.parse import parse_qs, urlparse
+        qs = parse_qs(urlparse(self.path).query)
+
+        # Extract pod ID from path
+        pod_id = self.path.split("/api/runpod/workspaces/")[1].split("/")[0]
+        api_key = qs.get("apiKey", [""])[0] or os.environ.get("RUNPOD_API_KEY", "")
+
+        if not api_key:
+            self._json_response({"error": "apiKey is required"}, 400)
+            return
+
+        try:
+            import httpx
+            mcp_url = os.environ.get("MCP_SERVER_RUNPOD_API", "https://mcp.getrunpod.io/")
+
+            async def get_status():
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    response = await client.post(
+                        mcp_url,
+                        json={
+                            "jsonrpc": "2.0",
+                            "method": "tools/call",
+                            "params": {"name": "get-pod", "arguments": {"podId": pod_id}},
+                            "id": str(uuid.uuid4())
+                        },
+                        headers={
+                            "Authorization": f"Bearer {api_key}",
+                            "Content-Type": "application/json"
+                        }
+                    )
+                    return response.json()
+
+            loop = asyncio.new_event_loop()
+            try:
+                result = loop.run_until_complete(get_status())
+                pod = result.get("result", result)
+
+                # Map status
+                status_map = {
+                    "RUNNING": "running",
+                    "PROVISIONING": "provisioning",
+                    "INITIALIZING": "provisioning",
+                    "STARTING": "provisioning",
+                    "EXITED": "stopped",
+                    "STOPPED": "stopped",
+                    "TERMINATED": "stopped",
+                    "FAILED": "error",
+                    "ERROR": "error",
+                }
+
+                self._json_response({
+                    "providerId": pod_id,
+                    "state": status_map.get(pod.get("status", "").upper(), "error"),
+                    "publicUrl": pod.get("runtime", {}).get("ports", [{}])[0].get("link") if pod.get("runtime") else None,
+                    "metadata": pod,
+                })
+            finally:
+                loop.close()
+
+        except Exception as e:
+            self._json_response({"error": str(e)}, 500)
+
+    def _runpod_list_gpus_get(self):
+        """GET /api/runpod/gpus — List available GPU options."""
+        from urllib.parse import parse_qs, urlparse
+        qs = parse_qs(urlparse(self.path).query)
+        api_key = qs.get("apiKey", [""])[0] or os.environ.get("RUNPOD_API_KEY", "")
+
+        try:
+            import httpx
+            mcp_url = os.environ.get("MCP_SERVER_RUNPOD_API", "https://mcp.getrunpod.io/")
+
+            async def list_gpus():
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    response = await client.post(
+                        mcp_url,
+                        json={
+                            "jsonrpc": "2.0",
+                            "method": "tools/call",
+                            "params": {"name": "list-gpu-types", "arguments": {}},
+                            "id": str(uuid.uuid4())
+                        },
+                        headers={
+                            "Authorization": f"Bearer {api_key}",
+                            "Content-Type": "application/json"
+                        } if api_key else {}
+                    )
+                    return response.json()
+
+            loop = asyncio.new_event_loop()
+            try:
+                result = loop.run_until_complete(list_gpus())
+                gpus = result.get("result", result)
+
+                # Map to UI format
+                formatted = [
+                    {
+                        "name": g.get("displayName") or g.get("name"),
+                        "pricePerHour": float(g.get("pricePerHour", g.get("minPriceCents", 0))) / (100 if "minPriceCents" in g else 1),
+                        "vramGb": g.get("memoryInGb") or g.get("vRAM", 0),
+                    }
+                    for g in gpus
+                ]
+                self._json_response(formatted if formatted else self._runpod_fallback_pricing())
+            finally:
+                loop.close()
+
+        except Exception:
+            # Fallback to cached pricing
+            self._json_response(self._runpod_fallback_pricing())
+
+    def _runpod_workspace_delete(self, path: str):
+        """DELETE /api/runpod/workspaces/<id> — Stop and delete a workspace pod."""
+        # Extract pod ID from path
+        pod_id = path.split("/api/runpod/workspaces/")[1].strip("/")
+
+        body = self._read_body() or {}
+        api_key = body.get("apiKey") or os.environ.get("RUNPOD_API_KEY", "")
+
+        if not api_key:
+            self._json_response({"error": "apiKey is required"}, 400)
+            return
+
+        try:
+            import httpx
+            mcp_url = os.environ.get("MCP_SERVER_RUNPOD_API", "https://mcp.getrunpod.io/")
+            session_id = str(uuid.uuid4())
+
+            async def delete_pod():
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    # First stop the pod, then delete it
+                    response = await client.post(
+                        mcp_url,
+                        json={
+                            "jsonrpc": "2.0",
+                            "method": "tools/call",
+                            "params": {"name": "delete-pod", "arguments": {"podId": pod_id}},
+                            "id": session_id
+                        },
+                        headers={
+                            "Authorization": f"Bearer {api_key}",
+                            "Content-Type": "application/json"
+                        }
+                    )
+                    return response.json()
+
+            loop = asyncio.new_event_loop()
+            try:
+                result = loop.run_until_complete(delete_pod())
+                self._json_response({"success": True, "result": result})
+            finally:
+                loop.close()
+
+        except Exception as e:
+            self._json_response({"error": str(e)}, 500)
+
+    def _runpod_fallback_pricing(self):
+        """Return fallback GPU pricing when MCP unavailable."""
+        return [
+            {"name": "NVIDIA GeForce RTX 4090", "pricePerHour": 0.79, "vramGb": 24},
+            {"name": "NVIDIA RTX A6000", "pricePerHour": 0.59, "vramGb": 48},
+            {"name": "NVIDIA A100 80GB", "pricePerHour": 1.29, "vramGb": 80},
+            {"name": "NVIDIA H100 PCIe", "pricePerHour": 2.19, "vramGb": 80},
+        ]
+
+    # ── WebSocket Log Receiver ───────────────────────────────────────────────────
+    def _runpod_log_post(self):
+        """POST /api/runpod/logs — Receive log entries from workspace containers."""
+        body = self._read_body() or {}
+        workspace_id = body.get("workspaceId", "").strip()
+        level = body.get("level", "info")
+        message = body.get("message", "")
+
+        if not workspace_id or not message:
+            self._json_response({"error": "workspaceId and message required"}, 400)
+            return
+
+        # Store log in the remote bus for real-time streaming
+        log_entry = {
+            "workspaceId": workspace_id,
+            "timestamp": time.time(),
+            "level": level,
+            "message": message,
+        }
+
+        with _REMOTE_BUS_LOCK:
+            _REMOTE_BUS_NEXT_ID[0] += 1
+            mid = _REMOTE_BUS_NEXT_ID[0]
+            _REMOTE_BUS_MESSAGES.append((mid, "runpod-log", time.time(), log_entry))
+            if len(_REMOTE_BUS_MESSAGES) > _REMOTE_BUS_CAP:
+                del _REMOTE_BUS_MESSAGES[: len(_REMOTE_BUS_MESSAGES) - _REMOTE_BUS_CAP]
+
+        self._json_response({"status": "received", "id": mid})
+
+    def _runpod_logs_get(self):
+        """GET /api/runpod/logs/<workspaceId> — Get logs for a workspace."""
+        # Extract workspace ID from path
+        workspace_id = self.path.split("/api/runpod/logs/")[1].strip("/")
+
+        # Filter logs by workspace ID
+        with _REMOTE_BUS_LOCK:
+            logs = [
+                {"id": mid, "workspaceId": p.get("workspaceId"), "timestamp": p.get("timestamp"), "level": p.get("level"), "message": p.get("message")}
+                for (mid, r, ts, p) in _REMOTE_BUS_MESSAGES
+                if r == "runpod-log" and p.get("workspaceId") == workspace_id
+            ]
+
+        self._json_response({"logs": logs})
+
+    def _runpod_validate_post(self):
+        """POST /api/runpod/validate — Validate RunPod API key."""
+        body = self._read_body() or {}
+        api_key = body.get("apiKey") or os.environ.get("RUNPOD_API_KEY", "")
+
+        if not api_key:
+            self._json_response({"valid": False, "error": "apiKey is required"}, 400)
+            return
+
+        try:
+            import httpx
+            mcp_url = os.environ.get("MCP_SERVER_RUNPOD_API", "https://mcp.getrunpod.io/")
+
+            async def validate():
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    response = await client.post(
+                        mcp_url,
+                        json={
+                            "jsonrpc": "2.0",
+                            "method": "tools/call",
+                            "params": {"name": "get-account", "arguments": {}},
+                            "id": str(uuid.uuid4())
+                        },
+                        headers={
+                            "Authorization": f"Bearer {api_key}",
+                            "Content-Type": "application/json"
+                        }
+                    )
+                    return response.json()
+
+            loop = asyncio.new_event_loop()
+            try:
+                result = loop.run_until_complete(validate())
+                account = result.get("result", result)
+                self._json_response({"valid": bool(account.get("id") or account.get("email"))})
+            finally:
+                loop.close()
+
+        except Exception as e:
+            self._json_response({"valid": False, "error": str(e)})
 
     # ── Remote bus ───────────────────────────────────────────────────────────
     # Cross-device control channel: mobile.html POSTs commands; the desktop
@@ -16052,6 +16064,70 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             _write_projects_manifest()
             _sync_project_index_map(pid)
             self._json_response(index)
+            return
+
+        # ── Rename file within project ──────────────────────────────────────
+        if sub == "rename":
+            if not _project_is_accessible(pid, self._auth_current_email(), self._auth_is_admin()):
+                self._json_response({"detail": "forbidden: project not accessible"}, 403)
+                return
+
+            project_root = _project_root_for_id(pid)
+            if not project_root:
+                self._json_response({"detail": "project not found", "project_id": pid}, 404)
+                return
+
+            from urllib.parse import parse_qs, urlparse
+            qs = parse_qs(urlparse(self.path).query)
+            rel = _normalize_project_rel_path(pid, qs.get("path", [""])[0])
+            new_name = (qs.get("new_name", [""])[0] or "").strip()
+
+            if not rel or not new_name:
+                self._json_response({"detail": "path and new_name parameters required"}, 400)
+                return
+
+            if "/" in new_name or "\\" in new_name:
+                self._json_response({"detail": "new_name must be a filename (no slashes)"}, 400)
+                return
+
+            target = (project_root / rel).resolve()
+            if not str(target).startswith(str(project_root.resolve())):
+                self._json_response({"detail": "path traversal"}, 403)
+                return
+
+            if not target.is_file():
+                self._json_response({"detail": "file not found"}, 404)
+                return
+
+            new_target = target.parent / new_name
+            if new_target.exists():
+                self._json_response({"detail": "target filename already exists"}, 409)
+                return
+
+            try:
+                target.rename(new_target)
+            except Exception as e:
+                self._json_response({"detail": str(e)}, 500)
+                return
+
+            # Drop stale index to force fresh disk scan on next /files call.
+            idx_file = project_root / "index.json"
+            if idx_file.is_file():
+                try:
+                    idx_file.unlink()
+                except Exception:
+                    pass
+
+            _write_projects_manifest()
+            _sync_project_index_map(pid)
+
+            old_dir = str(Path(rel).parent.as_posix()) if Path(rel).parent.as_posix() != "." else ""
+            new_rel = f"{old_dir}/{new_name}" if old_dir else new_name
+            self._json_response({
+                "status": "ok",
+                "old_path": rel,
+                "new_path": new_rel,
+            })
             return
 
         pdir = PROJECTS_DIR / pid

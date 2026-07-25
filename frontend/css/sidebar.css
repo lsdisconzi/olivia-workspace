@@ -36,6 +36,21 @@ main{padding-top:56px;display:flex;flex-direction:column;height:100vh;min-height
 }
 .sidebar.collapsed .sidebar-collapsed-strip{display:flex}
 
+/* ── SIDEBAR SECTION SCROLLING ── */
+.sidebar-section {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -72,4 +87,48 @@ main{padding-top:56px;display:flex;flex-direction:column;height:100vh;min-height
     padding: 8px 0;
     z-index: 390;
   }
+}
+
+/* ── Preview Download Dropdown ── */
+#previewDownloadDropdown {
+  position: relative;
+  display: inline-block;
+}
+
+#previewDownloadDropdown .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--panel-bg, #1a1a1a);
+  border: 1px solid var(--border, #333);
+  border-radius: 6px;
+  padding: 6px;
+  min-width: 160px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 4px;
+}
+
+#previewDownloadDropdown .dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--white, #fff);
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+#previewDownloadDropdown .dropdown-item:hover {
+  background: var(--border, #333);
+}
+
+#previewDownloadDropdown .dropdown-item i {
+  margin-right: 8px;
+  width: 16px;
 }
