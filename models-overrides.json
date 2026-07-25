@@ -179,6 +179,18 @@
       "output_cost_per_1m": 2.4,
       "supports_vision": false,
       "supports_thinking": false
+    },
+    {
+      "id": "poolside/laguna-m.1:free",
+      "name": "Poolside: Laguna M.1 (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "Laguna M.1 is the flagship coding agent model from [Poolside](https://poolside.ai/), optimized for complex software engi",
+      "context_window": 262144,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": true
     }
   ],
   "overrides": {
@@ -201,7 +213,35 @@
       "hidden": false
     },
     "nousresearch/hermes-3-llama-3.1-405b:free": {
+      "hidden": true,
+      "name": "Nous: Hermes 3 405B Instruct (free)"
+    },
+    "poolside/laguna-xs-2.1:free": {
       "hidden": true
+    },
+    "poolside/laguna-m.1:free": {
+      "hidden": false
+    },
+    "openai/gpt-oss-20b:free": {
+      "hidden": true
+    },
+    "nvidia/nemotron-3-super-120b-a12b:free": {
+      "hidden": true
+    },
+    "nvidia/llama-nemotron-embed-vl-1b-v2:free": {
+      "hidden": true
+    },
+    "liquid/lfm-2.5-1.2b-thinking:free": {
+      "hidden": true
+    },
+    "google/lyria-3-pro-preview": {
+      "hidden": true
+    },
+    "google/gemma-4-26b-a4b-it:free": {
+      "hidden": true
+    },
+    "nvidia/nemotron-3-nano-30b-a3b:free": {
+      "name": "NVIDIA: Nemotron 3 Nano 30B A3B (free)"
     }
   }
 }

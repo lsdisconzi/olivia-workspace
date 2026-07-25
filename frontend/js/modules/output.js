@@ -1182,6 +1182,53 @@ window.closeArtifactModal = closeArtifactModal;
 window.renderArtifactModalContent = renderArtifactModalContent;
 window.switchArtifactModalView = switchArtifactModalView;
 window.switchArtifactView = switchArtifactView;
+// ── Preview Download Dropdown Management ─────────────────────────────────────
+function toggleDownloadDropdown() {
+  const dropdown = document.getElementById('previewDownloadDropdown');
+  const menu = dropdown ? dropdown.querySelector('.dropdown-menu') : null;
+  if (!menu) return;
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+function closeDownloadDropdown() {
+  const menu = document.querySelector('#previewDownloadDropdown .dropdown-menu');
+  if (menu) menu.style.display = 'none';
+}
+
+// Update download button to show dropdown when file is markdown
+function updatePreviewDownloadVisibility(previewFile) {
+  const dropdown = document.getElementById('previewDownloadDropdown');
+  const button = document.getElementById('previewDownloadBtn');
+  if (!dropdown) return;
+
+  const isMd = previewFile && previewFile.name &&
+               (previewFile.name.endsWith('.md') || previewFile.name.endsWith('.markdown'));
+
+  if (isMd) {
+    dropdown.style.display = 'block';
+    if (button) {
+      button.onclick = (e) => {
+        e.stopPropagation();
+        toggleDownloadDropdown();
+      };
+    }
+  } else {
+    dropdown.style.display = 'block';
+    if (button) {
+      button.onclick = () => downloadCurrentPreview();
+      closeDownloadDropdown();
+    }
+  }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const dropdown = document.getElementById('previewDownloadDropdown');
+  if (dropdown && !dropdown.contains(e.target)) {
+    closeDownloadDropdown();
+  }
+});
+
 window.downloadArtifactBlob = downloadArtifactBlob;
 window.openArtifactExternal = openArtifactExternal;
 window.detectOutputFiles = detectOutputFiles;
@@ -1194,3 +1241,5 @@ window.downloadCurrentPreview  = downloadCurrentPreview;
 window.downloadPreviewAsPdf    = downloadPreviewAsPdf;
 window.maximizeCurrentPreview  = maximizeCurrentPreview;
 window.syncWorkspacePanels = _syncWorkspacePanels;
+window.updatePreviewDownloadVisibility = updatePreviewDownloadVisibility;
+window.closeDownloadDropdown = closeDownloadDropdown;

@@ -311,7 +311,16 @@ window.OliviaLegal_ENDPOINTS = [
   {p:"/api/functions/index", m:"GET", t:"Functions Registry", s:"Function index", d:"Generated function index grouped by category (9 categories)"},
   {p:"/api/functions/capabilities", m:"GET", t:"Functions Registry", s:"Capability map", d:"by_capability, by_use_case, and workflows groupings"},
   {p:"/api/functions/diagram", m:"GET", t:"Functions Registry", s:"Mermaid diagram", d:"Pre-built Mermaid flowchart of frontend → API wiring"},
-  {p:"/api/functions/{id}", m:"GET", t:"Functions Registry", s:"Function detail", d:"Individual function's full JSON schema"}
+  {p:"/api/functions/{id}", m:"GET", t:"Functions Registry", s:"Function detail", d:"Individual function's full JSON schema"},
+
+  /* ── 19. RunPod Workspace (CEL) ─────────────────────────────── */
+  {p:"/api/runpod/workspaces", m:"POST", t:"RunPod Workspace", s:"Create workspace", d:"Deploy a new GPU workspace to RunPod"},
+  {p:"/api/runpod/workspaces/{id}", m:"GET", t:"RunPod Workspace", s:"Get workspace", d:"Get workspace details by provider ID"},
+  {p:"/api/runpod/workspaces/{id}/status", m:"GET", t:"RunPod Workspace", s:"Workspace status", d:"Check workspace provisioning/running status"},
+  {p:"/api/runpod/workspaces/{id}/stop", m:"POST", t:"RunPod Workspace", s:"Stop workspace", d:"Stop a running workspace"},
+  {p:"/api/runpod/workspaces/{id}", m:"DELETE", t:"RunPod Workspace", s:"Destroy workspace", d:"Terminate and destroy workspace"},
+  {p:"/api/runpod/gpus", m:"GET", t:"RunPod Workspace", s:"GPU options", d:"List available GPU types with pricing"},
+  {p:"/api/runpod/validate", m:"POST", t:"RunPod Workspace", s:"Validate credentials", d:"Validate RunPod API key"}
 ];
 
 // Base URL defaults: local dev uses same-origin, remote deploy uses same-origin gateway paths.
@@ -325,7 +334,8 @@ window.OliviaLegal_ENDPOINTS = [
     transcription: gateway + '/api/pinocchio',
     argus: gateway + '/api/pipeline',
     garage: gateway + '/api/garage',
-    shared: gateway + '/api/shared'
+    shared: gateway + '/api/shared',
+    runpod: gateway + '/api/runpod'
   };
 
   window.OliviaLegal_BASE_URLS = window.OliviaLegal_BASE_URLS || {};

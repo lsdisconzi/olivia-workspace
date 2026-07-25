@@ -1,10 +1,118 @@
 /* ── SESSION FILES LIST ── */
-.session-file-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;transition:all .15s;font-size:11px;background:rgba(0,0,0,.02)}
-.session-file-item:hover{border-color:var(--border-hi);background:rgba(0,0,0,.04)}
-.session-file-icon{flex-shrink:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--amber);font-size:13px}
-.session-file-info{flex:1;min-width:0;overflow:hidden}
-.session-file-name{color:var(--white);font-family:var(--font-mono);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:2px}
-.session-file-meta{color:var(--gray);font-size:9px;opacity:0.7}
-.session-file-actions{display:flex;gap:4px;flex-shrink:0}
-.session-file-btn{background:none;border:none;color:var(--gray);font-size:10px;cursor:pointer;padding:4px 6px;border-radius:4px;transition:all .15s}
-.session-file-btn:hover{color:var(--amber);background:rgba(196,98,45,.1)}
+.session-file-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 4px;
+    transition: all .15s;
+    font-size: 11px;
+    background: rgba(0, 0, 0, .02)
+}
+
+.session-file-item:hover {
+    border-color: var(--border-hi);
+    background: rgba(0, 0, 0, .04)
+}
+
+.session-file-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--amber);
+    font-size: 13px
+}
+
+.session-file-info {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden
+}
+
+.session-file-name {
+    color: var(--white);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 2px
+}
+
+.session-file-meta {
+    color: var(--gray);
+    font-size: 9px;
+    opacity: 0.7
+}
+
+.session-file-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0
+}
+
+.session-file-btn {
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-size: 10px;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: all .15s
+}
+
+.session-file-btn:hover {
+    color: var(--amber);
+    background: rgba(196, 98, 45, .1)
+}
+
+/* ── PLANNING CARDS SCROLLING ── */
+.planning-scroll-wrap,
+#planningOverviewContent {
+    max-height: 800px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ── SESSION FILES LISTS SCROLLING ── */
+#transcriptsList,
+#importedFilesList,
+#generatedFilesList {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ── SCROLLBAR STYLING ── */
+#transcriptsList::-webkit-scrollbar,
+#importedFilesList::-webkit-scrollbar,
+#generatedFilesList::-webkit-scrollbar,
+#planningOverviewContent::-webkit-scrollbar,
+.planning-scroll-wrap::-webkit-scrollbar {
+    width: 6px;
+}
+
+#transcriptsList::-webkit-scrollbar-thumb,
+#importedFilesList::-webkit-scrollbar-thumb,
+#generatedFilesList::-webkit-scrollbar-thumb,
+#planningOverviewContent::-webkit-scrollbar-thumb,
+.planning-scroll-wrap::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+#transcriptsList::-webkit-scrollbar-thumb:hover,
+#importedFilesList::-webkit-scrollbar-thumb:hover,
+#generatedFilesList::-webkit-scrollbar-thumb:hover,
+#planningOverviewContent::-webkit-scrollbar-thumb:hover,
+.planning-scroll-wrap::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}

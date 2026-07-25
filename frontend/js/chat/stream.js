@@ -3744,6 +3744,185 @@ function exportLastMessageTxt() {
   addSystemBubble('Última resposta exportada');
 }
 
+// Download last assistant response as PDF
+async function downloadLastResponseAsPdf() {
+  const msg = _lastAssistantMessage();
+  if (!msg) {
+    addSystemBubble('Nenhuma resposta do assistente para exportar como PDF');
+    return;
+  }
+
+  const role = msg.role === 'agent' ? 'Agente' : 'Assistente';
+  const html = msg.html || '';
+
+  if (!html) {
+    addSystemBubble('A última resposta está vazia');
+    return;
+  }
+
+  // Escape HTML helper
+  function _escapeHtml(s) {
+    return String(s || '').replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  const timestamp = new Date().toLocaleString();
+  const title = `${role} Response ${new Date().toISOString().slice(0, 10)}`;
+
+  // Build print-optimized HTML that mirrors the rendered chat bubble styling
+  const printDoc = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>${_escapeHtml(title)}</title>
+<style>
+  @page { margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1a1a1a;
+    font-size: 12pt;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+  .doc-wrapper {
+    padding: 18mm 16mm;
+  }
+  .brand-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 3px solid #c4622d;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+  }
+  .brand-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c4622d, #e0a86a);
+    flex: 0 0 auto;
+  }
+  .brand-name {
+    font-weight: 700;
+    letter-spacing: .3px;
+    color: #c4622d;
+    font-size: 13pt;
+  }
+  .brand-meta {
+    margin-left: auto;
+    font-size: 9pt;
+    color: #777;
+    text-align: right;
+  }
+  .content {
+    font-size: 12pt;
+    line-height: 1.6;
+  }
+  .content h1, .content h2, .content h3 {
+    color: #244a73;
+    line-height: 1.25;
+  }
+  .content h1 {
+    border-bottom: 1px solid #e3e3e3;
+    padding-bottom: 4px;
+  }
+  .content a {
+    color: #244a73;
+  }
+  .content code {
+    background: #f4ece3;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: .9em;
+  }
+  .content pre {
+    background: #f7f3ee;
+    border-left: 3px solid #c4622d;
+    padding: 10px 12px;
+    border-radius: 4px;
+    overflow: auto;
+  }
+  .content pre code {
+    background: none;
+    padding: 0;
+  }
+  .content blockquote {
+    border-left: 3px solid #c4622d;
+    margin: 0;
+    padding: 2px 14px;
+    color: #444;
+  }
+  .content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+  }
+  .content th, .content td {
+    border: 1px solid #ddd;
+    padding: 6px 8px;
+    text-align: left;
+  }
+  .content th {
+    background: #f4ece3;
+  }
+  .content img {
+    max-width: 100%;
+  }
+  .content hr {
+    border: none;
+    border-top: 1px solid #e3e3e3;
+    margin: 16px 0;
+  }
+  .brand-footer {
+    margin-top: 24px;
+    border-top: 1px solid #e3e3e3;
+    padding-top: 8px;
+    font-size: 8.5pt;
+    color: #999;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <div class="doc-wrapper">
+    <div class="brand-header">
+      <span class="brand-mark"></span>
+      <span class="brand-name">OliviaLegal</span>
+      <span class="brand-meta">${_escapeHtml(role)} Response<br>${_escapeHtml(timestamp)}</span>
+    </div>
+    <div class="content">${html}</div>
+    <div class="brand-footer">Generated from OliviaLegal workspace · ${new Date().toISOString().slice(0,10)}</div>
+  </div>
+</body>
+</html>`;
+
+  const iframe = document.createElement('iframe');
+  iframe.style.position = 'fixed';
+  iframe.style.right = '0';
+  iframe.style.bottom = '0';
+  iframe.style.width = '0';
+  iframe.style.height = '0';
+  iframe.style.border = '0';
+  document.body.appendChild(iframe);
+
+  const finish = () => {
+    try { document.body.removeChild(iframe); } catch (_) {}
+  };
+  iframe.onload = () => {
+    try {
+      iframe.contentWindow.document.title = title;
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    } catch (_) {}
+    setTimeout(finish, 1500);
+  };
+  iframe.srcdoc = printDoc;
+  addSystemBubble('Preparando download do PDF...');
+}
+
 // Clear chat
 async function clearChat() {
   if (!await window.customConfirm('Limpar esta conversa? O histórico não será salvo.')) return;
@@ -3828,6 +4007,7 @@ window.openArtifactInBrowser = openArtifactInBrowser;
 window.loadSavedChat = loadSavedChat;
 window.copyLastAssistantMessage = copyLastAssistantMessage;
 window.exportLastMessageTxt = exportLastMessageTxt;
+window.downloadLastResponseAsPdf = downloadLastResponseAsPdf;
 window.clearChat = clearChat;
 window.setPanelContextEnabled = setPanelContextEnabled;
 window.refreshPanelContextStatus = refreshPanelContextStatus;

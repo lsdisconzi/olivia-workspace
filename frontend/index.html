@@ -43,6 +43,7 @@
   <!-- OliviaLegal-brand.css loaded first so workspace vars (base.css) take precedence -->
   <link href="../static/css/OliviaLegal-brand.css" rel="stylesheet" />
   <link href="css/endpoint-widget.css" rel="stylesheet" />
+  <link href="css/runpod-workspace.css" rel="stylesheet" />
   <link href="css/output-toggle-panel.css" rel="stylesheet" />
   <link href="css/base.css" rel="stylesheet" />
   <link href="css/nav.css" rel="stylesheet" />
@@ -711,7 +712,8 @@
                 style="margin-top:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px">
                 <div
                   style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                  <span data-i18n="storage">Storage</span></div>
+                  <span data-i18n="storage">Storage</span>
+                </div>
                 <div style="font-size:11px;color:var(--gray-hi);line-height:1.8">
                   <div><i class="fas fa-database" style="width:14px;color:var(--blue)"></i> Qdrant: <span
                       id="mvSidebarQdrantStatus" style="color:var(--gray)"><span
@@ -727,7 +729,8 @@
               <div style="margin-top:10px">
                 <div
                   style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                  <span data-i18n="quick_search">Quick Search</span></div>
+                  <span data-i18n="quick_search">Quick Search</span>
+                </div>
                 <div style="display:flex;gap:4px">
                   <input class="memory-search-input" id="mvSidebarQuickSearch" name="mvSidebarQuickSearch"
                     onkeydown="if(event.key==='Enter')mvQuickSearch()" placeholder="Search memory..."
@@ -772,12 +775,15 @@
                 <div
                   style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:8px;display:flex;align-items:center;gap:6px">
                   <i class="fas fa-flag-checkered"></i> Project Planning
-                  <span id="planningRefreshBtn" style="cursor:pointer;margin-left:4px;font-size:10px;color:var(--gray);opacity:.6" onclick="loadProjectPlanningOverview(true)" title="Refresh planning overview">
+                  <span id="planningRefreshBtn"
+                    style="cursor:pointer;margin-left:4px;font-size:10px;color:var(--gray);opacity:.6"
+                    onclick="loadProjectPlanningOverview(true)" title="Refresh planning overview">
                     <i class="fas fa-sync-alt"></i>
                   </span>
                 </div>
                 <div id="planningOverviewContent" style="display:flex;flex-direction:column;gap:4px">
-                  <p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic"><span data-i18n="loading_planning_overview">Loading project overview...</span></p>
+                  <p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic"><span
+                      data-i18n="loading_planning_overview">Loading project overview...</span></p>
                 </div>
               </div>
               <div class="config-section-title"><i class="fas fa-folder-tree"></i> Session Files</div>
@@ -861,7 +867,8 @@
                 style="display:none" type="file" />
               <div id="projectFilesList"
                 style="max-height:140px;overflow:auto;border:1px solid var(--border);border-radius:8px;padding:6px;font-size:11px;color:var(--gray)">
-                <span data-i18n="select_a_project_to_view_files">Select a project to view files.</span></div>
+                <span data-i18n="select_a_project_to_view_files">Select a project to view files.</span>
+              </div>
             </div>
           </div>
           <!-- TAB: Case Builder -->
@@ -1164,7 +1171,8 @@
                 style="margin-top:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;">
                 <div
                   style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                  <span data-i18n="providers">Providers</span></div>
+                  <span data-i18n="providers">Providers</span>
+                </div>
                 <div style="font-size:11px;color:var(--gray-hi);line-height:1.8">
                   <div><i class="fas fa-server" style="width:14px;color:var(--amber)"></i> Local: Transcription :8039
                   </div>
@@ -1507,7 +1515,8 @@
               <div style="margin-top:12px">
                 <div
                   style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                  <span data-i18n="recent_contracts">Recent Contracts</span></div>
+                  <span data-i18n="recent_contracts">Recent Contracts</span>
+                </div>
                 <div class="spaces-tree" id="spacesContractTree">
                   <div style="text-align:center;padding:14px;color:var(--gray)">
                     <div class="loading"></div>
@@ -1518,7 +1527,8 @@
               <div style="margin-top:12px">
                 <div
                   style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                  <span data-i18n="ontology_v24">Ontology v2.4</span></div>
+                  <span data-i18n="ontology_v24">Ontology v2.4</span>
+                </div>
                 <div id="spacesOntologySummary" style="font-size:11px;color:var(--gray-hi);line-height:1.7">
                   <div style="text-align:center;padding:8px;color:var(--gray)">
                     <div class="loading"></div>
@@ -2067,6 +2077,8 @@
                 class="fas fa-copy"></i></button>
             <button class="tbtn" data-tip="Export last response" onclick="exportLastMessageTxt()"><i
                 class="fas fa-file-arrow-down"></i></button>
+            <button class="tbtn" data-tip="Download as PDF" onclick="downloadLastResponseAsPdf()"><i
+                class="fas fa-file-pdf"></i></button>
             <button class="tbtn" data-tip="Export" onclick="exportChatJson()"><i class="fas fa-download"></i></button>
             <label class="tbtn" data-tip="Add Context"><i class="fas fa-paperclip"></i><input
                 accept=".md,.txt,.pdf,.docx,.json,.csv,.html,.htm,.css,.js,.py,.ts,.yaml,.yml,.toml,.xml,.log,.sh,.sql,.env,.cfg,.ini,.rst,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp"
@@ -2794,7 +2806,8 @@
                 style="margin-bottom:10px;padding:8px;border:1px dashed var(--border);border-radius:6px;background:var(--bg)">
                 <div
                   style="font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">
-                  <span data-i18n="listeningAdvancedParams">Advanced Endpoint Parameters</span></div>
+                  <span data-i18n="listeningAdvancedParams">Advanced Endpoint Parameters</span>
+                </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
                   <div><label for="lsDiarization"
                       style="font-size:10px;color:var(--gray);display:block;margin-bottom:3px"><span
@@ -2901,7 +2914,8 @@
                 style="margin-bottom:10px;padding:8px;border:1px dashed var(--border);border-radius:6px;background:var(--bg)">
                 <div
                   style="font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">
-                  <span data-i18n="listeningQdrantIndexing">Qdrant Indexing (parameters + segments)</span></div>
+                  <span data-i18n="listeningQdrantIndexing">Qdrant Indexing (parameters + segments)</span>
+                </div>
                 <div style="display:grid;grid-template-columns:1fr 2fr;gap:8px;align-items:end">
                   <div>
                     <label for="lsSaveToQdrant"
@@ -3032,18 +3046,22 @@
                 <div>
                   <div
                     style="font-size:10px;color:var(--gray-hi);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">
-                    <span data-i18n="listeningQdrantCollections">Qdrant Collections</span></div>
+                    <span data-i18n="listeningQdrantCollections">Qdrant Collections</span>
+                  </div>
                   <div id="lsQdrantCollectionsList"
                     style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;padding:6px;background:var(--bg);font-size:11px;font-family:var(--mono);color:var(--gray)">
-                    <span data-i18n="driveAuthStatus">Loading…</span></div>
+                    <span data-i18n="driveAuthStatus">Loading…</span>
+                  </div>
                 </div>
                 <div>
                   <div
                     style="font-size:10px;color:var(--gray-hi);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">
-                    <span data-i18n="listeningSavedTranscripts">Saved Transcripts</span></div>
+                    <span data-i18n="listeningSavedTranscripts">Saved Transcripts</span>
+                  </div>
                   <div id="lsSavedTranscriptsList"
                     style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;padding:6px;background:var(--bg);font-size:11px;font-family:var(--mono);color:var(--gray)">
-                    <span data-i18n="driveAuthStatus">Loading…</span></div>
+                    <span data-i18n="driveAuthStatus">Loading…</span>
+                  </div>
                 </div>
               </div>
               <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:8px">
@@ -3507,7 +3525,8 @@
           <div id="mvCollectionDetail"
             style="border:1px solid var(--border);border-radius:8px;padding:10px;min-height:70px;max-height:180px;overflow-y:auto;font-size:11px;color:var(--gray);flex-shrink:0">
             <span data-i18n="select_a_collection_to_see_details_and_samples_scr">Select a collection to see details and
-              samples (scroll).</span></div>
+              samples (scroll).</span>
+          </div>
           <div id="mvCollectionsList" style="flex:1;overflow-y:auto">
             <div class="mv-empty"><i class="fas fa-layer-group" style="font-size:22px;color:var(--border-hi)"></i>
               <p style="font-size:12px;margin-top:8px"><span data-i18n="loading_collections">Loading
@@ -3681,8 +3700,20 @@
                 onchange="setPanelContextEnabled('preview', this.checked)" type="checkbox" />
               <span><span data-i18n="chat_context_1">Chat context</span></span>
             </label>
-            <button class="btn btn-sm" id="previewDownloadBtn" onclick="downloadCurrentPreview()" style="display:none"
-              title="Download"><i class="fas fa-download"></i></button>
+            <div class="dropdown" id="previewDownloadDropdown" style="display:none">
+              <button class="btn btn-sm dropdown-toggle" id="previewDownloadBtn" onclick="downloadCurrentPreview()"
+                title="Download options"><i class="fas fa-download"></i></button>
+              <div class="dropdown-menu" style="display:none;position:absolute;background:var(--panel-bg);border:1px solid var(--border);border-radius:6px;padding:6px;min-width:160px;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.15)">
+                <button class="dropdown-item" onclick="downloadCurrentPreview();closeDownloadDropdown()"
+                  style="display:block;width:100%;text-align:left;background:none;border:none;color:var(--white);padding:8px 12px;cursor:pointer;font-size:12px;border-radius:4px">
+                  <i class="fas fa-file" style="margin-right:8px;width:16px"></i> Download Original
+                </button>
+                <button class="dropdown-item" onclick="downloadPreviewAsPdf();closeDownloadDropdown()"
+                  style="display:block;width:100%;text-align:left;background:none;border:none;color:var(--white);padding:8px 12px;cursor:pointer;font-size:12px;border-radius:4px">
+                  <i class="fas fa-file-pdf" style="margin-right:8px;width:16px;color:var(--red)"></i> Export as PDF
+                </button>
+              </div>
+            </div>
             <button class="btn btn-sm" id="previewMaximizeBtn" onclick="maximizeCurrentPreview()" style="display:none"
               title="Maximize"><i class="fas fa-expand"></i></button>
             <button class="btn btn-sm" onclick="window.togglePreviewPanel()"><i class="fas fa-times"></i></button>
@@ -4745,7 +4776,8 @@
                   <div style="margin-bottom:10px">
                     <div
                       style="font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                      <span data-i18n="environment">Environment</span></div>
+                      <span data-i18n="environment">Environment</span>
+                    </div>
                     <div id="sh3dEnvButtons" style="display:flex;flex-wrap:wrap;gap:4px">
                       <button class="sh3d-env-btn active" data-env="studio" onclick="sh3dSetEnvironment('studio')"><span
                           data-i18n="sidebarStudio">Studio</span></button>
@@ -5902,7 +5934,8 @@ garage/data/" rows="3"></textarea>
         </div>
         <div style="margin-top:10px;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--bg2)">
           <div style="font-size:10px;color:var(--gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">
-            <span data-i18n="canonical_resolution">Canonical Resolution</span></div>
+            <span data-i18n="canonical_resolution">Canonical Resolution</span>
+          </div>
           <div style="font-size:11px;color:var(--gray-hi);line-height:1.45">
             <div><strong style="color:var(--white)"><span data-i18n="workspace_1">Workspace:</span></strong> <span
                 id="modalResolvedWorkspacePath"><span data-i18n="calculating">calculating...</span></span></div>
@@ -6388,6 +6421,7 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <script src="js/modules/agent-functions-registry.js"></script>
   <script src="js/modules/api-explorer.js"></script>
   <script src="js/modules/endpoint-widget.js?v=20260709b"></script>
+  <script src="js/modules/runpod-workspace-ui.js?v=20260725a"></script>
   <script src="js/modules/meshy-ui.js"></script>
   <script src="js/modules/floating-chat.js"></script>
   <script src="js/modules/preview-recorder.js"></script>
