@@ -136,6 +136,8 @@ LLM_BASE_URL     = os.environ.get("LLM_BASE_URL", "https://api.deepseek.com")
 LLM_MODEL        = os.environ.get("LLM_MODEL", "deepseek-v4-flash")
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 OPENROUTER_BASE_URL = os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+FIREWORKS_API_KEY   = os.environ.get("FIREWORKS_API_KEY", "")
+FIREWORKS_BASE_URL  = os.environ.get("FIREWORKS_BASE_URL", "https://api.fireworks.ai/inference/v1")
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "")
 try:
     # Prevent mid-answer cutoffs on long assistant responses.
@@ -153,6 +155,7 @@ OPENROUTER_CATALOG_MODELS = [
         "id": "tencent/hy3:free",
         "name": "Tecent Hy3",
         "provider": "openrouter",
+        "base_url": "https://openrouter.ai/api/v1",
         "tier": "free",
         "best_for": "Triagem, respostas rapidas e custo baixo.",
         "context_window": 1048576,
@@ -164,6 +167,7 @@ OPENROUTER_CATALOG_MODELS = [
         "id": "poolside/laguna-xs-2.1:free",
         "name": "Laguna XS 2.1",
         "provider": "openrouter",
+        "base_url": "https://openrouter.ai/api/v1",
         "tier": "free",
         "best_for": "Sintese longa, analise complexa e raciocinio profundo.",
         "context_window": 1048576,
@@ -176,6 +180,7 @@ OPENROUTER_CATALOG_MODELS = [
         "id": "qwen/qwen3-next-80b-a3b-instruct:free",
         "name": "Qwen 3",
         "provider": "openrouter",
+        "base_url": "https://openrouter.ai/api/v1",
         "tier": "free",
         "best_for": "Escrita, raciocinio e resposta rápida.",
         "context_window": 1048576,
@@ -188,12 +193,13 @@ OPENROUTER_CATALOG_MODELS = [
         "id": "openrouter/free",
         "name": "Free Models Router",
         "provider": "openrouter",
+        "base_url": "https://openrouter.ai/api/v1",
         "tier": "free",
         "best_for": "Acesso gratuito a modelos variados do OpenRouter com selecao automatica.",
-        "context_window": 200000,   # typically up to 200k, actual limit depends on the model selected
-        "supports_vision": True,    # supports vision if the routed model does
-        "supports_thinking": True,  # supports reasoning if the routed model does
-        "api_formats": ["chat", "responses", "messages"],  # OpenAI Chat, OpenAI Responses, Anthropic Messages
+        "context_window": 200000,
+        "supports_vision": True,
+        "supports_thinking": True,
+        "api_formats": ["chat", "responses", "messages"],
     }
 ]
 
@@ -1745,6 +1751,7 @@ def _auth_list_users() -> list[dict]:
             """
             SELECT email, display_name, is_admin, must_change_password,
                    assistant_access_mode, assistant_write_scope,
+                   context_injection_scope, context_selected_files,
                    created_at, updated_at, last_login_at
             FROM auth_users
             ORDER BY created_at ASC
@@ -1764,6 +1771,8 @@ def _auth_list_users() -> list[dict]:
                 "force_change": bool(int(data.get("must_change_password") or 0)),
                 "assistant_access_mode": str(data.get("assistant_access_mode") or "read_write"),
                 "assistant_write_scope": str(data.get("assistant_write_scope") or ""),
+                "context_injection_scope": str(data.get("context_injection_scope") or ""),
+                "context_selected_files": str(data.get("context_selected_files") or ""),
                 "sections": _sections_for_user(data),
                 "created_at": str(data.get("created_at") or ""),
                 "updated_at": str(data.get("updated_at") or ""),
@@ -1783,6 +1792,7 @@ def _auth_create_user(
     must_change_password: bool = True,
     assistant_access_mode: str = "read_write",
     assistant_write_scope: str = "",
+    context_injection_scope: str = "",
 ) -> dict:
     key = _normalize_user_email(email)
     if not _is_valid_user_email(key):
@@ -1794,6 +1804,9 @@ def _auth_create_user(
     if mode not in {"read_only", "read_write", "write_new_only"}:
         mode = "read_write"
     scope = str(assistant_write_scope or "").strip()
+    ctx_scope = str(context_injection_scope or "").strip()
+    if ctx_scope not in ("workspace_and_project", "project_only", "custom"):
+        ctx_scope = "workspace_and_project" if is_admin else "project_only"
     name = str(display_name or "").strip() or _display_name_from_email(key)
 
     salt_hex = os.urandom(16).hex()
@@ -1807,8 +1820,9 @@ def _auth_create_user(
             INSERT INTO auth_users (
                 email, display_name, password_hash, password_salt,
                 is_admin, must_change_password, assistant_access_mode,
-                assistant_write_scope, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                assistant_write_scope, context_injection_scope,
+                created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 key,
@@ -1819,6 +1833,7 @@ def _auth_create_user(
                 1 if must_change_password else 0,
                 mode,
                 scope,
+                ctx_scope,
                 now,
                 now,
             ),
@@ -1917,6 +1932,36 @@ def _auth_update_permissions(email: str, assistant_access_mode: str, assistant_w
             conn.execute(
                 "UPDATE auth_users SET assistant_access_mode = ?, assistant_write_scope = ?, updated_at = ? WHERE email = ?",
                 (mode, scope, _utc_now_iso(), key),
+            )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _auth_update_context_scope(email: str, context_injection_scope: str, context_selected_files: str | None = None):
+    """Update a user's context injection scope and optionally selected files."""
+    key = _normalize_user_email(email)
+    scope = str(context_injection_scope or "").strip()
+    if scope and scope not in ("workspace_and_project", "project_only", "custom"):
+        raise ValueError("invalid context_injection_scope; must be workspace_and_project, project_only, or custom")
+    conn = _get_db()
+    try:
+        if context_selected_files is not None:
+            # Validate JSON
+            try:
+                parsed = json.loads(context_selected_files)
+                if not isinstance(parsed, list):
+                    raise ValueError("context_selected_files must be a JSON array")
+            except (json.JSONDecodeError, TypeError) as e:
+                raise ValueError(f"invalid context_selected_files JSON: {e}") from e
+            conn.execute(
+                "UPDATE auth_users SET context_injection_scope = ?, context_selected_files = ?, updated_at = ? WHERE email = ?",
+                (scope, context_selected_files, _utc_now_iso(), key),
+            )
+        else:
+            conn.execute(
+                "UPDATE auth_users SET context_injection_scope = ?, updated_at = ? WHERE email = ?",
+                (scope, _utc_now_iso(), key),
             )
         conn.commit()
     finally:
@@ -2364,6 +2409,10 @@ def _bootstrap_db_schema(conn) -> None:
             conn.execute("ALTER TABLE auth_users ADD COLUMN assistant_write_scope TEXT DEFAULT ''")
         if "sections_json" not in cols_auth:
             conn.execute("ALTER TABLE auth_users ADD COLUMN sections_json TEXT DEFAULT ''")
+        if "context_injection_scope" not in cols_auth:
+            conn.execute("ALTER TABLE auth_users ADD COLUMN context_injection_scope TEXT DEFAULT ''")
+        if "context_selected_files" not in cols_auth:
+            conn.execute("ALTER TABLE auth_users ADD COLUMN context_selected_files TEXT DEFAULT ''")
     except Exception:
         pass
     # Legacy compatibility: normalize any historical/invalid type to openclaude.
@@ -5061,12 +5110,62 @@ def _uploads_files_meta_scoped(project_id: str = "", agent_id: str = "") -> list
     return files_meta
 
 
-def _read_planning_context() -> str:
-    """Read existing planning files to include as continuity context."""
+def _get_user_context_config(user_email: str | None = None) -> tuple[str, list[str]]:
+    """Return (scope, selected_files) for a user.
+
+    scope can be:
+      "workspace_and_project"  — receive both workspace-root + project planning files
+      "project_only"           — receive only project-scoped planning files
+      "custom"                 — receive only files in selected_files list
+
+    If user_email is None or user not found, returns ("workspace_and_project", [])
+    (admin default — maximum context).
+    """
+    if not user_email:
+        return ("workspace_and_project", [])
+    user = _auth_get_user(user_email)
+    if not user:
+        return ("workspace_and_project", [])
+    scope = str(user.get("context_injection_scope") or "").strip()
+    if scope not in ("workspace_and_project", "project_only", "custom"):
+        # Default: admins get workspace+project; regular users get project_only
+        scope = "workspace_and_project" if bool(int(user.get("is_admin") or 0)) else "project_only"
+    selected_raw = str(user.get("context_selected_files") or "").strip()
+    selected_files: list[str] = []
+    if selected_raw:
+        try:
+            parsed = json.loads(selected_raw)
+            if isinstance(parsed, list):
+                selected_files = [s.strip() for s in parsed if isinstance(s, str) and s.strip()]
+        except (json.JSONDecodeError, TypeError):
+            selected_files = []
+    return (scope, selected_files)
+
+
+def _read_planning_context(user_email: str | None = None) -> str:
+    """Read existing planning files to include as continuity context.
+
+    When user_email is provided, the user's context_injection_scope setting
+    controls which planning files are included:
+      - workspace_and_project: workspace-root planning/ + project uploads/
+      - project_only:          only project uploads/
+      - custom:                only the filenames in context_selected_files
+    """
+    scope, selected_files = _get_user_context_config(user_email)
     parts = []
     seen = set()
     for directory in (_resolve_planning_dir(), UPLOADS_DIR):
         for name in PLANNING_FILENAMES:
+            # Apply scope filtering
+            if scope == "project_only":
+                # Skip workspace-root planning/ dir; only include from project dir (UPLOADS_DIR)
+                if directory == _resolve_planning_dir():
+                    continue
+            elif scope == "custom":
+                # Only include files that are in the user's selected_files list
+                if name not in selected_files:
+                    continue
+            # workspace_and_project: no filter, include all from both dirs (current behavior)
             p = directory / name
             if p in seen or not p.is_file():
                 continue
@@ -7121,20 +7220,51 @@ def _functions_catalog() -> dict[str, object]:
 
 # ── OpenClaude subprocess helpers ────────────────────────────────────────────
 
-def _openclaude_env(provider: str | None = None, model: str | None = None) -> dict:
+def _openclaude_env(provider: str | None = None, model: str | None = None,
+                    api_key: str | None = None, base_url: str | None = None) -> dict:
     """Build subprocess env for openclaude, routing to the selected remote LLM."""
     env = dict(os.environ)
-    if env.get("ANTHROPIC_API_KEY") and not provider and not model:
+    if env.get("ANTHROPIC_API_KEY") and not provider and not model and not api_key and not base_url:
         return env  # use Anthropic natively if no specific model requested
 
-    base_url, api_key = _resolve_remote_llm_target(provider, model)
+    # Use provided key/url if given, otherwise resolve from env vars
+    if api_key and base_url:
+        pass  # use explicit values below
+    else:
+        base_url, api_key = _resolve_remote_llm_target(provider, model)
+    is_ollama = _is_ollama_request(provider, model)
 
-    if api_key:
+    # Normalize 0.0.0.0 → 127.0.0.1 so OpenClaude recognises it as "local"
+    # and does not require an API key for local Ollama servers.
+    _base = (base_url or "").replace("0.0.0.0", "127.0.0.1")
+
+    # For Ollama or any provider with a resolved base_url, set OpenAI-compatible
+    # env vars so OpenClaude uses the /v1/chat/completions endpoint.
+    if api_key or is_ollama or _base:
         env["CLAUDE_CODE_USE_OPENAI"] = "1"
-        env["OPENAI_API_KEY"] = api_key
-        env["OPENAI_BASE_URL"] = base_url
+        if api_key:
+            env["OPENAI_API_KEY"] = api_key
+        elif is_ollama:
+            env["OPENAI_API_KEY"] = "ollama-no-key-needed"  # placeholder, Ollama does not require a key
+        env["OPENAI_BASE_URL"] = _base
 
+        # OpenClaude detects provider by base_url and may require a
+        # provider-specific env var (e.g. FIREWORKS_API_KEY).
+        _base_lower = (base_url or "").strip().lower()
+        if api_key:
+            if "fireworks" in _base_lower:
+                env["FIREWORKS_API_KEY"] = api_key
+            elif "openrouter" in _base_lower:
+                env["OPENROUTER_API_KEY"] = api_key
+            elif "deepseek" in _base_lower:
+                env["DEEPSEEK_API_KEY"] = api_key
+
+        # For Ollama, extract the raw model name (strip "ollama|port|" prefix)
         target_model = model or env.get("LLM_MODEL", "deepseek-v4-flash")
+        if is_ollama:
+            parts = str(model or "").split("|", 2)
+            if len(parts) == 3:
+                target_model = parts[2]
         env["OPENAI_MODEL"] = target_model
     return env
 
@@ -7183,7 +7313,10 @@ def _openclaude_cmd(
     # falls back to the default Anthropic model, which Vertex mode renders as
     # claude-sonnet-4-5@20250929 and 400s on OpenRouter).
     if provider:
-        cmd += ["--provider", provider]
+        # For Ollama, use "openai" provider since we connect via OpenAI-compatible
+        # API (CLAUDE_CODE_USE_OPENAI / OPENAI_BASE_URL / OPENAI_MODEL env vars).
+        oc_provider = "openai" if str(provider).strip().lower() == "ollama" else provider
+        cmd += ["--provider", oc_provider]
     # Attach MCP servers selected for this run (or all when not specified).
     mcp_cfg = _resolve_mcp_config_path(mcp_servers)
     if mcp_cfg:
@@ -7194,6 +7327,11 @@ def _openclaude_cmd(
         cmd.append("--include-partial-messages")
     effective_model = model
     if effective_model:
+        # For Ollama, strip the "ollama|port|" prefix to get the raw model name
+        if str(model or "").startswith("ollama|"):
+            parts = str(model).split("|", 2)
+            if len(parts) == 3:
+                effective_model = parts[2]
         cmd += ["--model", effective_model]
     if system:
         cmd += ["--system-prompt", system]
@@ -7228,6 +7366,8 @@ def _stream_openclaude(
     out_session_id: list | None = None,
     fork_session: bool = False,
     mcp_servers: list[str] | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
 ):
     """Yield SSE-ready dicts from openclaude — handles both chat and agent tool-use turns.
     
@@ -7248,15 +7388,16 @@ def _stream_openclaude(
         prompt_via_stdin=_prompt_too_big_for_argv(prompt),
         mcp_servers=mcp_servers,
     )
-    env = _openclaude_env(provider=provider, model=model)
+    env = _openclaude_env(provider=provider, model=model, api_key=api_key, base_url=base_url)
+    print(f"[openclaude:stream]   debug _openclaude_env: api_key={'set (' + str(len(api_key)) + ' chars)' if api_key else 'None'}, base_url={base_url}", flush=True)
     use_stdin = _prompt_too_big_for_argv(prompt)
     # ── Logging: show the command being launched ──
     safe_cmd = ' '.join(cmd[:6]) + f' ... ({len(cmd)} args, prompt={len(prompt)} chars{", via stdin" if use_stdin else ""})'
     print(f"[openclaude:stream] ── Launching ──")
     print(f"[openclaude:stream]   cmd: {safe_cmd}")
     print(f"[openclaude:stream]   session_id={session_id!r}  persist=True  max_turns={MAX_AGENT_TURNS}")
-    oc_env_keys = [k for k in ('CLAUDE_CODE_USE_OPENAI', 'OPENAI_BASE_URL', 'OPENAI_MODEL') if k in env]
-    print(f"[openclaude:stream]   env routing: {', '.join(f'{k}={env[k]}' for k in oc_env_keys) if oc_env_keys else 'anthropic (native)'}")
+    oc_env_keys_sorted = sorted(k for k in env if 'API_KEY' in k or 'BASE_URL' in k or k == 'CLAUDE_CODE_USE_OPENAI')
+    print(f"[openclaude:stream]   env routing: {', '.join(f'{k}={env[k]}' for k in oc_env_keys_sorted) if oc_env_keys_sorted else 'anthropic (native)'}")
     import time as _t; _oc_t0 = _t.monotonic()
 
     proc = subprocess.Popen(
@@ -7301,7 +7442,10 @@ def _stream_openclaude(
 
     def _drain_stdout():
         try:
-            for raw in proc.stdout:
+            while True:
+                raw = proc.stdout.readline()
+                if not raw:
+                    break
                 stdout_q.put(raw)
         finally:
             stdout_q.put(None)
@@ -7442,6 +7586,8 @@ def _run_openclaude_agent(
     max_turns: int = MAX_AGENT_TURNS,
     session_id: str | None = None,
     mcp_servers: list[str] | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
 ):
     """Run openclaude as an autonomous agent; push OliviaLegal-format events onto event_q."""
     use_stdin = _prompt_too_big_for_argv(prompt)
@@ -7455,7 +7601,7 @@ def _run_openclaude_agent(
         prompt_via_stdin=use_stdin,
         mcp_servers=mcp_servers,
     )
-    env = _openclaude_env(provider=provider, model=model)
+    env = _openclaude_env(provider=provider, model=model, api_key=api_key, base_url=base_url)
     safe_cmd = ' '.join(cmd[:6]) + f' ... ({len(cmd)} args{", prompt via stdin" if use_stdin else ""})'
     print(f"[openclaude:agent] ── Launching ──")
     print(f"[openclaude:agent]   cmd: {safe_cmd}")
@@ -7679,7 +7825,19 @@ def _is_ollama_request(provider: str | None = None, model: str | None = None) ->
 def _is_openrouter_request(provider: str | None = None, model: str | None = None) -> bool:
     p = str(provider or "").strip().lower()
     m = str(model or "").strip().lower()
-    return p == "openrouter" or m.startswith("openrouter|")
+    if p == "openrouter" or m.startswith("openrouter|"):
+        return True
+    # OpenRouter model IDs use the format "provider/model:tag".
+    # The ":free" suffix is unique to OpenRouter's free tier.
+    # Well-known OpenRouter provider prefixes also disambiguate.
+    if not p and m:
+        if m.endswith(":free"):
+            return True
+        if "/" in m and not m.startswith("deepseek"):
+            openrouter_prefixes = ("google/", "anthropic/", "openai/", "mistral/", "meta-", "cohere/")
+            if m.startswith(openrouter_prefixes):
+                return True
+    return False
 
 
 def _is_gemini_request(provider: str | None = None, model: str | None = None) -> bool:
@@ -7778,6 +7936,7 @@ _MODELS_OVERRIDES_FIELDS = (
     "name", "tier", "best_for", "context_window",
     "input_cost_per_1m", "output_cost_per_1m",
     "supports_vision", "supports_thinking", "hidden",
+    "base_url",
 )
 
 
@@ -8087,16 +8246,16 @@ def _build_model_overlay(m: dict, ov: dict | None, source: str) -> dict:
 
 def _build_models_catalog_payload() -> dict:
     models = [
-        {"id": "deepseek-v4-flash", "name": "DeepSeek V4 Flash", "provider": "deepseek", "cost_per_1k": 0.0014},
-        {"id": "deepseek-v4-pro", "name": "DeepSeek V4 Pro", "provider": "deepseek", "cost_per_1k": 0.0055},
+        {"id": "deepseek-v4-flash", "name": "DeepSeek V4 Flash", "provider": "deepseek", "cost_per_1k": 0.0014, "base_url": "https://api.deepseek.com"},
+        {"id": "deepseek-v4-pro", "name": "DeepSeek V4 Pro", "provider": "deepseek", "cost_per_1k": 0.0055, "base_url": "https://api.deepseek.com"},
     ]
 
     if _openclaude_available and os.environ.get("ANTHROPIC_API_KEY"):
         models.extend(
             [
-                {"id": "claude-opus-4-5", "name": "Claude Opus 4.5", "provider": "anthropic", "cost_per_1k": 0.015},
-                {"id": "claude-sonnet-4-5", "name": "Claude Sonnet 4.5", "provider": "anthropic", "cost_per_1k": 0.003},
-                {"id": "claude-haiku-3-5", "name": "Claude Haiku 3.5", "provider": "anthropic", "cost_per_1k": 0.0008},
+                {"id": "claude-opus-4-5", "name": "Claude Opus 4.5", "provider": "anthropic", "cost_per_1k": 0.015, "base_url": ""},
+                {"id": "claude-sonnet-4-5", "name": "Claude Sonnet 4.5", "provider": "anthropic", "cost_per_1k": 0.003, "base_url": ""},
+                {"id": "claude-haiku-3-5", "name": "Claude Haiku 3.5", "provider": "anthropic", "cost_per_1k": 0.0008, "base_url": ""},
             ]
         )
 
@@ -8104,9 +8263,11 @@ def _build_models_catalog_payload() -> dict:
         models.extend(
             [
                 {"id": "gemini-2.5-flash", "name": "gemini 2.5 flash", "provider": "gemini",
-                 "best_for": "Alta velocidade, tarefas multimodais de alto volume (mais rapido)."},
+                 "best_for": "Alta velocidade, tarefas multimodais de alto volume (mais rapido).",
+                 "base_url": "https://generativelanguage.googleapis.com/v1beta"},
                 {"id": "gemini-2.5-pro", "name": "gemini 2.5 pro", "provider": "gemini",
-                 "best_for": "Raciocinio complexo e janelas de contexto grandes (1M+ tokens)."},
+                 "best_for": "Raciocinio complexo e janelas de contexto grandes (1M+ tokens).",
+                 "base_url": "https://generativelanguage.googleapis.com/v1beta"},
             ]
         )
 
@@ -8159,12 +8320,45 @@ def _normalize_openai_base_url(base_url: str | None) -> str:
     return base
 
 
-def _resolve_remote_llm_target(provider: str | None = None, model: str | None = None) -> tuple[str, str | None]:
+def _is_fireworks_request(provider: str | None = None, model: str | None = None) -> bool:
+    p = str(provider or "").strip().lower()
+    m = str(model or "").strip().lower()
+    return p == "fireworks" or m.startswith("accounts/fireworks/") or m.startswith("fireworks/")
+
+
+def _resolve_remote_llm_target(provider: str | None = None, model: str | None = None, base_url: str | None = None) -> tuple[str, str | None]:
+    # If a base_url was provided (from model override), use it directly
+    # and resolve api_key from env var matching the provider.
+    if base_url:
+        api_key = None
+        p = str(provider or "").strip().lower()
+        if p == "openrouter":
+            api_key = OPENROUTER_API_KEY or None
+        elif p == "fireworks":
+            api_key = FIREWORKS_API_KEY or None
+        elif p == "gemini":
+            api_key = GOOGLE_API_KEY or None
+        elif p == "deepseek":
+            api_key = DEEPSEEK_API_KEY or None
+        return (_normalize_openai_base_url(base_url) or base_url, api_key)
+
+    # Fall back to provider-based detection
     if _is_openrouter_request(provider, model):
         return (
             _normalize_openai_base_url(OPENROUTER_BASE_URL) or "https://openrouter.ai/api/v1",
             OPENROUTER_API_KEY or None,
         )
+    if _is_fireworks_request(provider, model):
+        return (
+            _normalize_openai_base_url(FIREWORKS_BASE_URL) or "https://api.fireworks.ai/inference/v1",
+            FIREWORKS_API_KEY or None,
+        )
+    if _is_ollama_request(provider, model):
+        target = _resolve_ollama_target(model)
+        if target:
+            base_url, raw_model = target
+            return (base_url, "")  # Ollama uses no API key
+        return ("http://127.0.0.1:11434", "")
     if _is_gemini_request(provider, model):
         return (
             "https://generativelanguage.googleapis.com/v1beta/openai/",
@@ -8179,6 +8373,8 @@ def _resolve_remote_llm_target(provider: str | None = None, model: str | None = 
 def _remote_provider_label(provider: str | None = None, model: str | None = None) -> str:
     if _is_openrouter_request(provider, model):
         return "OpenRouter"
+    if _is_fireworks_request(provider, model):
+        return "Fireworks"
     if _is_ollama_request(provider, model):
         return "Ollama"
     if _is_gemini_request(provider, model):
@@ -8204,15 +8400,37 @@ def _stream_remote_llm(
     model: str | None = None,
     *,
     provider: str | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
     max_tokens: int | None = None,
     allow_multimodal: bool = False,
 ):
-    base_url, api_key = _resolve_remote_llm_target(provider, model)
+    resolved_base, resolved_key = _resolve_remote_llm_target(provider, model, base_url)
+
+    # Frontend-provided key (from Authorization header) takes priority over
+    # the env-var-based key from _resolve_remote_llm_target.
+    effective_api_key = api_key or resolved_key
+    effective_base_url = base_url or resolved_base
+
+    # Pre-check: if the effective API key is empty (and it's not Ollama,
+    # which needs no key), bail early with an actionable message.
+    if not effective_api_key and effective_base_url and not _is_ollama_request(provider, model):
+        provider_label = _remote_provider_label(provider, model)
+        yield {
+            "event": "error",
+            "message": (
+                f"MISSING_API_KEY:{provider_label}:"
+                f"Chave da API não configurada para {provider_label}. "
+                "Adicione sua chave no campo de API Key acima e clique em Verificar."
+            ),
+        }
+        return
+
     yield from _stream_llm(
         messages,
         model,
-        base_url=base_url,
-        api_key=api_key,
+        base_url=effective_base_url,
+        api_key=effective_api_key,
         sanitize_claude_model=not _is_openrouter_request(provider, model),
         max_tokens=max_tokens,
         allow_multimodal=allow_multimodal,
@@ -8231,6 +8449,11 @@ def _stream_llm(
 ):
     """Yield decoded token strings from any OpenAI-compatible streaming endpoint."""
     effective_model = model or LLM_MODEL
+    # Strip "ollama|port|" prefix so the raw model name is sent to Ollama's API
+    if effective_model and str(effective_model).startswith("ollama|"):
+        _parts = str(effective_model).split("|", 2)
+        if len(_parts) == 3:
+            effective_model = _parts[2]
     if effective_model:
         m_low = effective_model.lower()
         # Reject any model ID that doesn't look like a valid remote API model:
@@ -8816,7 +9039,80 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             "assistant_write_scope": str(user.get("assistant_write_scope") or "") if user else "",
             "sections": sections,
             "available_sections": SECTION_REGISTRY,
+            "context_injection_scope": str(user.get("context_injection_scope") or "") if user else "",
+            "context_selected_files": str(user.get("context_selected_files") or "") if user else "",
         })
+
+    def _user_context_files_get(self):
+        """GET /api/user/context-files — list available context files with selection state."""
+        email = self._auth_current_email()
+        if not email:
+            self._json_response({"error": "unauthenticated"}, 401)
+            return
+        user = self._auth_current_user()
+        scope, selected_files = _get_user_context_config(email)
+
+        # Discover available files from both directories
+        workspace_dir = _resolve_planning_dir()
+        project_dir = UPLOADS_DIR
+        sources = []
+        for label, directory in [("workspace", workspace_dir), ("project", project_dir)]:
+            files_list = []
+            for name in PLANNING_FILENAMES:
+                p = directory / name
+                available = p.is_file()
+                is_selected = (
+                    name in selected_files
+                    if scope == "custom"
+                    else True
+                )
+                files_list.append({
+                    "name": name,
+                    "available": available,
+                    "selected": is_selected,
+                    "size": p.stat().st_size if available else 0,
+                })
+            sources.append({
+                "source": label,
+                "label": "Workspace Root (planning/)" if label == "workspace" else "Project Root (uploads/)",
+                "path": str(directory),
+                "files": files_list,
+            })
+
+        self._json_response({
+            "scope": scope,
+            "selected_files": selected_files,
+            "sources": sources,
+        })
+
+    def _user_context_files_post(self):
+        """POST /api/user/context-files — update user's context file selection."""
+        email = self._auth_current_email()
+        if not email:
+            self._json_response({"error": "unauthenticated"}, 401)
+            return
+        body = self._read_body()
+        scope = str(body.get("scope") or "").strip()
+        selected_files_raw = body.get("selected_files")
+
+        # Build JSON string for selected_files
+        selected_files_json = ""
+        if selected_files_raw is not None:
+            if isinstance(selected_files_raw, list):
+                # Validate filenames
+                valid_names = set(PLANNING_FILENAMES)
+                cleaned = [s for s in selected_files_raw if isinstance(s, str) and s.strip() in valid_names]
+                selected_files_json = json.dumps(cleaned)
+            else:
+                self._json_response({"error": "selected_files must be an array of filenames"}, 400)
+                return
+
+        try:
+            _auth_update_context_scope(email, scope, selected_files_json if selected_files_raw is not None else None)
+        except Exception as exc:
+            self._json_response({"error": str(exc)}, 400)
+            return
+        self._json_response({"status": "ok"})
 
     def _supplied_admin_token(self) -> str:
         direct = str(self.headers.get(_ADMIN_TOKEN_HEADER) or "").strip()
@@ -9491,6 +9787,21 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         sections = body.get("sections")
         try:
             _auth_update_permissions(target_email, mode, scope, sections=sections)
+        except Exception as exc:
+            self._json_response({"error": str(exc)}, 400)
+            return
+        self._json_response({"status": "ok"})
+
+    def _admin_users_context_scope_patch(self, target_email: str):
+        """PATCH /OliviaLegal/admin/users/{email}/context-scope"""
+        if not self._auth_is_admin():
+            self._json_response({"error": "forbidden"}, 403)
+            return
+        body = self._read_body()
+        scope = str(body.get("context_injection_scope") or "").strip()
+        selected_files = body.get("context_selected_files")
+        try:
+            _auth_update_context_scope(target_email, scope, selected_files)
         except Exception as exc:
             self._json_response({"error": str(exc)}, 400)
             return
@@ -10285,6 +10596,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         if admin_perms_match:
             self._admin_users_permissions_patch(urllib.parse.unquote(admin_perms_match.group(1)))
             return
+        admin_ctx_scope_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/users/([^/]+)/context-scope/?$", raw_path)
+        if admin_ctx_scope_match:
+            self._admin_users_context_scope_patch(urllib.parse.unquote(admin_ctx_scope_match.group(1)))
+            return
         admin_model_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/models/([^/]+)/?$", raw_path)
         if admin_model_match:
             self._admin_models_patch(urllib.parse.unquote(admin_model_match.group(1)))
@@ -10313,6 +10628,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         user_prompt = body.get("userPrompt", "")
         model = body.get("model")
         provider = body.get("provider")
+        base_url = body.get("base_url")
+
+        # Read per-provider API key from Authorization header
+        auth_header = str(self.headers.get("Authorization") or "").strip()
+        custom_api_key = auth_header[len("Bearer "):] if auth_header.lower().startswith("bearer ") else None
         session_id = body.get("session_id")
         agent_id = body.get("agent_id")
         project_id = _resolve_context_project_id(body.get("project_id"), agent_id)
@@ -10347,15 +10667,17 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._sse_done()
             return
 
-        # Priority: explicit ollama > selected-agent OpenClaude > policy OpenClaude > LLM fallback
-        if wants_ollama:
-            self._agent_run_llm(user_prompt, model, provider="ollama", project_id=project_id, agent_id=agent_id)
+        # Priority: OpenClaude with any provider (including Ollama) > direct LLM fallback
+        if wants_ollama and _openclaude_available:
+            self._agent_run_openclaude(user_prompt, model, provider="ollama", session_id=session_id, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url)
+        elif wants_ollama:
+            self._agent_run_llm(user_prompt, model, provider="ollama", project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url)
         elif force_openclaude_agent:
-            self._agent_run_openclaude(user_prompt, model, provider, session_id=session_id, project_id=project_id, agent_id=agent_id)
+            self._agent_run_openclaude(user_prompt, model, provider, session_id=session_id, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url)
         elif _openclaude_available and _should_use_openclaude_chat(provider, model):
-            self._agent_run_openclaude(user_prompt, model, provider, session_id=session_id, project_id=project_id, agent_id=agent_id)
+            self._agent_run_openclaude(user_prompt, model, provider, session_id=session_id, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url)
         else:
-            self._agent_run_llm(user_prompt, model, provider=provider, project_id=project_id, agent_id=agent_id)
+            self._agent_run_llm(user_prompt, model, provider=provider, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url)
 
     def _agent_run_openclaude(
         self,
@@ -10365,6 +10687,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         session_id: str | None = None,
         project_id: str = "",
         agent_id: str = "",
+        custom_api_key: str | None = None,
+        base_url: str | None = None,
     ):
         """Run via local openclaude subprocess — full tool use with SSE events."""
         self._sse_start()
@@ -10372,7 +10696,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self._sse_send({"event": "thinking", "content": "Starting OpenClaude agent…"})
 
         # Enrich prompt with planning + uploads context
-        planning_ctx = _read_planning_context()
+        planning_ctx = _read_planning_context(user_email=self._auth_current_email())
         project_ctx = _read_project_context(max_chars=12000, project_id=project_id)
         uploads_ctx = _build_scoped_uploads_context(max_chars=20000, project_id=project_id, agent_id=str(agent_id or ""))
         parts = []
@@ -10389,7 +10713,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         event_q = queue.Queue()
         thread = threading.Thread(
             target=_run_openclaude_agent,
-            args=(full_prompt, event_q, model, provider, MAX_AGENT_TURNS, session_id, selected_mcp_servers),
+            args=(full_prompt, event_q, model, provider, MAX_AGENT_TURNS, session_id, selected_mcp_servers, custom_api_key, base_url),
             daemon=True,
         )
         thread.start()
@@ -10424,9 +10748,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         provider: str | None = None,
         project_id: str = "",
         agent_id: str = "",
+        custom_api_key: str | None = None,
+        base_url: str | None = None,
     ):
         """Fallback: direct LLM streaming without tool use."""
-        planning_ctx = _read_planning_context()
+        planning_ctx = _read_planning_context(user_email=self._auth_current_email())
         project_ctx = _read_project_context(max_chars=12000, project_id=project_id)
         uploads_ctx = _build_scoped_uploads_context(max_chars=20000, project_id=project_id, agent_id=str(agent_id or ""))
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
@@ -10458,7 +10784,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 ):
                     self._sse_send({"event": "tool_result", "tool_name": "response", "result": token})
             else:
-                for token in _stream_remote_llm(messages, model, provider=provider):
+                for token in _stream_remote_llm(messages, model, provider=provider, api_key=custom_api_key, base_url=base_url):
                     self._sse_send({"event": "tool_result", "tool_name": "response", "result": token})
             self._sse_send({"event": "done"})
         except Exception as e:
@@ -10509,10 +10835,20 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         import time as _time
         t0 = _time.monotonic()
         body = self._read_body()
+
+        # Read per-provider API key from Authorization header (sent by frontend)
+        auth_header = str(self.headers.get("Authorization") or "").strip()
+        custom_api_key = auth_header[len("Bearer "):] if auth_header.lower().startswith("bearer ") else None
+
         message_raw = _sanitize_text_payload(body.get("message", "") or body.get("userPrompt", ""))
         message, message_omitted_chars = _cap_text_payload(message_raw, ASSISTANT_MESSAGE_MAX_CHARS)
         model = body.get("model")
         provider = body.get("provider")
+        base_url = body.get("base_url")  # from model override entry
+        # If model is an Ollama model but provider is not set, resolve it so
+        # OpenClaude routing works correctly (--provider flag needed for env vars).
+        if str(provider or "").strip().lower() != "ollama" and model and str(model).strip().lower().startswith("ollama|"):
+            provider = "ollama"
         history = body.get("history", []) if isinstance(body.get("history", []), list) else []
         section_system, section_system_omitted_chars = _cap_text_payload(
             str(body.get("system") or "").strip(),
@@ -10693,7 +11029,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._sse_send({"type": "status", "message": "Montando contexto do workspace..."})
         except BrokenPipeError:
             return
-        planning_ctx = _read_planning_context()
+        planning_ctx = _read_planning_context(user_email=self._auth_current_email())
         project_ctx = _read_project_context(max_chars=12000, project_id=project_id)
         # Build smart uploads context (directory tree + file contents within budget)
         uploads_ctx = _build_scoped_uploads_context(max_chars=60000, project_id=project_id, agent_id=str(agent_id or ""))
@@ -10928,35 +11264,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             except BrokenPipeError:
                 return
 
-        # ── Standard streaming (no execution needed) ──
-        if wants_ollama:
-            try:
-                target = _resolve_ollama_target(model)
-                if not target:
-                    raise RuntimeError("Nenhum modelo Ollama encontrado em 11434/11435/11436.")
-                base_url, raw_model = target
-                self._sse_send({"type": "status", "message": f"Usando Ollama em {base_url}."})
-                for token in _stream_llm(
-                    messages,
-                    raw_model,
-                    base_url=base_url,
-                    api_key=None,
-                    sanitize_claude_model=False,
-                    max_tokens=max_tokens,
-                ):
-                    self._sse_send({"type": "token", "content": token})
-                    token_count += 1
-            except BrokenPipeError:
-                elapsed = _time.monotonic() - t0
-                print(f"[assistant]   client disconnected after {token_count} tokens ({elapsed:.1f}s)")
-                return
-            except Exception as e:
-                print(f"[assistant]   ERROR (ollama): {e}")
-                try:
-                    self._sse_send({"type": "error", "message": str(e)})
-                except BrokenPipeError:
-                    pass
-        elif force_openclaude_agent or (_openclaude_available and _should_use_openclaude_chat(provider, model)):
+        # ── Route via OpenClaude when available (any provider including Ollama) ──
+        if _openclaude_available and (force_openclaude_agent or wants_ollama or _should_use_openclaude_chat(provider, model)):
             # When session_id exists, openclaude resumes its native session — we only
             # send the current message (no flattened history needed).
             # On the first turn (no session_id), include planning/uploads context.
@@ -10994,9 +11303,12 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 for chunk in _stream_openclaude(
                     oc_prompt,
                     model=model,
+                    provider=provider,
                     session_id=resume_session_id,
                     out_session_id=out_sid,
                     mcp_servers=selected_mcp_servers,
+                    api_key=custom_api_key,
+                    base_url=base_url,
                 ):
                     self._sse_send(chunk)
                     if chunk.get("type") == "token":
@@ -11032,6 +11344,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                         session_id=None,
                         out_session_id=out_sid,
                         mcp_servers=selected_mcp_servers,
+                        api_key=custom_api_key,
+                        base_url=base_url,
                     ):
                         self._sse_send(chunk)
                         if chunk.get("type") == "token":
@@ -11049,6 +11363,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                             messages_for_model,
                             model,
                             provider=provider,
+                            api_key=custom_api_key,
+                            base_url=base_url,
                             max_tokens=max_tokens,
                             allow_multimodal=vision_enabled_for_request,
                         ):
@@ -11086,6 +11402,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                         messages_for_model,
                         model,
                         provider=provider,
+                        api_key=custom_api_key,
+                        base_url=base_url,
                         max_tokens=max_tokens,
                         allow_multimodal=vision_enabled_for_request,
                     ):
@@ -11108,6 +11426,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                     messages_for_model,
                     model,
                     provider=provider,
+                    api_key=custom_api_key,
+                    base_url=base_url,
                     max_tokens=max_tokens,
                     allow_multimodal=vision_enabled_for_request,
                 ):
@@ -13582,6 +13902,56 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         payload["models"] = public
         self._json_response(payload)
 
+    # ── API Key verification: POST /api/verify-key ──────────────────────
+    def _verify_key_post(self):
+        """Verify a per-provider API key by making a lightweight test call."""
+        body = self._read_body()
+        provider = str(body.get("provider", "")).strip().lower()
+        api_key = str(body.get("key", "")).strip()
+
+        if not provider or not api_key:
+            self._json_response({"valid": False, "error": "Provider and key are required."}, status=400)
+            return
+
+        # Map provider to test endpoint
+        # Note: OpenRouter's /api/v1/models is unauthenticated (returns 200 for any key),
+        # so we use /api/v1/auth/key which actually validates the credential.
+        provider_urls = {
+            "openrouter": "https://openrouter.ai/api/v1/auth/key",
+            "fireworks": "https://api.fireworks.ai/inference/v1/models",
+            "deepseek": "https://api.deepseek.com/models",
+        }
+
+        test_url = provider_urls.get(provider)
+        if not test_url:
+            # Ollama, Gemini etc — accept as valid (env-var based or local)
+            self._json_response({"valid": True})
+            return
+
+        try:
+            import http.client as _http_client
+            import json as _json
+            parsed = urllib.parse.urlparse(test_url)
+            conn = _http_client.HTTPSConnection(parsed.hostname, timeout=10)
+            conn.request(
+                "GET", parsed.path or "/",
+                headers={"Authorization": f"Bearer {api_key}", "Accept": "application/json"},
+            )
+            resp = conn.getresponse()
+            body_bytes = resp.read()
+            conn.close()
+            if resp.status == 200:
+                self._json_response({"valid": True})
+            else:
+                detail = ""
+                try:
+                    detail = _json.loads(body_bytes).get("error", {}).get("message", "")
+                except Exception:
+                    pass
+                self._json_response({"valid": False, "error": detail or f"HTTP {resp.status}"})
+        except Exception as exc:
+            self._json_response({"valid": False, "error": str(exc)})
+
     def _admin_openrouter_models_get(self):
         # Public, read-only catalog from OpenRouter; CORS-friendly so the
         # admin panel can also call it directly from the browser.
@@ -13726,6 +14096,14 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         if path == "/api/models/catalog":
             self._models_api_catalog_get()
+            return
+
+        if path == "/api/verify-key":
+            self._verify_key_post()
+            return
+
+        if path == "/api/user/context-files":
+            self._user_context_files_get()
             return
 
         if path == "/api/agent-groups":
@@ -14051,6 +14429,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._json_response(payload, status)
             return
 
+        # ── API Key verification ─────────────────────────────────────
+        if path == "/api/verify-key":
+            self._verify_key_post()
+            return
+
         # ── Google Drive API (POST) ───────────────────────────────────
         if path == "/api/drive/upload":
             self._drive_upload_post()
@@ -14068,6 +14451,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # ── Section Generator API ────────────────────────────────────
         if path == "/api/skills/generate-section":
             self._skills_generate_section_post()
+            return
+
+        # ── User Context Files API ───────────────────────────────────
+        if path == "/api/user/context-files":
+            self._user_context_files_post()
             return
 
         if _is_disabled_api_path(path):
