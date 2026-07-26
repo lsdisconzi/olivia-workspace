@@ -37,6 +37,7 @@
     const body = { message };
     if (cfg.model) body.model = cfg.model;
     if (cfg.provider) body.provider = cfg.provider;
+    if (cfg.baseUrl) body.base_url = cfg.baseUrl;
     const maxTokens = Number.isFinite(Number(cfg.maxTokens)) ? Number(cfg.maxTokens) : null;
     if (maxTokens && maxTokens > 0) body.max_tokens = Math.floor(maxTokens);
     const temperature = cfg.temperature;

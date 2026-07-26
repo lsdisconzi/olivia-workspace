@@ -222,6 +222,34 @@ function renderProviderTabs(catalog, activeProvider) {
       </button>
     `;
   }).join('');
+
+  updateProviderTabIndicators();
+}
+
+// Update provider tab indicators (green checkmark for providers with saved keys)
+function updateProviderTabIndicators() {
+  try {
+    const keys = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
+    document.querySelectorAll('.provider-tab').forEach(btn => {
+      const provider = btn.dataset.provider;
+      if (!provider) return;
+      const hasKey = !!keys[provider];
+      // Remove existing indicator span if any
+      const existing = btn.querySelector('.provider-key-indicator');
+      if (existing) existing.remove();
+      const indicator = document.createElement('span');
+      indicator.className = 'provider-key-indicator';
+      indicator.style.cssText = 'margin-left:4px;font-size:9px';
+      if (provider === 'ollama') {
+        indicator.innerHTML = '<span style="color:var(--gray)">&#9679;</span>';
+      } else if (hasKey) {
+        indicator.innerHTML = '<span style="color:var(--green)">&#10003;</span>';
+      } else {
+        indicator.innerHTML = '<span style="color:var(--red)">&#10007;</span>';
+      }
+      btn.appendChild(indicator);
+    });
+  } catch (e) { }
 }
 
 function _readLocalSavedChats() {
@@ -778,6 +806,7 @@ async function loadModelCatalog() {
 
     // Render only the active provider's models
     renderModelCards({ [activeProvider]: catalog[activeProvider] || [] }, window._currentModel);
+    renderApiKeyManager();
   } catch (e) {
     console.log('Failed to load model catalog:', e.message);
     const c = document.getElementById('modelCards');
@@ -811,12 +840,12 @@ function getCustomApiKey(provider) {
   }
 }
 
-// Verify API key — saves it locally and shows feedback in apiKeyStatus
+// Verify API key — calls backend and saves per-provider key on success
 async function verifyApiKey(provider, key) {
   // When called from the sidebar button (no args), read from UI
   if (!provider) {
     const activeTab = document.querySelector('.provider-tab.active');
-    provider = activeTab ? activeTab.dataset.provider : 'anthropic';
+    provider = activeTab ? activeTab.dataset.provider : 'deepseek';
   }
   if (key === undefined) {
     const input = document.getElementById('cfgApiKey');
@@ -836,42 +865,213 @@ async function verifyApiKey(provider, key) {
     try {
       const saved = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
       delete saved[provider];
-      delete saved['cfgApiKey'];
       localStorage.setItem('OliviaLegal.api.keys', JSON.stringify(saved));
     } catch (e) { }
+    renderApiKeyManager();
     return false;
   }
 
-  // Save key to localStorage under both provider name and element ID
-  try {
-    const saved = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
-    saved[provider] = key;
-    saved['cfgApiKey'] = key;
-    localStorage.setItem('OliviaLegal.api.keys', JSON.stringify(saved));
-  } catch (e) {
-    if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = 'Erro ao salvar chave'; }
-    return false;
-  }
-
-  // Show green success in apiKeyStatus
+  // Show verifying state
   if (statusEl) {
-    statusEl.style.color = 'var(--green)';
-    statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Chave salva localmente';
-    setTimeout(function () {
-      statusEl.style.color = 'var(--gray)';
-      statusEl.textContent = 'Chave personalizada ativa (' + provider + ')';
-    }, 2500);
+    statusEl.style.color = 'var(--amber)';
+    statusEl.textContent = 'Verificando chave...';
   }
-  return true;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/verify-key`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ provider, key }),
+    });
+    const data = await res.json();
+
+    if (data.valid) {
+      // Save key to localStorage
+      try {
+        const saved = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
+        saved[provider] = key;
+        localStorage.setItem('OliviaLegal.api.keys', JSON.stringify(saved));
+      } catch (e) {
+        if (statusEl) { statusEl.style.color = 'var(--red)'; statusEl.textContent = 'Erro ao salvar chave'; }
+        return false;
+      }
+
+      // Show success
+      if (statusEl) {
+        statusEl.style.color = 'var(--green)';
+        statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Chave verificada e salva';
+      }
+
+      // Update tab indicators
+      updateProviderTabIndicators();
+      renderApiKeyManager();
+
+      // Show model cards
+      const apiKeySection = document.getElementById('apiKeySection');
+      if (apiKeySection) apiKeySection.style.display = 'none';
+      const modelCards = document.getElementById('modelCards');
+      if (modelCards) modelCards.style.display = '';
+      if (window._modelCatalog) {
+        const provModels = window._modelCatalog[provider];
+        if (provModels) {
+          renderModelCards({ [provider]: provModels }, window._currentModel);
+        }
+      }
+      return true;
+    } else {
+      if (statusEl) {
+        statusEl.style.color = 'var(--red)';
+        statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Chave inválida: ' + (data.error || 'falha na verificação');
+      }
+      return false;
+    }
+  } catch (e) {
+    if (statusEl) {
+      statusEl.style.color = 'var(--red)';
+      statusEl.innerHTML = '<i class="fas fa-times-circle"></i> Erro ao verificar chave: ' + e.message;
+    }
+    return false;
+  }
 }
 
-// Switch model
+// ── API Key Manager ──────────────────────────────────────────
+function toggleApiKeyManager() {
+  const content = document.getElementById('apiKeyManagerContent');
+  if (!content) return;
+  const isOpen = content.style.display !== 'none';
+  content.style.display = isOpen ? 'none' : '';
+  const toggle = document.getElementById('apiKeyManagerToggle');
+  if (toggle) {
+    toggle.innerHTML = isOpen
+      ? '<i class="fas fa-chevron-down"></i> Gerenciar'
+      : '<i class="fas fa-chevron-up"></i> Fechar';
+  }
+  if (!isOpen) renderApiKeyManager();
+}
+
+function renderApiKeyManager() {
+  const container = document.getElementById('apiKeyManagerContent');
+  if (!container) return;
+  try {
+    const keys = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
+    const configured = Object.keys(keys).filter(k => keys[k] && k !== 'ollama');
+    // Update the section title count
+    const titleEl = document.getElementById('apiKeyManagerSection')
+      ?.querySelector('span[style*="font-weight:600"]');
+    if (titleEl) {
+      titleEl.textContent = configured.length > 0
+        ? 'API Keys (' + configured.length + ' configurada' + (configured.length !== 1 ? 's' : '') + ')'
+        : 'API Keys';
+    }
+
+    if (container.style.display === 'none') return; // don't build list if collapsed
+
+    const providers = Object.keys(MODEL_PROVIDER_META).filter(p => p !== 'other');
+
+    let html = '';
+    let hasAny = false;
+    providers.forEach(function (provider) {
+      const meta = _providerMeta(provider);
+      const savedKey = keys[provider] || '';
+      const hasKey = !!savedKey;
+      if (hasKey) hasAny = true;
+      const masked = hasKey ? savedKey.substring(0, 14) + '...' : '';
+
+      html += '<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 6px;border-radius:4px;margin-bottom:2px;background:var(--bg-card)">';
+      html += '  <div style="display:flex;align-items:center;gap:6px">';
+      html += '    <i class="fas ' + meta.icon + '" style="font-size:10px;width:14px;color:var(--gray)"></i>';
+      html += '    <span style="font-weight:500;font-size:11px">' + meta.label + '</span>';
+      if (hasKey) {
+        html += '    <span style="color:var(--green);font-size:10px">\u2713 ' + masked + '</span>';
+      } else {
+        html += '    <span style="color:var(--red);font-size:10px">\u2717 ' + (provider === 'ollama' ? 'Local' : 'N\u00e3o configurada') + '</span>';
+      }
+      html += '  </div>';
+      html += '  <div style="display:flex;gap:4px">';
+      if (provider !== 'ollama') {
+        html += '    <button class="tbtn" onclick="editProviderKey(\'' + provider + '\')" style="padding:1px 6px;font-size:10px" title="Editar chave">Editar</button>';
+        if (hasKey) {
+          html += '    <button class="tbtn" onclick="removeProviderKey(\'' + provider + '\')" style="padding:1px 6px;font-size:10px;color:var(--red)" title="Remover chave">Remover</button>';
+        }
+      } else {
+        html += '    <span style="font-size:10px;color:var(--gray)">Local</span>';
+      }
+      html += '  </div>';
+      html += '</div>';
+    });
+
+    if (!hasAny) {
+      html = '<div style="padding:8px 6px;text-align:center;font-size:11px;color:var(--gray)">Nenhuma chave configurada. Selecione um provedor acima e adicione sua chave de API.</div>';
+    }
+
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = '<div style="color:var(--red);font-size:11px;padding:4px">Erro ao carregar chaves</div>';
+  }
+}
+
+function editProviderKey(provider) {
+  // Switch to this provider
+  selectProvider(provider);
+  // Pre-fill the key input
+  try {
+    const keys = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
+    const keyInput = document.getElementById('cfgApiKey');
+    if (keyInput && keys[provider]) {
+      keyInput.value = keys[provider];
+    }
+  } catch (e) { /* ignore */ }
+  // Make sure the API key section is visible
+  const apiKeySection = document.getElementById('apiKeySection');
+  if (apiKeySection) apiKeySection.style.display = '';
+  // Collapse the manager
+  const content = document.getElementById('apiKeyManagerContent');
+  if (content) content.style.display = 'none';
+  const toggle = document.getElementById('apiKeyManagerToggle');
+  if (toggle) toggle.innerHTML = '<i class="fas fa-chevron-down"></i> Gerenciar';
+}
+
+function removeProviderKey(provider) {
+  var meta = _providerMeta(provider);
+  if (!confirm('Remover chave da API para ' + meta.label + '?')) return;
+  try {
+    var keys = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
+    delete keys[provider];
+    localStorage.setItem('OliviaLegal.api.keys', JSON.stringify(keys));
+  } catch (e) { /* ignore */ }
+  updateProviderTabIndicators();
+  renderApiKeyManager();
+  // If this is the active provider, refresh the UI to clear the key input
+  var activeTab = document.querySelector('.provider-tab.active');
+  if (activeTab && activeTab.dataset.provider === provider) {
+    selectProvider(provider);
+  }
+}
+
+// ── Switch model
 function switchModel(modelId) {
   const normalizedModel = normalizeWorkspaceModel(modelId, 'deepseek-v4-flash');
+
+  // Look up which provider this model belongs to in the catalog
+  let detectedProvider = null;
+  if (window._modelCatalog) {
+    for (const provider in window._modelCatalog) {
+      const models = window._modelCatalog[provider];
+      if (!Array.isArray(models)) continue;
+      if (models.some(m => normalizeWorkspaceModel(m.id, 'deepseek-v4-flash') === normalizedModel)) {
+        detectedProvider = provider;
+        break;
+      }
+    }
+  }
+
   // Save to localStorage
   try {
     const saved = JSON.parse(localStorage.getItem('OliviaLegal.workspace.config') || '{}');
     saved.model = normalizedModel;
+    if (detectedProvider) {
+      saved.provider = detectedProvider;
+    }
     localStorage.setItem('OliviaLegal.workspace.config', JSON.stringify(saved));
   } catch (e) {
     console.warn('Failed to save model config:', e);
@@ -879,20 +1079,14 @@ function switchModel(modelId) {
 
   // Update current model tracking and refresh card highlights
   window._currentModel = normalizedModel;
+
+  // If a different provider was detected, switch provider (updates tabs + cards)
   const activeTab = document.querySelector('.provider-tab.active');
   const activeProvider = activeTab ? activeTab.dataset.provider : null;
-  if (activeProvider && window._modelCatalog && window._modelCatalog[activeProvider]) {
+  if (detectedProvider && detectedProvider !== activeProvider) {
+    selectProvider(detectedProvider);
+  } else if (activeProvider && window._modelCatalog && window._modelCatalog[activeProvider]) {
     renderModelCards({ [activeProvider]: window._modelCatalog[activeProvider] }, normalizedModel);
-  }
-
-  // Ensure the current provider view also re-renders with the selected model
-  // when the chosen model comes from a provider-specific ID like Ollama.
-  if (window._modelCatalog && window._modelCatalog[activeProvider]) {
-    const currentProviderModels = window._modelCatalog[activeProvider] || [];
-    const hasSelectedModel = currentProviderModels.some(model => normalizeWorkspaceModel(model.id, 'deepseek-v4-flash') === normalizedModel);
-    if (!hasSelectedModel && window._modelCatalog.ollama) {
-      renderModelCards({ ollama: window._modelCatalog.ollama }, normalizedModel);
-    }
   }
 
   addSystemBubble(`Modelo alterado para: ${normalizedModel}`);
@@ -958,36 +1152,72 @@ function selectProvider(provider) {
     localStorage.setItem('OliviaLegal.workspace.config', JSON.stringify(saved));
   } catch (e) { }
 
-  // Filter cards to selected provider
-  if (window._modelCatalog) {
-    const provModels = window._modelCatalog[provider];
-    if (provModels) {
-      renderModelCards({ [provider]: provModels }, window._currentModel);
-    }
-  }
+  // Update provider tab indicators
+  updateProviderTabIndicators();
 
   // Restore the saved API key for this provider into the input field
+  const apiKeySection = document.getElementById('apiKeySection');
+  const modelCards = document.getElementById('modelCards');
+  const statusEl = document.getElementById('apiKeyStatus');
+
   try {
     const keys = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
-    const keyInput = document.getElementById('cfgApiKey');
-    const statusEl = document.getElementById('apiKeyStatus');
-    if (keyInput) {
-      const savedKey = keys[provider] || keys.cfgApiKey || '';
-      keyInput.value = savedKey;
-    }
-    if (statusEl) {
-      if (provider === 'ollama') {
+    const savedKey = keys[provider] || '';
+
+    // For ollama, always show models immediately (no key needed)
+    if (provider === 'ollama') {
+      if (statusEl) {
         statusEl.style.color = 'var(--gray)';
         statusEl.textContent = 'Usando Ollama local do servidor (11434/11435/11436)';
-      } else {
-        const key = keys[provider] || '';
-        if (key) {
-          statusEl.style.color = 'var(--green)';
-          statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Chave personalizada ativa (' + provider + ')';
-        } else {
-          statusEl.style.color = 'var(--gray)';
-          statusEl.textContent = 'Usando configuração do servidor para ' + provider;
+      }
+      // Show model cards
+      if (apiKeySection) apiKeySection.style.display = 'none';
+      if (modelCards) modelCards.style.display = '';
+      // Render models
+      if (window._modelCatalog) {
+        const provModels = window._modelCatalog[provider];
+        if (provModels) {
+          renderModelCards({ [provider]: provModels }, window._currentModel);
         }
+      }
+      return;
+    }
+
+    if (savedKey) {
+      // Key already saved — show models directly
+      if (statusEl) {
+        statusEl.style.color = 'var(--green)';
+        statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Chave personalizada ativa (' + provider + ')';
+      }
+      if (apiKeySection) {
+        apiKeySection.style.display = 'none';
+      }
+      if (modelCards) {
+        modelCards.style.display = '';
+      }
+      if (window._modelCatalog) {
+        const provModels = window._modelCatalog[provider];
+        if (provModels) {
+          renderModelCards({ [provider]: provModels }, window._currentModel);
+        }
+      }
+    } else {
+      // No key saved — show API key prompt, hide model cards
+      if (statusEl) {
+        statusEl.style.color = 'var(--amber)';
+        statusEl.innerHTML = 'Digite sua chave de API para <strong>' + provider + '</strong> e clique em Verificar';
+      }
+      if (apiKeySection) {
+        apiKeySection.style.display = '';
+        const keyInput = document.getElementById('cfgApiKey');
+        if (keyInput) {
+          keyInput.value = '';
+          keyInput.placeholder = 'Chave da API ' + provider;
+          keyInput.focus();
+        }
+      }
+      if (modelCards) {
+        modelCards.style.display = 'none';
       }
     }
   } catch (e) { }
@@ -1120,9 +1350,21 @@ function getConfig() {
       saved.model = model;
       localStorage.setItem('OliviaLegal.workspace.config', JSON.stringify(saved));
     }
+    const provider = saved.provider || 'deepseek';
+    const runtimeModel = normalizeRuntimeModelForProvider(saved.model, provider);
+    // Derive base_url from the model catalog
+    let base_url = '';
+    if (window._modelCatalog) {
+      const models = window._modelCatalog[provider];
+      if (Array.isArray(models)) {
+        const match = models.find(m => normalizeRuntimeModelForProvider(m.id, provider) === runtimeModel);
+        if (match && match.base_url) base_url = match.base_url;
+      }
+    }
     return {
-      model: normalizeRuntimeModelForProvider(saved.model, saved.provider || 'deepseek'),
-      provider: saved.provider || 'deepseek',
+      model: runtimeModel,
+      provider: provider,
+      base_url: base_url,
       guided: saved.guided || false,
       auditor: saved.auditor || false,
       autonomy_level: saved.autonomy_level || 'medium',
@@ -1135,6 +1377,7 @@ function getConfig() {
     return {
       model: 'deepseek-v4-flash',
       provider: 'deepseek',
+      base_url: '',
       guided: false,
       auditor: false,
       autonomy_level: 'medium',

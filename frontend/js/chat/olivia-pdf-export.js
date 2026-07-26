@@ -295,3 +295,7 @@ async function downloadLastResponseAsPdf() {
   iframe.srcdoc = printDoc;
   addSystemBubble('Preparando PDF com a identidade Olivia...');
 }
+
+// Expose to global scope so inline onclick="downloadLastResponseAsPdf()" works
+window.downloadLastResponseAsPdf = downloadLastResponseAsPdf;
+window.OLIVIA_PDF_BRAND = OLIVIA_PDF_BRAND;
