@@ -347,7 +347,7 @@ This document is auto-generated from the i18n translation keys.
 | `error` | Error |
 | `esc` | Esc |
 | `examplesgblassets` | examples/gbl-assets/ |
-| `explore_query_and_configure_all_olivialegal_memory` | Explore, query, and configure all Olivia memory. Vector, semantic, graph, short-term, and                 long-term. |
+| `explore_query_and_configure_all_Olivia_memory` | Explore, query, and configure all Olivia memory. Vector, semantic, graph, short-term, and                 long-term. |
 | `exportButton` | Export |
 | `exposure` | Exposure |
 | `extra` | +Extra |
@@ -395,7 +395,7 @@ This document is auto-generated from the i18n translation keys.
 | `guarulhos_br_1` | Guarulhos · BR |
 | `harbor_river_wave_mist` | harbor, river, wave,                               mist |
 | `headerDots` | More options |
-| `hello_im_the_api_specialist_agent_for_olivialegal_` | Hello! I'm the API specialist agent for OliviaLegal. I can help you understand any function,                       endpoint, request schema, or relationship between functions. What would you like to know? |
+| `hello_im_the_api_specialist_agent_for_Olivia_` | Hello! I'm the API specialist agent for OliviaLegal. I can help you understand any function,                       endpoint, request schema, or relationship between functions. What would you like to know? |
 | `high` | High |
 | `highend` | high-end |
 | `historyEmpty` | Select an agent to see saved conversations. |
@@ -609,7 +609,7 @@ This document is auto-generated from the i18n translation keys.
 | `noise_reduce` | Noise                       Reduce |
 | `none` | none |
 | `olivia_workspace` | Olivia · Workspace |
-| `olivialegal_legal_router` | Olivia Legal Router |
+| `Olivia_legal_router` | Olivia Legal Router |
 | `olivialegalenv` | OliviaLegal/.env |
 | `one_per_line` | (one per line) |
 | `one_per_line_1` | (one per line) |

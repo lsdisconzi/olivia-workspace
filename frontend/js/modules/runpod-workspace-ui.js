@@ -3,7 +3,7 @@
  * Version 1.0 · July 2026
  */
 
-(function() {
+(function () {
   'use strict';
 
   // Configuration
@@ -27,21 +27,21 @@
   // Initialize the RunPod UI
   function init(options) {
     Object.assign(config, options);
-    
+
     // Create FAB if not exists
     createFAB();
-    
+
     // Create modal HTML
     createModal();
-    
+
     // Create dashboard HTML
     createDashboard();
-    
+
     // Load GPU options if enabled
     if (config.autoFetchGpus) {
       fetchGPUOptions();
     }
-    
+
     // Attach event listeners
     attachEvents();
   }
@@ -56,7 +56,7 @@
       '<rect x="2" y="3" width="20" height="18" rx="2" />' +
       '<path d="M6 8h12M6 12h8M6 16h10" />' +
       '</svg>';
-    fab.onclick = function() {
+    fab.onclick = function () {
       openModal();
     };
     document.body.appendChild(fab);
@@ -115,7 +115,7 @@
 
   // Step HTML templates
   function getStepHTML(step) {
-    switch(step) {
+    switch (step) {
       case 1: return getStep1HTML();
       case 2: return getStep2HTML();
       case 3: return getStep3HTML();
@@ -217,11 +217,11 @@
     var modal = document.getElementById('runpod-workspace-modal');
     modal.classList.remove('hidden');
     config.modalOpen = true;
-    
+
     if (gitUrl) {
       document.getElementById('ws-git-url').value = gitUrl;
     }
-    
+
     updateStepDisplay();
   }
 
@@ -234,7 +234,7 @@
   function nextStep(step) {
     state.currentStep = step;
     updateStepDisplay();
-    
+
     if (step === 4) {
       updateSummary();
     }
@@ -248,7 +248,7 @@
   // Update step display
   function updateStepDisplay() {
     var tabs = document.querySelectorAll('.ep-tab-content');
-    tabs.forEach(function(tab) {
+    tabs.forEach(function (tab) {
       if (parseInt(tab.dataset.step) === state.currentStep) {
         tab.classList.add('active');
       } else {
@@ -262,7 +262,7 @@
     var gpuType = document.getElementById('ws-gpu-type').value;
     var gpuCount = document.getElementById('ws-gpu-count').value;
     var diskSize = document.getElementById('ws-disk-size').value;
-    
+
     document.getElementById('summary-gpu').textContent = gpuType.replace('_', ' ') + ' ×' + gpuCount;
     document.getElementById('summary-disk').textContent = diskSize + ' GB';
     document.getElementById('summary-cost').textContent = '$0.79 / hour'; // Will be calculated
@@ -284,7 +284,7 @@
   function populateGPUSelect(gpus) {
     var select = document.getElementById('ws-gpu-type');
     if (select && gpus.length > 0) {
-      select.innerHTML = gpus.map(function(gpu) {
+      select.innerHTML = gpus.map(function (gpu) {
         return '<option value="' + gpu.name + '">' + gpu.name + ' (' + gpu.vramGb + 'GB) - $' + gpu.pricePerHour + '/hr</option>';
       }).join('');
     }
@@ -298,7 +298,7 @@
       gpuType: document.getElementById('ws-gpu-type').value,
       gpuCount: parseInt(document.getElementById('ws-gpu-count').value),
       diskSizeGb: parseInt(document.getElementById('ws-disk-size').value),
-      exposedPorts: document.getElementById('ws-ports').value.split(',').map(function(p) { return p.trim(); }),
+      exposedPorts: document.getElementById('ws-ports').value.split(',').map(function (p) { return p.trim(); }),
       buildCommand: document.getElementById('ws-build-command').value,
       envVars: {}
     };
@@ -315,10 +315,10 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
       });
-      
+
       var workspace = await response.json();
       state.workspaceId = workspace.providerId;
-      
+
       closeModal();
       showDashboard();
       pollWorkspaceStatus(workspace.providerId);
@@ -330,13 +330,13 @@
 
   // Poll workspace status
   async function pollWorkspaceStatus(workspaceId) {
-    var interval = setInterval(async function() {
+    var interval = setInterval(async function () {
       try {
         var response = await fetch(config.apiBaseUrl + '/workspaces/' + workspaceId + '/status');
         var status = await response.json();
         state.deploymentStatus = status;
         updateDashboardStatus(status);
-        
+
         if (status.state === 'running' || status.state === 'error') {
           clearInterval(interval);
         }
@@ -366,7 +366,7 @@
   // Attach event listeners
   function attachEvents() {
     // Close modal on escape
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && config.modalOpen) {
         closeModal();
       }
@@ -386,7 +386,7 @@
 
   // Auto-initialize on DOM ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       init();
     });
   } else {

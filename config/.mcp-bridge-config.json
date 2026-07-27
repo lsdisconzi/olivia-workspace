@@ -1,5 +1,5 @@
 {
-  "_note": "serve.py drives ONLY stdio MCP servers (command+args). The previous type:http entries were ignored. Each server below is bridged to its remote Streamable-HTTP /mcp endpoint via scripts/mcp_bridge/streamable_bridge.py. Public host 34.46.10.126. juris-brazil (8116) is reachable now; garge (8110-8114) are Host-header locked on the VPS; 9115/9119/9122 services are not yet running on the VPS.",
+  "_note": "Localhost.",
   "mcpServers": {
     "mcp-server-files": {
       "command": "npx",
@@ -7,71 +7,52 @@
         "-y",
         "@modelcontextprotocol/server-files",
         "--root",
-        "/home"
+        "/Users/dev/_sell/olivia"
       ]
     },
-    "discovery": {
-      "command": "python3",
-      "args": [
-        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
-        "http://34.46.10.126:9115/mcp"
-      ]
+    "transcription-transcription": {
+      "url": "http://127.0.0.1:8121/mcp"
     },
-    "garage_core": {
-      "command": "python3",
-      "args": [
-        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
-        "http://34.46.10.126:8110/mcp"
-      ]
+    "transcription-transcripts": {
+      "url": "http://127.0.0.1:8122/mcp"
     },
-    "garage_files": {
-      "command": "python3",
-      "args": [
-        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
-        "http://34.46.10.126:8111/mcp"
-      ]
+    "transcription-meta": {
+      "url": "http://127.0.0.1:8123/mcp"
     },
-    "garage_ingestion": {
-      "command": "python3",
-      "args": [
-        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
-        "http://34.46.10.126:8112/mcp"
-      ]
+    "juris-search": {
+      "url": "http://127.0.0.1:8116/mcp"
     },
-    "garage_prompt": {
-      "command": "python3",
-      "args": [
-        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
-        "http://34.46.10.126:8113/mcp"
-      ]
+    "garage-core": {
+      "url": "http://127.0.0.1:8110/mcp"
     },
-    "garage_qdrant": {
-      "command": "python3",
-      "args": [
-        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
-        "http://34.46.10.126:8114/mcp"
-      ]
+    "garage-files": {
+      "url": "http://127.0.0.1:8111/mcp"
     },
-    "juris-brazil": {
-      "command": "python3",
-      "args": [
-        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
-        "http://34.46.10.126:8116/mcp"
-      ]
+    "garage-ingestion": {
+      "url": "http://127.0.0.1:8112/mcp"
     },
-    "argus_law": {
-      "command": "python3",
-      "args": [
-        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
-        "http://34.46.10.126:9119/mcp"
-      ]
+    "garage-prompt": {
+      "url": "http://127.0.0.1:8113/mcp"
     },
-    "transcription_transcripts": {
-      "command": "python3",
+    "garage-qdrant": {
+      "url": "http://127.0.0.1:8114/mcp"
+    },
+    "violation-refiner": {
+      "url": "http://127.0.0.1:8124/mcp"
+    },
+    "ocr-main-ocr": {
+      "url": "http://127.0.0.1:8125/mcp"
+    },
+    "ocr-main-pdf": {
+      "url": "http://127.0.0.1:8126/mcp"
+    },
+    "discovery-intelligence": {
+      "command": "npx",
       "args": [
-        "/home/disconzi1986_gmail_com/olivia/scripts/mcp_bridge/streamable_bridge.py",
-        "http://34.46.10.126:9122/mcp"
-      ]
+        "-y",
+        "discovery-main/mcp/discovery_mcp_server.js"
+      ],
+      "cwd": "/home/disconzi1986_gmail_com/discovery-main"
     }
   }
 }

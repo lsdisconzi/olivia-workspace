@@ -24,11 +24,11 @@
  *   - Live traffic log (all fetch/XHR calls the page makes)
  *   - Hit map (which endpoints were called, how many times)
  *   - Error summary (4xx/5xx calls)
- *   - Full endpoint catalog (from OliviaLegal_ENDPOINTS or gateway catalog)
+ *   - Full endpoint catalog (from Olivia_ENDPOINTS or gateway catalog)
  *   - Page URL + title for context
  */
 
-(function() {
+(function () {
   'use strict';
 
   /* ═══════════════════════════════════════════════════════════════════
@@ -70,21 +70,21 @@
      * Initialize the widget
      * @param {Object} options - Configuration options
      */
-    init: function(options) {
+    init: function (options) {
       if (state.initialized) return;
-      
+
       Object.assign(config, options || {});
-      
+
       // Load saved config
-      try { 
-        state.saved = JSON.parse(localStorage.getItem(config.storageKey) || '{}'); 
-      } catch(e) { 
-        state.saved = {}; 
+      try {
+        state.saved = JSON.parse(localStorage.getItem(config.storageKey) || '{}');
+      } catch (e) {
+        state.saved = {};
       }
 
-      // Load endpoints from window.OliviaLegal_ENDPOINTS or fetch from gateway
-      if (window.OliviaLegal_ENDPOINTS && window.OliviaLegal_ENDPOINTS.length > 0) {
-        processEndpoints(window.OliviaLegal_ENDPOINTS);
+      // Load endpoints from window.Olivia_ENDPOINTS or fetch from gateway
+      if (window.Olivia_ENDPOINTS && window.Olivia_ENDPOINTS.length > 0) {
+        processEndpoints(window.Olivia_ENDPOINTS);
       } else if (config.autoFetchCatalog && config.gatewayUrl) {
         fetchCatalog();
       }
@@ -97,7 +97,7 @@
         state._panelCtxListenerBound = true;
       }
       _updatePanelContextIndicator();
-      
+
       // Always keep a clean fetch reference for the widget's own AI calls
       if (!window._epOrigFetch) window._epOrigFetch = window.fetch;
 
@@ -116,15 +116,15 @@
     /**
      * Toggle the widget panel
      */
-    toggle: function() {
+    toggle: function () {
       var panel = document.getElementById('epPanel');
       var overlay = document.getElementById('epOverlay');
       if (!panel || !overlay) return;
-      
+
       var isOpen = panel.classList.contains('open');
       panel.classList.toggle('open');
       overlay.classList.toggle('open');
-      
+
       if (!isOpen) {
         render();
         _updatePanelContextIndicator();
@@ -134,30 +134,30 @@
     /**
      * Get current endpoints
      */
-    getEndpoints: function() {
+    getEndpoints: function () {
       return state.endpoints;
     },
 
     /**
      * Get traffic log
      */
-    getTraffic: function() {
+    getTraffic: function () {
       return state.traffic;
     },
 
     /**
      * Check if endpoint is enabled
      */
-    isEnabled: function(method, path) {
+    isEnabled: function (method, path) {
       var key = method.toUpperCase() + ' ' + path;
-      var ep = state.endpoints.find(function(e) { return e.key === key; });
+      var ep = state.endpoints.find(function (e) { return e.key === key; });
       return ep ? ep.enabled !== false : true;
     },
 
     /**
      * Get resolved URL for endpoint key
      */
-    getUrl: function(key) {
+    getUrl: function (key) {
       var val = state.saved[key];
       if (!val) {
         // Try to find in endpoints
@@ -176,7 +176,7 @@
     /**
      * Set endpoint configuration
      */
-    setEndpoint: function(key, value) {
+    setEndpoint: function (key, value) {
       state.saved[key] = value;
       localStorage.setItem(config.storageKey, JSON.stringify(state.saved));
       var input = document.getElementById('ep-' + key);
@@ -189,19 +189,19 @@
     /**
      * Save configuration
      */
-    save: function() {
+    save: function () {
       collectConfig();
       toast('Configuration saved — reloading…');
-      setTimeout(function() { location.reload(); }, 600);
+      setTimeout(function () { location.reload(); }, 600);
     },
 
     /**
      * Reset configuration
      */
-    reset: function() {
+    reset: function () {
       localStorage.removeItem(config.storageKey);
       toast('Configuration reset — reloading…');
-      setTimeout(function() { location.reload(); }, 600);
+      setTimeout(function () { location.reload(); }, 600);
     }
   };
 
@@ -214,7 +214,7 @@
     state.groupOrder = [];
     var seen = {};
 
-    rawEndpoints.forEach(function(ep, idx) {
+    rawEndpoints.forEach(function (ep, idx) {
       var processed = {
         id: idx,
         key: ep.m + ' ' + ep.p,
@@ -243,13 +243,13 @@
     var url = config.gatewayUrl + '/gateway/gateway-routes.json';
     state._ownRequests.add(url); // don't show catalog fetch in traffic log
     fetch(url)
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
         if (!data.services) return;
         var rawEndpoints = [];
-        data.services.forEach(function(svc) {
+        data.services.forEach(function (svc) {
           var endpoints = svc.endpoints || {};
-          Object.keys(endpoints).forEach(function(key) {
+          Object.keys(endpoints).forEach(function (key) {
             var ep = endpoints[key];
             rawEndpoints.push({
               p: ep.path,
@@ -263,7 +263,7 @@
         processEndpoints(rawEndpoints);
         render();
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.warn('[Endpoint Widget] Failed to fetch catalog:', err);
       });
   }
@@ -273,7 +273,7 @@
      ═══════════════════════════════════════════════════════════════════ */
   function injectHTML() {
     var html = '';
-    
+
     // Gear button
     html += '<button class="ep-gear" onclick="LA8159EndpointWidget.toggle()" title="Endpoint Configuration">';
     html += '<i class="fas fa-cog"></i>';
@@ -284,7 +284,7 @@
 
     // Panel
     html += '<div class="ep-panel" id="epPanel">';
-    
+
     // Header
     html += '<div class="ep-header">';
     html += '<div class="ep-header-top">';
@@ -307,10 +307,10 @@
 
     // Views
     html += '<div class="ep-views">';
-    
+
     // Catalog View
     html += '<div class="ep-view active" id="epViewCatalog"><div id="epBody"></div></div>';
-    
+
     // Traffic View
     if (config.trafficCapture) {
       html += '<div class="ep-view" id="epViewTraffic">';
@@ -375,7 +375,7 @@
     if (!body) return;
 
     var html = '';
-    state.groupOrder.forEach(function(tag) {
+    state.groupOrder.forEach(function (tag) {
       var eps = state.groups[tag] || [];
       if (eps.length === 0) return;
 
@@ -386,7 +386,7 @@
       html += '</div>';
       html += '<div class="ep-group-body">';
 
-      eps.forEach(function(ep) {
+      eps.forEach(function (ep) {
         html += '<div class="ep-row" data-key="' + escapeHtml(ep.key) + '" data-tag="' + escapeHtml(tag) + '">';
         html += '<div class="ep-row-label">';
         html += '<span class="ep-method ' + ep.method.toLowerCase() + '">' + ep.method + '</span>';
@@ -413,7 +413,7 @@
 
   function collectConfig() {
     var newConfig = {};
-    document.querySelectorAll('.ep-input').forEach(function(input) {
+    document.querySelectorAll('.ep-input').forEach(function (input) {
       var row = input.closest('.ep-row');
       if (!row) return;
       var key = row.dataset.key;
@@ -433,14 +433,14 @@
   /* ═══════════════════════════════════════════════════════════════════
      UI INTERACTIONS
      ═══════════════════════════════════════════════════════════════════ */
-  window.epToggleGroup = function(id) {
+  window.epToggleGroup = function (id) {
     var el = document.getElementById('epg-' + id);
     if (el) el.classList.toggle('open');
   };
 
-  window.epFilter = function(query) {
+  window.epFilter = function (query) {
     query = (query || '').toLowerCase();
-    document.querySelectorAll('.ep-row').forEach(function(row) {
+    document.querySelectorAll('.ep-row').forEach(function (row) {
       var key = (row.dataset.key || '').toLowerCase();
       var text = row.textContent.toLowerCase();
       var match = !query || key.indexOf(query) !== -1 || text.indexOf(query) !== -1;
@@ -448,23 +448,23 @@
     });
 
     // Auto-open groups with visible rows
-    document.querySelectorAll('.ep-group').forEach(function(g) {
+    document.querySelectorAll('.ep-group').forEach(function (g) {
       var visible = g.querySelectorAll('.ep-row:not(.hidden)').length;
       if (query && visible > 0) g.classList.add('open');
     });
   };
 
-  window.epSwitchTab = function(view) {
-    document.querySelectorAll('.ep-tab').forEach(function(t) {
+  window.epSwitchTab = function (view) {
+    document.querySelectorAll('.ep-tab').forEach(function (t) {
       t.classList.toggle('active', t.dataset.view === view);
     });
-    document.querySelectorAll('.ep-view').forEach(function(v) {
+    document.querySelectorAll('.ep-view').forEach(function (v) {
       v.classList.toggle('active', v.id === 'epView' + capitalize(view));
     });
     if (view === 'ai') _updatePanelContextIndicator();
   };
 
-  window.epToggleRecording = function() {
+  window.epToggleRecording = function () {
     state.recording = !state.recording;
     var btn = document.getElementById('recToggle');
     var ind = document.getElementById('recIndicator');
@@ -472,7 +472,7 @@
     if (ind) ind.classList.toggle('paused', !state.recording);
   };
 
-  window.epClearTraffic = function() {
+  window.epClearTraffic = function () {
     state.traffic = [];
     state.hitMap = {};
     state.totalHits = 0;
@@ -481,7 +481,7 @@
     if (container) {
       container.innerHTML = '<div class="ep-traffic-empty"><i class="fas fa-wave-square"></i><span>No traffic captured yet</span></div>';
     }
-    document.querySelectorAll('.ep-hit-count').forEach(function(el) {
+    document.querySelectorAll('.ep-hit-count').forEach(function (el) {
       el.classList.remove('visible');
     });
     updateTrafficCount();
@@ -506,7 +506,7 @@
   function patchFetch() {
     var origFetch = window.fetch;
     window._epOrigFetch = origFetch; // keep clean reference for widget own calls
-    window.fetch = function() {
+    window.fetch = function () {
       var url = arguments[0];
       var options = arguments[1] || {};
       var method = (options.method || 'GET').toUpperCase();
@@ -523,13 +523,13 @@
 
       if (state.recording && shouldCaptureUrl(url)) addTrafficEntry(entry);
 
-      return origFetch.apply(this, arguments).then(function(response) {
+      return origFetch.apply(this, arguments).then(function (response) {
         entry.status = response.status;
         entry.duration = Date.now() - startTime;
         matchEndpoint(entry);
         updateTrafficEntry(entry);
         return response;
-      }).catch(function(err) {
+      }).catch(function (err) {
         entry.status = 'ERR';
         entry.duration = Date.now() - startTime;
         state.totalErrors++;
@@ -544,13 +544,13 @@
     var origOpen = XMLHttpRequest.prototype.open;
     var origSend = XMLHttpRequest.prototype.send;
 
-    XMLHttpRequest.prototype.open = function(method, url) {
+    XMLHttpRequest.prototype.open = function (method, url) {
       this._epMethod = (method || 'GET').toUpperCase();
       this._epUrl = url;
       return origOpen.apply(this, arguments);
     };
 
-    XMLHttpRequest.prototype.send = function() {
+    XMLHttpRequest.prototype.send = function () {
       var xhr = this;
       var startTime = Date.now();
       var entry = {
@@ -564,7 +564,7 @@
 
       if (state.recording && shouldCaptureUrl(xhr._epUrl)) addTrafficEntry(entry);
 
-      xhr.addEventListener('loadend', function() {
+      xhr.addEventListener('loadend', function () {
         entry.status = xhr.status || 'ERR';
         entry.duration = Date.now() - startTime;
         if (xhr.status >= 400 || xhr.status === 0) state.totalErrors++;
@@ -610,9 +610,9 @@
 
   function formatTrafficEntry(entry) {
     var statusColor = entry.status === 'ERR' ? 'var(--ep-red)' :
-                      entry.status >= 400 ? 'var(--ep-red)' :
-                      entry.status >= 300 ? 'var(--ep-amber)' :
-                      entry.status >= 200 ? 'var(--ep-green)' : 'var(--ep-text-dim)';
+      entry.status >= 400 ? 'var(--ep-red)' :
+        entry.status >= 300 ? 'var(--ep-amber)' :
+          entry.status >= 200 ? 'var(--ep-green)' : 'var(--ep-text-dim)';
 
     var time = entry.time.toTimeString().substring(0, 8);
     var method = entry.method;
@@ -621,10 +621,10 @@
     var duration = entry.duration + 'ms';
 
     return '<span style="color:var(--ep-text-dim)">' + time + '</span>' +
-           '<span class="ep-method ' + method.toLowerCase() + '">' + method + '</span>' +
-           '<span style="color:var(--ep-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + escapeHtml(entry.url) + '">' + escapeHtml(url) + '</span>' +
-           '<span style="color:' + statusColor + ';font-weight:600">' + status + '</span>' +
-           '<span style="color:var(--ep-text-dim)">' + duration + '</span>';
+      '<span class="ep-method ' + method.toLowerCase() + '">' + method + '</span>' +
+      '<span style="color:var(--ep-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + escapeHtml(entry.url) + '">' + escapeHtml(url) + '</span>' +
+      '<span style="color:' + statusColor + ';font-weight:600">' + status + '</span>' +
+      '<span style="color:var(--ep-text-dim)">' + duration + '</span>';
   }
 
   function updateTrafficCount() {
@@ -637,7 +637,7 @@
     try {
       var u = new URL(entry.url, location.origin);
       urlPath = u.pathname;
-    } catch(e) {
+    } catch (e) {
       urlPath = entry.url.split('?')[0];
     }
 
@@ -665,12 +665,12 @@
       state.totalHits++;
 
       // Cross-reference with Functions Registry for richer data
-      if (window.OliviaLegal_FUNCTIONS && window.OliviaLegal_FUNCTIONS.loaded) {
-        var fnMatch = window.OliviaLegal_FUNCTIONS.matchEndpoint(entry.method, urlPath);
+      if (window.Olivia_FUNCTIONS && window.Olivia_FUNCTIONS.loaded) {
+        var fnMatch = window.Olivia_FUNCTIONS.matchEndpoint(entry.method, urlPath);
         if (fnMatch) {
-          entry.functionId   = fnMatch.id;
+          entry.functionId = fnMatch.id;
           entry.functionName = fnMatch.name;
-          entry.category     = fnMatch.category;
+          entry.category = fnMatch.category;
         }
       }
 
@@ -678,7 +678,7 @@
       var row = document.querySelector('.ep-row[data-key="' + matched.key.replace(/"/g, '\\"') + '"]');
       if (row) {
         row.classList.add('hit', 'hit-recent');
-        setTimeout(function() { row.classList.remove('hit-recent'); }, 1500);
+        setTimeout(function () { row.classList.remove('hit-recent'); }, 1500);
       }
 
       // Update hit badge
@@ -693,7 +693,7 @@
   /* ═══════════════════════════════════════════════════════════════════
      AI CHAT — Streaming LLM with live traffic context
      ═══════════════════════════════════════════════════════════════════ */
-  window.epChatSend = function() {
+  window.epChatSend = function () {
     var input = document.getElementById('epChatInput');
     var msg = (input ? input.value : '').trim();
     if (!msg || state.aiStreaming) return;
@@ -715,11 +715,11 @@
     copyBtn.className = 'ep-chat-copy-btn';
     copyBtn.title = 'Copy to clipboard';
     copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-    copyBtn.onclick = function() {
+    copyBtn.onclick = function () {
       var text = div.innerText.replace(/\n$/, '');
-      navigator.clipboard.writeText(text).then(function() {
+      navigator.clipboard.writeText(text).then(function () {
         copyBtn.innerHTML = '<i class="fas fa-check"></i>';
-        setTimeout(function() { copyBtn.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500);
+        setTimeout(function () { copyBtn.innerHTML = '<i class="fas fa-copy"></i>'; }, 1500);
       });
     };
     div.appendChild(copyBtn);
@@ -751,9 +751,9 @@
     var indicator = document.getElementById('epPanelContextIndicator');
     if (!indicator) return;
     var data = _getPanelContextData();
-    var activeLabels = (data.snapshots || []).filter(function(s) {
+    var activeLabels = (data.snapshots || []).filter(function (s) {
       return s && s.available && s.content;
-    }).map(function(s) {
+    }).map(function (s) {
       if (typeof window.formatPanelContextLabel === 'function') {
         return window.formatPanelContextLabel(s.key || s.label);
       }
@@ -778,18 +778,18 @@
     prompt += '- Time: ' + new Date().toISOString() + '\n\n';
 
     if (state.traffic.length > 0) {
-      var errored = state.traffic.filter(function(t) {
+      var errored = state.traffic.filter(function (t) {
         return t.status === 'ERR' || (typeof t.status === 'number' && t.status >= 400);
       });
       prompt += '## Live API Traffic (' + state.traffic.length + ' captured, ' + errored.length + ' errors)\n\n';
 
       // Hit map — sorted by frequency
-      var hitKeys = Object.keys(state.hitMap).sort(function(a, b) {
+      var hitKeys = Object.keys(state.hitMap).sort(function (a, b) {
         return state.hitMap[b] - state.hitMap[a];
       });
       if (hitKeys.length > 0) {
         prompt += '### Matched endpoint hits:\n';
-        hitKeys.forEach(function(key) {
+        hitKeys.forEach(function (key) {
           var ep = null;
           for (var i = 0; i < state.endpoints.length; i++) {
             if (state.endpoints[i].key === key) { ep = state.endpoints[i]; break; }
@@ -801,7 +801,7 @@
 
       // Unmatched — calls not in catalog (potential unknowns or new routes)
       var unmatched = {};
-      state.traffic.forEach(function(t) {
+      state.traffic.forEach(function (t) {
         if (!t.matched) {
           var k = t.method + ' ' + t.url.split('?')[0];
           unmatched[k] = (unmatched[k] || 0) + 1;
@@ -810,7 +810,7 @@
       var unmatchedKeys = Object.keys(unmatched);
       if (unmatchedKeys.length > 0) {
         prompt += '### Calls not in catalog (discovered from live traffic):\n';
-        unmatchedKeys.slice(0, 25).forEach(function(k) {
+        unmatchedKeys.slice(0, 25).forEach(function (k) {
           prompt += '- ' + k + ' × ' + unmatched[k] + '\n';
         });
         prompt += '\n';
@@ -819,7 +819,7 @@
       // Errors
       if (errored.length > 0) {
         prompt += '### Errors / failures:\n';
-        errored.slice(0, 20).forEach(function(t) {
+        errored.slice(0, 20).forEach(function (t) {
           prompt += '- ' + t.method + ' ' + t.url.split('?')[0] + ' → ' + t.status + '\n';
         });
         prompt += '\n';
@@ -827,11 +827,11 @@
 
       // Last 25 calls
       prompt += '### Chronological log (last 25 calls):\n';
-      state.traffic.slice(0, 25).forEach(function(t, i) {
+      state.traffic.slice(0, 25).forEach(function (t, i) {
         var ts = t.time.toTimeString ? t.time.toTimeString().substring(0, 8) : '';
         var ok = t.matched ? ' ✓' : '';
         prompt += (i + 1) + '. [' + ts + '] ' + t.method + ' ' + t.url.split('?')[0] +
-                  ' → ' + t.status + ' (' + t.duration + 'ms)' + ok + '\n';
+          ' → ' + t.status + ' (' + t.duration + 'ms)' + ok + '\n';
       });
       prompt += '\n';
     } else {
@@ -841,11 +841,11 @@
     // Endpoint catalog
     if (state.endpoints.length > 0) {
       prompt += '## Known Endpoint Catalog (' + state.endpoints.length + ' total)\n';
-      state.groupOrder.forEach(function(tag) {
+      state.groupOrder.forEach(function (tag) {
         var eps = state.groups[tag] || [];
         if (eps.length === 0) return;
         prompt += '\n### ' + tag + '\n';
-        eps.forEach(function(ep) {
+        eps.forEach(function (ep) {
           var hits = state.hitMap[ep.key] ? ' [' + state.hitMap[ep.key] + ' hits]' : '';
           prompt += '- ' + ep.method + ' ' + ep.path;
           if (ep.summary) prompt += ' — ' + ep.summary;
@@ -862,8 +862,8 @@
     prompt += 'Respond in the same language as the user.\n';
 
     // Append Functions Registry if loaded
-    if (window.OliviaLegal_FUNCTIONS && window.OliviaLegal_FUNCTIONS.loaded) {
-      prompt += window.OliviaLegal_FUNCTIONS.toSystemPrompt();
+    if (window.Olivia_FUNCTIONS && window.Olivia_FUNCTIONS.loaded) {
+      prompt += window.Olivia_FUNCTIONS.toSystemPrompt();
     }
 
     return prompt;
@@ -927,7 +927,7 @@
             } else if (d.type === 'done' || d.type === 'error') {
               break;
             }
-          } catch(pe) {}
+          } catch (pe) { }
         }
       }
 
@@ -936,22 +936,22 @@
         try {
           var plain = JSON.parse(buffer);
           fullContent = plain.response || plain.content || plain.message || JSON.stringify(plain, null, 2);
-        } catch(e) { fullContent = buffer; }
+        } catch (e) { fullContent = buffer; }
       }
 
       if (!fullContent) fullContent = '(no response from AI)';
       bubble.innerHTML = _renderMd(fullContent);
       state.chatHistory.push({ role: 'assistant', content: fullContent });
 
-    } catch(err) {
+    } catch (err) {
       var errHtml = '<span style="color:var(--ep-red)"><i class="fas fa-exclamation-triangle"></i> ' +
-                    escapeHtml(err.message) + '</span>';
+        escapeHtml(err.message) + '</span>';
 
       // Offline fallback — answer from local traffic data
       var offline = _offlineAnswer(userMsg);
       if (offline) {
         errHtml += '<hr style="border:none;border-top:1px solid var(--ep-border);margin:8px 0">' +
-                   '<em style="font-size:10px;color:var(--ep-text-dim)">Offline analysis (AI unavailable):</em><br>' + offline;
+          '<em style="font-size:10px;color:var(--ep-text-dim)">Offline analysis (AI unavailable):</em><br>' + offline;
       }
       bubble.innerHTML = errHtml;
     }
@@ -963,12 +963,12 @@
 
   function _renderMd(text) {
     if (typeof marked !== 'undefined') {
-      try { return marked.parse(text); } catch(e) {}
+      try { return marked.parse(text); } catch (e) { }
     }
     var d = document.createElement('div');
     d.textContent = text;
     var s = d.innerHTML;
-    s = s.replace(/```[\s\S]*?```/g, function(m) {
+    s = s.replace(/```[\s\S]*?```/g, function (m) {
       return '<pre><code>' + m.replace(/```\w*/g, '').trim() + '</code></pre>';
     });
     s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
@@ -981,14 +981,14 @@
   function _offlineAnswer(msg) {
     var lower = msg.toLowerCase();
     if (lower.indexOf('error') !== -1 || lower.indexOf('fail') !== -1 || lower.indexOf('404') !== -1) {
-      var errs = state.traffic.filter(function(t) {
+      var errs = state.traffic.filter(function (t) {
         return t.status === 'ERR' || (typeof t.status === 'number' && t.status >= 400);
       });
       if (errs.length === 0) return 'No errors in current traffic.';
       var html = errs.length + ' error(s) found:<br>';
-      errs.slice(0, 15).forEach(function(t) {
+      errs.slice(0, 15).forEach(function (t) {
         html += '<code>' + t.status + '</code> ' + escapeHtml(t.method) + ' ' +
-                escapeHtml(t.url.split('?')[0]) + '<br>';
+          escapeHtml(t.url.split('?')[0]) + '<br>';
       });
       return html;
     }
@@ -1009,7 +1009,7 @@
     if (!el) return;
     el.textContent = msg;
     el.classList.add('show');
-    setTimeout(function() { el.classList.remove('show'); }, 2200);
+    setTimeout(function () { el.classList.remove('show'); }, 2200);
   }
 
   function capitalize(str) {

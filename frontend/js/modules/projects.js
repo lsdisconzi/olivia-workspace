@@ -81,7 +81,7 @@ function onProjectUploadTargetChanged(rawValue) {
   const normalized = _normalizeProjectUploadSection(rawValue);
   try {
     localStorage.setItem(PROJECT_UPLOAD_TARGET_STORAGE_KEY, normalized);
-  } catch (_e) {}
+  } catch (_e) { }
   _refreshProjectUploadTargetHint();
 }
 
@@ -232,7 +232,7 @@ function _renderProjectList() {
     list.innerHTML = '<p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic">Nenhum projeto criado ainda. Clique em "Novo Projeto" para começar.</p>';
   } else {
     const visibleProjects = _projects.filter(p => p.name !== 'Olivia Workspace' && p.project_id !== 'OliviaLegal-project' && p.project_id !== 'Olivia Workspace');
-    
+
     if (!visibleProjects.length) {
       list.innerHTML = '<p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic">Nenhum projeto criado ainda. Clique em "Novo Projeto" para começar.</p>';
     } else {
@@ -554,7 +554,7 @@ async function archiveProject(projectId) {
     }
     if (_currentProjectId === pid) {
       _currentProjectId = null;
-      try { localStorage.removeItem(_projectsStorageKey()); } catch (_e) {}
+      try { localStorage.removeItem(_projectsStorageKey()); } catch (_e) { }
       _syncProjectIdGlobal();
     }
     await loadProjects();
@@ -590,7 +590,7 @@ async function deleteProject(projectId) {
     }
     if (_currentProjectId === pid) {
       _currentProjectId = null;
-      try { localStorage.removeItem(_projectsStorageKey()); } catch (_e) {}
+      try { localStorage.removeItem(_projectsStorageKey()); } catch (_e) { }
       _syncProjectIdGlobal();
     }
     await loadProjects();
@@ -785,15 +785,15 @@ async function renderArquivosPanel() {
 
     planningBox.innerHTML = planning.length
       ? planning.map((f) => _arquivosFileRow(f.name, f.label || f.name.split('/').pop(), {
-          size: f.size, color: f.color, icon: f.icon, section: 'planejamento',
-        })).join('')
+        size: f.size, color: f.color, icon: f.icon, section: 'planejamento',
+      })).join('')
       : '<p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic">Planejamento vazio</p>';
     if (planningCount) planningCount.textContent = `(${planning.length}/4)`;
 
     otherBox.innerHTML = others.length
       ? others.map((f) => _arquivosFileRow(f.name, f.name.split('/').pop(), {
-          size: f.size, section: String(f.name || '').includes('/') ? f.name.split('/')[0] : 'projeto',
-        })).join('')
+        size: f.size, section: String(f.name || '').includes('/') ? f.name.split('/')[0] : 'projeto',
+      })).join('')
       : '<p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic">Nenhum outro arquivo</p>';
     if (otherCount) otherCount.textContent = `(${others.length})`;
 
@@ -846,7 +846,7 @@ function initArquivosPanel() {
   window.__arquivosPanelInited = true;
 
   // First render once projects are loaded.
-  setTimeout(() => { try { renderArquivosPanel(); } catch (_e) {} }, 0);
+  setTimeout(() => { try { renderArquivosPanel(); } catch (_e) { } }, 0);
 
   // Refresh when the "Arquivos" tab is clicked.
   document.addEventListener('click', (e) => {
@@ -854,7 +854,7 @@ function initArquivosPanel() {
     if (!tab) return;
     const label = (tab.getAttribute('data-label') || '').trim();
     if (label === 'Arquivos' || (tab.getAttribute('onclick') || '').indexOf("'files'") > -1) {
-      setTimeout(() => { try { renderArquivosPanel(); } catch (_e) {} }, 0);
+      setTimeout(() => { try { renderArquivosPanel(); } catch (_e) { } }, 0);
     }
   }, true);
 }
@@ -865,8 +865,8 @@ if (document.readyState === 'loading') {
   initArquivosPanel();
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.OliviaLegal_EMBED_MODE) return;
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.Olivia_EMBED_MODE) return;
   _setProjectActionState();
   _initProjectUploadTargetInput();
   loadProjects();

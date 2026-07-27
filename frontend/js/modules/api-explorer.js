@@ -2,7 +2,7 @@
  * API Explorer — Interactive panel for browsing mapped functions,
  * viewing the endpoint flow diagram, and chatting with an API-aware agent.
  *
- * Depends on:  window.OliviaLegal_FUNCTIONS (agent-functions-registry.js)
+ * Depends on:  window.Olivia_FUNCTIONS (agent-functions-registry.js)
  *              window.LA8159API            (api-client.js)
  * Globals exposed: aexInit, aexSwitchView, aexShowDetail, aexAskAbout, aexSendChat,
  *                  aexSearchFunctions, aexFilterCategory
@@ -11,7 +11,7 @@
   'use strict';
 
   // ── State ──────────────────────────────────────────────────────────────────
-  var _loaded    = false;
+  var _loaded = false;
   var _currentFn = null;
   var _chatHistory = [];
   var _diagramLoaded = false;
@@ -32,7 +32,7 @@
       .replace(/\n/g, '<br>');
   }
 
-  function _reg() { return typeof OliviaLegal_FUNCTIONS !== 'undefined' ? OliviaLegal_FUNCTIONS : null; }
+  function _reg() { return typeof Olivia_FUNCTIONS !== 'undefined' ? Olivia_FUNCTIONS : null; }
 
   function _panelContextData() {
     if (typeof window.buildSelectedPanelContext === 'function') {
@@ -71,7 +71,7 @@
       if (typeof localStorage !== 'undefined') {
         return _aexNormalizeDiagramMode(localStorage.getItem(_diagramModeStorageKey));
       }
-    } catch (_e) {}
+    } catch (_e) { }
     return 'functions';
   }
 
@@ -207,13 +207,13 @@
     var allFns = _allFunctions();
     var counts = {};
     var noOwner = 0;
-    allFns.forEach(function(fn) {
+    allFns.forEach(function (fn) {
       var groups = Array.isArray(fn.ownerGroups) ? fn.ownerGroups : [];
       if (!groups.length) {
         noOwner += 1;
         return;
       }
-      groups.forEach(function(group) {
+      groups.forEach(function (group) {
         counts[group] = (counts[group] || 0) + 1;
       });
     });
@@ -221,14 +221,14 @@
     var labels = (r.registry && r.registry.architecture && r.registry.architecture.groupLabels)
       ? r.registry.architecture.groupLabels
       : {};
-    var groupKeys = Object.keys(labels).concat(Object.keys(counts)).filter(function(v, idx, arr) {
+    var groupKeys = Object.keys(labels).concat(Object.keys(counts)).filter(function (v, idx, arr) {
       return arr.indexOf(v) === idx;
     }).sort();
 
     var selected = sel.value || '';
     sel.innerHTML = '<option value="">Todos os grupos owner</option>' +
       '<option value="__none__">Sem ownership (' + noOwner + ')</option>' +
-      groupKeys.map(function(group) {
+      groupKeys.map(function (group) {
         var label = labels[group] || group;
         return '<option value="' + escapeHtml(group) + '">' + escapeHtml(label) + ' (' + (counts[group] || 0) + ')</option>';
       }).join('');
@@ -261,16 +261,16 @@
         : '';
       var testChip = status
         ? '<span class="aex-cap-chip" style="border-color:' +
-          (status === 'ok' ? '#2e7d32' : (status === 'untested' ? '#6c757d' : '#d32f2f')) +
-          ';color:' +
-          (status === 'ok' ? '#2e7d32' : (status === 'untested' ? '#6c757d' : '#d32f2f')) +
-          '">test:' + escapeHtml(status) + '</span>'
+        (status === 'ok' ? '#2e7d32' : (status === 'untested' ? '#6c757d' : '#d32f2f')) +
+        ';color:' +
+        (status === 'ok' ? '#2e7d32' : (status === 'untested' ? '#6c757d' : '#d32f2f')) +
+        '">test:' + escapeHtml(status) + '</span>'
         : '';
 
       return '<div class="aex-fn-card" onclick="aexShowDetail(\'' + fn.id + '\')" data-id="' + fn.id + '">' +
         '<div class="aex-fn-header">' +
-          '<span class="aex-method aex-method-' + method + '">' + escapeHtml(fn.method || 'GET') + '</span>' +
-          '<span class="aex-fn-name">' + escapeHtml(fn.name) + '</span>' +
+        '<span class="aex-method aex-method-' + method + '">' + escapeHtml(fn.method || 'GET') + '</span>' +
+        '<span class="aex-fn-name">' + escapeHtml(fn.name) + '</span>' +
         '</div>' +
         (path ? '<div class="aex-fn-url">' + escapeHtml(path) + '</div>' : '') +
         (servicePort ? '<div class="aex-fn-src"><i class="fas fa-plug"></i> ' + escapeHtml(servicePort) + '</div>' : '') +
@@ -279,7 +279,7 @@
         (caps.length ? '<div class="aex-fn-caps">' + caps.map(function (c) {
           return '<span class="aex-cap-chip">' + escapeHtml(c) + '</span>';
         }).join('') + readyChip + testChip + '</div>' : ('<div class="aex-fn-caps">' + readyChip + testChip + '</div>')) +
-      '</div>';
+        '</div>';
     }).join('');
   }
 
@@ -327,7 +327,7 @@
     }
 
     if (ownerGroupFilter) {
-      fns = (fns || []).filter(function(fn) {
+      fns = (fns || []).filter(function (fn) {
         var groups = Array.isArray(fn.ownerGroups) ? fn.ownerGroups : [];
         if (ownerGroupFilter === '__none__') return groups.length === 0;
         return groups.indexOf(ownerGroupFilter) >= 0;
@@ -399,11 +399,11 @@
   function _pushToOutputPanel(full, fn) {
     if (typeof addOutputArtifact !== 'function') return;
     addOutputArtifact({
-      id:           'fn-' + fn.id,
-      title:        (fn.method || 'GET') + ' · ' + fn.name,
-      type:         'html',
+      id: 'fn-' + fn.id,
+      title: (fn.method || 'GET') + ' · ' + fn.name,
+      type: 'html',
       content_type: 'text/html',
-      content:      _buildDetailPage(full, fn)
+      content: _buildDetailPage(full, fn)
     });
     // Auto-open output panel if closed
     var outPanel = document.getElementById('outputPanel');
@@ -418,21 +418,21 @@
     var path = fn.resolvedUrl
       ? fn.resolvedUrl.replace(/^https?:\/\/[^/]+/, '')
       : (fn.urlTemplate || '');
-    var methodColor = {GET:'#2e7d32',POST:'#1565c0',DELETE:'#b71c1c',PUT:'#e65100',PATCH:'#6a1b9a'}[method] || '#555';
+    var methodColor = { GET: '#2e7d32', POST: '#1565c0', DELETE: '#b71c1c', PUT: '#e65100', PATCH: '#6a1b9a' }[method] || '#555';
 
     var rows = '';
     var svcName = full.service || fn.service || '';
     var svcPortNum = full.port != null && full.port !== '' ? Number(full.port) : (fn.port != null && fn.port !== '' ? Number(fn.port) : null);
     var svcPortLabel = full.service_port || fn.servicePort || (svcName ? (svcPortNum != null ? (svcName + '.' + svcPortNum) : svcName) : '');
     var svcBaseUrl = full.base_url || fn.baseUrl || '';
-    if (full.source_file)     rows += '<tr><td>Arquivo</td><td><code>' + escapeHtml(full.source_file) + '</code></td></tr>';
+    if (full.source_file) rows += '<tr><td>Arquivo</td><td><code>' + escapeHtml(full.source_file) + '</code></td></tr>';
     if (full.source_function) rows += '<tr><td>Função</td><td><code>' + escapeHtml(full.source_function) + '()</code></td></tr>';
-    if (fn.category)          rows += '<tr><td>Categoria</td><td>' + escapeHtml(fn.category) + '</td></tr>';
-    if (svcPortLabel)         rows += '<tr><td>Service.Port</td><td><code>' + escapeHtml(svcPortLabel) + '</code></td></tr>';
-    if (svcBaseUrl)           rows += '<tr><td>Base URL</td><td><code>' + escapeHtml(svcBaseUrl) + '</code></td></tr>';
-    if (full.response_type)   rows += '<tr><td>Resposta</td><td>' + escapeHtml(full.response_type) + '</td></tr>';
+    if (fn.category) rows += '<tr><td>Categoria</td><td>' + escapeHtml(fn.category) + '</td></tr>';
+    if (svcPortLabel) rows += '<tr><td>Service.Port</td><td><code>' + escapeHtml(svcPortLabel) + '</code></td></tr>';
+    if (svcBaseUrl) rows += '<tr><td>Base URL</td><td><code>' + escapeHtml(svcBaseUrl) + '</code></td></tr>';
+    if (full.response_type) rows += '<tr><td>Resposta</td><td>' + escapeHtml(full.response_type) + '</td></tr>';
 
-    var caps = (fn.capabilities || []).map(function(c) {
+    var caps = (fn.capabilities || []).map(function (c) {
       return '<span style="display:inline-block;background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;border-radius:10px;padding:2px 8px;font-size:11px;margin:2px">' + escapeHtml(c) + '</span>';
     }).join('');
     var ownerGroups = fn.ownerGroupLabels || fn.ownerGroups || [];
@@ -442,15 +442,15 @@
     if (ownerGroups.length || ownerAgents.length || ownerCaps.length) {
       ownership = '<h4 style="margin:16px 0 6px;font-size:12px;color:#555">Ownership &amp; Assigned Capabilities</h4>' +
         '<div style="margin:6px 0">' +
-          ownerGroups.map(function(g){
-            return '<span style="display:inline-block;background:#eef7ff;color:#1565c0;border:1px solid #90caf9;border-radius:10px;padding:2px 8px;font-size:11px;margin:2px">group: ' + escapeHtml(g) + '</span>';
-          }).join('') +
-          ownerAgents.slice(0, 8).map(function(a){
-            return '<span style="display:inline-block;background:#fff3e0;color:#e65100;border:1px solid #ffcc80;border-radius:10px;padding:2px 8px;font-size:11px;margin:2px">agent: ' + escapeHtml(a) + '</span>';
-          }).join('') +
-          ownerCaps.slice(0, 8).map(function(c){
-            return '<span style="display:inline-block;background:#f5f5f5;color:#455a64;border:1px solid #cfd8dc;border-radius:10px;padding:2px 8px;font-size:11px;margin:2px">' + escapeHtml(c) + '</span>';
-          }).join('') +
+        ownerGroups.map(function (g) {
+          return '<span style="display:inline-block;background:#eef7ff;color:#1565c0;border:1px solid #90caf9;border-radius:10px;padding:2px 8px;font-size:11px;margin:2px">group: ' + escapeHtml(g) + '</span>';
+        }).join('') +
+        ownerAgents.slice(0, 8).map(function (a) {
+          return '<span style="display:inline-block;background:#fff3e0;color:#e65100;border:1px solid #ffcc80;border-radius:10px;padding:2px 8px;font-size:11px;margin:2px">agent: ' + escapeHtml(a) + '</span>';
+        }).join('') +
+        ownerCaps.slice(0, 8).map(function (c) {
+          return '<span style="display:inline-block;background:#f5f5f5;color:#455a64;border:1px solid #cfd8dc;border-radius:10px;padding:2px 8px;font-size:11px;margin:2px">' + escapeHtml(c) + '</span>';
+        }).join('') +
         '</div>';
     }
 
@@ -476,14 +476,14 @@
       'pre{white-space:pre-wrap;word-break:break-all}' +
       '</style></head><body>' +
       '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">' +
-        '<span style="background:' + methodColor + ';color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700">' + escapeHtml(method) + '</span>' +
-        '<strong style="font-size:15px">' + escapeHtml(fn.name) + '</strong>' +
+      '<span style="background:' + methodColor + ';color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700">' + escapeHtml(method) + '</span>' +
+      '<strong style="font-size:15px">' + escapeHtml(fn.name) + '</strong>' +
       '</div>' +
       (path ? '<code style="display:block;background:#f5f5f5;padding:8px 10px;border-radius:4px;margin-bottom:12px;font-size:12px">' + escapeHtml(path) + '</code>' : '') +
       (full.description ? '<p style="color:#555;margin:0 0 12px;line-height:1.5">' + escapeHtml(full.description) + '</p>' : '') +
       (rows ? '<table>' + rows + '</table>' : '') +
       (caps ? '<div style="margin:10px 0">' + caps + '</div>' : '') +
-        ownership +
+      ownership +
       bodySection + respSection +
       '</body></html>';
   }
@@ -492,19 +492,19 @@
   function _buildFormPage(full, fn) {
     var method = fn.method || 'GET';
     var url = fn.resolvedUrl || fn.urlTemplate || '';
-    var methodColor = {GET:'#2e7d32',POST:'#1565c0',DELETE:'#b71c1c',PUT:'#e65100',PATCH:'#6a1b9a'}[method] || '#555';
+    var methodColor = { GET: '#2e7d32', POST: '#1565c0', DELETE: '#b71c1c', PUT: '#e65100', PATCH: '#6a1b9a' }[method] || '#555';
 
     var pathParams = (full.path_params || fn.pathParams || []);
     var queryParams = (full.query_params || fn.queryParams || []);
     var bodySchema = full.body_schema || full.bodySchema;
 
     var paramFields = '';
-    pathParams.forEach(function(p) {
+    pathParams.forEach(function (p) {
       var name = p.name || p;
       paramFields += '<div class="field"><label for="pp_' + escapeHtml(name) + '">{' + escapeHtml(name) + '} <small style="color:#888">path</small></label>' +
         '<input type="text" id="pp_' + escapeHtml(name) + '" name="pp_' + escapeHtml(name) + '" placeholder="' + escapeHtml(name) + '" oninput="updateUrl()"></div>';
     });
-    queryParams.forEach(function(p) {
+    queryParams.forEach(function (p) {
       var name = p.name || p;
       var req = p.required ? ' <span style="color:red">*</span>' : '';
       paramFields += '<div class="field"><label for="qp_' + escapeHtml(name) + '">' + escapeHtml(name) + req + ' <small style="color:#888">query</small></label>' +
@@ -543,36 +543,36 @@
       '<div class="field"><div class="field-label">URL</div><div id="urlDisplay">' + escapeHtml(url) + '</div></div>' +
       bodyField +
       '<div class="field"><label for="extraHeaders">Headers extras <small style="color:#888">JSON opcional</small></label>' +
-        '<input type="text" id="extraHeaders" name="extraHeaders" placeholder=\'{"Authorization":"Bearer ..."}\' >' +
+      '<input type="text" id="extraHeaders" name="extraHeaders" placeholder=\'{"Authorization":"Bearer ..."}\' >' +
       '</div>' +
       '<button onclick="sendRequest()">Enviar &rarr;</button> <span id="loader" style="display:none" class="loader"></span>' +
       '<div id="result"></div>' +
       '<script>' +
       'var _baseUrl = ' + JSON.stringify(url) + ';' +
       'var _method = ' + JSON.stringify(method) + ';' +
-      'var _pathParams = ' + JSON.stringify(pathParams.map(function(p){ return p.name||p; })) + ';' +
-      'var _queryParams = ' + JSON.stringify(queryParams.map(function(p){ return p.name||p; })) + ';' +
+      'var _pathParams = ' + JSON.stringify(pathParams.map(function (p) { return p.name || p; })) + ';' +
+      'var _queryParams = ' + JSON.stringify(queryParams.map(function (p) { return p.name || p; })) + ';' +
       'function updateUrl(){' +
-        'var u = _baseUrl;' +
-        '_pathParams.forEach(function(n){var v=document.getElementById("pp_"+n);if(v&&v.value)u=u.replace("{"+n+"}","${"+n+"}".replace("${"+n+"}",v.value)||("{"+n+"}"))});' +
-        // simpler version:
-        '_pathParams.forEach(function(n){var el=document.getElementById("pp_"+n);if(el&&el.value)u=u.replace(new RegExp("\\\\{"+n+"\\\\}|\\\\$\\\\{"+n+"\\\\}","g"),encodeURIComponent(el.value))});' +
-        'var qs=[];_queryParams.forEach(function(n){var el=document.getElementById("qp_"+n);if(el&&el.value)qs.push(encodeURIComponent(n)+"="+encodeURIComponent(el.value))});' +
-        'if(qs.length)u+=(u.indexOf("?")>=0?"&":"?")+qs.join("&");' +
-        'document.getElementById("urlDisplay").textContent=u;' +
+      'var u = _baseUrl;' +
+      '_pathParams.forEach(function(n){var v=document.getElementById("pp_"+n);if(v&&v.value)u=u.replace("{"+n+"}","${"+n+"}".replace("${"+n+"}",v.value)||("{"+n+"}"))});' +
+      // simpler version:
+      '_pathParams.forEach(function(n){var el=document.getElementById("pp_"+n);if(el&&el.value)u=u.replace(new RegExp("\\\\{"+n+"\\\\}|\\\\$\\\\{"+n+"\\\\}","g"),encodeURIComponent(el.value))});' +
+      'var qs=[];_queryParams.forEach(function(n){var el=document.getElementById("qp_"+n);if(el&&el.value)qs.push(encodeURIComponent(n)+"="+encodeURIComponent(el.value))});' +
+      'if(qs.length)u+=(u.indexOf("?")>=0?"&":"?")+qs.join("&");' +
+      'document.getElementById("urlDisplay").textContent=u;' +
       '}' +
       'function sendRequest(){' +
-        'var u=document.getElementById("urlDisplay").textContent;' +
-        'var opts={method:_method,headers:{"Content-Type":"application/json"}};' +
-        'try{var eh=JSON.parse(document.getElementById("extraHeaders").value||"{}");Object.assign(opts.headers,eh);}catch(e){}' +
-        'var bd=document.getElementById("reqBody");if(bd&&bd.value.trim())opts.body=bd.value.trim();' +
-        'var res=document.getElementById("result");res.style.display="block";res.textContent="Enviando...";' +
-        'document.getElementById("loader").style.display="inline-block";' +
-        'fetch(u,opts).then(function(r){' +
-          'document.getElementById("loader").style.display="none";' +
-          'var statusEl="<span class=\'"+(r.ok?"status-ok":"status-err")+"\'> HTTP "+r.status+" "+r.statusText+"</span>\\n";' +
-          'return r.text().then(function(t){try{t=JSON.stringify(JSON.parse(t),null,2)}catch(e){}res.innerHTML=statusEl+"<code>"+t.replace(/&/g,"&amp;").replace(/</g,"&lt;")+"</code>"});' +
-        '}).catch(function(e){document.getElementById("loader").style.display="none";res.innerHTML="<span class=\'status-err\'>Erro: "+e.message+"</span>"});' +
+      'var u=document.getElementById("urlDisplay").textContent;' +
+      'var opts={method:_method,headers:{"Content-Type":"application/json"}};' +
+      'try{var eh=JSON.parse(document.getElementById("extraHeaders").value||"{}");Object.assign(opts.headers,eh);}catch(e){}' +
+      'var bd=document.getElementById("reqBody");if(bd&&bd.value.trim())opts.body=bd.value.trim();' +
+      'var res=document.getElementById("result");res.style.display="block";res.textContent="Enviando...";' +
+      'document.getElementById("loader").style.display="inline-block";' +
+      'fetch(u,opts).then(function(r){' +
+      'document.getElementById("loader").style.display="none";' +
+      'var statusEl="<span class=\'"+(r.ok?"status-ok":"status-err")+"\'> HTTP "+r.status+" "+r.statusText+"</span>\\n";' +
+      'return r.text().then(function(t){try{t=JSON.stringify(JSON.parse(t),null,2)}catch(e){}res.innerHTML=statusEl+"<code>"+t.replace(/&/g,"&amp;").replace(/</g,"&lt;")+"</code>"});' +
+      '}).catch(function(e){document.getElementById("loader").style.display="none";res.innerHTML="<span class=\'status-err\'>Erro: "+e.message+"</span>"});' +
       '}' +
       'updateUrl();' +
       '<\/script>' +
@@ -584,12 +584,12 @@
     var r = _reg();
     var fn = r ? r.getById(id) : null;
     if (!fn) return;
-    r.loadFunction(id).then(function(full) {
+    r.loadFunction(id).then(function (full) {
       var html = _buildFormPage(full || fn, fn);
       var browser = document.getElementById('browserFrame');
       if (browser) { browser.srcdoc = html; }
       if (typeof toggleBrowserPanel === 'function') toggleBrowserPanel();
-    }).catch(function() {
+    }).catch(function () {
       var html = _buildFormPage(fn, fn);
       var browser = document.getElementById('browserFrame');
       if (browser) { browser.srcdoc = html; }
@@ -611,7 +611,7 @@
       '<button class="aex-detail-close" onclick="document.getElementById(\'aexDetail\').classList.remove(\'open\')" title="Fechar"><i class="fas fa-times"></i></button>' +
       '<span class="aex-method aex-method-' + method.toLowerCase() + '">' + escapeHtml(method) + '</span>' +
       '<strong>' + escapeHtml(fn.name) + '</strong>' +
-    '</div>';
+      '</div>';
 
     if (full.description) {
       html += '<p class="aex-detail-desc">' + escapeHtml(full.description) + '</p>';
@@ -657,7 +657,7 @@
       html += '<div class="aex-detail-section">' +
         '<div class="aex-detail-section-title">Request Body</div>' +
         '<div class="aex-detail-code">' + escapeHtml(bsDesc) + '</div>' +
-      '</div>';
+        '</div>';
     }
 
     // Headers
@@ -666,8 +666,8 @@
       html += '<div class="aex-detail-section"><div class="aex-detail-section-title">Headers</div>' +
         headers.map(function (h) {
           var name = h.name || h;
-          var val  = h.value || '';
-          var req  = h.required ? ' <em style="color:var(--amber);font-size:9px">required</em>' : '';
+          var val = h.value || '';
+          var req = h.required ? ' <em style="color:var(--amber);font-size:9px">required</em>' : '';
           return '<div class="aex-detail-row"><code>' + escapeHtml(name) + '</code>' +
             (val ? '<span class="aex-detail-val">' + escapeHtml(val) + req + '</span>' : req) + '</div>';
         }).join('') + '</div>';
@@ -680,7 +680,7 @@
       html += '<div class="aex-detail-section">' +
         '<div class="aex-detail-section-title">Response</div>' +
         '<div class="aex-detail-code">' + escapeHtml(rsDesc) + '</div>' +
-      '</div>';
+        '</div>';
     }
 
     // Capabilities + use cases
@@ -689,8 +689,8 @@
     if (caps.length || uses.length) {
       html += '<div class="aex-detail-section"><div class="aex-detail-section-title">Capacidades &amp; Usos</div>' +
         '<div class="aex-fn-caps">' +
-          caps.map(function (c) { return '<span class="aex-cap-chip">' + escapeHtml(c) + '</span>'; }).join('') +
-          uses.map(function (u) { return '<span class="aex-cap-chip" style="border-color:var(--blue);color:var(--blue)">' + escapeHtml(u) + '</span>'; }).join('') +
+        caps.map(function (c) { return '<span class="aex-cap-chip">' + escapeHtml(c) + '</span>'; }).join('') +
+        uses.map(function (u) { return '<span class="aex-cap-chip" style="border-color:var(--blue);color:var(--blue)">' + escapeHtml(u) + '</span>'; }).join('') +
         '</div></div>';
     }
 
@@ -700,13 +700,13 @@
     if (ownerGroups.length || ownerAgents.length || ownerCaps.length) {
       html += '<div class="aex-detail-section"><div class="aex-detail-section-title">Ownership (Agentes &amp; Grupos)</div>' +
         '<div class="aex-fn-caps">' +
-          ownerGroups.map(function (g) { return '<span class="aex-cap-chip" style="border-color:var(--blue);color:var(--blue)">group: ' + escapeHtml(g) + '</span>'; }).join('') +
-          ownerAgents.slice(0, 12).map(function (a) { return '<span class="aex-cap-chip" style="border-color:var(--amber);color:var(--amber)">agent: ' + escapeHtml(a) + '</span>'; }).join('') +
+        ownerGroups.map(function (g) { return '<span class="aex-cap-chip" style="border-color:var(--blue);color:var(--blue)">group: ' + escapeHtml(g) + '</span>'; }).join('') +
+        ownerAgents.slice(0, 12).map(function (a) { return '<span class="aex-cap-chip" style="border-color:var(--amber);color:var(--amber)">agent: ' + escapeHtml(a) + '</span>'; }).join('') +
         '</div>' +
         (ownerCaps.length
           ? '<div class="aex-detail-row" style="margin-top:8px"><span class="aex-detail-label">Capability IDs</span><span class="aex-detail-val">' + escapeHtml(ownerCaps.slice(0, 10).join(', ')) + (ownerCaps.length > 10 ? ' +' + (ownerCaps.length - 10) : '') + '</span></div>'
           : '') +
-      '</div>';
+        '</div>';
     }
 
     // Related
@@ -725,12 +725,12 @@
     // Action buttons
     html += '<div style="margin:12px 12px 4px;display:flex;gap:6px">' +
       '<button class="btn btn-sm" style="flex:1;justify-content:center" onclick="aexTestInBrowser(\'' + escapeHtml(fn.id) + '\')" title="Abrir formul&aacute;rio interativo no painel browser">' +
-        '<i class="fas fa-flask"></i>&nbsp; Testar' +
+      '<i class="fas fa-flask"></i>&nbsp; Testar' +
       '</button>' +
       '<button class="btn btn-sm" style="flex:1;justify-content:center" onclick="aexAskAbout(\'' + escapeHtml(fn.id) + '\')">' +
-        '<i class="fas fa-comment-alt"></i>&nbsp; Perguntar ao agente' +
+      '<i class="fas fa-comment-alt"></i>&nbsp; Perguntar ao agente' +
       '</button>' +
-    '</div>';
+      '</div>';
 
     return html;
   }
@@ -742,8 +742,8 @@
 
     container.innerHTML =
       '<div style="text-align:center;padding:30px;color:var(--gray)">' +
-        '<div class="loading"></div>' +
-        '<p style="margin-top:8px;font-size:11px;color:var(--gray)">Carregando diagrama&hellip;</p>' +
+      '<div class="loading"></div>' +
+      '<p style="margin-top:8px;font-size:11px;color:var(--gray)">Carregando diagrama&hellip;</p>' +
       '</div>';
 
     _aexBuildDiagramText(_diagramMode)
@@ -754,9 +754,9 @@
       .catch(function (err) {
         container.innerHTML =
           '<div class="aex-empty">' +
-            '<i class="fas fa-exclamation-triangle"></i>' +
-            'Diagrama n&atilde;o dispon&iacute;vel.<br>' +
-            '<span style="font-size:10px">' + escapeHtml(err && err.message) + '</span>' +
+          '<i class="fas fa-exclamation-triangle"></i>' +
+          'Diagrama n&atilde;o dispon&iacute;vel.<br>' +
+          '<span style="font-size:10px">' + escapeHtml(err && err.message) + '</span>' +
           '</div>';
         _aexSetMapStatus('Falha ao carregar mapa.');
       });
@@ -779,8 +779,8 @@
     }
     container.innerHTML =
       '<div class="aex-empty">' +
-        '<i class="fas fa-project-diagram"></i>' +
-        'Mermaid n&atilde;o carregado. Inclua a CDN para renderizar o diagrama.' +
+      '<i class="fas fa-project-diagram"></i>' +
+      'Mermaid n&atilde;o carregado. Inclua a CDN para renderizar o diagrama.' +
       '</div>' +
       '<pre style="font-size:9px;color:var(--gray);overflow:auto;padding:8px;max-height:400px">' + escapeHtml(mmdText) + '</pre>';
   }
@@ -928,21 +928,21 @@
 
     var groupCounts = {};
     var unowned = 0;
-    (functions || []).forEach(function(fn) {
+    (functions || []).forEach(function (fn) {
       var groups = Array.isArray(fn.ownerGroups) ? fn.ownerGroups : [];
       if (!groups.length) {
         unowned += 1;
         return;
       }
-      groups.forEach(function(group) {
+      groups.forEach(function (group) {
         groupCounts[group] = (groupCounts[group] || 0) + 1;
       });
     });
 
     Object.keys(groupCounts)
-      .sort(function(a, b) { return groupCounts[b] - groupCounts[a]; })
+      .sort(function (a, b) { return groupCounts[b] - groupCounts[a]; })
       .slice(0, 16)
-      .forEach(function(group) {
+      .forEach(function (group) {
         var id = _aexNodeId('own_g', group);
         var label = labels[group] || group;
         lines.push('  ' + id + '["' + _aexNodeLabel(label) + ' (' + groupCounts[group] + ')"]');
@@ -966,7 +966,7 @@
     var currentMode = _aexNormalizeDiagramMode(mode);
     if (currentMode === 'functions') {
       _aexSetMapStatus('Mapa de funções do catálogo local.');
-      return _aexTryFetchText(['/api/functions/diagram', '/agents/functions/diagram.mmd', 'olivialegal_functions_mapping/diagram.mmd']);
+      return _aexTryFetchText(['/api/functions/diagram', '/agents/functions/diagram.mmd', 'Olivia_functions_mapping/diagram.mmd']);
     }
 
     if (currentMode === 'owners') {
@@ -1008,7 +1008,7 @@
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem(_diagramModeStorageKey, _diagramMode);
         }
-      } catch (_e) {}
+      } catch (_e) { }
     }
     _aexReloadDiagram();
   }
@@ -1037,7 +1037,7 @@
       if (typeof localStorage !== 'undefined') {
         return _aexMcpNormalizeViewMode(localStorage.getItem(_mcpViewModeStorageKey));
       }
-    } catch (_e) {}
+    } catch (_e) { }
     return 'list';
   }
 
@@ -1073,7 +1073,7 @@
         if (typeof localStorage !== 'undefined') {
           localStorage.setItem(_mcpViewModeStorageKey, _mcpViewMode);
         }
-      } catch (_e) {}
+      } catch (_e) { }
     }
     _aexMcpApplyViewMode();
     _aexMcpRenderToolsTable();
@@ -1214,7 +1214,7 @@
     try {
       if (typeof localStorage === 'undefined') return;
       localStorage.setItem(_mcpHideStaleStorageKey, v ? 'true' : 'false');
-    } catch (_e) {}
+    } catch (_e) { }
   }
 
   function _aexMcpServiceToken(tool) {
@@ -1342,19 +1342,19 @@
         var selectedClass = (_mcpSelected && _mcpSelected.key === key) ? ' is-selected' : '';
         return '<div class="aex-mcp-tool-card' + selectedClass + '" data-tool-key="' + escapeHtml(key) + '" onclick="_aexPrepareMcpToolByIndex(' + idx + ')" tabindex="0" onkeydown="if(event.key===\'Enter\'){event.preventDefault();_aexPrepareMcpToolByIndex(' + idx + ');}">' +
           '<div class="aex-mcp-tool-top">' +
-            '<code class="aex-mcp-tool-name">' + escapeHtml(toolName) + '</code>' +
-            '<span class="aex-mcp-chip">' + escapeHtml(serverId) + '</span>' +
+          '<code class="aex-mcp-tool-name">' + escapeHtml(toolName) + '</code>' +
+          '<span class="aex-mcp-chip">' + escapeHtml(serverId) + '</span>' +
           '</div>' +
           '<div class="aex-mcp-tool-row">' +
-            (method ? ('<span class="' + methodClass + '">' + escapeHtml(method) + '</span>') : '<span class="aex-mcp-chip warn">n/a</span>') +
-            '<code class="aex-mcp-tool-endpoint">' + escapeHtml(endpointLabel) + '</code>' +
+          (method ? ('<span class="' + methodClass + '">' + escapeHtml(method) + '</span>') : '<span class="aex-mcp-chip warn">n/a</span>') +
+          '<code class="aex-mcp-tool-endpoint">' + escapeHtml(endpointLabel) + '</code>' +
           '</div>' +
           '<div class="aex-mcp-tool-foot">' +
-            '<span class="aex-mcp-tool-source">' + escapeHtml(source) + '</span>' +
-            staleChip +
-            '<button class="btn btn-sm aex-mcp-action" onclick="event.stopPropagation();_aexPrepareMcpToolByIndex(' + idx + ')"><i class="fas fa-flask"></i> Testar</button>' +
+          '<span class="aex-mcp-tool-source">' + escapeHtml(source) + '</span>' +
+          staleChip +
+          '<button class="btn btn-sm aex-mcp-action" onclick="event.stopPropagation();_aexPrepareMcpToolByIndex(' + idx + ')"><i class="fas fa-flask"></i> Testar</button>' +
           '</div>' +
-        '</div>';
+          '</div>';
       }).join('');
     }
 
@@ -1386,7 +1386,7 @@
           '<td><code>' + escapeHtml(endpointLabel) + '</code></td>' +
           '<td>' + escapeHtml(source) + '</td>' +
           '<td><button class="btn btn-sm aex-mcp-action" onclick="event.stopPropagation();_aexMcpOpenToolFromTable(' + idx + ')"><i class="fas fa-flask"></i> Testar</button></td>' +
-        '</tr>';
+          '</tr>';
       }).join('');
     }
   }
@@ -1761,7 +1761,7 @@
           '<td>' + statusChip + '</td>' +
           '<td>' + requiredChip + '</td>' +
           '<td>' + error + '</td>' +
-        '</tr>';
+          '</tr>';
       }).join('');
     }
 
@@ -1893,9 +1893,9 @@
 
     if (typeof LA8159API !== 'undefined') {
       var assistantOpts = {
-        system:  combinedSystem,
+        system: combinedSystem,
         history: _chatHistory.slice(-10),
-        model:   null,
+        model: null,
         sessionKey: sectionCtx && sectionCtx.sessionKey ? sectionCtx.sessionKey : 'section:apiexplorer:default'
       };
       if (sectionCtx && sectionCtx.agentId) assistantOpts.agentId = sectionCtx.agentId;
@@ -1913,7 +1913,8 @@
       ).then(function (full) {
         _chatHistory.push({ role: 'assistant', content: full });
         bubble.innerHTML = _fmt(full);
-      }).catch(function (err) {        console.error('[API Explorer] Chat error:', err);        bubble.innerHTML = '<span style="color:var(--red)">Erro: ' + escapeHtml(err && err.message) + '</span>';
+      }).catch(function (err) {
+        console.error('[API Explorer] Chat error:', err); bubble.innerHTML = '<span style="color:var(--red)">Erro: ' + escapeHtml(err && err.message) + '</span>';
       });
     } else {
       bubble.innerHTML =
@@ -1942,7 +1943,7 @@
   }
 
   // ── Main view (portal to full workspace area) ──────────────────────────────
-  var _inMainMode  = false;
+  var _inMainMode = false;
   var _wasTabActive = false;
 
   function aexToggleMain() {
@@ -1957,13 +1958,13 @@
     _wasTabActive = tab && tab.classList.contains('active');
 
     // Deactivate all competing full-screen views
-    ['studioView','descobertaView','memoryView','spacesView','shadersView','listeningView'].forEach(function(vid) {
+    ['studioView', 'descobertaView', 'memoryView', 'spacesView', 'shadersView', 'listeningView'].forEach(function (vid) {
       var el = document.getElementById(vid);
       if (el) el.classList.remove('active');
     });
 
     // Hide main chat elements (same pattern as listeningShowView)
-    ['chatHeader','welcomeState','chatLog','chatCompose','chatToolbar'].forEach(function(id) {
+    ['chatHeader', 'welcomeState', 'chatLog', 'chatCompose', 'chatToolbar'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) { el._aexPrevDisplay = el.style.display; el.style.display = 'none'; }
     });
@@ -1977,7 +1978,7 @@
     if (bp) { bp._aexPrevOpen = bp.classList.contains('open'); bp.classList.remove('open'); }
 
     // Move #aexPanel into the main view
-    var panel    = document.getElementById('aexPanel');
+    var panel = document.getElementById('aexPanel');
     var mainView = document.getElementById('aexMainView');
     if (panel && mainView) {
       mainView.appendChild(panel);
@@ -2006,8 +2007,8 @@
     _inMainMode = false;
 
     // Move #aexPanel back to sidebar host
-    var panel    = document.getElementById('aexPanel');
-    var sidebar  = document.getElementById('tab-apiexplorer');
+    var panel = document.getElementById('aexPanel');
+    var sidebar = document.getElementById('tab-apiexplorer');
     var mainView = document.getElementById('aexMainView');
     if (panel && sidebar) {
       sidebar.appendChild(panel);
@@ -2025,7 +2026,7 @@
     if (mc) { mc.style.display = mc._aexDisplay !== undefined ? mc._aexDisplay : ''; delete mc._aexDisplay; }
 
     // Restore chat elements
-    ['chatHeader','welcomeState','chatLog','chatCompose','chatToolbar'].forEach(function(id) {
+    ['chatHeader', 'welcomeState', 'chatLog', 'chatCompose', 'chatToolbar'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) { el.style.display = el._aexPrevDisplay !== undefined ? el._aexPrevDisplay : ''; delete el._aexPrevDisplay; }
     });
@@ -2044,29 +2045,29 @@
   }
 
   // ── Public API ─────────────────────────────────────────────────────────────
-  window.aexInit             = aexInit;
-  window.aexSwitchView       = aexSwitchView;
-  window.aexShowDetail       = aexShowDetail;
-  window.aexAskAbout         = aexAskAbout;
-  window.aexSendChat         = aexSendChat;
-  window.aexSearchFunctions  = aexSearchFunctions;
-  window.aexFilterCategory   = aexFilterCategory;
-  window._aexReloadDiagram   = _aexReloadDiagram;
-  window._aexSetDiagramMode  = _aexSetDiagramMode;
-  window._aexReloadMcp       = _aexReloadMcp;
-  window._aexFilterMcpTools  = _aexFilterMcpTools;
-  window._aexSetMcpViewMode  = _aexSetMcpViewMode;
-  window._aexMcpPrevPage     = _aexMcpPrevPage;
-  window._aexMcpNextPage     = _aexMcpNextPage;
+  window.aexInit = aexInit;
+  window.aexSwitchView = aexSwitchView;
+  window.aexShowDetail = aexShowDetail;
+  window.aexAskAbout = aexAskAbout;
+  window.aexSendChat = aexSendChat;
+  window.aexSearchFunctions = aexSearchFunctions;
+  window.aexFilterCategory = aexFilterCategory;
+  window._aexReloadDiagram = _aexReloadDiagram;
+  window._aexSetDiagramMode = _aexSetDiagramMode;
+  window._aexReloadMcp = _aexReloadMcp;
+  window._aexFilterMcpTools = _aexFilterMcpTools;
+  window._aexSetMcpViewMode = _aexSetMcpViewMode;
+  window._aexMcpPrevPage = _aexMcpPrevPage;
+  window._aexMcpNextPage = _aexMcpNextPage;
   window._aexPrepareMcpToolByIndex = _aexPrepareMcpToolByIndex;
   window._aexMcpOpenToolFromTable = _aexMcpOpenToolFromTable;
-  window._aexPrepareMcpTool  = _aexPrepareMcpTool;
-  window._aexExecuteMcpTool  = _aexExecuteMcpTool;
-  window._aexClearMcpResult  = _aexClearMcpResult;
-  window.aexTestInBrowser    = aexTestInBrowser;
-  window.aexToggleMain       = aexToggleMain;
-  window.aexShowMain         = aexShowMain;
-  window.aexHideMain         = aexHideMain;
+  window._aexPrepareMcpTool = _aexPrepareMcpTool;
+  window._aexExecuteMcpTool = _aexExecuteMcpTool;
+  window._aexClearMcpResult = _aexClearMcpResult;
+  window.aexTestInBrowser = aexTestInBrowser;
+  window.aexToggleMain = aexToggleMain;
+  window.aexShowMain = aexShowMain;
+  window.aexHideMain = aexHideMain;
 
   _diagramMode = _aexReadDiagramMode();
 

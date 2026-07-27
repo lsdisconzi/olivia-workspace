@@ -8,8 +8,8 @@ programmatically — this lets the agent say "set environment to cyberpunk"
 and actually push the command.
 
 Env:
-    OliviaLegal_BUS_URL  — full URL of the bus (default http://127.0.0.1:3229/api/olivia/remote-bus)
-    OliviaLegal_BUS_TIMEOUT_S — HTTP timeout (default 10)
+    Olivia_BUS_URL  — full URL of the bus (default http://127.0.0.1:3229/api/olivia/remote-bus)
+    Olivia_BUS_TIMEOUT_S — HTTP timeout (default 10)
 
 MCP framing: stdio JSON-RPC 2.0, protocolVersion 2024-11-05.
 """
@@ -21,12 +21,12 @@ import sys
 import urllib.error
 import urllib.request
 
-_default_port = os.environ.get("OliviaLegal_PORT", "3229").strip() or "3229"
+_default_port = os.environ.get("Olivia_PORT", "3229").strip() or "3229"
 BUS_URL = os.environ.get(
-    "OliviaLegal_BUS_URL",
+    "Olivia_BUS_URL",
     f"http://127.0.0.1:{_default_port}/api/olivia/remote-bus",
 )
-TIMEOUT = float(os.environ.get("OliviaLegal_BUS_TIMEOUT_S", "10"))
+TIMEOUT = float(os.environ.get("Olivia_BUS_TIMEOUT_S", "10"))
 
 # Whitelists MUST mirror remote-bus-desktop.js so docs and enforcement match.
 SH3D_FUNCS = [

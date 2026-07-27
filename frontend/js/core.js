@@ -53,23 +53,23 @@ function isEmbeddedWorkspaceRuntime() {
   }
 }
 
-window.OliviaLegal_EMBED_MODE = isEmbeddedWorkspaceRuntime();
+window.Olivia_EMBED_MODE = isEmbeddedWorkspaceRuntime();
 
 // DOMContentLoaded listener and app initialization
-document.addEventListener('DOMContentLoaded', function() {
-  const embedMode = !!window.OliviaLegal_EMBED_MODE;
+document.addEventListener('DOMContentLoaded', function () {
+  const embedMode = !!window.Olivia_EMBED_MODE;
   console.log(`🟢 LA8159 Workspace initialized${embedMode ? ' (embed mode)' : ''}`);
-  
+
   // Initialize mobile layout
   initMobile();
   applyMobileLayout();
-  
+
   // Initialize sidebar resize
   initSidebarResize();
-  
+
   // Initialize sidebar click outside handler
   initSidebarClickOutside();
-  
+
   // Initialize output panel resize
   initOutputResize();
 
@@ -84,13 +84,13 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
     document.body.classList.add('workspace-embed-mode');
   }
-  
+
   // Set up event listeners for nav
   const hamburger = document.querySelector('.hamburger');
   if (hamburger) {
     hamburger.addEventListener('click', toggleMobileMenu);
   }
-  
+
   // Initial UI state
   if (!embedMode) showWelcomeView();
 });
@@ -99,9 +99,9 @@ document.addEventListener('DOMContentLoaded', function() {
 function initMobile() {
   const hamburger = document.querySelector('.hamburger');
   if (!hamburger) return;
-  
+
   hamburger.addEventListener('click', toggleMobileMenu);
-  
+
   // Close mobile drawer when clicking a link
   document.querySelectorAll('.mobile-drawer a').forEach(link => {
     link.addEventListener('click', () => {
@@ -116,7 +116,7 @@ function applyMobileLayout() {
   const overlay = document.getElementById('mobileSidebarOverlay');
   const strip = sidebar ? sidebar.querySelector('.sidebar-collapsed-strip') : null;
   const isMobile = window.innerWidth <= 768;
-  
+
   if (isMobile) {
     // Preserve the wider-layout sidebar state before forcing the mobile sheet behavior.
     if (sidebar) {
@@ -185,7 +185,7 @@ window.customPrompt = function (message, defaultValue) {
     title.textContent = 'Entrada';
     label.textContent = message;
     input.value = defaultValue || '';
-    
+
     overlay.style.display = 'block';
     modal.style.display = 'block';
     input.focus();

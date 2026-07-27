@@ -12988,11 +12988,11 @@
               "line": 85
             },
             {
-              "name": "OliviaLegal_LOADING_PERSONAS",
+              "name": "Olivia_LOADING_PERSONAS",
               "line": 86
             },
             {
-              "name": "OliviaLegal_LOADING_KEYWORDS",
+              "name": "Olivia_LOADING_KEYWORDS",
               "line": 140
             },
             {
@@ -13049,7 +13049,7 @@
       "js_deep": {
         "window_exports": [
           {
-            "name": "OliviaLegal_KNOWLEDGE",
+            "name": "Olivia_KNOWLEDGE",
             "line": 8,
             "type": "object"
           },
@@ -13746,14 +13746,14 @@
             "type": "number"
           },
           {
-            "name": "OliviaLegal_LOADING_PERSONAS",
+            "name": "Olivia_LOADING_PERSONAS",
             "line": 86,
             "kind": "const",
             "value_preview": "{",
             "type": "object"
           },
           {
-            "name": "OliviaLegal_LOADING_KEYWORDS",
+            "name": "Olivia_LOADING_KEYWORDS",
             "line": 140,
             "kind": "const",
             "value_preview": "{",
@@ -13987,7 +13987,7 @@
             "type": "function"
           },
           {
-            "name": "OliviaLegal_EMBED_MODE",
+            "name": "Olivia_EMBED_MODE",
             "line": 22,
             "type": "alias",
             "source": "_isEmbeddedRuntime"
@@ -24055,7 +24055,7 @@
       "js_deep": {
         "window_exports": [
           {
-            "name": "OliviaLegal_FUNCTIONS",
+            "name": "Olivia_FUNCTIONS",
             "line": 709,
             "type": "object"
           }
@@ -26268,7 +26268,7 @@
       "js_deep": {
         "window_exports": [
           {
-            "name": "OliviaLegal_ENDPOINTS",
+            "name": "Olivia_ENDPOINTS",
             "line": 3,
             "type": "array"
           }

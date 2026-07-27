@@ -34,10 +34,10 @@ Primary URL:
 To keep Olivia agent paths stable across backup/cleanup/redeploy cycles, set canonical roots in `.env`:
 
 ```bash
-OliviaLegal_SHARED_DIR=/Users/dev/services/_shared
-OliviaLegal_LEGAL_ROUTER_ROOT=/Users/dev/agents/agents-groups/olivia/source
-OliviaLegal_VIOLATIONS_ROOT=/Users/dev/services/_shared/cases/10_violations_json/validated
-OliviaLegal_LAW_LIBRARY_ROOT=/Users/dev/services/_shared/cases/law_md
+Olivia_SHARED_DIR=/Users/dev/services/_shared
+Olivia_LEGAL_ROUTER_ROOT=/Users/dev/agents/agents-groups/olivia/source
+Olivia_VIOLATIONS_ROOT=/Users/dev/services/_shared/cases/10_violations_json/validated
+Olivia_LAW_LIBRARY_ROOT=/Users/dev/services/_shared/cases/law_md
 ```
 
 When these are set, Olivia resolves Olivia data from shared/group-owned paths first and only falls back to legacy paths when needed.

@@ -6,8 +6,8 @@ if (typeof window.oliviaMode !== 'string') {
   window.oliviaMode = 'agent';
 }
 
-if (!window.OliviaLegal_KNOWLEDGE || typeof window.OliviaLegal_KNOWLEDGE !== 'object') {
-  window.OliviaLegal_KNOWLEDGE = {
+if (!window.Olivia_KNOWLEDGE || typeof window.Olivia_KNOWLEDGE !== 'object') {
+  window.Olivia_KNOWLEDGE = {
     studio: {
       title: 'Studio',
       description: 'Crie, edite e refine interfaces no Studio com geração e ajustes orientados por IA.',
@@ -83,7 +83,7 @@ const _runAutoFinalizeState = {
 };
 const _RUN_AUTO_FINALIZE_COOLDOWN_MS = 60000;
 const _RUN_AUTO_FINALIZE_MAX_ATTEMPTS = 1;
-const OliviaLegal_LOADING_PERSONAS = {
+const Olivia_LOADING_PERSONAS = {
   general: {
     coreIcon: 'fa-robot',
     title: 'Organizando contexto do agente enquanto o modelo trabalha.',
@@ -137,7 +137,7 @@ const OliviaLegal_LOADING_PERSONAS = {
   },
 };
 
-const OliviaLegal_LOADING_KEYWORDS = {
+const Olivia_LOADING_KEYWORDS = {
   health: ['coremu', 'residenc', 'saude', 'sus', 'ubs', 'enferm', 'farmac', 'fisioter', 'odont', 'psicolog', 'multiprof'],
   legal: ['legal', 'jurid', 'law', 'compliance', 'contrat', 'litig', 'regulator', 'governo'],
 };
@@ -169,19 +169,19 @@ function _resolveLA8159LoadingPersona(modeLabel) {
     nestedGroup,
   ].map((v) => String(v || '').trim()).filter(Boolean).join(' | ');
 
-  let persona = OliviaLegal_LOADING_PERSONAS.general;
-  if (_loadingPersonaMatch(hints, OliviaLegal_LOADING_KEYWORDS.health)) {
-    persona = OliviaLegal_LOADING_PERSONAS.health;
-  } else if (_loadingPersonaMatch(hints, OliviaLegal_LOADING_KEYWORDS.legal)) {
-    persona = OliviaLegal_LOADING_PERSONAS.legal;
+  let persona = Olivia_LOADING_PERSONAS.general;
+  if (_loadingPersonaMatch(hints, Olivia_LOADING_KEYWORDS.health)) {
+    persona = Olivia_LOADING_PERSONAS.health;
+  } else if (_loadingPersonaMatch(hints, Olivia_LOADING_KEYWORDS.legal)) {
+    persona = Olivia_LOADING_PERSONAS.legal;
   }
   return {
     label,
-    coreIcon: persona.coreIcon || OliviaLegal_LOADING_PERSONAS.general.coreIcon,
-    title: persona.title || OliviaLegal_LOADING_PERSONAS.general.title,
-    desc: persona.desc || OliviaLegal_LOADING_PERSONAS.general.desc,
-    pills: Array.isArray(persona.pills) ? persona.pills : OliviaLegal_LOADING_PERSONAS.general.pills,
-    disciplines: Array.isArray(persona.disciplines) ? persona.disciplines : OliviaLegal_LOADING_PERSONAS.general.disciplines,
+    coreIcon: persona.coreIcon || Olivia_LOADING_PERSONAS.general.coreIcon,
+    title: persona.title || Olivia_LOADING_PERSONAS.general.title,
+    desc: persona.desc || Olivia_LOADING_PERSONAS.general.desc,
+    pills: Array.isArray(persona.pills) ? persona.pills : Olivia_LOADING_PERSONAS.general.pills,
+    disciplines: Array.isArray(persona.disciplines) ? persona.disciplines : Olivia_LOADING_PERSONAS.general.disciplines,
   };
 }
 
@@ -1171,7 +1171,7 @@ function resetToWelcome(event) {
 // Use hint from knowledge base
 function useHint(key) {
   const input = document.getElementById('chatInput');
-  const knowledge = window.OliviaLegal_KNOWLEDGE[key];
+  const knowledge = window.Olivia_KNOWLEDGE[key];
 
   if (window.oliviaMode === 'assistant' && knowledge) {
     // In assistant mode, show explanation about the feature
@@ -1620,20 +1620,20 @@ async function sendAssistantMessage(message, opts) {
         _cfgInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     } else {
-    var _isAuth = _aMsg.indexOf('401') !== -1 || _aMsg.toLowerCase().indexOf('authentication') !== -1 || _aMsg.toLowerCase().indexOf('x-api-key') !== -1 || _aMsg.toLowerCase().indexOf('api key') !== -1 || _aMsg.toLowerCase().indexOf('api_key') !== -1;
-    console.error('[Stream] Assistant error  model:', model, _isAuth ? '\u26a0\ufe0f CHECK API KEY' : '', '\n', _aMsg);
-    if (thinkingBubble && thinkingBubble.parentNode) {
-      thinkingBubble.parentNode.removeChild(thinkingBubble);
-    }
-    var _displayMsg = _isAuth
-      ? 'Chave de API inv\xe1lida ou n\xe3o configurada no servidor (401). Verifique as configura\xe7\xf5es de API Key.'
-      : 'Erro ao conectar: ' + escapeHtml(_aMsg);
-    if (contentEl) {
-      contentEl.innerHTML = `<p style="color:var(--red)">${_displayMsg}</p>`;
-    } else {
-      addBubble('agent', `<p style="color:var(--red)">${_displayMsg}</p>`);
-    }
-    setChatRuntimeRoute('error', _displayMsg);
+      var _isAuth = _aMsg.indexOf('401') !== -1 || _aMsg.toLowerCase().indexOf('authentication') !== -1 || _aMsg.toLowerCase().indexOf('x-api-key') !== -1 || _aMsg.toLowerCase().indexOf('api key') !== -1 || _aMsg.toLowerCase().indexOf('api_key') !== -1;
+      console.error('[Stream] Assistant error  model:', model, _isAuth ? '\u26a0\ufe0f CHECK API KEY' : '', '\n', _aMsg);
+      if (thinkingBubble && thinkingBubble.parentNode) {
+        thinkingBubble.parentNode.removeChild(thinkingBubble);
+      }
+      var _displayMsg = _isAuth
+        ? 'Chave de API inv\xe1lida ou n\xe3o configurada no servidor (401). Verifique as configura\xe7\xf5es de API Key.'
+        : 'Erro ao conectar: ' + escapeHtml(_aMsg);
+      if (contentEl) {
+        contentEl.innerHTML = `<p style="color:var(--red)">${_displayMsg}</p>`;
+      } else {
+        addBubble('agent', `<p style="color:var(--red)">${_displayMsg}</p>`);
+      }
+      setChatRuntimeRoute('error', _displayMsg);
     }
     finalizeAssistantProgressUi(progressUi, 'Falha ao gerar resposta.', true);
   } finally {
@@ -4029,7 +4029,7 @@ async function downloadLastResponseAsPdf() {
   document.body.appendChild(iframe);
 
   const finish = () => {
-    try { document.body.removeChild(iframe); } catch (_) {}
+    try { document.body.removeChild(iframe); } catch (_) { }
   };
 
   iframe.onload = () => {
@@ -4041,7 +4041,7 @@ async function downloadLastResponseAsPdf() {
         iframe.contentWindow.document.title = title;
         iframe.contentWindow.focus();
         iframe.contentWindow.print();
-      } catch (_) {}
+      } catch (_) { }
       setTimeout(finish, 1500);
     };
 

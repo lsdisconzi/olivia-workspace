@@ -6,8 +6,8 @@
     'use strict';
 
     // ---------- localStorage keys ----------
-    var SHEETS_STORAGE = 'OliviaLegal_sheets_docs_v1';
-    var SHEETS_ACTIVE_KEY = 'OliviaLegal_sheets_active_id';
+    var SHEETS_STORAGE = 'Olivia_sheets_docs_v1';
+    var SHEETS_ACTIVE_KEY = 'Olivia_sheets_active_id';
 
     // ---------- SVG icon (simple grid) ----------
     var SHEET_SVG = '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' +
@@ -44,7 +44,7 @@
     }
 
     function saveDocs() {
-        try { localStorage.setItem(SHEETS_STORAGE, JSON.stringify(sDocs)); } catch (_) {}
+        try { localStorage.setItem(SHEETS_STORAGE, JSON.stringify(sDocs)); } catch (_) { }
     }
 
     function loadActiveDocId() {
@@ -54,7 +54,7 @@
     }
 
     function saveActiveDocId() {
-        try { localStorage.setItem(SHEETS_ACTIVE_KEY, sActiveDocId || ''); } catch (_) {}
+        try { localStorage.setItem(SHEETS_ACTIVE_KEY, sActiveDocId || ''); } catch (_) { }
     }
 
     // ---------- Backend sync ----------

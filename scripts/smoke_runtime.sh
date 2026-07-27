@@ -2,7 +2,7 @@
 # Basic runtime smoke checks for OliviaLegal.
 set -euo pipefail
 
-BASE_URL="${1:-http://127.0.0.1:${OliviaLegal_PORT:-3229}}"
+BASE_URL="${1:-http://127.0.0.1:${Olivia_PORT:-3229}}"
 
 check_endpoint() {
   local path="$1"
