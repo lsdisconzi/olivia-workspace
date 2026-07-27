@@ -25,9 +25,9 @@
   var cfg = {
     enabled: true,
     verbose: false,    // true = expand groups by default
-    filter:  '',       // filter by URL substring; '' = show all
-    timing:  true,     // show ms for each request
-    noisy:   false,    // false = suppress repetitive remote-bus/blob lines
+    filter: '',       // filter by URL substring; '' = show all
+    timing: true,     // show ms for each request
+    noisy: false,    // false = suppress repetitive remote-bus/blob lines
     noisyEvery: 250,   // print one aggregate note every N suppressed lines
   };
 
@@ -37,8 +37,8 @@
   } catch (e) {
     _isEmbeddedRuntime = true;
   }
-  if (typeof window.OliviaLegal_EMBED_MODE !== 'boolean') {
-    window.OliviaLegal_EMBED_MODE = _isEmbeddedRuntime;
+  if (typeof window.Olivia_EMBED_MODE !== 'boolean') {
+    window.Olivia_EMBED_MODE = _isEmbeddedRuntime;
   }
   // Embedded runtimes (e.g. workspace opened inside browser-panel iframe)
   // tend to duplicate logs from the host page, so keep logger silent by default.
@@ -53,15 +53,15 @@
 
   /* ── Styles ──────────────────────────────────────────────────────── */
   var C = {
-    fetch:    'background:#1565c0;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
-    ok:       'background:#2e7d32;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
-    err:      'background:#b71c1c;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
-    warn:     'background:#e65100;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
-    reg:      'background:#6a1b9a;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
-    stream:   'background:#004d40;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
-    dim:      'color:#888;font-size:11px',
-    path:     'color:#222;font-weight:500',
-    reset:    '',
+    fetch: 'background:#1565c0;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
+    ok: 'background:#2e7d32;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
+    err: 'background:#b71c1c;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
+    warn: 'background:#e65100;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
+    reg: 'background:#6a1b9a;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
+    stream: 'background:#004d40;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700',
+    dim: 'color:#888;font-size:11px',
+    path: 'color:#222;font-weight:500',
+    reset: '',
   };
 
   /* ── Internal helpers ────────────────────────────────────────────── */
@@ -77,12 +77,12 @@
     if (!str) return str;
     try {
       var u = new URL(str, window.location.origin);
-      ['api_key', 'apikey', 'key', 'token', 'access_token', 'auth'].forEach(function(k) {
+      ['api_key', 'apikey', 'key', 'token', 'access_token', 'auth'].forEach(function (k) {
         if (u.searchParams.has(k)) u.searchParams.set(k, _maskSecret(u.searchParams.get(k)));
       });
       return u.toString();
     } catch (e) {
-      return str.replace(/([?&](?:api_key|apikey|key|token|access_token|auth)=)([^&]+)/ig, function(_, p1, p2) {
+      return str.replace(/([?&](?:api_key|apikey|key|token|access_token|auth)=)([^&]+)/ig, function (_, p1, p2) {
         return p1 + _maskSecret(p2);
       });
     }
@@ -121,9 +121,9 @@
     if ((_noiseState.suppressed % every) !== 0) return;
 
     var top = Object.keys(_noiseState.byRoute)
-      .sort(function(a, b){ return _noiseState.byRoute[b] - _noiseState.byRoute[a]; })
+      .sort(function (a, b) { return _noiseState.byRoute[b] - _noiseState.byRoute[a]; })
       .slice(0, 3)
-      .map(function(k){ return k + ' x' + _noiseState.byRoute[k]; })
+      .map(function (k) { return k + ' x' + _noiseState.byRoute[k]; })
       .join(' · ');
 
     try {
@@ -134,7 +134,7 @@
         C.warn,
         C.reset
       );
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function _groupFn() {
@@ -157,13 +157,13 @@
       // Native Headers instance
       if (typeof Headers !== 'undefined' && rawHdrs instanceof Headers) {
         var out = {};
-        rawHdrs.forEach(function(v, k) { out[k] = v; });
+        rawHdrs.forEach(function (v, k) { out[k] = v; });
         return _redactHeaders(out);
       }
       // Array of [key, value]
       if (Array.isArray(rawHdrs)) {
         var arrOut = {};
-        rawHdrs.forEach(function(p) {
+        rawHdrs.forEach(function (p) {
           if (Array.isArray(p) && p.length >= 2) arrOut[String(p[0])] = String(p[1]);
         });
         return _redactHeaders(arrOut);
@@ -177,7 +177,7 @@
   function _redactHeaders(headersObj) {
     if (!headersObj || typeof headersObj !== 'object') return headersObj;
     var out = {};
-    Object.keys(headersObj).forEach(function(key) {
+    Object.keys(headersObj).forEach(function (key) {
       var lower = String(key).toLowerCase();
       var val = headersObj[key];
       if (lower === 'authorization' || lower === 'x-api-key' || lower === 'api-key') {
@@ -229,24 +229,24 @@
     if (url && typeof url === 'object' && typeof url.url === 'string') {
       if (!opts) {
         opts = { method: url.method };
-        try { if (url.headers) opts.headers = url.headers; } catch (e) {}
+        try { if (url.headers) opts.headers = url.headers; } catch (e) { }
       }
       url = url.url;
     }
-    var method  = ((opts && opts.method) || 'GET').toUpperCase();
+    var method = ((opts && opts.method) || 'GET').toUpperCase();
     var safeUrl = _sanitizeUrl(url);
-    var path    = _path(safeUrl);
+    var path = _path(safeUrl);
     if (!_shouldLog(path, safeUrl)) return _origFetch.apply(this, arguments);
     if (!cfg.verbose && !cfg.noisy && _isNoisyPath(path)) {
       _trackSuppressedNoise(method, path);
       return _origFetch.apply(this, arguments);
     }
 
-    var t0      = performance.now();
-    var body    = opts && opts.body ? _tryParseBody(opts.body) : null;
+    var t0 = performance.now();
+    var body = opts && opts.body ? _tryParseBody(opts.body) : null;
     var rawHdrs = opts && opts.headers ? opts.headers : null;
     var headers = _normalizeHeaders(rawHdrs);
-    var isSSE   = rawHdrs && (
+    var isSSE = rawHdrs && (
       (typeof rawHdrs.Accept === 'string' && rawHdrs.Accept.indexOf('text/event-stream') !== -1) ||
       path.indexOf('/stream') !== -1 || path.indexOf('/run') !== -1
     );
@@ -267,7 +267,7 @@
       if (headers && Object.keys(headers).length) {
         console.log('%c hdrs %c %s', C.dim, C.reset, _preview(headers, 600));
       }
-    } catch (e) {}
+    } catch (e) { }
 
     return _origFetch.apply(this, arguments)
       .then(function (response) {
@@ -280,7 +280,7 @@
             console.warn('%c ' + response.status + ' ' + (response.statusText || 'Error') + ' %c' + (cfg.timing ? ' ' + ms + 'ms' : ''), C.err, C.dim);
           }
           console.groupEnd();
-        } catch (e) {}
+        } catch (e) { }
         return response;
       })
       .catch(function (err) {
@@ -288,7 +288,7 @@
         try {
           console.error('%c NETWORK ERROR %c ' + err.message + (cfg.timing ? '  ' + ms + 'ms' : ''), C.err, C.dim);
           console.groupEnd();
-        } catch (e) {}
+        } catch (e) { }
         throw err;
       });
   };
@@ -299,12 +299,12 @@
   function _log(group, level, message, data) {
     if (!cfg.enabled) return;
     var style = level === 'error' ? C.err
-              : level === 'warn'  ? C.warn
-              : level === 'stream'? C.stream
-              : C.reg;
+      : level === 'warn' ? C.warn
+        : level === 'stream' ? C.stream
+          : C.reg;
     var fn = level === 'error' ? console.error
-           : level === 'warn'  ? console.warn
-           : console.log;
+      : level === 'warn' ? console.warn
+        : console.log;
     if (data !== undefined) {
       fn.call(console, '%c ' + group + ' %c ' + message, style, C.reset, data);
     } else {
@@ -316,8 +316,8 @@
   var existingLA8159 = (window.LA8159 && typeof window.LA8159 === 'object') ? window.LA8159 : {};
   var existingOlivia = (window.Olivia && typeof window.Olivia === 'object') ? window.Olivia : {};
   var runtimeNamespace = Object.assign({}, existingLA8159, existingOliviaLegal, cfg, {
-    log:    _log,
-    _orig:  _origFetch,
+    log: _log,
+    _orig: _origFetch,
   });
   window.LA8159 = runtimeNamespace;
   window.Olivia = runtimeNamespace;

@@ -34,7 +34,7 @@
     var dSessionId = null;
     var dPrimerSent = false;
     var dStreaming = false;
-    var DRIVE_STORAGE_KEY = 'OliviaLegal_drive_chat_v1';
+    var DRIVE_STORAGE_KEY = 'Olivia_drive_chat_v1';
     var _authStatusCache = null; // to avoid repeated fetches
 
     // ── Helpers ───────────────────────────────────────────────────────────────

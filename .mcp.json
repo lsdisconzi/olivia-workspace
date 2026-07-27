@@ -1,0 +1,31 @@
+{
+    "mcpServers": {
+        "transcription-transcription": {
+            "url": "http://127.0.0.1:8121/mcp"
+        },
+        "transcription-transcripts": {
+            "url": "http://127.0.0.1:8122/mcp"
+        },
+        "transcription-meta": {
+            "url": "http://127.0.0.1:8123/mcp"
+        },
+        "juris-search": {
+            "url": "http://127.0.0.1:8116/mcp"
+        },
+        "garage-core": {
+            "url": "http://127.0.0.1:8110/mcp"
+        },
+        "garage-files": {
+            "url": "http://127.0.0.1:8111/mcp"
+        },
+        "garage-ingestion": {
+            "url": "http://127.0.0.1:8112/mcp"
+        },
+        "garage-prompt": {
+            "url": "http://127.0.0.1:8113/mcp"
+        },
+        "garage-qdrant": {
+            "url": "http://127.0.0.1:8114/mcp"
+        }
+    }
+}

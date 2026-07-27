@@ -439,7 +439,7 @@ def main() -> None:
     bearer = args.bearer_token.strip()
     if not bearer:
         bearer = (
-            str(os.environ.get("OliviaLegal_ADMIN_API_TOKEN") or "").strip()
+            str(os.environ.get("Olivia_ADMIN_API_TOKEN") or "").strip()
             or str(os.environ.get("IBSCO_ADMIN_API_TOKEN") or "").strip()
         )
 

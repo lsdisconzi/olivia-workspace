@@ -85,7 +85,7 @@ Useful flags:
 --allow-write-methods
 
 # authenticated endpoints
---bearer-token "$OliviaLegal_ADMIN_API_TOKEN"
+--bearer-token "$Olivia_ADMIN_API_TOKEN"
 ```
 
 ### 4. Update validation data

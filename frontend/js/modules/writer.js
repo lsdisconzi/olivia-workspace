@@ -6,8 +6,8 @@
     'use strict';
 
     // ---------- localStorage keys ----------
-    var WRITER_STORAGE = 'OliviaLegal_writer_docs_v1';
-    var WRITER_ACTIVE_KEY = 'OliviaLegal_writer_active_id';
+    var WRITER_STORAGE = 'Olivia_writer_docs_v1';
+    var WRITER_ACTIVE_KEY = 'Olivia_writer_active_id';
 
     // ---------- SVG icon ----------
     var PEN_SVG_WRITER = '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' +
@@ -43,7 +43,7 @@
     }
 
     function saveDocs() {
-        try { localStorage.setItem(WRITER_STORAGE, JSON.stringify(wDocs)); } catch (_) {}
+        try { localStorage.setItem(WRITER_STORAGE, JSON.stringify(wDocs)); } catch (_) { }
     }
 
     function loadActiveDocId() {
@@ -53,7 +53,7 @@
     }
 
     function saveActiveDocId() {
-        try { localStorage.setItem(WRITER_ACTIVE_KEY, wActiveDocId || ''); } catch (_) {}
+        try { localStorage.setItem(WRITER_ACTIVE_KEY, wActiveDocId || ''); } catch (_) { }
     }
 
     // ---------- Backend sync ----------

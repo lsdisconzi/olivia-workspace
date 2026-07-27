@@ -52,7 +52,7 @@ function parseArgs() {
 }
 
 const cli = parseArgs();
-const PORT = cli.port || process.env.OliviaLegal_PORT || 3229;
+const PORT = cli.port || process.env.Olivia_PORT || 3229;
 const APP_URL = cli.url || `http://localhost:${PORT}/olivia/`;
 const DEVTOOLS = cli.devtools || false;
 
@@ -117,7 +117,7 @@ function createWindow() {
   // "Insecure Content-Security-Policy" renderer warning).
   try {
     mainWindow.webContents.session.setCSP(CSP);
-  } catch (_) {}
+  } catch (_) { }
 
   // Try loading the server URL; fall back to built-in waiting page on failure
   loadAppOrFallback();
@@ -218,8 +218,8 @@ function injectTitleBar(win) {
   let titlebarHTML = '';
   let titlebarCSS = '';
 
-  try { titlebarHTML = fs.readFileSync(titlebarPath, 'utf-8'); } catch (_) {}
-  try { titlebarCSS = fs.readFileSync(stylePath, 'utf-8'); } catch (_) {}
+  try { titlebarHTML = fs.readFileSync(titlebarPath, 'utf-8'); } catch (_) { }
+  try { titlebarCSS = fs.readFileSync(stylePath, 'utf-8'); } catch (_) { }
 
   if (titlebarCSS) {
     win.webContents.insertCSS(titlebarCSS);

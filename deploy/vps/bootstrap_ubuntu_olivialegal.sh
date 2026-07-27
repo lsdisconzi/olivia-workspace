@@ -24,7 +24,7 @@ REPO_URL=""
 GIT_REF="main"
 SERVICE_NAME="OliviaLegal"
 SERVICE_USER="root"
-OliviaLegal_PORT="3229"
+Olivia_PORT="3229"
 VPS_GATEWAY_URL="http://127.0.0.1:8183"
 INSTALL_SERVICE=1
 
@@ -72,7 +72,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --port)
-      OliviaLegal_PORT="$2"
+      Olivia_PORT="$2"
       shift 2
       ;;
     --gateway-url)
@@ -95,7 +95,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ ! "$OliviaLegal_PORT" =~ ^[0-9]+$ ]]; then
+if [[ ! "$Olivia_PORT" =~ ^[0-9]+$ ]]; then
   echo "ERROR: --port must be a numeric value"
   exit 1
 fi
@@ -191,7 +191,7 @@ if [[ ! -f "$APP_DIR/.env" ]] && [[ -f "$APP_DIR/config/.env.example" ]]; then
 fi
 
 cat > "$APP_DIR/.env.service" <<EOF
-OliviaLegal_PORT=${OliviaLegal_PORT}
+Olivia_PORT=${Olivia_PORT}
 VPS_GATEWAY_URL=${VPS_GATEWAY_URL}
 OPENCLAUDE_PATH=${OPENCLAUDE_ROOT}
 OPENCLAUDE_BIN=${OPENCLAUDE_BIN}
@@ -211,7 +211,7 @@ Type=simple
 User=${SERVICE_USER}
 WorkingDirectory=${APP_DIR}
 EnvironmentFile=${APP_DIR}/.env.service
-ExecStart=${APP_DIR}/.venv/bin/python -u ${APP_DIR}/serve.py --port \${OliviaLegal_PORT}
+ExecStart=${APP_DIR}/.venv/bin/python -u ${APP_DIR}/serve.py --port \${Olivia_PORT}
 Restart=always
 RestartSec=3
 KillSignal=SIGINT
@@ -229,7 +229,7 @@ EOF
   systemctl --no-pager --full status "$SERVICE_NAME" | head -n 30
 
   echo "Health check:"
-  curl -fsS "http://127.0.0.1:${OliviaLegal_PORT}/api/health" || true
+  curl -fsS "http://127.0.0.1:${Olivia_PORT}/api/health" || true
 else
   echo "[7/7] Service installation skipped (--no-service)"
   echo "Start manually with:"
@@ -238,5 +238,5 @@ fi
 
 echo "Done."
 echo "App dir:  $APP_DIR"
-echo "Port:     $OliviaLegal_PORT"
-echo "UI URL:   http://<server-ip>:${OliviaLegal_PORT}/olivia/"
+echo "Port:     $Olivia_PORT"
+echo "UI URL:   http://<server-ip>:${Olivia_PORT}/olivia/"

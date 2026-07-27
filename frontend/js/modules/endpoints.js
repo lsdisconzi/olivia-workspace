@@ -7,8 +7,8 @@ function _getGatewayBaseForEndpoints() {
     return String(window.OliviaLegal.gateway.base).replace(/\/$/, '');
   }
 
-  if (window.OliviaLegal_BASE_URLS && window.OliviaLegal_BASE_URLS.gateway) {
-    return String(window.OliviaLegal_BASE_URLS.gateway).replace(/\/$/, '');
+  if (window.Olivia_BASE_URLS && window.Olivia_BASE_URLS.gateway) {
+    return String(window.Olivia_BASE_URLS.gateway).replace(/\/$/, '');
   }
 
   return window.location.origin;
@@ -51,7 +51,7 @@ function initEndpointsWidget() {
   const select = document.getElementById('endpointsWidgetSelect');
   if (!select) return;
 
-  const entries = Array.isArray(window.OliviaLegal_ENDPOINTS) ? window.OliviaLegal_ENDPOINTS : [];
+  const entries = Array.isArray(window.Olivia_ENDPOINTS) ? window.Olivia_ENDPOINTS : [];
 
   select.innerHTML = '';
   if (!entries.length) {
@@ -110,20 +110,20 @@ async function copySelectedEndpoint() {
 }
 
 // Toggle the LA8159EndpointWidget panel (called from static HTML markup)
-window.epToggle = function() {
+window.epToggle = function () {
   if (window.LA8159EndpointWidget && typeof LA8159EndpointWidget.toggle === 'function') {
     LA8159EndpointWidget.toggle();
   } else {
     // Widget not loaded yet — fall back to toggling the panel directly
-    var panel   = document.getElementById('epPanel');
+    var panel = document.getElementById('epPanel');
     var overlay = document.getElementById('epOverlay');
-    if (panel)   panel.classList.toggle('open');
+    if (panel) panel.classList.toggle('open');
     if (overlay) overlay.classList.toggle('open');
   }
 };
 
 // Fetch a GET endpoint and display its JSON response in a system bubble
-window.previewEndpoint = async function(path) {
+window.previewEndpoint = async function (path) {
   var base = _getApiBaseForEndpoints();
   var normalizedPath = String(path || '');
   if (!normalizedPath.startsWith('/')) normalizedPath = '/' + normalizedPath;
@@ -148,9 +148,9 @@ window.previewEndpoint = async function(path) {
 
 // Toggle an endpoint's response as injected context in the next prompt
 var _endpointContextSet = new Set();
-window.toggleEndpointContext = async function(checkbox) {
+window.toggleEndpointContext = async function (checkbox) {
   var endpoint = checkbox.dataset.endpoint;
-  var method   = (checkbox.dataset.method || 'GET').toUpperCase();
+  var method = (checkbox.dataset.method || 'GET').toUpperCase();
   if (!endpoint) return;
 
   if (!checkbox.checked) {

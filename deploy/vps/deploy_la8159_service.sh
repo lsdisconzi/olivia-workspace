@@ -8,12 +8,12 @@
 #   VPS_USER                 default: root
 #   VPS_APP_DIR              default: /opt/OliviaLegal
 #   SERVICE_NAME             default: OliviaLegal
-#   OliviaLegal_PORT              default: 3229
+#   Olivia_PORT              default: 3229
 #   VPS_GATEWAY_URL          default: http://127.0.0.1:8183
 #   DEPLOY_EXCLUDES_FILE     default: deploy/vps/rsync-excludes.txt
 #
 # Example:
-#   VPS_HOST=your.vps.ip VPS_USER=root OliviaLegal_PORT=3229 ./deploy/vps/deploy_OliviaLegal_service.sh
+#   VPS_HOST=your.vps.ip VPS_USER=root Olivia_PORT=3229 ./deploy/vps/deploy_Olivia_service.sh
 
 set -euo pipefail
 
@@ -24,7 +24,7 @@ VPS_HOST="${VPS_HOST:-}"
 VPS_USER="${VPS_USER:-root}"
 VPS_APP_DIR="${VPS_APP_DIR:-/opt/OliviaLegal}"
 SERVICE_NAME="${SERVICE_NAME:-OliviaLegal}"
-OliviaLegal_PORT="${OliviaLegal_PORT:-3229}"
+Olivia_PORT="${Olivia_PORT:-3229}"
 VPS_GATEWAY_URL="${VPS_GATEWAY_URL:-http://127.0.0.1:8183}"
 DEPLOY_EXCLUDES_FILE="${DEPLOY_EXCLUDES_FILE:-$ROOT_DIR/deploy/vps/rsync-excludes.txt}"
 
@@ -68,7 +68,7 @@ ssh "${VPS_USER}@${VPS_HOST}" "\
     cd openclaude; npm install --omit=dev --no-audit --no-fund --loglevel=warn; cd ..; \
   fi; \
   cat > .env.service <<EOF
-OliviaLegal_PORT=${OliviaLegal_PORT}
+Olivia_PORT=${Olivia_PORT}
 VPS_GATEWAY_URL=${VPS_GATEWAY_URL}
 EOF
 "
@@ -85,11 +85,11 @@ ssh "${VPS_USER}@${VPS_HOST}" "\
 "
 
 echo "[6/6] Health check"
-ssh "${VPS_USER}@${VPS_HOST}" "curl -fsS 'http://127.0.0.1:${OliviaLegal_PORT}/api/health' || true"
+ssh "${VPS_USER}@${VPS_HOST}" "curl -fsS 'http://127.0.0.1:${Olivia_PORT}/api/health' || true"
 
 echo "Done."
 echo "Service: ${SERVICE_NAME}"
-echo "Port:    ${OliviaLegal_PORT}"
-echo "URL:     http://${VPS_HOST}:${OliviaLegal_PORT}/olivia/"
+echo "Port:    ${Olivia_PORT}"
+echo "URL:     http://${VPS_HOST}:${Olivia_PORT}/olivia/"
 
 rm -f "$SERVICE_TMP"

@@ -75,7 +75,7 @@ mimetypes.add_type('model/gltf+json',   '.gltf')
 
 # ── Config ────────────────────────────────────────────────────────────────────
 def _default_port() -> int:
-    raw = os.environ.get("OliviaLegal_PORT", "3229").strip()
+    raw = os.environ.get("Olivia_PORT", "3229").strip()
     try:
         return int(raw)
     except ValueError:
@@ -83,7 +83,7 @@ def _default_port() -> int:
 
 
 DEFAULT_PORT = _default_port()
-OliviaLegal_ROOT = PROJECT_ROOT
+Olivia_ROOT = PROJECT_ROOT
 PROJECT_CONTEXT_FILES = [
     PROJECT_ROOT / "PROJECT_STATUS.md",
     PROJECT_ROOT / "PROJECT_MANIFEST.md",
@@ -93,12 +93,12 @@ PROJECT_CONTEXT_FILES = [
 ]
 
 # Load .env defaults from root and optional shared environment file.
-bootstrap_environment(OliviaLegal_ROOT)
+bootstrap_environment(Olivia_ROOT)
 
 
-def _OliviaLegal_env(name: str, default: str = "") -> str:
-    """Read OliviaLegal_* variables."""
-    return os.environ.get(f"OliviaLegal_{name}", default)
+def _Olivia_env(name: str, default: str = "") -> str:
+    """Read Olivia_* variables."""
+    return os.environ.get(f"Olivia_{name}", default)
 
 
 def _get_gemini_access_token() -> str:
@@ -141,11 +141,11 @@ FIREWORKS_BASE_URL  = os.environ.get("FIREWORKS_BASE_URL", "https://api.firework
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "")
 try:
     # Prevent mid-answer cutoffs on long assistant responses.
-    LLM_STREAM_MAX_TOKENS = max(512, int(_OliviaLegal_env("LLM_STREAM_MAX_TOKENS", "8192")))
+    LLM_STREAM_MAX_TOKENS = max(512, int(_Olivia_env("LLM_STREAM_MAX_TOKENS", "8192")))
 except ValueError:
     LLM_STREAM_MAX_TOKENS = 8192
 try:
-    LLM_STREAM_TIMEOUT_SECONDS = max(60, int(_OliviaLegal_env("LLM_STREAM_TIMEOUT_SECONDS", "300")))
+    LLM_STREAM_TIMEOUT_SECONDS = max(60, int(_Olivia_env("LLM_STREAM_TIMEOUT_SECONDS", "300")))
 except ValueError:
     LLM_STREAM_TIMEOUT_SECONDS = 300
 
@@ -231,7 +231,7 @@ def _build_llm_ssl_context() -> ssl.SSLContext:
             except Exception:
                 pass
 
-    if _coerce_bool(_OliviaLegal_env("INSECURE_SSL", "")):
+    if _coerce_bool(_Olivia_env("INSECURE_SSL", "")):
         ctx.check_hostname = False
         ctx.verify_mode = ssl.CERT_NONE
 
@@ -378,7 +378,7 @@ _OLLAMA_MODELS_CACHE: dict[str, object] = {
 
 # ── OpenClaude integration ────────────────────────────────────────────────────
 # Point OPENCLAUDE_PATH at the local openclaude repo, or OPENCLAUDE_BIN at the exact binary.
-OPENCLAUDE_PATH = os.environ.get("OPENCLAUDE_PATH", str(OliviaLegal_ROOT / "openclaude"))
+OPENCLAUDE_PATH = os.environ.get("OPENCLAUDE_PATH", str(Olivia_ROOT / "openclaude"))
 OPENCLAUDE_BIN  = os.environ.get("OPENCLAUDE_BIN", "")  # explicit binary override
 _openclaude_available = False
 _openclaude_cli: Path | None = None
@@ -397,13 +397,13 @@ elif _oc_root and _oc_root.is_dir():
             break
 
 # Planning files directory (the 4-file agent orchestration convention lives here)
-PLANNING_DIR = OliviaLegal_ROOT
+PLANNING_DIR = Olivia_ROOT
 PLANNING_WORKSPACE_DIR = PLANNING_DIR / "planning"
 PLANNING_FILENAMES = ("task_plan.md", "findings.md", "progress.md", "memory.md")
 
 # Frontend (app UI) directory. Served under the legacy /olivia/* URL namespace via
 # _serve_static_with_tracker so existing links and route aliases keep working.
-WEB_ROOT = OliviaLegal_ROOT / "frontend"
+WEB_ROOT = Olivia_ROOT / "frontend"
 
 # Disable legacy modules to keep Olivia focused on chat + agent stream.
 DISABLED_API_PREFIXES = (
@@ -442,7 +442,7 @@ except ValueError:
 
 # ── MCP (local registry config) ─────────────────────────────────────────────
 VPS_GATEWAY_URL = os.environ.get("VPS_GATEWAY_URL", "http://localhost:8183")
-_MCP_CONFIG_PATH = OliviaLegal_ROOT / "config" / ".mcp-bridge-config.json"
+_MCP_CONFIG_PATH = Olivia_ROOT / "config" / ".mcp-bridge-config.json"
 
 def _ensure_mcp_config() -> str | None:
     """Ensure MCP config exists and return its path.
@@ -541,7 +541,7 @@ def _resolve_mcp_config_path(enabled_servers: list[str] | None = None) -> str | 
         return cfg_path
 
     key = hashlib.sha1(",".join(selected).encode("utf-8", errors="ignore")).hexdigest()[:12]
-    runtime_dir = OliviaLegal_ROOT / "uploads" / "runtime"
+    runtime_dir = Olivia_ROOT / "uploads" / "runtime"
     runtime_dir.mkdir(parents=True, exist_ok=True)
     runtime_path = runtime_dir / f"mcp-config-{key}.json"
     runtime_path.write_text(json.dumps({"mcpServers": filtered}, indent=2), encoding="utf-8")
@@ -701,7 +701,7 @@ def _mcp_spawn_process(runtime_spec: dict, text_mode: bool = True):
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
-        cwd=str(OliviaLegal_ROOT),
+        cwd=str(Olivia_ROOT),
         text=text_mode,
         bufsize=(1 if text_mode else 0),
         env=proc_env,
@@ -1226,19 +1226,19 @@ ARCHIVED_PROJECTS_DIR = PROJECT_ROOT / "content" / "archived_projects"
 ARCHIVED_PROJECTS_DIR.mkdir(parents=True, exist_ok=True)
 
 try:
-    MAX_UPLOAD_SCAN_FILES = max(50, int(_OliviaLegal_env("UPLOADS_SCAN_MAX_FILES", "350")))
+    MAX_UPLOAD_SCAN_FILES = max(50, int(_Olivia_env("UPLOADS_SCAN_MAX_FILES", "350")))
 except ValueError:
     MAX_UPLOAD_SCAN_FILES = 350
 try:
-    MAX_UPLOAD_META_FILES = max(20, int(_OliviaLegal_env("UPLOADS_META_MAX_FILES", "180")))
+    MAX_UPLOAD_META_FILES = max(20, int(_Olivia_env("UPLOADS_META_MAX_FILES", "180")))
 except ValueError:
     MAX_UPLOAD_META_FILES = 180
 try:
-    MAX_UPLOAD_TEXT_FILES = max(5, int(_OliviaLegal_env("UPLOADS_CONTEXT_TEXT_FILES", "40")))
+    MAX_UPLOAD_TEXT_FILES = max(5, int(_Olivia_env("UPLOADS_CONTEXT_TEXT_FILES", "40")))
 except ValueError:
     MAX_UPLOAD_TEXT_FILES = 40
 try:
-    UPLOADS_CONTEXT_CACHE_TTL = max(1.0, float(_OliviaLegal_env("UPLOADS_CONTEXT_CACHE_TTL", "10")))
+    UPLOADS_CONTEXT_CACHE_TTL = max(1.0, float(_Olivia_env("UPLOADS_CONTEXT_CACHE_TTL", "10")))
 except ValueError:
     UPLOADS_CONTEXT_CACHE_TTL = 10.0
 
@@ -1249,64 +1249,64 @@ _UPLOADS_CONTEXT_CACHE: dict[str, object] = {
 }
 
 try:
-    ASSISTANT_CONTEXT_PREVIEW_CACHE_SIZE = max(5, int(_OliviaLegal_env("ASSISTANT_CONTEXT_PREVIEW_CACHE_SIZE", "30")))
+    ASSISTANT_CONTEXT_PREVIEW_CACHE_SIZE = max(5, int(_Olivia_env("ASSISTANT_CONTEXT_PREVIEW_CACHE_SIZE", "30")))
 except ValueError:
     ASSISTANT_CONTEXT_PREVIEW_CACHE_SIZE = 30
 try:
-    ASSISTANT_CONTEXT_PREVIEW_TEXT_LIMIT = max(300, int(_OliviaLegal_env("ASSISTANT_CONTEXT_PREVIEW_TEXT_LIMIT", "2500")))
+    ASSISTANT_CONTEXT_PREVIEW_TEXT_LIMIT = max(300, int(_Olivia_env("ASSISTANT_CONTEXT_PREVIEW_TEXT_LIMIT", "2500")))
 except ValueError:
     ASSISTANT_CONTEXT_PREVIEW_TEXT_LIMIT = 2500
 try:
-    ASSISTANT_MESSAGE_MAX_CHARS = max(1200, int(_OliviaLegal_env("ASSISTANT_MESSAGE_MAX_CHARS", "120000")))
+    ASSISTANT_MESSAGE_MAX_CHARS = max(1200, int(_Olivia_env("ASSISTANT_MESSAGE_MAX_CHARS", "120000")))
 except ValueError:
     ASSISTANT_MESSAGE_MAX_CHARS = 120000
 try:
-    ASSISTANT_SECTION_SYSTEM_MAX_CHARS = max(300, int(_OliviaLegal_env("ASSISTANT_SECTION_SYSTEM_MAX_CHARS", "6000")))
+    ASSISTANT_SECTION_SYSTEM_MAX_CHARS = max(300, int(_Olivia_env("ASSISTANT_SECTION_SYSTEM_MAX_CHARS", "6000")))
 except ValueError:
     ASSISTANT_SECTION_SYSTEM_MAX_CHARS = 6000
 try:
-    ASSISTANT_HISTORY_MAX_TURNS = max(2, int(_OliviaLegal_env("ASSISTANT_HISTORY_MAX_TURNS", "120")))
+    ASSISTANT_HISTORY_MAX_TURNS = max(2, int(_Olivia_env("ASSISTANT_HISTORY_MAX_TURNS", "120")))
 except ValueError:
     ASSISTANT_HISTORY_MAX_TURNS = 120
 try:
-    ASSISTANT_HISTORY_ENTRY_MAX_CHARS = max(500, int(_OliviaLegal_env("ASSISTANT_HISTORY_ENTRY_MAX_CHARS", "24000")))
+    ASSISTANT_HISTORY_ENTRY_MAX_CHARS = max(500, int(_Olivia_env("ASSISTANT_HISTORY_ENTRY_MAX_CHARS", "24000")))
 except ValueError:
     ASSISTANT_HISTORY_ENTRY_MAX_CHARS = 24000
 try:
-    ASSISTANT_IMPORTED_FILES_MAX_COUNT = max(1, int(_OliviaLegal_env("ASSISTANT_IMPORTED_FILES_MAX_COUNT", "8")))
+    ASSISTANT_IMPORTED_FILES_MAX_COUNT = max(1, int(_Olivia_env("ASSISTANT_IMPORTED_FILES_MAX_COUNT", "8")))
 except ValueError:
     ASSISTANT_IMPORTED_FILES_MAX_COUNT = 8
 try:
-    ASSISTANT_IMPORTED_FILE_MAX_CHARS = max(500, int(_OliviaLegal_env("ASSISTANT_IMPORTED_FILE_MAX_CHARS", "24000")))
+    ASSISTANT_IMPORTED_FILE_MAX_CHARS = max(500, int(_Olivia_env("ASSISTANT_IMPORTED_FILE_MAX_CHARS", "24000")))
 except ValueError:
     ASSISTANT_IMPORTED_FILE_MAX_CHARS = 24000
 try:
-    ASSISTANT_IMPORTED_FILES_TOTAL_MAX_CHARS = max(4000, int(_OliviaLegal_env("ASSISTANT_IMPORTED_FILES_TOTAL_MAX_CHARS", "120000")))
+    ASSISTANT_IMPORTED_FILES_TOTAL_MAX_CHARS = max(4000, int(_Olivia_env("ASSISTANT_IMPORTED_FILES_TOTAL_MAX_CHARS", "120000")))
 except ValueError:
     ASSISTANT_IMPORTED_FILES_TOTAL_MAX_CHARS = 120000
 try:
-    ASSISTANT_IMAGE_ATTACHMENTS_MAX_COUNT = max(1, int(_OliviaLegal_env("ASSISTANT_IMAGE_ATTACHMENTS_MAX_COUNT", "4")))
+    ASSISTANT_IMAGE_ATTACHMENTS_MAX_COUNT = max(1, int(_Olivia_env("ASSISTANT_IMAGE_ATTACHMENTS_MAX_COUNT", "4")))
 except ValueError:
     ASSISTANT_IMAGE_ATTACHMENTS_MAX_COUNT = 4
 try:
-    ASSISTANT_IMAGE_ATTACHMENT_MAX_BYTES = max(64_000, int(_OliviaLegal_env("ASSISTANT_IMAGE_ATTACHMENT_MAX_BYTES", "3000000")))
+    ASSISTANT_IMAGE_ATTACHMENT_MAX_BYTES = max(64_000, int(_Olivia_env("ASSISTANT_IMAGE_ATTACHMENT_MAX_BYTES", "3000000")))
 except ValueError:
     ASSISTANT_IMAGE_ATTACHMENT_MAX_BYTES = 3_000_000
 try:
-    ASSISTANT_IMAGE_ATTACHMENTS_TOTAL_MAX_BYTES = max(128_000, int(_OliviaLegal_env("ASSISTANT_IMAGE_ATTACHMENTS_TOTAL_MAX_BYTES", "8000000")))
+    ASSISTANT_IMAGE_ATTACHMENTS_TOTAL_MAX_BYTES = max(128_000, int(_Olivia_env("ASSISTANT_IMAGE_ATTACHMENTS_TOTAL_MAX_BYTES", "8000000")))
 except ValueError:
     ASSISTANT_IMAGE_ATTACHMENTS_TOTAL_MAX_BYTES = 8_000_000
 _ASSISTANT_CONTEXT_PREVIEWS: list[dict[str, object]] = []
 _ASSISTANT_CONTEXT_PREVIEWS_LOCK = threading.Lock()
 
 REFERENCE_DOCX_SCOPE = (
-    str(_OliviaLegal_env("REFERENCE_DOCX_SCOPE", "reference_docx") or "reference_docx").strip()
+    str(_Olivia_env("REFERENCE_DOCX_SCOPE", "reference_docx") or "reference_docx").strip()
     or "reference_docx"
 )
 
 
 def _resolve_reference_docx_dir() -> Path:
-    configured = str(os.environ.get("OliviaLegal_DOCX_DIR", "")).strip()
+    configured = str(os.environ.get("Olivia_DOCX_DIR", "")).strip()
     if configured:
         return Path(configured).expanduser().resolve()
     return (UPLOADS_DIR / "reference_docx").resolve()
@@ -1319,12 +1319,12 @@ except Exception:
     pass
 
 SHARED_ROOT_CANDIDATES = (
-    Path(os.environ.get("OliviaLegal_SHARED_DIR", "")).expanduser() if os.environ.get("OliviaLegal_SHARED_DIR") else None,
+    Path(os.environ.get("Olivia_SHARED_DIR", "")).expanduser() if os.environ.get("Olivia_SHARED_DIR") else None,
     Path(os.environ.get("AWARENESS_SHARED_DIR", "")).expanduser() if os.environ.get("AWARENESS_SHARED_DIR") else None,
     Path(os.environ.get("SHARED_DIR", "")).expanduser() if os.environ.get("SHARED_DIR") else None,
-    OliviaLegal_ROOT / "_shared",
-    OliviaLegal_ROOT.parent / "services" / "_shared",
-    OliviaLegal_ROOT.parent / "_shared",
+    Olivia_ROOT / "_shared",
+    Olivia_ROOT.parent / "services" / "_shared",
+    Olivia_ROOT.parent / "_shared",
 )
 
 
@@ -1333,20 +1333,20 @@ def _resolve_shared_root() -> Path:
         if candidate and candidate.is_dir():
             return candidate.resolve()
     # Fallback to _shared even if missing; callers handle non-existence.
-    return (OliviaLegal_ROOT / "_shared").resolve()
+    return (Olivia_ROOT / "_shared").resolve()
 
 
 SHARED_ROOT = _resolve_shared_root()
 SHARED_CASES_ROOT = SHARED_ROOT / "cases"
-OliviaLegal_GROUP_SOURCE_ROOT = OliviaLegal_ROOT.parent / "agents" / "agents-groups" / "OliviaLegal" / "source"
+Olivia_GROUP_SOURCE_ROOT = Olivia_ROOT.parent / "agents" / "agents-groups" / "OliviaLegal" / "source"
 
 LEGAL_ROUTER_ROOT_CANDIDATES = (
-    Path(os.environ.get("OliviaLegal_LEGAL_ROUTER_ROOT", "")).expanduser() if os.environ.get("OliviaLegal_LEGAL_ROUTER_ROOT") else None,
+    Path(os.environ.get("Olivia_LEGAL_ROUTER_ROOT", "")).expanduser() if os.environ.get("Olivia_LEGAL_ROUTER_ROOT") else None,
     Path(os.environ.get("AWARENESS_LEGAL_ROUTER_ROOT", "")).expanduser() if os.environ.get("AWARENESS_LEGAL_ROUTER_ROOT") else None,
     Path(os.environ.get("LEGAL_ROUTER_ROOT", "")).expanduser() if os.environ.get("LEGAL_ROUTER_ROOT") else None,
-    OliviaLegal_GROUP_SOURCE_ROOT,
+    Olivia_GROUP_SOURCE_ROOT,
     SHARED_CASES_ROOT / "agents",
-    OliviaLegal_ROOT.parent / "OliviaLegal-incident" / "0_agents",
+    Olivia_ROOT.parent / "OliviaLegal-incident" / "0_agents",
 )
 
 
@@ -1364,13 +1364,13 @@ VIOLATIONS_ROOT_CANDIDATES = (
     # Canonical source of truth: the shared case store (data/LA8159 deleted
     # in favour of _shared/cases/LA8159).
     SHARED_CASES_ROOT / "LA8159" / "01-violations",
-    Path(os.environ.get("OliviaLegal_VIOLATIONS_ROOT", "")).expanduser() if os.environ.get("OliviaLegal_VIOLATIONS_ROOT") else None,
+    Path(os.environ.get("Olivia_VIOLATIONS_ROOT", "")).expanduser() if os.environ.get("Olivia_VIOLATIONS_ROOT") else None,
     Path(os.environ.get("AWARENESS_VIOLATIONS_ROOT", "")).expanduser() if os.environ.get("AWARENESS_VIOLATIONS_ROOT") else None,
-    OliviaLegal_GROUP_SOURCE_ROOT / "10_violations_json" / "validated",
+    Olivia_GROUP_SOURCE_ROOT / "10_violations_json" / "validated",
     SHARED_CASES_ROOT / "10_violations_json" / "validated",
-    OliviaLegal_ROOT / "data" / "source" / "10_violations_json" / "validated",
-    OliviaLegal_ROOT / "olivia" / "data" / "violations",
-    OliviaLegal_ROOT.parent / "OliviaLegal-incident" / "10_violations_json" / "validated",
+    Olivia_ROOT / "data" / "source" / "10_violations_json" / "validated",
+    Olivia_ROOT / "olivia" / "data" / "violations",
+    Olivia_ROOT.parent / "OliviaLegal-incident" / "10_violations_json" / "validated",
 )
 
 
@@ -1385,14 +1385,14 @@ VIOLATIONS_ROOT = _resolve_violations_root()
 MASTER_INDEX_ROOT = PROJECT_ROOT / "data" / "master_index"
 
 LAW_LIBRARY_ROOT_CANDIDATES = (
-    Path(os.environ.get("OliviaLegal_LAW_LIBRARY_ROOT", "")).expanduser() if os.environ.get("OliviaLegal_LAW_LIBRARY_ROOT") else None,
+    Path(os.environ.get("Olivia_LAW_LIBRARY_ROOT", "")).expanduser() if os.environ.get("Olivia_LAW_LIBRARY_ROOT") else None,
     Path(os.environ.get("AWARENESS_LAW_LIBRARY_ROOT", "")).expanduser() if os.environ.get("AWARENESS_LAW_LIBRARY_ROOT") else None,
     SHARED_CASES_ROOT / "law_md",
     SHARED_CASES_ROOT / "agents" / "sources",
-    OliviaLegal_GROUP_SOURCE_ROOT / "sources",
-    OliviaLegal_ROOT / "data" / "source",
-    OliviaLegal_ROOT / "olivia" / "data" / "law_library",
-    OliviaLegal_ROOT.parent / "OliviaLegal-incident" / "0_agents" / "sources",
+    Olivia_GROUP_SOURCE_ROOT / "sources",
+    Olivia_ROOT / "data" / "source",
+    Olivia_ROOT / "olivia" / "data" / "law_library",
+    Olivia_ROOT.parent / "OliviaLegal-incident" / "0_agents" / "sources",
 )
 
 
@@ -1464,9 +1464,9 @@ PROJECT_SECTION_FOLDERS = (
 )
 
 # ── SQLite agents database ────────────────────────────────────────────────────
-_legacy_db_path = UPLOADS_DIR / "OliviaLegal_legacy_workspace.db"
-_default_db_path = UPLOADS_DIR / "OliviaLegal_workspace.db"
-_configured_db_path = str(_OliviaLegal_env("DB_PATH", "")).strip()
+_legacy_db_path = UPLOADS_DIR / "Olivia_legacy_workspace.db"
+_default_db_path = UPLOADS_DIR / "Olivia_workspace.db"
+_configured_db_path = str(_Olivia_env("DB_PATH", "")).strip()
 if _configured_db_path:
     DB_PATH = Path(_configured_db_path).expanduser().resolve()
 elif _default_db_path.exists():
@@ -1538,9 +1538,9 @@ Quality and governance:
 - If constraints are unclear, state assumptions and proceed with the safest viable action.
 """
 
-AUTH_COOKIE_NAME = "OliviaLegal_session"
+AUTH_COOKIE_NAME = "Olivia_session"
 try:
-    AUTH_SESSION_TTL_SECONDS = max(300, int(_OliviaLegal_env("SESSION_TTL_SECONDS", "43200")))
+    AUTH_SESSION_TTL_SECONDS = max(300, int(_Olivia_env("SESSION_TTL_SECONDS", "43200")))
 except ValueError:
     AUTH_SESSION_TTL_SECONDS = 43200
 
@@ -1616,7 +1616,7 @@ def _password_is_valid(password: str) -> bool:
 def _admin_api_token() -> str:
     """Return configured admin API token for read-only admin endpoints."""
     return str(
-        os.environ.get("OliviaLegal_ADMIN_API_TOKEN")
+        os.environ.get("Olivia_ADMIN_API_TOKEN")
         or os.environ.get("IBSCO_ADMIN_API_TOKEN")
         or ""
     ).strip()
@@ -3007,12 +3007,12 @@ def _project_supports_legacy_outputs(project_id: str) -> bool:
 
 
 def _project_legacy_outputs_entries(project_id: str, project_root: Path) -> list[dict]:
-    """List files under OliviaLegal_ROOT/outputs mapped as outputs/... for compatible projects."""
+    """List files under Olivia_ROOT/outputs mapped as outputs/... for compatible projects."""
     if not _project_supports_legacy_outputs(project_id):
         return []
 
     try:
-        legacy_root = (OliviaLegal_ROOT / "outputs").resolve()
+        legacy_root = (Olivia_ROOT / "outputs").resolve()
         project_outputs = (project_root / "outputs").resolve()
     except Exception:
         return []
@@ -3091,7 +3091,7 @@ def _resolve_project_rel_target(project_id: str, project_dir: Path, rel_path: st
 
     if _project_supports_legacy_outputs(project_id):
         if rel_norm.lower().startswith("outputs/"):
-            legacy_root = (OliviaLegal_ROOT / "outputs").resolve()
+            legacy_root = (Olivia_ROOT / "outputs").resolve()
             suffix = rel_norm.split("/", 1)[1] if "/" in rel_norm else ""
             legacy_target = (legacy_root / suffix).resolve()
             if legacy_target.is_file() and _path_is_within(legacy_root, legacy_target):
@@ -5489,7 +5489,7 @@ def _write_projects_manifest() -> dict:
         entries.append({"_error": f"scan failed: {e}"})
 
     manifest = {
-        "kind": "OliviaLegal_projects_manifest",
+        "kind": "Olivia_projects_manifest",
         "version": 1,
         "updated_at": _utc_now_iso(),
         "projects_root": str(PROJECTS_DIR),
@@ -5984,7 +5984,7 @@ def _build_working_directory_markdown(user_message: str, project_id: str = "", a
     if root is None and aid:
         root = _agent_workspace_root(aid)
     if root is None:
-        root = OliviaLegal_ROOT
+        root = Olivia_ROOT
 
     entries: list[str] = []
     try:
@@ -6391,7 +6391,7 @@ def _load_functions_seed() -> tuple[list[dict[str, str]], str]:
             path = seed["path"].lower()
             topic = seed["topic"].lower()
             is_case_endpoint = path.startswith("/api/expenses/")
-            is_OliviaLegal_core = (
+            is_Olivia_core = (
                 path in {
                     "/health",
                     "/api/assistant/chat",
@@ -6401,7 +6401,7 @@ def _load_functions_seed() -> tuple[list[dict[str, str]], str]:
                 }
                 or path.startswith("/api/projects/")
             )
-            if not (is_case_endpoint or is_OliviaLegal_core):
+            if not (is_case_endpoint or is_Olivia_core):
                 continue
             endpoints.append(seed)
         if endpoints:
@@ -6690,8 +6690,8 @@ def _service_from_source_file(source_file: str | None) -> str | None:
 _FUNCTION_SERVICE_ALIASES = {
     "agent_architecture": "agent-architecture",
     "agents": "OliviaLegal",
-    "OliviaLegal_gateway": "gateway",
-    "OliviaLegal_qdrant": "OliviaLegal-qdrant",
+    "Olivia_gateway": "gateway",
+    "Olivia_qdrant": "OliviaLegal-qdrant",
     "bridge": "bridge",
     "bridge_res": "bridge",
     "bridge_residencia": "bridge",
@@ -7167,7 +7167,7 @@ def _build_catalog_from_seeds() -> dict[str, object]:
             "prerequisites": [],
             "related_functions": [],
             "source_file": source_file or "frontend/js/modules/endpoints-config.js",
-            "source_function": "window.OliviaLegal_ENDPOINTS",
+            "source_function": "window.Olivia_ENDPOINTS",
             "confidence": "medium",
         }
 
@@ -8585,7 +8585,7 @@ def _stream_llm(
             raise RuntimeError(
                 "TLS certificate verification failed for remote LLM. "
                 "Set SSL_CERT_FILE or REQUESTS_CA_BUNDLE, or install certifi in this Python env. "
-                "For local debugging only, set OliviaLegal_INSECURE_SSL=1  and restart the backend."
+                "For local debugging only, set Olivia_INSECURE_SSL=1  and restart the backend."
             ) from e
         raise RuntimeError(f"LLM streaming failed @ {target_base}: {reason_text}") from e
 
@@ -8656,7 +8656,7 @@ def _complete_llm(
             raise RuntimeError(
                 "TLS certificate verification failed for remote LLM. "
                 "Set SSL_CERT_FILE or REQUESTS_CA_BUNDLE, or install certifi in this Python env. "
-                "For local debugging only, set OliviaLegal_INSECURE_SSL=1  and restart the backend."
+                "For local debugging only, set Olivia_INSECURE_SSL=1  and restart the backend."
             ) from e
         raise RuntimeError(f"LLM completion failed: {reason_text}") from e
 
@@ -8990,7 +8990,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
     def __init__(self, *args, **kwargs):
         self._correlation_id = ""
-        super().__init__(*args, directory=str(OliviaLegal_ROOT), **kwargs)
+        super().__init__(*args, directory=str(Olivia_ROOT), **kwargs)
 
     def _ensure_correlation_id(self) -> str:
         current = str(getattr(self, "_correlation_id", "") or "").strip()
@@ -9243,8 +9243,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         "/olivia/gurupi-narrativa.html",
         "/olivia/gurupi-business-plan.html",
         "/olivia/IDSC/yearly_data/CSV-Bundles_filtered/ANALISE_IDSC_TOCANTINS_GURUPI.md",
-        "/olivia/IDSC/yearly_data/CSV-Bundles_filtered/CPSI_OLIVIA_OliviaLegal_FECHAMENTO.md",
-        "/olivia/IDSC/yearly_data/CSV-Bundles_filtered/OLIVIA_OliviaLegal_IMPACTO_IDSC_GURUPI.md",
+        "/olivia/IDSC/yearly_data/CSV-Bundles_filtered/CPSI_OLIVIA_Olivia_FECHAMENTO.md",
+        "/olivia/IDSC/yearly_data/CSV-Bundles_filtered/OLIVIA_Olivia_IMPACTO_IDSC_GURUPI.md",
         "/olivia/resident.html",
         "/olivia/manifest.json",
     }
@@ -9453,7 +9453,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         if candidate is not None:
             try:
-                candidate.relative_to(OliviaLegal_ROOT)
+                candidate.relative_to(Olivia_ROOT)
             except Exception:
                 return False
             if candidate.is_dir():
@@ -9462,9 +9462,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 return False
             target = candidate
         else:
-            target = (OliviaLegal_ROOT / raw_path.lstrip("/")).resolve()
+            target = (Olivia_ROOT / raw_path.lstrip("/")).resolve()
             try:
-                target.relative_to(OliviaLegal_ROOT)
+                target.relative_to(Olivia_ROOT)
             except Exception:
                 return False
 
@@ -9489,7 +9489,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         return True
 
     def _render_template_file(self, rel_path: str, replacements: dict[str, str] | None = None) -> str:
-        fpath = (OliviaLegal_ROOT / rel_path.lstrip("/")).resolve()
+        fpath = (Olivia_ROOT / rel_path.lstrip("/")).resolve()
         if not fpath.is_file():
             return ""
         text = fpath.read_text(encoding="utf-8", errors="replace")
@@ -10586,7 +10586,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             return
         # Public conversational endpoint — no authentication required
         if raw_path in {"/api/public/OliviaLegal-ask", "/api/olivia/public/ask", "/public/ask"}:
-            self._public_OliviaLegal_ask()
+            self._public_Olivia_ask()
             return
         if raw_path in {"/olivia/admin/users", "/olivia/admin/users"}:
             self._admin_users_create()
@@ -10895,7 +10895,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self._sse_done()
 
     # ── Public Olivia ask: POST /api/public/OliviaLegal-ask → SSE (no auth) ───────
-    def _public_OliviaLegal_ask(self):
+    def _public_Olivia_ask(self):
         _PUBLIC_SYSTEM = (
             "Você é o Agente Olivia — assistente acadêmico e operacional do programa de "
             "Residência Multiprofissional Integrada em Saúde da Família e Comunidade (RMISFC) "
@@ -12555,8 +12555,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
     def _master_index_status_payload(self) -> dict:
         json_rel = "data/master_index/master_index.json"
         md_rel = "data/master_index/master_index.md"
-        json_abs = (OliviaLegal_ROOT / json_rel).resolve()
-        md_abs = (OliviaLegal_ROOT / md_rel).resolve()
+        json_abs = (Olivia_ROOT / json_rel).resolve()
+        md_abs = (Olivia_ROOT / md_rel).resolve()
         json_available = json_abs.is_file()
         md_available = md_abs.is_file()
         return {
@@ -12837,7 +12837,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         def _resolve_soffice_binary() -> str:
             env_candidates = [
-                str(os.environ.get("OliviaLegal_SOFFICE_BIN", "") or "").strip(),
+                str(os.environ.get("Olivia_SOFFICE_BIN", "") or "").strip(),
                 str(os.environ.get("SOFFICE_BIN", "") or "").strip(),
                 str(os.environ.get("LIBREOFFICE_BIN", "") or "").strip(),
             ]
@@ -13420,7 +13420,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         """Read agents/skills/manifest.json and return it with a normalized
         shape so the frontend can populate the Edit Agent skill select with
         id + name + description regardless of the external service status."""
-        manifest_path = OliviaLegal_ROOT / "agents" / "skills" / "manifest.json"
+        manifest_path = Olivia_ROOT / "agents" / "skills" / "manifest.json"
         try:
             if not manifest_path.is_file():
                 return {"skills": [], "total": 0, "source": "local:empty"}
@@ -14241,7 +14241,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         if path == "/api/orchestration/contracts":
-            self._json_response(build_orchestration_contract_bundle(OliviaLegal_ROOT))
+            self._json_response(build_orchestration_contract_bundle(Olivia_ROOT))
             return
 
         if path == "/api/orchestration/ready":
@@ -14575,7 +14575,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
     # ── Notes persistence ────────────────────────────────────────────────────
     def _notes_file_path(self, stem: str) -> Path:
-        notes_dir = OliviaLegal_ROOT / "data" / "notes"
+        notes_dir = Olivia_ROOT / "data" / "notes"
         notes_dir.mkdir(parents=True, exist_ok=True)
         safe = re.sub(r"[^\w\-.]", "_", stem)
         return notes_dir / f"{safe}.json"
@@ -16161,7 +16161,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                     return
                 target = _resolve_project_rel_target(pid, PROJECT_ROOT, rel)
                 project_root = PROJECT_ROOT.resolve()
-                legacy_root = (OliviaLegal_ROOT / "outputs").resolve()
+                legacy_root = (Olivia_ROOT / "outputs").resolve()
                 if not target.is_file() or not (_path_is_within(project_root, target) or _path_is_within(legacy_root, target)):
                     self._json_response({"error": "file not found"}, 404)
                     return
@@ -16188,7 +16188,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                     return
                 target = _resolve_project_rel_target(pid, PROJECT_ROOT, rel)
                 project_root = PROJECT_ROOT.resolve()
-                legacy_root = (OliviaLegal_ROOT / "outputs").resolve()
+                legacy_root = (Olivia_ROOT / "outputs").resolve()
                 if not target.is_file() or not (_path_is_within(project_root, target) or _path_is_within(legacy_root, target)):
                     self._json_response({"error": "not found"}, 404)
                     return
@@ -16321,7 +16321,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 return
             target = _resolve_project_rel_target(pid, project_dir, rel)
             project_root = project_dir.resolve()
-            legacy_root = (OliviaLegal_ROOT / "outputs").resolve()
+            legacy_root = (Olivia_ROOT / "outputs").resolve()
             if not (_path_is_within(project_root, target) or _path_is_within(legacy_root, target)):
                 self._json_response({"error": "path traversal"}, 403)
                 return
@@ -16348,7 +16348,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             rel = _normalize_project_rel_path(pid, qs.get("path", [""])[0])
             target = _resolve_project_rel_target(pid, project_dir, rel)
             project_root = project_dir.resolve()
-            legacy_root = (OliviaLegal_ROOT / "outputs").resolve()
+            legacy_root = (Olivia_ROOT / "outputs").resolve()
             if not target.is_file() or not (_path_is_within(project_root, target) or _path_is_within(legacy_root, target)):
                 self._json_response({"error": "not found"}, 404)
                 return
@@ -17195,7 +17195,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         except Exception as exc:
             mcp_error = str(exc)
 
-        contracts = build_orchestration_contract_report(OliviaLegal_ROOT)
+        contracts = build_orchestration_contract_report(Olivia_ROOT)
         visualizer_probe = self._probe_http_dependency(f"{self._AGENT_ARCH_VISUALIZER_URL}/api/health")
         skill_probe = self._probe_http_dependency(f"{self._AGENT_ARCH_SKILL_URL}/api/skills")
 
@@ -18259,7 +18259,7 @@ def main():
     parser.add_argument("--port", type=int, default=DEFAULT_PORT, help=f"Port (default: {DEFAULT_PORT})")
     args = parser.parse_args()
 
-    os.chdir(OliviaLegal_ROOT)
+    os.chdir(Olivia_ROOT)
 
     class QuietServer(http.server.ThreadingHTTPServer):
         """Suppress noisy tracebacks from client disconnects."""

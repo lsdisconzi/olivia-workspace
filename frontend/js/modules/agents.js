@@ -535,7 +535,7 @@ async function loadAgentBackgroundStatuses(options) {
 }
 
 function ensureAgentBackgroundPolling() {
-  if (window.OliviaLegal_EMBED_MODE) return;
+  if (window.Olivia_EMBED_MODE) return;
   if (_agentBgPollTimer) return;
   _agentBgPollTimer = setInterval(() => {
     if (document.hidden) return;
@@ -1477,7 +1477,7 @@ async function loadMcpServerOptions(selectedNames = null) {
 
 // Load agents from API and update UI
 async function loadAgents() {
-  if (window.OliviaLegal_EMBED_MODE) return;
+  if (window.Olivia_EMBED_MODE) return;
   // Map seeded runtime agent names to the slugs used in agents.olivia.language.json.
   if (typeof window.registerAgentSlugOverrides === 'function') {
     window.registerAgentSlugOverrides({
@@ -2317,9 +2317,9 @@ async function submitBundleImport() {
 async function showCreateModal() {
   _editingAgentId = null;
   _modalAgentType = 'openclaude';
-  if (window.OliviaLegal_FUNCTIONS && typeof window.OliviaLegal_FUNCTIONS.init === 'function') {
+  if (window.Olivia_FUNCTIONS && typeof window.Olivia_FUNCTIONS.init === 'function') {
     try {
-      await window.OliviaLegal_FUNCTIONS.init();
+      await window.Olivia_FUNCTIONS.init();
     } catch (_e) {
       // Non-blocking: modal can still open without mapped registry context.
     }
@@ -2618,8 +2618,8 @@ function selectMemoryFilesFromShared() {
 }
 
 function _buildMappedFunctionsContextBrief() {
-  const regApi = (typeof window !== 'undefined' && window.OliviaLegal_FUNCTIONS)
-    ? window.OliviaLegal_FUNCTIONS
+  const regApi = (typeof window !== 'undefined' && window.Olivia_FUNCTIONS)
+    ? window.Olivia_FUNCTIONS
     : null;
   const baseLines = [
     '## Olivia API Mapping Context',
@@ -2745,9 +2745,9 @@ async function loadSharedScopes() {
 
 // Submit create agent form
 async function submitCreateAgent() {
-  if (window.OliviaLegal_FUNCTIONS && typeof window.OliviaLegal_FUNCTIONS.init === 'function') {
+  if (window.Olivia_FUNCTIONS && typeof window.Olivia_FUNCTIONS.init === 'function') {
     try {
-      await window.OliviaLegal_FUNCTIONS.init();
+      await window.Olivia_FUNCTIONS.init();
     } catch (_e) {
       // Keep agent creation functional even if mapping context fails to load.
     }

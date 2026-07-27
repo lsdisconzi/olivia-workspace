@@ -8,84 +8,148 @@
 
   // ── Catálogo de workflows (24 skills do plugin craudio) ──────────────────
   var CR_GROUPS = [
-    { id: 'config',   label: 'Configuração' },
+    { id: 'config', label: 'Configuração' },
     { id: 'analysis', label: 'Análise & Evidência' },
     { id: 'drafting', label: 'Redação' },
-    { id: 'review',   label: 'Revisão & Gestão' },
+    { id: 'review', label: 'Revisão & Gestão' },
   ];
 
   var CR_WORKFLOWS = [
-    { name: 'cold-start-interview', group: 'config', title: 'Entrevista de Abertura',
-      desc: 'Entrevista de intake e configuração do caso — aprende parâmetros, preferências de patrono, estratégia de jurisdição e caminhos de documentos. Rode primeiro: todo o resto depende dela.' },
-    { name: 'matter-intake', group: 'config', title: 'Abertura de Caso',
-      desc: 'Cria o arquivo formal do caso — grava matter.md com identificação, partes, jurisdição e estratégia inicial, e anexa ao log de casos do escritório.' },
-    { name: 'customize', group: 'config', title: 'Personalizar Plugin',
-      desc: 'Adapta o plugin a um novo advogado, escritório ou caso sem refazer toda a entrevista — muda preferências, estilo, contatos de escalonamento ou calibragem de risco.' },
+    {
+      name: 'cold-start-interview', group: 'config', title: 'Entrevista de Abertura',
+      desc: 'Entrevista de intake e configuração do caso — aprende parâmetros, preferências de patrono, estratégia de jurisdição e caminhos de documentos. Rode primeiro: todo o resto depende dela.'
+    },
+    {
+      name: 'matter-intake', group: 'config', title: 'Abertura de Caso',
+      desc: 'Cria o arquivo formal do caso — grava matter.md com identificação, partes, jurisdição e estratégia inicial, e anexa ao log de casos do escritório.'
+    },
+    {
+      name: 'customize', group: 'config', title: 'Personalizar Plugin',
+      desc: 'Adapta o plugin a um novo advogado, escritório ou caso sem refazer toda a entrevista — muda preferências, estilo, contatos de escalonamento ou calibragem de risco.'
+    },
 
-    { name: 'violation-analysis', group: 'analysis', title: 'Análise de Violações',
-      desc: 'Processa violações candidatas pelo pipeline estruturado — evidência → normas → nexo → confiança → enriquecimento jurisprudencial. O motor central de raciocínio.' },
-    { name: 'legal-framework-mapping', group: 'analysis', title: 'Mapeamento de Marco Legal',
-      desc: 'Mapeia cada fato do caso a cada artigo legal aplicável em todas as jurisdições. Marcos e artigos carregados a partir dos packs.' },
-    { name: 'cross-jurisdiction-nexus', group: 'analysis', title: 'Nexo Interjurisdicional',
-      desc: 'Analisa as conexões entre jurisdições — como conduta em um país gera consequências em outro e como condutas de agentes estatais ativam obrigações de tratados.' },
-    { name: 'systemic-pattern-analysis', group: 'analysis', title: 'Padrão Sistêmico',
-      desc: 'Analisa o padrão institucional entre incidentes — políticas recorrentes, práticas de manuseio de documentos e cultura. Distingue o padrão sistêmico das violações individuais.' },
-    { name: 'evidence-chain-verification', group: 'analysis', title: 'Cadeia de Custódia',
-      desc: 'Verifica autenticidade, cadeia de custódia e integridade forense das provas — hashes, alinhamento fonte-transcrição, diarização e lacunas que exigem ordens de preservação.' },
-    { name: 'transcript-segment-analysis', group: 'analysis', title: 'Análise de Transcrições',
-      desc: 'Mineração profunda do corpus de transcrições — extrai citações verbatim, identifica admissões-chave e cruza segmentos a violações específicas.' },
-    { name: 'document-authentication', group: 'analysis', title: 'Autenticação de Documentos',
-      desc: 'Autentica documentos físicos e digitais para uso judicial — verifica se gravações, transcrições e provas documentais atendem aos padrões de cada jurisdição.' },
-    { name: 'prejudice-quantification', group: 'analysis', title: 'Quantificação de Danos',
-      desc: 'Calcula danos morais e materiais em todas as jurisdições do caso. Rubricas de dano, referências e limites de responsabilidade vêm dos packs.' },
-    { name: 'jurisprudence-search', group: 'analysis', title: 'Busca de Jurisprudência',
-      desc: 'Busca precedentes de apoio nas bases jurisprudenciais de cada jurisdição declarada pelo caso.' },
+    {
+      name: 'violation-analysis', group: 'analysis', title: 'Análise de Violações',
+      desc: 'Processa violações candidatas pelo pipeline estruturado — evidência → normas → nexo → confiança → enriquecimento jurisprudencial. O motor central de raciocínio.'
+    },
+    {
+      name: 'legal-framework-mapping', group: 'analysis', title: 'Mapeamento de Marco Legal',
+      desc: 'Mapeia cada fato do caso a cada artigo legal aplicável em todas as jurisdições. Marcos e artigos carregados a partir dos packs.'
+    },
+    {
+      name: 'cross-jurisdiction-nexus', group: 'analysis', title: 'Nexo Interjurisdicional',
+      desc: 'Analisa as conexões entre jurisdições — como conduta em um país gera consequências em outro e como condutas de agentes estatais ativam obrigações de tratados.'
+    },
+    {
+      name: 'systemic-pattern-analysis', group: 'analysis', title: 'Padrão Sistêmico',
+      desc: 'Analisa o padrão institucional entre incidentes — políticas recorrentes, práticas de manuseio de documentos e cultura. Distingue o padrão sistêmico das violações individuais.'
+    },
+    {
+      name: 'evidence-chain-verification', group: 'analysis', title: 'Cadeia de Custódia',
+      desc: 'Verifica autenticidade, cadeia de custódia e integridade forense das provas — hashes, alinhamento fonte-transcrição, diarização e lacunas que exigem ordens de preservação.'
+    },
+    {
+      name: 'transcript-segment-analysis', group: 'analysis', title: 'Análise de Transcrições',
+      desc: 'Mineração profunda do corpus de transcrições — extrai citações verbatim, identifica admissões-chave e cruza segmentos a violações específicas.'
+    },
+    {
+      name: 'document-authentication', group: 'analysis', title: 'Autenticação de Documentos',
+      desc: 'Autentica documentos físicos e digitais para uso judicial — verifica se gravações, transcrições e provas documentais atendem aos padrões de cada jurisdição.'
+    },
+    {
+      name: 'prejudice-quantification', group: 'analysis', title: 'Quantificação de Danos',
+      desc: 'Calcula danos morais e materiais em todas as jurisdições do caso. Rubricas de dano, referências e limites de responsabilidade vêm dos packs.'
+    },
+    {
+      name: 'jurisprudence-search', group: 'analysis', title: 'Busca de Jurisprudência',
+      desc: 'Busca precedentes de apoio nas bases jurisprudenciais de cada jurisdição declarada pelo caso.'
+    },
 
-    { name: 'demand-draft', group: 'drafting', title: 'Carta de Demanda',
-      desc: 'Redige cartas de demanda específicas por jurisdição para cada réu — idioma e foro vêm dos packs; pretensões vêm da análise de violações do caso.' },
-    { name: 'claim-chart', group: 'drafting', title: 'Claim Chart',
-      desc: 'Constrói claim charts elemento a elemento para cada causa de pedir — mapeia elementos legais a fatos específicos com âncoras de evidência.' },
-    { name: 'brief-section-drafter', group: 'drafting', title: 'Redação de Peças',
-      desc: 'Redige seções de petições e peças para os foros do caso — específicas por jurisdição, no idioma do foro, com citações de evidência.' },
-    { name: 'chronology', group: 'drafting', title: 'Cronologia do Caso',
-      desc: 'Monta a linha do tempo canônica a partir de timestamps de transcrições, metadados de provas e registros de violação. Cada entrada ancorada a evidência específica.' },
-    { name: 'deposition-prep', group: 'drafting', title: 'Preparação de Depoimentos',
-      desc: 'Monta roteiros de depoimento e inquirição de testemunhas para os atores-chave do caso, a partir do registro de atores.' },
+    {
+      name: 'demand-draft', group: 'drafting', title: 'Carta de Demanda',
+      desc: 'Redige cartas de demanda específicas por jurisdição para cada réu — idioma e foro vêm dos packs; pretensões vêm da análise de violações do caso.'
+    },
+    {
+      name: 'claim-chart', group: 'drafting', title: 'Claim Chart',
+      desc: 'Constrói claim charts elemento a elemento para cada causa de pedir — mapeia elementos legais a fatos específicos com âncoras de evidência.'
+    },
+    {
+      name: 'brief-section-drafter', group: 'drafting', title: 'Redação de Peças',
+      desc: 'Redige seções de petições e peças para os foros do caso — específicas por jurisdição, no idioma do foro, com citações de evidência.'
+    },
+    {
+      name: 'chronology', group: 'drafting', title: 'Cronologia do Caso',
+      desc: 'Monta a linha do tempo canônica a partir de timestamps de transcrições, metadados de provas e registros de violação. Cada entrada ancorada a evidência específica.'
+    },
+    {
+      name: 'deposition-prep', group: 'drafting', title: 'Preparação de Depoimentos',
+      desc: 'Monta roteiros de depoimento e inquirição de testemunhas para os atores-chave do caso, a partir do registro de atores.'
+    },
 
-    { name: 'ontology-validate', group: 'review', title: 'Validação de Ontologia',
-      desc: 'Confere uma saída de análise jurídica contra as invariantes da ontologia legível por máquina. Use após qualquer skill de motor — antes de a saída chegar a um tribunal.' },
-    { name: 'privilege-log-review', group: 'review', title: 'Sigilo & Privilégio',
-      desc: 'Analisa sigilo e privilégio transfronteiriço — distingue as proteções de cada jurisdição e identifica riscos de privilégio entre fronteiras.' },
-    { name: 'legal-hold', group: 'review', title: 'Ordem de Preservação',
-      desc: 'Emite, renova, libera ou reporta ordens de preservação de provas — redige notificações e pedidos judiciais de preservação e acompanha custodiantes.' },
-    { name: 'matter-briefing', group: 'review', title: 'Briefing do Caso',
-      desc: 'Gera um briefing aprofundado do caso — pronto para sócio, co-counsel ou chamada com cliente. Destila violações, provas e transcrições em um resumo executivo.' },
-    { name: 'matter-update', group: 'review', title: 'Atualização do Caso',
-      desc: 'Anexa um evento datado ao histórico do caso e atualiza sua linha no log — desenvolvimentos, mudanças de status/fase, reavaliação de risco e prazos.' },
-    { name: 'matter-close', group: 'review', title: 'Encerramento do Caso',
-      desc: 'Encerra o caso — registra o desfecho em todas as jurisdições, danos recuperados vs. estimados, lições e estado final, sem apagar o registro.' },
-    { name: 'oc-status', group: 'review', title: 'Status para Co-counsel (CL)',
-      desc: 'Gera um informe periódico para o co-counsel chileno — status nos foros BR e CL, coordenação interjurisdicional, vigília de prescrição e itens de ação.' },
+    {
+      name: 'ontology-validate', group: 'review', title: 'Validação de Ontologia',
+      desc: 'Confere uma saída de análise jurídica contra as invariantes da ontologia legível por máquina. Use após qualquer skill de motor — antes de a saída chegar a um tribunal.'
+    },
+    {
+      name: 'privilege-log-review', group: 'review', title: 'Sigilo & Privilégio',
+      desc: 'Analisa sigilo e privilégio transfronteiriço — distingue as proteções de cada jurisdição e identifica riscos de privilégio entre fronteiras.'
+    },
+    {
+      name: 'legal-hold', group: 'review', title: 'Ordem de Preservação',
+      desc: 'Emite, renova, libera ou reporta ordens de preservação de provas — redige notificações e pedidos judiciais de preservação e acompanha custodiantes.'
+    },
+    {
+      name: 'matter-briefing', group: 'review', title: 'Briefing do Caso',
+      desc: 'Gera um briefing aprofundado do caso — pronto para sócio, co-counsel ou chamada com cliente. Destila violações, provas e transcrições em um resumo executivo.'
+    },
+    {
+      name: 'matter-update', group: 'review', title: 'Atualização do Caso',
+      desc: 'Anexa um evento datado ao histórico do caso e atualiza sua linha no log — desenvolvimentos, mudanças de status/fase, reavaliação de risco e prazos.'
+    },
+    {
+      name: 'matter-close', group: 'review', title: 'Encerramento do Caso',
+      desc: 'Encerra o caso — registra o desfecho em todas as jurisdições, danos recuperados vs. estimados, lições e estado final, sem apagar o registro.'
+    },
+    {
+      name: 'oc-status', group: 'review', title: 'Status para Co-counsel (CL)',
+      desc: 'Gera um informe periódico para o co-counsel chileno — status nos foros BR e CL, coordenação interjurisdicional, vigília de prescrição e itens de ação.'
+    },
   ];
 
   // ── Catálogo de agentes agendados (8) ────────────────────────────────────
   var CR_AGENTS = [
-    { name: 'deadline-tracker', title: 'Rastreador de Prazos', cadence: 'Diário',
-      desc: 'Acompanha toda prescrição, decadência e prazo processual em todas as jurisdições. Produz uma contagem regressiva priorizada e escala agressivamente nos 30 dias finais de qualquer prazo crítico.' },
-    { name: 'docket-watcher-br', title: 'Vigia de Autos · Brasil', cadence: 'Diário',
-      desc: 'Monitora autos judiciais e procedimentos administrativos brasileiros em busca de novas petições, decisões e prazos. Posta alertas no canal configurado no perfil do caso.' },
-    { name: 'docket-watcher-cl', title: 'Vigia de Autos · Chile', cadence: 'Diário',
-      desc: 'Monitora autos judiciais e procedimentos administrativos chilenos em busca de novas petições, decisões e prazos. Posta alertas no canal configurado no perfil do caso.' },
-    { name: 'evidence-integrity-monitor', title: 'Integridade de Provas', cadence: 'Semanal',
-      desc: 'Verifica a integridade das provas — confere hashes SHA-256 contra o manifesto, checa lacunas na cadeia de custódia e monitora novas provas adicionadas ao acervo.' },
-    { name: 'jurisprudence-updater', title: 'Atualizador de Jurisprudência', cadence: 'Semanal',
-      desc: 'Varre as fontes jurisprudenciais de cada jurisdição em busca de novos precedentes sobre os temas do caso. Sinaliza decisões que fortalecem, enfraquecem ou distinguem a tese.' },
-    { name: 'regulatory-feed-monitor', title: 'Monitor Regulatório', cadence: 'Semanal',
-      desc: 'Consulta os órgãos reguladores relevantes ao caso em busca de mudanças, novas resoluções, ações de enforcement e posicionamentos que afetem a estratégia.' },
-    { name: 'media-monitor', title: 'Monitor de Mídia', cadence: 'Semanal',
-      desc: 'Monitora imprensa, publicações setoriais e redes sociais sobre o caso, as partes e reclamações de consumidores. Sinaliza riscos reputacionais e indícios de pressão por acordo.' },
-    { name: 'cross-border-service-monitor', title: 'Citação Internacional', cadence: 'Semanal',
-      desc: 'Acompanha a citação internacional de cada réu — cartas rogatórias, apostilamento, conformidade com convenções e traduções. Sinaliza atrasos que ameacem prazos de prescrição.' },
+    {
+      name: 'deadline-tracker', title: 'Rastreador de Prazos', cadence: 'Diário',
+      desc: 'Acompanha toda prescrição, decadência e prazo processual em todas as jurisdições. Produz uma contagem regressiva priorizada e escala agressivamente nos 30 dias finais de qualquer prazo crítico.'
+    },
+    {
+      name: 'docket-watcher-br', title: 'Vigia de Autos · Brasil', cadence: 'Diário',
+      desc: 'Monitora autos judiciais e procedimentos administrativos brasileiros em busca de novas petições, decisões e prazos. Posta alertas no canal configurado no perfil do caso.'
+    },
+    {
+      name: 'docket-watcher-cl', title: 'Vigia de Autos · Chile', cadence: 'Diário',
+      desc: 'Monitora autos judiciais e procedimentos administrativos chilenos em busca de novas petições, decisões e prazos. Posta alertas no canal configurado no perfil do caso.'
+    },
+    {
+      name: 'evidence-integrity-monitor', title: 'Integridade de Provas', cadence: 'Semanal',
+      desc: 'Verifica a integridade das provas — confere hashes SHA-256 contra o manifesto, checa lacunas na cadeia de custódia e monitora novas provas adicionadas ao acervo.'
+    },
+    {
+      name: 'jurisprudence-updater', title: 'Atualizador de Jurisprudência', cadence: 'Semanal',
+      desc: 'Varre as fontes jurisprudenciais de cada jurisdição em busca de novos precedentes sobre os temas do caso. Sinaliza decisões que fortalecem, enfraquecem ou distinguem a tese.'
+    },
+    {
+      name: 'regulatory-feed-monitor', title: 'Monitor Regulatório', cadence: 'Semanal',
+      desc: 'Consulta os órgãos reguladores relevantes ao caso em busca de mudanças, novas resoluções, ações de enforcement e posicionamentos que afetem a estratégia.'
+    },
+    {
+      name: 'media-monitor', title: 'Monitor de Mídia', cadence: 'Semanal',
+      desc: 'Monitora imprensa, publicações setoriais e redes sociais sobre o caso, as partes e reclamações de consumidores. Sinaliza riscos reputacionais e indícios de pressão por acordo.'
+    },
+    {
+      name: 'cross-border-service-monitor', title: 'Citação Internacional', cadence: 'Semanal',
+      desc: 'Acompanha a citação internacional de cada réu — cartas rogatórias, apostilamento, conformidade com convenções e traduções. Sinaliza atrasos que ameacem prazos de prescrição.'
+    },
   ];
 
   var CR_PIPELINE = ['Evidência', 'Normas', 'Nexo', 'Confiança', 'Jurisprudência'];
@@ -105,7 +169,7 @@
   var crSessionId = null;
   var crPrimerSent = false;
   var crStreaming = false;
-  var CR_STORAGE_KEY = 'OliviaLegal_craudio_chat_v1';
+  var CR_STORAGE_KEY = 'Olivia_craudio_chat_v1';
 
   var CR_PRIMER = [
     'Você é o Craudio — assistente de litígio civil multijurisdicional (Brasil, Chile e direito internacional de tratados).',
@@ -141,29 +205,29 @@
 
     view.innerHTML =
       '<div class="cr-head">' +
-        '<div class="cr-head-brand">' +
-          '<span class="cr-logo">' + CUBE_SVG + '</span>' +
-          '<span class="cr-title">Craudio</span>' +
-          '<span class="cr-sub">Litígio Multijurisdicional</span>' +
-        '</div>' +
-        '<button class="btn btn-sm" onclick="craudioHideView()" title="Fechar">' +
-          '<i class="fas fa-times"></i></button>' +
+      '<div class="cr-head-brand">' +
+      '<span class="cr-logo">' + CUBE_SVG + '</span>' +
+      '<span class="cr-title">Craudio</span>' +
+      '<span class="cr-sub">Litígio Multijurisdicional</span>' +
+      '</div>' +
+      '<button class="btn btn-sm" onclick="craudioHideView()" title="Fechar">' +
+      '<i class="fas fa-times"></i></button>' +
       '</div>' +
       '<div class="cr-subnav">' +
-        '<button class="cr-tab active" data-panel="overview"  onclick="craudioSwitchPanel(\'overview\')">Visão Geral</button>' +
-        '<button class="cr-tab"        data-panel="workflows" onclick="craudioSwitchPanel(\'workflows\')">Workflows</button>' +
-        '<button class="cr-tab"        data-panel="agents"    onclick="craudioSwitchPanel(\'agents\')">Agentes</button>' +
-        '<button class="cr-tab"        data-panel="chat"      onclick="craudioSwitchPanel(\'chat\')">Chat</button>' +
+      '<button class="cr-tab active" data-panel="overview"  onclick="craudioSwitchPanel(\'overview\')">Visão Geral</button>' +
+      '<button class="cr-tab"        data-panel="workflows" onclick="craudioSwitchPanel(\'workflows\')">Workflows</button>' +
+      '<button class="cr-tab"        data-panel="agents"    onclick="craudioSwitchPanel(\'agents\')">Agentes</button>' +
+      '<button class="cr-tab"        data-panel="chat"      onclick="craudioSwitchPanel(\'chat\')">Chat</button>' +
       '</div>' +
       '<div class="cr-panels">' +
-        '<div id="crPanel-overview"  class="cr-panel active">' + overviewHtml() + '</div>' +
-        '<div id="crPanel-workflows" class="cr-panel">' + workflowsHtml() + '</div>' +
-        '<div id="crPanel-agents"    class="cr-panel">' + agentsHtml() + '</div>' +
-        '<div id="crPanel-chat"      class="cr-panel">' + chatHtml() + '</div>' +
+      '<div id="crPanel-overview"  class="cr-panel active">' + overviewHtml() + '</div>' +
+      '<div id="crPanel-workflows" class="cr-panel">' + workflowsHtml() + '</div>' +
+      '<div id="crPanel-agents"    class="cr-panel">' + agentsHtml() + '</div>' +
+      '<div id="crPanel-chat"      class="cr-panel">' + chatHtml() + '</div>' +
       '</div>' +
       '<div id="crDetail" class="cr-detail">' +
-        '<div class="cr-detail-backdrop" onclick="craudioCloseDetail()"></div>' +
-        '<div class="cr-detail-card" id="crDetailCard"></div>' +
+      '<div class="cr-detail-backdrop" onclick="craudioCloseDetail()"></div>' +
+      '<div class="cr-detail-card" id="crDetailCard"></div>' +
       '</div>';
 
     crBuilt = true;
@@ -185,40 +249,40 @@
     }).join('');
 
     return '<div class="cr-hero">' +
-        '<span class="cr-hero-logo">' + CUBE_SVG + '</span>' +
-        '<h1 class="cr-hero-title">Craudio</h1>' +
-        '<p class="cr-hero-tag">Litígio civil estratégico entre Brasil, Chile e o direito internacional de tratados — orientado a workflows.</p>' +
+      '<span class="cr-hero-logo">' + CUBE_SVG + '</span>' +
+      '<h1 class="cr-hero-title">Craudio</h1>' +
+      '<p class="cr-hero-tag">Litígio civil estratégico entre Brasil, Chile e o direito internacional de tratados — orientado a workflows.</p>' +
       '</div>' +
       '<div class="cr-block">' +
-        '<h3 class="cr-h3">O que é</h3>' +
-        '<p class="cr-p">O Craudio é um plugin de litígio multijurisdicional. Ele transforma o trabalho do caso em workflows estruturados e auditáveis: cada análise consome fatos do caso e conhecimento jurídico carregado de <em>packs</em>, e emite minutas com proveniência de fonte. Nada é afirmado como conclusão — tudo é minuta para revisão do advogado.</p>' +
+      '<h3 class="cr-h3">O que é</h3>' +
+      '<p class="cr-p">O Craudio é um plugin de litígio multijurisdicional. Ele transforma o trabalho do caso em workflows estruturados e auditáveis: cada análise consome fatos do caso e conhecimento jurídico carregado de <em>packs</em>, e emite minutas com proveniência de fonte. Nada é afirmado como conclusão — tudo é minuta para revisão do advogado.</p>' +
       '</div>' +
       '<div class="cr-block">' +
-        '<h3 class="cr-h3">O pipeline central</h3>' +
-        '<p class="cr-p">Toda violação candidata percorre o mesmo caminho probabilístico, da prova bruta ao precedente que a sustenta:</p>' +
-        '<div class="cr-pipeline">' + pipeline + '</div>' +
+      '<h3 class="cr-h3">O pipeline central</h3>' +
+      '<p class="cr-p">Toda violação candidata percorre o mesmo caminho probabilístico, da prova bruta ao precedente que a sustenta:</p>' +
+      '<div class="cr-pipeline">' + pipeline + '</div>' +
       '</div>' +
       '<div class="cr-stats">' + stats + '</div>' +
       '<div class="cr-guard"><i class="fas fa-scale-balanced"></i> ' +
-        'Toda saída do Craudio é uma minuta para revisão do advogado — não é aconselhamento jurídico nem conclusão. O advogado revisa, verifica e assume a responsabilidade profissional.' +
+      'Toda saída do Craudio é uma minuta para revisão do advogado — não é aconselhamento jurídico nem conclusão. O advogado revisa, verifica e assume a responsabilidade profissional.' +
       '</div>' +
       '<div class="cr-cta">' +
-        '<button class="btn btn-primary" onclick="craudioSwitchPanel(\'workflows\')">' +
-          '<i class="fas fa-diagram-project"></i> Explorar workflows</button>' +
-        '<button class="btn" onclick="craudioSwitchPanel(\'chat\')">' +
-          '<i class="fas fa-comments"></i> Abrir o chat</button>' +
+      '<button class="btn btn-primary" onclick="craudioSwitchPanel(\'workflows\')">' +
+      '<i class="fas fa-diagram-project"></i> Explorar workflows</button>' +
+      '<button class="btn" onclick="craudioSwitchPanel(\'chat\')">' +
+      '<i class="fas fa-comments"></i> Abrir o chat</button>' +
       '</div>';
   }
 
   function cardHtml(kind, item, badge) {
     return '<div class="cr-card" onclick="craudioOpenDetail(\'' + kind + '\',\'' + item.name + '\')">' +
       '<div class="cr-card-head">' +
-        '<span class="cr-card-title">' + esc(item.title) + '</span>' +
-        '<span class="cr-card-badge">' + esc(badge) + '</span>' +
+      '<span class="cr-card-title">' + esc(item.title) + '</span>' +
+      '<span class="cr-card-badge">' + esc(badge) + '</span>' +
       '</div>' +
       '<p class="cr-card-desc">' + esc(item.desc) + '</p>' +
       '<span class="cr-card-name">' +
-        (kind === 'skill' ? '/craudio:' + esc(item.name) : esc(item.name)) +
+      (kind === 'skill' ? '/craudio:' + esc(item.name) : esc(item.name)) +
       '</span></div>';
   }
 
@@ -247,19 +311,19 @@
 
   function chatHtml() {
     return '<div class="cr-chat">' +
-        '<div class="cr-chat-bar">' +
-          '<span class="cr-chat-bar-label"><i class="fas fa-cube"></i> Chat Craudio</span>' +
-          '<button class="btn btn-sm" onclick="craudioNewChat()" title="Nova conversa">' +
-            '<i class="fas fa-plus"></i> Nova conversa</button>' +
-        '</div>' +
-        '<div id="crChatLog" class="cr-chat-log"></div>' +
-        '<div class="cr-chat-compose">' +
-          '<textarea id="crChatInput" class="cr-chat-input" rows="1" ' +
-            'placeholder="Pergunte ao Craudio ou execute um workflow…" ' +
-            'onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();craudioSend();}"></textarea>' +
-          '<button class="cr-chat-send" id="crChatSend" onclick="craudioSend()" title="Enviar">' +
-            '<i class="fas fa-arrow-up"></i></button>' +
-        '</div>' +
+      '<div class="cr-chat-bar">' +
+      '<span class="cr-chat-bar-label"><i class="fas fa-cube"></i> Chat Craudio</span>' +
+      '<button class="btn btn-sm" onclick="craudioNewChat()" title="Nova conversa">' +
+      '<i class="fas fa-plus"></i> Nova conversa</button>' +
+      '</div>' +
+      '<div id="crChatLog" class="cr-chat-log"></div>' +
+      '<div class="cr-chat-compose">' +
+      '<textarea id="crChatInput" class="cr-chat-input" rows="1" ' +
+      'placeholder="Pergunte ao Craudio ou execute um workflow…" ' +
+      'onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();craudioSend();}"></textarea>' +
+      '<button class="cr-chat-send" id="crChatSend" onclick="craudioSend()" title="Enviar">' +
+      '<i class="fas fa-arrow-up"></i></button>' +
+      '</div>' +
       '</div>';
   }
 
@@ -295,27 +359,27 @@
     var card = document.getElementById('crDetailCard');
     card.innerHTML =
       '<div class="cr-detail-head">' +
-        '<div>' +
-          '<div class="cr-detail-kicker">' + esc(badge || '') + '</div>' +
-          '<h2 class="cr-detail-title">' + esc(item.title) + '</h2>' +
-        '</div>' +
-        '<button class="btn btn-sm" onclick="craudioCloseDetail()"><i class="fas fa-times"></i></button>' +
+      '<div>' +
+      '<div class="cr-detail-kicker">' + esc(badge || '') + '</div>' +
+      '<h2 class="cr-detail-title">' + esc(item.title) + '</h2>' +
+      '</div>' +
+      '<button class="btn btn-sm" onclick="craudioCloseDetail()"><i class="fas fa-times"></i></button>' +
       '</div>' +
       '<p class="cr-detail-desc">' + esc(item.desc) + '</p>' +
       (isSkill
         ? '<div class="cr-detail-meta"><span class="cr-detail-meta-label">Posição no pipeline</span>' +
-          '<div class="cr-pipeline cr-pipeline-sm">' +
-          CR_PIPELINE.map(function (s, i) {
-            return '<span class="cr-pipe-step">' + esc(s) + '</span>' +
-              (i < CR_PIPELINE.length - 1 ? '<i class="fas fa-arrow-right cr-pipe-arrow"></i>' : '');
-          }).join('') + '</div></div>'
+        '<div class="cr-pipeline cr-pipeline-sm">' +
+        CR_PIPELINE.map(function (s, i) {
+          return '<span class="cr-pipe-step">' + esc(s) + '</span>' +
+            (i < CR_PIPELINE.length - 1 ? '<i class="fas fa-arrow-right cr-pipe-arrow"></i>' : '');
+        }).join('') + '</div></div>'
         : '<div class="cr-detail-meta"><span class="cr-detail-meta-label">Cadência</span>' +
-          '<span class="cr-detail-cadence">' + esc(item.cadence) + '</span></div>') +
+        '<span class="cr-detail-cadence">' + esc(item.cadence) + '</span></div>') +
       '<div class="cr-detail-cmd"><span class="cr-detail-meta-label">Comando</span>' +
-        '<code>' + esc(command) + '</code></div>' +
+      '<code>' + esc(command) + '</code></div>' +
       '<button class="btn btn-primary cr-detail-run" ' +
-        'onclick="craudioRun(' + JSON.stringify(command).replace(/"/g, '&quot;') + ')">' +
-        '<i class="fas fa-play"></i> Executar no chat</button>';
+      'onclick="craudioRun(' + JSON.stringify(command).replace(/"/g, '&quot;') + ')">' +
+      '<i class="fas fa-play"></i> Executar no chat</button>';
 
     document.getElementById('crDetail').classList.add('open');
   };
@@ -342,7 +406,7 @@
     } catch (_e) { crHistory = []; }
   }
   function saveHistory() {
-    try { localStorage.setItem(CR_STORAGE_KEY, JSON.stringify(crHistory)); } catch (_e) {}
+    try { localStorage.setItem(CR_STORAGE_KEY, JSON.stringify(crHistory)); } catch (_e) { }
   }
 
   function renderChatLog() {
@@ -546,9 +610,9 @@
     });
     var mc = document.querySelector('.main-content');
     if (mc) { mc._crDisplay = mc.style.display; mc.style.display = 'none'; }
-    if (typeof window.aexHideMain === 'function') { try { window.aexHideMain(); } catch (_e) {} }
+    if (typeof window.aexHideMain === 'function') { try { window.aexHideMain(); } catch (_e) { } }
     CR_SIBLING_HIDE.forEach(function (fn) {
-      try { if (typeof window[fn] === 'function') window[fn](); } catch (_e) {}
+      try { if (typeof window[fn] === 'function') window[fn](); } catch (_e) { }
     });
     var v = document.getElementById('craudioView');
     if (v) v.classList.add('active');
@@ -579,7 +643,7 @@
       var orig = window[n];
       if (typeof orig !== 'function' || orig._crWrapped) return;
       var wrapped = function () {
-        try { window.craudioHideView(); } catch (_e) {}
+        try { window.craudioHideView(); } catch (_e) { }
         return orig.apply(this, arguments);
       };
       wrapped._crWrapped = true;

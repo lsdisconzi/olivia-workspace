@@ -17,37 +17,37 @@ const path = require("path");
 
 // ─── Parse CLI arguments ────────────────────────────────────────────────
 function parseArgs(args) {
-  const parsed = { outDir: "./sections", registry: "./registry.json" };
-  args.forEach(arg => {
-    const match = arg.match(/^--(.+)=(.+)$/);
-    if (match) {
-      parsed[match[1]] = match[2];
-    }
-  });
-  return parsed;
+    const parsed = { outDir: "./sections", registry: "./registry.json" };
+    args.forEach(arg => {
+        const match = arg.match(/^--(.+)=(.+)$/);
+        if (match) {
+            parsed[match[1]] = match[2];
+        }
+    });
+    return parsed;
 }
 
 const cli = parseArgs(process.argv.slice(2));
 if (!cli.spec) {
-  console.error("Missing --spec argument.");
-  process.exit(1);
+    console.error("Missing --spec argument.");
+    process.exit(1);
 }
 
 let spec;
 try {
-  spec = JSON.parse(cli.spec);
+    spec = JSON.parse(cli.spec);
 } catch (e) {
-  console.error("Invalid JSON in --spec");
-  process.exit(1);
+    console.error("Invalid JSON in --spec");
+    process.exit(1);
 }
 
 // ─── Validate required fields ──────────────────────────────────────────
 const required = ["id", "label", "icon"];
 for (const key of required) {
-  if (!spec[key]) {
-    console.error(`Spec is missing required field: ${key}`);
-    process.exit(1);
-  }
+    if (!spec[key]) {
+        console.error(`Spec is missing required field: ${key}`);
+        process.exit(1);
+    }
 }
 
 // defaults
@@ -57,35 +57,35 @@ spec.dataModel = spec.dataModel || { items: "array of {id, title, content, updat
 
 // ─── Template helpers ──────────────────────────────────────────────────
 function toPascalCase(str) {
-  return (str.charAt(0).toUpperCase() + str.slice(1)).replace(/[-_](\w)/g, (_, c) => c.toUpperCase());
+    return (str.charAt(0).toUpperCase() + str.slice(1)).replace(/[-_](\w)/g, (_, c) => c.toUpperCase());
 }
 
 function toKebabCase(str) {
-  return str.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/[\s_]+/g, '-').toLowerCase();
+    return str.replace(/([a-z])([A-Z])/g, '$1-$2').replace(/[\s_]+/g, '-').toLowerCase();
 }
 
 function toJsClassName(str) {
-  return toPascalCase(str) + "Section";
+    return toPascalCase(str) + "Section";
 }
 
 function cssClassPrefix(str) {
-  return toKebabCase(str).substring(0, 3) + "-";
+    return toKebabCase(str).substring(0, 3) + "-";
 }
 
 // ─── JS Template ───────────────────────────────────────────────────────
 function generateJS(spec) {
-  const id = spec.id;
-  const label = spec.label;
-  const icon = spec.icon;
-  const description = spec.description;
-  const storageKey = `OliviaLegal_${id}_v1`;
-  const className = toJsClassName(id);
-  const prefix = cssClassPrefix(id);   // e.g., "kbn-" for kanban
+    const id = spec.id;
+    const label = spec.label;
+    const icon = spec.icon;
+    const description = spec.description;
+    const storageKey = `Olivia_${id}_v1`;
+    const className = toJsClassName(id);
+    const prefix = cssClassPrefix(id);   // e.g., "kbn-" for kanban
 
-  // Capitalised id for function names
-  const Id = toPascalCase(id);
+    // Capitalised id for function names
+    const Id = toPascalCase(id);
 
-  return `/* ============================================================================
+    return `/* ============================================================================
    ${Id} — ${label} inside Olivia Workspace.
    ============================================================================ */
 (function () {
@@ -359,12 +359,12 @@ function generateJS(spec) {
 
 // ─── CSS Template ───────────────────────────────────────────────────────
 function generateCSS(spec) {
-  const id = spec.id;
-  const label = spec.label;
-  const prefix = cssClassPrefix(id);
-  const accentColor = spec.accentColor || "var(--blue, #3b82f6)";
+    const id = spec.id;
+    const label = spec.label;
+    const prefix = cssClassPrefix(id);
+    const accentColor = spec.accentColor || "var(--blue, #3b82f6)";
 
-  return `/* ============================================================================
+    return `/* ============================================================================
    ${label} — Olivia Workspace section styles.
    ============================================================================ */
 
@@ -491,53 +491,53 @@ function generateCSS(spec) {
 
 // ─── File writing ───────────────────────────────────────────────────────
 function ensureDir(dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
 }
 
 function writeSectionFiles(spec, outDir) {
-  ensureDir(outDir);
+    ensureDir(outDir);
 
-  const jsPath = path.join(outDir, spec.id + ".js");
-  const cssPath = path.join(outDir, spec.id + ".css");
+    const jsPath = path.join(outDir, spec.id + ".js");
+    const cssPath = path.join(outDir, spec.id + ".css");
 
-  fs.writeFileSync(jsPath, generateJS(spec), "utf8");
-  fs.writeFileSync(cssPath, generateCSS(spec), "utf8");
+    fs.writeFileSync(jsPath, generateJS(spec), "utf8");
+    fs.writeFileSync(cssPath, generateCSS(spec), "utf8");
 
-  console.log("Generated:", jsPath);
-  console.log("Generated:", cssPath);
+    console.log("Generated:", jsPath);
+    console.log("Generated:", cssPath);
 }
 
 // ─── Registry update ───────────────────────────────────────────────────
 function updateRegistry(spec, registryPath) {
-  let registry = [];
-  if (fs.existsSync(registryPath)) {
-    try {
-      registry = JSON.parse(fs.readFileSync(registryPath, "utf8"));
-    } catch (e) {
-      console.error("Warning: invalid registry file, starting fresh.");
+    let registry = [];
+    if (fs.existsSync(registryPath)) {
+        try {
+            registry = JSON.parse(fs.readFileSync(registryPath, "utf8"));
+        } catch (e) {
+            console.error("Warning: invalid registry file, starting fresh.");
+        }
     }
-  }
 
-  // check if already exists
-  const idx = registry.findIndex(r => r.id === spec.id);
-  const entry = {
-    id: spec.id,
-    label: spec.label,
-    icon: spec.icon,
-    onclick: spec.onclick || ""
-  };
+    // check if already exists
+    const idx = registry.findIndex(r => r.id === spec.id);
+    const entry = {
+        id: spec.id,
+        label: spec.label,
+        icon: spec.icon,
+        onclick: spec.onclick || ""
+    };
 
-  if (idx >= 0) {
-    registry[idx] = entry;
-    console.log("Updated registry entry for", spec.id);
-  } else {
-    registry.push(entry);
-    console.log("Added registry entry for", spec.id);
-  }
+    if (idx >= 0) {
+        registry[idx] = entry;
+        console.log("Updated registry entry for", spec.id);
+    } else {
+        registry.push(entry);
+        console.log("Added registry entry for", spec.id);
+    }
 
-  fs.writeFileSync(registryPath, JSON.stringify(registry, null, 2), "utf8");
+    fs.writeFileSync(registryPath, JSON.stringify(registry, null, 2), "utf8");
 }
 
 // ─── Main ───────────────────────────────────────────────────────────────

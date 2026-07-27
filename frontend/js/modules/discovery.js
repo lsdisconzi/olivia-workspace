@@ -124,7 +124,7 @@ function _discHasBridgeArtifact(fileSet, name) {
 }
 
 async function _discEnsureFunctionsRegistry() {
-  const registry = window.OliviaLegal_FUNCTIONS;
+  const registry = window.Olivia_FUNCTIONS;
   if (!registry || typeof registry.init !== 'function') return null;
   try {
     await registry.init();
@@ -254,7 +254,7 @@ async function _discFetchBridgeIntelligenceFile(relPath, asText) {
 
 async function _discLoadIntelligenceFromArtifacts() {
   if (!_discAllFiles.length) {
-    try { await discLoadFiles(); } catch (_) {}
+    try { await discLoadFiles(); } catch (_) { }
   }
 
   const fileSet = _discBuildBridgeFileSet();
@@ -387,7 +387,7 @@ function _discNormalizeComprehendGroups(data) {
 
 async function _discLoadComprehensionFromArtifacts() {
   if (!_discAllFiles.length) {
-    try { await discLoadFiles(); } catch (_) {}
+    try { await discLoadFiles(); } catch (_) { }
   }
 
   const fileSet = _discBuildBridgeFileSet();
@@ -514,7 +514,7 @@ async function _discMirrorFilesToProject(profile) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ agent_id: activeAgent.agent_id, agent_name: activeAgent.name || '' })
-    }).catch(() => {});
+    }).catch(() => { });
   }
 }
 
@@ -562,7 +562,7 @@ async function _discIndexSectionFiles(result, profile) {
 
 // Show discovery view
 function discShowView() {
-  const hide = ['chatHeader','welcomeState','chatLog','chatCompose','chatToolbar'];
+  const hide = ['chatHeader', 'welcomeState', 'chatLog', 'chatCompose', 'chatToolbar'];
   hide.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
   // Collapse main-content so disc-view gets the full flex:1 width
   const mc = document.querySelector('.main-content');
@@ -592,7 +592,7 @@ function discHideView() {
   // Restore main-content
   const mc = document.querySelector('.main-content');
   if (mc) { mc.style.display = mc._dscDisplay !== undefined ? mc._dscDisplay : ''; delete mc._dscDisplay; }
-  const show = ['chatHeader','welcomeState','chatLog','chatCompose','chatToolbar'];
+  const show = ['chatHeader', 'welcomeState', 'chatLog', 'chatCompose', 'chatToolbar'];
   show.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = ''; });
   const op = document.getElementById('outputPanel');
   const bp = document.getElementById('browserPanel');
@@ -666,7 +666,7 @@ async function discLoadOverview() {
   const subCat = document.getElementById('discSubCat');
   if (subCat) {
     subCat.innerHTML = Object.entries(_discCategoriesData).map(([key, data]) =>
-      `<div class="dsc-subitem" onclick="discFilterByCategory('${escapeHtml(key)}')"><i class="fas fa-folder"></i> ${escapeHtml(data.label || key)} <span style="opacity:.6;font-size:10px">(${data.count||0})</span></div>`
+      `<div class="dsc-subitem" onclick="discFilterByCategory('${escapeHtml(key)}')"><i class="fas fa-folder"></i> ${escapeHtml(data.label || key)} <span style="opacity:.6;font-size:10px">(${data.count || 0})</span></div>`
     ).join('');
   }
   discRenderCategories();
@@ -688,8 +688,8 @@ async function discLoadInsights() {
   ]);
 
   const stats = statsR.status === 'fulfilled' ? statsR.value : null;
-  const ent   = entR.status === 'fulfilled'   ? entR.value   : null;
-  const tl    = tlR.status === 'fulfilled'    ? tlR.value    : null;
+  const ent = entR.status === 'fulfilled' ? entR.value : null;
+  const tl = tlR.status === 'fulfilled' ? tlR.value : null;
 
   if (stats && !stats.error) {
     _discPipelineStats = stats;
@@ -747,14 +747,14 @@ async function discLoadIntelligence() {
       : fetch(_BRIDGE_SERVER + '/case-state/next-steps').then(r => r.ok ? r.json() : null),
   ]);
 
-  const caseData    = caseR.status    === 'fulfilled' ? caseR.value    : null;
+  const caseData = caseR.status === 'fulfilled' ? caseR.value : null;
   const summaryData = summaryR.status === 'fulfilled' ? summaryR.value : null;
-  const violData    = violR.status    === 'fulfilled' ? violR.value    : null;
-  const gapData     = gapR.status     === 'fulfilled' ? gapR.value     : null;
+  const violData = violR.status === 'fulfilled' ? violR.value : null;
+  const gapData = gapR.status === 'fulfilled' ? gapR.value : null;
   const intelTlData = intelTlR.status === 'fulfilled' ? intelTlR.value : null;
-  const phaseData   = phaseR.status   === 'fulfilled' ? phaseR.value   : null;
-  const findData    = findR.status    === 'fulfilled' ? findR.value    : null;
-  const nextData    = nextR.status    === 'fulfilled' ? nextR.value    : null;
+  const phaseData = phaseR.status === 'fulfilled' ? phaseR.value : null;
+  const findData = findR.status === 'fulfilled' ? findR.value : null;
+  const nextData = nextR.status === 'fulfilled' ? nextR.value : null;
 
   if (caseData && !caseData.error) {
     _discCaseState = caseData;
@@ -779,9 +779,9 @@ async function discLoadIntelligence() {
     const events = Array.isArray(intelTlData) ? intelTlData : (intelTlData.timeline || intelTlData.events || []);
     discRenderTimeline({ events });
   }
-  if (phaseData  && !phaseData.error)  { _discCasePhase    = phaseData;  discRenderCasePhase(phaseData); }
-  if (findData   && !findData.error)   { _discCaseFindings = findData;   discRenderCaseFindings(findData); }
-  if (nextData   && !nextData.error)   { _discCaseNextSteps = nextData;  discRenderCaseNextSteps(nextData); }
+  if (phaseData && !phaseData.error) { _discCasePhase = phaseData; discRenderCasePhase(phaseData); }
+  if (findData && !findData.error) { _discCaseFindings = findData; discRenderCaseFindings(findData); }
+  if (nextData && !nextData.error) { _discCaseNextSteps = nextData; discRenderCaseNextSteps(nextData); }
 }
 
 // Load pipeline status — GET /api/bridge/pipeline/stats
@@ -819,7 +819,7 @@ async function discLoadEvents() {
   }
 
   if (!_discAllFiles.length) {
-    try { await discLoadFiles(); } catch (_) {}
+    try { await discLoadFiles(); } catch (_) { }
   }
   const fileSet = _discBuildBridgeFileSet();
   const hasEventsFile = fileSet.has('_intelligence/events.json') || fileSet.has('events.json');
@@ -831,7 +831,7 @@ async function discLoadEvents() {
         discRenderEvents(data.events || data);
         return;
       }
-    } catch (_) {}
+    } catch (_) { }
     if (el && el.children.length === 0) {
       el.innerHTML = '<div class="dsc-empty"><p>Eventos ainda não disponíveis no artefato local.</p></div>';
     }
@@ -885,7 +885,7 @@ function discRenderFileList(files) {
   const list = files || _discUploadedFiles;
   const html = list.map(f => `
     <div class="disc-file-item">
-      <span class="disc-file-icon">${((f.kind || f.type || 'file').toUpperCase()).slice(0,4)}</span>
+      <span class="disc-file-icon">${((f.kind || f.type || 'file').toUpperCase()).slice(0, 4)}</span>
       <span class="disc-file-name" title="${escapeHtml(f.relativePath || f.name || f.fileName || '')}">${escapeHtml(f.relativePath || f.name || f.fileName || '')}</span>
       <span class="disc-file-size">${formatBytes(f.size_bytes || f.size || 0)}</span>
       <button class="btn-xs" onclick="discRemoveFile('${f._id || ''}')" title="Remover"><i class="fas fa-times"></i></button>
@@ -1268,7 +1268,7 @@ async function discOpenFileOutput(url, name, kind) {
       if (text.length > 250000) text = text.slice(0, 250000) + '\n\n... (truncated)';
 
       if (fileType === 'json') {
-        try { text = JSON.stringify(JSON.parse(text), null, 2); } catch {}
+        try { text = JSON.stringify(JSON.parse(text), null, 2); } catch { }
         artifact.type = 'json';
       } else if (fileType === 'markdown') {
         artifact.type = 'markdown';
@@ -1349,9 +1349,9 @@ function discRenderFileTable(files) {
     const sizeBytes = f.size_bytes || f.sizeBytes || f.size || 0;
     const sizeHuman = f.size_human || f.sizeHuman || '';
     const name = escapeHtml(displayName);
-    const cat  = escapeHtml(categoryLabel);
+    const cat = escapeHtml(categoryLabel);
     const size = escapeHtml(sizeHuman || formatBytes(sizeBytes));
-    const kind = escapeHtml((f.kind || 'file').toString().replace('/', '').toUpperCase().slice(0,6));
+    const kind = escapeHtml((f.kind || 'file').toString().replace('/', '').toUpperCase().slice(0, 6));
     const refName = displayName || f.file || f.path || 'arquivo';
     const url = _discResolveProjectMirrorUrl(f) || discResolveFileUrl(f);
     const projectRelPath = _discResolveProjectRelativePath(f);
@@ -1578,22 +1578,22 @@ async function discStartProcessing() {
 // Shared SSE pipeline runner
 async function _discStreamPipeline({ backendPath, params, labelText, onComplete }) {
   const progressEl = document.getElementById('discRunProgress');
-  const labelEl    = document.getElementById('discRunProgressLabel');
-  const elapsedEl  = document.getElementById('discRunElapsed');
-  const statusEl   = document.getElementById('discRunStatus');
-  const barEl      = document.getElementById('discRunBar');
+  const labelEl = document.getElementById('discRunProgressLabel');
+  const elapsedEl = document.getElementById('discRunElapsed');
+  const statusEl = document.getElementById('discRunStatus');
+  const barEl = document.getElementById('discRunBar');
 
   if (progressEl) {
     progressEl.style.display = '';
     progressEl.style.borderLeftColor = 'var(--orange,#e05a1c)';
   }
-  if (labelEl)  labelEl.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${labelText}`;
-  if (barEl)  {
+  if (labelEl) labelEl.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${labelText}`;
+  if (barEl) {
     barEl.style.animation = 'discBarSlide 1.8s linear infinite';
     barEl.style.width = '38%';
     barEl.style.background = 'linear-gradient(90deg,var(--orange,#e05a1c),#f5a623)';
   }
-  if (statusEl)  statusEl.textContent = 'Conectando ao pipeline…';
+  if (statusEl) statusEl.textContent = 'Conectando ao pipeline…';
   if (elapsedEl) elapsedEl.textContent = '0:00';
 
   let seconds = 0;
@@ -1604,14 +1604,14 @@ async function _discStreamPipeline({ backendPath, params, labelText, onComplete 
     if (elapsedEl) elapsedEl.textContent = `${m}:${String(s).padStart(2, '0')}`;
   }, 1000);
 
-  const qs  = new URLSearchParams(params).toString();
+  const qs = new URLSearchParams(params).toString();
   const url = _BRIDGE_SERVER + backendPath + (qs ? '?' + qs : '');
   let succeeded = false;
 
   try {
     const response = await fetch(url, {
       headers: { Accept: 'text/event-stream' },
-      signal:  AbortSignal.timeout(5 * 60 * 1000),
+      signal: AbortSignal.timeout(5 * 60 * 1000),
     });
 
     if (!response.ok) {
@@ -1619,10 +1619,10 @@ async function _discStreamPipeline({ backendPath, params, labelText, onComplete 
       throw new Error(err.error || `HTTP ${response.status}`);
     }
 
-    const reader  = response.body.getReader();
+    const reader = response.body.getReader();
     const decoder = new TextDecoder();
-    let   buffer  = '';
-    let   streamDone = false;
+    let buffer = '';
+    let streamDone = false;
 
     while (!streamDone) {
       const { done, value } = await reader.read();
@@ -1633,8 +1633,8 @@ async function _discStreamPipeline({ backendPath, params, labelText, onComplete 
 
       let evtName = '', evtData = '';
       for (const line of lines) {
-        if      (line.startsWith('event: ')) evtName = line.slice(7).trim();
-        else if (line.startsWith('data: '))  evtData = line.slice(6).trim();
+        if (line.startsWith('event: ')) evtName = line.slice(7).trim();
+        else if (line.startsWith('data: ')) evtData = line.slice(6).trim();
         else if (line === '' && evtData) {
           let payload;
           try { payload = JSON.parse(evtData); } catch { payload = { text: evtData }; }
@@ -1648,7 +1648,7 @@ async function _discStreamPipeline({ backendPath, params, labelText, onComplete 
             clearInterval(timerInterval);
             const count = payload.processed || payload.files_processed || payload.groups_written || 0;
             if (statusEl) statusEl.textContent = `✔ Concluído — ${count} item(ns) processado(s)`;
-            if (labelEl)  labelEl.innerHTML = '<i class="fas fa-check-circle" style="color:var(--green,#22a06b)"></i> Pipeline concluído';
+            if (labelEl) labelEl.innerHTML = '<i class="fas fa-check-circle" style="color:var(--green,#22a06b)"></i> Pipeline concluído';
             if (barEl) {
               barEl.style.animation = 'none';
               barEl.style.width = '100%';
@@ -1670,7 +1670,7 @@ async function _discStreamPipeline({ backendPath, params, labelText, onComplete 
     const isTimeout = e.name === 'TimeoutError' || e.name === 'AbortError';
     const msg = isTimeout ? 'Tempo limite excedido (5 min)' : (e.message || 'Erro de rede');
     if (statusEl) statusEl.textContent = '✖ ' + msg;
-    if (labelEl)  labelEl.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--orange,#e05a1c)"></i> Erro no pipeline';
+    if (labelEl) labelEl.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:var(--orange,#e05a1c)"></i> Erro no pipeline';
     if (barEl) { barEl.style.animation = 'none'; barEl.style.width = '100%'; barEl.style.background = 'rgba(180,50,50,.6)'; }
   } finally {
     if (!succeeded) clearInterval(timerInterval);
@@ -1680,18 +1680,18 @@ async function _discStreamPipeline({ backendPath, params, labelText, onComplete 
 // Run intelligence L5-L7 pipeline via GET /api/bridge/intelligence/run-stream (SSE)
 async function discRunIntelPipeline() {
   const savedKeys = (() => { try { return JSON.parse(localStorage.getItem('olivia.api.keys') || '{}'); } catch { return {}; } })();
-  const cfg      = (typeof getConfig === 'function') ? getConfig() : {};
+  const cfg = (typeof getConfig === 'function') ? getConfig() : {};
   const provider = cfg.provider || 'anthropic';
-  const apiKey   = savedKeys[provider] || prompt(`Chave ${provider} para Inteligência L5-L7:`);
+  const apiKey = savedKeys[provider] || prompt(`Chave ${provider} para Inteligência L5-L7:`);
   if (!apiKey) return;
   const model = cfg.model || 'deepseek-v4-pro';
   const btn = document.getElementById('discBtnRunIntel');
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rodando…'; }
   await _discStreamPipeline({
     backendPath: '/intelligence/run-stream',
-    params:      { api_key: apiKey, model },
-    labelText:   'Inteligência L5-L7 em execução…',
-    onComplete:  () => {
+    params: { api_key: apiKey, model },
+    labelText: 'Inteligência L5-L7 em execução…',
+    onComplete: () => {
       _discIntelSummary = null; _discViolations = null; _discGapReport = null;
       _discCaseState = null; _discIntelTimeline = null; _discCaseGraph = null;
       discLoadIntelligence();
@@ -1704,18 +1704,18 @@ async function discRunIntelPipeline() {
 // Run comprehension (Layer C) via GET /api/bridge/comprehend/run-stream (SSE)
 async function discRunComprehension() {
   const savedKeys = (() => { try { return JSON.parse(localStorage.getItem('olivia.api.keys') || '{}'); } catch { return {}; } })();
-  const cfg      = (typeof getConfig === 'function') ? getConfig() : {};
+  const cfg = (typeof getConfig === 'function') ? getConfig() : {};
   const provider = cfg.provider || 'anthropic';
-  const apiKey   = savedKeys[provider] || prompt(`Chave ${provider} para Compreensão:`);
+  const apiKey = savedKeys[provider] || prompt(`Chave ${provider} para Compreensão:`);
   if (!apiKey) return;
   const model = cfg.model || 'deepseek-v4-pro';
   const btn = document.getElementById('discBtnRunComprehend');
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rodando…'; }
   await _discStreamPipeline({
     backendPath: '/comprehend/run-stream',
-    params:      { api_key: apiKey, model, concurrency: 3 },
-    labelText:   'Compreensão do Corpus em execução…',
-    onComplete:  () => {
+    params: { api_key: apiKey, model, concurrency: 3 },
+    labelText: 'Compreensão do Corpus em execução…',
+    onComplete: () => {
       _discComprehendOverview = null; _discComprehendGroups = null;
       discLoadComprehension();
     },
@@ -1746,23 +1746,23 @@ async function discLoadComprehension() {
       ? Promise.resolve(_discComprehendOverview)
       : (_discRouteSupport.comprehendOverview
         ? fetch(_BRIDGE_SERVER + '/comprehend/overview').then(r => {
-            if (!r.ok) {
-              if (r.status === 404) _discRouteSupport.comprehendOverview = false;
-              return null;
-            }
-            return r.json();
-          })
+          if (!r.ok) {
+            if (r.status === 404) _discRouteSupport.comprehendOverview = false;
+            return null;
+          }
+          return r.json();
+        })
         : Promise.resolve(null)),
     _discComprehendGroups
       ? Promise.resolve(_discComprehendGroups)
       : (_discRouteSupport.comprehendGroups
         ? fetch(_BRIDGE_SERVER + '/comprehend/groups').then(r => {
-            if (!r.ok) {
-              if (r.status === 404) _discRouteSupport.comprehendGroups = false;
-              return null;
-            }
-            return r.json();
-          })
+          if (!r.ok) {
+            if (r.status === 404) _discRouteSupport.comprehendGroups = false;
+            return null;
+          }
+          return r.json();
+        })
         : Promise.resolve(null)),
   ]);
   const ov = ovR.status === 'fulfilled' ? ovR.value : null;
@@ -1797,13 +1797,13 @@ function discExportData(format) {
     violations: _discViolations,
     gap_report: _discGapReport
   };
-  
+
   const json = JSON.stringify(data, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `discovery_export_${new Date().toISOString().slice(0,10)}.json`;
+  a.download = `discovery_export_${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -1813,10 +1813,10 @@ function discToggleMaximize() {
   const ws = document.querySelector('.workspace');
   const btn = document.getElementById('discMaxBtn');
   if (!ws || !btn) return;
-  
+
   ws.classList.toggle('disc-maximized');
-  btn.innerHTML = ws.classList.contains('disc-maximized') 
-    ? '<i class="fas fa-compress"></i>' 
+  btn.innerHTML = ws.classList.contains('disc-maximized')
+    ? '<i class="fas fa-compress"></i>'
     : '<i class="fas fa-expand"></i>';
 }
 
@@ -1967,8 +1967,8 @@ function discBuildNarrativePayload(summaryData) {
     ? keyPoints
     : (stats
       ? Object.entries(stats)
-          .slice(0, 6)
-          .map(([k, v]) => `${discHumanKey(k)}: ${discTextValue(v) || '-'}`)
+        .slice(0, 6)
+        .map(([k, v]) => `${discHumanKey(k)}: ${discTextValue(v) || '-'}`)
       : []);
 
   return { text: lines.join(' '), key_points: derivedPoints, raw: summaryData, stats };
@@ -1981,11 +1981,11 @@ function discUpdateStats() {
   const catCount = Object.keys(_discCategoriesData).length ||
     new Set(files.map(f => f.category).filter(Boolean)).size;
   const elFiles = document.getElementById('discStatFiles');
-  const elSize  = document.getElementById('discStatSize');
-  const elCats  = document.getElementById('discStatCats');
+  const elSize = document.getElementById('discStatSize');
+  const elCats = document.getElementById('discStatCats');
   if (elFiles) elFiles.textContent = files.length;
-  if (elSize)  elSize.textContent  = formatBytes(totalSize);
-  if (elCats)  elCats.textContent  = catCount;
+  if (elSize) elSize.textContent = formatBytes(totalSize);
+  if (elCats) elCats.textContent = catCount;
 }
 
 // Enriched search via GET /api/bridge/pipeline/search
@@ -2021,7 +2021,7 @@ async function discEnrichedSearchRun() {
 function discRenderCategories() {
   const container = document.getElementById('discCategories');
   if (!container) return;
-  
+
   const cats = Object.entries(_discCategoriesData);
   const html = cats.map(([key, data]) => `
     <div class="disc-category-item" onclick="discFilterByCategory('${escapeHtml(key)}')" style="cursor:pointer">
@@ -2041,7 +2041,7 @@ function discRenderCategories() {
 function discRenderLanguages(langs) {
   const container = document.getElementById('discLanguages');
   if (!container) return;
-  
+
   const entries = Object.entries(langs).sort((a, b) => b[1] - a[1]);
   const html = entries.map(([lang, count]) => `
     <div class="disc-lang-item">
@@ -2057,7 +2057,7 @@ function discRenderLanguages(langs) {
 function discRenderDomains(domains) {
   const container = document.getElementById('discDomains');
   if (!container) return;
-  
+
   const entries = Object.entries(domains).sort((a, b) => b[1] - a[1]);
   const html = entries.map(([domain, count]) => `
     <div class="disc-domain-item">
@@ -2072,7 +2072,7 @@ function discRenderDomains(domains) {
 function discRenderTags(tags) {
   const container = document.getElementById('discTags');
   if (!container) return;
-  
+
   const html = tags.map(tag => `
     <span class="disc-tag-pill">${escapeHtml(tag)}</span>
   `).join('');
@@ -2100,7 +2100,7 @@ function discRenderEntityList(type) {
 function discRenderEvents(events) {
   const container = document.getElementById('discEvents');
   if (!container) return;
-  
+
   const html = (events || []).map(e => `
     <div class="disc-event-item">
       <span class="disc-event-date">${escapeHtml(e.date || '')}</span>
@@ -2115,7 +2115,7 @@ function discRenderEvents(events) {
 function discRenderTimeline(timeline) {
   const container = document.getElementById('discTimeline');
   if (!container) return;
-  
+
   const events = timeline.events || timeline || [];
   const html = events.map(e => `
     <div class="disc-timeline-item">
@@ -2136,7 +2136,7 @@ function discRenderCaseState(caseData) {
   const statusClass = typeof caseData.status === 'string' ? caseData.status : '';
   const summary = discTextValue(caseData.summary || '');
   const statsEntries = Object.entries(caseData.stats || {});
-  
+
   const html = `
     <div class="disc-case-header">
       <span class="disc-case-title">${escapeHtml(title)}</span>
@@ -2170,7 +2170,7 @@ function discRenderNarrative(narrative) {
   const rawJson = narrative && narrative.raw && typeof narrative.raw === 'object'
     ? escapeHtml(JSON.stringify(narrative.raw, null, 2))
     : '';
-  
+
   const html = `
     <div class="disc-narrative-text">${escapeHtml(text || 'Resumo nao disponivel.')}</div>
     ${points.length ? `<ul class="disc-narrative-keypoints">${points.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>` : ''}
@@ -2193,7 +2193,7 @@ function discRenderNarrative(narrative) {
 function discRenderViolations(violations) {
   const container = document.getElementById('discViolations');
   if (!container) return;
-  
+
   const items = violations.items || violations || [];
   const html = items.map(v => `
     <div class="disc-violation-item">
@@ -2209,7 +2209,7 @@ function discRenderViolations(violations) {
 function discRenderGapReport(gapReport) {
   const container = document.getElementById('discGapReport');
   if (!container) return;
-  
+
   const gaps = gapReport.gaps || gapReport || [];
   const html = gaps.map(g => `
     <div class="disc-gap-item">
@@ -2247,7 +2247,7 @@ function discRenderComprehendGroups(data) {
     container.innerHTML = '<div class="dsc-empty"><p>Execute a Compreensão para gerar descrições por grupo.</p></div>';
     return;
   }
-  const groups = Array.isArray(data) ? data : (data.groups || Object.entries(data).map(([k,v]) => ({name:k,...(typeof v==='object'?v:{description:v})})));
+  const groups = Array.isArray(data) ? data : (data.groups || Object.entries(data).map(([k, v]) => ({ name: k, ...(typeof v === 'object' ? v : { description: v }) })));
   const html = groups.map(g => `
     <div class="disc-gap-item">
       <span class="disc-gap-category">${escapeHtml(g.name || g.group || g.category || '')}</span>
@@ -2293,14 +2293,13 @@ function discRenderCaseNextSteps(data) {
   if (!container) return;
   const items = Array.isArray(data) ? data : (data.next_steps || data.recommendations || []);
   if (!items.length) { container.innerHTML = '<div class="dsc-empty"><p>Sem próximas etapas</p></div>'; return; }
-  container.innerHTML = `<ol style="margin:0;padding-left:16px">${
-    items.map(s => {
-      const text = typeof s === 'string'
-        ? s
-        : (s.action || s.step || s.description || s.summary || discTextValue(s));
-      return `<li style="margin-bottom:6px;font-size:12px;color:var(--white)">${escapeHtml(discTextValue(text) || '-')}</li>`;
-    }).join('')
-  }</ol>`;
+  container.innerHTML = `<ol style="margin:0;padding-left:16px">${items.map(s => {
+    const text = typeof s === 'string'
+      ? s
+      : (s.action || s.step || s.description || s.summary || discTextValue(s));
+    return `<li style="margin-bottom:6px;font-size:12px;color:var(--white)">${escapeHtml(discTextValue(text) || '-')}</li>`;
+  }).join('')
+    }</ol>`;
 }
 
 // Expose functions to window scope

@@ -7,7 +7,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
 cd "$SCRIPT_DIR"
 
-PORT="${OliviaLegal_PORT:-3229}"
+PORT="${Olivia_PORT:-3229}"
 STOP_WATCHERS=1
 FORCE_AFTER=5
 

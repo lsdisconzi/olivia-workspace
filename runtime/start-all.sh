@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-PORT="${OliviaLegal_PORT:-3229}"
+PORT="${Olivia_PORT:-3229}"
 TAIL_LOGS=1
 WATCH_FUNCTIONS=0
 WATCH_INTERVAL=20
