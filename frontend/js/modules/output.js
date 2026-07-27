@@ -754,7 +754,11 @@ function renderGeneratedFiles() {
   if (!container) return;
 
   if (outputArtifacts.length === 0) {
-    container.innerHTML = '<p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic">Nenhum artefato gerado ainda</p>';
+    container.innerHTML = '<div style="text-align:center;padding:16px 12px;border:1px dashed var(--border);border-radius:8px;background:rgba(255,255,255,0.02)">'
+      + '<div style="font-size:20px;color:var(--gray);margin-bottom:6px"><i class="fas fa-wand-magic-sparkles"></i></div>'
+      + '<div style="font-size:11px;color:var(--gray);margin-bottom:4px">Nenhum artefato gerado ainda</div>'
+      + '<div style="font-size:10px;color:var(--gray);opacity:.7">Peça ao agente para criar documentos, código, análises e muito mais</div>'
+      + '</div>';
     return;
   }
 

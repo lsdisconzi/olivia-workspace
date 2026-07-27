@@ -169,6 +169,9 @@ function switchSidebarTab(tab) {
   // If leaving writer, hide writer view
   const wasWriter = document.querySelector('.sidebar-tab.active[onclick*="writer"]');
   if (wasWriter && tab !== 'writer' && typeof writerHideView === 'function') writerHideView();
+  // If leaving social media, hide social media view
+  const wasSocialMedia = document.querySelector('.sidebar-tab.active[onclick*="socialmedia"]');
+  if (wasSocialMedia && tab !== 'socialmedia' && typeof socialMediaHideView === 'function') socialMediaHideView();
 
   document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.sidebar-section').forEach(s => s.classList.remove('active'));

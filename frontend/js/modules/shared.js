@@ -10,6 +10,254 @@ window._importedFiles = _importedFiles;
 let _sharedDataTree = null;
 const CASE_UPLOAD_TARGET_STORAGE_KEY = 'OliviaLegal.case.upload.target.subpath';
 
+// ── Session state persistence (6.2) ───────────────────────────────
+const SESSION_STATE_FILE = 'data/session_state.json';
+let _sessionStateSaveTimer = null;
+let _sessionStateFilter = '';    // current search/filter text (6.4)
+let _sessionStateSort = 'recent'; // 'recent' | 'name' | 'size' (6.4)
+let _sessionIndexSyncedAt = null;
+
+// ── Session context tracking (6.3) ────────────────────────────────
+// Tracks which imported files are checked as context for the AI
+var _contextSessionFiles = window._contextSessionFiles || new Map();
+window._contextSessionFiles = _contextSessionFiles;
+
+// Tracks which imported files have checkboxes selected for bulk actions (6.6)
+var _sessionBulkSelection = window._sessionBulkSelection || new Set();
+window._sessionBulkSelection = _sessionBulkSelection;
+
+// Serialize _importedFiles to a persistable JSON payload
+function _sessionStateSerialize() {
+  const entries = [];
+  for (const [name, file] of _importedFiles) {
+    if (!file) continue;
+    // Only persist text content and server-referenced files; skip blob-only entries
+    const entry = {
+      name: file.name,
+      size: file.size,
+      type: file.type || '',
+      mimeType: file.mimeType || '',
+      previewType: file.previewType || '',
+      contextEligible: !!file.contextEligible,
+      projectId: file.projectId || '',
+      projectPath: file.projectPath || '',
+      serverUrl: file.serverUrl || '',
+      savedAt: file.savedAt || Date.now(),
+      inContext: !!_contextSessionFiles.get(name),
+    };
+    // Persist text content only for text-type files
+    if (file.type === 'text' && file.content && typeof file.content === 'string') {
+      entry.content = file.content;
+    }
+    entries.push(entry);
+  }
+  return { version: 1, saved_at: new Date().toISOString(), files: entries };
+}
+
+// Debounced save of session state to project data/
+function _sessionStateScheduleSave() {
+  if (_sessionStateSaveTimer) clearTimeout(_sessionStateSaveTimer);
+  _sessionStateSaveTimer = setTimeout(() => {
+    _sessionStateSaveTimer = null;
+    _sessionStateSaveNow();
+  }, 1200);
+}
+window._sessionStateScheduleSave = _sessionStateScheduleSave;
+
+async function _sessionStateSaveNow() {
+  const pid = (typeof getCurrentProjectId === 'function') ? getCurrentProjectId() : null;
+  if (!pid) return;
+  const payload = _sessionStateSerialize();
+  if (!payload.files.length) {
+    // Don't save empty state — just return
+    return;
+  }
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const fd = new FormData();
+  fd.append('files', blob, 'session_state.json');
+  try {
+    await fetch(`${API_BASE}/api/projects/${encodeURIComponent(pid)}/upload?section=data`, {
+      method: 'POST', body: fd
+    });
+  } catch (_e) {
+    // Silently fail — persistence is best-effort
+  }
+}
+window._sessionStateSaveNow = _sessionStateSaveNow;
+
+// Load session state from project data/ and hydrate _importedFiles
+async function _sessionStateHydrate(pid) {
+  if (!pid) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/projects/${encodeURIComponent(pid)}/raw?path=${encodeURIComponent(SESSION_STATE_FILE)}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data || !Array.isArray(data.files)) return;
+    for (const entry of data.files) {
+      if (!entry || !entry.name) continue;
+      if (_importedFiles.has(entry.name)) continue; // don't overwrite existing
+      const fileInfo = {
+        name: entry.name,
+        size: entry.size || 0,
+        type: entry.type || 'text',
+        mimeType: entry.mimeType || '',
+        previewType: entry.previewType || '',
+        contextEligible: !!entry.contextEligible,
+        projectId: entry.projectId || '',
+        projectPath: entry.projectPath || '',
+        serverUrl: entry.serverUrl || '',
+        savedAt: entry.savedAt || Date.now(),
+      };
+      if (entry.content && typeof entry.content === 'string') {
+        fileInfo.content = entry.content;
+      }
+      _importedFiles.set(entry.name, fileInfo);
+      if (entry.inContext) {
+        _contextSessionFiles.set(entry.name, true);
+      }
+    }
+    // Refresh UI after hydration
+    renderSessionFiles();
+    updateComposeContextBar();
+  } catch (_e) {
+    // Silently fail — hydration is best-effort
+  }
+}
+window._sessionStateHydrate = _sessionStateHydrate;
+
+// ── Filter & Sort helpers (6.4) ──────────────────────────────────
+function _sessionSetFilter(text) {
+  _sessionStateFilter = (text || '').trim().toLowerCase();
+  renderSessionFiles();
+}
+window._sessionSetFilter = _sessionSetFilter;
+
+function _sessionSetSort(mode) {
+  if (!['recent', 'name', 'size'].includes(mode)) mode = 'recent';
+  _sessionStateSort = mode;
+  renderSessionFiles();
+  // Update toggle button visuals
+  document.querySelectorAll('.ss-sort-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.sort === mode);
+  });
+}
+window._sessionSetSort = _sessionSetSort;
+
+function _sessionApplyFilterSort(files) {
+  let result = Array.from(files);
+  // Filter
+  if (_sessionStateFilter) {
+    result = result.filter(f => f.name.toLowerCase().includes(_sessionStateFilter));
+  }
+  // Sort
+  if (_sessionStateSort === 'name') {
+    result.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (_sessionStateSort === 'size') {
+    result.sort((a, b) => (b.size || 0) - (a.size || 0));
+  } else {
+    // 'recent' — most recently added first (by insertion order, reversed)
+    result.reverse();
+  }
+  return result;
+}
+
+function _sessionFriendlyTime(ts) {
+  if (!ts) return '';
+  const diff = Date.now() - (typeof ts === 'number' ? ts : new Date(ts).getTime());
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'agora';
+  if (mins < 60) return `${mins}m atrás`;
+  const hrs = Math.floor(mins / 60);
+  return `${hrs}h atrás`;
+}
+
+function _sessionRefreshStaleness() {
+  _sessionIndexSyncedAt = Date.now();
+  const el = document.getElementById('tabFilesStaleness');
+  if (el) el.textContent = 'index synced just now';
+}
+window._sessionRefreshStaleness = _sessionRefreshStaleness;
+
+// ── Context toggle for session files (6.3) ────────────────────────
+function _sessionToggleContext(name) {
+  if (!name) return;
+  if (_contextSessionFiles.has(name)) {
+    _contextSessionFiles.delete(name);
+  } else {
+    _contextSessionFiles.set(name, true);
+  }
+  renderSessionFiles();
+  updateComposeContextBar();
+  _sessionStateScheduleSave();
+}
+window._sessionToggleContext = _sessionToggleContext;
+
+function _sessionIsInContext(name) {
+  return _contextSessionFiles.has(name);
+}
+
+// ── Bulk actions (6.6) ────────────────────────────────────────────
+function _sessionToggleBulk(name) {
+  if (!name) return;
+  if (_sessionBulkSelection.has(name)) {
+    _sessionBulkSelection.delete(name);
+  } else {
+    _sessionBulkSelection.add(name);
+  }
+  _sessionUpdateBulkBar();
+  // Update row visual without full re-render
+  const row = document.querySelector(`[data-session-file="${CSS.escape(name)}"]`);
+  if (row) row.classList.toggle('selected', _sessionBulkSelection.has(name));
+}
+window._sessionToggleBulk = _sessionToggleBulk;
+
+function _sessionUpdateBulkBar() {
+  const bar = document.getElementById('tabFilesBulkBar');
+  const countEl = document.getElementById('tabFilesBulkCount');
+  if (!bar || !countEl) return;
+  const count = _sessionBulkSelection.size;
+  if (count === 0) {
+    bar.style.display = 'none';
+    return;
+  }
+  bar.style.display = 'flex';
+  countEl.textContent = count + ' selected';
+}
+
+function _sessionBulkAttach() {
+  const count = _sessionBulkSelection.size;
+  _sessionBulkSelection.forEach(name => {
+    _contextSessionFiles.set(name, true);
+  });
+  _sessionBulkSelection.clear();
+  _sessionUpdateBulkBar();
+  renderSessionFiles();
+  updateComposeContextBar();
+  _sessionStateScheduleSave();
+  addSystemBubble(count + ' file(s) added to context');
+}
+window._sessionBulkAttach = _sessionBulkAttach;
+
+function _sessionBulkDelete() {
+  if (_sessionBulkSelection.size === 0) return;
+  const count = _sessionBulkSelection.size;
+  _sessionBulkSelection.forEach(name => {
+    const file = _importedFiles.get(name);
+    if (file && file.url && String(file.url).startsWith('blob:')) {
+      try { URL.revokeObjectURL(file.url); } catch (_) {}
+    }
+    _importedFiles.delete(name);
+    _contextSessionFiles.delete(name);
+  });
+  _sessionBulkSelection.clear();
+  _sessionUpdateBulkBar();
+  renderSessionFiles();
+  updateComposeContextBar();
+  _sessionStateScheduleSave();
+  addSystemBubble(count + ' file(s) removed');
+}
+window._sessionBulkDelete = _sessionBulkDelete;
+
 function _isImageContextFile(file) {
   const mimeType = String(file && file.type || '').toLowerCase();
   const fileName = String(file && file.name || '');
@@ -653,6 +901,7 @@ function handleContextFileImport(files) {
         previewType,
         contextEligible: isTextLike || isImage,
         projectId: _activeProjectId || '',
+        savedAt: Date.now(),
       };
 
       if (isImage && !isTextLike) {
@@ -669,6 +918,7 @@ function handleContextFileImport(files) {
       _importedFiles.set(file.name, fileInfo);
       updateComposeContextBar();
       renderSessionFiles();
+      _sessionStateScheduleSave();
       if (isImage && !isTextLike) {
         addSystemBubble(`Imagem "${file.name}" anexada ao contexto visual`);
       } else {
@@ -694,11 +944,13 @@ function handleContextFileImport(files) {
         projectPath: _activeProjectId && isImage ? `uploads/${file.name}` : '',
         serverUrl: (_activeProjectId && isImage)
           ? _buildProjectUploadRawUrl(_activeProjectId, `uploads/${file.name}`)
-          : ''
+          : '',
+        savedAt: Date.now(),
       };
       _importedFiles.set(file.name, fileInfo);
       updateComposeContextBar();
       renderSessionFiles();
+      _sessionStateScheduleSave();
       if (isImage) {
         addSystemBubble(`Imagem "${file.name}" anexada ao contexto visual`);
       } else {
@@ -919,32 +1171,97 @@ function renderSessionFiles() {
   const countBadge = document.getElementById('importedFilesCount');
   if (countBadge) countBadge.textContent = '(' + _importedFiles.size + ')';
   if (!container) return;
-  
+
+  // Staleness signal (6.8)
+  const stalenessEl = document.getElementById('tabFilesStaleness');
+  if (stalenessEl) {
+    if (_importedFiles.size > 0 && _sessionIndexSyncedAt) {
+      stalenessEl.textContent = 'index synced ' + _sessionFriendlyTime(_sessionIndexSyncedAt);
+      stalenessEl.style.display = 'block';
+    } else {
+      stalenessEl.style.display = 'none';
+    }
+  }
+
   if (_importedFiles.size === 0) {
-    container.innerHTML = '<p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic">Nenhum arquivo importado ainda</p>';
+    container.innerHTML = '<div class="case-upload-zone" style="cursor:pointer;text-align:center;padding:20px 12px;border:1.5px dashed var(--border);border-radius:8px;background:rgba(255,255,255,0.02);transition:border-color .2s,background .2s" onclick="document.getElementById(\'contextFileInput\').click()" ondragover="event.preventDefault();this.style.borderColor=\'var(--accent)\';this.style.background=\'rgba(90,141,238,0.06)\'" ondragleave="this.style.borderColor=\'var(--border)\';this.style.background=\'rgba(255,255,255,0.02)\'" ondrop="event.preventDefault();event.dataTransfer.files.length && handleContextFileImport(event.dataTransfer.files);this.style.borderColor=\'var(--border)\';this.style.background=\'rgba(255,255,255,0.02)\'">'
+      + '<div style="font-size:24px;color:var(--gray);margin-bottom:8px"><i class="fas fa-cloud-arrow-up"></i></div>'
+      + '<div style="font-size:12px;font-weight:600;color:var(--white);margin-bottom:4px">Nenhum arquivo importado ainda</div>'
+      + '<div style="font-size:10px;color:var(--gray);margin-bottom:10px">Arraste arquivos aqui ou clique para selecionar</div>'
+      + '<div style="font-size:9px;color:var(--gray);opacity:.6">PDFs · imagens · documentos · código</div>'
+      + '</div>';
+    // Hide filter bar when empty
+    const filterBar = document.getElementById('tabFilesFilterBar');
+    if (filterBar) filterBar.style.display = 'none';
     return;
   }
-  
-  const files = Array.from(_importedFiles.values());
+
+  // Show filter bar when files exist (6.4)
+  const filterBar = document.getElementById('tabFilesFilterBar');
+  if (filterBar) filterBar.style.display = 'flex';
+
+  // Apply filter + sort (6.4)
+  const files = _sessionApplyFilterSort(_importedFiles.values());
+
   const html = files.map(file => {
-    const safeId = JSON.stringify(file.name);
+    const safeName = file.name;
+    const safeId = JSON.stringify(safeName);
     const clickJs = `previewImportedWorkspaceFile(${safeId})`;
-    const ext  = (file.name.split('.').pop() || '').toLowerCase();
+    const ext  = (safeName.split('.').pop() || '').toLowerCase();
     const isImage = file.type === 'image' || file.previewType === 'image';
-    const icon = isImage
-      ? '🖼️'
-      : (['json','js','py','html','css','ts'].includes(ext) ? '💻' : (file.type === 'text' ? '📝' : '📎'));
-    const uploadState = isImage && file.uploadPending ? ' (uploading...)' : '';
+
+    // Richer type icon (6.5)
+    let icon;
+    if (isImage) icon = '<i class="fas fa-image" style="color:var(--green)"></i>';
+    else if (['pdf'].includes(ext)) icon = '<i class="fas fa-file-pdf" style="color:var(--red)"></i>';
+    else if (['doc','docx'].includes(ext)) icon = '<i class="fas fa-file-word" style="color:var(--blue)"></i>';
+    else if (['xls','xlsx','csv'].includes(ext)) icon = '<i class="fas fa-file-excel" style="color:var(--green)"></i>';
+    else if (['json','js','py','html','css','ts','jsx','tsx','go','rs','rb','php','java','c','cpp','h','hpp'].includes(ext)) icon = '<i class="fas fa-file-code" style="color:var(--amber)"></i>';
+    else if (['txt','md'].includes(ext)) icon = '<i class="fas fa-file-lines" style="color:var(--purple)"></i>';
+    else if (['mp3','wav','ogg','m4a','flac'].includes(ext)) icon = '<i class="fas fa-file-audio" style="color:var(--cyan)"></i>';
+    else if (['mp4','avi','mov','webm'].includes(ext)) icon = '<i class="fas fa-file-video" style="color:var(--pink)"></i>';
+    else icon = '<i class="fas fa-file" style="color:var(--gray)"></i>';
+
+    // Section tag (6.5)
+    const sectionTag = file.projectPath ? file.projectPath.split('/')[0] : '';
+    const sectionHtml = sectionTag
+      ? `<span style="font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,.05);color:var(--gray);font-weight:500;flex-shrink:0;text-transform:uppercase">${escapeHtml(sectionTag)}</span>`
+      : '';
+
+    // Status dot (6.5)
+    const isServerBased = !!file.serverUrl || !!file.projectPath;
+    const statusDot = isServerBased
+      ? `<span title="Saved to project" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0"></span>`
+      : `<span title="Session only" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0"></span>`;
+
+    // Timestamp (6.5)
+    const ts = file.savedAt ? _sessionFriendlyTime(file.savedAt) : '';
+
+    // In-context indicator (6.3)
+    const inContext = _sessionIsInContext(safeName);
+    const contextIndicator = inContext
+      ? `<span title="In context" style="font-size:9px;color:var(--purple);flex-shrink:0"><i class="fas fa-brain"></i></span>`
+      : '';
+
+    // Bulk checkbox (6.6)
+    const isSelected = _sessionBulkSelection.has(safeName);
+    const checkedAttr = isSelected ? 'checked' : '';
+
     return `
-      <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--border);border-radius:5px;font-size:11px;cursor:pointer" onclick="${escapeHtml(clickJs)}" title="Abrir">
-        <span style="font-size:13px;flex-shrink:0">${icon}</span>
-        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--white)" title="${escapeHtml(file.name)}">${escapeHtml(file.name)}${escapeHtml(uploadState)}</span>
-        <span style="color:var(--gray);flex-shrink:0">${formatBytes(file.size)}</span>
-        <div style="display:flex;gap:4px;flex-shrink:0" onclick="event.stopPropagation()">
-          <button style="border:none;background:none;color:var(--gray);cursor:pointer;padding:2px 5px;font-size:11px" onclick="removeFileContext(${safeId})" title="Remover"><i class="fas fa-trash"></i></button>
+      <div data-session-file="${escapeHtml(safeName)}" style="display:flex;align-items:center;gap:5px;padding:4px 6px;border:1px solid ${isSelected ? 'var(--accent)' : 'var(--border)'};border-radius:5px;font-size:11px;cursor:pointer;${isSelected ? 'background:rgba(90,141,238,0.06)' : ''}" onclick="${escapeHtml(clickJs)}" title="${escapeHtml(safeName)}">
+        <input type="checkbox" ${checkedAttr} onclick="event.stopPropagation();_sessionToggleBulk(${safeId})" style="flex-shrink:0;cursor:pointer;accent-color:var(--accent)">
+        ${statusDot}
+        <span style="font-size:12px;flex-shrink:0;width:14px;text-align:center">${icon}</span>
+        ${contextIndicator}
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--white)" title="${escapeHtml(safeName)}">${escapeHtml(safeName)}</span>
+        ${sectionHtml}
+        <span style="color:var(--gray);flex-shrink:0;font-size:10px">${file.size ? formatBytes(file.size) : ''}</span>
+        <span style="color:var(--gray);flex-shrink:0;font-size:9px;opacity:.6">${ts}</span>
+        <div style="display:flex;gap:3px;flex-shrink:0" onclick="event.stopPropagation()">
+          <button style="border:none;background:none;color:var(--purple);cursor:pointer;padding:2px 3px;font-size:9px;opacity:.6" onclick="_sessionToggleContext(${safeId});return false" title="${inContext ? 'Remove from context' : 'Add to context'}"><i class="fas fa-${inContext ? 'brain' : 'circle'}"></i></button>
+          <button style="border:none;background:none;color:var(--red);cursor:pointer;padding:2px 3px;font-size:9px;opacity:.6" onclick="removeFileContext(${safeId});return false" title="Remover"><i class="fas fa-trash"></i></button>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
   
   container.innerHTML = html;
@@ -1068,16 +1385,61 @@ function clearCaseFiles() {
   addSystemBubble('Todos os arquivos de caso foram removidos');
 }
 
-// Clear session files
+// Clear session files (with confirmation, 6.7)
 function clearSessionFiles() {
+  // Route through the existing confirm modal
+  const overlay = document.getElementById('confirmModalOverlay');
+  const modal = document.getElementById('confirmModal');
+  const titleEl = document.getElementById('confirmModalTitle');
+  const msgEl = document.getElementById('confirmModalMessage');
+  const confirmBtn = document.getElementById('confirmModalConfirmBtn');
+  const cancelBtn = document.getElementById('confirmModalCancelBtn');
+  if (!overlay || !modal || !confirmBtn || !cancelBtn) {
+    // Fallback: clear directly if modal elements not found
+    _doClearSessionFiles();
+    return;
+  }
+
+  const t = (k, d) => (typeof window.t === 'function' ? window.t(k, d) : d);
+  if (titleEl) titleEl.innerHTML = '<i class="fas fa-trash-can" style="margin-right:6px;color:var(--red)"></i> ' + t('ui.clearSessionTitle', 'Clear all session files?');
+  if (msgEl) msgEl.textContent = t('ui.clearSessionBody', 'This will remove all imported files, images, and context from the current session. This action cannot be undone.');
+
+  overlay.style.display = '';
+  modal.style.display = '';
+
+  // Remove old listeners by cloning and replacing
+  const newConfirm = confirmBtn.cloneNode(true);
+  confirmBtn.parentNode.replaceChild(newConfirm, confirmBtn);
+  const newCancel = cancelBtn.cloneNode(true);
+  cancelBtn.parentNode.replaceChild(newCancel, cancelBtn);
+
+  const close = () => {
+    overlay.style.display = 'none';
+    modal.style.display = 'none';
+  };
+
+  newConfirm.addEventListener('click', () => {
+    close();
+    _doClearSessionFiles();
+  });
+  newCancel.addEventListener('click', close);
+  overlay.addEventListener('click', close, { once: true });
+}
+
+// Internal: actually clears session files without confirmation
+function _doClearSessionFiles() {
   for (const [, file] of _importedFiles) {
     if (file && file.url && String(file.url).startsWith('blob:')) {
       try { URL.revokeObjectURL(file.url); } catch (_) {}
     }
   }
   _importedFiles.clear();
+  _contextSessionFiles.clear();
+  _sessionBulkSelection.clear();
+  _sessionUpdateBulkBar();
   renderSessionFiles();
   updateComposeContextBar();
+  _sessionStateScheduleSave();
   addSystemBubble('Todos os arquivos de sessão foram removidos');
 }
 
@@ -1098,8 +1460,12 @@ function removeFileContext(name) {
       try { URL.revokeObjectURL(file.url); } catch (_) {}
     }
     _importedFiles.delete(name);
+    _contextSessionFiles.delete(name);
+    _sessionBulkSelection.delete(name);
+    _sessionUpdateBulkBar();
     renderSessionFiles();
     updateComposeContextBar();
+    _sessionStateScheduleSave();
     addSystemBubble(`Arquivo "${name}" removido do contexto`);
   }
 }
@@ -1382,6 +1748,10 @@ function updateComposeContextBar() {
   if (imageCount > 0) {
     badges.push(`<span class="context-badge"><i class="fas fa-image"></i> ${imageCount} imagem(ns) visual(is)</span>`);
   }
+  const ctxCount = _contextSessionFiles.size;
+  if (ctxCount > 0) {
+    badges.push(`<span class="context-badge" style="border-color:var(--purple)"><i class="fas fa-brain" style="color:var(--purple)"></i> ${ctxCount} no contexto</span>`);
+  }
   if (_checkedShared.size > 0) {
     badges.push(`<span class="context-badge"><i class="fas fa-share-alt"></i> ${_checkedShared.size} item(ns) _shared</span>`);
   }
@@ -1411,7 +1781,35 @@ function updateComposeContextBar() {
   bar.innerHTML = badges.join('');
 }
 
-// Expose functions to window scope
+// ── Active Project Chip (6.1) ──────────────────────────────────────
+// Updates the project name and file count chip at the top of #tab-files
+// whenever the active project changes.
+function _updateTabFilesProjectChip() {
+  const chip = document.getElementById('tabFilesProjectChip');
+  const nameEl = document.getElementById('tabFilesProjectName');
+  const countEl = document.getElementById('tabFilesProjectFilesCount');
+  if (!chip || !nameEl) return;
+
+  const pid = (typeof getCurrentProjectId === 'function') ? getCurrentProjectId() : null;
+  if (!pid) {
+    chip.style.display = 'none';
+    return;
+  }
+
+  const project = (typeof _findProject === 'function') ? _findProject(pid) : null;
+  if (!project) {
+    chip.style.display = 'none';
+    return;
+  }
+
+  nameEl.textContent = project.name || pid;
+  if (countEl) {
+    const fc = typeof project.files_count === 'number' ? project.files_count : '';
+    countEl.textContent = fc ? `${fc} arquivo${fc !== 1 ? 's' : ''}` : '';
+  }
+  chip.style.display = 'flex';
+}
+window._updateTabFilesProjectChip = _updateTabFilesProjectChip;
 window.getImportedFilesContext = getImportedFilesContext;
 window.getSharedContext = getSharedContext;
 window.updateSharedContextBar = updateSharedContextBar;

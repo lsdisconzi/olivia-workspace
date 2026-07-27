@@ -1,0 +1,343 @@
+/* ============================================================================
+   Social Media Assistant — seção do Olivia Workspace.
+   Usa os tokens nativos do workspace (claro/escuro automático).
+   ============================================================================ */
+
+.social-media-view {
+  display: none;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg);
+}
+.social-media-view.active { display: flex; }
+
+/* When social-media is open, hide main-content so it takes the full area */
+.workspace.sm-open > .main-content {
+  display: none !important;
+}
+
+/* ── Cabeçalho ─────────────────────────────────────────────────────────── */
+.sm-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg-card);
+}
+.sm-head-brand { display: flex; align-items: center; gap: 9px; }
+.sm-head i { color: var(--amber); font-size: 18px; }
+.sm-title {
+  font-family: var(--serif);
+  font-size: 16px; font-weight: 600;
+  color: var(--white); letter-spacing: -0.01em;
+}
+
+/* ── Painéis ───────────────────────────────────────────────────────────── */
+.sm-panels {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 0;
+}
+
+/* Left profile panel */
+.sm-profile-panel {
+  width: 300px;
+  min-width: 240px;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  transition: width .3s, opacity .3s;
+}
+.sm-profile-panel.collapsed { width: 0; min-width: 0; overflow: hidden; opacity: 0; }
+
+/* Toggle button for left panel */
+.sm-toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: -14px;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 48px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-hi);
+  border-radius: 0 6px 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--gray);
+  font-size: 11px;
+  z-index: 10;
+  transition: all .15s;
+}
+.sm-toggle-btn:hover { color: var(--white); border-color: var(--amber); }
+
+/* Profile card and list */
+.sm-profile-list-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+}
+.sm-profile-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.sm-profile-pic {
+  width: 36px; height: 36px;
+  background: var(--amber-lo);
+  border: 1px solid rgba(196,98,45,.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--amber); font-size: 14px; flex-shrink: 0;
+}
+.sm-profile-item {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: all .15s;
+  font-size: 13px; color: var(--gray-hi);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.sm-profile-item:hover, .sm-profile-item.active {
+  border-color: var(--amber);
+  color: var(--white);
+  background: var(--amber-lo);
+}
+.sm-profile-item .edit-btn {
+  color: var(--gray);
+  cursor: pointer;
+  padding: 2px 6px;
+}
+.sm-profile-item .edit-btn:hover { color: var(--amber); }
+
+/* Chat panel (center) */
+.sm-chat-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+}
+.sm-chat-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.sm-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--bg);
+}
+.sm-message {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.sm-message.user {
+  align-self: flex-end;
+  background: var(--amber-lo);
+  border: 1px solid rgba(196,98,45,.25);
+  color: var(--white);
+}
+.sm-message.assistant {
+  align-self: flex-start;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--gray-hi);
+}
+.sm-chat-input-area {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  background: var(--bg-card);
+}
+
+/* Output panel (right) */
+.sm-output-panel {
+  width: 330px;
+  min-width: 260px;
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  transition: width .3s, opacity .3s;
+}
+.sm-output-panel.collapsed { width: 0; min-width: 0; overflow: hidden; opacity: 0; }
+
+.sm-output-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+}
+.sm-output-preview {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--gray-hi);
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+/* ── Forms & buttons ───────────────────────────────────────────────────── */
+.sm-form-group { margin-bottom: 12px; }
+.sm-form-label {
+  display: block;
+  font-size: 11px;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 5px;
+}
+.sm-input, .sm-select, .sm-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--bg-input, #171715);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 13px;
+  transition: border-color .15s;
+  -webkit-appearance: none;
+}
+.sm-input:focus, .sm-select:focus, .sm-textarea:focus {
+  outline: none;
+  border-color: var(--amber);
+}
+.sm-textarea { resize: vertical; }
+
+.sm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .18s;
+  border: 1px solid var(--border-hi);
+  background: transparent;
+  color: var(--gray-hi);
+  white-space: nowrap;
+}
+.sm-btn:hover { color: var(--white); background: rgba(255,255,255,.05); }
+.sm-btn-primary {
+  background: var(--primary-btn-bg, #ede8df);
+  border-color: var(--primary-btn-bg, #ede8df);
+  color: var(--primary-btn-fg, #191917);
+  font-weight: 600;
+}
+.sm-btn-primary:hover {
+  background: #f5f0e8;
+  border-color: #f5f0e8;
+  color: #191917;
+}
+.sm-btn-outline {
+  border-color: rgba(196,98,45,.4);
+  color: var(--amber);
+}
+.sm-btn-outline:hover {
+  background: var(--amber-lo);
+  color: var(--amber);
+}
+.sm-btn-sm { padding: 5px 10px; font-size: 12px; }
+
+/* ── Modal ──────────────────────────────────────────────────────────────── */
+.sm-modal-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.5);
+  align-items: center; justify-content: center;
+}
+.sm-modal-overlay.open { display: flex; }
+.sm-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-hi);
+  border-radius: var(--r);
+  width: 90%; max-width: 420px;
+  padding: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+.sm-modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.sm-modal-title {
+  font-family: var(--serif);
+  font-size: 16px; font-weight: 600;
+  color: var(--white);
+}
+.sm-modal-close {
+  background: none; border: none;
+  color: var(--gray); font-size: 20px; cursor: pointer;
+}
+.sm-modal-close:hover { color: var(--white); }
+
+/* ── Typing indicator ──────────────────────────────────────────────────── */
+.sm-typing {
+  display: flex; gap: 4px; padding: 8px 14px;
+  align-self: flex-start;
+}
+.sm-typing-dot {
+  width: 6px; height: 6px;
+  background: var(--amber);
+  border-radius: 50%;
+  animation: smTyping 1.2s infinite ease-in-out;
+}
+.sm-typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.sm-typing-dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes smTyping {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ── Empty states & helpers ─────────────────────────────────────────────── */
+.sm-empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--gray);
+}
+.sm-empty-state i { font-size: 32px; margin-bottom: 12px; display: block; color: var(--border-hi); }
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sm-profile-panel, .sm-output-panel { display: none; }
+  .sm-profile-panel.collapsed, .sm-output-panel.collapsed { display: none; }
+  .sm-profile-panel.open, .sm-output-panel.open { display: flex; width: 280px; }
+}

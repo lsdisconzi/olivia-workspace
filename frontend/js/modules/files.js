@@ -127,7 +127,11 @@ async function loadTranscripts() {
     const list = data.transcripts || [];
     if (countBadge) countBadge.textContent = '(' + list.length + ')';
     if (!list.length) {
-      container.innerHTML = '<p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic">Nenhuma transcrição salva ainda</p>';
+      container.innerHTML = '<div style="text-align:center;padding:16px 12px;border:1px dashed var(--border);border-radius:8px;background:rgba(255,255,255,0.02)">'
+        + '<div style="font-size:20px;color:var(--gray);margin-bottom:6px"><i class="fas fa-closed-captioning"></i></div>'
+        + '<div style="font-size:11px;color:var(--gray);margin-bottom:4px">Nenhuma transcrição salva ainda</div>'
+        + '<div style="font-size:10px;color:var(--gray);opacity:.7">Grave áudio no módulo <strong>Listening</strong> para gerar transcrições</div>'
+        + '</div>';
       return;
     }
     container.innerHTML = list.map(t => {

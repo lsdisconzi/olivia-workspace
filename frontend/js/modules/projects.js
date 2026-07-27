@@ -258,6 +258,7 @@ function _renderProjectList() {
     current.textContent = _projectCurrentLabel(_findProject(_currentProjectId));
   }
   if (typeof discUpdateActiveProjectLabel === 'function') discUpdateActiveProjectLabel();
+  if (typeof _updateTabFilesProjectChip === 'function') _updateTabFilesProjectChip();
   _setProjectActionState();
 }
 
@@ -345,12 +346,15 @@ async function selectProject(projectId, opts) {
   }
 
   await refreshProjectIndex(projectId);
+  if (typeof _sessionRefreshStaleness === 'function') _sessionRefreshStaleness();
   await _refreshProjectPanels({ force: true });
+  if (typeof _sessionStateHydrate === 'function') _sessionStateHydrate(projectId);
   if (typeof discLoadFiles === 'function') discLoadFiles();
   if (typeof discLoadOverview === 'function') discLoadOverview();
   if (typeof discUpdateActiveProjectLabel === 'function') discUpdateActiveProjectLabel();
   if (typeof renderArquivosPanel === 'function') renderArquivosPanel();
   if (typeof loadProjectPlanningOverview === 'function') loadProjectPlanningOverview(true);
+  if (typeof _updateTabFilesProjectChip === 'function') _updateTabFilesProjectChip();
 
   if (!options.silent && project) {
     const msg = (typeof window.t === 'function'

@@ -600,7 +600,8 @@
   // ── Lifecycle: show / hide a view (espelha o padrão violations.js) ───────
   var CR_SIBLING_HIDE = ['violationsHideView', 'lawLibHideView', 'masterIndexHideView',
     'legalRouterHideView', 'spacesHideView', 'listeningHideView', 'studioHideView',
-    'descobertaHideView', 'memoryHideView', 'shadersHideView', 'architectureHideView'];
+    'descobertaHideView', 'memoryHideView', 'shadersHideView', 'architectureHideView',
+    'socialMediaHideView'];
   var CR_CHAT_IDS = ['chatHeader', 'welcomeState', 'chatLog', 'chatCompose', 'chatToolbar'];
 
   window.craudioShowView = function () {
@@ -638,7 +639,7 @@
     var names = ['violationsShowView', 'lawLibShowView', 'masterIndexShowView',
       'legalRouterShowView', 'spacesShowView', 'listeningShowView', 'studioShowView',
       'descobertaShowView', 'memoryShowView', 'shadersShowView', 'architectureShowView',
-      'resetToWelcome', 'aexToggleMain'];
+      'socialMediaShowView', 'resetToWelcome', 'aexToggleMain'];
     names.forEach(function (n) {
       var orig = window[n];
       if (typeof orig !== 'function' || orig._crWrapped) return;
