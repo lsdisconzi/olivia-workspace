@@ -6,7 +6,7 @@ tags: ["la8159", "category:cl", "jurisdiction:chile"]
 ---
 # CL_CACH — Chilean Aeronautical Code (Ley 18.916)
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §1.1, §1.7, §1.8](../../../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §1.1, §1.7, §1.8](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `CL_CACH`
@@ -61,5 +61,5 @@ tags: ["la8159", "category:cl", "jurisdiction:chile"]
 - Pair every Art. 133 cite with 133 A when post-removal facts are present.
 
 ## 9. Provenance
-- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md](../../../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md) §§1.1, 1.7, 1.8, 2.3, 2.4
+- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md](../source/la8159/01-violations) §§1.1, 1.7, 1.8, 2.3, 2.4
 - Last sync: 2026-04-28

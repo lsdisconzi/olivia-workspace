@@ -67,7 +67,7 @@
     {
       "id": "la8159.violations.validated",
       "title": "Validated violations corpus (canonical)",
-      "path": "agents-groups/la8159/source/10_violations_json/validated",
+      "path": "agents-groups/la8159/source/la8159/01-violations",
       "kind": "corpus",
       "language": "en",
       "owner_agents": [
@@ -92,7 +92,7 @@
     {
       "id": "la8159.violations.reports",
       "title": "Authoritative verification and strategic reports",
-      "path": "agents-groups/la8159/source/10_violations_json/validated",
+      "path": "agents-groups/la8159/source/la8159/01-violations",
       "kind": "corpus",
       "language": "en",
       "owner_agents": [
@@ -137,7 +137,7 @@
     {
       "id": "la8159.sources.br",
       "title": "Brazil statutory source caches",
-      "path": "agents-groups/la8159/source/sources/BR",
+      "path": "agents-groups/la8159/source/la8159/04-law/BR",
       "kind": "corpus",
       "language": "pt-BR",
       "owner_agents": [
@@ -176,7 +176,7 @@
     {
       "id": "la8159.sources.cl",
       "title": "Chile statutory source caches",
-      "path": "agents-groups/la8159/source/sources/CL",
+      "path": "agents-groups/la8159/source/la8159/04-law/CL",
       "kind": "corpus",
       "language": "es-CL",
       "owner_agents": [
@@ -206,7 +206,7 @@
     {
       "id": "la8159.sources.int",
       "title": "International instrument source caches",
-      "path": "agents-groups/la8159/source/sources/INT",
+      "path": "agents-groups/la8159/source/la8159/04-law/INT",
       "kind": "corpus",
       "language": "en",
       "owner_agents": [

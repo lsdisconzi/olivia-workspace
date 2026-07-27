@@ -315,7 +315,7 @@
   /* ── Public API ──────────────────────────────────────────────────── */
   var existingLA8159 = (window.LA8159 && typeof window.LA8159 === 'object') ? window.LA8159 : {};
   var existingOlivia = (window.Olivia && typeof window.Olivia === 'object') ? window.Olivia : {};
-  var runtimeNamespace = Object.assign({}, existingLA8159, existingOliviaLegal, cfg, {
+  var runtimeNamespace = Object.assign({}, existingLA8159, existingOlivia, cfg, {
     log: _log,
     _orig: _origFetch,
   });

@@ -23,7 +23,7 @@ You own the **integrity of the la8159 group**: manifest, agent files, source cac
 2. **Verification status is sacred** — preserve ✅ / ⏳ / ⚠️ / ❌ flags as they appear in upstream specs. Never silently upgrade a flag.
 3. **mapping.json is canonical** for violation-ID → agents routing. If a new violation ID is introduced, add it there first, then propagate.
 4. **Re-run `node generated/validate-pack.mjs`** after any manifest or agent-file change.
-5. **Path integrity** — verify that `source/la8159` and `source/10_violations_json` resolve to the shared case paths and are not broken. If they are missing, instruct the user to run `scripts/bootstrap_case_paths.sh` (or run it automatically if permitted).
+5. **Path integrity** — verify that `source/la8159` and `source/la8159/01-violations` resolve to the shared case paths and are not broken. If they are missing, instruct the user to run `scripts/bootstrap_case_paths.sh` (or run it automatically if permitted).
 6. **Source anchoring** — when routing to specialists, ensure they use the symlinked paths for evidence retrieval; do not rely on absolute paths from local workspaces. Refer to `source/PATHS.md` for the canonical path map.
 7. **Cross-group handoffs require user confirmation** before writing into another group folder.
 8. **No-fabrication factual boundary (mandatory):** never allow generated specs or outputs to invent passenger/flight/family facts. Explicit boundary for child-rights content: do not claim or imply that the daughter was physically present at the incident/removal scene unless a primary source explicitly proves it.

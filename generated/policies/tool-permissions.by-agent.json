@@ -1,0 +1,74 @@
+{
+  "version": "1.0.0",
+  "group": "olivia",
+  "default_policy": {
+    "mode": "deny-by-default",
+    "require_confirmation_for": [
+      "cross_group_write",
+      "destructive_file_delete",
+      "production_endpoint_write"
+    ]
+  },
+  "agents": {
+    "orchestrator-control-plane": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "qdrant_search", "neo4j_query", "terminate"],
+      "denied_tools": [],
+      "require_confirmation_for": ["cross_group_write"],
+      "notes": ["Runtime router. Routes to Olivia specialists."]
+    },
+    "olivia-coordinator": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "terminate"],
+      "denied_tools": [],
+      "require_confirmation_for": ["cross_group_write", "destructive_file_delete"],
+      "notes": ["Governance coordinator. Owns manifest, policies, schemas."]
+    },
+    "olivia-ecosystem-coordinator": {
+      "allowed_tools": ["context_assemble", "terminate"],
+      "denied_tools": ["bash", "python_execute", "str_replace_editor"],
+      "require_confirmation_for": [],
+      "notes": ["Public-facing Q&A only. No filesystem access."]
+    },
+    "shaders": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "terminate"],
+      "denied_tools": [],
+      "require_confirmation_for": [],
+      "notes": ["2D SVG + 3D WebGL scene creator."]
+    },
+    "discovery": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "qdrant_search", "terminate"],
+      "denied_tools": [],
+      "require_confirmation_for": [],
+      "notes": ["Document intelligence / NLP pipeline."]
+    },
+    "listening": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "terminate"],
+      "denied_tools": [],
+      "require_confirmation_for": [],
+      "notes": ["Audio capture + transcription."]
+    },
+    "memory": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "qdrant_search", "neo4j_query", "terminate"],
+      "denied_tools": [],
+      "require_confirmation_for": ["collection_delete"],
+      "notes": ["Qdrant + Neo4j memory plane."]
+    },
+    "studio": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "terminate"],
+      "denied_tools": [],
+      "require_confirmation_for": [],
+      "notes": ["UI components + preview agent."]
+    },
+    "qdrant": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "qdrant_search", "qdrant_ingest", "terminate"],
+      "denied_tools": [],
+      "require_confirmation_for": ["collection_delete"],
+      "notes": ["Standalone Qdrant ops."]
+    },
+    "frontend-engineer": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "terminate"],
+      "denied_tools": [],
+      "require_confirmation_for": [],
+      "notes": ["Senior frontend architect and migration specialist."]
+    }
+  }
+}

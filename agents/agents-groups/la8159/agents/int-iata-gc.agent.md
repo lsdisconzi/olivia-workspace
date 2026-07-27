@@ -6,7 +6,7 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 ---
 # INT_IATA_GC — IATA General Conditions of Carriage
 
-> Spec v1.0 · 2026-04-27 · Tier 3 (contractual) · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.7](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 3 (contractual) · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.7](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `INT_IATA_GC`
@@ -52,5 +52,5 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 - Always cross-ref to domestic consumer-protection statutes for actual recovery.
 
 ## 9. Provenance
-- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md) §2.7, §5
+- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §2.7, §5
 - Last sync: 2026-04-27

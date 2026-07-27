@@ -11,7 +11,7 @@
   // Resolve to an absolute gateway URL so calls work regardless of which static
   // server is hosting this page. Mirrors the logic in config.js.
   var _runtimeCfg = (window.Olivia && typeof window.Olivia === 'object')
-    ? window.OliviaLegal
+    ? window.Olivia
     : ((window.LA8159 && typeof window.LA8159 === 'object') ? window.LA8159 : {});
   var _gatewayOrigin = (_runtimeCfg.gateway && _runtimeCfg.gateway.base)
     ? String(_runtimeCfg.gateway.base).replace(/\/$/, '')

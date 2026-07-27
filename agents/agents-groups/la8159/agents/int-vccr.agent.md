@@ -6,7 +6,7 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 ---
 # INT_VCCR — Vienna Convention on Consular Relations (1963)
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.5](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.5](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `INT_VCCR`
@@ -52,5 +52,5 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 - Always identify the state act (PDI custody) triggering the obligation.
 
 ## 9. Provenance
-- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md) §2.5, §5
+- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §2.5, §5
 - Last sync: 2026-04-28

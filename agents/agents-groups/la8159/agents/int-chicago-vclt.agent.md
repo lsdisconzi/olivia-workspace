@@ -6,7 +6,7 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 ---
 # INT_CHICAGO_VCLT — Chicago Convention 1944 + Vienna Convention on Law of Treaties
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.2](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.2](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `INT_CHICAGO_VCLT`
@@ -62,5 +62,5 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 - VCLT Arts. 26/27 always presented as treaty-binding framework, not individual rights.
 
 ## 9. Provenance
-- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md) §2.2, §5
+- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §2.2, §5
 - Last sync: 2026-04-28

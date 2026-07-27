@@ -6,7 +6,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 ---
 # BR_CDC — Brazilian Consumer Defense Code
 
-> Spec v1.0 · 2026-04-27 · Tier 1 (hard binding) · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §2.1–2.6](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 (hard binding) · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §2.1–2.6](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `BR_CDC`
@@ -76,6 +76,6 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Never mix the CDC track with the BR_CP criminal track without explicit `track: civil` / `track: criminal-time-barred` labels.
 
 ## 9. Provenance
-- Verification report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md) §§2.1–2.6, 2.13
-- Strategic narrative: [BR_STRATEGIC_LEGAL_NARRATIVE.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_STRATEGIC_LEGAL_NARRATIVE.md) §3
+- Verification report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §§2.1–2.6, 2.13
+- Strategic narrative: [BR_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations) §3
 - Last sync: 2026-04-27

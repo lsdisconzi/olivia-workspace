@@ -6,7 +6,7 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 ---
 # INT_MC99 — Montreal Convention 1999
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative reports: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.3](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md) · [INT_STRATEGIC_LEGAL_NARRATIVE.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_STRATEGIC_LEGAL_NARRATIVE.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative reports: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.3](../source/la8159/01-violations) · [INT_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `INT_MC99`
@@ -65,6 +65,6 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 - Tag enforcement pathway: `MC99 Art. 33 civil action in national court`.
 
 ## 9. Provenance
-- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md) §2.3, §3, §5
-- [INT_STRATEGIC_LEGAL_NARRATIVE.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_STRATEGIC_LEGAL_NARRATIVE.md)
+- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §2.3, §3, §5
+- [INT_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations)
 - Last sync: 2026-04-27

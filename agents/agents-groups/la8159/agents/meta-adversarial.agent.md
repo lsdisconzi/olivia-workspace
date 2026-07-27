@@ -65,6 +65,6 @@ tags: ["la8159", "category:meta", "jurisdiction:cross-framework"]
 
 ## 9. Provenance
 - Aggregates Section 7 of the specialist agent files in this library.
-- [BR_STRATEGIC_LEGAL_NARRATIVE.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_STRATEGIC_LEGAL_NARRATIVE.md)
-- [INT_STRATEGIC_LEGAL_NARRATIVE.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_STRATEGIC_LEGAL_NARRATIVE.md)
+- [BR_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations)
+- [INT_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations)
 - Last sync: 2026-04-27

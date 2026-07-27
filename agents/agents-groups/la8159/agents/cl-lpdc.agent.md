@@ -6,7 +6,7 @@ tags: ["la8159", "category:cl", "jurisdiction:chile"]
 ---
 # CL_LPDC — Chilean Consumer Protection (Ley 19.496)
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §2](../../../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §2](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `CL_LPDC`
@@ -59,5 +59,5 @@ tags: ["la8159", "category:cl", "jurisdiction:chile"]
 - Use phrase "pattern of regulatory non-compliance"; **never** "pattern of abuse".
 
 ## 9. Provenance
-- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md](../../../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md) §§2.1–2.4, 6.1–6.2
+- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md](../source/la8159/01-violations) §§2.1–2.4, 6.1–6.2
 - Last sync: 2026-04-27

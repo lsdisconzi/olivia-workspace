@@ -6,7 +6,7 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 ---
 # INT_ICAO_AN9 — ICAO Annex 9 (Facilitation)
 
-> Spec v1.0 · 2026-04-27 · Tier 2 · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.1](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 2 · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.1](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `INT_ICAO_AN9`
@@ -57,5 +57,5 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 - Tag enforcement: `ICAO State Letter / USOAP audit · no individual recovery`.
 
 ## 9. Provenance
-- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md) §2.1, §5
+- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §2.1, §5
 - Last sync: 2026-04-27

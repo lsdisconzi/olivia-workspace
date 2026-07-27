@@ -6,7 +6,7 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 ---
 # INT_UNCRC_HAGUE — UN Convention on the Rights of the Child + Hague 1980
 
-> Spec v1.0 · 2026-04-27 · Tier 2/3 · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.6](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 2/3 · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.6](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `INT_UNCRC_HAGUE`
@@ -59,5 +59,5 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 - Always include this qualifier when discussing INT-016/UNCRC family impact: `No claim of child physical presence at incident; claim is post-incident separation impact.`
 
 ## 9. Provenance
-- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md) §2.6, §5
+- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §2.6, §5
 - Last sync: 2026-04-27

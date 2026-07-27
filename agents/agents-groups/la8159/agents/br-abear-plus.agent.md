@@ -6,7 +6,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 ---
 # BR_ABEAR_PLUS — ABEAR Code + Lei 12.846/2013 + Decreto 11.129/2022 (PNDH-3)
 
-> Spec v1.0 · 2026-04-27 · Tier 3 · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §§2.15–2.17](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 3 · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §§2.15–2.17](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `BR_ABEAR_PLUS`
@@ -96,7 +96,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Never present these instruments as `direct` legal anchors.
 
 ## 9. Provenance
-- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md) §§2.15–2.17, §5
+- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §§2.15–2.17, §5
 - [`branch_documentation/ABEAR_CONTENT_REPORT.md`](../../../../services/garage-main/branch_documentation/ABEAR_CONTENT_REPORT.md) — full ABEAR document inventory (978 files, 2019–2026)
 - [`branch_documentation/aviation_ethics_institutional_governance.md`](../../../../services/garage-main/branch_documentation/aviation_ethics_institutional_governance.md) §4.1 (ABEAR Compliance Program)
 - Local PDF cache: `crawler_output/abear-docs/documents/www.abear.com.br/wp-content/uploads/` (15 governance PDFs)

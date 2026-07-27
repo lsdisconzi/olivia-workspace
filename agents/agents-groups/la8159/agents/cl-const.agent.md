@@ -6,7 +6,7 @@ tags: ["la8159", "category:cl", "jurisdiction:chile"]
 ---
 # CL_CONST — Chilean Constitution
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §3, §6.2(5)](../../../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §3, §6.2(5)](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `CL_CONST`
@@ -57,5 +57,5 @@ tags: ["la8159", "category:cl", "jurisdiction:chile"]
 - Use as reinforcing layer; never as standalone primary anchor.
 
 ## 9. Provenance
-- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md](../../../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md) §3, §6.2(5)
+- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md](../source/la8159/01-violations) §3, §6.2(5)
 - Last sync: 2026-04-27

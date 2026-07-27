@@ -6,7 +6,7 @@ tags: ["la8159", "category:cl", "jurisdiction:chile"]
 ---
 # CL_CPCL — Chilean Penal Code
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §§1.2–1.6, §6.4](../../../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §§1.2–1.6, §6.4](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `CL_CPCL`
@@ -68,5 +68,5 @@ tags: ["la8159", "category:cl", "jurisdiction:chile"]
 - Never use as primary harm measure when civil/consumer damages claim is available.
 
 ## 9. Provenance
-- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md](../../../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md) §§1.2–1.6, 6.4
+- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md](../source/la8159/01-violations) §§1.2–1.6, 6.4
 - Last sync: 2026-04-27
