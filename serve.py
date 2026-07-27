@@ -7258,7 +7258,14 @@ def _openclaude_env(provider: str | None = None, model: str | None = None,
     # Use provided key/url if given, otherwise resolve from env vars
     if api_key and base_url:
         pass  # use explicit values below
+    elif api_key:
+        # Only api_key provided, resolve base_url from provider
+        base_url, _ = _resolve_remote_llm_target(provider, model)
+    elif base_url:
+        # Only base_url provided, resolve api_key from env
+        _, api_key = _resolve_remote_llm_target(provider, model)
     else:
+        # Neither provided, resolve both
         base_url, api_key = _resolve_remote_llm_target(provider, model)
     is_ollama = _is_ollama_request(provider, model)
 
@@ -8432,6 +8439,7 @@ def _stream_remote_llm(
     base_url: str | None = None,
     max_tokens: int | None = None,
     allow_multimodal: bool = False,
+    response_format: dict | None = None,
 ):
     resolved_base, resolved_key = _resolve_remote_llm_target(provider, model, base_url)
 
@@ -8462,6 +8470,7 @@ def _stream_remote_llm(
         sanitize_claude_model=not _is_openrouter_request(provider, model),
         max_tokens=max_tokens,
         allow_multimodal=allow_multimodal,
+        response_format=response_format,
     )
 
 
@@ -8474,6 +8483,7 @@ def _stream_llm(
     sanitize_claude_model: bool = True,
     max_tokens: int | None = None,
     allow_multimodal: bool = False,
+    response_format: dict | None = None,
 ):
     """Yield decoded token strings from any OpenAI-compatible streaming endpoint."""
     effective_model = model or LLM_MODEL
@@ -8560,6 +8570,8 @@ def _stream_llm(
     if str(effective_model or "").lower().startswith("deepseek"):
         payload["thinking"] = {"type": "enabled"}
         payload["reasoning_effort"] = "high"
+    if response_format:
+        payload["response_format"] = response_format
     body = json.dumps(payload).encode("utf-8")
 
     req = urllib.request.Request(url, data=body, method="POST")
@@ -8619,9 +8631,28 @@ def _complete_llm(
     model: str | None = None,
     temperature: float = 0.0,
     max_tokens: int = 800,
+    provider: str | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+    response_format: dict | None = None,
 ) -> str:
-    """Return a non-streaming completion from the DeepSeek/OpenAI API."""
-    target_base = _normalize_openai_base_url(LLM_BASE_URL)
+    """Return a non-streaming completion from any OpenAI-compatible API."""
+    resolved_base, resolved_key = _resolve_remote_llm_target(provider, model, base_url)
+
+    # Frontend-provided key takes priority
+    effective_api_key = api_key or resolved_key
+    effective_base_url = base_url or resolved_base
+
+    # Pre-check for missing API key
+    if not effective_api_key and effective_base_url and not _is_ollama_request(provider, model):
+        provider_label = _remote_provider_label(provider, model)
+        raise RuntimeError(
+            f"MISSING_API_KEY:{provider_label}:"
+            f"Chave da API não configurada para {provider_label}. "
+            "Adicione sua chave no campo de API Key acima e clique em Verificar."
+        )
+
+    target_base = _normalize_openai_base_url(effective_base_url)
     if not target_base:
         target_base = "https://api.deepseek.com"
     chat_path = "/chat/completions" if target_base.endswith("/v1") else "/v1/chat/completions"
@@ -8637,11 +8668,14 @@ def _complete_llm(
     if str(effective_model or "").lower().startswith("deepseek"):
         payload["thinking"] = {"type": "enabled"}
         payload["reasoning_effort"] = "high"
+    if response_format:
+        payload["response_format"] = response_format
     body = json.dumps(payload).encode("utf-8")
 
     req = urllib.request.Request(url, data=body, method="POST")
     req.add_header("Content-Type", "application/json")
-    req.add_header("Authorization", f"Bearer {DEEPSEEK_API_KEY}")
+    if effective_api_key:
+        req.add_header("Authorization", f"Bearer {effective_api_key}")
 
     ctx = _build_llm_ssl_context()
     try:
@@ -10662,6 +10696,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._delete_note_post()
         elif raw_path == "/api/craudio/import":
             self._craudio_import_post()
+        elif raw_path == "/api/llm/completions":
+            self._llm_completions_post()
         elif raw_path.startswith("/api/"):
             self._api_post(raw_path)
         else:
@@ -10933,6 +10969,56 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         except Exception as exc:
             self._sse_send({"type": "error", "message": str(exc)})
         self._sse_done()
+
+    # ── Non-streaming LLM completions: POST /api/llm/completions ──────────
+    def _llm_completions_post(self):
+        """Non-streaming completion for JSON extraction tasks."""
+        body = self._read_body()
+        auth_header = str(self.headers.get("Authorization") or "").strip()
+        custom_api_key = auth_header[len("Bearer "):] if auth_header.lower().startswith("bearer ") else None
+
+        message = str(body.get("message", "") or "").strip()
+        system = str(body.get("system", "") or "").strip()
+        model = body.get("model")
+        provider = body.get("provider")
+        base_url = body.get("base_url")
+        response_format = body.get("response_format")
+        max_tokens = body.get("max_tokens")
+
+        if not message:
+            self._json_response({"error": "message is required"}, status=400)
+            return
+
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": message})
+
+        kwargs = {}
+        if provider:
+            kwargs["provider"] = provider
+        if model:
+            kwargs["model"] = model
+        if base_url:
+            kwargs["base_url"] = base_url
+        if custom_api_key:
+            kwargs["api_key"] = custom_api_key
+        if response_format:
+            kwargs["response_format"] = response_format
+        if max_tokens:
+            try:
+                kwargs["max_tokens"] = max(256, min(32768, int(max_tokens)))
+            except (TypeError, ValueError):
+                pass
+
+        try:
+            content = _complete_llm(messages, **kwargs)
+            self._json_response({"content": content, "status": "ok"})
+        except RuntimeError as exc:
+            self._json_response({"error": str(exc)}, status=502)
+        except Exception as exc:
+            logger.error("llm_completions error: %s", exc)
+            self._json_response({"error": str(exc)}, status=500)
 
     # ── Assistant chat: POST /api/assistant/chat → SSE stream ───────────────
     def _assistant_chat(self):
