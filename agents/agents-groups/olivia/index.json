@@ -18,7 +18,7 @@
     "agent_file": "agents/agents-groups/olivia/agents/olivia-coordinator.agent.md"
   },
   "agents": [
-    { "slug": "orchestrator-control-plane", "name": "Orchestrator Control Plane", "role": "orchestrator", "agent_file": "agents-groups/olivia/agents/orchestrator-control-plane.agent.md" },
+    { "slug": "orchestrator-control-plane", "name": "Orchestrator Control Plane", "role": "orchestrator", "agent_file": "agents/agents-groups/olivia/agents/orchestrator-control-plane.agent.md" },
     { "slug": "olivia-coordinator", "name": "Olivia Coordinator", "role": "coordinator", "agent_file": "agents/agents-groups/olivia/agents/olivia-coordinator.agent.md" },
     { "slug": "shaders", "name": "Shaders Agent", "role": "specialist", "specialty": "2D SVG + 3D WebGL scenes", "agent_file": "agents/agents-groups/olivia/agents/olivia-shaders-proactive.agent.md" },
     { "slug": "discovery", "name": "Discovery Agent", "role": "specialist", "specialty": "Document intelligence / NLP pipeline", "agent_file": "agents/agents-groups/olivia/agents/olivia-discovery-intelligence.agent.md" },

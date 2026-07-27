@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "generated/schemas/knowledge-manifest.schema.json",
+  "version": "1.0.0",
+  "title": "Knowledge Manifest",
+  "description": "Schema for knowledge manifests used by agent groups. Lists knowledge entries with paths, owners, consumers, and PII sensitivity.",
+  "type": "object",
+  "required": ["version", "group", "entries"],
+  "properties": {
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "group": { "type": "string" },
+    "description": { "type": "string" },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "pii_redaction": { "type": "boolean" }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "path", "kind"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "path": { "type": "string" },
+          "kind": { "enum": ["doc", "schema", "corpus", "policy", "reference"] },
+          "language": { "type": "string" },
+          "owner_agents": { "type": "array", "items": { "type": "string" } },
+          "consumer_agents": { "type": "array", "items": { "type": "string" } },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "pii_sensitivity": { "enum": ["none", "low", "medium", "high", "critical"] }
+        }
+      }
+    }
+  }
+}

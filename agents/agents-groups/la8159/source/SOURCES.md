@@ -179,7 +179,7 @@ No remaining optional cache gaps.
 
 ## 7. What is **already in** the workspace
 
-- ✅ All 4 authoritative verification reports (BR / BR-strategic / CL_v2 / INT / INT-strategic) under `10_violations_json/validated/{BR,CL,INT}/law_validated/reports/` — these are the **doctrinal ground truth** that drove every agent's NEVER-do rules.
+- ✅ All 4 authoritative verification reports (BR / BR-strategic / CL_v2 / INT / INT-strategic) under `la8159/01-violations/` — these are the **doctrinal ground truth** that drove every agent's NEVER-do rules.
 - ✅ All active agent specs are present in the workspace: 33 specialists + 7 meta, plus the template. Section 3 source blocks and per-article verification flags reflect each spec's current maturity (`✅` / `⏳` / `⚠️` / `❌`).
 - ✅ `mapping.json` routing all 71 violation IDs.
 - ✅ `INDEX.md` agent inventory.
@@ -196,6 +196,6 @@ No remaining optional cache gaps.
 ## 9. Provenance
 
 - Aggregated from Section 3 of the active specialist and meta `agent.md` files in this folder.
-- Cross-checked against verification reports under `10_violations_json/validated/{BR,CL,INT}/law_validated/reports/`.
+- Cross-checked against verification reports under `la8159/01-violations/`.
 - Last sync: 2026-04-28.
 - Cache populated: 2026-04-28 (44 MD files from 09_LAW JSON sources, missing_law_info PDFs/MDs, the official Itamaraty Joint Declaration page, the official JAC Resolution 218 norm page, and eight newly added offline treaty/constitutional/soft-law caches).

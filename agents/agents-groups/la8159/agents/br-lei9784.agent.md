@@ -6,7 +6,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 ---
 # BR_LEI9784 — Lei 9.784/1999 (Processo Administrativo Federal)
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §3 (Tier 6)](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §3 (Tier 6)](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `BR_LEI9784`
@@ -54,5 +54,5 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Cross-route constitutional layer to `BR_CF88` Art. 37.
 
 ## 9. Provenance
-- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md) §3 (Tier 6)
+- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §3 (Tier 6)
 - Last sync: 2026-04-27

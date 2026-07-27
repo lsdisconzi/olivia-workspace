@@ -10695,15 +10695,15 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
     def do_PATCH(self):
         parsed = urllib.parse.urlparse(self.path)
         raw_path = parsed.path
-        admin_perms_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/users/([^/]+)/assistant-permissions/?$", raw_path)
+        admin_perms_match = re.match(r"^/(?:OliviaLegal|Olivia|olivia)/admin/users/([^/]+)/assistant-permissions/?$", raw_path)
         if admin_perms_match:
             self._admin_users_permissions_patch(urllib.parse.unquote(admin_perms_match.group(1)))
             return
-        admin_ctx_scope_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/users/([^/]+)/context-scope/?$", raw_path)
+        admin_ctx_scope_match = re.match(r"^/(?:OliviaLegal|Olivia|olivia)/admin/users/([^/]+)/context-scope/?$", raw_path)
         if admin_ctx_scope_match:
             self._admin_users_context_scope_patch(urllib.parse.unquote(admin_ctx_scope_match.group(1)))
             return
-        admin_model_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/models/([^/]+)/?$", raw_path)
+        admin_model_match = re.match(r"^/(?:OliviaLegal|Olivia|olivia)/admin/models/([^/]+)/?$", raw_path)
         if admin_model_match:
             self._admin_models_patch(urllib.parse.unquote(admin_model_match.group(1)))
             return

@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "group": "olivia",
+  "routing": [
+    {
+      "route_id": "olivia_orch_to_shaders",
+      "from": "orchestrator-control-plane",
+      "to": "shaders",
+      "trigger": "scene_or_shader_task",
+      "priority": "normal"
+    },
+    {
+      "route_id": "olivia_orch_to_discovery",
+      "from": "orchestrator-control-plane",
+      "to": "discovery",
+      "trigger": "document_intelligence_or_nlp",
+      "priority": "normal"
+    },
+    {
+      "route_id": "olivia_orch_to_listening",
+      "from": "orchestrator-control-plane",
+      "to": "listening",
+      "trigger": "audio_capture_or_transcription",
+      "priority": "normal"
+    },
+    {
+      "route_id": "olivia_orch_to_memory",
+      "from": "orchestrator-control-plane",
+      "to": "memory",
+      "trigger": "memory_or_graph_query",
+      "priority": "normal"
+    },
+    {
+      "route_id": "olivia_orch_to_studio",
+      "from": "orchestrator-control-plane",
+      "to": "studio",
+      "trigger": "ui_component_or_preview",
+      "priority": "normal"
+    },
+    {
+      "route_id": "olivia_orch_to_qdrant",
+      "from": "orchestrator-control-plane",
+      "to": "qdrant",
+      "trigger": "qdrant_collection_ops",
+      "priority": "normal"
+    },
+    {
+      "route_id": "olivia_orch_to_frontend",
+      "from": "orchestrator-control-plane",
+      "to": "frontend-engineer",
+      "trigger": "frontend_migration_or_refactor",
+      "priority": "normal"
+    },
+    {
+      "route_id": "olivia_orch_to_ecosystem",
+      "from": "orchestrator-control-plane",
+      "to": "olivia-ecosystem-coordinator",
+      "trigger": "platform_narrative_or_onboarding",
+      "priority": "low"
+    },
+    {
+      "route_id": "olivia_orch_to_coordinator",
+      "from": "orchestrator-control-plane",
+      "to": "olivia-coordinator",
+      "trigger": "governance_or_manifest_update",
+      "priority": "low"
+    },
+    {
+      "route_id": "olivia_coordinator_to_meta",
+      "from": "olivia-coordinator",
+      "to": "meta-orchestrator",
+      "trigger": "cross_group_escalation",
+      "priority": "high",
+      "requires_confirmation": true
+    }
+  ]
+}

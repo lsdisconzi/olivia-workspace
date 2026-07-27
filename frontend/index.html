@@ -3060,29 +3060,53 @@
           <!-- Upload card -->
           <div class="ls-card">
             <div class="ls-card-head">
-              <h2><i class="fas fa-upload"></i> Audio</h2>
+              <h2><i class="fas fa-upload"></i> Audio / Video</h2>
             </div>
             <div class="ls-card-body">
-              <div class="ls-upload-zone" onclick="document.getElementById('lsAudioInput').click()"
-                ondragleave="this.classList.remove('dragover')"
-                ondragover="this.classList.add('dragover');event.preventDefault()"
-                ondrop="this.classList.remove('dragover');if(typeof lsHandleDrop==='function')lsHandleDrop(event)">
+              <div class="ls-upload-zone" onclick="document.getElementById('lsAudioInput').click()">
                 <i class="fas fa-music" style="font-size:24px;color:var(--amber);margin-bottom:8px;display:block"></i>
                 <div style="font-size:13px;font-weight:500;color:var(--white);margin-bottom:4px"><span
                     data-i18n="listeningDragDrop">Drag or click to select</span></div>
                 <div style="font-size:11px;color:var(--gray)"><span data-i18n="mp3_wav_m4a_flac_ogg_webm">MP3, WAV, M4A,
-                    FLAC, OGG, WEBM</span></div>
+                    FLAC, OGG, WEBM, MP4</span></div>
               </div>
-              <input accept="audio/*" id="lsAudioInput" name="lsAudioInput"
+              <input accept="audio/*,video/*" id="lsAudioInput" name="lsAudioInput"
                 onchange="if(typeof lsHandleFileSelect==='function')lsHandleFileSelect(event)" style="display:none"
                 type="file" />
               <div id="lsFileInfo"
                 style="display:none;margin-top:10px;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--gray-hi)">
               </div>
+
+              <!-- Media Preview (hidden until file selected) -->
+              <div id="lsMediaPreview" style="display:none;margin-top:10px">
+                <div id="lsPreviewFileName"
+                  style="font-size:11px;font-weight:600;color:var(--white);margin-bottom:6px">
+                </div>
+                <div id="lsMediaPlayer"
+                  style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px;margin-bottom:8px">
+                </div>
+                <!-- Clip controls -->
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px">
+                  <span style="font-size:10px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:.06em"><span data-i18n="clipSection">Clip</span></span>
+                  <span style="font-size:10px;color:var(--gray)"><span data-i18n="from">From</span>:</span>
+                  <input id="lsClipStart" type="text" placeholder="0:00"
+                    style="width:64px;padding:4px 6px;border:1px solid var(--border);background:var(--bg-card);color:var(--white);font-family:var(--mono);font-size:11px;border-radius:4px;outline:none"
+                    title="Start time (mm:ss or seconds)" />
+                  <span style="font-size:10px;color:var(--gray)"><span data-i18n="to">To</span>:</span>
+                  <input id="lsClipEnd" type="text" placeholder="—"
+                    style="width:64px;padding:4px 6px;border:1px solid var(--border);background:var(--bg-card);color:var(--white);font-family:var(--mono);font-size:11px;border-radius:4px;outline:none"
+                    title="End time (mm:ss or seconds). Leave empty for rest of file." />
+                  <button class="btn btn-sm" onclick="lsClearMediaPreview()"
+                    style="margin-left:auto;font-size:10px;border-color:var(--gray);color:var(--gray)">
+                    <i class="fas fa-times"></i> <span data-i18n="removeMedia">Remove</span>
+                  </button>
+                </div>
+              </div>
+
               <div style="margin-top:10px;display:flex;gap:8px">
                 <button class="btn" id="lsRunBtn" onclick="if(typeof lsRun==='function')lsRun()"
-                  style="border-color:var(--green);color:var(--green);flex:1"><i class="fas fa-play"></i>
-                  Transcribe</button>
+                  style="border-color:var(--green);color:var(--green);flex:1;opacity:0.5;cursor:default" disabled><i class="fas fa-play"></i>
+                  <span data-i18n="transcribeSelected">Transcribe</span></button>
                 <button class="btn btn-sm" onclick="if(typeof lsStop==='function')lsStop()"
                   style="border-color:var(--red);color:var(--red)" title="Stop"><i class="fas fa-stop"></i></button>
               </div>
@@ -3136,7 +3160,7 @@
             </div>
           </div>
           <!-- Progress card -->
-          <div class="ls-card">
+          <div class="ls-card" id="lsProgressCard">
             <div class="ls-card-head">
               <h2><i class="fas fa-tasks"></i> Progress</h2><span id="lsRunStatus"
                 style="font-size:10px;font-family:var(--mono);color:var(--gray)"><span
@@ -3170,9 +3194,14 @@
           <div class="ls-card" id="lsSpeakerPanel" style="display:none">
             <div class="ls-card-head">
               <h2><i class="fas fa-users"></i> Speakers</h2>
+              <button id="lsSpeakerEditBtn" class="ls-speaker-edit-btn" onclick="lsToggleSpeakerEdit()"><i class="fas fa-pen"></i> Edit</button>
             </div>
-            <div class="ls-card-body">
+            <div class="ls-card-body" id="lsSpeakerCardBody">
               <div id="lsSpeakerGrid" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+            </div>
+            <div class="ls-speaker-edit-actions" id="lsSpeakerEditActions">
+              <button class="ls-speaker-edit-cancel" onclick="lsCancelSpeakerEdit()"><i class="fas fa-times"></i> Cancel</button>
+              <button class="ls-speaker-edit-save" onclick="lsSaveSpeakerEdits()"><i class="fas fa-check"></i> Save</button>
             </div>
           </div>
           <div class="ls-card" id="lsTranscriptCard" style="display:none">

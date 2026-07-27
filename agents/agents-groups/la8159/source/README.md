@@ -7,17 +7,17 @@ This folder is a grounded legal-spec library for the LA8159 matter. Each `agent.
 - `meta/` — routing, adversarial, evidence, prescription, and institutional-pattern synthesis specs.
 - `personnel/` — natural-person registry and dossiers used by the meta layer.
 - `sources/` — offline legal text caches and supporting source extracts.
-- `10_violations_json/validated/` — canonical mounted validated violations corpus and reports.
+- `la8159/01-violations/` — canonical mounted validated violations corpus and reports.
 - [mapping.json](mapping.json) — violation ID to primary/supporting agent routing.
 - [INDEX.md](INDEX.md) — canonical inventory with current verification status.
 - [PLAN.md](PLAN.md) — design intent, schema rules, milestones, and operating constraints.
 - [SOURCES.md](SOURCES.md) — source-cache coverage and update protocol.
 
 ## Canonical data mount
-- This library expects validated violations at `source/10_violations_json/validated/`.
+- This library expects validated violations at `source/la8159/01-violations/validated/`.
 - Use [../scripts/bootstrap_case_paths.sh](../scripts/bootstrap_case_paths.sh) to create/update the canonical symlink chain:
-	1. `services/_shared/cases/10_violations_json -> LA8159-incident/10_violations_json`
-	2. `agents-groups/la8159/source/10_violations_json -> services/_shared/cases/10_violations_json`
+	1. `services/_shared/cases/la8159/01-violations -> LA8159-incident/la8159/01-violations`
+	2. `agents-groups/la8159/source/la8159/01-violations -> services/_shared/cases/la8159/01-violations`
 - This keeps relative report links stable after backup/cleanup/redeploy workflows.
 
 ## Current status
@@ -42,12 +42,12 @@ This folder is a grounded legal-spec library for the LA8159 matter. Each `agent.
 - Regulator-industry or silence-pattern analysis: use the Tier-4 meta specs plus [personnel/REGISTRY.md](personnel/REGISTRY.md), but keep the final legal theory grounded in BR/CL/INT specialists.
 
 ## Maintenance rules
-1. Do not contradict the authoritative verification reports under [../10_violations_json/validated/](../10_violations_json/validated/).
+1. Do not contradict the authoritative verification reports under [la8159/01-violations/](la8159/01-violations/).
 2. When adding or revising an agent, update the spec, [INDEX.md](INDEX.md), and [mapping.json](mapping.json) together.
 3. If a source cache changes verification status, update [SOURCES.md](SOURCES.md) and the affected Section 2 and Section 3 blocks.
 4. Use [_TEMPLATE/agent.md](_TEMPLATE/agent.md) for any new specialist or meta spec.
 
 ## Authoritative inputs (do not contradict)
-- BR Verification and Strategic Narrative: [../10_violations_json/validated/BR/law_validated/reports/](../10_violations_json/validated/BR/law_validated/reports/)
-- CL Verification v2: [../10_violations_json/validated/CL/law_validated/reports/](../10_violations_json/validated/CL/law_validated/reports/)
-- INT Verification and Strategic Narrative: [../10_violations_json/validated/INT/law_validated/reports/](../10_violations_json/validated/INT/law_validated/reports/)
+- BR Verification and Strategic Narrative: [la8159/01-violations/](la8159/01-violations/)
+- CL Verification v2: [la8159/01-violations/](la8159/01-violations/)
+- INT Verification and Strategic Narrative: [la8159/01-violations/](la8159/01-violations/)

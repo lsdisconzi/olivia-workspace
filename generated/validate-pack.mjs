@@ -49,7 +49,6 @@ const docs = [
 ];
 const links = [
   'agents/agents-groups/la8159/source/la8159',
-  'agents/agents-groups/la8159/source/10_violations_json',
 ];
 
 for (const relativePath of [...agentFiles, ...docs, manifestPath]) {

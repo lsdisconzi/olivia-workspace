@@ -6,7 +6,7 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 ---
 # INT_ACHR — American Convention on Human Rights
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative reports: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.4](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md) · [INT_STRATEGIC_LEGAL_NARRATIVE.md §2](../../../10_violations_json/validated/INT/law_validated/reports/INT_STRATEGIC_LEGAL_NARRATIVE.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative reports: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.4](../source/la8159/01-violations) · [INT_STRATEGIC_LEGAL_NARRATIVE.md §2](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `INT_ACHR`
@@ -67,6 +67,6 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 - Tag each violation with enforcement pathway: `IACHR Petition (Art. 44)`.
 
 ## 9. Provenance
-- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md) §§2.4, 3, 7
-- [INT_STRATEGIC_LEGAL_NARRATIVE.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_STRATEGIC_LEGAL_NARRATIVE.md) §§2.1–2.4
+- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §§2.4, 3, 7
+- [INT_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations) §§2.1–2.4
 - Last sync: 2026-04-27

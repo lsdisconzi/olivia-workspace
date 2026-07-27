@@ -214,6 +214,17 @@ var lsCurrentResponse = null;
 var lsCurrentRunId = null;
 var lsSpeakerLabels = {};
 var lsIsRunning = false;
+var lsSpeakerEditMode = false;   // inline speaker name editing
+
+/* ── PREVIEW STATE ── */
+var lsSelectedFile = null;       // File object for the selected media
+var lsSelectedFileUrl = null;    // blob: URL for preview
+var lsPreviewActive = false;     // true when media is loaded for preview
+var lsClipStart = null;          // clip start time in seconds (null = from beginning)
+var lsClipEnd = null;            // clip end time in seconds (null = until end)
+
+/* ── ALLOWED VIDEO EXTENSIONS ── */
+var LS_VIDEO_EXTS = ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'];
 
 /* ── SHOW / HIDE VIEW ── */
 window.listeningShowView = function(){
@@ -883,8 +894,10 @@ async function lsRunTranscription(file){
   if(lsIsRunning) return;
   lsIsRunning = true;
   lsSpeakerLabels = {};
+  lsSpeakerEditMode = false;
   lsCurrentResponse = null;
-  lsCurrentRunId = lsGenerateRunId();
+  // Preserve run ID if already set during preview (so media file in listening_files/ matches)
+  if(!lsCurrentRunId) lsCurrentRunId = lsGenerateRunId();
 
   // Reset UI
   var pc = document.getElementById('lsProgressCard'), tc = document.getElementById('lsTranscriptCard');
@@ -892,6 +905,11 @@ async function lsRunTranscription(file){
   if(pc) pc.style.display = '';
   if(tc) tc.style.display = 'none';
   if(sp) sp.style.display = 'none';
+  // Reset edit mode UI
+  var editBtn = document.getElementById('lsSpeakerEditBtn');
+  var editActions = document.getElementById('lsSpeakerEditActions');
+  if(editBtn){ editBtn.innerHTML = '<i class="fas fa-pen"></i> Edit'; editBtn.classList.remove('active'); }
+  if(editActions) editActions.classList.remove('visible');
   lsSetProgress(0, 'Preparando…');
   lsSetRunStatus('LA8159 está ouvindo…');
   var aio = document.getElementById('lsAiOutput'); if(aio) aio.style.display = 'none';
@@ -1058,6 +1076,22 @@ function lsRenderSpeakers(segments){
     var d = speakers[spk];
     var name = lsSpeakerLabels[spk] || spk;
     var color = lsSpeakerColor(speakerIdx[spk]);
+    var safeId = 'lsSpeakEdit_' + spk.replace(/[^\w]/g, '_');
+
+    if(lsSpeakerEditMode){
+      // Edit mode: render inline input
+      return '<div class="ls-speaker-card" style="cursor:default">'+
+        '<div style="display:flex;align-items:center;gap:8px">'+
+          '<div style="width:28px;height:28px;border-radius:50%;background:'+color+';display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:600;flex-shrink:0">'+name.charAt(0).toUpperCase()+'</div>'+
+          '<div style="flex:1;min-width:0">'+
+            '<input id="'+safeId+'" class="ls-speaker-edit-input" data-speaker="'+spk.replace(/"/g,'&quot;')+'" value="'+name.replace(/"/g,'&quot;')+'" spellcheck="false">'+
+            '<div class="ls-speaker-meta" style="margin-top:3px">'+d.count+' seg · '+d.words+' pal.</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+    }
+
+    // View mode: clickable card
     return '<div class="ls-speaker-card" onclick="lsEditOneSpeaker(\''+spk.replace(/'/g,"\\'")+'\')">'+
       '<div style="display:flex;align-items:center;gap:8px">'+
         '<div style="width:28px;height:28px;border-radius:50%;background:'+color+';display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:600">'+name.charAt(0).toUpperCase()+'</div>'+
@@ -1065,31 +1099,93 @@ function lsRenderSpeakers(segments){
       '</div>'+
     '</div>';
   }).join('');
+
+  // If edit mode is active but the actions bar isn't visible, show it
+  var actions = document.getElementById('lsSpeakerEditActions');
+  var btn = document.getElementById('lsSpeakerEditBtn');
+  if(lsSpeakerEditMode){
+    if(actions) actions.classList.add('visible');
+    if(btn) btn.classList.add('active');
+  }
 }
 
+/* ── INLINE SPEAKER EDITOR ── */
+
 window.lsEditOneSpeaker = function(spk){
-  var cur = lsSpeakerLabels[spk] || spk;
-  var newName = prompt('Nome para '+spk+':', cur);
-  if(newName && newName.trim()){
-    lsSpeakerLabels[spk] = newName.trim();
+  // Enter edit mode and pre-fill for this speaker
+  if(!lsSpeakerEditMode){
+    lsSpeakerEditMode = true;
     if(lsCurrentResponse && lsCurrentResponse.segments){
-      lsRenderTranscript(lsCurrentResponse.segments);
       lsRenderSpeakers(lsCurrentResponse.segments);
     }
+    // Focus the input for this speaker after render
+    setTimeout(function(){
+      var inp = document.getElementById('lsSpeakEdit_' + spk.replace(/[^\w]/g, '_'));
+      if(inp){ inp.focus(); inp.select(); }
+    }, 50);
+  }
+};
+
+window.lsToggleSpeakerEdit = function(){
+  lsSpeakerEditMode = !lsSpeakerEditMode;
+  var btn = document.getElementById('lsSpeakerEditBtn');
+  var actions = document.getElementById('lsSpeakerEditActions');
+  if(!lsSpeakerEditMode){
+    // Exiting without saving — reset labels to their pre-edit state
+    lsSpeakerEditMode = false;
+    if(btn){ btn.innerHTML = '<i class="fas fa-pen"></i> Edit'; btn.classList.remove('active'); }
+    if(actions) actions.classList.remove('visible');
+    if(lsCurrentResponse && lsCurrentResponse.segments){
+      lsRenderSpeakers(lsCurrentResponse.segments);
+    }
+    return;
+  }
+  // Entering edit mode
+  if(btn){ btn.innerHTML = '<i class="fas fa-times"></i> Cancel'; btn.classList.add('active'); }
+  if(actions) actions.classList.add('visible');
+  if(lsCurrentResponse && lsCurrentResponse.segments){
+    lsRenderSpeakers(lsCurrentResponse.segments);
+  }
+};
+
+window.lsSaveSpeakerEdits = function(){
+  var inputs = document.querySelectorAll('.ls-speaker-edit-input');
+  var newLabels = {};
+  inputs.forEach(function(inp){
+    var spk = inp.dataset.speaker;
+    var val = String(inp.value || '').trim();
+    if(spk && val) newLabels[spk] = val;
+  });
+  // Apply new labels
+  Object.keys(newLabels).forEach(function(spk){ lsSpeakerLabels[spk] = newLabels[spk]; });
+  // Exit edit mode
+  lsSpeakerEditMode = false;
+  var btn = document.getElementById('lsSpeakerEditBtn');
+  var actions = document.getElementById('lsSpeakerEditActions');
+  if(btn){ btn.innerHTML = '<i class="fas fa-pen"></i> Edit'; btn.classList.remove('active'); }
+  if(actions) actions.classList.remove('visible');
+  // Re-render
+  if(lsCurrentResponse && lsCurrentResponse.segments){
+    lsRenderTranscript(lsCurrentResponse.segments);
+    lsRenderSpeakers(lsCurrentResponse.segments);
+  }
+  lsToast('Speaker names updated');
+};
+
+window.lsCancelSpeakerEdit = function(){
+  lsSpeakerEditMode = false;
+  var btn = document.getElementById('lsSpeakerEditBtn');
+  var actions = document.getElementById('lsSpeakerEditActions');
+  if(btn){ btn.innerHTML = '<i class="fas fa-pen"></i> Edit'; btn.classList.remove('active'); }
+  if(actions) actions.classList.remove('visible');
+  if(lsCurrentResponse && lsCurrentResponse.segments){
+    lsRenderSpeakers(lsCurrentResponse.segments);
   }
 };
 
 window.lsEditSpeakers = function(){
-  if(!lsCurrentResponse || !lsCurrentResponse.segments) return lsToast('Nenhum resultado');
-  var speakers = {};
-  lsCurrentResponse.segments.forEach(function(s){ if(s.speaker) speakers[s.speaker]=1; });
-  Object.keys(speakers).forEach(function(spk){
-    var cur = lsSpeakerLabels[spk] || spk;
-    var newName = prompt('Nome para '+spk+':', cur);
-    if(newName && newName.trim()) lsSpeakerLabels[spk] = newName.trim();
-  });
-  lsRenderTranscript(lsCurrentResponse.segments);
-  lsRenderSpeakers(lsCurrentResponse.segments);
+  // Legacy compatibility: toggle edit mode
+  lsToggleSpeakerEdit();
 };
 
 /* ── COPY / DOWNLOAD ── */
@@ -1156,16 +1252,396 @@ window.lsRunAiAnalysis = async function(){
   }
 };
 
-/* ── FILE INPUT ── */
-document.addEventListener('DOMContentLoaded', function(){
+/* ── FILE INPUT — PREVIEW FIRST, TRANSCRIBE ON DEMAND ── */
+
+function lsIsVideoFile(fileName){
+  var ext = String(fileName || '').split('.').pop().toLowerCase();
+  return LS_VIDEO_EXTS.indexOf(ext) !== -1;
+}
+
+function lsShowMediaPreview(file, url){
+  var container = document.getElementById('lsMediaPreview');
+  var player = document.getElementById('lsMediaPlayer');
+  var clipStartInp = document.getElementById('lsClipStart');
+  var clipEndInp = document.getElementById('lsClipEnd');
+  var fileLabel = document.getElementById('lsPreviewFileName');
+  var runBtn = document.getElementById('lsRunBtn');
+
+  if(!container) return;
+
+  // Store references
+  lsSelectedFile = file;
+  lsSelectedFileUrl = url;
+  lsPreviewActive = true;
+  lsClipStart = null;
+  lsClipEnd = null;
+
+  // Show container
+  container.style.display = '';
+
+  // Update file label
+  if(fileLabel){
+    fileLabel.textContent = file.name + ' · ' + (file.size / 1024 / 1024).toFixed(2) + ' MB';
+  }
+
+  // Create media element
+  if(player){
+    // Remove old media element
+    var oldEl = player.querySelector('audio, video');
+    if(oldEl) oldEl.remove();
+
+    var isVideo = lsIsVideoFile(file.name);
+    var mediaEl = document.createElement(isVideo ? 'video' : 'audio');
+    mediaEl.src = url;
+    mediaEl.controls = true;
+    mediaEl.preload = 'auto';
+    mediaEl.style.width = '100%';
+    mediaEl.style.maxHeight = isVideo ? '280px' : '60px';
+    mediaEl.style.borderRadius = '6px';
+    mediaEl.style.backgroundColor = '#000';
+    if(isVideo){
+      mediaEl.style.maxWidth = '100%';
+    }
+    player.appendChild(mediaEl);
+
+    // Enable clip tracking
+    mediaEl.addEventListener('loadedmetadata', function(){
+      if(clipStartInp) clipStartInp.placeholder = '0:00';
+      if(clipEndInp) clipEndInp.placeholder = lsFmtTime(mediaEl.duration);
+    });
+  }
+
+  // Reset clip inputs
+  if(clipStartInp){ clipStartInp.value = ''; clipStartInp.placeholder = '0:00'; }
+  if(clipEndInp){ clipEndInp.value = ''; clipEndInp.placeholder = '—'; }
+
+  // Enable transcribe button
+  if(runBtn){
+    runBtn.disabled = false;
+    runBtn.style.opacity = '1';
+    runBtn.style.cursor = 'pointer';
+  }
+}
+
+function lsClearMediaPreview(){
+  var container = document.getElementById('lsMediaPreview');
+  var player = document.getElementById('lsMediaPlayer');
+  var runBtn = document.getElementById('lsRunBtn');
+  var fileLabel = document.getElementById('lsPreviewFileName');
+  var clipStartInp = document.getElementById('lsClipStart');
+  var clipEndInp = document.getElementById('lsClipEnd');
+
+  if(player){
+    var oldEl = player.querySelector('audio, video');
+    if(oldEl){
+      oldEl.pause();
+      oldEl.removeAttribute('src');
+      oldEl.load();
+      oldEl.remove();
+    }
+  }
+  if(container) container.style.display = 'none';
+  if(fileLabel) fileLabel.textContent = '';
+  if(clipStartInp) clipStartInp.value = '';
+  if(clipEndInp) clipEndInp.value = '';
+
+  if(lsSelectedFileUrl){
+    URL.revokeObjectURL(lsSelectedFileUrl);
+  }
+
+  lsSelectedFile = null;
+  lsSelectedFileUrl = null;
+  lsPreviewActive = false;
+  lsClipStart = null;
+  lsClipEnd = null;
+
+  if(runBtn){
+    runBtn.disabled = true;
+    runBtn.style.opacity = '0.5';
+    runBtn.style.cursor = 'default';
+  }
+}
+
+async function lsSaveMediaToProject(file){
+  var pid = (typeof getCurrentProjectId === 'function') ? getCurrentProjectId() : null;
+  if(!pid){
+    lsLogProcess('⚠️ Nenhum projeto ativo — mídia não foi salva em listening_files/', 'warning');
+    return false;
+  }
+
+  try {
+    var fd = new FormData();
+    fd.append('files', file, file.name);
+    var resp = await fetch(
+      API_BASE + '/api/projects/' + encodeURIComponent(pid) + '/upload?section=listening_files&preserve_paths=false',
+      { method: 'POST', body: fd }
+    );
+    if(resp.ok){
+      lsLogProcess('Mídia salva em listening_files/: ' + file.name, 'success');
+      if(typeof refreshProjectIndex === 'function') refreshProjectIndex(pid);
+      if(typeof loadProjectFiles === 'function') loadProjectFiles();
+      return true;
+    } else {
+      lsLogProcess('⚠️ Falha ao salvar mídia no projeto', 'warning');
+      return false;
+    }
+  } catch(err){
+    lsLogProcess('⚠️ Erro ao salvar mídia: ' + (err.message || String(err)), 'warning');
+    return false;
+  }
+}
+
+window.lsHandleFileSelect = function(event){
+  var file = event.target && event.target.files && event.target.files[0];
+  if(!file) return;
+  lsLoadMediaFile(file);
+};
+
+window.lsHandleDrop = function(event){
+  event.preventDefault();
+  var file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
+  if(!file) return;
+  // Also update the file input so the label matches
   var inp = document.getElementById('lsAudioInput');
-  if(inp) inp.addEventListener('change', function(){
-    if(this.files && this.files[0]) lsRunTranscription(this.files[0]);
-  });
+  if(inp){
+    try {
+      var dt = new DataTransfer();
+      dt.items.add(file);
+      inp.files = dt.files;
+    } catch(_){}
+  }
+  lsLoadMediaFile(file);
+};
+
+async function lsLoadMediaFile(file){
+  // Clear any previous preview
+  lsClearMediaPreview();
+
+  // Generate a unique run id for this file
+  lsCurrentRunId = lsGenerateRunId();
+
+  // Save original media to project's listening_files/
+  await lsSaveMediaToProject(file);
+
+  // Create blob URL for preview
+  var url = URL.createObjectURL(file);
+
+  // Show media preview
+  lsShowMediaPreview(file, url);
+  lsLogProcess('Mídia carregada: ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)', 'info');
+
+  // Show file info
+  var fi = document.getElementById('lsFileInfo');
+  if(fi){
+    fi.style.display = '';
+    fi.textContent = file.name + ' · ' + (file.size / 1024 / 1024).toFixed(2) + ' MB';
+  }
+
+  // Reset transcript/speaker display
+  var tc = document.getElementById('lsTranscriptCard');
+  var sp = document.getElementById('lsSpeakerPanel');
+  var aio = document.getElementById('lsAiOutput');
+  if(tc) tc.style.display = 'none';
+  if(sp) sp.style.display = 'none';
+  if(aio) aio.style.display = 'none';
+
+  // Reset progress
+  var pc = document.getElementById('lsProgressCard');
+  if(pc) pc.style.display = 'none';
+  lsSetRunStatus('Pronto para transcrição');
+}
+
+/* ── TRANSCRIBE (from preview, with optional clip) ── */
+window.lsRun = async function(){
+  if(lsIsRunning) return;
+  if(!lsSelectedFile){
+    lsToast('Selecione um arquivo primeiro');
+    return;
+  }
+
+  // Read clip values from inputs
+  var clipStartInp = document.getElementById('lsClipStart');
+  var clipEndInp = document.getElementById('lsClipEnd');
+  var rawStart = clipStartInp ? String(clipStartInp.value || '').trim() : '';
+  var rawEnd = clipEndInp ? String(clipEndInp.value || '').trim() : '';
+
+  var fileToTranscribe = lsSelectedFile; // start with the full file
+
+  if(rawStart || rawEnd){
+    // Parse clip times
+    var clipStartSec = rawStart ? lsParseTimeToSeconds(rawStart) : null;
+    var clipEndSec = rawEnd ? lsParseTimeToSeconds(rawEnd) : null;
+
+    if(clipStartSec !== null || clipEndSec !== null){
+      try {
+        lsLogProcess('✂️ Clipando áudio: ' +
+          (clipStartSec !== null ? lsFmtTime(clipStartSec) : '0:00') +
+          ' → ' +
+          (clipEndSec !== null ? lsFmtTime(clipEndSec) : 'fim'), 'info');
+        fileToTranscribe = await lsClipAudio(lsSelectedFile, clipStartSec, clipEndSec);
+        lsLogProcess('Áudio clipado: ' + (fileToTranscribe.size / 1024 / 1024).toFixed(2) + ' MB', 'success');
+      } catch(clipErr){
+        lsLogProcess('⚠️ Falha ao clipar áudio, usando arquivo original: ' + (clipErr.message || String(clipErr)), 'warning');
+        fileToTranscribe = lsSelectedFile;
+      }
+    }
+  }
+
+  // Run transcription
+  await lsRunTranscription(fileToTranscribe);
+};
+
+function lsParseTimeToSeconds(str){
+  if(!str) return null;
+  str = String(str).trim().replace(',', '.');
+  // Support mm:ss, hh:mm:ss, and plain seconds
+  var parts = str.split(':');
+  if(parts.length === 3){
+    return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseFloat(parts[2]);
+  } else if(parts.length === 2){
+    return parseInt(parts[0]) * 60 + parseFloat(parts[1]);
+  } else {
+    var n = parseFloat(str);
+    return Number.isFinite(n) ? n : null;
+  }
+}
+
+async function lsClipAudio(file, startSec, endSec){
+  // Decode the audio file, extract the desired portion, re-encode as WAV
+  var arrayBuffer = await file.arrayBuffer();
+  var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  var audioBuffer;
+
+  try {
+    audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+  } catch(decErr){
+    // If decode fails (e.g. video file), fall back to serving the full file
+    throw new Error('Não foi possível decodificar o áudio: ' + decErr.message);
+  }
+
+  var sampleRate = audioBuffer.sampleRate;
+  var numChannels = audioBuffer.numberOfChannels;
+  var totalSamples = audioBuffer.length;
+  var duration = totalSamples / sampleRate;
+
+  // Clamp clip boundaries
+  var startSample = startSec !== null ? Math.max(0, Math.round(startSec * sampleRate)) : 0;
+  var endSample = endSec !== null ? Math.min(totalSamples, Math.round(endSec * sampleRate)) : totalSamples;
+
+  if(startSample >= endSample){
+    throw new Error('Clip inválido: início (' + lsFmtTime(startSample / sampleRate) + ') ≥ fim (' + lsFmtTime(endSample / sampleRate) + ')');
+  }
+
+  if(startSample === 0 && endSample === totalSamples){
+    // No actual clipping, return original file
+    audioCtx.close();
+    return file;
+  }
+
+  var clipLength = endSample - startSample;
+
+  // Create new buffer for the clip
+  var clipBuffer = audioCtx.createBuffer(numChannels, clipLength, sampleRate);
+
+  for(var ch = 0; ch < numChannels; ch++){
+    var origData = audioBuffer.getChannelData(ch);
+    var clipData = clipBuffer.getChannelData(ch);
+    for(var i = 0; i < clipLength; i++){
+      clipData[i] = origData[startSample + i];
+    }
+  }
+
+  audioCtx.close();
+
+  // Encode as WAV
+  var wavBlob = lsEncodeWav(clipBuffer);
+  var clippedFile = new File([wavBlob], file.name.replace(/\.\w+$/, '.wav'), { type: 'audio/wav' });
+  return clippedFile;
+}
+
+function lsEncodeWav(audioBuffer){
+  var numChannels = audioBuffer.numberOfChannels;
+  var sampleRate = audioBuffer.sampleRate;
+  var length = audioBuffer.length;
+
+  // Interleave channels
+  var interleaved = new Float32Array(length * numChannels);
+  for(var ch = 0; ch < numChannels; ch++){
+    var channelData = audioBuffer.getChannelData(ch);
+    for(var i = 0; i < length; i++){
+      interleaved[i * numChannels + ch] = channelData[i];
+    }
+  }
+
+  // Convert to 16-bit PCM
+  var numSamples = interleaved.length;
+  var dataSize = numSamples * 2; // 16-bit = 2 bytes per sample
+  var buffer = new ArrayBuffer(44 + dataSize);
+  var view = new DataView(buffer);
+
+  // WAV header
+  function writeString(offset, str){
+    for(var i = 0; i < str.length; i++){
+      view.setUint8(offset + i, str.charCodeAt(i));
+    }
+  }
+
+  writeString(0, 'RIFF');
+  view.setUint32(4, 36 + dataSize, true);
+  writeString(8, 'WAVE');
+  writeString(12, 'fmt ');
+  view.setUint32(16, 16, true); // chunk size
+  view.setUint16(20, 1, true);  // PCM format
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * numChannels * 2, true); // byte rate
+  view.setUint16(32, numChannels * 2, true); // block align
+  view.setUint16(34, 16, true); // bits per sample
+  writeString(36, 'data');
+  view.setUint32(40, dataSize, true);
+
+  // Write PCM samples
+  var offset = 44;
+  for(var i = 0; i < numSamples; i++){
+    var s = Math.max(-1, Math.min(1, interleaved[i]));
+    s = s < 0 ? s * 0x8000 : s * 0x7FFF;
+    view.setInt16(offset, s, true);
+    offset += 2;
+  }
+
+  return new Blob([buffer], { type: 'audio/wav' });
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  // Wire up drag-and-drop on the upload zone
+  var dropZone = document.querySelector('.ls-upload-zone');
+  if(dropZone){
+    dropZone.addEventListener('dragover', function(e){
+      e.preventDefault();
+      this.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', function(){
+      this.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', function(e){
+      e.preventDefault();
+      this.classList.remove('dragover');
+      if(typeof lsHandleDrop === 'function') lsHandleDrop(e);
+    });
+  }
 });
 
 window.lsHandleFile = function(file){
-  if(file) lsRunTranscription(file);
+  if(file) lsLoadMediaFile(file);
+};
+
+window.lsStop = function(){
+  // Cancel running transcription if any
+  lsIsRunning = false;
+  lsSetRunStatus('Cancelado');
+  lsSetProgress(0, 'Cancelado');
+  lsLogProcess('⏹ Transcrição cancelada pelo usuário', 'error');
+  lsToast('Cancelado');
 };
 
 /* ── CONTEXT (Qdrant collections + saved transcripts) ── */

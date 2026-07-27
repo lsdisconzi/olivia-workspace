@@ -19,8 +19,8 @@ tags: ["la8159", "category:meta", "jurisdiction:cross-framework"]
 - Forum availability per jurisdiction
 
 ## 3. Sources
-- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §6.3](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md)
-- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §6.4](../../../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md)
+- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §6.3](../source/la8159/01-violations)
+- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §6.4](../source/la8159/01-violations)
 
 ## 4. Knowledge boundaries (NEVER do)
 - ⚠️ **Never let the BR CC Art. 206 §3 V deadline (April 4, 2027) lapse** without filing.
@@ -68,7 +68,7 @@ tags: ["la8159", "category:meta", "jurisdiction:cross-framework"]
 - Always pair forum recommendation with the specialist agent who anchors the substantive claim.
 
 ## 9. Provenance
-- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §6.3](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md)
-- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §6.4](../../../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md)
-- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §3](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md)
+- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §6.3](../source/la8159/01-violations)
+- [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md §6.4](../source/la8159/01-violations)
+- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §3](../source/la8159/01-violations)
 - Last sync: 2026-04-27

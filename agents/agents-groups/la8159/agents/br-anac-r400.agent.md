@@ -6,7 +6,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 ---
 # BR_ANAC_R400 — ANAC Resolução 400/2016
 
-> Spec v1.0 · 2026-04-27 · Tier 2 (binding regulation under CBA + Lei 11.182/2005) · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §2.11](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 2 (binding regulation under CBA + Lei 11.182/2005) · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §2.11](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `BR_ANAC_R400`
@@ -61,6 +61,6 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Always note when an obligation is **also** required by CDC (cumulative protection).
 
 ## 9. Provenance
-- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md) §2.11
-- [BR_STRATEGIC_LEGAL_NARRATIVE.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_STRATEGIC_LEGAL_NARRATIVE.md) §3, §4
+- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §2.11
+- [BR_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations) §3, §4
 - Last sync: 2026-04-27

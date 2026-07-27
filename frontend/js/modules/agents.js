@@ -2714,7 +2714,7 @@ async function loadSharedScopes() {
       { name: 'contracts', file_count: '?' },
       { name: 'cases', file_count: '?' },
       { name: 'cases/juris-search', file_count: '?' },
-      { name: 'cases/10_violations_json', file_count: '?' },
+      { name: 'cases/la8159/01-violations', file_count: '?' },
       { name: 'cases/agents', file_count: '?' }
     ];
     const displayScopes = scopes.length ? scopes : fallbackScopes;
@@ -2733,7 +2733,7 @@ async function loadSharedScopes() {
       'contracts',
       'cases',
       'cases/juris-search',
-      'cases/10_violations_json',
+      'cases/la8159/01-violations',
       'cases/agents'
     ];
     grid.innerHTML = fallbackScopes.map(name => {

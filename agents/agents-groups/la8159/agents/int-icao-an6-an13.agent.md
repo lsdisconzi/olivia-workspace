@@ -6,7 +6,7 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 ---
 # INT_ICAO_AN6_AN13 — ICAO Annex 6 (Operations) + Annex 13 (Investigation)
 
-> Spec v1.0 · 2026-04-27 · Tier 2 · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.4, §5](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 2 · Authoritative report: [INT_COMPREHENSIVE_VERIFICATION_REPORT.md §2.4, §5](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `INT_ICAO_AN6_AN13`
@@ -53,5 +53,5 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 - Pair with `INT_ICAO_AN9` for the actual passenger-rights claim.
 
 ## 9. Provenance
-- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md) §2.4, §5
+- [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §2.4, §5
 - Last sync: 2026-04-27

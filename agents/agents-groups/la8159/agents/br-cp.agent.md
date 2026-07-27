@@ -6,7 +6,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 ---
 # BR_CP — Brazilian Penal Code (civil/factual support only)
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §§2.9–2.10, 6](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §§2.9–2.10, 6](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `BR_CP`
@@ -51,5 +51,5 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Always pair with `BR_CC` for civil damages translation.
 
 ## 9. Provenance
-- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md) §§2.9–2.10, §6
+- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §§2.9–2.10, §6
 - Last sync: 2026-04-27

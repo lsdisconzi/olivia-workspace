@@ -1,0 +1,6 @@
+{
+  "version": "1.0.0",
+  "description": "Olivia platform agent bundles index. Each bundle defines the import configuration for a platform agent.",
+  "generated_at": "2026-07-27T00:00:00Z",
+  "bundles": []
+}

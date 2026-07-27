@@ -6,7 +6,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 ---
 # BR_CC — Brazilian Civil Code
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §2.12, §6.2](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §2.12, §6.2](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `BR_CC`
@@ -54,5 +54,5 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Always pair Art. 932 III with the specific employee identification.
 
 ## 9. Provenance
-- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md) §2.12, §6
+- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §2.12, §6
 - Last sync: 2026-04-27

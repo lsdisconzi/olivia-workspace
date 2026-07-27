@@ -6,7 +6,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 ---
 # BR_CBA — Código Brasileiro de Aeronáutica
 
-> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §2.7–2.8](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md)
+> Spec v1.0 · 2026-04-27 · Tier 1 · Authoritative report: [BR_COMPREHENSIVE_VERIFICATION_REPORT.md §2.7–2.8](../source/la8159/01-violations)
 
 ## 1. Identity
 - **Agent ID:** `BR_CBA`
@@ -53,6 +53,6 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Never assert Art. 3 alone resolves merits — it resolves jurisdiction; merits run through CDC / R400 / CC.
 
 ## 9. Provenance
-- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md) §§2.7–2.8
-- [BR_STRATEGIC_LEGAL_NARRATIVE.md](../../../10_violations_json/validated/BR/law_validated/reports/BR_STRATEGIC_LEGAL_NARRATIVE.md) §1, §2.1
+- [BR_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §§2.7–2.8
+- [BR_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations) §1, §2.1
 - Last sync: 2026-04-27

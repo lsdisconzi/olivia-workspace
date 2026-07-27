@@ -1,0 +1,34 @@
+# Olivia Orchestrator Policy
+# Version: 1.0.0
+# Governs the orchestrator-control-plane agent
+
+rules:
+  - id: olivia-orch-001
+    description: "Route to most specific specialist"
+    priority: 1
+    action: route
+    condition: "intent matches a single specialist's specialty"
+
+  - id: olivia-orch-002
+    description: "Keep intermediates explicit"
+    priority: 2
+    action: annotate
+    condition: "output contains structured data for downstream reuse"
+
+  - id: olivia-orch-003
+    description: "Escalate blockers to coordinator or meta-orchestrator"
+    priority: 3
+    action: escalate
+    condition: "request spans groups or requires policy change"
+
+  - id: olivia-orch-004
+    description: "No silent fan-out"
+    priority: 4
+    action: sequence
+    condition: "request spans multiple specialists"
+
+  - id: olivia-orch-005
+    description: "State assumptions when ambiguous"
+    priority: 5
+    action: annotate
+    condition: "intent is ambiguous"

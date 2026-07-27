@@ -10,7 +10,7 @@
 
 Build a **library of single-purpose legal agents**, one per legal framework actually cited in the LA8159 violations corpus, so that:
 
-- Every probable violation in [10_violations_json/validated/](../10_violations_json/validated/) can be reasoned about by a specialist agent that knows **only** its framework, its caveats, and its enforcement pathway.
+- Every probable violation in the [01-violations corpus](la8159/01-violations/) can be reasoned about by a specialist agent that knows **only** its framework, its caveats, and its enforcement pathway.
 - Strategic synthesis (cross-framework arguments, hierarchies of claims, adversarial testing) is delegated to a small set of **meta-agents** that orchestrate the specialists.
 - Citations are **always traceable to a verified source** (or explicitly flagged as pending/unverified).
 - The same structure can later be re-used for any other incident or jurisdiction by swapping the agent inventory.
@@ -168,11 +168,11 @@ META_Orchestrator → META_Adversarial → META_Evidence_Mapper → META_Prescri
 
 Every agent draws from these four reports (do not contradict without justification):
 
-- [BR Comprehensive Verification Report](../10_violations_json/validated/BR/law_validated/reports/BR_COMPREHENSIVE_VERIFICATION_REPORT.md)
-- [BR Strategic Legal Narrative](../10_violations_json/validated/BR/law_validated/reports/BR_STRATEGIC_LEGAL_NARRATIVE.md)
-- [CL Comprehensive Verification Report v2](../10_violations_json/validated/CL/law_validated/reports/CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md)
-- [INT Comprehensive Verification Report](../10_violations_json/validated/INT/law_validated/reports/INT_COMPREHENSIVE_VERIFICATION_REPORT.md)
-- [INT Strategic Legal Narrative](../10_violations_json/validated/INT/law_validated/reports/INT_STRATEGIC_LEGAL_NARRATIVE.md)
+- [BR Comprehensive Verification Report](la8159/01-violations/)
+- [BR Strategic Legal Narrative](la8159/01-violations/)
+- [CL Comprehensive Verification Report v2](la8159/01-violations/)
+- [INT Comprehensive Verification Report](la8159/01-violations/)
+- [INT Strategic Legal Narrative](la8159/01-violations/)
 
 ## 8. Operating rules (apply to every agent)
 
