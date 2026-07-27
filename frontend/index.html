@@ -26,6 +26,7 @@
   <script src="https://cdn.jsdelivr.net/npm/docx-preview@0.3.6/dist/docx-preview.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <!-- Three.js importmap for scene3d.js ES module -->
   <script type="importmap">
 {
@@ -249,6 +250,7 @@
   </script>
   <link href="css/voice.css" rel="stylesheet" />
   <link href="css/craudio.css" rel="stylesheet" />
+  <link href="css/social-media.css" rel="stylesheet" />
   <link href="css/writer.css" rel="stylesheet" />
   <link href="css/sheets.css" rel="stylesheet" />
 </head>
@@ -785,6 +787,12 @@
           <!-- TAB: Session Files -->
           <div class="sidebar-section" id="tab-files">
             <div style="padding:12px 14px">
+              <!-- Active Project Chip (6.1) -->
+              <div id="tabFilesProjectChip" style="margin-bottom:12px;padding:6px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;display:none;align-items:center;gap:8px;font-size:11px">
+                <i class="fas fa-folder-open" style="color:var(--accent);flex-shrink:0"></i>
+                <span id="tabFilesProjectName" style="flex:1;color:var(--white);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+                <span id="tabFilesProjectFilesCount" style="color:var(--gray);font-size:10px;flex-shrink:0"></span>
+              </div>
               <!-- Project Planning Overview (placed at top for quick status) -->
               <div id="projectPlanningOverview" style="margin-bottom:16px">
                 <div
@@ -863,6 +871,18 @@
                   <i class="fas fa-file-import"></i> Imported Files <span id="importedFilesCount"
                     style="opacity:0.6"><span data-i18n="0_1">(0)</span></span>
                 </div>
+                <!-- Search + Sort bar (6.4) -->
+                <div id="tabFilesFilterBar" style="display:none;margin-bottom:6px;gap:4px;flex-wrap:wrap">
+                  <div style="flex:1;min-width:100px;position:relative">
+                    <input type="text" id="tabFilesSearchInput" placeholder="Filter files..."
+                      oninput="_sessionSetFilter(this.value)"
+                      style="width:100%;padding:5px 8px 5px 24px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--bg2);color:var(--white);outline:none;box-sizing:border-box">
+                    <i class="fas fa-search" style="position:absolute;left:7px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--gray)"></i>
+                  </div>
+                  <button class="ss-sort-btn active" data-sort="recent" onclick="_sessionSetSort('recent')" style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer" title="Most recent first"><i class="fas fa-clock"></i></button>
+                  <button class="ss-sort-btn" data-sort="name" onclick="_sessionSetSort('name')" style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer" title="Sort by name"><i class="fas fa-sort-alpha-down"></i></button>
+                  <button class="ss-sort-btn" data-sort="size" onclick="_sessionSetSort('size')" style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer" title="Sort by size"><i class="fas fa-sort-size-down"></i></button>
+                </div>
                 <div id="importedFilesList" style="display:flex;flex-direction:column;gap:4px">
                   <p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic"><span
                       data-i18n="no_imported_files_yet">No
@@ -882,9 +902,21 @@
                       generated artifacts yet</span></p>
                 </div>
               </div>
-              <button class="add-agent-btn" onclick="clearSessionFiles()" style="margin-top:8px"><i
+              <!-- Bulk action bar (6.6) -->
+              <div id="tabFilesBulkBar" style="display:none;margin-top:6px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:rgba(255,255,255,0.03);align-items:center;gap:6px;flex-wrap:wrap">
+                <span id="tabFilesBulkCount" style="font-size:10px;color:var(--gray);font-weight:500"></span>
+                <div style="display:flex;gap:4px;margin-left:auto">
+                  <button class="add-agent-btn" onclick="_sessionBulkAttach()" style="font-size:10px;padding:3px 8px"><i class="fas fa-paperclip"></i> Context</button>
+                  <button class="add-agent-btn" onclick="_sessionBulkDelete()" style="font-size:10px;padding:3px 8px;color:var(--red)"><i class="fas fa-trash"></i> Delete</button>
+                </div>
+              </div>
+              <!-- Staleness signal (6.8) -->
+              <div id="tabFilesStaleness" style="font-size:9px;color:var(--gray);opacity:.6;text-align:right;padding:2px 2px 6px;display:none"></div>
+              <button class="add-agent-btn" onclick="clearSessionFiles()" style="margin-top:4px"><i
                   class="fas fa-trash-can"></i> Clear All</button>
             </div>
+            <input type="file" id="contextFileInput" multiple
+              style="display:none" onchange="handleContextFileImport(this.files);this.value=''">
           </div>
           <!-- TAB: Projects -->
           <div class="sidebar-section" id="tab-projects">
@@ -1609,6 +1641,19 @@
                   class="fas fa-gavel"></i> Open Craudio</button>
             </div>
           </div>
+          <!-- TAB: Social Media -->
+          <div class="sidebar-section" id="tab-socialmedia">
+            <div style="padding:14px 12px">
+              <div
+                style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
+                <i class="fas fa-share-nodes" style="color:var(--amber)"></i> Social Media
+              </div>
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px"><span
+                  data-i18n="linkedin_profiles_chat_assistant_content_generat">LinkedIn profiles chat assistant &amp; content generation.</span></p>
+              <button class="btn" onclick="socialMediaShowView()" style="width:100%;justify-content:center"><i
+                  class="fas fa-share-nodes"></i> Open Social Media</button>
+            </div>
+          </div>
           <!-- TAB: Drive -->
           <div class="sidebar-section" id="tab-drive">
             <div style="padding:14px 12px">
@@ -2115,6 +2160,7 @@
         <div class="chat-log" id="chatLog"></div>
         <div class="chat-compose" id="chatCompose">
           <div class="pinned-paths-bar" id="pinnedPathsBar" style="display:none"></div>
+          <div class="compose-context-bar" id="composeContextBar" style="display:none"></div>
           <div class="compose-row">
             <button class="compose-voice-btn" id="voiceInputBtn" onclick="voiceToggleQuick()"
               title="Tap to start/stop recording"><i class="fas fa-microphone"></i></button>
@@ -2162,6 +2208,8 @@
       </div>
       <!-- ═══════ CRAUDIO VIEW ═══════ -->
       <div class="craudio-view" id="craudioView"></div>
+      <!-- ═══════ SOCIAL MEDIA VIEW ═══════ -->
+      <div class="social-media-view" id="socialMediaView"></div>
       <!-- ═══════ SHEETS VIEW ═══════ -->
       <div class="sheets-view" id="sheetsView"></div>
       <!-- ═══════ DRIVE VIEW ═══════ -->
@@ -6519,6 +6567,7 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <script src="js/spaces.js"></script>
   <script src="js/shaders.js"></script>
   <script src="js/modules/craudio.js"></script>
+  <script src="js/modules/social-media.js"></script>
   <script src="js/modules/drive.js"></script>
   <script src="js/modules/writer.js"></script>
   <script src="js/modules/sheets.js"></script>

@@ -43,7 +43,8 @@
     apiexplorer: (typeof window.t === 'function') ? window.t('sidebar.apiexplorer', 'API Explorer') : 'API Explorer',
     craudio: (typeof window.t === 'function') ? window.t('sidebar.craudio', 'Craudio') : 'Craudio',
     drive: (typeof window.t === 'function') ? window.t('sidebar.drive', 'Drive') : 'Drive',
-    writer: (typeof window.t === 'function') ? window.t('sidebar.writer', 'Writer') : 'Writer'
+    writer: (typeof window.t === 'function') ? window.t('sidebar.writer', 'Writer') : 'Writer',
+    socialmedia: (typeof window.t === 'function') ? window.t('sidebar.socialmedia', 'Social Media') : 'Social Media'
   };
 
   function getLabel(reg) {

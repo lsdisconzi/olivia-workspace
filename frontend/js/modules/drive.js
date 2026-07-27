@@ -41,6 +41,7 @@
     // ── Search state ────────────────────────────────────────────────────────
     var _driveSearchActive = false;
     var _driveSearchPrevFolder = 'root';   // folder to restore after clearing search
+    var _driveSearchSkipRestore = false;   // flag to skip breadcrumb restore (when navigating from search)
 
     // ── Helpers ───────────────────────────────────────────────────────────────
     function esc(s) {
@@ -263,7 +264,7 @@
         // Replace breadcrumb with search result header
         var bread = document.getElementById('drBreadcrumb');
         if (bread) {
-            bread.innerHTML = '<span class="dr-bread-item active"><i class="fas fa-search"></i> Resultados para: ' + esc(query) + '</span>';
+            bread.innerHTML = '<span class="dr-bread-item active" data-id="search"><i class="fas fa-search"></i> Resultados para: ' + esc(query) + '</span>';
         }
 
         // Hide folder filter dropdown while searching
@@ -308,6 +309,25 @@
         driveRefreshFiles();
     };
 
+    // Clear search UI only (used when navigating to a folder from search results)
+    window._driveClearSearchUI = function () {
+        _driveSearchActive = false;
+        var input = document.getElementById('drSearchInput');
+        if (input) input.value = '';
+        var clearBtn = document.getElementById('drSearchClear');
+        if (clearBtn) clearBtn.style.display = 'none';
+
+        // Restore navigation buttons
+        var navBack = document.getElementById('drNavBack');
+        var navFwd = document.getElementById('drNavFwd');
+        if (navBack) navBack.style.display = '';
+        if (navFwd) navFwd.style.display = '';
+        _updateNavButtons();
+
+        // Reset breadcrumb path to root so navigation starts fresh
+        _driveBreadPath = [{ id: 'root', name: 'Meu Drive' }];
+    };
+
     function renderSearchResults(files, query) {
         var list = document.getElementById('drFilesList');
         if (!list) return;
@@ -348,7 +368,7 @@
             // Click on a folder navigates to it (and clears search), on a file opens preview
             var rowClick = '';
             if (isFolder) {
-                rowClick = 'onclick="driveNavFolder(\'' + esc(f.id) + '\'); driveClearSearch();"';
+                rowClick = 'onclick="_driveClearSearchUI(); driveNavFolder(\'' + esc(f.id) + '\');"';
             }
 
             html += '<div class="dr-file-row dr-file-row-search" ' + rowClick + '>' +
@@ -553,7 +573,8 @@
     function getCurrentFolderId() {
         var bread = document.getElementById('drBreadcrumb');
         var active = bread ? bread.querySelector('.dr-bread-item.active') : null;
-        return active ? active.getAttribute('data-id') : 'root';
+        var folderId = active ? active.getAttribute('data-id') : null;
+        return folderId || 'root';
     }
 
     // ── Folder navigation history ────────────────────────────────────────────
