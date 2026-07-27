@@ -1,0 +1,1531 @@
+{
+  "metadata": {
+    "folder": "content",
+    "indexed_at": "2026-07-26T22:51:20.288769",
+    "total_files": 87,
+    "total_lines": 2228,
+    "languages": {
+      "unknown": 27,
+      "json": 59,
+      "markdown": 1
+    }
+  },
+  "tree": {
+    ".DS_Store": {
+      "file_ref": "files/content/.DS_Store"
+    },
+    "examples": {
+      ".DS_Store": {
+        "file_ref": "files/content/examples/.DS_Store"
+      },
+      "svg-assets": {
+        "aurora-flow.svg": {
+          "file_ref": "files/content/examples/svg-assets/aurora-flow.svg"
+        },
+        "city-harbor.svg": {
+          "file_ref": "files/content/examples/svg-assets/city-harbor.svg"
+        },
+        "deepseek_svg_20260715_55e171.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_55e171.svg"
+        },
+        "deepseek_svg_20260715_5f2ef2.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_5f2ef2.svg"
+        },
+        "deepseek_svg_20260715_690d9e.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_690d9e.svg"
+        },
+        "deepseek_svg_20260715_750fbf.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_750fbf.svg"
+        },
+        "deepseek_svg_20260715_783d80.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_783d80.svg"
+        },
+        "deepseek_svg_20260715_ba81c3.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_ba81c3.svg"
+        },
+        "deepseek_svg_20260715_be4dc2.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_be4dc2.svg"
+        },
+        "deepseek_svg_20260715_be9044.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_be9044.svg"
+        },
+        "deepseek_svg_20260715_d09347.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_d09347.svg"
+        },
+        "deepseek_svg_20260715_df4cab.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_df4cab.svg"
+        },
+        "deepseek_svg_20260715_e74818.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_e74818.svg"
+        },
+        "deepseek_svg_20260715_f21986.svg": {
+          "file_ref": "files/content/examples/svg-assets/deepseek_svg_20260715_f21986.svg"
+        },
+        "topo-ridges.svg": {
+          "file_ref": "files/content/examples/svg-assets/topo-ridges.svg"
+        }
+      }
+    },
+    "scenes": {
+      ".DS_Store": {
+        "file_ref": "files/content/scenes/.DS_Store"
+      },
+      "assets": {
+        ".DS_Store": {
+          "file_ref": "files/content/scenes/assets/.DS_Store"
+        },
+        "README.md": {
+          "file_ref": "files/content/scenes/assets/README.md"
+        },
+        "aurora.asset.json": {
+          "file_ref": "files/content/scenes/assets/aurora.asset.json"
+        },
+        "bicycles.asset.json": {
+          "file_ref": "files/content/scenes/assets/bicycles.asset.json"
+        },
+        "canal_water.asset.json": {
+          "file_ref": "files/content/scenes/assets/canal_water.asset.json"
+        },
+        "castle_rock.asset.json": {
+          "file_ref": "files/content/scenes/assets/castle_rock.asset.json"
+        },
+        "deer.asset.json": {
+          "file_ref": "files/content/scenes/assets/deer.asset.json"
+        },
+        "fawn.asset.json": {
+          "file_ref": "files/content/scenes/assets/fawn.asset.json"
+        },
+        "fiat.asset.json": {
+          "file_ref": "files/content/scenes/assets/fiat.asset.json"
+        },
+        "fiat_147.asset.json": {
+          "file_ref": "files/content/scenes/assets/fiat_147.asset.json"
+        },
+        "fiat_havan.asset.json": {
+          "file_ref": "files/content/scenes/assets/fiat_havan.asset.json"
+        },
+        "fiat_havan_147.asset.json": {
+          "file_ref": "files/content/scenes/assets/fiat_havan_147.asset.json"
+        },
+        "firefly_swarm.asset.json": {
+          "file_ref": "files/content/scenes/assets/firefly_swarm.asset.json"
+        },
+        "flower_row.asset.json": {
+          "file_ref": "files/content/scenes/assets/flower_row.asset.json"
+        },
+        "glowing_mushroom.asset.json": {
+          "file_ref": "files/content/scenes/assets/glowing_mushroom.asset.json"
+        },
+        "golden_butterfly.asset.json": {
+          "file_ref": "files/content/scenes/assets/golden_butterfly.asset.json"
+        },
+        "gorse_bush.asset.json": {
+          "file_ref": "files/content/scenes/assets/gorse_bush.asset.json"
+        },
+        "grass_patch.asset.json": {
+          "file_ref": "files/content/scenes/assets/grass_patch.asset.json"
+        },
+        "havan_moto.asset.json": {
+          "file_ref": "files/content/scenes/assets/havan_moto.asset.json"
+        },
+        "havan_statue.asset.json": {
+          "file_ref": "files/content/scenes/assets/havan_statue.asset.json"
+        },
+        "havan_truck.asset.json": {
+          "file_ref": "files/content/scenes/assets/havan_truck.asset.json"
+        },
+        "havan_veio.asset.json": {
+          "file_ref": "files/content/scenes/assets/havan_veio.asset.json"
+        },
+        "hills_hoist.asset.json": {
+          "file_ref": "files/content/scenes/assets/hills_hoist.asset.json"
+        },
+        "ice_castle.asset.json": {
+          "file_ref": "files/content/scenes/assets/ice_castle.asset.json"
+        },
+        "manifest.json": {
+          "file_ref": "files/content/scenes/assets/manifest.json"
+        },
+        "moon.asset.json": {
+          "file_ref": "files/content/scenes/assets/moon.asset.json"
+        },
+        "mushroom_patch.asset.json": {
+          "file_ref": "files/content/scenes/assets/mushroom_patch.asset.json"
+        },
+        "my_car.asset.json": {
+          "file_ref": "files/content/scenes/assets/my_car.asset.json"
+        },
+        "oak_tree.asset.json": {
+          "file_ref": "files/content/scenes/assets/oak_tree.asset.json"
+        },
+        "owl.asset.json": {
+          "file_ref": "files/content/scenes/assets/owl.asset.json"
+        },
+        "owl_flying.asset.json": {
+          "file_ref": "files/content/scenes/assets/owl_flying.asset.json"
+        },
+        "palm_tree.asset.json": {
+          "file_ref": "files/content/scenes/assets/palm_tree.asset.json"
+        },
+        "pine_tree_snowy.asset.json": {
+          "file_ref": "files/content/scenes/assets/pine_tree_snowy.asset.json"
+        },
+        "princess.asset.json": {
+          "file_ref": "files/content/scenes/assets/princess.asset.json"
+        },
+        "pup.asset.json": {
+          "file_ref": "files/content/scenes/assets/pup.asset.json"
+        },
+        "queenslander_house.asset.json": {
+          "file_ref": "files/content/scenes/assets/queenslander_house.asset.json"
+        },
+        "sand_dunes.asset.json": {
+          "file_ref": "files/content/scenes/assets/sand_dunes.asset.json"
+        },
+        "snowflakes.asset.json": {
+          "file_ref": "files/content/scenes/assets/snowflakes.asset.json"
+        },
+        "snowman.asset.json": {
+          "file_ref": "files/content/scenes/assets/snowman.asset.json"
+        },
+        "street_lamp.asset.json": {
+          "file_ref": "files/content/scenes/assets/street_lamp.asset.json"
+        },
+        "stroller.asset.json": {
+          "file_ref": "files/content/scenes/assets/stroller.asset.json"
+        },
+        "sun.asset.json": {
+          "file_ref": "files/content/scenes/assets/sun.asset.json"
+        },
+        "svg": {
+          ".DS_Store": {
+            "file_ref": "files/content/scenes/assets/svg/.DS_Store"
+          },
+          "fiat_147.svg": {
+            "file_ref": "files/content/scenes/assets/svg/fiat_147.svg"
+          },
+          "havan-building.svg": {
+            "file_ref": "files/content/scenes/assets/svg/havan-building.svg"
+          },
+          "havan-carro.svg": {
+            "file_ref": "files/content/scenes/assets/svg/havan-carro.svg"
+          },
+          "havan-moto.svg": {
+            "file_ref": "files/content/scenes/assets/svg/havan-moto.svg"
+          },
+          "havan-statue.svg": {
+            "file_ref": "files/content/scenes/assets/svg/havan-statue.svg"
+          },
+          "havan-truck.svg": {
+            "file_ref": "files/content/scenes/assets/svg/havan-truck.svg"
+          },
+          "havan-veio.svg": {
+            "file_ref": "files/content/scenes/assets/svg/havan-veio.svg"
+          }
+        },
+        "swan.asset.json": {
+          "file_ref": "files/content/scenes/assets/swan.asset.json"
+        },
+        "toy_train.asset.json": {
+          "file_ref": "files/content/scenes/assets/toy_train.asset.json"
+        },
+        "trampoline.asset.json": {
+          "file_ref": "files/content/scenes/assets/trampoline.asset.json"
+        },
+        "windmill.asset.json": {
+          "file_ref": "files/content/scenes/assets/windmill.asset.json"
+        }
+      },
+      "cozy-edinburgh-evening.scene.json": {
+        "file_ref": "files/content/scenes/cozy-edinburgh-evening.scene.json"
+      },
+      "custom_havan_fiat-2.scene.json": {
+        "file_ref": "files/content/scenes/custom_havan_fiat-2.scene.json"
+      },
+      "custom_havan_fiat.scene.json": {
+        "file_ref": "files/content/scenes/custom_havan_fiat.scene.json"
+      },
+      "custom_havan_story.scene.json": {
+        "file_ref": "files/content/scenes/custom_havan_story.scene.json"
+      },
+      "custom_havan_update.scene.json": {
+        "file_ref": "files/content/scenes/custom_havan_update.scene.json"
+      },
+      "enchanted-forest.scene.json": {
+        "file_ref": "files/content/scenes/enchanted-forest.scene.json"
+      },
+      "happy-pups-backyard.scene.json": {
+        "file_ref": "files/content/scenes/happy-pups-backyard.scene.json"
+      },
+      "havan_statue.scene.json": {
+        "file_ref": "files/content/scenes/havan_statue.scene.json"
+      },
+      "ice-kingdom.scene.json": {
+        "file_ref": "files/content/scenes/ice-kingdom.scene.json"
+      },
+      "jalapao.scene.json": {
+        "file_ref": "files/content/scenes/jalapao.scene.json"
+      },
+      "loch-golden-hour.scene.json": {
+        "file_ref": "files/content/scenes/loch-golden-hour.scene.json"
+      },
+      "manifest.json": {
+        "file_ref": "files/content/scenes/manifest.json"
+      },
+      "palmas-tocantins.scene.json": {
+        "file_ref": "files/content/scenes/palmas-tocantins.scene.json"
+      },
+      "snowy-playground-train.scene.json": {
+        "file_ref": "files/content/scenes/snowy-playground-train.scene.json"
+      },
+      "welcome.scene.json": {
+        "file_ref": "files/content/scenes/welcome.scene.json"
+      }
+    }
+  },
+  "files": {
+    "content/.DS_Store": {
+      "path": "content/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 8196,
+      "lines": 36,
+      "last_modified": "2026-07-26T22:34:13.662477",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/scenes/ice-kingdom.scene.json": {
+      "path": "content/scenes/ice-kingdom.scene.json",
+      "language": "json",
+      "size_bytes": 13060,
+      "lines": 14,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/enchanted-forest.scene.json": {
+      "path": "content/scenes/enchanted-forest.scene.json",
+      "language": "json",
+      "size_bytes": 14789,
+      "lines": 18,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/cozy-edinburgh-evening.scene.json": {
+      "path": "content/scenes/cozy-edinburgh-evening.scene.json",
+      "language": "json",
+      "size_bytes": 13135,
+      "lines": 14,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/.DS_Store": {
+      "path": "content/scenes/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 8196,
+      "lines": 4,
+      "last_modified": "2026-07-23T06:42:42.625343",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/scenes/snowy-playground-train.scene.json": {
+      "path": "content/scenes/snowy-playground-train.scene.json",
+      "language": "json",
+      "size_bytes": 15466,
+      "lines": 14,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/havan_statue.scene.json": {
+      "path": "content/scenes/havan_statue.scene.json",
+      "language": "json",
+      "size_bytes": 18571,
+      "lines": 14,
+      "last_modified": "2026-07-23T07:19:48.584598",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/custom_havan_story.scene.json": {
+      "path": "content/scenes/custom_havan_story.scene.json",
+      "language": "json",
+      "size_bytes": 10074,
+      "lines": 14,
+      "last_modified": "2026-07-17T12:01:32.761723",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/custom_havan_fiat-2.scene.json": {
+      "path": "content/scenes/custom_havan_fiat-2.scene.json",
+      "language": "json",
+      "size_bytes": 16229,
+      "lines": 13,
+      "last_modified": "2026-07-23T02:17:41.381909",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/custom_havan_update.scene.json": {
+      "path": "content/scenes/custom_havan_update.scene.json",
+      "language": "json",
+      "size_bytes": 8355,
+      "lines": 14,
+      "last_modified": "2026-07-17T12:00:25.890843",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/happy-pups-backyard.scene.json": {
+      "path": "content/scenes/happy-pups-backyard.scene.json",
+      "language": "json",
+      "size_bytes": 16666,
+      "lines": 14,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/welcome.scene.json": {
+      "path": "content/scenes/welcome.scene.json",
+      "language": "json",
+      "size_bytes": 450,
+      "lines": 15,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/custom_havan_fiat.scene.json": {
+      "path": "content/scenes/custom_havan_fiat.scene.json",
+      "language": "json",
+      "size_bytes": 16271,
+      "lines": 13,
+      "last_modified": "2026-07-23T02:19:13.937007",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/palmas-tocantins.scene.json": {
+      "path": "content/scenes/palmas-tocantins.scene.json",
+      "language": "json",
+      "size_bytes": 3498,
+      "lines": 13,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/manifest.json": {
+      "path": "content/scenes/manifest.json",
+      "language": "json",
+      "size_bytes": 480,
+      "lines": 17,
+      "last_modified": "2026-07-23T07:19:55.696096",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/loch-golden-hour.scene.json": {
+      "path": "content/scenes/loch-golden-hour.scene.json",
+      "language": "json",
+      "size_bytes": 17845,
+      "lines": 14,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/jalapao.scene.json": {
+      "path": "content/scenes/jalapao.scene.json",
+      "language": "json",
+      "size_bytes": 4655,
+      "lines": 14,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/havan_veio.asset.json": {
+      "path": "content/scenes/assets/havan_veio.asset.json",
+      "language": "json",
+      "size_bytes": 6883,
+      "lines": 41,
+      "last_modified": "2026-07-23T06:51:05.146683",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/sun.asset.json": {
+      "path": "content/scenes/assets/sun.asset.json",
+      "language": "json",
+      "size_bytes": 724,
+      "lines": 16,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/queenslander_house.asset.json": {
+      "path": "content/scenes/assets/queenslander_house.asset.json",
+      "language": "json",
+      "size_bytes": 2115,
+      "lines": 15,
+      "last_modified": "2026-07-15T05:23:48.335426",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/.DS_Store": {
+      "path": "content/scenes/assets/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 1,
+      "last_modified": "2026-07-23T06:03:50.270914",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/scenes/assets/sand_dunes.asset.json": {
+      "path": "content/scenes/assets/sand_dunes.asset.json",
+      "language": "json",
+      "size_bytes": 958,
+      "lines": 15,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/moon.asset.json": {
+      "path": "content/scenes/assets/moon.asset.json",
+      "language": "json",
+      "size_bytes": 754,
+      "lines": 15,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/fiat_havan_147.asset.json": {
+      "path": "content/scenes/assets/fiat_havan_147.asset.json",
+      "language": "json",
+      "size_bytes": 9551,
+      "lines": 42,
+      "last_modified": "2026-07-23T02:23:06.422682",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/fiat_havan.asset.json": {
+      "path": "content/scenes/assets/fiat_havan.asset.json",
+      "language": "json",
+      "size_bytes": 5490,
+      "lines": 40,
+      "last_modified": "2026-07-23T07:15:01.611826",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/palm_tree.asset.json": {
+      "path": "content/scenes/assets/palm_tree.asset.json",
+      "language": "json",
+      "size_bytes": 910,
+      "lines": 14,
+      "last_modified": "2026-07-15T05:23:48.206672",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/deer.asset.json": {
+      "path": "content/scenes/assets/deer.asset.json",
+      "language": "json",
+      "size_bytes": 2408,
+      "lines": 16,
+      "last_modified": "2026-07-15T05:23:47.940928",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/fiat_147.asset.json": {
+      "path": "content/scenes/assets/fiat_147.asset.json",
+      "language": "json",
+      "size_bytes": 9382,
+      "lines": 41,
+      "last_modified": "2026-07-23T02:21:53.340886",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/aurora.asset.json": {
+      "path": "content/scenes/assets/aurora.asset.json",
+      "language": "json",
+      "size_bytes": 1105,
+      "lines": 13,
+      "last_modified": "2026-07-15T05:23:48.151682",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/owl.asset.json": {
+      "path": "content/scenes/assets/owl.asset.json",
+      "language": "json",
+      "size_bytes": 2038,
+      "lines": 16,
+      "last_modified": "2026-07-15T05:23:47.929151",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/swan.asset.json": {
+      "path": "content/scenes/assets/swan.asset.json",
+      "language": "json",
+      "size_bytes": 999,
+      "lines": 14,
+      "last_modified": "2026-07-15T05:23:48.218790",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/pine_tree_snowy.asset.json": {
+      "path": "content/scenes/assets/pine_tree_snowy.asset.json",
+      "language": "json",
+      "size_bytes": 1333,
+      "lines": 17,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/toy_train.asset.json": {
+      "path": "content/scenes/assets/toy_train.asset.json",
+      "language": "json",
+      "size_bytes": 1817,
+      "lines": 15,
+      "last_modified": "2026-07-15T05:23:48.185507",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/my_car.asset.json": {
+      "path": "content/scenes/assets/my_car.asset.json",
+      "language": "json",
+      "size_bytes": 194227,
+      "lines": 36,
+      "last_modified": "2026-07-23T01:58:54.133090",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/castle_rock.asset.json": {
+      "path": "content/scenes/assets/castle_rock.asset.json",
+      "language": "json",
+      "size_bytes": 1640,
+      "lines": 14,
+      "last_modified": "2026-07-15T05:23:48.356397",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/gorse_bush.asset.json": {
+      "path": "content/scenes/assets/gorse_bush.asset.json",
+      "language": "json",
+      "size_bytes": 848,
+      "lines": 14,
+      "last_modified": "2026-07-15T05:23:48.408602",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/windmill.asset.json": {
+      "path": "content/scenes/assets/windmill.asset.json",
+      "language": "json",
+      "size_bytes": 1454,
+      "lines": 17,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/canal_water.asset.json": {
+      "path": "content/scenes/assets/canal_water.asset.json",
+      "language": "json",
+      "size_bytes": 1249,
+      "lines": 16,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/oak_tree.asset.json": {
+      "path": "content/scenes/assets/oak_tree.asset.json",
+      "language": "json",
+      "size_bytes": 1589,
+      "lines": 18,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/README.md": {
+      "path": "content/scenes/assets/README.md",
+      "language": "markdown",
+      "size_bytes": 2275,
+      "lines": 61,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/firefly_swarm.asset.json": {
+      "path": "content/scenes/assets/firefly_swarm.asset.json",
+      "language": "json",
+      "size_bytes": 995,
+      "lines": 15,
+      "last_modified": "2026-07-15T05:23:48.130307",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/hills_hoist.asset.json": {
+      "path": "content/scenes/assets/hills_hoist.asset.json",
+      "language": "json",
+      "size_bytes": 1131,
+      "lines": 14,
+      "last_modified": "2026-07-15T05:23:48.300095",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/ice_castle.asset.json": {
+      "path": "content/scenes/assets/ice_castle.asset.json",
+      "language": "json",
+      "size_bytes": 2522,
+      "lines": 15,
+      "last_modified": "2026-07-15T05:23:48.083299",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/manifest.json": {
+      "path": "content/scenes/assets/manifest.json",
+      "language": "json",
+      "size_bytes": 1131,
+      "lines": 45,
+      "last_modified": "2026-07-23T06:42:05.902509",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/street_lamp.asset.json": {
+      "path": "content/scenes/assets/street_lamp.asset.json",
+      "language": "json",
+      "size_bytes": 1053,
+      "lines": 15,
+      "last_modified": "2026-07-15T05:23:48.241427",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/flower_row.asset.json": {
+      "path": "content/scenes/assets/flower_row.asset.json",
+      "language": "json",
+      "size_bytes": 1091,
+      "lines": 16,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/havan_statue.asset.json": {
+      "path": "content/scenes/assets/havan_statue.asset.json",
+      "language": "json",
+      "size_bytes": 16710,
+      "lines": 39,
+      "last_modified": "2026-07-23T06:12:41.291060",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/glowing_mushroom.asset.json": {
+      "path": "content/scenes/assets/glowing_mushroom.asset.json",
+      "language": "json",
+      "size_bytes": 1101,
+      "lines": 15,
+      "last_modified": "2026-07-15T05:23:48.108225",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/pup.asset.json": {
+      "path": "content/scenes/assets/pup.asset.json",
+      "language": "json",
+      "size_bytes": 2938,
+      "lines": 17,
+      "last_modified": "2026-07-15T05:23:47.974739",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/princess.asset.json": {
+      "path": "content/scenes/assets/princess.asset.json",
+      "language": "json",
+      "size_bytes": 2297,
+      "lines": 16,
+      "last_modified": "2026-07-15T05:23:48.022110",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/mushroom_patch.asset.json": {
+      "path": "content/scenes/assets/mushroom_patch.asset.json",
+      "language": "json",
+      "size_bytes": 1323,
+      "lines": 16,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/grass_patch.asset.json": {
+      "path": "content/scenes/assets/grass_patch.asset.json",
+      "language": "json",
+      "size_bytes": 905,
+      "lines": 17,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/snowflakes.asset.json": {
+      "path": "content/scenes/assets/snowflakes.asset.json",
+      "language": "json",
+      "size_bytes": 737,
+      "lines": 14,
+      "last_modified": "2026-07-15T05:23:48.173703",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/havan_moto.asset.json": {
+      "path": "content/scenes/assets/havan_moto.asset.json",
+      "language": "json",
+      "size_bytes": 4664,
+      "lines": 47,
+      "last_modified": "2026-07-23T06:48:34.766592",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/stroller.asset.json": {
+      "path": "content/scenes/assets/stroller.asset.json",
+      "language": "json",
+      "size_bytes": 1074,
+      "lines": 15,
+      "last_modified": "2026-07-15T05:23:48.276718",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/golden_butterfly.asset.json": {
+      "path": "content/scenes/assets/golden_butterfly.asset.json",
+      "language": "json",
+      "size_bytes": 1254,
+      "lines": 15,
+      "last_modified": "2026-07-15T05:23:47.999175",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/havan_truck.asset.json": {
+      "path": "content/scenes/assets/havan_truck.asset.json",
+      "language": "json",
+      "size_bytes": 7564,
+      "lines": 42,
+      "last_modified": "2026-07-23T06:51:05.146689",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/fiat.asset.json": {
+      "path": "content/scenes/assets/fiat.asset.json",
+      "language": "json",
+      "size_bytes": 9883,
+      "lines": 41,
+      "last_modified": "2026-07-23T02:38:32.054247",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/trampoline.asset.json": {
+      "path": "content/scenes/assets/trampoline.asset.json",
+      "language": "json",
+      "size_bytes": 1096,
+      "lines": 14,
+      "last_modified": "2026-07-15T05:23:48.321896",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/fawn.asset.json": {
+      "path": "content/scenes/assets/fawn.asset.json",
+      "language": "json",
+      "size_bytes": 892,
+      "lines": 14,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/snowman.asset.json": {
+      "path": "content/scenes/assets/snowman.asset.json",
+      "language": "json",
+      "size_bytes": 2051,
+      "lines": 15,
+      "last_modified": "2026-07-15T05:23:48.051657",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/owl_flying.asset.json": {
+      "path": "content/scenes/assets/owl_flying.asset.json",
+      "language": "json",
+      "size_bytes": 1452,
+      "lines": 15,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/bicycles.asset.json": {
+      "path": "content/scenes/assets/bicycles.asset.json",
+      "language": "json",
+      "size_bytes": 1233,
+      "lines": 15,
+      "last_modified": "2026-07-15T05:23:48.255584",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/svg/fiat_147.svg": {
+      "path": "content/scenes/assets/svg/fiat_147.svg",
+      "language": "unknown",
+      "size_bytes": 193968,
+      "lines": 42,
+      "last_modified": "2026-07-23T00:54:13.087419",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/svg/.DS_Store": {
+      "path": "content/scenes/assets/svg/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 1,
+      "last_modified": "2026-07-22T22:05:49.813096",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/scenes/assets/svg/havan-carro.svg": {
+      "path": "content/scenes/assets/svg/havan-carro.svg",
+      "language": "unknown",
+      "size_bytes": 276906,
+      "lines": 81,
+      "last_modified": "2026-07-23T05:53:30.774020",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/svg/havan-truck.svg": {
+      "path": "content/scenes/assets/svg/havan-truck.svg",
+      "language": "unknown",
+      "size_bytes": 305793,
+      "lines": 95,
+      "last_modified": "2026-07-23T04:03:26.986558",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/svg/havan-veio.svg": {
+      "path": "content/scenes/assets/svg/havan-veio.svg",
+      "language": "unknown",
+      "size_bytes": 257948,
+      "lines": 60,
+      "last_modified": "2026-07-23T04:05:46.162266",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/svg/havan-moto.svg": {
+      "path": "content/scenes/assets/svg/havan-moto.svg",
+      "language": "unknown",
+      "size_bytes": 1004255,
+      "lines": 81,
+      "last_modified": "2026-07-23T04:02:36.969450",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/svg/havan-building.svg": {
+      "path": "content/scenes/assets/svg/havan-building.svg",
+      "language": "unknown",
+      "size_bytes": 3253578,
+      "lines": 233,
+      "last_modified": "2026-07-23T05:56:00.746522",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/scenes/assets/svg/havan-statue.svg": {
+      "path": "content/scenes/assets/svg/havan-statue.svg",
+      "language": "unknown",
+      "size_bytes": 270493,
+      "lines": 50,
+      "last_modified": "2026-07-23T04:01:36.386634",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/.DS_Store": {
+      "path": "content/examples/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 2,
+      "last_modified": "2026-07-22T22:27:26.960613",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/aurora-flow.svg": {
+      "path": "content/examples/svg-assets/aurora-flow.svg",
+      "language": "unknown",
+      "size_bytes": 1669,
+      "lines": 34,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_d09347.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_d09347.svg",
+      "language": "unknown",
+      "size_bytes": 889,
+      "lines": 9,
+      "last_modified": "2026-07-15T12:32:32.744946",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_690d9e.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_690d9e.svg",
+      "language": "unknown",
+      "size_bytes": 2492,
+      "lines": 24,
+      "last_modified": "2026-07-15T12:32:32.663709",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/topo-ridges.svg": {
+      "path": "content/examples/svg-assets/topo-ridges.svg",
+      "language": "unknown",
+      "size_bytes": 1365,
+      "lines": 20,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_df4cab.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_df4cab.svg",
+      "language": "unknown",
+      "size_bytes": 932,
+      "lines": 11,
+      "last_modified": "2026-07-15T12:32:32.760884",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_f21986.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_f21986.svg",
+      "language": "unknown",
+      "size_bytes": 2816,
+      "lines": 31,
+      "last_modified": "2026-07-15T12:32:32.793109",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_750fbf.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_750fbf.svg",
+      "language": "unknown",
+      "size_bytes": 5018,
+      "lines": 47,
+      "last_modified": "2026-07-15T12:32:32.677867",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_5f2ef2.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_5f2ef2.svg",
+      "language": "unknown",
+      "size_bytes": 628,
+      "lines": 9,
+      "last_modified": "2026-07-15T12:32:32.650493",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_be9044.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_be9044.svg",
+      "language": "unknown",
+      "size_bytes": 1355,
+      "lines": 14,
+      "last_modified": "2026-07-15T12:32:32.738266",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_e74818.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_e74818.svg",
+      "language": "unknown",
+      "size_bytes": 1378,
+      "lines": 15,
+      "last_modified": "2026-07-15T12:32:32.777017",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/city-harbor.svg": {
+      "path": "content/examples/svg-assets/city-harbor.svg",
+      "language": "unknown",
+      "size_bytes": 1704,
+      "lines": 35,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_55e171.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_55e171.svg",
+      "language": "unknown",
+      "size_bytes": 696,
+      "lines": 11,
+      "last_modified": "2026-07-15T12:32:32.657510",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_ba81c3.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_ba81c3.svg",
+      "language": "unknown",
+      "size_bytes": 3077,
+      "lines": 37,
+      "last_modified": "2026-07-15T12:32:32.709927",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_783d80.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_783d80.svg",
+      "language": "unknown",
+      "size_bytes": 2036,
+      "lines": 20,
+      "last_modified": "2026-07-15T12:32:32.694851",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_be4dc2.svg": {
+      "path": "content/examples/svg-assets/deepseek_svg_20260715_be4dc2.svg",
+      "language": "unknown",
+      "size_bytes": 1605,
+      "lines": 17,
+      "last_modified": "2026-07-15T12:32:32.724679",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    }
+  },
+  "html_pages": {},
+  "modules": {
+    "content/scenes": {
+      "files": [
+        "content/scenes/ice-kingdom.scene.json",
+        "content/scenes/enchanted-forest.scene.json",
+        "content/scenes/cozy-edinburgh-evening.scene.json",
+        "content/scenes/.DS_Store",
+        "content/scenes/snowy-playground-train.scene.json",
+        "content/scenes/havan_statue.scene.json",
+        "content/scenes/custom_havan_story.scene.json",
+        "content/scenes/custom_havan_fiat-2.scene.json",
+        "content/scenes/custom_havan_update.scene.json",
+        "content/scenes/happy-pups-backyard.scene.json",
+        "content/scenes/welcome.scene.json",
+        "content/scenes/custom_havan_fiat.scene.json",
+        "content/scenes/palmas-tocantins.scene.json",
+        "content/scenes/manifest.json",
+        "content/scenes/loch-golden-hour.scene.json",
+        "content/scenes/jalapao.scene.json"
+      ],
+      "count": 16
+    },
+    "content/scenes/assets": {
+      "files": [
+        "content/scenes/assets/havan_veio.asset.json",
+        "content/scenes/assets/sun.asset.json",
+        "content/scenes/assets/queenslander_house.asset.json",
+        "content/scenes/assets/.DS_Store",
+        "content/scenes/assets/sand_dunes.asset.json",
+        "content/scenes/assets/moon.asset.json",
+        "content/scenes/assets/fiat_havan_147.asset.json",
+        "content/scenes/assets/fiat_havan.asset.json",
+        "content/scenes/assets/palm_tree.asset.json",
+        "content/scenes/assets/deer.asset.json",
+        "content/scenes/assets/fiat_147.asset.json",
+        "content/scenes/assets/aurora.asset.json",
+        "content/scenes/assets/owl.asset.json",
+        "content/scenes/assets/swan.asset.json",
+        "content/scenes/assets/pine_tree_snowy.asset.json",
+        "content/scenes/assets/toy_train.asset.json",
+        "content/scenes/assets/my_car.asset.json",
+        "content/scenes/assets/castle_rock.asset.json",
+        "content/scenes/assets/gorse_bush.asset.json",
+        "content/scenes/assets/windmill.asset.json",
+        "content/scenes/assets/canal_water.asset.json",
+        "content/scenes/assets/oak_tree.asset.json",
+        "content/scenes/assets/README.md",
+        "content/scenes/assets/firefly_swarm.asset.json",
+        "content/scenes/assets/hills_hoist.asset.json",
+        "content/scenes/assets/ice_castle.asset.json",
+        "content/scenes/assets/manifest.json",
+        "content/scenes/assets/street_lamp.asset.json",
+        "content/scenes/assets/flower_row.asset.json",
+        "content/scenes/assets/havan_statue.asset.json",
+        "content/scenes/assets/glowing_mushroom.asset.json",
+        "content/scenes/assets/pup.asset.json",
+        "content/scenes/assets/princess.asset.json",
+        "content/scenes/assets/mushroom_patch.asset.json",
+        "content/scenes/assets/grass_patch.asset.json",
+        "content/scenes/assets/snowflakes.asset.json",
+        "content/scenes/assets/havan_moto.asset.json",
+        "content/scenes/assets/stroller.asset.json",
+        "content/scenes/assets/golden_butterfly.asset.json",
+        "content/scenes/assets/havan_truck.asset.json",
+        "content/scenes/assets/fiat.asset.json",
+        "content/scenes/assets/trampoline.asset.json",
+        "content/scenes/assets/fawn.asset.json",
+        "content/scenes/assets/snowman.asset.json",
+        "content/scenes/assets/owl_flying.asset.json",
+        "content/scenes/assets/bicycles.asset.json"
+      ],
+      "count": 46
+    },
+    "content/scenes/assets/svg": {
+      "files": [
+        "content/scenes/assets/svg/fiat_147.svg",
+        "content/scenes/assets/svg/.DS_Store",
+        "content/scenes/assets/svg/havan-carro.svg",
+        "content/scenes/assets/svg/havan-truck.svg",
+        "content/scenes/assets/svg/havan-veio.svg",
+        "content/scenes/assets/svg/havan-moto.svg",
+        "content/scenes/assets/svg/havan-building.svg",
+        "content/scenes/assets/svg/havan-statue.svg"
+      ],
+      "count": 8
+    },
+    "content/examples/svg-assets": {
+      "files": [
+        "content/examples/svg-assets/aurora-flow.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_d09347.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_690d9e.svg",
+        "content/examples/svg-assets/topo-ridges.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_df4cab.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_f21986.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_750fbf.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_5f2ef2.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_be9044.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_e74818.svg",
+        "content/examples/svg-assets/city-harbor.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_55e171.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_ba81c3.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_783d80.svg",
+        "content/examples/svg-assets/deepseek_svg_20260715_be4dc2.svg"
+      ],
+      "count": 15
+    }
+  },
+  "symbols_index": {},
+  "dependency_graph": {
+    "content/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/ice-kingdom.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/enchanted-forest.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/cozy-edinburgh-evening.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/snowy-playground-train.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/havan_statue.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/custom_havan_story.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/custom_havan_fiat-2.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/custom_havan_update.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/happy-pups-backyard.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/welcome.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/custom_havan_fiat.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/palmas-tocantins.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/manifest.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/loch-golden-hour.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/jalapao.scene.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/havan_veio.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/sun.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/queenslander_house.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/sand_dunes.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/moon.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/fiat_havan_147.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/fiat_havan.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/palm_tree.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/deer.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/fiat_147.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/aurora.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/owl.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/swan.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/pine_tree_snowy.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/toy_train.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/my_car.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/castle_rock.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/gorse_bush.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/windmill.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/canal_water.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/oak_tree.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/README.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/firefly_swarm.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/hills_hoist.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/ice_castle.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/manifest.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/street_lamp.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/flower_row.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/havan_statue.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/glowing_mushroom.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/pup.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/princess.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/mushroom_patch.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/grass_patch.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/snowflakes.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/havan_moto.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/stroller.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/golden_butterfly.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/havan_truck.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/fiat.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/trampoline.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/fawn.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/snowman.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/owl_flying.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/bicycles.asset.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/svg/fiat_147.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/svg/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/svg/havan-carro.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/svg/havan-truck.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/svg/havan-veio.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/svg/havan-moto.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/svg/havan-building.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/scenes/assets/svg/havan-statue.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/aurora-flow.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_d09347.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_690d9e.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/topo-ridges.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_df4cab.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_f21986.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_750fbf.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_5f2ef2.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_be9044.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_e74818.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/city-harbor.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_55e171.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_ba81c3.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_783d80.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/examples/svg-assets/deepseek_svg_20260715_be4dc2.svg": {
+      "imports": [],
+      "imported_by": []
+    }
+  },
+  "js_cross_module_graph": {}
+}

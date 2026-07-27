@@ -97,7 +97,7 @@ function downloadCurrentPreview() {
 
 // Export the currently-previewed MARKDOWN file to a branded PDF using the
 // browser's print pipeline. Mirrors the panel's markdown look (amber/blue
-// OliviaLegal accents) for visual consistency with convert_artifacts.py branding.
+// Olivia accents) for visual consistency with convert_artifacts.py branding.
 function downloadPreviewAsPdf() {
   const s = window._previewState;
   if (!s || !s.url) return;
@@ -180,7 +180,7 @@ function downloadPreviewAsPdf() {
     <span class="brand-meta">${escapeHtml(displayName)}<br>${escapeHtml(stamp)}</span>
   </div>
   <div class="markdown-body">${bodyHtml}</div>
-  <div class="brand-footer">Generated from OliviaLegal workspace preview · ${escapeHtml(new Date().toISOString().slice(0,10))}</div>
+  <div class="brand-footer">Generated from Olivia workspace preview · ${escapeHtml(new Date().toISOString().slice(0,10))}</div>
 </body>
 </html>`;
 

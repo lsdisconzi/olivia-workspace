@@ -22,7 +22,7 @@ window.THREE = THREE;
 // So for the /kout/ mount we must POST to /api/kout/api/bridge/upload, NOT
 // /kout/api/bridge/upload (which the static-rewrite location turns into a 405).
 const _S3_UPLOAD_URL = (() => {
-  const runtime = (window.OliviaLegal && typeof window.OliviaLegal === 'object')
+  const runtime = (window.Olivia && typeof window.Olivia === 'object')
     ? window.OliviaLegal
     : ((window.LA8159 && typeof window.LA8159 === 'object') ? window.LA8159 : {});
   if (runtime && runtime.bridge) {

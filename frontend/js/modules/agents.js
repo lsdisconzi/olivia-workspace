@@ -2622,7 +2622,7 @@ function _buildMappedFunctionsContextBrief() {
     ? window.OliviaLegal_FUNCTIONS
     : null;
   const baseLines = [
-    '## OliviaLegal API Mapping Context',
+    '## Olivia API Mapping Context',
     '- Fonte principal: agents/functions/agent_functions',
     '- Sempre priorize funções do catálogo mapeado antes de propor chamadas novas.',
     '- Use matchEndpoint/search/loadFunction para casar intenção com função existente.'
@@ -2640,7 +2640,7 @@ function _buildMappedFunctionsContextBrief() {
   const source = (registry.sourceMeta && registry.sourceMeta.source) ? registry.sourceMeta.source : 'catalog';
 
   return [
-    '## OliviaLegal API Mapping Context',
+    '## Olivia API Mapping Context',
     '- Fonte principal: agents/functions/agent_functions',
     '- Origem ativa carregada: ' + source,
     '- Funções mapeadas: ' + total + ' (agent-ready: ' + ready + ')',
@@ -2655,7 +2655,7 @@ function _composeAgentSystemPrompt(basePrompt) {
   const raw = String(basePrompt || '').trim();
   const mappingContext = _buildMappedFunctionsContextBrief();
   if (!mappingContext) return raw || null;
-  if (raw && raw.indexOf('## OliviaLegal API Mapping Context') >= 0) return raw;
+  if (raw && raw.indexOf('## Olivia API Mapping Context') >= 0) return raw;
   if (!raw) return mappingContext;
   return raw + '\n\n' + mappingContext;
 }

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OliviaLegal · Escolha o modo</title>
+  <title>Olivia · Escolha o modo</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet">
@@ -378,21 +378,21 @@
     </div>
 
     <div class="grid">
-      <a class="mode-card hl-verde" href="/OliviaLegal/olivia">
+      <a class="mode-card hl-verde" href="/olivia/olivia">
         <div class="mode-icon verde"><i class="fas fa-table-columns"></i></div>
         <div class="mode-title">Workspace</div>
         <div class="mode-desc">Experiência completa: orquestração de agentes, projetos, memória, arquivos e ferramentas.
         </div>
       </a>
 
-      <a class="mode-card hl-azul" href="/OliviaLegal/residente">
+      <a class="mode-card hl-azul" href="/olivia/residente">
         <div class="mode-icon azul"><i class="fas fa-mobile-screen-button"></i></div>
         <div class="mode-title">Mobile Remote</div>
         <div class="mode-desc">Controles rápidos e operação remota, ideal para uso leve em tela pequena ou movimento.
         </div>
       </a>
 
-      <a class="mode-card hl-terra" href="/OliviaLegal/agent">
+      <a class="mode-card hl-terra" href="/olivia/agent">
         <div class="mode-icon terra"><i class="fas fa-comments"></i></div>
         <div class="mode-title">Agent Mobile</div>
         <div class="mode-desc">Fluxo de conversa dedicado com interface otimizada para leitura e interação em
@@ -412,10 +412,10 @@
     </section>
 
     <div class="foot">
-      <a class="foot-link" href="/OliviaLegal/olivia">
+      <a class="foot-link" href="/olivia/olivia">
         <i class="fas fa-arrow-left"></i> Página inicial
       </a>
-      <a class="foot-link" href="/OliviaLegal/logout">
+      <a class="foot-link" href="/olivia/logout">
         <i class="fas fa-sign-out-alt"></i> Sair
       </a>
       __ADMIN_LINK__
@@ -427,7 +427,7 @@
       const list = document.getElementById('notifList');
       const count = document.getElementById('notifCount');
       try {
-        const res = await fetch('/OliviaLegal/admin/notifications?limit=20');
+        const res = await fetch('/olivia/admin/notifications?limit=20');
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'falha ao carregar');
         const items = Array.isArray(data.notifications) ? data.notifications : [];
@@ -451,7 +451,7 @@
           btn.addEventListener('click', async () => {
             const id = btn.getAttribute('data-id');
             if (!id) return;
-            await fetch(`/OliviaLegal/admin/notifications/${encodeURIComponent(id)}/read`, { method: 'POST' });
+            await fetch(`/olivia/admin/notifications/${encodeURIComponent(id)}/read`, { method: 'POST' });
             loadNotifications();
           });
         });
@@ -462,13 +462,13 @@
     }
 
     document.getElementById('markAllNotifBtn').addEventListener('click', async () => {
-      await fetch('/OliviaLegal/admin/notifications/read-all', { method: 'POST' });
+      await fetch('/olivia/admin/notifications/read-all', { method: 'POST' });
       loadNotifications();
     });
 
     loadNotifications();
   </script>
-  <script src="/OliviaLegal/auth-activity/tracker.js"></script>
+  <script src="/olivia/auth-activity/tracker.js"></script>
 </body>
 
 </html>

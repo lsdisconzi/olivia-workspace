@@ -314,13 +314,13 @@
 
   /* ── Public API ──────────────────────────────────────────────────── */
   var existingLA8159 = (window.LA8159 && typeof window.LA8159 === 'object') ? window.LA8159 : {};
-  var existingOliviaLegal = (window.OliviaLegal && typeof window.OliviaLegal === 'object') ? window.OliviaLegal : {};
+  var existingOlivia = (window.Olivia && typeof window.Olivia === 'object') ? window.Olivia : {};
   var runtimeNamespace = Object.assign({}, existingLA8159, existingOliviaLegal, cfg, {
     log:    _log,
     _orig:  _origFetch,
   });
   window.LA8159 = runtimeNamespace;
-  window.OliviaLegal = runtimeNamespace;
+  window.Olivia = runtimeNamespace;
 
   /* ── Boot banner ─────────────────────────────────────────────────── */
   if (cfg.enabled) {

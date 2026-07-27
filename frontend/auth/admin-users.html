@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OliviaLegal · Admin Users</title>
+  <title>Olivia · Admin Users</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
@@ -366,9 +366,9 @@
     </div>
 
     <div class="actions">
-      <a class="btn" href="/OliviaLegal/mode-select"><i class="fa-solid fa-arrow-left"></i> Mode Select</a>
-      <a class="btn" href="/OliviaLegal/admin/activity"><i class="fa-solid fa-chart-line"></i> Activity</a>
-      <a class="btn" href="/OliviaLegal/admin/pages"><i class="fa-solid fa-file-lines"></i> Páginas de teste</a>
+      <a class="btn" href="/olivia/mode-select"><i class="fa-solid fa-arrow-left"></i> Mode Select</a>
+      <a class="btn" href="/olivia/admin/activity"><i class="fa-solid fa-chart-line"></i> Activity</a>
+      <a class="btn" href="/olivia/admin/pages"><i class="fa-solid fa-file-lines"></i> Páginas de teste</a>
       <button class="btn" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Atualizar lista</button>
     </div>
 
@@ -378,7 +378,8 @@
         <div class="grid">
           <div class="field">
             <label for="userId">Email (Google)</label>
-            <input id="userId" name="user_id" type="email" placeholder="usuario@gmail.com" required autocomplete="email">
+            <input id="userId" name="user_id" type="email" placeholder="usuario@gmail.com" required
+              autocomplete="email">
           </div>
           <div class="field">
             <label for="displayName">Nome de exibição</label>
@@ -401,14 +402,24 @@
             <label for="assistantWriteScope">Escopo de escrita</label>
             <input id="assistantWriteScope" name="assistant_write_scope" placeholder="uploads/user" autocomplete="off">
           </div>
+          <div class="field">
+            <label for="addUserContextScope">Context Injection Scope</label>
+            <select id="addUserContextScope" name="context_injection_scope" autocomplete="off">
+              <option value="project_only" selected>Project Only</option>
+              <option value="workspace_and_project">Workspace + Project</option>
+              <option value="custom">Custom Selection</option>
+            </select>
+          </div>
           <div class="field" style="grid-column:1/-1;">
             <label>Seções visíveis no tronco (deixe em branco = todas)</label>
-            <div id="addSectionsBox" class="section-check-grid"><span style="color:var(--gray)">Carregando seções…</span></div>
+            <div id="addSectionsBox" class="section-check-grid"><span style="color:var(--gray)">Carregando
+                seções…</span></div>
           </div>
         </div>
         <div style="margin-top:8px;color:var(--gray-hi);font-size:12px;">
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-            <input id="forceChangeOnCreate" name="force_change_on_create" type="checkbox" checked style="width:auto;"> Forçar troca de senha no
+            <input id="forceChangeOnCreate" name="force_change_on_create" type="checkbox" checked style="width:auto;">
+            Forçar troca de senha no
             primeiro login
           </label>
         </div>
@@ -447,7 +458,8 @@
     <div class="panel">
       <h2><i class="fa-solid fa-microchip"></i> Provedores / Modelos</h2>
       <p style="color:var(--gray);font-size:12px;margin-bottom:12px;">
-        Adicione modelos do <strong>OpenRouter</strong> ou <strong>Fireworks</strong>. Modelos existentes podem ser ocultados, editados ou
+        Adicione modelos do <strong>OpenRouter</strong> ou <strong>Fireworks</strong>. Modelos existentes podem ser
+        ocultados, editados ou
         removidos (remoção de modelos nativos é restável).
       </p>
 
@@ -465,11 +477,13 @@
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
           <input id="orSearchInput" name="or_search" class="mini-input" style="flex:1;min-width:200px;"
-            placeholder="Filtrar por nome ou id (ex: claude, sonar, hy3)" aria-label="Filtrar modelos do OpenRouter" autocomplete="off">
+            placeholder="Filtrar por nome ou id (ex: claude, sonar, hy3)" aria-label="Filtrar modelos do OpenRouter"
+            autocomplete="off">
           <span id="orCount" style="color:var(--gray-hi);font-size:12px;white-space:nowrap;"></span>
         </div>
         <select id="orModelSelect" name="or_model" class="mini-select" size="8"
-          style="width:100%;height:auto;max-height:240px;background:var(--bg-card);" aria-label="Selecionar modelo do OpenRouter" autocomplete="off">
+          style="width:100%;height:auto;max-height:240px;background:var(--bg-card);"
+          aria-label="Selecionar modelo do OpenRouter" autocomplete="off">
           <option disabled>Carregue os modelos primeiro…</option>
         </select>
         <div id="orDetail" style="margin-top:10px;font-size:13px;color:var(--gray-hi);"></div>
@@ -488,12 +502,16 @@
             Pagos</button>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
-          <label for="fwSearchInput" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Filtrar modelos do Fireworks</label>
+          <label for="fwSearchInput"
+            style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Filtrar modelos do
+            Fireworks</label>
           <input id="fwSearchInput" name="fw_search" class="mini-input" style="flex:1;min-width:200px;"
             placeholder="Filtrar por nome ou id (ex: deepseek, nemotron)" autocomplete="off">
           <span id="fwCount" style="color:var(--gray-hi);font-size:12px;white-space:nowrap;"></span>
         </div>
-        <label for="fwModelSelect" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Selecionar modelo do Fireworks</label>
+        <label for="fwModelSelect"
+          style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Selecionar modelo do
+          Fireworks</label>
         <select id="fwModelSelect" name="fw_model" class="mini-select" size="8"
           style="width:100%;height:auto;max-height:240px;background:var(--bg-card);" autocomplete="off">
           <option disabled>Carregue os modelos primeiro…</option>
@@ -506,7 +524,8 @@
         <div class="grid">
           <div class="field">
             <label for="modelId">ID do modelo (OpenRouter)</label>
-            <input id="modelId" name="id" type="text" placeholder="anthropic/claude-3.5-sonnet" required autocomplete="off">
+            <input id="modelId" name="id" type="text" placeholder="anthropic/claude-3.5-sonnet" required
+              autocomplete="off">
           </div>
           <div class="field">
             <label for="modelName">Nome de exibição</label>
@@ -522,11 +541,13 @@
           </div>
           <div class="field">
             <label for="modelInCost">Custo entrada / 1M</label>
-            <input id="modelInCost" name="input_cost_per_1m" type="number" step="any" placeholder="3.0" autocomplete="off">
+            <input id="modelInCost" name="input_cost_per_1m" type="number" step="any" placeholder="3.0"
+              autocomplete="off">
           </div>
           <div class="field">
             <label for="modelOutCost">Custo saída / 1M</label>
-            <input id="modelOutCost" name="output_cost_per_1m" type="number" step="any" placeholder="15.0" autocomplete="off">
+            <input id="modelOutCost" name="output_cost_per_1m" type="number" step="any" placeholder="15.0"
+              autocomplete="off">
           </div>
           <div class="field" style="grid-column:1/-1;">
             <label for="modelBestFor">Melhor para</label>
@@ -600,7 +621,9 @@
             </tr>
           </thead>
           <tbody id="ollamaServersBody">
-            <tr><td colspan="5" style="color:var(--gray)">Carregando...</td></tr>
+            <tr>
+              <td colspan="5" style="color:var(--gray)">Carregando...</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -618,13 +641,14 @@
               <th>Senha</th>
               <th>Admin</th>
               <th>Assistente</th>
+              <th>Contexto</th>
               <th>Seções</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody id="usersTableBody">
             <tr>
-              <td colspan="7" style="color:var(--gray)">Carregando...</td>
+              <td colspan="8" style="color:var(--gray)">Carregando...</td>
             </tr>
           </tbody>
         </table>
@@ -641,12 +665,25 @@
       { value: 'read_write', label: 'Ler + editar + criar' },
       { value: 'write_new_only', label: 'Somente criar novos' },
     ];
+    const CONTEXT_SCOPE_OPTIONS = [
+      { value: 'workspace_and_project', label: 'Workspace + Project' },
+      { value: 'project_only', label: 'Project Only' },
+      { value: 'custom', label: 'Custom Selection' },
+    ];
     function setNotice(el, msg, ok) { el.textContent = msg; el.className = 'notice ' + (ok ? 'ok' : 'err'); el.style.display = 'block' }
     function clearNotice(el) { el.textContent = ''; el.className = 'notice'; el.style.display = 'none' }
     function assistantModeLabel(mode) { const f = ASSISTANT_MODE_OPTIONS.find(i => i.value === mode); return f ? f.label : mode }
     function buildAssistantModeSelect(mode, id) {
       const opts = ASSISTANT_MODE_OPTIONS.map(i => `<option value="${i.value}" ${i.value === mode ? 'selected' : ''}>${i.label}</option>`).join('');
       return `<select class="mini-select" id="assistant_access_mode_${id}" data-field="assistant_access_mode" data-user-id="${id}" name="assistant_access_mode_${id}" aria-label="Acesso do assistente para ${id}" autocomplete="off">${opts}</select>`;
+    }
+    function buildContextScopeSelect(scope, id) {
+      const opts = CONTEXT_SCOPE_OPTIONS.map(i => `<option value="${i.value}" ${i.value === scope ? 'selected' : ''}>${i.label}</option>`).join('');
+      return `<select class="mini-select" id="context_scope_${id}" data-field="context_injection_scope" data-user-id="${id}" name="context_scope_${id}" aria-label="Context injection scope for ${id}" autocomplete="off">${opts}</select>`;
+    }
+    function contextScopeLabel(scope) {
+      const f = CONTEXT_SCOPE_OPTIONS.find(i => i.value === scope);
+      return f ? f.label : (scope || '—');
     }
     function buildSectionsLabel(sections) {
       if (!sections || !sections.length) return '<span style="color:var(--muted)">todas (padrão)</span>';
@@ -678,16 +715,16 @@
       const body = document.getElementById('usersTableBody');
       const notice = document.getElementById('tableNotice');
       clearNotice(notice);
-      body.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">Carregando...</td></tr>';
+      body.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">Carregando...</td></tr>';
       try {
-        const res = await fetch('/OliviaLegal/admin/users');
+        const res = await fetch('/olivia/admin/users');
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Falha ao carregar usuários.');
         const users = Array.isArray(data.users) ? data.users : [];
         const admins = new Set(Array.isArray(data.admins) ? data.admins : []);
         if (Array.isArray(data.available_sections)) window.__SECTION_REGISTRY = data.available_sections;
         renderSectionsCell();
-        if (!users.length) { body.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">Nenhum usuário cadastrado.</td></tr>'; return; }
+        if (!users.length) { body.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">Nenhum usuário cadastrado.</td></tr>'; return; }
 
         body.innerHTML = '';
         users.forEach(user => {
@@ -696,7 +733,8 @@
           window.__userSections = window.__userSections || {};
           window.__userSections[user.id] = user.sections || [];
           const mode = String(user.assistant_access_mode || 'read_write');
-          const scope = String(user.assistant_write_scope || '');
+          const writeScope = String(user.assistant_write_scope || '');
+          const ctxScope = String(user.context_injection_scope || '');
           const tr = document.createElement('tr');
           tr.innerHTML = `
         <td><code>${user.id}</code></td>
@@ -706,9 +744,15 @@
         <td class="policy-cell">
           <div class="policy-grid">
             ${buildAssistantModeSelect(mode, user.id)}
-            <input class="mini-input" id="write_scope_${user.id}" data-field="assistant_write_scope" data-user-id="${user.id}" name="write_scope_${user.id}" value="${scope}" placeholder="uploads/${user.id}" aria-label="Escopo de escrita para ${user.id}" autocomplete="off">
+            <input class="mini-input" id="write_scope_${user.id}" data-field="assistant_write_scope" data-user-id="${user.id}" name="write_scope_${user.id}" value="${writeScope}" placeholder="uploads/${user.id}" aria-label="Escopo de escrita para ${user.id}" autocomplete="off">
           </div>
           <div style="font-size:11px;color:var(--muted);margin-top:5px;">Atual: ${assistantModeLabel(mode)}</div>
+        </td>
+        <td>
+          <div class="policy-grid" style="grid-template-columns:1fr">
+            ${buildContextScopeSelect(ctxScope, user.id)}
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:5px;">Atual: ${contextScopeLabel(ctxScope)}</div>
         </td>
         <td class="sections-cell" data-field="sections" data-user-id="${user.id}">
           ${buildSectionsLabel(user.sections)}
@@ -738,12 +782,18 @@
             if (action === 'save-policy') {
               const modeEl = body.querySelector(`select[data-user-id="${id}"][data-field="assistant_access_mode"]`);
               const scopeEl = body.querySelector(`input[data-user-id="${id}"][data-field="assistant_write_scope"]`);
+              const ctxScopeEl = body.querySelector(`select[data-user-id="${id}"][data-field="context_injection_scope"]`);
               btn.disabled = true;
               try {
-                const r = await fetch(`/OliviaLegal/admin/users/${encodeURIComponent(id)}/assistant-permissions`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ assistant_access_mode: String(modeEl.value || ''), assistant_write_scope: String(scopeEl.value || ''), sections: collectSections('editSectionsBox') }) });
+                const r = await fetch(`/olivia/admin/users/${encodeURIComponent(id)}/assistant-permissions`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ assistant_access_mode: String(modeEl.value || ''), assistant_write_scope: String(scopeEl.value || ''), sections: collectSections('editSectionsBox') }) });
                 const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Falha ao salvar política');
-                setNotice(notice, 'Política atualizada para ' + id, true); await fetchUsers();
-              } catch (err) { setNotice(notice, err.message || 'Erro ao salvar política', false); btn.disabled = false; }
+                // Also save context injection scope if changed
+                if (ctxScopeEl) {
+                  const ctxRes = await fetch(`/olivia/admin/users/${encodeURIComponent(id)}/context-scope`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ context_injection_scope: String(ctxScopeEl.value || '') }) });
+                  if (!ctxRes.ok) { const ctxD = await ctxRes.json(); throw new Error(ctxD.error || 'Falha ao salvar contexto'); }
+                }
+                setNotice(notice, 'Política e contexto atualizados para ' + id, true); await fetchUsers();
+              } catch (err) { setNotice(notice, err.message || 'Erro ao salvar', false); btn.disabled = false; }
               return;
             }
             if (action === 'reset') {
@@ -751,7 +801,7 @@
               if (pwd.length < 8) { setNotice(notice, 'Senha muito curta.', false); return; }
               btn.disabled = true;
               try {
-                const r = await fetch(`/OliviaLegal/admin/users/${encodeURIComponent(id)}/reset-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ new_password: pwd, force_change: true }) });
+                const r = await fetch(`/olivia/admin/users/${encodeURIComponent(id)}/reset-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ new_password: pwd, force_change: true }) });
                 const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Falha ao resetar senha');
                 setNotice(notice, 'Senha resetada para ' + id, true); await fetchUsers();
               } catch (err) { setNotice(notice, err.message || 'Erro ao resetar senha', false); btn.disabled = false; }
@@ -761,7 +811,7 @@
               if (!confirm('Remover usuário ' + id + '?')) return;
               btn.disabled = true;
               try {
-                const r = await fetch(`/OliviaLegal/admin/users/${encodeURIComponent(id)}`, { method: 'DELETE' });
+                const r = await fetch(`/olivia/admin/users/${encodeURIComponent(id)}`, { method: 'DELETE' });
                 const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Falha ao remover usuário');
                 setNotice(notice, 'Usuário removido: ' + id, true); await fetchUsers();
               } catch (err) { setNotice(notice, err.message || 'Erro ao remover usuário', false); btn.disabled = false; }
@@ -769,7 +819,7 @@
           });
         });
       } catch (err) {
-        body.innerHTML = '<tr><td colspan="7" style="color:#e09090">Erro ao carregar lista.</td></tr>';
+        body.innerHTML = '<tr><td colspan="8" style="color:#e09090">Erro ao carregar lista.</td></tr>';
         setNotice(notice, err.message || 'Erro ao carregar usuários', false);
       }
     }
@@ -787,12 +837,13 @@
         force_change: document.getElementById('forceChangeOnCreate').checked,
         assistant_access_mode: String(fd.get('assistant_access_mode') || 'read_write').trim(),
         assistant_write_scope: String(fd.get('assistant_write_scope') || '').trim(),
+        context_injection_scope: String(fd.get('context_injection_scope') || 'project_only').trim(),
         sections: collectSections('addSectionsBox'),
       };
       if (!payload.user_id || !payload.display_name) { setNotice(notice, 'Preencha email e nome.', false); return; }
       if (!payload.initial_password || payload.initial_password.length < 8) { setNotice(notice, 'Senha inicial deve ter no mínimo 8 caracteres.', false); return; }
       try {
-        const r = await fetch('/OliviaLegal/admin/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const r = await fetch('/olivia/admin/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Falha ao adicionar usuário');
         form.reset(); setNotice(notice, 'Usuário criado com sucesso.', true); await fetchUsers();
       } catch (err) { setNotice(notice, err.message || 'Erro ao adicionar usuário', false); }
@@ -807,7 +858,7 @@
       const category = String(document.getElementById('notifCategory').value || 'info').trim();
       if (!title || !message) { setNotice(notice, 'Preencha titulo e mensagem.', false); return; }
       try {
-        const r = await fetch('/OliviaLegal/admin/notifications', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, message, category }) });
+        const r = await fetch('/olivia/admin/notifications', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, message, category }) });
         const d = await r.json();
         if (!r.ok) throw new Error(d.error || 'Falha ao publicar notificacao');
         document.getElementById('notificationForm').reset();
@@ -821,7 +872,7 @@
     document.getElementById('notificationForm').addEventListener('submit', publishNotification);
     document.getElementById('refreshBtn').addEventListener('click', () => { fetchUsers(); fetchModels(); });
     fetchUsers();
-      buildSectionsChecklist('addSectionsBox', []);
+    buildSectionsChecklist('addSectionsBox', []);
     fetchModels();
 
     // ── Provedores / Modelos ──────────────────────────────────────────────
@@ -829,9 +880,9 @@
       const body = document.getElementById('modelsTableBody');
       const notice = document.getElementById('modelsTableNotice');
       clearNotice(notice);
-      body.innerHTML = '<tr><td colspan="7" style="color:var(--muted)">Carregando...</td></tr>';
+      body.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">Carregando...</td></tr>';
       try {
-        const res = await fetch('/OliviaLegal/admin/models');
+        const res = await fetch('/olivia/admin/models');
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Falha ao carregar modelos.');
         const models = Array.isArray(data.models) ? data.models : [];
@@ -871,7 +922,7 @@
               const nameEl = body.querySelector(`input[data-id="${rawId}"][data-field="name"]`);
               btn.disabled = true;
               try {
-                const r = await fetch(`/OliviaLegal/admin/models/${encodeURIComponent(id)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: String(nameEl?.value || '').trim() }) });
+                const r = await fetch(`/olivia/admin/models/${encodeURIComponent(id)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: String(nameEl?.value || '').trim() }) });
                 const d = await r.json();
                 if (!r.ok) throw new Error(d.error || 'Falha ao salvar modelo');
                 setNotice(notice, 'Modelo atualizado: ' + id, true);
@@ -883,7 +934,7 @@
               const currentlyHidden = models.find(x => String(x.id) === id)?._hidden === true;
               btn.disabled = true;
               try {
-                const r = await fetch(`/OliviaLegal/admin/models/${encodeURIComponent(id)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hidden: !currentlyHidden }) });
+                const r = await fetch(`/olivia/admin/models/${encodeURIComponent(id)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hidden: !currentlyHidden }) });
                 const d = await r.json();
                 if (!r.ok) throw new Error(d.error || 'Falha ao alterar visibilidade');
                 setNotice(notice, (!currentlyHidden ? 'Oculto: ' : 'Visível: ') + id, true);
@@ -895,7 +946,7 @@
               if (!confirm('Remover modelo ' + id + '?')) return;
               btn.disabled = true;
               try {
-                const r = await fetch(`/OliviaLegal/admin/models/${encodeURIComponent(id)}`, { method: 'DELETE' });
+                const r = await fetch(`/olivia/admin/models/${encodeURIComponent(id)}`, { method: 'DELETE' });
                 const d = await r.json();
                 if (!r.ok) throw new Error(d.error || 'Falha ao remover');
                 setNotice(notice, (d.restorable ? 'Ocultado (restável): ' : 'Removido: ') + id, true);
@@ -906,7 +957,7 @@
             if (action === 'restore-model') {
               btn.disabled = true;
               try {
-                const r = await fetch(`/OliviaLegal/admin/models/${encodeURIComponent(id)}/restore`, { method: 'POST' });
+                const r = await fetch(`/olivia/admin/models/${encodeURIComponent(id)}/restore`, { method: 'POST' });
                 const d = await r.json();
                 if (!r.ok) throw new Error(d.error || 'Falha ao restaurar');
                 setNotice(notice, 'Restaurado: ' + id, true);
@@ -940,7 +991,7 @@
       };
       if (!payload.id || !payload.name) { setNotice(notice, 'Preencha ID e nome.', false); return; }
       try {
-        const r = await fetch('/OliviaLegal/admin/models', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const r = await fetch('/olivia/admin/models', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const d = await r.json();
         if (!r.ok) throw new Error(d.error || 'Falha ao adicionar modelo');
         form.reset();
@@ -1021,7 +1072,7 @@
       const btn = document.getElementById('orSearchBtn');
       btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Carregando…';
       try {
-        const res = await fetch('/OliviaLegal/openrouter/models');
+        const res = await fetch('/olivia/openrouter/models');
         const data = await res.json();
         OR_MODELS = Array.isArray(data.models) ? data.models : [];
         orRenderOptions();
@@ -1110,7 +1161,7 @@
       const btn = document.getElementById('fwSearchBtn');
       btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Carregando\u2026';
       try {
-        const res = await fetch('/OliviaLegal/fireworks/models');
+        const res = await fetch('/olivia/fireworks/models');
         const data = await res.json();
         FW_MODELS = Array.isArray(data.models) ? data.models : [];
         fwRenderOptions();
@@ -1150,7 +1201,7 @@
       clearNotice(notice);
       body.innerHTML = '<tr><td colspan="5" style="color:var(--gray)">Verificando conexões…</td></tr>';
       try {
-        const res = await fetch('/OliviaLegal/admin/ollama-servers');
+        const res = await fetch('/olivia/admin/ollama-servers');
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Erro ao carregar servidores');
         const servers = data.servers || [];
@@ -1182,7 +1233,7 @@
             if (!confirm('Remover servidor Ollama: ' + url + '?')) return;
             btn.disabled = true;
             try {
-              const r = await fetch('/OliviaLegal/admin/ollama-servers/' + encodeURIComponent(url), { method: 'DELETE' });
+              const r = await fetch('/olivia/admin/ollama-servers/' + encodeURIComponent(url), { method: 'DELETE' });
               const d = await r.json();
               if (!r.ok) throw new Error(d.error || 'Falha ao remover');
               setNotice(notice, 'Removido: ' + url, true);
@@ -1208,7 +1259,7 @@
       const btn = document.getElementById('ollamaAddBtn');
       btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Testando…';
       try {
-        const r = await fetch('/OliviaLegal/admin/ollama-servers', {
+        const r = await fetch('/olivia/admin/ollama-servers', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ url })
@@ -1235,7 +1286,7 @@
     fetchOllamaServers();
 
   </script>
-  <script src="/OliviaLegal/auth-activity/tracker.js"></script>
+  <script src="/olivia/auth-activity/tracker.js"></script>
 </body>
 
 </html>

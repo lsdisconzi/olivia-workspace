@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# start-all.sh — Start OliviaLegal (standalone)
+# start-all.sh — Start Olivia (standalone)
 # Usage:  ./start-all.sh [--port 3229] [--no-tail] [--watch-functions] [--watch-interval 20] [--skip-config-doctor] [--smoke]
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
@@ -210,7 +210,7 @@ if [[ $SERVER_READY -eq 0 ]]; then
   exit 1
 fi
 echo "┌────────────────────────────────────────────────────────┐"
-echo "│  OliviaLegal UI   →  http://localhost:$PORT/OliviaLegal/          │"
+echo "│  Olivia UI   →  http://localhost:$PORT/olivia/          │"
 echo "│  API root   →  http://localhost:$PORT/api             │"
 echo "│  PID        →  $SERVER_PID                               │"
 echo "│  Kill       →  kill $SERVER_PID                          │"
@@ -287,8 +287,8 @@ if [[ -f "$DESKTOP_DIR/package.json" ]]; then
     else
       # Resolve the freshly built executable for the current platform.
       if [[ "$(uname -s)" == "Darwin" ]]; then
-        APP_PATH="$(ls -d "$DESKTOP_DIR"/dist/mac*/"OliviaLegal Desktop.app" 2>/dev/null | head -1)"
-        [[ -n "$APP_PATH" ]] && ELECTRON_APP_BIN="$APP_PATH/Contents/MacOS/OliviaLegal Desktop"
+        APP_PATH="$(ls -d "$DESKTOP_DIR"/dist/mac*/"Olivia Desktop.app" 2>/dev/null | head -1)"
+        [[ -n "$APP_PATH" ]] && ELECTRON_APP_BIN="$APP_PATH/Contents/MacOS/Olivia Desktop"
       elif [[ "$(uname -s)" == "Linux" ]]; then
         APP_PATH="$(ls -d "$DESKTOP_DIR"/dist/linux-* 2>/dev/null | head -1)"
         [[ -n "$APP_PATH" ]] && ELECTRON_APP_BIN="$APP_PATH/olivia-legal-desktop"

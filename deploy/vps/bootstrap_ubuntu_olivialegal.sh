@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Bootstrap OliviaLegal on a fresh Ubuntu VPS.
+# Bootstrap Olivia on a fresh Ubuntu VPS.
 #
 # What this script does:
 # 1) Installs required Ubuntu packages
 # 2) Installs/updates Node.js 22.x (NodeSource)
-# 3) Clones or updates the OliviaLegal repository
+# 3) Clones or updates the Olivia repository
 # 4) Creates Python venv and installs requirements
 # 5) Installs prebuilt OpenClaude runtime (no bun required)
 # 6) Optionally installs/restarts a systemd service
@@ -12,7 +12,7 @@
 # Example:
 #   sudo ./deploy/vps/bootstrap_ubuntu_olivialegal.sh \
 #     --repo-url https://github.com/your-org/OliviaLegal.git \
-#     --app-dir /opt/OliviaLegal \
+#     --app-dir /opt/Olivia \
 #     --git-ref main \
 #     --port 3229 \
 #     --gateway-url http://127.0.0.1:8183
@@ -38,7 +38,7 @@ Options:
   --git-ref REF          Git branch/tag/commit to checkout (default: main)
   --service-name NAME    systemd service name (default: OliviaLegal)
   --service-user USER    systemd service user (default: root)
-  --port PORT            OliviaLegal port (default: 3229)
+  --port PORT            Olivia port (default: 3229)
   --gateway-url URL      VPS gateway URL (default: http://127.0.0.1:8183)
   --no-service           Skip systemd service installation/restart
   -h, --help             Show this help
@@ -203,7 +203,7 @@ if [[ "$INSTALL_SERVICE" -eq 1 ]]; then
   TMP_SERVICE_FILE="$(mktemp)"
   cat > "$TMP_SERVICE_FILE" <<EOF
 [Unit]
-Description=OliviaLegal Unified Agent Server
+Description=Olivia Unified Agent Server
 After=network.target
 
 [Service]
@@ -239,4 +239,4 @@ fi
 echo "Done."
 echo "App dir:  $APP_DIR"
 echo "Port:     $OliviaLegal_PORT"
-echo "UI URL:   http://<server-ip>:${OliviaLegal_PORT}/OliviaLegal/"
+echo "UI URL:   http://<server-ip>:${OliviaLegal_PORT}/olivia/"

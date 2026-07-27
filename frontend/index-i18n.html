@@ -34,7 +34,7 @@
   }
 }
 </script>
-  <!-- OliviaLegal API Bootstrap -->
+  <!-- Olivia API Bootstrap -->
   <!-- [studio-js-1] -->
   <!-- Dark mode toggle — defined early so onclick="koutDarkModeToggle()" always resolves -->
   <!-- [studio-js-2] -->
@@ -71,6 +71,7 @@
   <link href="css/drive.css" rel="stylesheet" />
   <!-- Mobile-specific meta & PWA hints (frontend-mobile) -->
   <meta content="#1c4532" name="theme-color" />
+  <meta content="yes" name="mobile-web-app-capable" />
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style" />
   <meta content="telephone=no" name="format-detection" />
@@ -96,13 +97,13 @@
 <body>
   <!-- NAV -->
   <nav>
-    <a class="nav-logo" href="/OliviaLegal/">Olivia <span class="nav-logo-sub" id="navWorkspaceLabel"
+    <a class="nav-logo" href="/olivia/">Olivia <span class="nav-logo-sub" id="navWorkspaceLabel"
         onclick="resetToWelcome(event)"><span data-i18n="navWorkspace">Workspace</span></span></a>
     <div class="nav-links-desktop">
-      <a class="nav-link" href="/OliviaLegal/"><span data-i18n="navHome">Home</span></a>
-      <a class="nav-link" href="/OliviaLegal/arquitetura"><span data-i18n="sidebarArchitecture">Architecture</span></a>
-      <a class="nav-link" href="/OliviaLegal/agent"><span data-i18n="navAgent">Mobile Agent</span></a>
-      <a class="nav-link active" href="/OliviaLegal/olivia.html"><span data-i18n="navWorkspace">Workspace</span></a>
+      <a class="nav-link" href="/olivia/"><span data-i18n="navHome">Home</span></a>
+      <a class="nav-link" href="/olivia/arquitetura"><span data-i18n="sidebarArchitecture">Architecture</span></a>
+      <a class="nav-link" href="/olivia/agent"><span data-i18n="navAgent">Mobile Agent</span></a>
+      <a class="nav-link active" href="/olivia/olivia.html"><span data-i18n="navWorkspace">Workspace</span></a>
       <div class="vw-lang-flags" style="margin-left:14px;">
       </div>
       <div class="desktop-mode-toggle agent" id="desktopModeToggle" title="Single mode: Agent">
@@ -114,9 +115,9 @@
       <span class="dot"></span><span class="dot"></span><span class="dot"></span>
     </button>
     <div class="mobile-dropdown" id="mobileDropdown">
-      <a href="/OliviaLegal/"><i class="fas fa-home"></i>Home</a>
-      <a href="/OliviaLegal/arquitetura"><i class="fas fa-sitemap"></i>Architecture</a>
-      <a href="/OliviaLegal/agent"><i class="fas fa-comments"></i>Mobile Agent</a>
+      <a href="/olivia/"><i class="fas fa-home"></i>Home</a>
+      <a href="/olivia/arquitetura"><i class="fas fa-sitemap"></i>Architecture</a>
+      <a href="/olivia/agent"><i class="fas fa-comments"></i>Mobile Agent</a>
       <div class="divider"></div>
       <div class="mode-toggle-row" style="justify-content:flex-start;gap:8px;cursor:default">
         <i class="fas fa-robot mode-toggle-icon active" id="modeIcon"></i>
@@ -304,10 +305,13 @@
                       configuration for active provider</span></div>
                 </div>
                 <!-- API Key Manager -->
-                <div id="apiKeyManagerSection" style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
+                <div id="apiKeyManagerSection"
+                  style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
                   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                    <span style="font-size:11px;font-weight:600;color:var(--text)"><i class="fas fa-key"></i> API Keys</span>
-                    <button class="tbtn" onclick="toggleApiKeyManager()" id="apiKeyManagerToggle" style="padding:1px 8px;font-size:10px">
+                    <span style="font-size:11px;font-weight:600;color:var(--text)"><i class="fas fa-key"></i> API
+                      Keys</span>
+                    <button class="tbtn" onclick="toggleApiKeyManager()" id="apiKeyManagerToggle"
+                      style="padding:1px 8px;font-size:10px">
                       <i class="fas fa-chevron-down"></i> Gerenciar
                     </button>
                   </div>
@@ -501,7 +505,7 @@
             <div style="padding:14px 12px">
               <div
                 style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
-                <i class="fas fa-triangle-exclamation" style="color:var(--amber)"></i> OliviaLegal Violations
+                <i class="fas fa-triangle-exclamation" style="color:var(--amber)"></i> Olivia Violations
               </div>
               <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px"><span
                   data-i18n="violationsDesc">71 validated violations (BR/CL/INT) with legal basis, actors, and incident
@@ -517,7 +521,7 @@
             <div style="padding:14px 12px">
               <div
                 style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
-                <i class="fas fa-book-bookmark" style="color:var(--amber)"></i> OliviaLegal Law Library
+                <i class="fas fa-book-bookmark" style="color:var(--amber)"></i> Olivia Law Library
               </div>
               <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px"><span
                   data-i18n="lawLibDesc">59 legal sources (codes, laws, regulations, treaties) with verbatim text and
@@ -533,11 +537,11 @@
             <div style="padding:14px 12px">
               <div
                 style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
-                <i class="fas fa-brain" style="color:var(--amber)"></i> OliviaLegal Memory
+                <i class="fas fa-brain" style="color:var(--amber)"></i> Olivia Memory
               </div>
               <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px"><span
                   data-i18n="explore_query_and_configure_all_olivialegal_memory">Explore, query, and configure all
-                  OliviaLegal memory. Vector, semantic, graph, short-term, and
+                  Olivia memory. Vector, semantic, graph, short-term, and
                   long-term.</span></p>
               <button class="btn" onclick="memoryShowView()" style="width:100%;justify-content:center">
                 <i class="fas fa-brain"></i> Open Memory Space
@@ -564,7 +568,8 @@
                 style="margin-top:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px">
                 <div
                   style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                  <span data-i18n="storage">Storage</span></div>
+                  <span data-i18n="storage">Storage</span>
+                </div>
                 <div style="font-size:11px;color:var(--gray-hi);line-height:1.8">
                   <div><i class="fas fa-database" style="width:14px;color:var(--blue)"></i> Qdrant: <span
                       id="mvSidebarQdrantStatus" style="color:var(--gray)"><span
@@ -580,7 +585,8 @@
               <div style="margin-top:10px">
                 <div
                   style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                  <span data-i18n="quick_search">Quick Search</span></div>
+                  <span data-i18n="quick_search">Quick Search</span>
+                </div>
                 <div style="display:flex;gap:4px">
                   <input class="memory-search-input" id="mvSidebarQuickSearch" name="mvSidebarQuickSearch"
                     onkeydown="if(event.key==='Enter')mvQuickSearch()" placeholder="Search memory..."
@@ -621,6 +627,64 @@
           <div class="sidebar-section" id="tab-files">
             <div style="padding:12px 14px">
               <div class="config-section-title"><i class="fas fa-folder-tree"></i> Session Files</div>
+              <!-- Project Planning Overview (placed at top for quick status) -->
+              <div id="projectPlanningOverview" style="margin-bottom:16px">
+                <div
+                  style="font-size:11px;font-weight:600;color:var(--purple);margin-bottom:8px;display:flex;align-items:center;gap:6px">
+                  <i class="fas fa-flag-checkered"></i> Project Planning
+                  <span id="planningRefreshBtn"
+                    style="cursor:pointer;margin-left:4px;font-size:10px;color:var(--gray);opacity:.6"
+                    onclick="loadProjectPlanningOverview(true)" title="Refresh planning overview">
+                    <i class="fas fa-sync-alt"></i>
+                  </span>
+                </div>
+                <div id="planningOverviewContent" style="display:flex;flex-direction:column;gap:4px">
+                  <p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic"><span
+                      data-i18n="loading_planning_overview">Loading project overview...</span></p>
+                </div>
+                <!-- CONTEXT CONFIG PANEL (Context Injection) -->
+                <div class="context-config-section" style="margin-top:12px">
+                  <div class="context-config-header" onclick="toggleContextConfigPanel()"
+                    style="cursor:pointer;padding:8px 12px;background:var(--bg2);border-radius:6px;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600;color:var(--purple)">
+                    <span><i class="fas fa-sliders"></i> Context Injection</span>
+                    <i class="fas fa-chevron-down" id="contextConfigChevron"></i>
+                  </div>
+                  <div class="context-config-body" id="contextConfigBody" style="display:none">
+                    <div id="contextConfigLoading"
+                      style="text-align:center;padding:12px;color:var(--gray);font-size:11px">
+                      <i class="fas fa-spinner fa-spin"></i> Loading context config...
+                    </div>
+                    <div id="contextConfigContent" style="display:none">
+                      <label class="context-config-label" for="contextScopeSelect">Injection Scope</label>
+                      <select class="context-select" id="contextScopeSelect" onchange="onContextScopeChange()">
+                        <option value="workspace_and_project">Workspace + Project</option>
+                        <option value="project_only">Project Only</option>
+                        <option value="custom">Custom Selection</option>
+                      </select>
+                      <div id="contextStatusInfo" class="context-status-info" style="display:none">
+                        <i class="fas fa-circle-info"></i>
+                        <span id="contextStatusText"></span>
+                      </div>
+                      <input type="text" id="contextSearchInput" class="context-search-bar"
+                        placeholder="Filter files..." onkeyup="onContextSearch()" />
+
+                      <div id="contextFilesContainer"></div>
+                      <div class="context-actions">
+                        <button class="btn btn-xs" onclick="previewContextContent()" style="flex:1"
+                          id="contextPreviewBtn">
+                          <i class="fas fa-eye"></i> Preview
+                        </button>
+                        <button class="btn btn-xs btn-primary" onclick="saveContextConfig()" style="flex:1"
+                          id="contextSaveBtn">
+                          <i class="fas fa-floppy-disk"></i> Save
+                        </button>
+                      </div>
+                      <div class="context-saved-notice" id="contextSavedNotice">✓ Settings saved</div>
+                      <div id="contextPreviewContainer" style="display:none"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <!-- Transcriptions Section -->
               <div style="margin-bottom:16px">
                 <div
@@ -701,7 +765,8 @@
                 style="display:none" type="file" />
               <div id="projectFilesList"
                 style="max-height:140px;overflow:auto;border:1px solid var(--border);border-radius:8px;padding:6px;font-size:11px;color:var(--gray)">
-                <span data-i18n="select_a_project_to_view_files">Select a project to view files.</span></div>
+                <span data-i18n="select_a_project_to_view_files">Select a project to view files.</span>
+              </div>
             </div>
           </div>
           <!-- TAB: Case Builder -->
@@ -1004,7 +1069,8 @@
                 style="margin-top:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;">
                 <div
                   style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                  <span data-i18n="providers">Providers</span></div>
+                  <span data-i18n="providers">Providers</span>
+                </div>
                 <div style="font-size:11px;color:var(--gray-hi);line-height:1.8">
                   <div><i class="fas fa-server" style="width:14px;color:var(--amber)"></i> Local: Transcription :8039
                   </div>
@@ -1347,7 +1413,8 @@
               <div style="margin-top:12px">
                 <div
                   style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                  <span data-i18n="recent_contracts">Recent Contracts</span></div>
+                  <span data-i18n="recent_contracts">Recent Contracts</span>
+                </div>
                 <div class="spaces-tree" id="spacesContractTree">
                   <div style="text-align:center;padding:14px;color:var(--gray)">
                     <div class="loading"></div>
@@ -1358,7 +1425,8 @@
               <div style="margin-top:12px">
                 <div
                   style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                  <span data-i18n="ontology_v24">Ontology v2.4</span></div>
+                  <span data-i18n="ontology_v24">Ontology v2.4</span>
+                </div>
                 <div id="spacesOntologySummary" style="font-size:11px;color:var(--gray-hi);line-height:1.7">
                   <div style="text-align:center;padding:8px;color:var(--gray)">
                     <div class="loading"></div>
@@ -1457,7 +1525,7 @@
             <button class="btn btn-sm header-opt" onclick="clearChat()"><i class="fas fa-trash"></i></button>
           </div>
         </div>
-        <!-- Welcome/Empty State - Morphing OliviaLegal -->
+        <!-- Welcome/Empty State - Morphing Olivia -->
         <div class="welcome-state" id="welcomeState">
           <div class="welcome-logo">
             <div class="morph-stage">
@@ -2044,7 +2112,7 @@
           <!-- AI Assistant Panel -->
           <div class="studio-ai-panel" id="studioAiPanel">
             <div class="studio-ai-header">
-              <div class="studio-ai-header-title"><i class="fas fa-wand-magic-sparkles"></i> OliviaLegal Assistant</div>
+              <div class="studio-ai-header-title"><i class="fas fa-wand-magic-sparkles"></i> Olivia Assistant</div>
               <div class="studio-ai-header-actions">
                 <button class="studio-ai-save" id="studioAiSaveBtn" onclick="studioSaveAssistantConversation()"
                   title="Save assistant conversation">
@@ -2634,7 +2702,8 @@
                 style="margin-bottom:10px;padding:8px;border:1px dashed var(--border);border-radius:6px;background:var(--bg)">
                 <div
                   style="font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">
-                  <span data-i18n="listeningAdvancedParams">Advanced Endpoint Parameters</span></div>
+                  <span data-i18n="listeningAdvancedParams">Advanced Endpoint Parameters</span>
+                </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
                   <div><label for="lsDiarization"
                       style="font-size:10px;color:var(--gray);display:block;margin-bottom:3px"><span
@@ -2741,7 +2810,8 @@
                 style="margin-bottom:10px;padding:8px;border:1px dashed var(--border);border-radius:6px;background:var(--bg)">
                 <div
                   style="font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">
-                  <span data-i18n="listeningQdrantIndexing">Qdrant Indexing (parameters + segments)</span></div>
+                  <span data-i18n="listeningQdrantIndexing">Qdrant Indexing (parameters + segments)</span>
+                </div>
                 <div style="display:grid;grid-template-columns:1fr 2fr;gap:8px;align-items:end">
                   <div>
                     <label for="lsSaveToQdrant"
@@ -2872,18 +2942,22 @@
                 <div>
                   <div
                     style="font-size:10px;color:var(--gray-hi);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">
-                    <span data-i18n="listeningQdrantCollections">Qdrant Collections</span></div>
+                    <span data-i18n="listeningQdrantCollections">Qdrant Collections</span>
+                  </div>
                   <div id="lsQdrantCollectionsList"
                     style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;padding:6px;background:var(--bg);font-size:11px;font-family:var(--mono);color:var(--gray)">
-                    <span data-i18n="driveAuthStatus">Loading…</span></div>
+                    <span data-i18n="driveAuthStatus">Loading…</span>
+                  </div>
                 </div>
                 <div>
                   <div
                     style="font-size:10px;color:var(--gray-hi);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">
-                    <span data-i18n="listeningSavedTranscripts">Saved Transcripts</span></div>
+                    <span data-i18n="listeningSavedTranscripts">Saved Transcripts</span>
+                  </div>
                   <div id="lsSavedTranscriptsList"
                     style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;padding:6px;background:var(--bg);font-size:11px;font-family:var(--mono);color:var(--gray)">
-                    <span data-i18n="driveAuthStatus">Loading…</span></div>
+                    <span data-i18n="driveAuthStatus">Loading…</span>
+                  </div>
                 </div>
               </div>
               <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:8px">
@@ -3252,12 +3326,12 @@
           <div
             style="flex-shrink:0;border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:var(--bg-card)">
             <div style="font-size:11px;font-weight:600;color:var(--white);margin-bottom:6px"><i
-                class="fas fa-layer-group" style="color:var(--amber);margin-right:6px"></i>OliviaLegal Memory Layers
+                class="fas fa-layer-group" style="color:var(--amber);margin-right:6px"></i>Olivia Memory Layers
             </div>
             <div style="font-size:11px;color:var(--gray);line-height:1.6">
               Memory is divided into 3 layers. Use the <strong style="color:var(--amber)"><span
                   data-i18n="memoryAnalyzeWithAI">Analyze with AI</span></strong>
-              button to let OliviaLegal automatically classify where each piece of content should live.
+              button to let Olivia automatically classify where each piece of content should live.
             </div>
           </div>
           <!-- Layer descriptions -->
@@ -3347,7 +3421,8 @@
           <div id="mvCollectionDetail"
             style="border:1px solid var(--border);border-radius:8px;padding:10px;min-height:70px;max-height:180px;overflow-y:auto;font-size:11px;color:var(--gray);flex-shrink:0">
             <span data-i18n="select_a_collection_to_see_details_and_samples_scr">Select a collection to see details and
-              samples (scroll).</span></div>
+              samples (scroll).</span>
+          </div>
           <div id="mvCollectionsList" style="flex:1;overflow-y:auto">
             <div class="mv-empty"><i class="fas fa-layer-group" style="font-size:22px;color:var(--border-hi)"></i>
               <p style="font-size:12px;margin-top:8px"><span data-i18n="loading_collections">Loading
@@ -4564,7 +4639,8 @@
                   <div style="margin-bottom:10px">
                     <div
                       style="font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:6px">
-                      <span data-i18n="environment">Environment</span></div>
+                      <span data-i18n="environment">Environment</span>
+                    </div>
                     <div id="sh3dEnvButtons" style="display:flex;flex-wrap:wrap;gap:4px">
                       <button class="sh3d-env-btn active" data-env="studio" onclick="sh3dSetEnvironment('studio')"><span
                           data-i18n="sidebarStudio">Studio</span></button>
@@ -5319,7 +5395,7 @@ https://.../side.png" rows="3"
         <div class="sp-toast" id="spToast"></div>
       </div>
       <div class="writer-view" id="writerView"></div>
-      <!-- ═══════ VIOLATIONS VIEW — OliviaLegal ═══════ -->
+      <!-- ═══════ VIOLATIONS VIEW — Olivia ═══════ -->
       <div class="vw-view" id="violationsView">
         <div class="vw-edge-resize" id="violationsEdgeResize" title="Drag to resize the view"></div>
         <div class="vw-hbar">
@@ -5327,7 +5403,7 @@ https://.../side.png" rows="3"
             <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#a13a2c 0%,#c4622d 100%)"><i
                 class="fas fa-exclamation-triangle"></i></div>
             <div>
-              <h1><span data-i18n="violationsTitle">OliviaLegal Violations</span></h1>
+              <h1><span data-i18n="violationsTitle">Olivia Violations</span></h1>
               <p><span data-i18n="validated_corpus_br_cl_int">Validated corpus: BR · CL · INT</span></p>
             </div>
             <div></div>
@@ -5359,7 +5435,7 @@ https://.../side.png" rows="3"
                     BR</span></span>
                 <span class="vw-chip" data-jur="CL"
                   onclick="if(typeof violationsFilterJur==='function')violationsFilterJur('CL',this)"
-                  title="OliviaLegal incident · Santiago · July/2024"><span data-i18n="santiago_cl">Santiago ·
+                  title="Olivia incident · Santiago · July/2024"><span data-i18n="santiago_cl">Santiago ·
                     CL</span></span>
                 <span class="vw-chip" data-jur="INT"
                   onclick="if(typeof violationsFilterJur==='function')violationsFilterJur('INT',this)"
@@ -5399,7 +5475,7 @@ https://.../side.png" rows="3"
           </div>
         </div>
       </div>
-      <!-- ═══════ LAW LIBRARY VIEW — OliviaLegal ═══════ -->
+      <!-- ═══════ LAW LIBRARY VIEW — Olivia ═══════ -->
       <div class="vw-view" id="lawLibView">
         <div class="vw-edge-resize" id="lawLibEdgeResize" title="Drag to resize the view"></div>
         <div class="vw-hbar">
@@ -5407,7 +5483,7 @@ https://.../side.png" rows="3"
             <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#2d5278 0%,#2d785a 100%)"><i
                 class="fas fa-book"></i></div>
             <div>
-              <h1><span data-i18n="lawLibTitle">OliviaLegal Law Library</span></h1>
+              <h1><span data-i18n="lawLibTitle">Olivia Law Library</span></h1>
               <p><span data-i18n="codes_laws_and_treaties_br_cl_int">Codes, laws, and treaties (BR · CL · INT)</span>
               </p>
             </div>
@@ -5436,7 +5512,7 @@ https://.../side.png" rows="3"
                     BR</span></span>
                 <span class="vw-chip" data-jur="CL"
                   onclick="if(typeof lawLibFilterJur==='function')lawLibFilterJur('CL',this)"
-                  title="Chilean law · OliviaLegal incident (Santiago)"><span data-i18n="santiago_cl_1">Santiago ·
+                  title="Chilean law · Olivia incident (Santiago)"><span data-i18n="santiago_cl_1">Santiago ·
                     CL</span></span>
                 <span class="vw-chip" data-jur="INT"
                   onclick="if(typeof lawLibFilterJur==='function')lawLibFilterJur('INT',this)"
@@ -5537,7 +5613,7 @@ https://.../side.png" rows="3"
           </div>
         </div>
       </div>
-      <!-- ═══════ LEGAL ROUTER VIEW — OliviaLegal ═══════ -->
+      <!-- ═══════ LEGAL ROUTER VIEW — Olivia ═══════ -->
       <div class="vw-view" id="legalRouterView">
         <div class="vw-edge-resize" id="legalRouterEdgeResize" title="Drag to resize the view"></div>
         <div class="vw-hbar">
@@ -5545,7 +5621,7 @@ https://.../side.png" rows="3"
             <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#5a2d78 0%,#a13a2c 100%)"><i
                 class="fas fa-route"></i></div>
             <div>
-              <h1><span data-i18n="olivialegal_legal_router">OliviaLegal Legal Router</span></h1>
+              <h1><span data-i18n="olivialegal_legal_router">Olivia Legal Router</span></h1>
               <p><span data-i18n="resolves_violation_ids_frameworks_and_personnel">Resolves violation IDs, frameworks,
                   and personnel</span></p>
             </div>
@@ -5721,7 +5797,8 @@ garage/data/" rows="3"></textarea>
         </div>
         <div style="margin-top:10px;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--bg2)">
           <div style="font-size:10px;color:var(--gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">
-            <span data-i18n="canonical_resolution">Canonical Resolution</span></div>
+            <span data-i18n="canonical_resolution">Canonical Resolution</span>
+          </div>
           <div style="font-size:11px;color:var(--gray-hi);line-height:1.45">
             <div><strong style="color:var(--white)"><span data-i18n="workspace_1">Workspace:</span></strong> <span
                 id="modalResolvedWorkspacePath"><span data-i18n="calculating">calculating...</span></span></div>
@@ -6184,7 +6261,7 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <script src="js/modals.js"></script>
   <script src="js/sidebar/tabs.js"></script>
   <script src="js/chat/stream.js"></script>
-  <script src="js/chat/olivia-pdf-export.js"></script>
+  <!-- olivia-pdf-export.js removed: PDF export code is already embedded in stream.js -->
   <script src="js/modules/agents.js"></script>
   <script src="js/modules/agent-orchestration.js"></script>
   <script src="js/modules/architecture.js"></script>

@@ -2407,7 +2407,7 @@ function _cflKoutWorkspaceStaticUrl(relPath) {
 }
 
 // ── Workspace project detection ──────────────────────────────────────
-// When the OliviaLegal workspace project is selected, the agent has
+// When the Olivia workspace project is selected, the agent has
 // full filesystem access to the app itself.  File references should
 // resolve to direct web URLs (e.g. /olivia/js/chat/stream.js) instead
 // of the project-raw API endpoint.
@@ -3778,9 +3778,11 @@ function exportLastMessageTxt() {
 }
 
 // ─── Shared brand kit — reuse this for any other export/print surface ───
-const OLIVIA_PDF_BRAND = {
+// NOTE: uses var (not const/let) to avoid "Identifier has already been declared"
+// if olivia-pdf-export.js loads first and sets window.OLIVIA_PDF_BRAND.
+var OLIVIA_PDF_BRAND = window.OLIVIA_PDF_BRAND || {
   name: 'Olivia',
-  kicker: 'OliviaLegal · Workspace Export',
+  kicker: 'Olivia · Workspace Export',
   footerLeft: 'Olivia · AI Operating Environment',
   colors: {
     cream: '#faf9f6',

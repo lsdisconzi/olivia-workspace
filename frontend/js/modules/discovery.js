@@ -5,7 +5,7 @@
 
 // Bridge base URL — all TheBridge calls go through /api/bridge
 const _BRIDGE_SERVER = (() => {
-  const runtime = (window.OliviaLegal && typeof window.OliviaLegal === 'object')
+  const runtime = (window.Olivia && typeof window.Olivia === 'object')
     ? window.OliviaLegal
     : ((window.LA8159 && typeof window.LA8159 === 'object') ? window.LA8159 : {});
 

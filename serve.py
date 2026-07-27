@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-OliviaLegal — Unified Agent Server
+Olivia — Unified Agent Server
 
 Architecture:
   ┌─────────────────┐
-  │  OliviaLegal UI       │  ← Frontend (olivia/)
+  │  Olivia UI       │  ← Frontend (olivia/)
   └────────┬─────────┘
            │ SSE
   ┌────────▼─────────┐
@@ -405,7 +405,7 @@ PLANNING_FILENAMES = ("task_plan.md", "findings.md", "progress.md", "memory.md")
 # _serve_static_with_tracker so existing links and route aliases keep working.
 WEB_ROOT = OliviaLegal_ROOT / "frontend"
 
-# Disable legacy modules to keep OliviaLegal focused on chat + agent stream.
+# Disable legacy modules to keep Olivia focused on chat + agent stream.
 DISABLED_API_PREFIXES = (
     "/api/memory",
     "/api/files",
@@ -414,8 +414,8 @@ DISABLED_API_PREFIXES = (
 # ── Remote bus (cross-device control channel) ───────────────────────────────
 # In-memory, process-local queue that lets the mobile page drive the desktop
 # shaders preview (and vice versa). Messages are small JSON blobs: the producer
-# POSTs to /api/olivialegal/remote-bus, the consumer long-polls
-# GET /api/olivialegal/remote-bus?since=<id>&role=<role>.
+# POSTs to /api/olivia/remote-bus, the consumer long-polls
+# GET /api/olivia/remote-bus?since=<id>&role=<role>.
 _REMOTE_BUS_LOCK = threading.Lock()
 _REMOTE_BUS_MESSAGES: list = []       # list of (id, role, ts, payload)
 _REMOTE_BUS_NEXT_ID = [0]
@@ -1406,7 +1406,7 @@ def _resolve_law_library_root() -> Path:
 LAW_LIBRARY_ROOT = _resolve_law_library_root()
 
 CASE_PROJECT_ID = "OliviaLegal-project"
-CASE_PROJECT_NAME = "OliviaLegal Workspace"
+CASE_PROJECT_NAME = "Olivia Workspace"
 
 # --- Navigation "tree trunk" section registry ---------------------------------
 # Canonical list of every sidebar section. The trunk is rendered data-driven from this
@@ -1518,7 +1518,7 @@ OLIVIA_ORCHESTRATOR_DEFAULT_CONFIG = {
         },
     },
 }
-OLIVIA_ORCHESTRATOR_DEFAULT_SYSTEM_PROMPT = """You are Olivia Orchestrator Control Panel for OliviaLegal Workspace.
+OLIVIA_ORCHESTRATOR_DEFAULT_SYSTEM_PROMPT = """You are Olivia Orchestrator Control Panel for Olivia Workspace.
 
 Mission:
 - Coordinate specialist agents across sections and deliver consolidated outcomes.
@@ -1636,7 +1636,7 @@ def _constant_time_equals(expected: str, supplied: str) -> bool:
         )
 
 
-def _safe_next_path(raw: str, default: str = "/OliviaLegal/mode-select") -> str:
+def _safe_next_path(raw: str, default: str = "/olivia/mode-select") -> str:
     value = str(raw or "").strip()
     if not value.startswith("/"):
         return default
@@ -2526,7 +2526,7 @@ def _ensure_olivia_orchestrator_agent(conn) -> None:
                 agent_id,
                 OLIVIA_ORCHESTRATOR_AGENT_NAME,
                 "openclaude",
-                "Primary OliviaLegal control-plane orchestrator with full workspace execution access.",
+                "Primary Olivia control-plane orchestrator with full workspace execution access.",
                 OLIVIA_ORCHESTRATOR_DEFAULT_SYSTEM_PROMPT,
                 json.dumps(OLIVIA_ORCHESTRATOR_DEFAULT_CONFIG),
                 json.dumps(["*"]),
@@ -2579,7 +2579,7 @@ def _ensure_olivia_orchestrator_agent(conn) -> None:
          WHERE id = ?
         """,
         (
-            "Primary OliviaLegal control-plane orchestrator with full workspace execution access.",
+            "Primary Olivia control-plane orchestrator with full workspace execution access.",
             system_prompt,
             json.dumps(merged_config),
             json.dumps(tools),
@@ -3043,7 +3043,7 @@ def _project_legacy_outputs_entries(project_id: str, project_root: Path) -> list
 
 
 def _resolve_project_rel_target(project_id: str, project_dir: Path, rel_path: str) -> Path:
-    """Resolve project-relative path with fallback to legacy OliviaLegal outputs root."""
+    """Resolve project-relative path with fallback to legacy Olivia outputs root."""
     rel = _normalize_project_rel_path(project_id, rel_path)
     if not rel:
         return project_dir
@@ -3632,7 +3632,7 @@ def _background_worker_alive(agent_id: str) -> bool:
         thread = worker.get("thread")
         return isinstance(thread, threading.Thread) and thread.is_alive()
 
-SYSTEM_PROMPT = """You are OliviaLegal — a warm, precise, proactive AI assistant.
+SYSTEM_PROMPT = """You are Olivia — a warm, precise, proactive AI assistant.
 You help users analyze uploaded files, answer questions, plan work, and provide insights.
 
 ## Your Capabilities
@@ -3792,7 +3792,7 @@ def _seed_project_planning_files(pdir: Path, project_name: str) -> dict[str, Pat
     arquivos_dir = pdir / "arquivos"
     arquivos_dir.mkdir(parents=True, exist_ok=True)
 
-    header = f"# {project_name or pdir.name}\n\n<!-- OliviaLegal planning file. Auto-seeded at project creation. -->\n\n"
+    header = f"# {project_name or pdir.name}\n\n<!-- Olivia planning file. Auto-seeded at project creation. -->\n\n"
     defaults = {
         "task_plan.md": header + (
             "## Goal\n- [Describe the objective for this project.]\n\n"
@@ -5142,7 +5142,7 @@ def _get_user_context_config(user_email: str | None = None) -> tuple[str, list[s
     return (scope, selected_files)
 
 
-def _read_planning_context(user_email: str | None = None) -> str:
+def _read_planning_context(user_email: str | None = None, project_id: str = "") -> str:
     """Read existing planning files to include as continuity context.
 
     When user_email is provided, the user's context_injection_scope setting
@@ -5150,28 +5150,55 @@ def _read_planning_context(user_email: str | None = None) -> str:
       - workspace_and_project: workspace-root planning/ + project uploads/
       - project_only:          only project uploads/
       - custom:                only the filenames in context_selected_files
+
+    When project_id is provided, the project-specific directory
+    (uploads/projects/{project_id}/) is used for the "project" source
+    instead of the UPLOADS_DIR root.
     """
     scope, selected_files = _get_user_context_config(user_email)
     parts = []
     seen = set()
-    for directory in (_resolve_planning_dir(), UPLOADS_DIR):
-        for name in PLANNING_FILENAMES:
-            # Apply scope filtering
-            if scope == "project_only":
-                # Skip workspace-root planning/ dir; only include from project dir (UPLOADS_DIR)
-                if directory == _resolve_planning_dir():
-                    continue
-            elif scope == "custom":
-                # Only include files that are in the user's selected_files list
-                if name not in selected_files:
-                    continue
-            # workspace_and_project: no filter, include all from both dirs (current behavior)
-            p = directory / name
+    # Determine the project directory for planning files
+    project_dir = UPLOADS_DIR
+    if project_id:
+        candidate = PROJECTS_DIR / project_id
+        if candidate.is_dir():
+            project_dir = candidate
+    for directory in (_resolve_planning_dir(), project_dir):
+        # Determine the list of relative file paths to process for this directory
+        files_to_check = []
+        if scope == "custom":
+            # the user explicitly selected these paths
+            files_to_check = selected_files
+        else:
+            # Default behavior: just the standard planning files
+            files_to_check = PLANNING_FILENAMES
+
+        for raw_path in files_to_check:
+            # Prevent path traversal
+            if ".." in raw_path or raw_path.startswith("/"):
+                continue
+            
+            # Apply scope filtering for non-custom
+            if scope == "project_only" and directory == _resolve_planning_dir():
+                continue
+            
+            p = directory / raw_path
             if p in seen or not p.is_file():
                 continue
             seen.add(p)
-            content = p.read_text(encoding="utf-8", errors="replace")[:4000]
-            parts.append(f"\n--- {name} ({directory.name}) ---\n{content}")
+            
+            # Only attempt to read reasonable text-based files into the prompt string
+            mime = mimetypes.guess_type(p.name)[0] or ""
+            if not (mime.startswith("text/") or mime == "application/json" or p.name.endswith(".md")):
+                # Skip injecting binaries as text
+                continue
+                
+            try:
+                content = p.read_text(encoding="utf-8", errors="replace")[:4000]
+                parts.append(f"\n--- {raw_path} ({directory.name}) ---\n{content}")
+            except Exception:
+                pass
     return "\n".join(parts) if parts else ""
 
 
@@ -5427,7 +5454,7 @@ def _write_projects_manifest() -> dict:
     entries.append({
         "project_id": CASE_PROJECT_ID,
         "name": CASE_PROJECT_NAME,
-        "description": "OliviaLegal workspace (read-only).",
+        "description": "Olivia workspace (read-only).",
         "path": str(PROJECT_ROOT),
         "created_at": case_created,
         "readonly": True,
@@ -8786,179 +8813,179 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
     _ROOT_ALIASES = {
         "/",
         "/OliviaLegal",
-        "/OliviaLegal/",
+        "/olivia/",
         "/OliviaLegal",
-        "/OliviaLegal/",
+        "/olivia/",
     }
     _WORKSPACE_ALIASES = {
         "/",
         "/OliviaLegal",
-        "/OliviaLegal/",
-        "/OliviaLegal/olivia",
-        "/OliviaLegal/olivia/",
-        "/OliviaLegal/olivia.html",
+        "/olivia/",
+        "/olivia/olivia",
+        "/olivia/olivia/",
+        "/olivia/olivia.html",
         "/OliviaLegal",
-        "/OliviaLegal/olivia",
-        "/OliviaLegal/olivia/",
-        "/OliviaLegal/olivia.html",
+        "/olivia/olivia",
+        "/olivia/olivia/",
+        "/olivia/olivia.html",
     }
     _ARCHITECTURE_ALIASES = {
-        "/OliviaLegal/arquitetura",
-        "/OliviaLegal/arquitetura/",
-        "/OliviaLegal/arquitetura",
-        "/OliviaLegal/arquitetura/",
+        "/olivia/arquitetura",
+        "/olivia/arquitetura/",
+        "/olivia/arquitetura",
+        "/olivia/arquitetura/",
     }
     _AGENT_ALIASES = {
-        "/OliviaLegal/agent",
-        "/OliviaLegal/agent/",
-        "/OliviaLegal/agente",
-        "/OliviaLegal/agente/",
-        "/OliviaLegal/agent",
-        "/OliviaLegal/agent/",
-        "/OliviaLegal/agente",
-        "/OliviaLegal/agente/",
+        "/olivia/agent",
+        "/olivia/agent/",
+        "/olivia/agente",
+        "/olivia/agente/",
+        "/olivia/agent",
+        "/olivia/agent/",
+        "/olivia/agente",
+        "/olivia/agente/",
     }
     _RESIDENT_LANDING_ALIASES = {
-        "/OliviaLegal/resident",
-        "/OliviaLegal/resident/",
-        "/OliviaLegal/residente",
-        "/OliviaLegal/residente/",
-        "/OliviaLegal/residencia",
-        "/OliviaLegal/residencia/",
-        "/OliviaLegal/resident",
-        "/OliviaLegal/resident/",
-        "/OliviaLegal/residente",
-        "/OliviaLegal/residente/",
-        "/OliviaLegal/residencia",
-        "/OliviaLegal/residencia/",
+        "/olivia/resident",
+        "/olivia/resident/",
+        "/olivia/residente",
+        "/olivia/residente/",
+        "/olivia/residencia",
+        "/olivia/residencia/",
+        "/olivia/resident",
+        "/olivia/resident/",
+        "/olivia/residente",
+        "/olivia/residente/",
+        "/olivia/residencia",
+        "/olivia/residencia/",
     }
     _RESIDENT_WORKSPACE1_ALIASES = {
-        "/OliviaLegal/olivia-residente",
-        "/OliviaLegal/olivia-residente/",
-        "/OliviaLegal/olivia-residente",
-        "/OliviaLegal/olivia-residente/",
+        "/olivia/olivia-residente",
+        "/olivia/olivia-residente/",
+        "/olivia/olivia-residente",
+        "/olivia/olivia-residente/",
     }
     _RESIDENT_WORKSPACE2_ALIASES = {
-        "/OliviaLegal/assistente",
-        "/OliviaLegal/assistente/",
-        "/OliviaLegal/assistente",
-        "/OliviaLegal/assistente/",
+        "/olivia/assistente",
+        "/olivia/assistente/",
+        "/olivia/assistente",
+        "/olivia/assistente/",
     }
     _OLIVIA_BR_ALIASES = {
-        "/OliviaLegal/olivia",
-        "/OliviaLegal/olivia/",
-        "/OliviaLegal/olivia/br",
-        "/OliviaLegal/olivia/br/",
-        "/OliviaLegal/olivia/pt-br",
-        "/OliviaLegal/olivia/pt-br/",
-        "/OliviaLegal/olivia",
-        "/OliviaLegal/olivia/",
-        "/OliviaLegal/olivia/br",
-        "/OliviaLegal/olivia/br/",
-        "/OliviaLegal/olivia/pt-br",
-        "/OliviaLegal/olivia/pt-br/",
+        "/olivia/olivia",
+        "/olivia/olivia/",
+        "/olivia/olivia/br",
+        "/olivia/olivia/br/",
+        "/olivia/olivia/pt-br",
+        "/olivia/olivia/pt-br/",
+        "/olivia/olivia",
+        "/olivia/olivia/",
+        "/olivia/olivia/br",
+        "/olivia/olivia/br/",
+        "/olivia/olivia/pt-br",
+        "/olivia/olivia/pt-br/",
     }
     _OLIVIA_PT_ALIASES = {
-        "/OliviaLegal/olivia/pt",
-        "/OliviaLegal/olivia/pt/",
-        "/OliviaLegal/olivia/pt",
-        "/OliviaLegal/olivia/pt/",
+        "/olivia/olivia/pt",
+        "/olivia/olivia/pt/",
+        "/olivia/olivia/pt",
+        "/olivia/olivia/pt/",
     }
     _OLIVIA_EN_ALIASES = {
-        "/OliviaLegal/olivia/en",
-        "/OliviaLegal/olivia/en/",
-        "/OliviaLegal/olivia/en",
-        "/OliviaLegal/olivia/en/",
+        "/olivia/olivia/en",
+        "/olivia/olivia/en/",
+        "/olivia/olivia/en",
+        "/olivia/olivia/en/",
     }
     _OLIVIA_IT_ALIASES = {
-        "/OliviaLegal/olivia/it",
-        "/OliviaLegal/olivia/it/",
-        "/OliviaLegal/olivia/it",
-        "/OliviaLegal/olivia/it/",
+        "/olivia/olivia/it",
+        "/olivia/olivia/it/",
+        "/olivia/olivia/it",
+        "/olivia/olivia/it/",
     }
     _OLIVIA_GR_ALIASES = {
-        "/OliviaLegal/olivia/gr",
-        "/OliviaLegal/olivia/gr/",
-        "/OliviaLegal/olivia/gr",
-        "/OliviaLegal/olivia/gr/",
+        "/olivia/olivia/gr",
+        "/olivia/olivia/gr/",
+        "/olivia/olivia/gr",
+        "/olivia/olivia/gr/",
     }
     _OLIVIA_TH_ALIASES = {
-        "/OliviaLegal/olivia/th",
-        "/OliviaLegal/olivia/th/",
-        "/OliviaLegal/olivia/th",
-        "/OliviaLegal/olivia/th/",
+        "/olivia/olivia/th",
+        "/olivia/olivia/th/",
+        "/olivia/olivia/th",
+        "/olivia/olivia/th/",
     }
     _OLIVIA_CL_ALIASES = {
-        "/OliviaLegal/olivia/cl",
-        "/OliviaLegal/olivia/cl/",
-        "/OliviaLegal/olivia/cl",
-        "/OliviaLegal/olivia/cl/",
+        "/olivia/olivia/cl",
+        "/olivia/olivia/cl/",
+        "/olivia/olivia/cl",
+        "/olivia/olivia/cl/",
     }
     _GURUPI_NARRATIVA_ALIASES = {
-        "/OliviaLegal/gurupi",
-        "/OliviaLegal/gurupi/",
-        "/OliviaLegal/gurupi/narrativa",
-        "/OliviaLegal/gurupi/narrativa/",
-        "/OliviaLegal/gurupi/gurupi-narrativa.html",
-        "/OliviaLegal/gurupi",
-        "/OliviaLegal/gurupi/",
-        "/OliviaLegal/gurupi/narrativa",
-        "/OliviaLegal/gurupi/narrativa/",
-        "/OliviaLegal/gurupi/gurupi-narrativa.html",
+        "/olivia/gurupi",
+        "/olivia/gurupi/",
+        "/olivia/gurupi/narrativa",
+        "/olivia/gurupi/narrativa/",
+        "/olivia/gurupi/gurupi-narrativa.html",
+        "/olivia/gurupi",
+        "/olivia/gurupi/",
+        "/olivia/gurupi/narrativa",
+        "/olivia/gurupi/narrativa/",
+        "/olivia/gurupi/gurupi-narrativa.html",
     }
     _GURUPI_BUSINESS_PLAN_ALIASES = {
-        "/OliviaLegal/gurupi/plano",
-        "/OliviaLegal/gurupi/plano/",
-        "/OliviaLegal/gurupi/business-plan",
-        "/OliviaLegal/gurupi/business-plan/",
-        "/OliviaLegal/gurupi/gurupi-business-plan.html",
-        "/OliviaLegal/gurupi/plano",
-        "/OliviaLegal/gurupi/plano/",
-        "/OliviaLegal/gurupi/business-plan",
-        "/OliviaLegal/gurupi/business-plan/",
-        "/OliviaLegal/gurupi/gurupi-business-plan.html",
+        "/olivia/gurupi/plano",
+        "/olivia/gurupi/plano/",
+        "/olivia/gurupi/business-plan",
+        "/olivia/gurupi/business-plan/",
+        "/olivia/gurupi/gurupi-business-plan.html",
+        "/olivia/gurupi/plano",
+        "/olivia/gurupi/plano/",
+        "/olivia/gurupi/business-plan",
+        "/olivia/gurupi/business-plan/",
+        "/olivia/gurupi/gurupi-business-plan.html",
     }
     _LOGIN_ALIASES = {
-        "/OliviaLegal/login",
-        "/OliviaLegal/login/",
-        "/OliviaLegal/login",
-        "/OliviaLegal/login/",
+        "/olivia/login",
+        "/olivia/login/",
+        "/olivia/login",
+        "/olivia/login/",
     }
     _LOGOUT_ALIASES = {
-        "/OliviaLegal/logout",
-        "/OliviaLegal/logout/",
-        "/OliviaLegal/logout",
-        "/OliviaLegal/logout/",
+        "/olivia/logout",
+        "/olivia/logout/",
+        "/olivia/logout",
+        "/olivia/logout/",
     }
     _CHANGE_PASSWORD_ALIASES = {
-        "/OliviaLegal/change-password",
-        "/OliviaLegal/change-password/",
-        "/OliviaLegal/change-password",
-        "/OliviaLegal/change-password/",
+        "/olivia/change-password",
+        "/olivia/change-password/",
+        "/olivia/change-password",
+        "/olivia/change-password/",
     }
     _MODE_SELECT_ALIASES = {
-        "/OliviaLegal/mode-select",
-        "/OliviaLegal/mode-select/",
-        "/OliviaLegal/mode-select",
-        "/OliviaLegal/mode-select/",
+        "/olivia/mode-select",
+        "/olivia/mode-select/",
+        "/olivia/mode-select",
+        "/olivia/mode-select/",
     }
     _ADMIN_ACTIVITY_ALIASES = {
-        "/OliviaLegal/admin/activity",
-        "/OliviaLegal/admin/activity/",
-        "/OliviaLegal/admin/activity",
-        "/OliviaLegal/admin/activity/",
+        "/olivia/admin/activity",
+        "/olivia/admin/activity/",
+        "/olivia/admin/activity",
+        "/olivia/admin/activity/",
     }
     _ADMIN_USERS_UI_ALIASES = {
-        "/OliviaLegal/admin/users-ui",
-        "/OliviaLegal/admin/users-ui/",
-        "/OliviaLegal/admin/users-ui",
-        "/OliviaLegal/admin/users-ui/",
+        "/olivia/admin/users-ui",
+        "/olivia/admin/users-ui/",
+        "/olivia/admin/users-ui",
+        "/olivia/admin/users-ui/",
     }
     _ADMIN_PAGES_UI_ALIASES = {
-        "/OliviaLegal/admin/pages",
-        "/OliviaLegal/admin/pages/",
-        "/OliviaLegal/admin/pages",
-        "/OliviaLegal/admin/pages/",
+        "/olivia/admin/pages",
+        "/olivia/admin/pages/",
+        "/olivia/admin/pages",
+        "/olivia/admin/pages/",
     }
 
     def __init__(self, *args, **kwargs):
@@ -9010,7 +9037,42 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
     def _auth_current_email(self) -> str:
         token = self._cookie_value(AUTH_COOKIE_NAME)
-        return _auth_session_get_email(token)
+        if not token:
+            auth_hdr = str(self.headers.get("Authorization") or "").strip()
+            if auth_hdr.lower().startswith("bearer "):
+                token = auth_hdr[7:].strip()
+        if not token and getattr(self, "path", None):
+            try:
+                parsed = urllib.parse.urlparse(str(self.path))
+                qs = urllib.parse.parse_qs(parsed.query)
+                token = str((qs.get("token") or qs.get("auth_token") or [""])[0] or "").strip()
+            except Exception:
+                pass
+
+        email = _auth_session_get_email(token)
+        if email:
+            return email
+
+        # Fallback 1: Single active session in memory
+        with _AUTH_SESSIONS_LOCK:
+            now = time.time()
+            active_emails = list({
+                str(s.get("email") or "")
+                for s in _AUTH_SESSIONS.values()
+                if float(s.get("expires_at") or 0) > now and s.get("email")
+            })
+            if len(active_emails) == 1:
+                return active_emails[0]
+
+        # Fallback 2: Single user registered in local environment
+        try:
+            users = _auth_list_users()
+            if len(users) == 1 and users[0].get("email"):
+                return str(users[0]["email"])
+        except Exception:
+            pass
+
+        return ""
 
     def _auth_current_user(self) -> dict | None:
         email = self._auth_current_email()
@@ -9052,29 +9114,67 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         user = self._auth_current_user()
         scope, selected_files = _get_user_context_config(email)
 
+        # Accept optional project_id query param to discover project-specific files
+        parsed = urllib.parse.urlparse(self.path)
+        qs = urllib.parse.parse_qs(parsed.query)
+        project_id = str((qs.get("project_id") or [""])[0] or "").strip()
+
         # Discover available files from both directories
         workspace_dir = _resolve_planning_dir()
         project_dir = UPLOADS_DIR
+        if project_id:
+            candidate = PROJECTS_DIR / project_id
+            if candidate.is_dir():
+                project_dir = candidate
+        def _scan_context_dir(root: Path, base: Path, selected: set) -> list:
+            items = []
+            try:
+                for entry in os.scandir(root):
+                    if entry.name.startswith("."):
+                        continue
+                    rel_path = str(Path(entry.path).relative_to(base))
+                    if entry.is_dir(follow_symlinks=False):
+                        children = _scan_context_dir(Path(entry.path), base, selected)
+                        if children:
+                            items.append({
+                                "name": entry.name,
+                                "type": "directory",
+                                "path": rel_path,
+                                "children": children
+                            })
+                    elif entry.is_file(follow_symlinks=False):
+                        size = entry.stat().st_size
+                        mime = mimetypes.guess_type(entry.name)[0] or "application/octet-stream"
+                        if entry.name.endswith(".md") or entry.name.endswith(".json") or entry.name.endswith(".txt") or entry.name.endswith(".csv"):
+                            mime = "text/plain"
+                        items.append({
+                            "name": entry.name,
+                            "type": mime,
+                            "path": rel_path,
+                            "size": size,
+                            "selected": rel_path in selected or entry.name in selected
+                        })
+            except PermissionError:
+                pass
+            # sort directories first, then alphabetically
+            items.sort(key=lambda x: (0 if x["type"] == "directory" else 1, x["name"].lower()))
+            return items
+
         sources = []
         for label, directory in [("workspace", workspace_dir), ("project", project_dir)]:
-            files_list = []
-            for name in PLANNING_FILENAMES:
-                p = directory / name
-                available = p.is_file()
-                is_selected = (
-                    name in selected_files
-                    if scope == "custom"
-                    else True
+            source_label = (
+                f"Project ({project_id})"
+                if label == "project" and project_id
+                else (
+                    "Workspace Root (planning/)"
+                    if label == "workspace"
+                    else "Project Root (uploads/)"
                 )
-                files_list.append({
-                    "name": name,
-                    "available": available,
-                    "selected": is_selected,
-                    "size": p.stat().st_size if available else 0,
-                })
+            )
+            files_list = _scan_context_dir(directory, directory, set(selected_files)) if directory.is_dir() else []
             sources.append({
                 "source": label,
-                "label": "Workspace Root (planning/)" if label == "workspace" else "Project Root (uploads/)",
+                "label": source_label,
                 "path": str(directory),
                 "files": files_list,
             })
@@ -9146,6 +9246,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         "/olivia/IDSC/yearly_data/CSV-Bundles_filtered/CPSI_OLIVIA_OliviaLegal_FECHAMENTO.md",
         "/olivia/IDSC/yearly_data/CSV-Bundles_filtered/OLIVIA_OliviaLegal_IMPACTO_IDSC_GURUPI.md",
         "/olivia/resident.html",
+        "/olivia/manifest.json",
     }
 
     def _is_protected_ui_path(self, raw_path: str) -> bool:
@@ -9176,7 +9277,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header("Set-Cookie", cookie)
 
     def _send_redirect(self, location: str, *, token: str = "", clear_cookie: bool = False):
-        dest = _safe_next_path(location, "/OliviaLegal/mode-select")
+        dest = _safe_next_path(location, "/olivia/mode-select")
         self.send_response(302)
         self.send_header("Location", dest)
         if clear_cookie:
@@ -9198,9 +9299,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         if not html_text or "<html" not in html_text.lower():
             return html_text
         current_path = urllib.parse.urlparse(str(getattr(self, "path", "") or "")).path
-        if current_path.startswith("/api/") or current_path in {"/OliviaLegal/auth-activity/tracker.js"}:
+        if current_path.startswith("/api/") or current_path in {"/olivia/auth-activity/tracker.js"}:
             return html_text
-        tag = '<script src="/OliviaLegal/auth-activity/tracker.js"></script>'
+        tag = '<script src="/olivia/auth-activity/tracker.js"></script>'
         if tag in html_text:
             return html_text
         if "</body>" in html_text:
@@ -9208,10 +9309,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         return html_text + "\n" + tag
 
     def _auth_activity_tracker_js_get(self):
-        payload = b"""/* OliviaLegal auth-activity tracker */
+        payload = b"""/* Olivia auth-activity tracker */
 (function(){
   'use strict';
-  var ENDPOINT = '/OliviaLegal/api/activity/client';
+  var ENDPOINT = '/olivia/api/activity/client';
   var PAGE = location.pathname;
   var queue = [];
   var pageStart = Date.now();
@@ -9311,7 +9412,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
             accepted_events.append(
                 {
-                    "path": page or "/OliviaLegal/api/activity/client",
+                    "path": page or "/olivia/api/activity/client",
                     "detail": _sanitize_activity_detail(detail),
                 }
             )
@@ -9418,11 +9519,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         bootstrap_mode = setup_required and _has_bootstrap_admin_credentials()
         error = str((qs.get("error") or [""])[0] or "").strip()
         username = str((qs.get("username") or [""])[0] or "").strip()
-        next_page = _safe_next_path((qs.get("next") or ["/OliviaLegal/mode-select"])[0], "/OliviaLegal/mode-select")
+        next_page = _safe_next_path((qs.get("next") or ["/olivia/mode-select"])[0], "/olivia/mode-select")
 
         users = _auth_list_users()
         allowed_users = ", ".join(u.get("display_name") or u.get("email") for u in users[:6]) or "No users configured"
-        title = "OliviaLegal · First Access Setup" if setup_required else "OliviaLegal · Restricted Access"
+        title = "Olivia · First Access Setup" if setup_required else "Olivia · Restricted Access"
         card_title = "Create Initial Admin" if setup_required else "Restricted Access"
         card_desc = (
             "First access detected. Sign in with bootstrap admin credentials from .env."
@@ -9452,7 +9553,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 "__CARD_TITLE__": card_title,
                 "__CARD_DESC__": card_desc,
                 "__ALLOWED_USERS__": html_lib.escape(allowed_users),
-                "__FORM_ACTION__": "/OliviaLegal/login",
+                "__FORM_ACTION__": "/olivia/login",
                 "__SUBMIT_LABEL__": submit_label,
                 "__AUTH_HINT__": auth_hint,
                 "__ERROR_HTML__": error_html,
@@ -9470,7 +9571,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         email = _normalize_user_email(form.get("username") or form.get("email") or "")
         raw_user = str(form.get("username") or form.get("email") or "").strip()
         password = str(form.get("code") or form.get("password") or "")
-        next_page = _safe_next_path(form.get("next") or "/OliviaLegal/mode-select", "/OliviaLegal/mode-select")
+        next_page = _safe_next_path(form.get("next") or "/olivia/mode-select", "/olivia/mode-select")
         setup_required = _auth_users_count() == 0
         bootstrap_mode = setup_required and _has_bootstrap_admin_credentials()
 
@@ -9480,21 +9581,21 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             supplied_user = raw_user.lower()
             if supplied_user != expected_user or password != expected_password:
                 self._send_redirect(
-                    f"/OliviaLegal/login?error={urllib.parse.quote('Invalid bootstrap credentials.')}&username={urllib.parse.quote(raw_user)}&next={urllib.parse.quote(next_page)}"
+                    f"/olivia/login?error={urllib.parse.quote('Invalid bootstrap credentials.')}&username={urllib.parse.quote(raw_user)}&next={urllib.parse.quote(next_page)}"
                 )
                 return
 
             bootstrap_email = _bootstrap_admin_email()
             if not bootstrap_email:
                 self._send_redirect(
-                    "/OliviaLegal/login?error="
+                    "/olivia/login?error="
                     + urllib.parse.quote("Invalid ADMIN_USERNAME in .env. Use letters/numbers and optional symbols before @.")
                 )
                 return
 
             email = bootstrap_email
             password = expected_password
-            next_page = "/OliviaLegal/admin/users-ui"
+            next_page = "/olivia/admin/users-ui"
 
             if _auth_users_count() == 0:
                 try:
@@ -9506,14 +9607,14 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                         must_change_password=False,
                     )
                 except Exception as exc:
-                    self._send_redirect(f"/OliviaLegal/login?error={urllib.parse.quote(str(exc))}&username={urllib.parse.quote(raw_user)}")
+                    self._send_redirect(f"/olivia/login?error={urllib.parse.quote(str(exc))}&username={urllib.parse.quote(raw_user)}")
                     return
 
         if not _is_valid_user_email(email):
-            self._send_redirect(f"/OliviaLegal/login?error={urllib.parse.quote('Use a valid gmail.com account.')}&username={urllib.parse.quote(email)}&next={urllib.parse.quote(next_page)}")
+            self._send_redirect(f"/olivia/login?error={urllib.parse.quote('Use a valid gmail.com account.')}&username={urllib.parse.quote(email)}&next={urllib.parse.quote(next_page)}")
             return
         if not _password_is_valid(password):
-            self._send_redirect(f"/OliviaLegal/login?error={urllib.parse.quote('Password must have at least 8 characters.')}&username={urllib.parse.quote(email)}&next={urllib.parse.quote(next_page)}")
+            self._send_redirect(f"/olivia/login?error={urllib.parse.quote('Password must have at least 8 characters.')}&username={urllib.parse.quote(email)}&next={urllib.parse.quote(next_page)}")
             return
 
         ip = self._request_ip()
@@ -9529,27 +9630,27 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                     must_change_password=False,
                 )
             except Exception as exc:
-                self._send_redirect(f"/OliviaLegal/login?error={urllib.parse.quote(str(exc))}&username={urllib.parse.quote(email)}")
+                self._send_redirect(f"/olivia/login?error={urllib.parse.quote(str(exc))}&username={urllib.parse.quote(email)}")
                 return
 
         user = _auth_verify_user(email, password)
         if not user:
-            _activity_log_write(email=email, event_type="login", path="/OliviaLegal/login", method="POST", status=401, detail={"ok": False}, ip=ip, user_agent=ua)
-            self._send_redirect(f"/OliviaLegal/login?error={urllib.parse.quote('Invalid email or password.')}&username={urllib.parse.quote(email)}&next={urllib.parse.quote(next_page)}")
+            _activity_log_write(email=email, event_type="login", path="/olivia/login", method="POST", status=401, detail={"ok": False}, ip=ip, user_agent=ua)
+            self._send_redirect(f"/olivia/login?error={urllib.parse.quote('Invalid email or password.')}&username={urllib.parse.quote(email)}&next={urllib.parse.quote(next_page)}")
             return
 
         _auth_mark_login(email)
         token = _auth_session_create(email)
-        _activity_log_write(email=email, event_type="login", path="/OliviaLegal/login", method="POST", status=200, detail={"ok": True}, ip=ip, user_agent=ua)
+        _activity_log_write(email=email, event_type="login", path="/olivia/login", method="POST", status=200, detail={"ok": True}, ip=ip, user_agent=ua)
 
         must_change = bool(int(user.get("must_change_password") or 0))
         if must_change:
-            target = f"/OliviaLegal/change-password?next={urllib.parse.quote(next_page)}"
+            target = f"/olivia/change-password?next={urllib.parse.quote(next_page)}"
             self._send_redirect(target, token=token)
             return
 
         if setup_required:
-            next_page = "/OliviaLegal/admin/users-ui"
+            next_page = "/olivia/admin/users-ui"
 
         self._send_redirect(next_page, token=token)
 
@@ -9560,25 +9661,25 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         _activity_log_write(
             email=email,
             event_type="logout",
-            path="/OliviaLegal/logout",
+            path="/olivia/logout",
             method="GET",
             status=200,
             ip=self._request_ip(),
             user_agent=str(self.headers.get("User-Agent") or ""),
         )
-        self._send_redirect("/OliviaLegal/login", clear_cookie=True)
+        self._send_redirect("/olivia/login", clear_cookie=True)
 
     def _auth_change_password_get(self):
         user = self._auth_current_user()
         if not user:
-            next_page = _safe_next_path(self.path, "/OliviaLegal/mode-select")
-            self._send_redirect(f"/OliviaLegal/login?next={urllib.parse.quote(next_page)}")
+            next_page = _safe_next_path(self.path, "/olivia/mode-select")
+            self._send_redirect(f"/olivia/login?next={urllib.parse.quote(next_page)}")
             return
 
         parsed = urllib.parse.urlparse(self.path)
         qs = urllib.parse.parse_qs(parsed.query)
         error = str((qs.get("error") or [""])[0] or "").strip()
-        next_page = _safe_next_path((qs.get("next") or ["/OliviaLegal/mode-select"])[0], "/OliviaLegal/mode-select")
+        next_page = _safe_next_path((qs.get("next") or ["/olivia/mode-select"])[0], "/olivia/mode-select")
         error_html = (
             f'<div class="error"><i class="fa-solid fa-circle-exclamation"></i> {html_lib.escape(error)}</div>' if error else ""
         )
@@ -9586,8 +9687,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         html_text = self._render_template_file(
             "frontend/auth/change-password.html",
             {
-                "__PAGE_TITLE__": "OliviaLegal · Update Password",
-                "__FORM_ACTION__": "/OliviaLegal/change-password",
+                "__PAGE_TITLE__": "Olivia · Update Password",
+                "__FORM_ACTION__": "/olivia/change-password",
                 "__USER_DISPLAY__": html_lib.escape(str(user.get("display_name") or user.get("email") or "user")),
                 "__MIN_LENGTH__": "8",
                 "__NEXT__": html_lib.escape(next_page),
@@ -9602,27 +9703,27 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
     def _auth_change_password_post(self):
         user = self._auth_current_user()
         if not user:
-            self._send_redirect("/OliviaLegal/login")
+            self._send_redirect("/olivia/login")
             return
 
         form = self._read_form_body()
         current_code = str(form.get("current_code") or "")
         new_code = str(form.get("new_code") or "")
         confirm_code = str(form.get("confirm_code") or "")
-        next_page = _safe_next_path(form.get("next") or "/OliviaLegal/mode-select", "/OliviaLegal/mode-select")
+        next_page = _safe_next_path(form.get("next") or "/olivia/mode-select", "/olivia/mode-select")
         email = _normalize_user_email(str(user.get("email") or ""))
 
         if not _auth_verify_user(email, current_code):
-            self._send_redirect(f"/OliviaLegal/change-password?error={urllib.parse.quote('Current password is incorrect.')}&next={urllib.parse.quote(next_page)}")
+            self._send_redirect(f"/olivia/change-password?error={urllib.parse.quote('Current password is incorrect.')}&next={urllib.parse.quote(next_page)}")
             return
         if not _password_is_valid(new_code):
-            self._send_redirect(f"/OliviaLegal/change-password?error={urllib.parse.quote('New password must have at least 8 characters.')}&next={urllib.parse.quote(next_page)}")
+            self._send_redirect(f"/olivia/change-password?error={urllib.parse.quote('New password must have at least 8 characters.')}&next={urllib.parse.quote(next_page)}")
             return
         if new_code != confirm_code:
-            self._send_redirect(f"/OliviaLegal/change-password?error={urllib.parse.quote('Password confirmation does not match.')}&next={urllib.parse.quote(next_page)}")
+            self._send_redirect(f"/olivia/change-password?error={urllib.parse.quote('Password confirmation does not match.')}&next={urllib.parse.quote(next_page)}")
             return
         if current_code == new_code:
-            self._send_redirect(f"/OliviaLegal/change-password?error={urllib.parse.quote('New password must be different from current password.')}&next={urllib.parse.quote(next_page)}")
+            self._send_redirect(f"/olivia/change-password?error={urllib.parse.quote('New password must be different from current password.')}&next={urllib.parse.quote(next_page)}")
             return
 
         _auth_update_password(email, new_code, must_change_password=False)
@@ -9631,7 +9732,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
     def _mode_select_get(self):
         user = self._auth_current_user()
         if not user:
-            self._send_redirect("/OliviaLegal/login?next=/OliviaLegal/mode-select")
+            self._send_redirect("/olivia/login?next=/olivia/mode-select")
             return
 
         html_text = self._render_template_file(
@@ -9639,7 +9740,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             {
                 "__USER_DISPLAY__": html_lib.escape(str(user.get("display_name") or user.get("email") or "")),
                 "__EMAIL__": html_lib.escape(str(user.get("email") or "")),
-                "__ADMIN_LINK__": '<a href="/OliviaLegal/admin/activity" class="ghost-link">Admin Activity</a>' if self._auth_is_admin() else "",
+                "__ADMIN_LINK__": '<a href="/olivia/admin/activity" class="ghost-link">Admin Activity</a>' if self._auth_is_admin() else "",
             },
         )
         if not html_text:
@@ -9648,7 +9749,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         _activity_log_write(
             email=str(user.get("email") or ""),
             event_type="request",
-            path="/OliviaLegal/mode-select",
+            path="/olivia/mode-select",
             method="GET",
             status=200,
             ip=self._request_ip(),
@@ -9721,6 +9822,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         force_change = bool(body.get("force_change", True))
         mode = str(body.get("assistant_access_mode") or "read_write").strip()
         scope = str(body.get("assistant_write_scope") or "").strip()
+        ctx_scope = str(body.get("context_injection_scope") or "").strip()
 
         if not password:
             self._json_response({"error": "initial_password is required"}, 400)
@@ -9734,6 +9836,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 must_change_password=force_change,
                 assistant_access_mode=mode,
                 assistant_write_scope=scope,
+                context_injection_scope=ctx_scope,
             )
         except Exception as exc:
             self._json_response({"error": str(exc)}, 400)
@@ -9793,7 +9896,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self._json_response({"status": "ok"})
 
     def _admin_users_context_scope_patch(self, target_email: str):
-        """PATCH /OliviaLegal/admin/users/{email}/context-scope"""
+        """PATCH /olivia/admin/users/{email}/context-scope"""
         if not self._auth_is_admin():
             self._json_response({"error": "forbidden"}, 403)
             return
@@ -10080,7 +10183,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         _activity_log_write(
             email=self._auth_current_email(),
             event_type="notification_created",
-            path="/OliviaLegal/admin/notifications",
+            path="/olivia/admin/notifications",
             method="POST",
             status=201,
             detail={"notification_id": created.get("id"), "category": created.get("category")},
@@ -10276,48 +10379,48 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         if raw_path in self._ADMIN_PAGES_UI_ALIASES:
             self._admin_pages_ui_get()
             return
-        if raw_path in {"/OliviaLegal/admin/activity/api", "/OliviaLegal/admin/activity/api"}:
+        if raw_path in {"/olivia/admin/activity/api", "/olivia/admin/activity/api"}:
             self._admin_activity_api_get()
             return
-        if raw_path in {"/OliviaLegal/admin/users", "/OliviaLegal/admin/users"}:
+        if raw_path in {"/olivia/admin/users", "/olivia/admin/users"}:
             self._admin_users_get()
             return
-        if raw_path in {"/OliviaLegal/admin/models", "/OliviaLegal/admin/models/"}:
+        if raw_path in {"/olivia/admin/models", "/olivia/admin/models/"}:
             self._admin_models_get()
             return
-        if raw_path in {"/OliviaLegal/admin/ollama-servers", "/OliviaLegal/admin/ollama-servers/"}:
+        if raw_path in {"/olivia/admin/ollama-servers", "/olivia/admin/ollama-servers/"}:
             self._admin_ollama_servers_get()
             return
-        if raw_path in {"/OliviaLegal/openrouter/models", "/OliviaLegal/openrouter/models/"}:
+        if raw_path in {"/olivia/openrouter/models", "/olivia/openrouter/models/"}:
             self._admin_openrouter_models_get()
             return
-        if raw_path in {"/OliviaLegal/fireworks/models", "/OliviaLegal/fireworks/models/"}:
+        if raw_path in {"/olivia/fireworks/models", "/olivia/fireworks/models/"}:
             self._admin_fireworks_models_get()
             return
-        if raw_path in {"/OliviaLegal/api/case/dossier", "/OliviaLegal/api/case/dossier/", "/api/case/dossier", "/api/case/dossier/"}:
+        if raw_path in {"/olivia/api/case/dossier", "/olivia/api/case/dossier/", "/api/case/dossier", "/api/case/dossier/"}:
             self._case_dossier_get()
             return
-        if raw_path in {"/OliviaLegal/api/case/documents", "/OliviaLegal/api/case/documents/", "/api/case/documents", "/api/case/documents/"}:
+        if raw_path in {"/olivia/api/case/documents", "/olivia/api/case/documents/", "/api/case/documents", "/api/case/documents/"}:
             self._case_dossier_documents_get()
             return
-        if raw_path in {"/OliviaLegal/admin/notifications", "/OliviaLegal/admin/notifications/"}:
+        if raw_path in {"/olivia/admin/notifications", "/olivia/admin/notifications/"}:
             self._admin_notifications_get()
             return
-        if raw_path in {"/OliviaLegal/auth-activity/tracker.js"}:
+        if raw_path in {"/olivia/auth-activity/tracker.js"}:
             self._auth_activity_tracker_js_get()
             return
 
         current_email = self._auth_current_email()
         if raw_path in self._ROOT_ALIASES:
             if not current_email:
-                self._send_redirect(f"/OliviaLegal/login?next={urllib.parse.quote('/OliviaLegal/mode-select')}")
+                self._send_redirect(f"/olivia/login?next={urllib.parse.quote('/olivia/mode-select')}")
             else:
-                self._send_redirect("/OliviaLegal/mode-select")
+                self._send_redirect("/olivia/mode-select")
             return
 
         if self._is_protected_ui_path(raw_path) and not current_email:
-            next_path = _safe_next_path(raw_path, "/OliviaLegal/mode-select")
-            self._send_redirect(f"/OliviaLegal/login?next={urllib.parse.quote(next_path)}")
+            next_path = _safe_next_path(raw_path, "/olivia/mode-select")
+            self._send_redirect(f"/olivia/login?next={urllib.parse.quote(next_path)}")
             return
 
         if raw_path == "/health":
@@ -10325,12 +10428,12 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         elif raw_path in {"/ready", "/api/ready"}:
             self._serve_ready()
         elif raw_path in {"/awareness/olivia", "/awareness/olivia/"}:
-            self._send_redirect("/OliviaLegal/olivia")
+            self._send_redirect("/olivia/olivia")
         elif raw_path in {"/docs", "/openapi.json", "/api", "/v1", "/routes"}:
             # Common external/tool probes; return no-content to avoid noisy 404s.
             self._serve_no_content()
-        elif raw_path in {"/remote-bus", "/api/OliviaLegal/remote-bus", "/api/olivialegal/remote-bus"}:
-            # Accept both forms because some proxies strip /api/OliviaLegal while others preserve it.
+        elif raw_path in {"/remote-bus", "/api/olivia/remote-bus", "/api/olivia/remote-bus"}:
+            # Accept both forms because some proxies strip /api/Olivia while others preserve it.
             self._remote_bus_get()
         elif raw_path in {
             "/favicon.ico",
@@ -10468,34 +10571,34 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         if raw_path in self._CHANGE_PASSWORD_ALIASES:
             self._auth_change_password_post()
             return
-        if raw_path in {"/OliviaLegal/api/activity/client", "/api/activity/client"}:
+        if raw_path in {"/olivia/api/activity/client", "/api/activity/client"}:
             self._auth_activity_client_post()
             return
-        if raw_path in {"/OliviaLegal/admin/notifications", "/OliviaLegal/admin/notifications/"}:
+        if raw_path in {"/olivia/admin/notifications", "/olivia/admin/notifications/"}:
             self._admin_notifications_create()
             return
-        notif_read_match = re.match(r"^/OliviaLegal/admin/notifications/([^/]+)/read/?$", raw_path)
+        notif_read_match = re.match(r"^/olivia/admin/notifications/([^/]+)/read/?$", raw_path)
         if notif_read_match:
             self._admin_notifications_mark_read(urllib.parse.unquote(notif_read_match.group(1)))
             return
-        if raw_path in {"/OliviaLegal/admin/notifications/read-all", "/OliviaLegal/admin/notifications/read-all/"}:
+        if raw_path in {"/olivia/admin/notifications/read-all", "/olivia/admin/notifications/read-all/"}:
             self._admin_notifications_mark_all_read()
             return
         # Public conversational endpoint — no authentication required
-        if raw_path in {"/api/public/OliviaLegal-ask", "/api/OliviaLegal/public/ask", "/public/ask"}:
+        if raw_path in {"/api/public/OliviaLegal-ask", "/api/olivia/public/ask", "/public/ask"}:
             self._public_OliviaLegal_ask()
             return
-        if raw_path in {"/OliviaLegal/admin/users", "/OliviaLegal/admin/users"}:
+        if raw_path in {"/olivia/admin/users", "/olivia/admin/users"}:
             self._admin_users_create()
             return
         reset_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/users/([^/]+)/reset-password/?$", raw_path)
         if reset_match:
             self._admin_users_reset_password(urllib.parse.unquote(reset_match.group(1)))
             return
-        if raw_path in {"/OliviaLegal/admin/models", "/OliviaLegal/admin/models/"}:
+        if raw_path in {"/olivia/admin/models", "/olivia/admin/models/"}:
             self._admin_models_create()
             return
-        if raw_path in {"/OliviaLegal/admin/ollama-servers", "/OliviaLegal/admin/ollama-servers/"}:
+        if raw_path in {"/olivia/admin/ollama-servers", "/olivia/admin/ollama-servers/"}:
             self._admin_ollama_servers_post()
             return
         restore_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/models/([^/]+)/restore/?$", raw_path)
@@ -10504,7 +10607,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         current_email = self._auth_current_email()
-        if raw_path in {"/run", "/api/OliviaLegal/run", "/api/assistant/chat"} and not current_email:
+        if raw_path in {"/run", "/api/olivia/run", "/api/assistant/chat"} and not current_email:
             # Allow trusted local service-to-service calls for assistant chat
             # (used by the agent-architecture proxy on :8120), and allow
             # explicit admin token requests.
@@ -10515,7 +10618,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 self._json_response({"error": "authentication required"}, 401)
                 return
 
-        if raw_path in {"/run", "/api/OliviaLegal/run"}:
+        if raw_path in {"/run", "/api/olivia/run"}:
             if current_email:
                 _activity_log_write(
                     email=current_email,
@@ -10528,8 +10631,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                     user_agent=str(self.headers.get("User-Agent") or ""),
                 )
             self._agent_run()
-        elif raw_path in {"/remote-bus", "/api/OliviaLegal/remote-bus", "/api/olivialegal/remote-bus"}:
-            # Accept both forms because some proxies strip /api/OliviaLegal while others preserve it.
+        elif raw_path in {"/remote-bus", "/api/olivia/remote-bus", "/api/olivia/remote-bus"}:
+            # Accept both forms because some proxies strip /api/Olivia while others preserve it.
             self._remote_bus_post()
         elif raw_path == "/api/assistant/chat":
             if current_email:
@@ -10574,7 +10677,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         if admin_model_match:
             self._admin_models_delete(urllib.parse.unquote(admin_model_match.group(1)))
             return
-        ollama_server_del_match = re.match(r"^/OliviaLegal/admin/ollama-servers/(.+)$", raw_path)
+        ollama_server_del_match = re.match(r"^/olivia/admin/ollama-servers/(.+)$", raw_path)
         if ollama_server_del_match:
             self._admin_ollama_servers_delete(urllib.parse.unquote(ollama_server_del_match.group(1)))
             return
@@ -10696,7 +10799,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self._sse_send({"event": "thinking", "content": "Starting OpenClaude agent…"})
 
         # Enrich prompt with planning + uploads context
-        planning_ctx = _read_planning_context(user_email=self._auth_current_email())
+        planning_ctx = _read_planning_context(user_email=self._auth_current_email(), project_id=project_id)
         project_ctx = _read_project_context(max_chars=12000, project_id=project_id)
         uploads_ctx = _build_scoped_uploads_context(max_chars=20000, project_id=project_id, agent_id=str(agent_id or ""))
         parts = []
@@ -10752,7 +10855,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         base_url: str | None = None,
     ):
         """Fallback: direct LLM streaming without tool use."""
-        planning_ctx = _read_planning_context(user_email=self._auth_current_email())
+        planning_ctx = _read_planning_context(user_email=self._auth_current_email(), project_id=project_id)
         project_ctx = _read_project_context(max_chars=12000, project_id=project_id)
         uploads_ctx = _build_scoped_uploads_context(max_chars=20000, project_id=project_id, agent_id=str(agent_id or ""))
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
@@ -10791,10 +10894,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._sse_send({"event": "error", "message": str(e)})
         self._sse_done()
 
-    # ── Public OliviaLegal ask: POST /api/public/OliviaLegal-ask → SSE (no auth) ───────
+    # ── Public Olivia ask: POST /api/public/OliviaLegal-ask → SSE (no auth) ───────
     def _public_OliviaLegal_ask(self):
         _PUBLIC_SYSTEM = (
-            "Você é o Agente OliviaLegal — assistente acadêmico e operacional do programa de "
+            "Você é o Agente Olivia — assistente acadêmico e operacional do programa de "
             "Residência Multiprofissional Integrada em Saúde da Família e Comunidade (RMISFC) "
             "da UnirG, Gurupi, Tocantins. "
             "Responda SEMPRE em português brasileiro (PT-BR). "
@@ -11029,7 +11132,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._sse_send({"type": "status", "message": "Montando contexto do workspace..."})
         except BrokenPipeError:
             return
-        planning_ctx = _read_planning_context(user_email=self._auth_current_email())
+        planning_ctx = _read_planning_context(user_email=self._auth_current_email(), project_id=project_id)
         project_ctx = _read_project_context(max_chars=12000, project_id=project_id)
         # Build smart uploads context (directory tree + file contents within budget)
         uploads_ctx = _build_scoped_uploads_context(max_chars=60000, project_id=project_id, agent_id=str(agent_id or ""))
@@ -11037,7 +11140,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         # If a specific agent was selected and has a custom system_prompt stored
         # (e.g. imported GitHub Copilot agent like "IBSCO Change & AI Adoption Strategist"),
-        # use THAT persona as the primary system message instead of the generic OliviaLegal prompt.
+        # use THAT persona as the primary system message instead of the generic Olivia prompt.
         agent_system_prompt, agent_profile = _resolve_agent_system_prompt(str(agent_id or ""))
         selected_mcp_servers = _agent_mcp_servers(str(agent_id or ""))
         if agent_system_prompt:
@@ -11068,7 +11171,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 "browsing, no database, and no arbitrary file-system calls. You "
                 "CANNOT emit pseudo-code like `file_write(...)`, `file_ls(...)`, "
                 "`# Executing...` — those are not real and will never run.\n\n"
-                "HOWEVER, the OliviaLegal backend gives you ONE indirect capability: "
+                "HOWEVER, the Olivia backend gives you ONE indirect capability: "
                 "**autosave of fenced code blocks**. If you emit a fenced block "
                 "whose info string contains `title=\"<relative/path>\"` (or "
                 "`path=\"...\"`, `file=\"...\"`, `filename=\"...\"`), the server "
@@ -14081,8 +14184,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
     def _api_get(self, path):
         # Accept both the canonical path and the nginx-stripped variant
-        # (OliviaLegal-gateway proxy_pass removes the /api/OliviaLegal/ prefix).
-        if path in {"/api/OliviaLegal/remote-bus", "/api/olivialegal/remote-bus", "/remote-bus"}:
+        # (OliviaLegal-gateway proxy_pass removes the /api/olivia/ prefix).
+        if path in {"/api/olivia/remote-bus", "/api/olivia/remote-bus", "/remote-bus"}:
             self._remote_bus_get()
             return
 
@@ -14338,7 +14441,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self._json_response({})
 
     def _api_post(self, path):
-        if path in {"/api/OliviaLegal/remote-bus", "/api/olivialegal/remote-bus", "/remote-bus"}:
+        if path in {"/api/olivia/remote-bus", "/api/olivia/remote-bus", "/remote-bus"}:
             self._remote_bus_post()
             return
 
@@ -14869,7 +14972,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
     # Cross-device control channel: mobile.html POSTs commands; the desktop
     # shaders page long-polls and applies them (and can post acks back).
     def _remote_bus_get(self):
-        """GET /api/olivialegal/remote-bus?since=<id>&role=<role>&wait=<sec>
+        """GET /api/olivia/remote-bus?since=<id>&role=<role>&wait=<sec>
         Long-polls up to `wait` seconds (default 25) for messages newer than
         `since`. Filters out messages the caller itself produced via `role`
         (caller won't receive own echoes if role is supplied).
@@ -14899,7 +15002,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             time.sleep(0.5)
 
     def _remote_bus_post(self):
-        """POST /api/olivialegal/remote-bus — body: {role, payload}.
+        """POST /api/olivia/remote-bus — body: {role, payload}.
         Stores the message for any long-poller to pick up.
         """
         body = self._read_body()
@@ -15927,7 +16030,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 projects.append({
                     "project_id": CASE_PROJECT_ID,
                     "name": CASE_PROJECT_NAME,
-                    "description": "OliviaLegal workspace (somente leitura) com pastas operacionais.",
+                    "description": "Olivia workspace (somente leitura) com pastas operacionais.",
                     "created_at": datetime.fromtimestamp(PROJECT_ROOT.stat().st_mtime, tz=timezone.utc).isoformat(),
                     "files_count": len(_case_file_entries()),
                     "owner_email": "",
@@ -18152,7 +18255,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 def main():
-    parser = argparse.ArgumentParser(description="OliviaLegal server")
+    parser = argparse.ArgumentParser(description="Olivia server")
     parser.add_argument("--port", type=int, default=DEFAULT_PORT, help=f"Port (default: {DEFAULT_PORT})")
     args = parser.parse_args()
 
@@ -18168,7 +18271,7 @@ def main():
             super().handle_error(request, client_address)
 
     with QuietServer(("0.0.0.0", args.port), KoutHandler) as httpd:
-        print(f"OliviaLegal   →  http://localhost:{args.port}/OliviaLegal/")
+        print(f"Olivia   →  http://localhost:{args.port}/olivia/")
         print(f"Gateway →  {VPS_GATEWAY_URL}")
         # Determine actual provider/model based on available keys and model format
         if OPENROUTER_API_KEY:

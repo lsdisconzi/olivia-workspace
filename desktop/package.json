@@ -1,11 +1,11 @@
 {
   "name": "olivia-legal-desktop",
   "version": "1.0.0",
-  "description": "OliviaLegal Desktop — multi-agent legal operations suite",
-  "author": "OliviaLegal Team <info@olivialeqal.com>",
+  "description": "Olivia Desktop — multi-agent legal operations suite",
+  "author": "Olivia Team <info@olivialeqal.com>",
   "homepage": "https://github.com/Gitlawb/olivia-ecosystem",
   "main": "main.js",
-  "productName": "OliviaLegal Desktop",
+  "productName": "Olivia Desktop",
   "appId": "com.olivialeqal.desktop",
   "scripts": {
     "start": "electron .",
@@ -21,11 +21,16 @@
       "node_modules/**/*"
     ],
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "category": "public.app-category.utilities"
     },
     "linux": {
-      "target": ["AppImage", "deb"],
+      "target": [
+        "AppImage",
+        "deb"
+      ],
       "category": "Utility"
     }
   },

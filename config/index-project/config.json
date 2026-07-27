@@ -1,0 +1,495 @@
+{
+  "metadata": {
+    "folder": "config",
+    "indexed_at": "2026-07-26T22:51:20.288769",
+    "total_files": 27,
+    "total_lines": 64004,
+    "languages": {
+      "markdown": 3,
+      "unknown": 3,
+      "json": 21
+    }
+  },
+  "tree": {
+    ".DS_Store": {
+      "file_ref": "files/config/.DS_Store"
+    },
+    ".mcp-bridge-config.json": {
+      "file_ref": "files/config/.mcp-bridge-config.json"
+    },
+    ".mcp-bridge-config.json.bkup": {
+      "file_ref": "files/config/.mcp-bridge-config.json.bkup"
+    },
+    "catalog": {
+      "garage_openapi_catalog.json": {
+        "file_ref": "files/config/catalog/garage_openapi_catalog.json"
+      },
+      "garage_openapi_catalog.md": {
+        "file_ref": "files/config/catalog/garage_openapi_catalog.md"
+      }
+    },
+    "client_secret_2_345835065613-1aun2692e5ooh2l2njfj764j1pi22flh.apps.googleusercontent.com.json": {
+      "file_ref": "files/config/client_secret_2_345835065613-1aun2692e5ooh2l2njfj764j1pi22flh.apps.googleusercontent.com.json"
+    },
+    "index-project": {
+      "agents.json": {
+        "file_ref": "files/config/index-project/agents.json"
+      },
+      "config.json": {
+        "file_ref": "files/config/index-project/config.json"
+      },
+      "content.json": {
+        "file_ref": "files/config/index-project/content.json"
+      },
+      "data.json": {
+        "file_ref": "files/config/index-project/data.json"
+      },
+      "data__notes.json": {
+        "file_ref": "files/config/index-project/data__notes.json"
+      },
+      "deploy.json": {
+        "file_ref": "files/config/index-project/deploy.json"
+      },
+      "deploy__vps.json": {
+        "file_ref": "files/config/index-project/deploy__vps.json"
+      },
+      "desktop.json": {
+        "file_ref": "files/config/index-project/desktop.json"
+      },
+      "frontend.json": {
+        "file_ref": "files/config/index-project/frontend.json"
+      },
+      "generated.json": {
+        "file_ref": "files/config/index-project/generated.json"
+      },
+      "planning.json": {
+        "file_ref": "files/config/index-project/planning.json"
+      },
+      "pluggins.json": {
+        "file_ref": "files/config/index-project/pluggins.json"
+      },
+      "pluggins__craudio.json": {
+        "file_ref": "files/config/index-project/pluggins__craudio.json"
+      },
+      "runtime.json": {
+        "file_ref": "files/config/index-project/runtime.json"
+      },
+      "scripts.json": {
+        "file_ref": "files/config/index-project/scripts.json"
+      },
+      "src.json": {
+        "file_ref": "files/config/index-project/src.json"
+      },
+      "static.json": {
+        "file_ref": "files/config/index-project/static.json"
+      },
+      "tests.json": {
+        "file_ref": "files/config/index-project/tests.json"
+      }
+    },
+    "rclone_config_example.md": {
+      "file_ref": "files/config/rclone_config_example.md"
+    },
+    "requirements.txt": {
+      "file_ref": "files/config/requirements.txt"
+    },
+    "📋 Rclone Configuration & Remote info.md": {
+      "file_ref": "files/config/📋 Rclone Configuration & Remote info.md"
+    }
+  },
+  "files": {
+    "config/rclone_config_example.md": {
+      "path": "config/rclone_config_example.md",
+      "language": "markdown",
+      "size_bytes": 7224,
+      "lines": 249,
+      "last_modified": "2026-07-23T15:58:28.915770",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "config/.DS_Store": {
+      "path": "config/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 1,
+      "last_modified": "2026-07-17T03:41:48.985282",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/requirements.txt": {
+      "path": "config/requirements.txt",
+      "language": "unknown",
+      "size_bytes": 279,
+      "lines": 9,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "config/.mcp-bridge-config.json": {
+      "path": "config/.mcp-bridge-config.json",
+      "language": "json",
+      "size_bytes": 2479,
+      "lines": 77,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "config/📋 Rclone Configuration & Remote info.md": {
+      "path": "config/📋 Rclone Configuration & Remote info.md",
+      "language": "markdown",
+      "size_bytes": 3258,
+      "lines": 104,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "config/client_secret_2_345835065613-1aun2692e5ooh2l2njfj764j1pi22flh.apps.googleusercontent.com.json": {
+      "path": "config/client_secret_2_345835065613-1aun2692e5ooh2l2njfj764j1pi22flh.apps.googleusercontent.com.json",
+      "language": "json",
+      "size_bytes": 578,
+      "lines": 1,
+      "last_modified": "2026-07-21T19:34:53.510707",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/.mcp-bridge-config.json.bkup": {
+      "path": "config/.mcp-bridge-config.json.bkup",
+      "language": "unknown",
+      "size_bytes": 5200,
+      "lines": 124,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "config/catalog/garage_openapi_catalog.md": {
+      "path": "config/catalog/garage_openapi_catalog.md",
+      "language": "markdown",
+      "size_bytes": 11719,
+      "lines": 121,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "config/catalog/garage_openapi_catalog.json": {
+      "path": "config/catalog/garage_openapi_catalog.json",
+      "language": "json",
+      "size_bytes": 83643,
+      "lines": 2542,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "config/index-project/pluggins.json": {
+      "path": "config/index-project/pluggins.json",
+      "language": "json",
+      "size_bytes": 307,
+      "lines": 16,
+      "last_modified": "2026-07-26T22:49:37.935877",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/content.json": {
+      "path": "config/index-project/content.json",
+      "language": "json",
+      "size_bytes": 50759,
+      "lines": 1531,
+      "last_modified": "2026-07-26T22:49:37.901370",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/data__notes.json": {
+      "path": "config/index-project/data__notes.json",
+      "language": "json",
+      "size_bytes": 309,
+      "lines": 16,
+      "last_modified": "2026-07-26T22:49:37.902408",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/runtime.json": {
+      "path": "config/index-project/runtime.json",
+      "language": "json",
+      "size_bytes": 5569,
+      "lines": 255,
+      "last_modified": "2026-07-26T22:49:37.937323",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/src.json": {
+      "path": "config/index-project/src.json",
+      "language": "json",
+      "size_bytes": 41415,
+      "lines": 1765,
+      "last_modified": "2026-07-26T22:49:37.941710",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/generated.json": {
+      "path": "config/index-project/generated.json",
+      "language": "json",
+      "size_bytes": 1261,
+      "lines": 53,
+      "last_modified": "2026-07-26T22:49:37.934805",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/tests.json": {
+      "path": "config/index-project/tests.json",
+      "language": "json",
+      "size_bytes": 2988,
+      "lines": 124,
+      "last_modified": "2026-07-26T22:49:37.943022",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/static.json": {
+      "path": "config/index-project/static.json",
+      "language": "json",
+      "size_bytes": 2718,
+      "lines": 121,
+      "last_modified": "2026-07-26T22:49:37.942384",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/frontend.json": {
+      "path": "config/index-project/frontend.json",
+      "language": "json",
+      "size_bytes": 1271200,
+      "lines": 50718,
+      "last_modified": "2026-07-26T22:49:37.933272",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/config.json": {
+      "path": "config/index-project/config.json",
+      "language": "json",
+      "size_bytes": 5400,
+      "lines": 182,
+      "last_modified": "2026-07-26T22:49:37.898887",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/deploy.json": {
+      "path": "config/index-project/deploy.json",
+      "language": "json",
+      "size_bytes": 2549,
+      "lines": 98,
+      "last_modified": "2026-07-26T22:49:37.902969",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/pluggins__craudio.json": {
+      "path": "config/index-project/pluggins__craudio.json",
+      "language": "json",
+      "size_bytes": 315,
+      "lines": 16,
+      "last_modified": "2026-07-26T22:49:37.936364",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/agents.json": {
+      "path": "config/index-project/agents.json",
+      "language": "json",
+      "size_bytes": 80173,
+      "lines": 2245,
+      "last_modified": "2026-07-26T22:49:37.897501",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/deploy__vps.json": {
+      "path": "config/index-project/deploy__vps.json",
+      "language": "json",
+      "size_bytes": 2510,
+      "lines": 96,
+      "last_modified": "2026-07-26T22:49:37.903460",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/data.json": {
+      "path": "config/index-project/data.json",
+      "language": "json",
+      "size_bytes": 303,
+      "lines": 16,
+      "last_modified": "2026-07-26T22:49:37.901883",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/scripts.json": {
+      "path": "config/index-project/scripts.json",
+      "language": "json",
+      "size_bytes": 70628,
+      "lines": 3020,
+      "last_modified": "2026-07-26T22:49:37.939793",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/planning.json": {
+      "path": "config/index-project/planning.json",
+      "language": "json",
+      "size_bytes": 2600,
+      "lines": 112,
+      "last_modified": "2026-07-26T22:49:37.935404",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "config/index-project/desktop.json": {
+      "path": "config/index-project/desktop.json",
+      "language": "json",
+      "size_bytes": 8963,
+      "lines": 392,
+      "last_modified": "2026-07-26T22:49:37.904367",
+      "git_commit": "",
+      "parsed": {}
+    }
+  },
+  "html_pages": {},
+  "modules": {
+    "config": {
+      "files": [
+        "config/rclone_config_example.md",
+        "config/.DS_Store",
+        "config/requirements.txt",
+        "config/.mcp-bridge-config.json",
+        "config/📋 Rclone Configuration & Remote info.md",
+        "config/client_secret_2_345835065613-1aun2692e5ooh2l2njfj764j1pi22flh.apps.googleusercontent.com.json",
+        "config/.mcp-bridge-config.json.bkup"
+      ],
+      "count": 7
+    },
+    "config/index-project": {
+      "files": [
+        "config/index-project/pluggins.json",
+        "config/index-project/content.json",
+        "config/index-project/data__notes.json",
+        "config/index-project/runtime.json",
+        "config/index-project/src.json",
+        "config/index-project/generated.json",
+        "config/index-project/tests.json",
+        "config/index-project/static.json",
+        "config/index-project/frontend.json",
+        "config/index-project/config.json",
+        "config/index-project/deploy.json",
+        "config/index-project/pluggins__craudio.json",
+        "config/index-project/agents.json",
+        "config/index-project/deploy__vps.json",
+        "config/index-project/data.json",
+        "config/index-project/scripts.json",
+        "config/index-project/planning.json",
+        "config/index-project/desktop.json"
+      ],
+      "count": 18
+    }
+  },
+  "symbols_index": {},
+  "dependency_graph": {
+    "config/rclone_config_example.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/requirements.txt": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/.mcp-bridge-config.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/📋 Rclone Configuration & Remote info.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/client_secret_2_345835065613-1aun2692e5ooh2l2njfj764j1pi22flh.apps.googleusercontent.com.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/.mcp-bridge-config.json.bkup": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/catalog/garage_openapi_catalog.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/catalog/garage_openapi_catalog.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/pluggins.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/content.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/data__notes.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/runtime.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/src.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/generated.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/tests.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/static.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/frontend.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/config.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/deploy.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/pluggins__craudio.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/agents.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/deploy__vps.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/data.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/scripts.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/planning.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "config/index-project/desktop.json": {
+      "imports": [],
+      "imported_by": []
+    }
+  },
+  "js_cross_module_graph": {}
+}

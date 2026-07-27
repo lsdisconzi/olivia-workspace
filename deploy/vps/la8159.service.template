@@ -1,5 +1,5 @@
 [Unit]
-Description=OliviaLegal Unified Agent Server
+Description=Olivia Unified Agent Server
 After=network.target
 
 [Service]

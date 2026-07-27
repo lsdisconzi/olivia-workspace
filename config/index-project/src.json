@@ -1,0 +1,1765 @@
+{
+  "metadata": {
+    "folder": "src",
+    "indexed_at": "2026-07-26T22:51:20.288769",
+    "total_files": 8,
+    "total_lines": 2327,
+    "languages": {
+      "python": 8
+    }
+  },
+  "tree": {
+    "__init__.py": {
+      "file_ref": "files/src/__init__.py"
+    },
+    "endpoint_mapper.py": {
+      "file_ref": "files/src/endpoint_mapper.py"
+    },
+    "mcp": {
+      "__init__.py": {
+        "file_ref": "files/src/mcp/__init__.py"
+      },
+      "remote_bus.py": {
+        "file_ref": "files/src/mcp/remote_bus.py"
+      },
+      "vps_bridge.py": {
+        "file_ref": "files/src/mcp/vps_bridge.py"
+      }
+    },
+    "orchestration_contracts.py": {
+      "file_ref": "files/src/orchestration_contracts.py"
+    },
+    "runtime_config.py": {
+      "file_ref": "files/src/runtime_config.py"
+    },
+    "server": {
+      "__init__.py": {
+        "file_ref": "files/src/server/__init__.py"
+      }
+    }
+  },
+  "files": {
+    "src/runtime_config.py": {
+      "path": "src/runtime_config.py",
+      "language": "python",
+      "size_bytes": 1423,
+      "lines": 50,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "os",
+          "pathlib"
+        ],
+        "imports_external": [
+          "__future__"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_iter_env_lines",
+              "line": 10,
+              "end_line": 24,
+              "args": [
+                "path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_load_env_file",
+              "line": 27,
+              "end_line": 32,
+              "args": [
+                "path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "bootstrap_environment",
+              "line": 35,
+              "end_line": 49,
+              "args": [
+                "root"
+              ],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": []
+        }
+      }
+    },
+    "src/endpoint_mapper.py": {
+      "path": "src/endpoint_mapper.py",
+      "language": "python",
+      "size_bytes": 51924,
+      "lines": 1243,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "os",
+          "re",
+          "json",
+          "time",
+          "argparse",
+          "hashlib",
+          "sys",
+          "pathlib",
+          "typing"
+        ],
+        "imports_external": [
+          "shutil",
+          "dataclasses",
+          "openai",
+          "src.runtime_config"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_derive_project_name",
+              "line": 1068,
+              "end_line": 1079,
+              "args": [
+                "source_dir",
+                "override"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_copy_sources",
+              "line": 1082,
+              "end_line": 1093,
+              "args": [
+                "source_dir",
+                "output_dir"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_clear_pages",
+              "line": 1096,
+              "end_line": 1102,
+              "args": [
+                "source_dir"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 1105,
+              "end_line": 1238,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "__init__",
+              "line": 123,
+              "end_line": 143,
+              "args": [
+                "self",
+                "api_key"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_extract_js_from_html",
+              "line": 145,
+              "end_line": 150,
+              "args": [
+                "self",
+                "content"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_chunk_content",
+              "line": 152,
+              "end_line": 174,
+              "args": [
+                "self",
+                "content"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_analyze_chunk",
+              "line": 176,
+              "end_line": 246,
+              "args": [
+                "self",
+                "file_path",
+                "file_type",
+                "content",
+                "chunk_num",
+                "total_chunks"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "analyze_file",
+              "line": 248,
+              "end_line": 324,
+              "args": [
+                "self",
+                "file_path",
+                "content"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "scan",
+              "line": 338,
+              "end_line": 353,
+              "args": [
+                "cls",
+                "directory"
+              ],
+              "decorators": [
+                "classmethod"
+              ]
+            },
+            {
+              "name": "__init__",
+              "line": 366,
+              "end_line": 367,
+              "args": [
+                "self"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_generate_id",
+              "line": 370,
+              "end_line": 373,
+              "args": [
+                "method",
+                "url"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_extract_path_params",
+              "line": 376,
+              "end_line": 390,
+              "args": [
+                "url"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_extract_query_params",
+              "line": 393,
+              "end_line": 407,
+              "args": [
+                "url"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_categorize_endpoint",
+              "line": 410,
+              "end_line": 443,
+              "args": [
+                "method",
+                "url",
+                "context"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_derive_function_name",
+              "line": 446,
+              "end_line": 467,
+              "args": [
+                "endpoint"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_parse_body_schema",
+              "line": 470,
+              "end_line": 490,
+              "args": [
+                "payload"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_extract_headers",
+              "line": 493,
+              "end_line": 503,
+              "args": [
+                "notes"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_infer_response_type",
+              "line": 506,
+              "end_line": 512,
+              "args": [
+                "url",
+                "method",
+                "response"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_derive_use_cases",
+              "line": 515,
+              "end_line": 541,
+              "args": [
+                "method",
+                "url",
+                "context",
+                "category"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_derive_capabilities",
+              "line": 544,
+              "end_line": 562,
+              "args": [
+                "method",
+                "url",
+                "category"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "generate_from_analysis",
+              "line": 564,
+              "end_line": 612,
+              "args": [
+                "self",
+                "analysis"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_find_relationships",
+              "line": 614,
+              "end_line": 644,
+              "args": [
+                "self",
+                "functions"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "write_to_directory",
+              "line": 646,
+              "end_line": 715,
+              "args": [
+                "self",
+                "output_dir"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_generate_workflows",
+              "line": 717,
+              "end_line": 773,
+              "args": [
+                "self"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_generate_agent_readme",
+              "line": 775,
+              "end_line": 852,
+              "args": [
+                "self"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "generate_mermaid_diagram",
+              "line": 863,
+              "end_line": 922,
+              "args": [
+                "analysis"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "generate_per_file_diagram",
+              "line": 925,
+              "end_line": 947,
+              "args": [
+                "file_analysis"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "generate_markdown",
+              "line": 950,
+              "end_line": 1038,
+              "args": [
+                "analysis"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "generate_json",
+              "line": 1041,
+              "end_line": 1061,
+              "args": [
+                "analysis"
+              ],
+              "decorators": [
+                "staticmethod"
+              ]
+            },
+            {
+              "name": "_flatten",
+              "line": 307,
+              "end_line": 316,
+              "args": [
+                "items"
+              ],
+              "decorators": []
+            }
+          ],
+          "classes": [
+            {
+              "name": "APIEndpoint",
+              "line": 42,
+              "end_line": 52,
+              "methods": [],
+              "bases": []
+            },
+            {
+              "name": "FileAnalysis",
+              "line": 55,
+              "end_line": 61,
+              "methods": [],
+              "bases": []
+            },
+            {
+              "name": "ProjectAnalysis",
+              "line": 64,
+              "end_line": 70,
+              "methods": [],
+              "bases": []
+            },
+            {
+              "name": "AgentFunction",
+              "line": 74,
+              "end_line": 111,
+              "methods": [],
+              "bases": []
+            },
+            {
+              "name": "EndpointAnalyzer",
+              "line": 118,
+              "end_line": 324,
+              "methods": [
+                {
+                  "name": "__init__",
+                  "line": 123,
+                  "end_line": 143,
+                  "args": [
+                    "self",
+                    "api_key"
+                  ]
+                },
+                {
+                  "name": "_extract_js_from_html",
+                  "line": 145,
+                  "end_line": 150,
+                  "args": [
+                    "self",
+                    "content"
+                  ]
+                },
+                {
+                  "name": "_chunk_content",
+                  "line": 152,
+                  "end_line": 174,
+                  "args": [
+                    "self",
+                    "content"
+                  ]
+                },
+                {
+                  "name": "_analyze_chunk",
+                  "line": 176,
+                  "end_line": 246,
+                  "args": [
+                    "self",
+                    "file_path",
+                    "file_type",
+                    "content",
+                    "chunk_num",
+                    "total_chunks"
+                  ]
+                },
+                {
+                  "name": "analyze_file",
+                  "line": 248,
+                  "end_line": 324,
+                  "args": [
+                    "self",
+                    "file_path",
+                    "content"
+                  ]
+                }
+              ],
+              "bases": []
+            },
+            {
+              "name": "FileScanner",
+              "line": 331,
+              "end_line": 353,
+              "methods": [
+                {
+                  "name": "scan",
+                  "line": 338,
+                  "end_line": 353,
+                  "args": [
+                    "cls",
+                    "directory"
+                  ]
+                }
+              ],
+              "bases": []
+            },
+            {
+              "name": "AgentFunctionsGenerator",
+              "line": 360,
+              "end_line": 852,
+              "methods": [
+                {
+                  "name": "__init__",
+                  "line": 366,
+                  "end_line": 367,
+                  "args": [
+                    "self"
+                  ]
+                },
+                {
+                  "name": "_generate_id",
+                  "line": 370,
+                  "end_line": 373,
+                  "args": [
+                    "method",
+                    "url"
+                  ]
+                },
+                {
+                  "name": "_extract_path_params",
+                  "line": 376,
+                  "end_line": 390,
+                  "args": [
+                    "url"
+                  ]
+                },
+                {
+                  "name": "_extract_query_params",
+                  "line": 393,
+                  "end_line": 407,
+                  "args": [
+                    "url"
+                  ]
+                },
+                {
+                  "name": "_categorize_endpoint",
+                  "line": 410,
+                  "end_line": 443,
+                  "args": [
+                    "method",
+                    "url",
+                    "context"
+                  ]
+                },
+                {
+                  "name": "_derive_function_name",
+                  "line": 446,
+                  "end_line": 467,
+                  "args": [
+                    "endpoint"
+                  ]
+                },
+                {
+                  "name": "_parse_body_schema",
+                  "line": 470,
+                  "end_line": 490,
+                  "args": [
+                    "payload"
+                  ]
+                },
+                {
+                  "name": "_extract_headers",
+                  "line": 493,
+                  "end_line": 503,
+                  "args": [
+                    "notes"
+                  ]
+                },
+                {
+                  "name": "_infer_response_type",
+                  "line": 506,
+                  "end_line": 512,
+                  "args": [
+                    "url",
+                    "method",
+                    "response"
+                  ]
+                },
+                {
+                  "name": "_derive_use_cases",
+                  "line": 515,
+                  "end_line": 541,
+                  "args": [
+                    "method",
+                    "url",
+                    "context",
+                    "category"
+                  ]
+                },
+                {
+                  "name": "_derive_capabilities",
+                  "line": 544,
+                  "end_line": 562,
+                  "args": [
+                    "method",
+                    "url",
+                    "category"
+                  ]
+                },
+                {
+                  "name": "generate_from_analysis",
+                  "line": 564,
+                  "end_line": 612,
+                  "args": [
+                    "self",
+                    "analysis"
+                  ]
+                },
+                {
+                  "name": "_find_relationships",
+                  "line": 614,
+                  "end_line": 644,
+                  "args": [
+                    "self",
+                    "functions"
+                  ]
+                },
+                {
+                  "name": "write_to_directory",
+                  "line": 646,
+                  "end_line": 715,
+                  "args": [
+                    "self",
+                    "output_dir"
+                  ]
+                },
+                {
+                  "name": "_generate_workflows",
+                  "line": 717,
+                  "end_line": 773,
+                  "args": [
+                    "self"
+                  ]
+                },
+                {
+                  "name": "_generate_agent_readme",
+                  "line": 775,
+                  "end_line": 852,
+                  "args": [
+                    "self"
+                  ]
+                }
+              ],
+              "bases": []
+            },
+            {
+              "name": "DocumentationGenerator",
+              "line": 859,
+              "end_line": 1061,
+              "methods": [
+                {
+                  "name": "generate_mermaid_diagram",
+                  "line": 863,
+                  "end_line": 922,
+                  "args": [
+                    "analysis"
+                  ]
+                },
+                {
+                  "name": "generate_per_file_diagram",
+                  "line": 925,
+                  "end_line": 947,
+                  "args": [
+                    "file_analysis"
+                  ]
+                },
+                {
+                  "name": "generate_markdown",
+                  "line": 950,
+                  "end_line": 1038,
+                  "args": [
+                    "analysis"
+                  ]
+                },
+                {
+                  "name": "generate_json",
+                  "line": 1041,
+                  "end_line": 1061,
+                  "args": [
+                    "analysis"
+                  ]
+                }
+              ],
+              "bases": []
+            }
+          ],
+          "globals": [
+            {
+              "name": "_PROJ_ROOT",
+              "line": 28
+            }
+          ]
+        }
+      }
+    },
+    "src/orchestration_contracts.py": {
+      "path": "src/orchestration_contracts.py",
+      "language": "python",
+      "size_bytes": 9980,
+      "lines": 278,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "json",
+          "datetime",
+          "pathlib",
+          "typing"
+        ],
+        "imports_external": [
+          "__future__"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_read_json",
+              "line": 91,
+              "end_line": 98,
+              "args": [
+                "path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_project_contract_paths",
+              "line": 101,
+              "end_line": 108,
+              "args": [
+                "project_root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "validate_meta_route_request",
+              "line": 111,
+              "end_line": 125,
+              "args": [
+                "payload"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "validate_meta_route_response",
+              "line": 128,
+              "end_line": 145,
+              "args": [
+                "payload"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_validate_policy_coverage",
+              "line": 148,
+              "end_line": 190,
+              "args": [
+                "tool_permissions",
+                "handoff_routes"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_validate_memory_assignments",
+              "line": 193,
+              "end_line": 231,
+              "args": [
+                "groups_index",
+                "memory_assignments"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "build_orchestration_contract_report",
+              "line": 234,
+              "end_line": 261,
+              "args": [
+                "project_root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "build_orchestration_contract_bundle",
+              "line": 264,
+              "end_line": 277,
+              "args": [
+                "project_root"
+              ],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "CORE_GROUPS",
+              "line": 11
+            },
+            {
+              "name": "BROADCAST_TARGET_ALIASES",
+              "line": 12
+            },
+            {
+              "name": "ERROR_TAXONOMY",
+              "line": 80
+            }
+          ]
+        }
+      }
+    },
+    "src/__init__.py": {
+      "path": "src/__init__.py",
+      "language": "python",
+      "size_bytes": 0,
+      "lines": 1,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [],
+        "imports_external": [],
+        "symbols": {
+          "functions": [],
+          "classes": [],
+          "globals": []
+        }
+      }
+    },
+    "src/server/__init__.py": {
+      "path": "src/server/__init__.py",
+      "language": "python",
+      "size_bytes": 0,
+      "lines": 1,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [],
+        "imports_external": [],
+        "symbols": {
+          "functions": [],
+          "classes": [],
+          "globals": []
+        }
+      }
+    },
+    "src/mcp/__init__.py": {
+      "path": "src/mcp/__init__.py",
+      "language": "python",
+      "size_bytes": 0,
+      "lines": 1,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [],
+        "imports_external": [],
+        "symbols": {
+          "functions": [],
+          "classes": [],
+          "globals": []
+        }
+      }
+    },
+    "src/mcp/remote_bus.py": {
+      "path": "src/mcp/remote_bus.py",
+      "language": "python",
+      "size_bytes": 8958,
+      "lines": 231,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "json",
+          "os",
+          "sys",
+          "urllib.error",
+          "urllib.request"
+        ],
+        "imports_external": [
+          "__future__"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_post_bus",
+              "line": 62,
+              "end_line": 82,
+              "args": [
+                "payload"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_call_tool",
+              "line": 85,
+              "end_line": 128,
+              "args": [
+                "name",
+                "args"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_send",
+              "line": 176,
+              "end_line": 178,
+              "args": [
+                "obj"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 181,
+              "end_line": 226,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "_default_port",
+              "line": 24
+            },
+            {
+              "name": "BUS_URL",
+              "line": 25
+            },
+            {
+              "name": "TIMEOUT",
+              "line": 29
+            },
+            {
+              "name": "SH3D_FUNCS",
+              "line": 32
+            },
+            {
+              "name": "SH_FUNCS",
+              "line": 46
+            },
+            {
+              "name": "TOOLS",
+              "line": 131
+            }
+          ]
+        }
+      }
+    },
+    "src/mcp/vps_bridge.py": {
+      "path": "src/mcp/vps_bridge.py",
+      "language": "python",
+      "size_bytes": 17350,
+      "lines": 522,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "json",
+          "os",
+          "re",
+          "sys",
+          "urllib.error",
+          "urllib.parse",
+          "urllib.request"
+        ],
+        "imports_external": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_log",
+              "line": 54,
+              "end_line": 57,
+              "args": [
+                "msg"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_load_static_endpoints",
+              "line": 69,
+              "end_line": 86,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "_infer_topic",
+              "line": 93,
+              "end_line": 101,
+              "args": [
+                "path",
+                "tags"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_load_openapi_endpoints",
+              "line": 104,
+              "end_line": 171,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "_merge_endpoints",
+              "line": 178,
+              "end_line": 197,
+              "args": [
+                "static",
+                "dynamic"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_slugify",
+              "line": 200,
+              "end_line": 204,
+              "args": [
+                "text"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_make_tool_name",
+              "line": 207,
+              "end_line": 220,
+              "args": [
+                "ep"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_build_tools",
+              "line": 233,
+              "end_line": 308,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "_execute_api_call",
+              "line": 318,
+              "end_line": 387,
+              "args": [
+                "ep",
+                "arguments"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_send",
+              "line": 402,
+              "end_line": 406,
+              "args": [
+                "msg"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_handle_initialize",
+              "line": 409,
+              "end_line": 418,
+              "args": [
+                "req_id",
+                "_params"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_handle_tools_list",
+              "line": 421,
+              "end_line": 426,
+              "args": [
+                "req_id",
+                "_params"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_handle_tools_call",
+              "line": 429,
+              "end_line": 460,
+              "args": [
+                "req_id",
+                "params"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 472,
+              "end_line": 517,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "GATEWAY_URL",
+              "line": 31
+            },
+            {
+              "name": "OPENAPI_URL",
+              "line": 32
+            },
+            {
+              "name": "SKIP_OPENAPI",
+              "line": 33
+            },
+            {
+              "name": "MAX_TOOLS",
+              "line": 34
+            },
+            {
+              "name": "_HERE",
+              "line": 36
+            },
+            {
+              "name": "_ENDPOINTS_CANDIDATES",
+              "line": 37
+            },
+            {
+              "name": "_SKIP_PATH_PATTERNS",
+              "line": 43
+            },
+            {
+              "name": "_EP_RE",
+              "line": 63
+            },
+            {
+              "name": "SERVER_INFO",
+              "line": 394
+            },
+            {
+              "name": "PROTOCOL_VERSION",
+              "line": 399
+            },
+            {
+              "name": "_HANDLERS",
+              "line": 463
+            }
+          ]
+        }
+      }
+    }
+  },
+  "html_pages": {},
+  "modules": {
+    "src": {
+      "files": [
+        "src/runtime_config.py",
+        "src/endpoint_mapper.py",
+        "src/orchestration_contracts.py",
+        "src/__init__.py"
+      ],
+      "count": 4
+    },
+    "src/mcp": {
+      "files": [
+        "src/mcp/__init__.py",
+        "src/mcp/remote_bus.py",
+        "src/mcp/vps_bridge.py"
+      ],
+      "count": 3
+    }
+  },
+  "symbols_index": {
+    "_extract_path_params": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 376,
+        "type": "function"
+      }
+    ],
+    "main": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 1105,
+        "type": "function"
+      },
+      {
+        "file": "src/mcp/remote_bus.py",
+        "line": 181,
+        "type": "function"
+      },
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 472,
+        "type": "function"
+      }
+    ],
+    "__init__": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 123,
+        "type": "function"
+      },
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 366,
+        "type": "function"
+      }
+    ],
+    "_log": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 54,
+        "type": "function"
+      }
+    ],
+    "_iter_env_lines": [
+      {
+        "file": "src/runtime_config.py",
+        "line": 10,
+        "type": "function"
+      }
+    ],
+    "_load_env_file": [
+      {
+        "file": "src/runtime_config.py",
+        "line": 27,
+        "type": "function"
+      }
+    ],
+    "bootstrap_environment": [
+      {
+        "file": "src/runtime_config.py",
+        "line": 35,
+        "type": "function"
+      }
+    ],
+    "_derive_project_name": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 1068,
+        "type": "function"
+      }
+    ],
+    "_copy_sources": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 1082,
+        "type": "function"
+      }
+    ],
+    "_clear_pages": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 1096,
+        "type": "function"
+      }
+    ],
+    "_extract_js_from_html": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 145,
+        "type": "function"
+      }
+    ],
+    "_chunk_content": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 152,
+        "type": "function"
+      }
+    ],
+    "_analyze_chunk": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 176,
+        "type": "function"
+      }
+    ],
+    "analyze_file": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 248,
+        "type": "function"
+      }
+    ],
+    "scan": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 338,
+        "type": "function"
+      }
+    ],
+    "_generate_id": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 370,
+        "type": "function"
+      }
+    ],
+    "_extract_query_params": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 393,
+        "type": "function"
+      }
+    ],
+    "_categorize_endpoint": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 410,
+        "type": "function"
+      }
+    ],
+    "_derive_function_name": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 446,
+        "type": "function"
+      }
+    ],
+    "_parse_body_schema": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 470,
+        "type": "function"
+      }
+    ],
+    "_extract_headers": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 493,
+        "type": "function"
+      }
+    ],
+    "_infer_response_type": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 506,
+        "type": "function"
+      }
+    ],
+    "_derive_use_cases": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 515,
+        "type": "function"
+      }
+    ],
+    "_derive_capabilities": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 544,
+        "type": "function"
+      }
+    ],
+    "generate_from_analysis": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 564,
+        "type": "function"
+      }
+    ],
+    "_find_relationships": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 614,
+        "type": "function"
+      }
+    ],
+    "write_to_directory": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 646,
+        "type": "function"
+      }
+    ],
+    "_generate_workflows": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 717,
+        "type": "function"
+      }
+    ],
+    "_generate_agent_readme": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 775,
+        "type": "function"
+      }
+    ],
+    "generate_mermaid_diagram": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 863,
+        "type": "function"
+      }
+    ],
+    "generate_per_file_diagram": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 925,
+        "type": "function"
+      }
+    ],
+    "generate_markdown": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 950,
+        "type": "function"
+      }
+    ],
+    "generate_json": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 1041,
+        "type": "function"
+      }
+    ],
+    "_flatten": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 307,
+        "type": "function"
+      }
+    ],
+    "APIEndpoint": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 42,
+        "type": "class"
+      }
+    ],
+    "FileAnalysis": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 55,
+        "type": "class"
+      }
+    ],
+    "ProjectAnalysis": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 64,
+        "type": "class"
+      }
+    ],
+    "AgentFunction": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 74,
+        "type": "class"
+      }
+    ],
+    "EndpointAnalyzer": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 118,
+        "type": "class"
+      }
+    ],
+    "FileScanner": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 331,
+        "type": "class"
+      }
+    ],
+    "AgentFunctionsGenerator": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 360,
+        "type": "class"
+      }
+    ],
+    "DocumentationGenerator": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 859,
+        "type": "class"
+      }
+    ],
+    "_read_json": [
+      {
+        "file": "src/orchestration_contracts.py",
+        "line": 91,
+        "type": "function"
+      }
+    ],
+    "_project_contract_paths": [
+      {
+        "file": "src/orchestration_contracts.py",
+        "line": 101,
+        "type": "function"
+      }
+    ],
+    "validate_meta_route_request": [
+      {
+        "file": "src/orchestration_contracts.py",
+        "line": 111,
+        "type": "function"
+      }
+    ],
+    "validate_meta_route_response": [
+      {
+        "file": "src/orchestration_contracts.py",
+        "line": 128,
+        "type": "function"
+      }
+    ],
+    "_validate_policy_coverage": [
+      {
+        "file": "src/orchestration_contracts.py",
+        "line": 148,
+        "type": "function"
+      }
+    ],
+    "_validate_memory_assignments": [
+      {
+        "file": "src/orchestration_contracts.py",
+        "line": 193,
+        "type": "function"
+      }
+    ],
+    "build_orchestration_contract_report": [
+      {
+        "file": "src/orchestration_contracts.py",
+        "line": 234,
+        "type": "function"
+      }
+    ],
+    "build_orchestration_contract_bundle": [
+      {
+        "file": "src/orchestration_contracts.py",
+        "line": 264,
+        "type": "function"
+      }
+    ],
+    "_post_bus": [
+      {
+        "file": "src/mcp/remote_bus.py",
+        "line": 62,
+        "type": "function"
+      }
+    ],
+    "_call_tool": [
+      {
+        "file": "src/mcp/remote_bus.py",
+        "line": 85,
+        "type": "function"
+      }
+    ],
+    "_send": [
+      {
+        "file": "src/mcp/remote_bus.py",
+        "line": 176,
+        "type": "function"
+      },
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 402,
+        "type": "function"
+      }
+    ],
+    "_load_static_endpoints": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 69,
+        "type": "function"
+      }
+    ],
+    "_infer_topic": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 93,
+        "type": "function"
+      }
+    ],
+    "_load_openapi_endpoints": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 104,
+        "type": "function"
+      }
+    ],
+    "_merge_endpoints": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 178,
+        "type": "function"
+      }
+    ],
+    "_slugify": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 200,
+        "type": "function"
+      }
+    ],
+    "_make_tool_name": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 207,
+        "type": "function"
+      }
+    ],
+    "_build_tools": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 233,
+        "type": "function"
+      }
+    ],
+    "_execute_api_call": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 318,
+        "type": "function"
+      }
+    ],
+    "_handle_initialize": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 409,
+        "type": "function"
+      }
+    ],
+    "_handle_tools_list": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 421,
+        "type": "function"
+      }
+    ],
+    "_handle_tools_call": [
+      {
+        "file": "src/mcp/vps_bridge.py",
+        "line": 429,
+        "type": "function"
+      }
+    ]
+  },
+  "dependency_graph": {
+    "src/runtime_config.py": {
+      "imports": [
+        "os",
+        "pathlib",
+        "__future__"
+      ],
+      "imported_by": []
+    },
+    "src/endpoint_mapper.py": {
+      "imports": [
+        "os",
+        "re",
+        "json",
+        "time",
+        "argparse",
+        "hashlib",
+        "sys",
+        "pathlib",
+        "typing",
+        "shutil",
+        "dataclasses",
+        "openai",
+        "src.runtime_config"
+      ],
+      "imported_by": []
+    },
+    "src/orchestration_contracts.py": {
+      "imports": [
+        "json",
+        "datetime",
+        "pathlib",
+        "typing",
+        "__future__"
+      ],
+      "imported_by": []
+    },
+    "src/__init__.py": {
+      "imports": [],
+      "imported_by": []
+    },
+    "src/server/__init__.py": {
+      "imports": [],
+      "imported_by": []
+    },
+    "src/mcp/__init__.py": {
+      "imports": [],
+      "imported_by": []
+    },
+    "src/mcp/remote_bus.py": {
+      "imports": [
+        "json",
+        "os",
+        "sys",
+        "urllib.error",
+        "urllib.request",
+        "__future__"
+      ],
+      "imported_by": []
+    },
+    "src/mcp/vps_bridge.py": {
+      "imports": [
+        "json",
+        "os",
+        "re",
+        "sys",
+        "urllib.error",
+        "urllib.parse",
+        "urllib.request"
+      ],
+      "imported_by": []
+    }
+  },
+  "js_cross_module_graph": {}
+}

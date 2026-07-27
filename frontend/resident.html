@@ -1,879 +1,1469 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Residência Multiprofissional · UnirG 2026 · Olivia</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-  --eco-verde: #1c4532;
-  --eco-verde-2: #163a2a;
-  --eco-verde-3: #2d785a;
-  --eco-verde-light: #5a8a6e;
-  --eco-verde-lo: rgba(28,69,50,0.06);
-  --eco-terra: #c4622d;
-  --eco-terra-light: #d4733e;
-  --eco-terra-lo: rgba(196,98,45,0.06);
-  --eco-creme: #faf9f6;
-  --eco-branco: #ffffff;
-  --eco-tinta: #1a1814;
-  --eco-medio: #6b665d;
-  --eco-claro: #9a9088;
-  --eco-borda: #e5e2dc;
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Residência Multiprofissional · UnirG 2026 · Olivia</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --eco-verde: #1c4532;
+      --eco-verde-2: #163a2a;
+      --eco-verde-3: #2d785a;
+      --eco-verde-light: #5a8a6e;
+      --eco-verde-lo: rgba(28, 69, 50, 0.06);
+      --eco-terra: #c4622d;
+      --eco-terra-light: #d4733e;
+      --eco-terra-lo: rgba(196, 98, 45, 0.06);
+      --eco-creme: #faf9f6;
+      --eco-branco: #ffffff;
+      --eco-tinta: #1a1814;
+      --eco-medio: #6b665d;
+      --eco-claro: #9a9088;
+      --eco-borda: #e5e2dc;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body {
-  font-family: var(--font-body);
-  background: var(--eco-creme);
-  color: var(--eco-tinta);
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-}
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-@keyframes sway { 0%,100% { transform:rotate(0deg); } 50% { transform:rotate(1.2deg); } }
-@keyframes sway-r { 0%,100% { transform:rotate(0deg); } 50% { transform:rotate(-1deg); } }
-@keyframes fruit-glow { 0%,100% { opacity:.85; } 50% { opacity:1; } }
-@keyframes float-up { 0% { opacity:0; transform:translateY(24px); } 100% { opacity:1; transform:translateY(0); } }
-@keyframes subtle-pulse { 0%,100% { opacity:.4; } 50% { opacity:.6; } }
-@keyframes leaf-rustle { 0%,100% { transform:rotate(0deg) scale(1); } 50% { transform:rotate(3deg) scale(1.02); } }
-@keyframes pulse-beat { 0%,100% { transform:scale(1); } 50% { transform:scale(1.03); } }
+    html {
+      scroll-behavior: smooth;
+    }
 
-@media(prefers-reduced-motion:reduce) {
-  *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; }
-  html { scroll-behavior:auto; }
-}
+    body {
+      font-family: var(--font-body);
+      background: var(--eco-creme);
+      color: var(--eco-tinta);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
 
-/* ═══════════ NAVIGATION — Olivia style ═══════════ */
-.nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  height: 56px; background: rgba(255,255,255,0.95);
-  border-bottom: 1px solid var(--eco-borda);
-  display: flex; align-items: center;
-  padding: 0 24px;
-  backdrop-filter: blur(20px);
-}
-.nav-inner {
-  width: 100%; max-width: 1080px; margin: 0 auto;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.nav-brand {
-  font-family: var(--font-display); font-size: 17px; font-weight: 500;
-  color: var(--eco-verde); text-decoration: none;
-  display: flex; align-items: baseline; gap: 12px;
-}
-.nav-brand-sub {
-  font-family: var(--font-mono); font-size: 10px; font-weight: 400;
-  color: var(--eco-claro); letter-spacing: 0.1em; text-transform: uppercase;
-}
-.nav-links { display: flex; gap: 24px; align-items: center; }
-.nav-link {
-  font-size: 13px; color: var(--eco-medio); text-decoration: none;
-  transition: color .15s; letter-spacing: .01em;
-}
-.nav-link:hover { color: var(--eco-tinta); }
-.nav-link i { font-size: 11px; margin-right: 5px; }
-.nav-cta {
-  font-size: 13px; padding: 7px 18px; border: 1px solid var(--eco-borda);
-  color: var(--eco-tinta); text-decoration: none; border-radius: 6px;
-  transition: all .15s;
-}
-.nav-cta:hover { border-color: var(--eco-terra); background: var(--eco-terra-lo); }
+    @keyframes sway {
 
-@media(max-width:768px) {
-  .nav-links { display: none; }
-}
+      0%,
+      100% {
+        transform: rotate(0deg);
+      }
 
-/* ═══════════ CONTENT WRAPPER ═══════════ */
-.content { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+      50% {
+        transform: rotate(1.2deg);
+      }
+    }
 
-/* ═══════════ HERO ═══════════ */
-.hero {
-  text-align: center; padding: 120px 0 72px;
-  position: relative; overflow: hidden;
-}
-.hero::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(28,69,50,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 80% 100%, rgba(196,98,45,0.03) 0%, transparent 50%);
-}
-.hero-content { position: relative; z-index: 1; animation: float-up .8s ease-out; }
-.hero-kicker {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--font-mono); font-size: 10px; color: var(--eco-verde-3);
-  text-transform: uppercase; letter-spacing: .14em;
-  padding: 7px 20px; border: 1px solid rgba(28,69,50,0.2);
-  border-radius: 24px; background: var(--eco-verde-lo); margin-bottom: 28px;
-}
-.hero-title {
-  font-family: var(--font-display); font-size: clamp(32px, 6vw, 48px);
-  font-weight: 400; color: var(--eco-tinta); line-height: 1.15;
-  margin-bottom: 18px; letter-spacing: -0.02em;
-}
-.hero-title em { color: var(--eco-verde); font-style: italic; font-weight: 300; }
-.hero-desc {
-  font-size: 16px; color: var(--eco-medio); line-height: 1.8;
-  max-width: 580px; margin: 0 auto 36px;
-}
-.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    @keyframes sway-r {
 
-/* ═══════════ BUTTONS — Olivia style ═══════════ */
-.btn-primary {
-  font-family: var(--font-body); font-size: 14px; font-weight: 500;
-  padding: 13px 28px; border-radius: 8px; border: none;
-  background: var(--eco-verde); color: var(--eco-creme);
-  cursor: pointer; transition: all .3s ease;
-  display: inline-flex; align-items: center; gap: 9px;
-  text-decoration: none;
-}
-.btn-primary:hover {
-  background: var(--eco-verde-2); transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(28,69,50,0.15);
-}
-.btn-ghost {
-  font-family: var(--font-body); font-size: 14px; font-weight: 500;
-  padding: 13px 24px; border-radius: 8px;
-  border: 1px solid var(--eco-borda); background: transparent;
-  color: var(--eco-medio); cursor: pointer; transition: all .3s ease;
-  text-decoration: none; display: inline-flex; align-items: center; gap: 9px;
-}
-.btn-ghost:hover { border-color: var(--eco-verde-3); color: var(--eco-verde); }
+      0%,
+      100% {
+        transform: rotate(0deg);
+      }
 
-/* ═══════════ SECTIONS ═══════════ */
-.section { padding: 64px 0; }
-.section + .section { border-top: 1px solid var(--eco-borda); }
-.section-even { background: var(--eco-branco); }
-.section-kicker {
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--eco-terra); margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
-}
-.section-title {
-  font-family: var(--font-display); font-size: clamp(24px, 4vw, 34px);
-  font-weight: 400; color: var(--eco-verde); letter-spacing: -0.02em;
-  margin-bottom: 12px; line-height: 1.2;
-}
-.section-title em { font-style: italic; font-weight: 300; }
-.section-desc {
-  font-size: 15px; color: var(--eco-medio); line-height: 1.8;
-  max-width: 600px; margin-bottom: 36px;
-}
+      50% {
+        transform: rotate(-1deg);
+      }
+    }
 
-/* ═══════════ QUOTE BOX ═══════════ */
-.quote-box {
-  background: linear-gradient(135deg, rgba(28,69,50,0.04), rgba(28,69,50,0.01));
-  border: 1px solid rgba(28,69,50,0.15); border-radius: 10px;
-  padding: 28px 32px; margin: 32px 0; position: relative;
-}
-.quote-box::before {
-  content: '"'; position: absolute; top: 16px; left: 24px;
-  font-family: var(--font-display); font-size: 48px; color: var(--eco-verde-3);
-  opacity: .2; line-height: 1;
-}
-.quote-text {
-  font-family: var(--font-display); font-size: 18px; font-weight: 300;
-  color: var(--eco-verde); line-height: 1.7; font-style: italic;
-  padding-left: 12px;
-}
-.quote-author {
-  font-family: var(--font-mono); font-size: 10px; color: var(--eco-claro);
-  text-transform: uppercase; letter-spacing: .1em; margin-top: 14px;
-  padding-left: 12px;
-}
+    @keyframes fruit-glow {
 
-/* ═══════════ STEPS GRID ═══════════ */
-.steps-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
-  gap: 14px; margin-bottom: 36px;
-}
-.step {
-  background: var(--eco-branco); border: 1px solid var(--eco-borda);
-  border-radius: 10px; padding: 24px 20px; transition: all .25s;
-}
-.step:hover { box-shadow: 0 4px 20px rgba(26,24,20,0.08); border-color: rgba(28,69,50,0.2); transform: translateY(-2px); }
-.step-num {
-  font-family: var(--font-mono); font-size: 10px; color: var(--eco-terra);
-  letter-spacing: .08em; margin-bottom: 12px; font-weight: 500;
-}
-.step-icon {
-  width: 38px; height: 38px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; background: var(--eco-verde-lo); color: var(--eco-verde);
-  margin-bottom: 14px;
-}
-.step-title {
-  font-family: var(--font-display); font-size: 15px; font-weight: 500;
-  color: var(--eco-tinta); margin-bottom: 6px;
-}
-.step-desc { font-size: 12px; color: var(--eco-medio); line-height: 1.7; }
+      0%,
+      100% {
+        opacity: .85;
+      }
 
-/* ═══════════ WORKSPACE CARDS ═══════════ */
-.workspace-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
-  gap: 16px;
-}
-.workspace-card {
-  background: var(--eco-branco); border: 1px solid var(--eco-borda);
-  border-radius: 10px; padding: 28px 24px; transition: all .3s;
-  display: flex; flex-direction: column; gap: 12px;
-  text-decoration: none; color: inherit;
-}
-.workspace-card:hover {
-  box-shadow: 0 8px 32px rgba(26,24,20,0.1); border-color: var(--eco-verde-3);
-  transform: translateY(-3px);
-}
-.workspace-card.featured { border-left: 3px solid var(--eco-verde); }
-.workspace-icon {
-  width: 44px; height: 44px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center; font-size: 18px;
-}
-.workspace-icon.verde { background: var(--eco-verde-lo); color: var(--eco-verde); }
-.workspace-icon.terra { background: var(--eco-terra-lo); color: var(--eco-terra); }
-.workspace-title {
-  font-family: var(--font-display); font-size: 18px; font-weight: 400;
-  color: var(--eco-tinta);
-}
-.workspace-desc { font-size: 13px; color: var(--eco-medio); line-height: 1.8; flex: 1; }
-.workspace-link {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-size: 13px; font-weight: 500; color: var(--eco-verde); margin-top: 4px;
-}
+      50% {
+        opacity: 1;
+      }
+    }
 
-/* ═══════════ FEATURE CARDS ═══════════ */
-.features-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
-  gap: 14px;
-}
-.feature-card {
-  background: var(--eco-branco); border: 1px solid var(--eco-borda);
-  border-radius: 10px; padding: 24px 22px; transition: all .25s;
-}
-.feature-card:hover { box-shadow: 0 4px 20px rgba(26,24,20,0.08); transform: translateY(-2px); }
-.feature-card.highlight { border-left: 3px solid var(--eco-verde); }
-.feature-icon {
-  width: 40px; height: 40px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; margin-bottom: 16px;
-}
-.feature-icon.verde { background: var(--eco-verde-lo); color: var(--eco-verde); }
-.feature-icon.terra { background: var(--eco-terra-lo); color: var(--eco-terra); }
-.feature-icon.ouro  { background: rgba(184,134,11,0.08); color: #B8860B; }
-.feature-icon.azul  { background: rgba(29,78,216,0.06); color: #1D4ED8; }
-.feature-title {
-  font-family: var(--font-display); font-size: 16px; font-weight: 500;
-  color: var(--eco-tinta); margin-bottom: 6px;
-}
-.feature-desc { font-size: 13px; color: var(--eco-medio); line-height: 1.8; }
+    @keyframes float-up {
+      0% {
+        opacity: 0;
+        transform: translateY(24px);
+      }
 
-/* ═══════════ AREAS GRID ═══════════ */
-.areas-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr));
-  gap: 12px;
-}
-.area-card {
-  background: var(--eco-branco); border: 1px solid var(--eco-borda);
-  border-radius: 10px; padding: 22px 16px; text-align: center;
-  transition: all .25s;
-}
-.area-card:hover { border-color: var(--eco-verde-3); background: var(--eco-verde-lo); box-shadow: 0 4px 16px rgba(28,69,50,0.08); }
-.area-emoji { font-size: 30px; margin-bottom: 10px; display: block; }
-.area-name {
-  font-family: var(--font-display); font-size: 15px; font-weight: 500;
-  color: var(--eco-tinta); margin-bottom: 4px;
-}
-.area-focus { font-size: 11px; color: var(--eco-claro); line-height: 1.5; }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-/* ═══════════ JOURNEY / TIMELINE ═══════════ */
-.journey { display: flex; flex-direction: column; gap: 0; position: relative; padding-left: 32px; }
-.journey::before {
-  content: ''; position: absolute; left: 13px; top: 10px; bottom: 10px;
-  width: 1.5px; background: var(--eco-borda); border-radius: 1px;
-}
-.journey-step { position: relative; padding: 18px 0 18px 24px; }
-.journey-dot {
-  position: absolute; left: -24px; top: 22px;
-  width: 22px; height: 22px; border-radius: 50%;
-  border: 1.5px solid var(--eco-verde-3); background: var(--eco-creme);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; color: var(--eco-verde); font-family: var(--font-mono); font-weight: 500;
-}
-.journey-title {
-  font-family: var(--font-display); font-size: 16px; font-weight: 500;
-  color: var(--eco-tinta); margin-bottom: 5px;
-}
-.journey-desc { font-size: 13px; color: var(--eco-medio); line-height: 1.8; }
+    @keyframes subtle-pulse {
 
-/* ═══════════ PRINCIPLES ═══════════ */
-.principles-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
-  gap: 14px;
-}
-.principle {
-  display: flex; gap: 14px; align-items: flex-start;
-  padding: 18px; background: var(--eco-creme); border: 1px solid var(--eco-borda);
-  border-radius: 8px;
-}
-.principle-icon {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: var(--eco-verde-lo); color: var(--eco-verde);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; flex-shrink: 0;
-}
-.principle-title { font-size: 13px; font-weight: 600; color: var(--eco-tinta); margin-bottom: 3px; }
-.principle-desc { font-size: 12px; color: var(--eco-medio); line-height: 1.7; }
+      0%,
+      100% {
+        opacity: .4;
+      }
 
-/* ═══════════ HERO SVG DECORATION ═══════════ */
-.hero-branch {
-  position: absolute; right: -40px; top: 50%; transform: translateY(-50%);
-  opacity: .12; pointer-events: none;
-}
-@media(max-width:768px) { .hero-branch { display:none; } }
+      50% {
+        opacity: .6;
+      }
+    }
 
-/* ═══════════ CTA FINAL ═══════════ */
-.cta-final {
-  text-align: center; padding: 48px 32px; margin: 24px 0;
-  background: linear-gradient(135deg, rgba(28,69,50,0.04), rgba(28,69,50,0.01));
-  border: 1px solid rgba(28,69,50,0.12); border-radius: 12px;
-}
-.cta-final-title {
-  font-family: var(--font-display); font-size: clamp(20px, 3vw, 26px);
-  font-weight: 400; color: var(--eco-verde); line-height: 1.5;
-  margin-bottom: 24px; font-style: italic;
-}
+    @keyframes leaf-rustle {
 
-/* ═══════════ FOOTER — Olivia style ═══════════ */
-.footer {
-  padding: 44px 24px; background: var(--eco-verde); text-align: center;
-  margin-top: 48px;
-}
-.footer-brand {
-  font-family: var(--font-display); font-size: 18px; font-weight: 400;
-  color: var(--eco-creme); margin-bottom: 6px;
-}
-.footer-text {
-  font-size: 12px; color: rgba(250,249,246,0.55); margin-bottom: 16px;
-  line-height: 1.7;
-}
-.footer-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--font-mono); font-size: 9px;
-  letter-spacing: .12em; text-transform: uppercase;
-  color: rgba(250,249,246,0.4); padding: 5px 14px;
-  border: 1px solid rgba(250,249,246,0.12); border-radius: 20px;
-}
+      0%,
+      100% {
+        transform: rotate(0deg) scale(1);
+      }
 
-/* ═══════════ RESPONSIVE ═══════════ */
-@media(max-width:768px) {
-  .hero { padding: 88px 0 48px; }
-  .section { padding: 44px 0; }
-  .areas-grid { grid-template-columns: repeat(2,1fr); }
-}
-@media(max-width:480px) {
-  .features-grid, .workspace-grid { grid-template-columns: 1fr; }
-  .hero-actions { flex-direction: column; align-items: stretch; }
-  .steps-grid { grid-template-columns: 1fr 1fr; }
-}
+      50% {
+        transform: rotate(3deg) scale(1.02);
+      }
+    }
 
-/* ═══════════ MOBILE NAV ═══════════ */
-.nav-desktop { display: flex; }
-.nav-mobile { display: none; }
+    @keyframes pulse-beat {
 
-@media (max-width: 768px) {
-  .nav-desktop { display: none !important; }
-  .nav-mobile { display: flex !important; }
-  .nav-links { display: none; }
-}
+      0%,
+      100% {
+        transform: scale(1);
+      }
 
-.mobile-menu-btn {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 8px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.15s;
-}
-.mobile-menu-btn:hover { background: rgba(196,98,45,0.08); }
-.mobile-menu-btn .dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--eco-terra);
-}
+      50% {
+        transform: scale(1.03);
+      }
+    }
 
-.mobile-workspace-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: var(--eco-verde);
-  border-radius: 8px;
-  color: var(--eco-creme);
-  text-decoration: none;
-  font-size: 14px;
-  transition: all 0.15s;
-}
-.mobile-workspace-btn:hover {
-  background: var(--eco-verde-2);
-  transform: scale(1.05);
-}
+    @media(prefers-reduced-motion:reduce) {
 
-.mobile-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: white;
-  border: 1px solid var(--eco-borda);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(26,24,20,0.12);
-  padding: 8px;
-  min-width: 200px;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px);
-  transition: all 0.2s ease;
-  z-index: 1001;
-}
-.mobile-dropdown.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-.mobile-dropdown a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  color: var(--eco-tinta);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: background 0.15s;
-}
-.mobile-dropdown a:hover {
-  background: var(--eco-verde-lo);
-}
-.mobile-dropdown a i {
-  width: 20px;
-  text-align: center;
-  color: var(--eco-terra);
-  font-size: 13px;
-}
-.mobile-dropdown .divider {
-  height: 1px;
-  background: var(--eco-borda);
-  margin: 8px 0;
-}
-</style>
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    /* ═══════════ NAVIGATION — Olivia style ═══════════ */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 56px;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid var(--eco-borda);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--eco-verde);
+      text-decoration: none;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .nav-brand-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--eco-claro);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-link {
+      font-size: 13px;
+      color: var(--eco-medio);
+      text-decoration: none;
+      transition: color .15s;
+      letter-spacing: .01em;
+    }
+
+    .nav-link:hover {
+      color: var(--eco-tinta);
+    }
+
+    .nav-link i {
+      font-size: 11px;
+      margin-right: 5px;
+    }
+
+    .nav-cta {
+      font-size: 13px;
+      padding: 7px 18px;
+      border: 1px solid var(--eco-borda);
+      color: var(--eco-tinta);
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all .15s;
+    }
+
+    .nav-cta:hover {
+      border-color: var(--eco-terra);
+      background: var(--eco-terra-lo);
+    }
+
+    @media(max-width:768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    /* ═══════════ CONTENT WRAPPER ═══════════ */
+    .content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ═══════════ HERO ═══════════ */
+    .hero {
+      text-align: center;
+      padding: 120px 0 72px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(28, 69, 50, 0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 80% 100%, rgba(196, 98, 45, 0.03) 0%, transparent 50%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      animation: float-up .8s ease-out;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--eco-verde-3);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      padding: 7px 20px;
+      border: 1px solid rgba(28, 69, 50, 0.2);
+      border-radius: 24px;
+      background: var(--eco-verde-lo);
+      margin-bottom: 28px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 6vw, 48px);
+      font-weight: 400;
+      color: var(--eco-tinta);
+      line-height: 1.15;
+      margin-bottom: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title em {
+      color: var(--eco-verde);
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--eco-medio);
+      line-height: 1.8;
+      max-width: 580px;
+      margin: 0 auto 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ═══════════ BUTTONS — Olivia style ═══════════ */
+    .btn-primary {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 13px 28px;
+      border-radius: 8px;
+      border: none;
+      background: var(--eco-verde);
+      color: var(--eco-creme);
+      cursor: pointer;
+      transition: all .3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      background: var(--eco-verde-2);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(28, 69, 50, 0.15);
+    }
+
+    .btn-ghost {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 13px 24px;
+      border-radius: 8px;
+      border: 1px solid var(--eco-borda);
+      background: transparent;
+      color: var(--eco-medio);
+      cursor: pointer;
+      transition: all .3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--eco-verde-3);
+      color: var(--eco-verde);
+    }
+
+    /* ═══════════ SECTIONS ═══════════ */
+    .section {
+      padding: 64px 0;
+    }
+
+    .section+.section {
+      border-top: 1px solid var(--eco-borda);
+    }
+
+    .section-even {
+      background: var(--eco-branco);
+    }
+
+    .section-kicker {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--eco-terra);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 400;
+      color: var(--eco-verde);
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .section-title em {
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .section-desc {
+      font-size: 15px;
+      color: var(--eco-medio);
+      line-height: 1.8;
+      max-width: 600px;
+      margin-bottom: 36px;
+    }
+
+    /* ═══════════ QUOTE BOX ═══════════ */
+    .quote-box {
+      background: linear-gradient(135deg, rgba(28, 69, 50, 0.04), rgba(28, 69, 50, 0.01));
+      border: 1px solid rgba(28, 69, 50, 0.15);
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin: 32px 0;
+      position: relative;
+    }
+
+    .quote-box::before {
+      content: '"';
+      position: absolute;
+      top: 16px;
+      left: 24px;
+      font-family: var(--font-display);
+      font-size: 48px;
+      color: var(--eco-verde-3);
+      opacity: .2;
+      line-height: 1;
+    }
+
+    .quote-text {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--eco-verde);
+      line-height: 1.7;
+      font-style: italic;
+      padding-left: 12px;
+    }
+
+    .quote-author {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--eco-claro);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-top: 14px;
+      padding-left: 12px;
+    }
+
+    /* ═══════════ STEPS GRID ═══════════ */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+
+    .step {
+      background: var(--eco-branco);
+      border: 1px solid var(--eco-borda);
+      border-radius: 10px;
+      padding: 24px 20px;
+      transition: all .25s;
+    }
+
+    .step:hover {
+      box-shadow: 0 4px 20px rgba(26, 24, 20, 0.08);
+      border-color: rgba(28, 69, 50, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--eco-terra);
+      letter-spacing: .08em;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .step-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      background: var(--eco-verde-lo);
+      color: var(--eco-verde);
+      margin-bottom: 14px;
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--eco-tinta);
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--eco-medio);
+      line-height: 1.7;
+    }
+
+    /* ═══════════ WORKSPACE CARDS ═══════════ */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .workspace-card {
+      background: var(--eco-branco);
+      border: 1px solid var(--eco-borda);
+      border-radius: 10px;
+      padding: 28px 24px;
+      transition: all .3s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .workspace-card:hover {
+      box-shadow: 0 8px 32px rgba(26, 24, 20, 0.1);
+      border-color: var(--eco-verde-3);
+      transform: translateY(-3px);
+    }
+
+    .workspace-card.featured {
+      border-left: 3px solid var(--eco-verde);
+    }
+
+    .workspace-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .workspace-icon.verde {
+      background: var(--eco-verde-lo);
+      color: var(--eco-verde);
+    }
+
+    .workspace-icon.terra {
+      background: var(--eco-terra-lo);
+      color: var(--eco-terra);
+    }
+
+    .workspace-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--eco-tinta);
+    }
+
+    .workspace-desc {
+      font-size: 13px;
+      color: var(--eco-medio);
+      line-height: 1.8;
+      flex: 1;
+    }
+
+    .workspace-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--eco-verde);
+      margin-top: 4px;
+    }
+
+    /* ═══════════ FEATURE CARDS ═══════════ */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .feature-card {
+      background: var(--eco-branco);
+      border: 1px solid var(--eco-borda);
+      border-radius: 10px;
+      padding: 24px 22px;
+      transition: all .25s;
+    }
+
+    .feature-card:hover {
+      box-shadow: 0 4px 20px rgba(26, 24, 20, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .feature-card.highlight {
+      border-left: 3px solid var(--eco-verde);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    .feature-icon.verde {
+      background: var(--eco-verde-lo);
+      color: var(--eco-verde);
+    }
+
+    .feature-icon.terra {
+      background: var(--eco-terra-lo);
+      color: var(--eco-terra);
+    }
+
+    .feature-icon.ouro {
+      background: rgba(184, 134, 11, 0.08);
+      color: #B8860B;
+    }
+
+    .feature-icon.azul {
+      background: rgba(29, 78, 216, 0.06);
+      color: #1D4ED8;
+    }
+
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--eco-tinta);
+      margin-bottom: 6px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: var(--eco-medio);
+      line-height: 1.8;
+    }
+
+    /* ═══════════ AREAS GRID ═══════════ */
+    .areas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .area-card {
+      background: var(--eco-branco);
+      border: 1px solid var(--eco-borda);
+      border-radius: 10px;
+      padding: 22px 16px;
+      text-align: center;
+      transition: all .25s;
+    }
+
+    .area-card:hover {
+      border-color: var(--eco-verde-3);
+      background: var(--eco-verde-lo);
+      box-shadow: 0 4px 16px rgba(28, 69, 50, 0.08);
+    }
+
+    .area-emoji {
+      font-size: 30px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .area-name {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--eco-tinta);
+      margin-bottom: 4px;
+    }
+
+    .area-focus {
+      font-size: 11px;
+      color: var(--eco-claro);
+      line-height: 1.5;
+    }
+
+    /* ═══════════ JOURNEY / TIMELINE ═══════════ */
+    .journey {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .journey::before {
+      content: '';
+      position: absolute;
+      left: 13px;
+      top: 10px;
+      bottom: 10px;
+      width: 1.5px;
+      background: var(--eco-borda);
+      border-radius: 1px;
+    }
+
+    .journey-step {
+      position: relative;
+      padding: 18px 0 18px 24px;
+    }
+
+    .journey-dot {
+      position: absolute;
+      left: -24px;
+      top: 22px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid var(--eco-verde-3);
+      background: var(--eco-creme);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: var(--eco-verde);
+      font-family: var(--font-mono);
+      font-weight: 500;
+    }
+
+    .journey-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--eco-tinta);
+      margin-bottom: 5px;
+    }
+
+    .journey-desc {
+      font-size: 13px;
+      color: var(--eco-medio);
+      line-height: 1.8;
+    }
+
+    /* ═══════════ PRINCIPLES ═══════════ */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .principle {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 18px;
+      background: var(--eco-creme);
+      border: 1px solid var(--eco-borda);
+      border-radius: 8px;
+    }
+
+    .principle-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--eco-verde-lo);
+      color: var(--eco-verde);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .principle-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--eco-tinta);
+      margin-bottom: 3px;
+    }
+
+    .principle-desc {
+      font-size: 12px;
+      color: var(--eco-medio);
+      line-height: 1.7;
+    }
+
+    /* ═══════════ HERO SVG DECORATION ═══════════ */
+    .hero-branch {
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: .12;
+      pointer-events: none;
+    }
+
+    @media(max-width:768px) {
+      .hero-branch {
+        display: none;
+      }
+    }
+
+    /* ═══════════ CTA FINAL ═══════════ */
+    .cta-final {
+      text-align: center;
+      padding: 48px 32px;
+      margin: 24px 0;
+      background: linear-gradient(135deg, rgba(28, 69, 50, 0.04), rgba(28, 69, 50, 0.01));
+      border: 1px solid rgba(28, 69, 50, 0.12);
+      border-radius: 12px;
+    }
+
+    .cta-final-title {
+      font-family: var(--font-display);
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 400;
+      color: var(--eco-verde);
+      line-height: 1.5;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    /* ═══════════ FOOTER — Olivia style ═══════════ */
+    .footer {
+      padding: 44px 24px;
+      background: var(--eco-verde);
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--eco-creme);
+      margin-bottom: 6px;
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: rgba(250, 249, 246, 0.55);
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .footer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(250, 249, 246, 0.4);
+      padding: 5px 14px;
+      border: 1px solid rgba(250, 249, 246, 0.12);
+      border-radius: 20px;
+    }
+
+    /* ═══════════ RESPONSIVE ═══════════ */
+    @media(max-width:768px) {
+      .hero {
+        padding: 88px 0 48px;
+      }
+
+      .section {
+        padding: 44px 0;
+      }
+
+      .areas-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width:480px) {
+
+      .features-grid,
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* ═══════════ MOBILE NAV ═══════════ */
+    .nav-desktop {
+      display: flex;
+    }
+
+    .nav-mobile {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .nav-desktop {
+        display: none !important;
+      }
+
+      .nav-mobile {
+        display: flex !important;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    .mobile-menu-btn {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+
+    .mobile-menu-btn:hover {
+      background: rgba(196, 98, 45, 0.08);
+    }
+
+    .mobile-menu-btn .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--eco-terra);
+    }
+
+    .mobile-workspace-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--eco-verde);
+      border-radius: 8px;
+      color: var(--eco-creme);
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+
+    .mobile-workspace-btn:hover {
+      background: var(--eco-verde-2);
+      transform: scale(1.05);
+    }
+
+    .mobile-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: white;
+      border: 1px solid var(--eco-borda);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(26, 24, 20, 0.12);
+      padding: 8px;
+      min-width: 200px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: all 0.2s ease;
+      z-index: 1001;
+    }
+
+    .mobile-dropdown.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .mobile-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      color: var(--eco-tinta);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+
+    .mobile-dropdown a:hover {
+      background: var(--eco-verde-lo);
+    }
+
+    .mobile-dropdown a i {
+      width: 20px;
+      text-align: center;
+      color: var(--eco-terra);
+      font-size: 13px;
+    }
+
+    .mobile-dropdown .divider {
+      height: 1px;
+      background: var(--eco-borda);
+      margin: 8px 0;
+    }
+  </style>
   <link rel="stylesheet" href="/static/css/OliviaLegal-brand.css">
 </head>
+
 <body>
 
-<!-- ═══════════ NAVIGATION ═══════════ -->
-<nav class="nav">
-  <div class="nav-inner" style="position:relative">
-    <a href="/" class="nav-brand">
-      Olivia <span class="nav-brand-sub">OliviaLegal · Residência</span>
-    </a>
-    
-    <!-- Desktop Navigation -->
-    <div class="nav-links nav-desktop">
-      <a href="/OliviaLegal/" class="nav-link"><i class="fas fa-leaf"></i>Olivia</a>
-      <a href="/OliviaLegal/" class="nav-link"><i class="fas fa-cubes"></i>Plataforma</a>
-      <a href="#sobre" class="nav-link"><i class="fas fa-stethoscope"></i>Sobre</a>
-      <a href="#documentos" class="nav-link"><i class="fas fa-folder-open"></i>Documentos</a>
-      <a href="/OliviaLegal/mode-select" class="nav-cta">Meu Espaço</a>
-    </div>
-
-    <!-- Mobile Navigation -->
-    <div class="nav-mobile" style="gap:12px;align-items:center">
-      <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </button>
-      <a href="/residencia" class="mobile-workspace-btn" aria-label="Meu Espaço">
-        <i class="fas fa-user-md"></i>
+  <!-- ═══════════ NAVIGATION ═══════════ -->
+  <nav class="nav">
+    <div class="nav-inner" style="position:relative">
+      <a href="/" class="nav-brand">
+        Olivia <span class="nav-brand-sub">Olivia · Residência</span>
       </a>
-      
-      <!-- Mobile Dropdown -->
-      <div class="mobile-dropdown" id="mobileDropdown">
-        <a href="/OliviaLegal/">
-          <i class="fas fa-leaf"></i>
-          Olivia
+
+      <!-- Desktop Navigation -->
+      <div class="nav-links nav-desktop">
+        <a href="/olivia/" class="nav-link"><i class="fas fa-leaf"></i>Olivia</a>
+        <a href="/olivia/" class="nav-link"><i class="fas fa-cubes"></i>Plataforma</a>
+        <a href="#sobre" class="nav-link"><i class="fas fa-stethoscope"></i>Sobre</a>
+        <a href="#documentos" class="nav-link"><i class="fas fa-folder-open"></i>Documentos</a>
+        <a href="/olivia/mode-select" class="nav-cta">Meu Espaço</a>
+      </div>
+
+      <!-- Mobile Navigation -->
+      <div class="nav-mobile" style="gap:12px;align-items:center">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </button>
+        <a href="/residencia" class="mobile-workspace-btn" aria-label="Meu Espaço">
+          <i class="fas fa-user-md"></i>
         </a>
-        <a href="/OliviaLegal/">
-          <i class="fas fa-cubes"></i>
-          Plataforma
+
+        <!-- Mobile Dropdown -->
+        <div class="mobile-dropdown" id="mobileDropdown">
+          <a href="/olivia/">
+            <i class="fas fa-leaf"></i>
+            Olivia
+          </a>
+          <a href="/olivia/">
+            <i class="fas fa-cubes"></i>
+            Plataforma
+          </a>
+          <div class="divider"></div>
+          <a href="#sobre">
+            <i class="fas fa-stethoscope"></i>
+            Sobre
+          </a>
+          <a href="#documentos">
+            <i class="fas fa-folder-open"></i>
+            Documentos
+          </a>
+          <div class="divider"></div>
+          <a href="/olivia/mode-select">
+            <i class="fas fa-user-md" style="color:var(--eco-verde)"></i>
+            Meu Espaço
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <div class="content">
+    <section class="hero" id="sobre">
+      <!-- Decorative olive branch -->
+      <svg class="hero-branch" width="200" height="400" viewBox="0 0 200 400">
+        <g style="transform-origin:100px 200px;animation:sway 10s ease-in-out infinite">
+          <path d="M160 380 Q155 340,145 300 Q130 250,115 200 Q100 150,90 110 Q82 80,78 50" fill="none"
+            stroke="var(--eco-verde-3)" stroke-width="2" stroke-linecap="round" opacity=".35" />
+          <g style="animation:sway-r 6s ease-in-out .3s infinite;transform-origin:120px 260px">
+            <path d="M125 265 Q138 255,148 248" fill="none" stroke="var(--eco-verde-3)" stroke-width=".8"
+              stroke-linecap="round" opacity=".25" />
+            <ellipse cx="150" cy="246" rx="10" ry="6" fill="var(--eco-verde-3)" opacity=".12"
+              transform="rotate(25 150 246)" />
+          </g>
+          <g style="animation:sway 5s ease-in-out .6s infinite;transform-origin:98px 160px">
+            <path d="M103 165 Q90 155,82 148" fill="none" stroke="var(--eco-verde-3)" stroke-width=".8"
+              stroke-linecap="round" opacity=".25" />
+            <ellipse cx="78" cy="146" rx="10" ry="6" fill="var(--eco-verde-3)" opacity=".12"
+              transform="rotate(-20 78 146)" />
+          </g>
+          <ellipse cx="130" cy="270" rx="5" ry="6.5" fill="var(--eco-terra)" opacity=".5" transform="rotate(15 130 270)"
+            style="animation:fruit-glow 4s ease-in-out infinite" />
+          <ellipse cx="108" cy="185" rx="5" ry="6" fill="var(--eco-terra)" opacity=".45" transform="rotate(-10 108 185)"
+            style="animation:fruit-glow 4s ease-in-out .5s infinite" />
+          <ellipse cx="86" cy="95" rx="5.5" ry="7" fill="var(--eco-terra)" opacity=".5" transform="rotate(-25 86 95)"
+            style="animation:fruit-glow 4s ease-in-out 1s infinite" />
+        </g>
+      </svg>
+
+      <div class="hero-content">
+        <div class="hero-kicker"><i class="fas fa-stethoscope"></i> UnirG · Olivia · Residência Multiprofissional 2026
+        </div>
+        <h1 class="hero-title">Seu projeto de residência,<br>com <em>inteligência</em> ao seu lado</h1>
+        <p class="hero-desc">
+          Uma plataforma criada para apoiar residentes multiprofissionais em saúde — do primeiro dia no território até a
+          entrega do artigo científico. Tudo local, seguro e pensado para você.
+        </p>
+        <div class="hero-actions">
+          <a href="/olivia/mode-select" class="btn-primary">
+            <i class="fas fa-rocket"></i> Começar agora
+          </a>
+          <a href="#documentos" class="btn-ghost">
+            <i class="fas fa-compass"></i> Como funciona
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ O QUE É ═══════════ -->
+    <section class="section" id="oque">
+      <span class="section-kicker"><i class="fas fa-circle-info"></i> O que é</span>
+      <h2 class="section-title">TheBridge <em>Residência</em></h2>
+      <p class="section-desc">
+        Um ambiente inteligente de apoio à Residência Multiprofissional em Saúde da UnirG, regulamentado pela
+        OliviaLegal. Combina organização documental, inteligência artificial e um assistente personalizado para
+        acompanhar cada residente ao longo do programa.
+      </p>
+
+      <div class="quote-box">
+        <div class="quote-text">
+          A residência é um mergulho intenso na realidade do SUS. Este projeto existe para que você não precise fazer
+          esse mergulho sozinho(a).
+        </div>
+        <div class="quote-author">OliviaLegal-AI · Filosofia do projeto</div>
+      </div>
+    </section>
+
+    <!-- ═══════════ DESCOBERTA DE DOCUMENTOS ═══════════ -->
+    <section class="section" id="documentos">
+      <span class="section-kicker"><i class="fas fa-folder-open"></i> Seus documentos</span>
+      <h2 class="section-title">Aponte uma pasta. <em>O sistema faz o resto.</em></h2>
+      <p class="section-desc">
+        Adicione qualquer pasta com materiais da sua residência — PDFs, resoluções, protocolos, artigos ou anotações. O
+        TheBridge escaneia automaticamente, categoriza cada arquivo e extrai o conteúdo relevante para torná-lo
+        pesquisável e conectado ao seu projeto.
+      </p>
+
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-icon"><i class="fas fa-folder-plus"></i></div>
+          <div class="step-title">Adicionar pasta</div>
+          <div class="step-desc">Aponte para qualquer diretório no seu computador — pastas de disciplinas, downloads ou
+            dados de campo.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-icon"><i class="fas fa-file-lines"></i></div>
+          <div class="step-title">Varredura automática</div>
+          <div class="step-desc">O sistema lê todos os arquivos encontrados, identifica tipos e extrai metadados
+            automaticamente.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-icon"><i class="fas fa-brain"></i></div>
+          <div class="step-title">Extração inteligente</div>
+          <div class="step-desc">Conteúdo, categorias, palavras-chave e conexões com o seu projeto são identificados e
+            organizados.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-icon"><i class="fas fa-magnifying-glass"></i></div>
+          <div class="step-title">Buscar e usar</div>
+          <div class="step-desc">Encontre qualquer documento instantaneamente e conecte materiais ao seu assistente de
+            projeto.</div>
+        </div>
+      </div>
+
+      <div style="text-align:center">
+        <a href="/olivia/olivia" class="btn-primary">
+          <i class="fas fa-folder-open"></i> Gerenciar meus documentos
         </a>
-        <div class="divider"></div>
-        <a href="#sobre">
-          <i class="fas fa-stethoscope"></i>
-          Sobre
+      </div>
+    </section>
+
+    <!-- ═══════════ ESPAÇOS DE TRABALHO ═══════════ -->
+    <section class="section" id="espacos">
+      <span class="section-kicker"><i class="fas fa-layer-group"></i> Espaços de trabalho</span>
+      <h2 class="section-title">Onde tudo <em>acontece</em></h2>
+      <p class="section-desc">
+        Dois espaços complementares para a sua residência: um para organizar seus materiais, outro para construir seu
+        projeto com apoio da IA.
+      </p>
+
+      <div class="workspace-grid">
+        <a href="/olivia/mode-select" class="workspace-card featured">
+          <div class="workspace-icon verde"><i class="fas fa-robot"></i></div>
+          <div class="workspace-title">Assistente de Residência</div>
+          <div class="workspace-desc">Seu espaço personalizado de projeto — com assistente de IA, plano de ação
+            estruturado, suporte ao referencial teórico e geração do artigo científico. O agente conhece você e
+            acompanha cada fase da jornada.</div>
+          <span class="workspace-link"><i class="fas fa-arrow-right"></i> Entrar no meu espaço</span>
         </a>
-        <a href="#documentos">
-          <i class="fas fa-folder-open"></i>
-          Documentos
-        </a>
-        <div class="divider"></div>
-        <a href="/OliviaLegal/mode-select">
-          <i class="fas fa-user-md" style="color:var(--eco-verde)"></i>
-          Meu Espaço
+        <a href="/olivia/olivia" class="workspace-card">
+          <div class="workspace-icon terra"><i class="fas fa-folder-open"></i></div>
+          <div class="workspace-title">Gestão de Documentos</div>
+          <div class="workspace-desc">Gerencie as pastas do seu programa: adicione diretórios, visualize o que foi
+            escaneado, explore os arquivos extraídos e acesse o conteúdo de qualquer material indexado.</div>
+          <span class="workspace-link"><i class="fas fa-arrow-right"></i> Acessar documentos</span>
         </a>
       </div>
-    </div>
-  </div>
-</nav>
+    </section>
 
-<!-- ═══════════ HERO ═══════════ -->
-<div class="content">
-<section class="hero" id="sobre">
-  <!-- Decorative olive branch -->
-  <svg class="hero-branch" width="200" height="400" viewBox="0 0 200 400">
-    <g style="transform-origin:100px 200px;animation:sway 10s ease-in-out infinite">
-      <path d="M160 380 Q155 340,145 300 Q130 250,115 200 Q100 150,90 110 Q82 80,78 50" fill="none" stroke="var(--eco-verde-3)" stroke-width="2" stroke-linecap="round" opacity=".35"/>
-      <g style="animation:sway-r 6s ease-in-out .3s infinite;transform-origin:120px 260px">
-        <path d="M125 265 Q138 255,148 248" fill="none" stroke="var(--eco-verde-3)" stroke-width=".8" stroke-linecap="round" opacity=".25"/>
-        <ellipse cx="150" cy="246" rx="10" ry="6" fill="var(--eco-verde-3)" opacity=".12" transform="rotate(25 150 246)"/>
-      </g>
-      <g style="animation:sway 5s ease-in-out .6s infinite;transform-origin:98px 160px">
-        <path d="M103 165 Q90 155,82 148" fill="none" stroke="var(--eco-verde-3)" stroke-width=".8" stroke-linecap="round" opacity=".25"/>
-        <ellipse cx="78" cy="146" rx="10" ry="6" fill="var(--eco-verde-3)" opacity=".12" transform="rotate(-20 78 146)"/>
-      </g>
-      <ellipse cx="130" cy="270" rx="5" ry="6.5" fill="var(--eco-terra)" opacity=".5" transform="rotate(15 130 270)" style="animation:fruit-glow 4s ease-in-out infinite"/>
-      <ellipse cx="108" cy="185" rx="5" ry="6" fill="var(--eco-terra)" opacity=".45" transform="rotate(-10 108 185)" style="animation:fruit-glow 4s ease-in-out .5s infinite"/>
-      <ellipse cx="86" cy="95" rx="5.5" ry="7" fill="var(--eco-terra)" opacity=".5" transform="rotate(-25 86 95)" style="animation:fruit-glow 4s ease-in-out 1s infinite"/>
-    </g>
-  </svg>
+    <!-- ═══════════ O QUE OFERECE ═══════════ -->
+    <section class="section" id="oferece">
+      <span class="section-kicker"><i class="fas fa-sparkles"></i> Recursos</span>
+      <h2 class="section-title">Feito para <em>sua residência</em></h2>
+      <p class="section-desc">
+        Cada recurso foi pensado a partir das necessidades reais de quem vive uma residência multiprofissional: tempo
+        escasso, muitos documentos e a pressão de produzir com qualidade.
+      </p>
 
-  <div class="hero-content">
-    <div class="hero-kicker"><i class="fas fa-stethoscope"></i> UnirG · OliviaLegal · Residência Multiprofissional 2026</div>
-    <h1 class="hero-title">Seu projeto de residência,<br>com <em>inteligência</em> ao seu lado</h1>
-    <p class="hero-desc">
-      Uma plataforma criada para apoiar residentes multiprofissionais em saúde — do primeiro dia no território até a entrega do artigo científico. Tudo local, seguro e pensado para você.
-    </p>
-    <div class="hero-actions">
-      <a href="/OliviaLegal/mode-select" class="btn-primary">
-        <i class="fas fa-rocket"></i> Começar agora
-      </a>
-      <a href="#documentos" class="btn-ghost">
-        <i class="fas fa-compass"></i> Como funciona
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ O QUE É ═══════════ -->
-<section class="section" id="oque">
-  <span class="section-kicker"><i class="fas fa-circle-info"></i> O que é</span>
-  <h2 class="section-title">TheBridge <em>Residência</em></h2>
-  <p class="section-desc">
-    Um ambiente inteligente de apoio à Residência Multiprofissional em Saúde da UnirG, regulamentado pela OliviaLegal. Combina organização documental, inteligência artificial e um assistente personalizado para acompanhar cada residente ao longo do programa.
-  </p>
-
-  <div class="quote-box">
-    <div class="quote-text">
-      A residência é um mergulho intenso na realidade do SUS. Este projeto existe para que você não precise fazer esse mergulho sozinho(a).
-    </div>
-    <div class="quote-author">OliviaLegal-AI · Filosofia do projeto</div>
-  </div>
-</section>
-
-<!-- ═══════════ DESCOBERTA DE DOCUMENTOS ═══════════ -->
-<section class="section" id="documentos">
-  <span class="section-kicker"><i class="fas fa-folder-open"></i> Seus documentos</span>
-  <h2 class="section-title">Aponte uma pasta. <em>O sistema faz o resto.</em></h2>
-  <p class="section-desc">
-    Adicione qualquer pasta com materiais da sua residência — PDFs, resoluções, protocolos, artigos ou anotações. O TheBridge escaneia automaticamente, categoriza cada arquivo e extrai o conteúdo relevante para torná-lo pesquisável e conectado ao seu projeto.
-  </p>
-
-  <div class="steps-grid">
-    <div class="step">
-      <div class="step-num">01</div>
-      <div class="step-icon"><i class="fas fa-folder-plus"></i></div>
-      <div class="step-title">Adicionar pasta</div>
-      <div class="step-desc">Aponte para qualquer diretório no seu computador — pastas de disciplinas, downloads ou dados de campo.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <div class="step-icon"><i class="fas fa-file-lines"></i></div>
-      <div class="step-title">Varredura automática</div>
-      <div class="step-desc">O sistema lê todos os arquivos encontrados, identifica tipos e extrai metadados automaticamente.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <div class="step-icon"><i class="fas fa-brain"></i></div>
-      <div class="step-title">Extração inteligente</div>
-      <div class="step-desc">Conteúdo, categorias, palavras-chave e conexões com o seu projeto são identificados e organizados.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">04</div>
-      <div class="step-icon"><i class="fas fa-magnifying-glass"></i></div>
-      <div class="step-title">Buscar e usar</div>
-      <div class="step-desc">Encontre qualquer documento instantaneamente e conecte materiais ao seu assistente de projeto.</div>
-    </div>
-  </div>
-
-  <div style="text-align:center">
-    <a href="/OliviaLegal/olivia" class="btn-primary">
-      <i class="fas fa-folder-open"></i> Gerenciar meus documentos
-    </a>
-  </div>
-</section>
-
-<!-- ═══════════ ESPAÇOS DE TRABALHO ═══════════ -->
-<section class="section" id="espacos">
-  <span class="section-kicker"><i class="fas fa-layer-group"></i> Espaços de trabalho</span>
-  <h2 class="section-title">Onde tudo <em>acontece</em></h2>
-  <p class="section-desc">
-    Dois espaços complementares para a sua residência: um para organizar seus materiais, outro para construir seu projeto com apoio da IA.
-  </p>
-
-  <div class="workspace-grid">
-    <a href="/OliviaLegal/mode-select" class="workspace-card featured">
-      <div class="workspace-icon verde"><i class="fas fa-robot"></i></div>
-      <div class="workspace-title">Assistente de Residência</div>
-      <div class="workspace-desc">Seu espaço personalizado de projeto — com assistente de IA, plano de ação estruturado, suporte ao referencial teórico e geração do artigo científico. O agente conhece você e acompanha cada fase da jornada.</div>
-      <span class="workspace-link"><i class="fas fa-arrow-right"></i> Entrar no meu espaço</span>
-    </a>
-    <a href="/OliviaLegal/olivia" class="workspace-card">
-      <div class="workspace-icon terra"><i class="fas fa-folder-open"></i></div>
-      <div class="workspace-title">Gestão de Documentos</div>
-      <div class="workspace-desc">Gerencie as pastas do seu programa: adicione diretórios, visualize o que foi escaneado, explore os arquivos extraídos e acesse o conteúdo de qualquer material indexado.</div>
-      <span class="workspace-link"><i class="fas fa-arrow-right"></i> Acessar documentos</span>
-    </a>
-  </div>
-</section>
-
-<!-- ═══════════ O QUE OFERECE ═══════════ -->
-<section class="section" id="oferece">
-  <span class="section-kicker"><i class="fas fa-sparkles"></i> Recursos</span>
-  <h2 class="section-title">Feito para <em>sua residência</em></h2>
-  <p class="section-desc">
-    Cada recurso foi pensado a partir das necessidades reais de quem vive uma residência multiprofissional: tempo escasso, muitos documentos e a pressão de produzir com qualidade.
-  </p>
-
-  <div class="features-grid">
-    <div class="feature-card highlight">
-      <div class="feature-icon verde"><i class="fas fa-robot"></i></div>
-      <div class="feature-title">Assistente pessoal de projeto</div>
-      <div class="feature-desc">Um agente de IA que conhece seu nome, sua área e seu estágio no programa. Ele te guia desde a formulação do problema até a estrutura do artigo — em linguagem humana.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon terra"><i class="fas fa-folder-open"></i></div>
-      <div class="feature-title">Gestão inteligente de documentos</div>
-      <div class="feature-desc">Aponte para a pasta do seu programa e o sistema organiza automaticamente: resoluções, editais, protocolos, artigos. Tudo categorizado e acessível.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon ouro"><i class="fas fa-magnifying-glass-chart"></i></div>
-      <div class="feature-title">Análise de materiais</div>
-      <div class="feature-desc">Suba seus artigos, dados de campo ou protocolos — o agente analisa o conteúdo, identifica pontos-chave e conecta com o seu projeto de pesquisa.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon azul"><i class="fas fa-sitemap"></i></div>
-      <div class="feature-title">Plano de ação estruturado</div>
-      <div class="feature-desc">Um plano vivo que acompanha o progresso: problema, objetivos, referencial teórico, metodologia, resultados esperados e estrutura do artigo.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon verde"><i class="fas fa-brain"></i></div>
-      <div class="feature-title">Suporte ao referencial teórico</div>
-      <div class="feature-desc">Identifique conceitos relevantes, mapeie a literatura e construa a base teórica do seu trabalho, conectando com as diretrizes do SUS.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon terra"><i class="fas fa-file-lines"></i></div>
-      <div class="feature-title">Geração de documentos</div>
-      <div class="feature-desc">Exporte seu plano completo, esboço de artigo ou relatório de progresso a qualquer momento, seguindo padrões acadêmicos.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ ÁREAS PROFISSIONAIS ═══════════ -->
-<section class="section" id="areas">
-  <span class="section-kicker"><i class="fas fa-users"></i> Áreas profissionais</span>
-  <h2 class="section-title">Feito para <em>cada área</em></h2>
-  <p class="section-desc">
-    O programa abrange cinco áreas da saúde. O assistente se adapta ao contexto e às particularidades de cada profissão.
-  </p>
-
-  <div class="areas-grid">
-    <div class="area-card">
-      <span class="area-emoji">🩺</span>
-      <div class="area-name">Enfermagem</div>
-      <div class="area-focus">Saúde da Família e Comunidade</div>
-    </div>
-    <div class="area-card">
-      <span class="area-emoji">💊</span>
-      <div class="area-name">Farmácia</div>
-      <div class="area-focus">Saúde Coletiva</div>
-    </div>
-    <div class="area-card">
-      <span class="area-emoji">🦴</span>
-      <div class="area-name">Fisioterapia</div>
-      <div class="area-focus">Atenção Básica</div>
-    </div>
-    <div class="area-card">
-      <span class="area-emoji">🦷</span>
-      <div class="area-name">Odontologia</div>
-      <div class="area-focus">Saúde Bucal Coletiva</div>
-    </div>
-    <div class="area-card">
-      <span class="area-emoji">🧠</span>
-      <div class="area-name">Psicologia</div>
-      <div class="area-focus">Saúde Mental na Atenção Básica</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ JORNADA ═══════════ -->
-<section class="section" id="jornada">
-  <span class="section-kicker"><i class="fas fa-route"></i> Sua jornada</span>
-  <h2 class="section-title">Do território <em>ao artigo</em></h2>
-  <p class="section-desc">
-    O assistente te acompanha em cada etapa da residência, respeitando seu ritmo e construindo junto com você.
-  </p>
-
-  <div class="journey">
-    <div class="journey-step">
-      <div class="journey-dot">1</div>
-      <div class="journey-title">Identificação</div>
-      <div class="journey-desc">Você se apresenta, conta sua área e o território onde está atuando. O agente reconhece seu perfil e configura o espaço para sua realidade.</div>
-    </div>
-    <div class="journey-step">
-      <div class="journey-dot">2</div>
-      <div class="journey-title">Problema de pesquisa</div>
-      <div class="journey-desc">Juntos, vocês identificam um problema de saúde observado na UBS ou no território. O assistente ajuda a refinar a pergunta e a justificativa.</div>
-    </div>
-    <div class="journey-step">
-      <div class="journey-dot">3</div>
-      <div class="journey-title">Referencial teórico</div>
-      <div class="journey-desc">Com base no tema, o agente sugere conceitos-chave, autores de referência e diretrizes do SUS para embasar o trabalho.</div>
-    </div>
-    <div class="journey-step">
-      <div class="journey-dot">4</div>
-      <div class="journey-title">Metodologia</div>
-      <div class="journey-desc">Definição do desenho do estudo, população, critérios, instrumentos de coleta e plano de análise — com orientação do assistente.</div>
-    </div>
-    <div class="journey-step">
-      <div class="journey-dot">5</div>
-      <div class="journey-title">Resultados e artigo</div>
-      <div class="journey-desc">Organização dos achados, discussão à luz da literatura e estruturação do artigo científico. O agente gera esboços que você revisa.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ PRINCÍPIOS ═══════════ -->
-<section class="section" id="principios">
-  <span class="section-kicker"><i class="fas fa-shield-halved"></i> Princípios</span>
-  <h2 class="section-title">Como <em>trabalhamos</em></h2>
-  <p class="section-desc">
-    Cada decisão de design foi guiada por valores que colocam o residente no centro.
-  </p>
-
-  <div class="principles-grid">
-    <div class="principle">
-      <div class="principle-icon"><i class="fas fa-lock"></i></div>
-      <div>
-        <div class="principle-title">Privacidade total</div>
-        <div class="principle-desc">Seus arquivos não saem do seu computador. Todo o processamento acontece localmente.</div>
+      <div class="features-grid">
+        <div class="feature-card highlight">
+          <div class="feature-icon verde"><i class="fas fa-robot"></i></div>
+          <div class="feature-title">Assistente pessoal de projeto</div>
+          <div class="feature-desc">Um agente de IA que conhece seu nome, sua área e seu estágio no programa. Ele te
+            guia desde a formulação do problema até a estrutura do artigo — em linguagem humana.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon terra"><i class="fas fa-folder-open"></i></div>
+          <div class="feature-title">Gestão inteligente de documentos</div>
+          <div class="feature-desc">Aponte para a pasta do seu programa e o sistema organiza automaticamente:
+            resoluções, editais, protocolos, artigos. Tudo categorizado e acessível.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon ouro"><i class="fas fa-magnifying-glass-chart"></i></div>
+          <div class="feature-title">Análise de materiais</div>
+          <div class="feature-desc">Suba seus artigos, dados de campo ou protocolos — o agente analisa o conteúdo,
+            identifica pontos-chave e conecta com o seu projeto de pesquisa.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon azul"><i class="fas fa-sitemap"></i></div>
+          <div class="feature-title">Plano de ação estruturado</div>
+          <div class="feature-desc">Um plano vivo que acompanha o progresso: problema, objetivos, referencial teórico,
+            metodologia, resultados esperados e estrutura do artigo.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon verde"><i class="fas fa-brain"></i></div>
+          <div class="feature-title">Suporte ao referencial teórico</div>
+          <div class="feature-desc">Identifique conceitos relevantes, mapeie a literatura e construa a base teórica do
+            seu trabalho, conectando com as diretrizes do SUS.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon terra"><i class="fas fa-file-lines"></i></div>
+          <div class="feature-title">Geração de documentos</div>
+          <div class="feature-desc">Exporte seu plano completo, esboço de artigo ou relatório de progresso a qualquer
+            momento, seguindo padrões acadêmicos.</div>
+        </div>
       </div>
-    </div>
-    <div class="principle">
-      <div class="principle-icon"><i class="fas fa-heart"></i></div>
-      <div>
-        <div class="principle-title">Humano primeiro</div>
-        <div class="principle-desc">A tecnologia serve como apoio, não como substituta. A decisão final é sempre sua.</div>
-      </div>
-    </div>
-    <div class="principle">
-      <div class="principle-icon"><i class="fas fa-universal-access"></i></div>
-      <div>
-        <div class="principle-title">Acessível e simples</div>
-        <div class="principle-desc">Interface pensada para quem não é da área de tecnologia. Sem jargão, sem complicação.</div>
-      </div>
-    </div>
-    <div class="principle">
-      <div class="principle-icon"><i class="fas fa-puzzle-piece"></i></div>
-      <div>
-        <div class="principle-title">Adaptável à sua área</div>
-        <div class="principle-desc">O sistema reconhece sua profissão e adapta sugestões ao contexto da sua especialidade.</div>
-      </div>
-    </div>
-    <div class="principle">
-      <div class="principle-icon"><i class="fas fa-graduation-cap"></i></div>
-      <div>
-        <div class="principle-title">Foco acadêmico</div>
-        <div class="principle-desc">Do problema de pesquisa ao artigo, seguindo padrões acadêmicos reconhecidos.</div>
-      </div>
-    </div>
-    <div class="principle">
-      <div class="principle-icon"><i class="fas fa-rotate"></i></div>
-      <div>
-        <div class="principle-title">Evolução contínua</div>
-        <div class="principle-desc">O plano de ação é vivo — acompanha seu progresso e cresce junto com o projeto.</div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- ═══════════ CTA FINAL ═══════════ -->
-<section class="section" style="padding-bottom:24px">
-  <div class="cta-final">
-    <!-- Small olive branch accent -->
-    <svg width="60" height="50" viewBox="0 0 60 50" style="margin-bottom:16px;opacity:.6">
-      <g style="transform-origin:30px 25px;animation:sway 8s ease-in-out infinite">
-        <path d="M10 45 Q15 35,20 28 Q28 18,38 12 Q48 6,55 3" fill="none" stroke="var(--eco-verde-3)" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
-        <ellipse cx="22" cy="30" rx="3" ry="4" fill="var(--eco-terra)" opacity=".6" style="animation:fruit-glow 4s ease-in-out infinite"/>
-        <ellipse cx="38" cy="14" rx="3.5" ry="4.5" fill="var(--eco-terra)" opacity=".65" style="animation:fruit-glow 4s ease-in-out .5s infinite"/>
-      </g>
-    </svg>
-    <div class="cta-final-title">
-      Pronto(a) para começar?<br>Seu espaço personalizado está esperando.
+    <!-- ═══════════ ÁREAS PROFISSIONAIS ═══════════ -->
+    <section class="section" id="areas">
+      <span class="section-kicker"><i class="fas fa-users"></i> Áreas profissionais</span>
+      <h2 class="section-title">Feito para <em>cada área</em></h2>
+      <p class="section-desc">
+        O programa abrange cinco áreas da saúde. O assistente se adapta ao contexto e às particularidades de cada
+        profissão.
+      </p>
+
+      <div class="areas-grid">
+        <div class="area-card">
+          <span class="area-emoji">🩺</span>
+          <div class="area-name">Enfermagem</div>
+          <div class="area-focus">Saúde da Família e Comunidade</div>
+        </div>
+        <div class="area-card">
+          <span class="area-emoji">💊</span>
+          <div class="area-name">Farmácia</div>
+          <div class="area-focus">Saúde Coletiva</div>
+        </div>
+        <div class="area-card">
+          <span class="area-emoji">🦴</span>
+          <div class="area-name">Fisioterapia</div>
+          <div class="area-focus">Atenção Básica</div>
+        </div>
+        <div class="area-card">
+          <span class="area-emoji">🦷</span>
+          <div class="area-name">Odontologia</div>
+          <div class="area-focus">Saúde Bucal Coletiva</div>
+        </div>
+        <div class="area-card">
+          <span class="area-emoji">🧠</span>
+          <div class="area-name">Psicologia</div>
+          <div class="area-focus">Saúde Mental na Atenção Básica</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ JORNADA ═══════════ -->
+    <section class="section" id="jornada">
+      <span class="section-kicker"><i class="fas fa-route"></i> Sua jornada</span>
+      <h2 class="section-title">Do território <em>ao artigo</em></h2>
+      <p class="section-desc">
+        O assistente te acompanha em cada etapa da residência, respeitando seu ritmo e construindo junto com você.
+      </p>
+
+      <div class="journey">
+        <div class="journey-step">
+          <div class="journey-dot">1</div>
+          <div class="journey-title">Identificação</div>
+          <div class="journey-desc">Você se apresenta, conta sua área e o território onde está atuando. O agente
+            reconhece seu perfil e configura o espaço para sua realidade.</div>
+        </div>
+        <div class="journey-step">
+          <div class="journey-dot">2</div>
+          <div class="journey-title">Problema de pesquisa</div>
+          <div class="journey-desc">Juntos, vocês identificam um problema de saúde observado na UBS ou no território. O
+            assistente ajuda a refinar a pergunta e a justificativa.</div>
+        </div>
+        <div class="journey-step">
+          <div class="journey-dot">3</div>
+          <div class="journey-title">Referencial teórico</div>
+          <div class="journey-desc">Com base no tema, o agente sugere conceitos-chave, autores de referência e
+            diretrizes do SUS para embasar o trabalho.</div>
+        </div>
+        <div class="journey-step">
+          <div class="journey-dot">4</div>
+          <div class="journey-title">Metodologia</div>
+          <div class="journey-desc">Definição do desenho do estudo, população, critérios, instrumentos de coleta e plano
+            de análise — com orientação do assistente.</div>
+        </div>
+        <div class="journey-step">
+          <div class="journey-dot">5</div>
+          <div class="journey-title">Resultados e artigo</div>
+          <div class="journey-desc">Organização dos achados, discussão à luz da literatura e estruturação do artigo
+            científico. O agente gera esboços que você revisa.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ PRINCÍPIOS ═══════════ -->
+    <section class="section" id="principios">
+      <span class="section-kicker"><i class="fas fa-shield-halved"></i> Princípios</span>
+      <h2 class="section-title">Como <em>trabalhamos</em></h2>
+      <p class="section-desc">
+        Cada decisão de design foi guiada por valores que colocam o residente no centro.
+      </p>
+
+      <div class="principles-grid">
+        <div class="principle">
+          <div class="principle-icon"><i class="fas fa-lock"></i></div>
+          <div>
+            <div class="principle-title">Privacidade total</div>
+            <div class="principle-desc">Seus arquivos não saem do seu computador. Todo o processamento acontece
+              localmente.</div>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-icon"><i class="fas fa-heart"></i></div>
+          <div>
+            <div class="principle-title">Humano primeiro</div>
+            <div class="principle-desc">A tecnologia serve como apoio, não como substituta. A decisão final é sempre
+              sua.</div>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-icon"><i class="fas fa-universal-access"></i></div>
+          <div>
+            <div class="principle-title">Acessível e simples</div>
+            <div class="principle-desc">Interface pensada para quem não é da área de tecnologia. Sem jargão, sem
+              complicação.</div>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-icon"><i class="fas fa-puzzle-piece"></i></div>
+          <div>
+            <div class="principle-title">Adaptável à sua área</div>
+            <div class="principle-desc">O sistema reconhece sua profissão e adapta sugestões ao contexto da sua
+              especialidade.</div>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-icon"><i class="fas fa-graduation-cap"></i></div>
+          <div>
+            <div class="principle-title">Foco acadêmico</div>
+            <div class="principle-desc">Do problema de pesquisa ao artigo, seguindo padrões acadêmicos reconhecidos.
+            </div>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-icon"><i class="fas fa-rotate"></i></div>
+          <div>
+            <div class="principle-title">Evolução contínua</div>
+            <div class="principle-desc">O plano de ação é vivo — acompanha seu progresso e cresce junto com o projeto.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ CTA FINAL ═══════════ -->
+    <section class="section" style="padding-bottom:24px">
+      <div class="cta-final">
+        <!-- Small olive branch accent -->
+        <svg width="60" height="50" viewBox="0 0 60 50" style="margin-bottom:16px;opacity:.6">
+          <g style="transform-origin:30px 25px;animation:sway 8s ease-in-out infinite">
+            <path d="M10 45 Q15 35,20 28 Q28 18,38 12 Q48 6,55 3" fill="none" stroke="var(--eco-verde-3)"
+              stroke-width="1.5" stroke-linecap="round" opacity=".5" />
+            <ellipse cx="22" cy="30" rx="3" ry="4" fill="var(--eco-terra)" opacity=".6"
+              style="animation:fruit-glow 4s ease-in-out infinite" />
+            <ellipse cx="38" cy="14" rx="3.5" ry="4.5" fill="var(--eco-terra)" opacity=".65"
+              style="animation:fruit-glow 4s ease-in-out .5s infinite" />
+          </g>
+        </svg>
+        <div class="cta-final-title">
+          Pronto(a) para começar?<br>Seu espaço personalizado está esperando.
+        </div>
+        <a href="/olivia/mode-select" class="btn-primary">
+          <i class="fas fa-play-circle"></i> Entrar no meu espaço
+        </a>
+      </div>
+    </section>
+
+  </div><!-- /content -->
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer">
+    <div class="footer-brand">Olivia · Residência UnirG</div>
+    <div class="footer-text">
+      Plataforma de apoio à Residência Multiprofissional em Saúde<br>
+      Universidade de Gurupi · Olivia · 2026
     </div>
-    <a href="/OliviaLegal/mode-select" class="btn-primary">
-      <i class="fas fa-play-circle"></i> Entrar no meu espaço
-    </a>
-  </div>
-</section>
+    <span class="footer-badge">
+      <i class="fas fa-lock"></i> Dados processados localmente · OliviaLegal-AI
+    </span>
+  </footer>
 
-</div><!-- /content -->
+  <!-- ═══════════ SCRIPTS ═══════════ -->
+  <script>
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      document.getElementById('mobileDropdown').classList.toggle('open');
+    }
 
-<!-- ═══════════ FOOTER ═══════════ -->
-<footer class="footer">
-  <div class="footer-brand">Olivia · Residência UnirG</div>
-  <div class="footer-text">
-    Plataforma de apoio à Residência Multiprofissional em Saúde<br>
-    Universidade de Gurupi · OliviaLegal · 2026
-  </div>
-  <span class="footer-badge">
-    <i class="fas fa-lock"></i> Dados processados localmente · OliviaLegal-AI
-  </span>
-</footer>
-
-<!-- ═══════════ SCRIPTS ═══════════ -->
-<script>
-// Mobile menu toggle
-function toggleMobileMenu() {
-  document.getElementById('mobileDropdown').classList.toggle('open');
-}
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.mobile-menu-btn') && !e.target.closest('.mobile-dropdown')) {
-    document.getElementById('mobileDropdown').classList.remove('open');
-  }
-});
-</script>
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.mobile-menu-btn') && !e.target.closest('.mobile-dropdown')) {
+        document.getElementById('mobileDropdown').classList.remove('open');
+      }
+    });
+  </script>
 </body>
+
 </html>

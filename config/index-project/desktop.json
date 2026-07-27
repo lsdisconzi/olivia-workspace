@@ -1,0 +1,392 @@
+{
+  "metadata": {
+    "folder": "desktop",
+    "indexed_at": "2026-07-26T22:51:20.288769",
+    "total_files": 8,
+    "total_lines": 4387,
+    "languages": {
+      "javascript": 2,
+      "json": 2,
+      "bash": 1,
+      "html": 2,
+      "css": 1
+    }
+  },
+  "tree": {
+    "main.js": {
+      "file_ref": "files/desktop/main.js"
+    },
+    "package-lock.json": {
+      "file_ref": "files/desktop/package-lock.json"
+    },
+    "package.json": {
+      "file_ref": "files/desktop/package.json"
+    },
+    "preload.js": {
+      "file_ref": "files/desktop/preload.js"
+    },
+    "scripts": {
+      "generate-icons.sh": {
+        "file_ref": "files/desktop/scripts/generate-icons.sh"
+      }
+    },
+    "src": {
+      "renderer": {
+        "style.css": {
+          "file_ref": "files/desktop/src/renderer/style.css"
+        },
+        "titlebar.html": {
+          "file_ref": "files/desktop/src/renderer/titlebar.html"
+        },
+        "waiting.html": {
+          "file_ref": "files/desktop/src/renderer/waiting.html"
+        }
+      }
+    }
+  },
+  "files": {
+    "desktop/preload.js": {
+      "path": "desktop/preload.js",
+      "language": "javascript",
+      "size_bytes": 1095,
+      "lines": 25,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [],
+        "exports": [],
+        "symbols": {
+          "functions": [],
+          "classes": [],
+          "constants": []
+        }
+      }
+    },
+    "desktop/main.js": {
+      "path": "desktop/main.js",
+      "language": "javascript",
+      "size_bytes": 12327,
+      "lines": 304,
+      "last_modified": "2026-07-21T19:34:53.682327",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [],
+        "exports": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "parseArgs",
+              "line": 38,
+              "args": []
+            },
+            {
+              "name": "createWindow",
+              "line": 95,
+              "args": []
+            },
+            {
+              "name": "loadAppOrFallback",
+              "line": 181,
+              "args": []
+            },
+            {
+              "name": "loadFallback",
+              "line": 201,
+              "args": [
+                "reason"
+              ]
+            },
+            {
+              "name": "injectTitleBar",
+              "line": 213,
+              "args": [
+                "win"
+              ]
+            },
+            {
+              "name": "_isHeadlessContainer",
+              "line": 16,
+              "args": [
+                "("
+              ]
+            }
+          ],
+          "classes": [],
+          "constants": [
+            {
+              "name": "path",
+              "line": 5
+            },
+            {
+              "name": "fs",
+              "line": 6
+            },
+            {
+              "name": "_isHeadlessContainer",
+              "line": 16
+            },
+            {
+              "name": "cli",
+              "line": 54
+            },
+            {
+              "name": "PORT",
+              "line": 55
+            },
+            {
+              "name": "APP_URL",
+              "line": 56
+            },
+            {
+              "name": "DEVTOOLS",
+              "line": 57
+            },
+            {
+              "name": "CSP",
+              "line": 67
+            },
+            {
+              "name": "gotLock",
+              "line": 78
+            },
+            {
+              "name": "mainWindow",
+              "line": 93
+            }
+          ]
+        }
+      }
+    },
+    "desktop/package-lock.json": {
+      "path": "desktop/package-lock.json",
+      "language": "json",
+      "size_bytes": 129026,
+      "lines": 3666,
+      "last_modified": "2026-07-14T18:47:39.606237",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "desktop/package.json": {
+      "path": "desktop/package.json",
+      "language": "json",
+      "size_bytes": 942,
+      "lines": 37,
+      "last_modified": "2026-07-15T14:13:18.692693",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "desktop/scripts/generate-icons.sh": {
+      "path": "desktop/scripts/generate-icons.sh",
+      "language": "bash",
+      "size_bytes": 3970,
+      "lines": 86,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "desktop/src/renderer/titlebar.html": {
+      "path": "desktop/src/renderer/titlebar.html",
+      "language": "html",
+      "size_bytes": 901,
+      "lines": 14,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "title": "",
+        "scripts": [],
+        "stylesheets": [],
+        "templates": [],
+        "ids": [
+          "ol-titlebar-drag",
+          "ol-titlebar-controls",
+          "ol-titlebar-minimize",
+          "ol-titlebar-maximize",
+          "ol-titlebar-close"
+        ],
+        "forms": []
+      }
+    },
+    "desktop/src/renderer/waiting.html": {
+      "path": "desktop/src/renderer/waiting.html",
+      "language": "html",
+      "size_bytes": 4304,
+      "lines": 155,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "title": "Olivia — Starting...",
+        "scripts": [],
+        "stylesheets": [],
+        "templates": [],
+        "ids": [
+          "spinner",
+          "status",
+          "reason",
+          "retryBtn"
+        ],
+        "forms": []
+      }
+    },
+    "desktop/src/renderer/style.css": {
+      "path": "desktop/src/renderer/style.css",
+      "language": "css",
+      "size_bytes": 2116,
+      "lines": 100,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [],
+        "selectors": {
+          "classes": [
+            "ol-titlebar-btn",
+            "ol-titlebar-btn--close",
+            "ol-titlebar-controls",
+            "ol-titlebar-drag",
+            "ol-titlebar-title"
+          ],
+          "ids": [
+            "da3633",
+            "e6edf3",
+            "ed6a5e",
+            "f5c542",
+            "fff",
+            "ol-titlebar",
+            "ol-titlebar-close",
+            "ol-titlebar-maximize",
+            "ol-titlebar-minimize"
+          ],
+          "elements": [
+            "svg"
+          ]
+        }
+      }
+    }
+  },
+  "html_pages": {
+    "desktop/src/renderer/titlebar.html": {
+      "title": "",
+      "scripts": [],
+      "stylesheets": [],
+      "templates": [],
+      "ids": [
+        "ol-titlebar-drag",
+        "ol-titlebar-controls",
+        "ol-titlebar-minimize",
+        "ol-titlebar-maximize",
+        "ol-titlebar-close"
+      ],
+      "forms": []
+    },
+    "desktop/src/renderer/waiting.html": {
+      "title": "Olivia — Starting...",
+      "scripts": [],
+      "stylesheets": [],
+      "templates": [],
+      "ids": [
+        "spinner",
+        "status",
+        "reason",
+        "retryBtn"
+      ],
+      "forms": []
+    }
+  },
+  "modules": {
+    "desktop": {
+      "files": [
+        "desktop/preload.js",
+        "desktop/main.js",
+        "desktop/package-lock.json",
+        "desktop/package.json"
+      ],
+      "count": 4
+    },
+    "desktop/src/renderer": {
+      "files": [
+        "desktop/src/renderer/titlebar.html",
+        "desktop/src/renderer/waiting.html",
+        "desktop/src/renderer/style.css"
+      ],
+      "count": 3
+    }
+  },
+  "symbols_index": {
+    "parseArgs": [
+      {
+        "file": "desktop/main.js",
+        "line": 38,
+        "type": "function"
+      }
+    ],
+    "createWindow": [
+      {
+        "file": "desktop/main.js",
+        "line": 95,
+        "type": "function"
+      }
+    ],
+    "loadAppOrFallback": [
+      {
+        "file": "desktop/main.js",
+        "line": 181,
+        "type": "function"
+      }
+    ],
+    "loadFallback": [
+      {
+        "file": "desktop/main.js",
+        "line": 201,
+        "type": "function"
+      }
+    ],
+    "injectTitleBar": [
+      {
+        "file": "desktop/main.js",
+        "line": 213,
+        "type": "function"
+      }
+    ],
+    "_isHeadlessContainer": [
+      {
+        "file": "desktop/main.js",
+        "line": 16,
+        "type": "function"
+      }
+    ]
+  },
+  "dependency_graph": {
+    "desktop/preload.js": {
+      "imports": [],
+      "imported_by": []
+    },
+    "desktop/main.js": {
+      "imports": [],
+      "imported_by": []
+    },
+    "desktop/package-lock.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "desktop/package.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "desktop/scripts/generate-icons.sh": {
+      "imports": [],
+      "imported_by": []
+    },
+    "desktop/src/renderer/titlebar.html": {
+      "imports": [],
+      "imported_by": []
+    },
+    "desktop/src/renderer/waiting.html": {
+      "imports": [],
+      "imported_by": []
+    },
+    "desktop/src/renderer/style.css": {
+      "imports": [],
+      "imported_by": []
+    }
+  },
+  "js_cross_module_graph": {}
+}

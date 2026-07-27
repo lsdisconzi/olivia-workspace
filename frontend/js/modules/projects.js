@@ -231,7 +231,7 @@ function _renderProjectList() {
   if (!_projects.length) {
     list.innerHTML = '<p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic">Nenhum projeto criado ainda. Clique em "Novo Projeto" para começar.</p>';
   } else {
-    const visibleProjects = _projects.filter(p => p.name !== 'OliviaLegal Workspace' && p.project_id !== 'OliviaLegal-project' && p.project_id !== 'OliviaLegal Workspace');
+    const visibleProjects = _projects.filter(p => p.name !== 'Olivia Workspace' && p.project_id !== 'OliviaLegal-project' && p.project_id !== 'Olivia Workspace');
     
     if (!visibleProjects.length) {
       list.innerHTML = '<p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic">Nenhum projeto criado ainda. Clique em "Novo Projeto" para começar.</p>';

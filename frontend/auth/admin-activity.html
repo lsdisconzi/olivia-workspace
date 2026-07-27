@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OliviaLegal · Admin Activity</title>
+  <title>Olivia · Admin Activity</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link
     href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
@@ -315,11 +315,11 @@
       <div class="page-title">Admin Activity</div>
     </div>
     <div class="links">
-      <a class="pill-link" href="/OliviaLegal/mode-select">Mode Select</a>
-      <a class="pill-link" href="/OliviaLegal/olivia.html">Workspace</a>
-      <a class="pill-link" href="/OliviaLegal/admin/users-ui">Users</a>
-      <a class="pill-link notif-badge" id="notifBadge" href="/OliviaLegal/mode-select">Notificações: 0</a>
-      <a class="pill-link" href="/OliviaLegal/logout">Logout</a>
+      <a class="pill-link" href="/olivia/mode-select">Mode Select</a>
+      <a class="pill-link" href="/olivia/olivia.html">Workspace</a>
+      <a class="pill-link" href="/olivia/admin/users-ui">Users</a>
+      <a class="pill-link notif-badge" id="notifBadge" href="/olivia/mode-select">Notificações: 0</a>
+      <a class="pill-link" href="/olivia/logout">Logout</a>
     </div>
   </header>
 
@@ -394,7 +394,7 @@
       if (user) qs.set('user', user);
       if (page) qs.set('page', page);
 
-      fetch('/OliviaLegal/admin/activity/api?' + qs.toString())
+      fetch('/olivia/admin/activity/api?' + qs.toString())
         .then(r => r.json())
         .then(render)
         .catch(err => {
@@ -446,7 +446,7 @@
 
     async function loadNotifBadge() {
       try {
-        const r = await fetch('/OliviaLegal/admin/notifications?unread=1&limit=1');
+        const r = await fetch('/olivia/admin/notifications?unread=1&limit=1');
         const d = await r.json();
         const unread = Number(d.unread_count || 0);
         const badge = document.getElementById('notifBadge');
@@ -459,7 +459,7 @@
     loadNotifBadge();
     setInterval(loadNotifBadge, 30000);
   </script>
-  <script src="/OliviaLegal/auth-activity/tracker.js"></script>
+  <script src="/olivia/auth-activity/tracker.js"></script>
 </body>
 
 </html>

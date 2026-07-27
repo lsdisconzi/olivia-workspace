@@ -1,0 +1,2245 @@
+{
+  "metadata": {
+    "folder": "agents",
+    "indexed_at": "2026-07-26T22:51:20.288769",
+    "total_files": 113,
+    "total_lines": 14027,
+    "languages": {
+      "unknown": 10,
+      "python": 1,
+      "json": 13,
+      "markdown": 88,
+      "bash": 1
+    }
+  },
+  "tree": {
+    ".DS_Store": {
+      "file_ref": "files/agents/.DS_Store"
+    },
+    "agents-groups": {
+      ".DS_Store": {
+        "file_ref": "files/agents/agents-groups/.DS_Store"
+      },
+      "_meta": {
+        ".DS_Store": {
+          "file_ref": "files/agents/agents-groups/_meta/.DS_Store"
+        },
+        "groups.index.json": {
+          "file_ref": "files/agents/agents-groups/_meta/groups.index.json"
+        },
+        "meta-orchestrator.agent.md": {
+          "file_ref": "files/agents/agents-groups/_meta/meta-orchestrator.agent.md"
+        },
+        "policies": {
+          ".DS_Store": {
+            "file_ref": "files/agents/agents-groups/_meta/policies/.DS_Store"
+          },
+          "mcp-bootstrap": {
+            "legalpipeline.mcp-bootstrap.md": {
+              "file_ref": "files/agents/agents-groups/_meta/policies/mcp-bootstrap/legalpipeline.mcp-bootstrap.md"
+            },
+            "pinocchio.mcp-bootstrap.md": {
+              "file_ref": "files/agents/agents-groups/_meta/policies/mcp-bootstrap/pinocchio.mcp-bootstrap.md"
+            }
+          },
+          "mcp-servers.registry.json": {
+            "file_ref": "files/agents/agents-groups/_meta/policies/mcp-servers.registry.json"
+          },
+          "meta-handoff-routes.json": {
+            "file_ref": "files/agents/agents-groups/_meta/policies/meta-handoff-routes.json"
+          },
+          "meta-tool-permissions.json": {
+            "file_ref": "files/agents/agents-groups/_meta/policies/meta-tool-permissions.json"
+          }
+        }
+      },
+      "la8159": {
+        ".DS_Store": {
+          "file_ref": "files/agents/agents-groups/la8159/.DS_Store"
+        },
+        ".build-index.py": {
+          "file_ref": "files/agents/agents-groups/la8159/.build-index.py"
+        },
+        "agents": {
+          "br-abear-plus.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-abear-plus.agent.md"
+          },
+          "br-abrapavaa-sentra.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-abrapavaa-sentra.agent.md"
+          },
+          "br-anac-r400.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-anac-r400.agent.md"
+          },
+          "br-anticorrupcao.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-anticorrupcao.agent.md"
+          },
+          "br-cba.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-cba.agent.md"
+          },
+          "br-cc.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-cc.agent.md"
+          },
+          "br-cdc.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-cdc.agent.md"
+          },
+          "br-cf88.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-cf88.agent.md"
+          },
+          "br-conflito-interesses.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-conflito-interesses.agent.md"
+          },
+          "br-cp.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-cp.agent.md"
+          },
+          "br-improbidade.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-improbidade.agent.md"
+          },
+          "br-lai-transparency.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-lai-transparency.agent.md"
+          },
+          "br-lei9784.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-lei9784.agent.md"
+          },
+          "br-oab-comissao-aero.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-oab-comissao-aero.agent.md"
+          },
+          "br-oab-disciplina.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-oab-disciplina.agent.md"
+          },
+          "br-sdc-procon-senacon.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/br-sdc-procon-senacon.agent.md"
+          },
+          "cl-cach.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/cl-cach.agent.md"
+          },
+          "cl-const.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/cl-const.agent.md"
+          },
+          "cl-contraloria-indh.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/cl-contraloria-indh.agent.md"
+          },
+          "cl-cpcl.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/cl-cpcl.agent.md"
+          },
+          "cl-dgac-l16752.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/cl-dgac-l16752.agent.md"
+          },
+          "cl-lpdc.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/cl-lpdc.agent.md"
+          },
+          "cl-transparency-l20285.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/cl-transparency-l20285.agent.md"
+          },
+          "int-achr.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/int-achr.agent.md"
+          },
+          "int-chicago-vclt.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/int-chicago-vclt.agent.md"
+          },
+          "int-iata-gc.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/int-iata-gc.agent.md"
+          },
+          "int-icao-an17.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/int-icao-an17.agent.md"
+          },
+          "int-icao-an6-an13.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/int-icao-an6-an13.agent.md"
+          },
+          "int-icao-an9.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/int-icao-an9.agent.md"
+          },
+          "int-mc99.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/int-mc99.agent.md"
+          },
+          "int-softlaw.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/int-softlaw.agent.md"
+          },
+          "int-uncrc-hague.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/int-uncrc-hague.agent.md"
+          },
+          "int-vccr.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/int-vccr.agent.md"
+          },
+          "la8159-coordinator.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/la8159-coordinator.agent.md"
+          },
+          "la8159-orchestrator.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/la8159-orchestrator.agent.md"
+          },
+          "meta-adversarial.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/meta-adversarial.agent.md"
+          },
+          "meta-evidence-mapper.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/meta-evidence-mapper.agent.md"
+          },
+          "meta-institutional-silence.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/meta-institutional-silence.agent.md"
+          },
+          "meta-personnel-accountability.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/meta-personnel-accountability.agent.md"
+          },
+          "meta-prescription-forum.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/meta-prescription-forum.agent.md"
+          },
+          "meta-revolvingdoor.agent.md": {
+            "file_ref": "files/agents/agents-groups/la8159/agents/meta-revolvingdoor.agent.md"
+          }
+        },
+        "index.json": {
+          "file_ref": "files/agents/agents-groups/la8159/index.json"
+        },
+        "knowledge": {
+          "manifest.json": {
+            "file_ref": "files/agents/agents-groups/la8159/knowledge/manifest.json"
+          }
+        },
+        "policies": {
+          "handoff-routes.json": {
+            "file_ref": "files/agents/agents-groups/la8159/policies/handoff-routes.json"
+          },
+          "tool-permissions.by-agent.json": {
+            "file_ref": "files/agents/agents-groups/la8159/policies/tool-permissions.by-agent.json"
+          }
+        },
+        "scripts": {
+          "bootstrap_case_paths.sh": {
+            "file_ref": "files/agents/agents-groups/la8159/scripts/bootstrap_case_paths.sh"
+          }
+        },
+        "source": {
+          ".DS_Store": {
+            "file_ref": "files/agents/agents-groups/la8159/source/.DS_Store"
+          },
+          "DOC_agents.md": {
+            "file_ref": "files/agents/agents-groups/la8159/source/DOC_agents.md"
+          },
+          "INDEX.md": {
+            "file_ref": "files/agents/agents-groups/la8159/source/INDEX.md"
+          },
+          "JURISPRUDENCE_SEARCH_GUIDE.md": {
+            "file_ref": "files/agents/agents-groups/la8159/source/JURISPRUDENCE_SEARCH_GUIDE.md"
+          },
+          "PATHS.md": {
+            "file_ref": "files/agents/agents-groups/la8159/source/PATHS.md"
+          },
+          "PLAN.md": {
+            "file_ref": "files/agents/agents-groups/la8159/source/PLAN.md"
+          },
+          "README.md": {
+            "file_ref": "files/agents/agents-groups/la8159/source/README.md"
+          },
+          "SOURCES.md": {
+            "file_ref": "files/agents/agents-groups/la8159/source/SOURCES.md"
+          },
+          "mapping.json": {
+            "file_ref": "files/agents/agents-groups/la8159/source/mapping.json"
+          },
+          "personnel": {
+            ".DS_Store": {
+              "file_ref": "files/agents/agents-groups/la8159/source/personnel/.DS_Store"
+            },
+            "REGISTRY.md": {
+              "file_ref": "files/agents/agents-groups/la8159/source/personnel/REGISTRY.md"
+            },
+            "_TEMPLATE": {
+              "dossier.md": {
+                "file_ref": "files/agents/agents-groups/la8159/source/personnel/_TEMPLATE/dossier.md"
+              }
+            },
+            "dossiers": {
+              ".DS_Store": {
+                "file_ref": "files/agents/agents-groups/la8159/source/personnel/dossiers/.DS_Store"
+              },
+              "ariel-prado": {
+                "dossier.md": {
+                  "file_ref": "files/agents/agents-groups/la8159/source/personnel/dossiers/ariel-prado/dossier.md"
+                }
+              },
+              "bruno-bartijotto": {
+                "dossier.md": {
+                  "file_ref": "files/agents/agents-groups/la8159/source/personnel/dossiers/bruno-bartijotto/dossier.md"
+                }
+              },
+              "joaquin-barraza": {
+                "dossier.md": {
+                  "file_ref": "files/agents/agents-groups/la8159/source/personnel/dossiers/joaquin-barraza/dossier.md"
+                }
+              },
+              "juliano-noman": {
+                "dossier.md": {
+                  "file_ref": "files/agents/agents-groups/la8159/source/personnel/dossiers/juliano-noman/dossier.md"
+                }
+              },
+              "rogeria-gieremek": {
+                "dossier.md": {
+                  "file_ref": "files/agents/agents-groups/la8159/source/personnel/dossiers/rogeria-gieremek/dossier.md"
+                }
+              },
+              "sandra-assali": {
+                "dossier.md": {
+                  "file_ref": "files/agents/agents-groups/la8159/source/personnel/dossiers/sandra-assali/dossier.md"
+                }
+              },
+              "waleska-fortini": {
+                "dossier.md": {
+                  "file_ref": "files/agents/agents-groups/la8159/source/personnel/dossiers/waleska-fortini/dossier.md"
+                }
+              }
+            },
+            "personnel.json": {
+              "file_ref": "files/agents/agents-groups/la8159/source/personnel/personnel.json"
+            }
+          }
+        }
+      },
+      "olivia": {
+        ".DS_Store": {
+          "file_ref": "files/agents/agents-groups/olivia/.DS_Store"
+        },
+        "PATHS.md": {
+          "file_ref": "files/agents/agents-groups/olivia/PATHS.md"
+        },
+        "agents": {
+          "olivia-coordinator.agent.md": {
+            "file_ref": "files/agents/agents-groups/olivia/agents/olivia-coordinator.agent.md"
+          },
+          "olivia-discovery-intelligence.agent.md": {
+            "file_ref": "files/agents/agents-groups/olivia/agents/olivia-discovery-intelligence.agent.md"
+          },
+          "olivia-ecosystem-coordinator.agent.md": {
+            "file_ref": "files/agents/agents-groups/olivia/agents/olivia-ecosystem-coordinator.agent.md"
+          },
+          "olivia-frontend-migration-engineer.agent.md": {
+            "file_ref": "files/agents/agents-groups/olivia/agents/olivia-frontend-migration-engineer.agent.md"
+          },
+          "olivia-listening-operations.agent.md": {
+            "file_ref": "files/agents/agents-groups/olivia/agents/olivia-listening-operations.agent.md"
+          },
+          "olivia-memory-graph.agent.md": {
+            "file_ref": "files/agents/agents-groups/olivia/agents/olivia-memory-graph.agent.md"
+          },
+          "olivia-qdrant-manager.agent.md": {
+            "file_ref": "files/agents/agents-groups/olivia/agents/olivia-qdrant-manager.agent.md"
+          },
+          "olivia-shaders-proactive.agent.md": {
+            "file_ref": "files/agents/agents-groups/olivia/agents/olivia-shaders-proactive.agent.md"
+          },
+          "olivia-studio-ui.agent.md": {
+            "file_ref": "files/agents/agents-groups/olivia/agents/olivia-studio-ui.agent.md"
+          },
+          "orchestrator-control-plane.agent.md": {
+            "file_ref": "files/agents/agents-groups/olivia/agents/orchestrator-control-plane.agent.md"
+          }
+        },
+        "index.json": {
+          "file_ref": "files/agents/agents-groups/olivia/index.json"
+        },
+        "knowledge": {
+          "Olivia Workspace · Complete Feature Guide — Both Sides.md": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/Olivia Workspace · Complete Feature Guide — Both Sides.md"
+          },
+          "Olivia _ The AI Operating Environment.md": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/Olivia _ The AI Operating Environment.md"
+          },
+          "Olivia _ p2- O Ambiente Operacional de IA.md": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/Olivia _ p2- O Ambiente Operacional de IA.md"
+          },
+          "Olivia _ p3- O Ambiente Operacional de IA.md": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/Olivia _ p3- O Ambiente Operacional de IA.md"
+          },
+          "Olivia _ p4- O Ambiente Operacional de IA.md": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/Olivia _ p4- O Ambiente Operacional de IA.md"
+          },
+          "Olivia _ story - A Arvore que Aprende.md": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/Olivia _ story - A Arvore que Aprende.md"
+          },
+          "Olivia _ thread- O Ambiente Operacional de IA.md": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/Olivia _ thread- O Ambiente Operacional de IA.md"
+          },
+          "Olivia _p1-  The AI Operating Environment.md": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/Olivia _p1-  The AI Operating Environment.md"
+          },
+          "manifest.json": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/manifest.json"
+          },
+          "olivia-imagine.md": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/olivia-imagine.md"
+          },
+          "studio-project-structure.md": {
+            "file_ref": "files/agents/agents-groups/olivia/knowledge/studio-project-structure.md"
+          }
+        }
+      }
+    },
+    "skills": {
+      ".DS_Store": {
+        "file_ref": "files/agents/skills/.DS_Store"
+      },
+      "code-generation.skill.md": {
+        "file_ref": "files/agents/skills/code-generation.skill.md"
+      },
+      "file-system.skill.md": {
+        "file_ref": "files/agents/skills/file-system.skill.md"
+      },
+      "frontend-design.skill.md": {
+        "file_ref": "files/agents/skills/frontend-design.skill.md"
+      },
+      "manifest.json": {
+        "file_ref": "files/agents/skills/manifest.json"
+      },
+      "refactoring.skill.md": {
+        "file_ref": "files/agents/skills/refactoring.skill.md"
+      },
+      "testing.skill.md": {
+        "file_ref": "files/agents/skills/testing.skill.md"
+      },
+      "vite-builder.skill.md": {
+        "file_ref": "files/agents/skills/vite-builder.skill.md"
+      },
+      "vue3-migration.skill.md": {
+        "file_ref": "files/agents/skills/vue3-migration.skill.md"
+      }
+    }
+  },
+  "files": {
+    "agents/.DS_Store": {
+      "path": "agents/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 10244,
+      "lines": 70,
+      "last_modified": "2026-07-21T05:42:10.830113",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "agents/agents-groups/.DS_Store": {
+      "path": "agents/agents-groups/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 1,
+      "last_modified": "2026-07-24T01:05:37.733991",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/.build-index.py": {
+      "path": "agents/agents-groups/la8159/.build-index.py",
+      "language": "python",
+      "size_bytes": 25689,
+      "lines": 610,
+      "last_modified": "2026-07-15T01:28:15.907906",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "json",
+          "re",
+          "pathlib"
+        ],
+        "imports_external": [
+          "shutil"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "slugify",
+              "line": 28,
+              "end_line": 29,
+              "args": [
+                "agent_id"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "first_heading",
+              "line": 32,
+              "end_line": 37,
+              "args": [
+                "text"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "extract_summary",
+              "line": 40,
+              "end_line": 52,
+              "args": [
+                "text"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "has_yaml_frontmatter",
+              "line": 55,
+              "end_line": 56,
+              "args": [
+                "text"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "ensure_frontmatter",
+              "line": 59,
+              "end_line": 71,
+              "args": [
+                "body",
+                "name",
+                "description",
+                "tags"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "collect_specs",
+              "line": 74,
+              "end_line": 87,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "jurisdiction_for",
+              "line": 90,
+              "end_line": 93,
+              "args": [
+                "category",
+                "agent_id"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "language_focus_for",
+              "line": 96,
+              "end_line": 102,
+              "args": [
+                "category"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "write_bundle",
+              "line": 105,
+              "end_line": 143,
+              "args": [
+                "slug",
+                "name",
+                "description",
+                "body",
+                "agent_md_rel",
+                "qdrant_collection",
+                "neo4j_database",
+                "config"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 146,
+              "end_line": 605,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "ROOT",
+              "line": 8
+            },
+            {
+              "name": "SRC",
+              "line": 9
+            },
+            {
+              "name": "AGENTS_DIR",
+              "line": 10
+            },
+            {
+              "name": "REPO_ROOT",
+              "line": 13
+            },
+            {
+              "name": "BUNDLES_DIR",
+              "line": 14
+            },
+            {
+              "name": "CATEGORIES",
+              "line": 17
+            },
+            {
+              "name": "ORCHESTRATOR_SOURCE_ID",
+              "line": 25
+            }
+          ]
+        }
+      }
+    },
+    "agents/agents-groups/la8159/.DS_Store": {
+      "path": "agents/agents-groups/la8159/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 1,
+      "last_modified": "2026-07-17T00:48:40.496894",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/index.json": {
+      "path": "agents/agents-groups/la8159/index.json",
+      "language": "json",
+      "size_bytes": 30007,
+      "lines": 916,
+      "last_modified": "2026-07-15T01:28:16.027686",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/.DS_Store": {
+      "path": "agents/agents-groups/la8159/source/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 1,
+      "last_modified": "2026-07-17T00:49:12.498441",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/SOURCES.md": {
+      "path": "agents/agents-groups/la8159/source/SOURCES.md",
+      "language": "markdown",
+      "size_bytes": 18851,
+      "lines": 202,
+      "last_modified": "2026-07-15T01:28:16.061063",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/JURISPRUDENCE_SEARCH_GUIDE.md": {
+      "path": "agents/agents-groups/la8159/source/JURISPRUDENCE_SEARCH_GUIDE.md",
+      "language": "markdown",
+      "size_bytes": 40175,
+      "lines": 804,
+      "last_modified": "2026-07-15T01:28:16.059371",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/README.md": {
+      "path": "agents/agents-groups/la8159/source/README.md",
+      "language": "markdown",
+      "size_bytes": 4742,
+      "lines": 54,
+      "last_modified": "2026-07-15T01:28:16.060444",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/mapping.json": {
+      "path": "agents/agents-groups/la8159/source/mapping.json",
+      "language": "json",
+      "size_bytes": 8511,
+      "lines": 109,
+      "last_modified": "2026-07-15T01:28:16.063128",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/PATHS.md": {
+      "path": "agents/agents-groups/la8159/source/PATHS.md",
+      "language": "markdown",
+      "size_bytes": 1976,
+      "lines": 48,
+      "last_modified": "2026-07-17T01:01:16.891686",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/INDEX.md": {
+      "path": "agents/agents-groups/la8159/source/INDEX.md",
+      "language": "markdown",
+      "size_bytes": 14130,
+      "lines": 121,
+      "last_modified": "2026-07-15T01:28:16.054476",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/DOC_agents.md": {
+      "path": "agents/agents-groups/la8159/source/DOC_agents.md",
+      "language": "markdown",
+      "size_bytes": 12391,
+      "lines": 300,
+      "last_modified": "2026-07-15T01:28:16.054035",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/PLAN.md": {
+      "path": "agents/agents-groups/la8159/source/PLAN.md",
+      "language": "markdown",
+      "size_bytes": 13021,
+      "lines": 202,
+      "last_modified": "2026-07-15T01:28:16.059892",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/.DS_Store": {
+      "path": "agents/agents-groups/la8159/source/personnel/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 1,
+      "last_modified": "2026-07-17T00:47:35.625780",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/personnel.json": {
+      "path": "agents/agents-groups/la8159/source/personnel/personnel.json",
+      "language": "json",
+      "size_bytes": 6724,
+      "lines": 118,
+      "last_modified": "2026-07-15T01:28:16.171435",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/REGISTRY.md": {
+      "path": "agents/agents-groups/la8159/source/personnel/REGISTRY.md",
+      "language": "markdown",
+      "size_bytes": 3349,
+      "lines": 32,
+      "last_modified": "2026-07-15T01:28:16.164223",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/_TEMPLATE/dossier.md": {
+      "path": "agents/agents-groups/la8159/source/personnel/_TEMPLATE/dossier.md",
+      "language": "markdown",
+      "size_bytes": 1669,
+      "lines": 40,
+      "last_modified": "2026-07-15T01:28:16.164775",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/.DS_Store": {
+      "path": "agents/agents-groups/la8159/source/personnel/dossiers/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 1,
+      "last_modified": "2026-07-17T00:47:47.035320",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/rogeria-gieremek/dossier.md": {
+      "path": "agents/agents-groups/la8159/source/personnel/dossiers/rogeria-gieremek/dossier.md",
+      "language": "markdown",
+      "size_bytes": 6420,
+      "lines": 61,
+      "last_modified": "2026-07-15T01:28:16.168334",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/joaquin-barraza/dossier.md": {
+      "path": "agents/agents-groups/la8159/source/personnel/dossiers/joaquin-barraza/dossier.md",
+      "language": "markdown",
+      "size_bytes": 6235,
+      "lines": 62,
+      "last_modified": "2026-07-15T01:28:16.166739",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/ariel-prado/dossier.md": {
+      "path": "agents/agents-groups/la8159/source/personnel/dossiers/ariel-prado/dossier.md",
+      "language": "markdown",
+      "size_bytes": 4685,
+      "lines": 46,
+      "last_modified": "2026-07-15T01:28:16.165547",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/juliano-noman/dossier.md": {
+      "path": "agents/agents-groups/la8159/source/personnel/dossiers/juliano-noman/dossier.md",
+      "language": "markdown",
+      "size_bytes": 4263,
+      "lines": 48,
+      "last_modified": "2026-07-15T01:28:16.167353",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/waleska-fortini/dossier.md": {
+      "path": "agents/agents-groups/la8159/source/personnel/dossiers/waleska-fortini/dossier.md",
+      "language": "markdown",
+      "size_bytes": 4534,
+      "lines": 51,
+      "last_modified": "2026-07-15T01:28:16.171158",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/sandra-assali/dossier.md": {
+      "path": "agents/agents-groups/la8159/source/personnel/dossiers/sandra-assali/dossier.md",
+      "language": "markdown",
+      "size_bytes": 5242,
+      "lines": 53,
+      "last_modified": "2026-07-15T01:28:16.169491",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/bruno-bartijotto/dossier.md": {
+      "path": "agents/agents-groups/la8159/source/personnel/dossiers/bruno-bartijotto/dossier.md",
+      "language": "markdown",
+      "size_bytes": 4485,
+      "lines": 52,
+      "last_modified": "2026-07-15T01:28:16.166092",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/meta-evidence-mapper.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/meta-evidence-mapper.agent.md",
+      "language": "markdown",
+      "size_bytes": 3372,
+      "lines": 62,
+      "last_modified": "2026-07-15T01:28:16.024732",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/cl-lpdc.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/cl-lpdc.agent.md",
+      "language": "markdown",
+      "size_bytes": 4338,
+      "lines": 64,
+      "last_modified": "2026-07-15T01:28:15.994589",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-sdc-procon-senacon.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-sdc-procon-senacon.agent.md",
+      "language": "markdown",
+      "size_bytes": 5075,
+      "lines": 80,
+      "last_modified": "2026-07-15T01:28:15.970607",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-cf88.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-cf88.agent.md",
+      "language": "markdown",
+      "size_bytes": 4007,
+      "lines": 64,
+      "last_modified": "2026-07-15T01:28:15.920617",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/int-icao-an17.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/int-icao-an17.agent.md",
+      "language": "markdown",
+      "size_bytes": 3060,
+      "lines": 54,
+      "last_modified": "2026-07-15T01:28:16.008747",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/meta-revolvingdoor.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/meta-revolvingdoor.agent.md",
+      "language": "markdown",
+      "size_bytes": 7911,
+      "lines": 98,
+      "last_modified": "2026-07-15T01:28:16.027165",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-lai-transparency.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-lai-transparency.agent.md",
+      "language": "markdown",
+      "size_bytes": 7339,
+      "lines": 85,
+      "last_modified": "2026-07-15T01:28:15.954017",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-cp.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-cp.agent.md",
+      "language": "markdown",
+      "size_bytes": 3608,
+      "lines": 56,
+      "last_modified": "2026-07-15T01:28:15.939209",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/cl-transparency-l20285.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/cl-transparency-l20285.agent.md",
+      "language": "markdown",
+      "size_bytes": 2448,
+      "lines": 53,
+      "last_modified": "2026-07-15T01:28:15.995506",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/int-mc99.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/int-mc99.agent.md",
+      "language": "markdown",
+      "size_bytes": 5688,
+      "lines": 71,
+      "last_modified": "2026-07-15T01:28:16.020797",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-abear-plus.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-abear-plus.agent.md",
+      "language": "markdown",
+      "size_bytes": 9883,
+      "lines": 104,
+      "last_modified": "2026-07-15T01:28:15.908811",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/int-achr.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/int-achr.agent.md",
+      "language": "markdown",
+      "size_bytes": 5453,
+      "lines": 73,
+      "last_modified": "2026-07-15T01:28:15.997998",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-cba.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-cba.agent.md",
+      "language": "markdown",
+      "size_bytes": 4013,
+      "lines": 59,
+      "last_modified": "2026-07-15T01:28:15.914459",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/cl-const.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/cl-const.agent.md",
+      "language": "markdown",
+      "size_bytes": 3440,
+      "lines": 62,
+      "last_modified": "2026-07-15T01:28:15.978168",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/la8159-coordinator.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/la8159-coordinator.agent.md",
+      "language": "markdown",
+      "size_bytes": 3209,
+      "lines": 47,
+      "last_modified": "2026-07-17T01:01:51.565965",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/int-icao-an9.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/int-icao-an9.agent.md",
+      "language": "markdown",
+      "size_bytes": 3724,
+      "lines": 62,
+      "last_modified": "2026-07-15T01:28:16.019010",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/int-softlaw.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/int-softlaw.agent.md",
+      "language": "markdown",
+      "size_bytes": 4359,
+      "lines": 62,
+      "last_modified": "2026-07-15T01:28:16.021695",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/int-iata-gc.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/int-iata-gc.agent.md",
+      "language": "markdown",
+      "size_bytes": 3167,
+      "lines": 57,
+      "last_modified": "2026-07-15T01:28:16.006189",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-cc.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-cc.agent.md",
+      "language": "markdown",
+      "size_bytes": 3456,
+      "lines": 59,
+      "last_modified": "2026-07-15T01:28:15.915270",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/cl-dgac-l16752.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/cl-dgac-l16752.agent.md",
+      "language": "markdown",
+      "size_bytes": 3090,
+      "lines": 58,
+      "last_modified": "2026-07-15T01:28:15.989217",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/cl-cach.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/cl-cach.agent.md",
+      "language": "markdown",
+      "size_bytes": 5321,
+      "lines": 66,
+      "last_modified": "2026-07-15T01:28:15.974073",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-lei9784.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-lei9784.agent.md",
+      "language": "markdown",
+      "size_bytes": 3361,
+      "lines": 59,
+      "last_modified": "2026-07-15T01:28:15.959097",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/meta-prescription-forum.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/meta-prescription-forum.agent.md",
+      "language": "markdown",
+      "size_bytes": 5067,
+      "lines": 75,
+      "last_modified": "2026-07-15T01:28:16.026385",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/cl-contraloria-indh.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/cl-contraloria-indh.agent.md",
+      "language": "markdown",
+      "size_bytes": 5876,
+      "lines": 87,
+      "last_modified": "2026-07-15T01:28:15.980466",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/meta-personnel-accountability.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/meta-personnel-accountability.agent.md",
+      "language": "markdown",
+      "size_bytes": 7656,
+      "lines": 95,
+      "last_modified": "2026-07-15T01:28:16.025884",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/int-vccr.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/int-vccr.agent.md",
+      "language": "markdown",
+      "size_bytes": 3638,
+      "lines": 57,
+      "last_modified": "2026-07-15T01:28:16.023243",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/int-uncrc-hague.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/int-uncrc-hague.agent.md",
+      "language": "markdown",
+      "size_bytes": 4458,
+      "lines": 64,
+      "last_modified": "2026-07-15T01:28:16.022263",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-improbidade.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-improbidade.agent.md",
+      "language": "markdown",
+      "size_bytes": 4050,
+      "lines": 72,
+      "last_modified": "2026-07-15T01:28:15.942523",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-oab-comissao-aero.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-oab-comissao-aero.agent.md",
+      "language": "markdown",
+      "size_bytes": 4645,
+      "lines": 75,
+      "last_modified": "2026-07-15T01:28:15.960692",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/int-chicago-vclt.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/int-chicago-vclt.agent.md",
+      "language": "markdown",
+      "size_bytes": 4717,
+      "lines": 67,
+      "last_modified": "2026-07-15T01:28:16.002327",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/meta-institutional-silence.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/meta-institutional-silence.agent.md",
+      "language": "markdown",
+      "size_bytes": 8551,
+      "lines": 100,
+      "last_modified": "2026-07-15T01:28:16.025159",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-anac-r400.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-anac-r400.agent.md",
+      "language": "markdown",
+      "size_bytes": 4298,
+      "lines": 67,
+      "last_modified": "2026-07-15T01:28:15.910781",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/la8159-orchestrator.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/la8159-orchestrator.agent.md",
+      "language": "markdown",
+      "size_bytes": 6432,
+      "lines": 91,
+      "last_modified": "2026-07-17T01:01:51.566329",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-oab-disciplina.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-oab-disciplina.agent.md",
+      "language": "markdown",
+      "size_bytes": 11924,
+      "lines": 138,
+      "last_modified": "2026-07-15T01:28:15.967069",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-anticorrupcao.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-anticorrupcao.agent.md",
+      "language": "markdown",
+      "size_bytes": 11226,
+      "lines": 124,
+      "last_modified": "2026-07-15T01:28:15.913763",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-cdc.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-cdc.agent.md",
+      "language": "markdown",
+      "size_bytes": 6644,
+      "lines": 82,
+      "last_modified": "2026-07-15T01:28:15.917568",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/int-icao-an6-an13.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/int-icao-an6-an13.agent.md",
+      "language": "markdown",
+      "size_bytes": 3521,
+      "lines": 58,
+      "last_modified": "2026-07-15T01:28:16.014803",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-conflito-interesses.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-conflito-interesses.agent.md",
+      "language": "markdown",
+      "size_bytes": 8820,
+      "lines": 112,
+      "last_modified": "2026-07-15T01:28:15.933336",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/br-abrapavaa-sentra.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/br-abrapavaa-sentra.agent.md",
+      "language": "markdown",
+      "size_bytes": 5976,
+      "lines": 88,
+      "last_modified": "2026-07-15T01:28:15.909594",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/cl-cpcl.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/cl-cpcl.agent.md",
+      "language": "markdown",
+      "size_bytes": 4878,
+      "lines": 73,
+      "last_modified": "2026-07-15T01:28:15.986436",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/agents/meta-adversarial.agent.md": {
+      "path": "agents/agents-groups/la8159/agents/meta-adversarial.agent.md",
+      "language": "markdown",
+      "size_bytes": 4259,
+      "lines": 71,
+      "last_modified": "2026-07-15T01:28:16.024425",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/policies/tool-permissions.by-agent.json": {
+      "path": "agents/agents-groups/la8159/policies/tool-permissions.by-agent.json",
+      "language": "json",
+      "size_bytes": 22383,
+      "lines": 876,
+      "last_modified": "2026-07-15T01:28:16.029892",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/policies/handoff-routes.json": {
+      "path": "agents/agents-groups/la8159/policies/handoff-routes.json",
+      "language": "json",
+      "size_bytes": 62580,
+      "lines": 2324,
+      "last_modified": "2026-07-15T01:28:16.029386",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/knowledge/manifest.json": {
+      "path": "agents/agents-groups/la8159/knowledge/manifest.json",
+      "language": "json",
+      "size_bytes": 7543,
+      "lines": 298,
+      "last_modified": "2026-07-17T01:01:51.566358",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/la8159/scripts/bootstrap_case_paths.sh": {
+      "path": "agents/agents-groups/la8159/scripts/bootstrap_case_paths.sh",
+      "language": "bash",
+      "size_bytes": 3307,
+      "lines": 105,
+      "last_modified": "2026-07-17T01:03:28.255591",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/_meta/groups.index.json": {
+      "path": "agents/agents-groups/_meta/groups.index.json",
+      "language": "json",
+      "size_bytes": 2278,
+      "lines": 58,
+      "last_modified": "2026-07-15T01:28:15.849657",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/_meta/meta-orchestrator.agent.md": {
+      "path": "agents/agents-groups/_meta/meta-orchestrator.agent.md",
+      "language": "markdown",
+      "size_bytes": 5224,
+      "lines": 117,
+      "last_modified": "2026-07-15T01:28:15.852101",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/_meta/.DS_Store": {
+      "path": "agents/agents-groups/_meta/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 1,
+      "last_modified": "2026-07-17T00:06:15.782286",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "agents/agents-groups/_meta/policies/.DS_Store": {
+      "path": "agents/agents-groups/_meta/policies/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 2,
+      "last_modified": "2026-07-17T00:06:21.010105",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "agents/agents-groups/_meta/policies/mcp-servers.registry.json": {
+      "path": "agents/agents-groups/_meta/policies/mcp-servers.registry.json",
+      "language": "json",
+      "size_bytes": 13180,
+      "lines": 369,
+      "last_modified": "2026-07-15T01:28:15.854245",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/_meta/policies/meta-tool-permissions.json": {
+      "path": "agents/agents-groups/_meta/policies/meta-tool-permissions.json",
+      "language": "json",
+      "size_bytes": 766,
+      "lines": 24,
+      "last_modified": "2026-07-15T01:28:15.856201",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/_meta/policies/meta-handoff-routes.json": {
+      "path": "agents/agents-groups/_meta/policies/meta-handoff-routes.json",
+      "language": "json",
+      "size_bytes": 5708,
+      "lines": 152,
+      "last_modified": "2026-07-15T01:28:15.855518",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/_meta/policies/mcp-bootstrap/legalpipeline.mcp-bootstrap.md": {
+      "path": "agents/agents-groups/_meta/policies/mcp-bootstrap/legalpipeline.mcp-bootstrap.md",
+      "language": "markdown",
+      "size_bytes": 1014,
+      "lines": 35,
+      "last_modified": "2026-07-15T01:28:15.853168",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/_meta/policies/mcp-bootstrap/pinocchio.mcp-bootstrap.md": {
+      "path": "agents/agents-groups/_meta/policies/mcp-bootstrap/pinocchio.mcp-bootstrap.md",
+      "language": "markdown",
+      "size_bytes": 977,
+      "lines": 35,
+      "last_modified": "2026-07-15T01:28:15.853764",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/.DS_Store": {
+      "path": "agents/agents-groups/olivia/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 10244,
+      "lines": 5,
+      "last_modified": "2026-07-24T01:05:18.014131",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/PATHS.md": {
+      "path": "agents/agents-groups/olivia/PATHS.md",
+      "language": "markdown",
+      "size_bytes": 1722,
+      "lines": 40,
+      "last_modified": "2026-07-17T01:33:40.066705",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/index.json": {
+      "path": "agents/agents-groups/olivia/index.json",
+      "language": "json",
+      "size_bytes": 3500,
+      "lines": 48,
+      "last_modified": "2026-07-18T23:27:32.395213",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/agents/olivia-ecosystem-coordinator.agent.md": {
+      "path": "agents/agents-groups/olivia/agents/olivia-ecosystem-coordinator.agent.md",
+      "language": "markdown",
+      "size_bytes": 6041,
+      "lines": 93,
+      "last_modified": "2026-07-15T13:17:13.653274",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/agents/olivia-qdrant-manager.agent.md": {
+      "path": "agents/agents-groups/olivia/agents/olivia-qdrant-manager.agent.md",
+      "language": "markdown",
+      "size_bytes": 1083,
+      "lines": 31,
+      "last_modified": "2026-07-17T01:33:02.483719",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/agents/olivia-frontend-migration-engineer.agent.md": {
+      "path": "agents/agents-groups/olivia/agents/olivia-frontend-migration-engineer.agent.md",
+      "language": "markdown",
+      "size_bytes": 5338,
+      "lines": 94,
+      "last_modified": "2026-07-18T23:57:04.301896",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/agents/olivia-memory-graph.agent.md": {
+      "path": "agents/agents-groups/olivia/agents/olivia-memory-graph.agent.md",
+      "language": "markdown",
+      "size_bytes": 1115,
+      "lines": 31,
+      "last_modified": "2026-07-17T01:33:02.483742",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/agents/olivia-shaders-proactive.agent.md": {
+      "path": "agents/agents-groups/olivia/agents/olivia-shaders-proactive.agent.md",
+      "language": "markdown",
+      "size_bytes": 2960,
+      "lines": 69,
+      "last_modified": "2026-07-17T01:33:02.488852",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/agents/olivia-coordinator.agent.md": {
+      "path": "agents/agents-groups/olivia/agents/olivia-coordinator.agent.md",
+      "language": "markdown",
+      "size_bytes": 4202,
+      "lines": 76,
+      "last_modified": "2026-07-15T13:17:00.402250",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/agents/olivia-studio-ui.agent.md": {
+      "path": "agents/agents-groups/olivia/agents/olivia-studio-ui.agent.md",
+      "language": "markdown",
+      "size_bytes": 6407,
+      "lines": 117,
+      "last_modified": "2026-07-18T21:44:03.236585",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/agents/olivia-discovery-intelligence.agent.md": {
+      "path": "agents/agents-groups/olivia/agents/olivia-discovery-intelligence.agent.md",
+      "language": "markdown",
+      "size_bytes": 2878,
+      "lines": 63,
+      "last_modified": "2026-07-17T01:33:02.483643",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/agents/olivia-listening-operations.agent.md": {
+      "path": "agents/agents-groups/olivia/agents/olivia-listening-operations.agent.md",
+      "language": "markdown",
+      "size_bytes": 1152,
+      "lines": 32,
+      "last_modified": "2026-07-17T01:33:02.483650",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/agents/orchestrator-control-plane.agent.md": {
+      "path": "agents/agents-groups/olivia/agents/orchestrator-control-plane.agent.md",
+      "language": "markdown",
+      "size_bytes": 876,
+      "lines": 24,
+      "last_modified": "2026-07-17T01:23:17.900190",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ thread- O Ambiente Operacional de IA.md": {
+      "path": "agents/agents-groups/olivia/knowledge/Olivia _ thread- O Ambiente Operacional de IA.md",
+      "language": "markdown",
+      "size_bytes": 6058,
+      "lines": 120,
+      "last_modified": "2026-07-21T04:07:06.206609",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ p3- O Ambiente Operacional de IA.md": {
+      "path": "agents/agents-groups/olivia/knowledge/Olivia _ p3- O Ambiente Operacional de IA.md",
+      "language": "markdown",
+      "size_bytes": 5418,
+      "lines": 100,
+      "last_modified": "2026-07-21T04:07:06.188528",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia Workspace · Complete Feature Guide — Both Sides.md": {
+      "path": "agents/agents-groups/olivia/knowledge/Olivia Workspace · Complete Feature Guide — Both Sides.md",
+      "language": "markdown",
+      "size_bytes": 30698,
+      "lines": 615,
+      "last_modified": "2026-07-21T04:08:58.256118",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ p4- O Ambiente Operacional de IA.md": {
+      "path": "agents/agents-groups/olivia/knowledge/Olivia _ p4- O Ambiente Operacional de IA.md",
+      "language": "markdown",
+      "size_bytes": 4475,
+      "lines": 89,
+      "last_modified": "2026-07-21T04:07:06.192213",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/studio-project-structure.md": {
+      "path": "agents/agents-groups/olivia/knowledge/studio-project-structure.md",
+      "language": "markdown",
+      "size_bytes": 9053,
+      "lines": 175,
+      "last_modified": "2026-07-18T21:42:56.744530",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ The AI Operating Environment.md": {
+      "path": "agents/agents-groups/olivia/knowledge/Olivia _ The AI Operating Environment.md",
+      "language": "markdown",
+      "size_bytes": 6948,
+      "lines": 91,
+      "last_modified": "2026-07-21T04:07:06.203450",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ story - A Arvore que Aprende.md": {
+      "path": "agents/agents-groups/olivia/knowledge/Olivia _ story - A Arvore que Aprende.md",
+      "language": "markdown",
+      "size_bytes": 2822,
+      "lines": 50,
+      "last_modified": "2026-07-21T04:07:06.200563",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ p2- O Ambiente Operacional de IA.md": {
+      "path": "agents/agents-groups/olivia/knowledge/Olivia _ p2- O Ambiente Operacional de IA.md",
+      "language": "markdown",
+      "size_bytes": 8735,
+      "lines": 191,
+      "last_modified": "2026-07-21T04:07:06.184373",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _p1-  The AI Operating Environment.md": {
+      "path": "agents/agents-groups/olivia/knowledge/Olivia _p1-  The AI Operating Environment.md",
+      "language": "markdown",
+      "size_bytes": 6948,
+      "lines": 91,
+      "last_modified": "2026-07-21T04:07:06.209465",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/manifest.json": {
+      "path": "agents/agents-groups/olivia/knowledge/manifest.json",
+      "language": "json",
+      "size_bytes": 3057,
+      "lines": 90,
+      "last_modified": "2026-07-21T19:34:21.027194",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/agents-groups/olivia/knowledge/olivia-imagine.md": {
+      "path": "agents/agents-groups/olivia/knowledge/olivia-imagine.md",
+      "language": "markdown",
+      "size_bytes": 1176,
+      "lines": 19,
+      "last_modified": "2026-07-21T04:07:06.218523",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/skills/file-system.skill.md": {
+      "path": "agents/skills/file-system.skill.md",
+      "language": "markdown",
+      "size_bytes": 843,
+      "lines": 21,
+      "last_modified": "2026-07-18T23:14:38.788762",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/skills/code-generation.skill.md": {
+      "path": "agents/skills/code-generation.skill.md",
+      "language": "markdown",
+      "size_bytes": 967,
+      "lines": 19,
+      "last_modified": "2026-07-18T23:14:38.792657",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/skills/.DS_Store": {
+      "path": "agents/skills/.DS_Store",
+      "language": "unknown",
+      "size_bytes": 6148,
+      "lines": 1,
+      "last_modified": "2026-07-20T20:22:53.412119",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "agents/skills/vue3-migration.skill.md": {
+      "path": "agents/skills/vue3-migration.skill.md",
+      "language": "markdown",
+      "size_bytes": 1111,
+      "lines": 21,
+      "last_modified": "2026-07-18T23:14:38.760089",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/skills/vite-builder.skill.md": {
+      "path": "agents/skills/vite-builder.skill.md",
+      "language": "markdown",
+      "size_bytes": 1014,
+      "lines": 21,
+      "last_modified": "2026-07-18T23:14:38.773911",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/skills/frontend-design.skill.md": {
+      "path": "agents/skills/frontend-design.skill.md",
+      "language": "markdown",
+      "size_bytes": 8381,
+      "lines": 56,
+      "last_modified": "2026-07-19T04:26:55.356423",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/skills/manifest.json": {
+      "path": "agents/skills/manifest.json",
+      "language": "json",
+      "size_bytes": 1195,
+      "lines": 40,
+      "last_modified": "2026-07-19T05:37:12.693014",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/skills/testing.skill.md": {
+      "path": "agents/skills/testing.skill.md",
+      "language": "markdown",
+      "size_bytes": 825,
+      "lines": 21,
+      "last_modified": "2026-07-18T23:14:38.740053",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "agents/skills/refactoring.skill.md": {
+      "path": "agents/skills/refactoring.skill.md",
+      "language": "markdown",
+      "size_bytes": 966,
+      "lines": 22,
+      "last_modified": "2026-07-18T23:14:38.743512",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    }
+  },
+  "html_pages": {},
+  "modules": {
+    "agents/agents-groups/la8159": {
+      "files": [
+        "agents/agents-groups/la8159/.build-index.py",
+        "agents/agents-groups/la8159/.DS_Store",
+        "agents/agents-groups/la8159/index.json"
+      ],
+      "count": 3
+    },
+    "agents/agents-groups/la8159/source": {
+      "files": [
+        "agents/agents-groups/la8159/source/.DS_Store",
+        "agents/agents-groups/la8159/source/SOURCES.md",
+        "agents/agents-groups/la8159/source/JURISPRUDENCE_SEARCH_GUIDE.md",
+        "agents/agents-groups/la8159/source/README.md",
+        "agents/agents-groups/la8159/source/mapping.json",
+        "agents/agents-groups/la8159/source/PATHS.md",
+        "agents/agents-groups/la8159/source/INDEX.md",
+        "agents/agents-groups/la8159/source/DOC_agents.md",
+        "agents/agents-groups/la8159/source/PLAN.md"
+      ],
+      "count": 9
+    },
+    "agents/agents-groups/la8159/source/personnel": {
+      "files": [
+        "agents/agents-groups/la8159/source/personnel/.DS_Store",
+        "agents/agents-groups/la8159/source/personnel/personnel.json",
+        "agents/agents-groups/la8159/source/personnel/REGISTRY.md"
+      ],
+      "count": 3
+    },
+    "agents/agents-groups/la8159/agents": {
+      "files": [
+        "agents/agents-groups/la8159/agents/meta-evidence-mapper.agent.md",
+        "agents/agents-groups/la8159/agents/cl-lpdc.agent.md",
+        "agents/agents-groups/la8159/agents/br-sdc-procon-senacon.agent.md",
+        "agents/agents-groups/la8159/agents/br-cf88.agent.md",
+        "agents/agents-groups/la8159/agents/int-icao-an17.agent.md",
+        "agents/agents-groups/la8159/agents/meta-revolvingdoor.agent.md",
+        "agents/agents-groups/la8159/agents/br-lai-transparency.agent.md",
+        "agents/agents-groups/la8159/agents/br-cp.agent.md",
+        "agents/agents-groups/la8159/agents/cl-transparency-l20285.agent.md",
+        "agents/agents-groups/la8159/agents/int-mc99.agent.md",
+        "agents/agents-groups/la8159/agents/br-abear-plus.agent.md",
+        "agents/agents-groups/la8159/agents/int-achr.agent.md",
+        "agents/agents-groups/la8159/agents/br-cba.agent.md",
+        "agents/agents-groups/la8159/agents/cl-const.agent.md",
+        "agents/agents-groups/la8159/agents/la8159-coordinator.agent.md",
+        "agents/agents-groups/la8159/agents/int-icao-an9.agent.md",
+        "agents/agents-groups/la8159/agents/int-softlaw.agent.md",
+        "agents/agents-groups/la8159/agents/int-iata-gc.agent.md",
+        "agents/agents-groups/la8159/agents/br-cc.agent.md",
+        "agents/agents-groups/la8159/agents/cl-dgac-l16752.agent.md",
+        "agents/agents-groups/la8159/agents/cl-cach.agent.md",
+        "agents/agents-groups/la8159/agents/br-lei9784.agent.md",
+        "agents/agents-groups/la8159/agents/meta-prescription-forum.agent.md",
+        "agents/agents-groups/la8159/agents/cl-contraloria-indh.agent.md",
+        "agents/agents-groups/la8159/agents/meta-personnel-accountability.agent.md",
+        "agents/agents-groups/la8159/agents/int-vccr.agent.md",
+        "agents/agents-groups/la8159/agents/int-uncrc-hague.agent.md",
+        "agents/agents-groups/la8159/agents/br-improbidade.agent.md",
+        "agents/agents-groups/la8159/agents/br-oab-comissao-aero.agent.md",
+        "agents/agents-groups/la8159/agents/int-chicago-vclt.agent.md",
+        "agents/agents-groups/la8159/agents/meta-institutional-silence.agent.md",
+        "agents/agents-groups/la8159/agents/br-anac-r400.agent.md",
+        "agents/agents-groups/la8159/agents/la8159-orchestrator.agent.md",
+        "agents/agents-groups/la8159/agents/br-oab-disciplina.agent.md",
+        "agents/agents-groups/la8159/agents/br-anticorrupcao.agent.md",
+        "agents/agents-groups/la8159/agents/br-cdc.agent.md",
+        "agents/agents-groups/la8159/agents/int-icao-an6-an13.agent.md",
+        "agents/agents-groups/la8159/agents/br-conflito-interesses.agent.md",
+        "agents/agents-groups/la8159/agents/br-abrapavaa-sentra.agent.md",
+        "agents/agents-groups/la8159/agents/cl-cpcl.agent.md",
+        "agents/agents-groups/la8159/agents/meta-adversarial.agent.md"
+      ],
+      "count": 41
+    },
+    "agents/agents-groups/_meta": {
+      "files": [
+        "agents/agents-groups/_meta/groups.index.json",
+        "agents/agents-groups/_meta/meta-orchestrator.agent.md",
+        "agents/agents-groups/_meta/.DS_Store"
+      ],
+      "count": 3
+    },
+    "agents/agents-groups/_meta/policies": {
+      "files": [
+        "agents/agents-groups/_meta/policies/.DS_Store",
+        "agents/agents-groups/_meta/policies/mcp-servers.registry.json",
+        "agents/agents-groups/_meta/policies/meta-tool-permissions.json",
+        "agents/agents-groups/_meta/policies/meta-handoff-routes.json"
+      ],
+      "count": 4
+    },
+    "agents/agents-groups/olivia": {
+      "files": [
+        "agents/agents-groups/olivia/.DS_Store",
+        "agents/agents-groups/olivia/PATHS.md",
+        "agents/agents-groups/olivia/index.json"
+      ],
+      "count": 3
+    },
+    "agents/agents-groups/olivia/agents": {
+      "files": [
+        "agents/agents-groups/olivia/agents/olivia-ecosystem-coordinator.agent.md",
+        "agents/agents-groups/olivia/agents/olivia-qdrant-manager.agent.md",
+        "agents/agents-groups/olivia/agents/olivia-frontend-migration-engineer.agent.md",
+        "agents/agents-groups/olivia/agents/olivia-memory-graph.agent.md",
+        "agents/agents-groups/olivia/agents/olivia-shaders-proactive.agent.md",
+        "agents/agents-groups/olivia/agents/olivia-coordinator.agent.md",
+        "agents/agents-groups/olivia/agents/olivia-studio-ui.agent.md",
+        "agents/agents-groups/olivia/agents/olivia-discovery-intelligence.agent.md",
+        "agents/agents-groups/olivia/agents/olivia-listening-operations.agent.md",
+        "agents/agents-groups/olivia/agents/orchestrator-control-plane.agent.md"
+      ],
+      "count": 10
+    },
+    "agents/agents-groups/olivia/knowledge": {
+      "files": [
+        "agents/agents-groups/olivia/knowledge/Olivia _ thread- O Ambiente Operacional de IA.md",
+        "agents/agents-groups/olivia/knowledge/Olivia _ p3- O Ambiente Operacional de IA.md",
+        "agents/agents-groups/olivia/knowledge/Olivia Workspace · Complete Feature Guide — Both Sides.md",
+        "agents/agents-groups/olivia/knowledge/Olivia _ p4- O Ambiente Operacional de IA.md",
+        "agents/agents-groups/olivia/knowledge/studio-project-structure.md",
+        "agents/agents-groups/olivia/knowledge/Olivia _ The AI Operating Environment.md",
+        "agents/agents-groups/olivia/knowledge/Olivia _ story - A Arvore que Aprende.md",
+        "agents/agents-groups/olivia/knowledge/Olivia _ p2- O Ambiente Operacional de IA.md",
+        "agents/agents-groups/olivia/knowledge/Olivia _p1-  The AI Operating Environment.md",
+        "agents/agents-groups/olivia/knowledge/manifest.json",
+        "agents/agents-groups/olivia/knowledge/olivia-imagine.md"
+      ],
+      "count": 11
+    },
+    "agents/skills": {
+      "files": [
+        "agents/skills/file-system.skill.md",
+        "agents/skills/code-generation.skill.md",
+        "agents/skills/.DS_Store",
+        "agents/skills/vue3-migration.skill.md",
+        "agents/skills/vite-builder.skill.md",
+        "agents/skills/frontend-design.skill.md",
+        "agents/skills/manifest.json",
+        "agents/skills/testing.skill.md",
+        "agents/skills/refactoring.skill.md"
+      ],
+      "count": 9
+    }
+  },
+  "symbols_index": {
+    "main": [
+      {
+        "file": "agents/agents-groups/la8159/.build-index.py",
+        "line": 146,
+        "type": "function"
+      }
+    ],
+    "slugify": [
+      {
+        "file": "agents/agents-groups/la8159/.build-index.py",
+        "line": 28,
+        "type": "function"
+      }
+    ],
+    "first_heading": [
+      {
+        "file": "agents/agents-groups/la8159/.build-index.py",
+        "line": 32,
+        "type": "function"
+      }
+    ],
+    "extract_summary": [
+      {
+        "file": "agents/agents-groups/la8159/.build-index.py",
+        "line": 40,
+        "type": "function"
+      }
+    ],
+    "has_yaml_frontmatter": [
+      {
+        "file": "agents/agents-groups/la8159/.build-index.py",
+        "line": 55,
+        "type": "function"
+      }
+    ],
+    "ensure_frontmatter": [
+      {
+        "file": "agents/agents-groups/la8159/.build-index.py",
+        "line": 59,
+        "type": "function"
+      }
+    ],
+    "collect_specs": [
+      {
+        "file": "agents/agents-groups/la8159/.build-index.py",
+        "line": 74,
+        "type": "function"
+      }
+    ],
+    "jurisdiction_for": [
+      {
+        "file": "agents/agents-groups/la8159/.build-index.py",
+        "line": 90,
+        "type": "function"
+      }
+    ],
+    "language_focus_for": [
+      {
+        "file": "agents/agents-groups/la8159/.build-index.py",
+        "line": 96,
+        "type": "function"
+      }
+    ],
+    "write_bundle": [
+      {
+        "file": "agents/agents-groups/la8159/.build-index.py",
+        "line": 105,
+        "type": "function"
+      }
+    ]
+  },
+  "dependency_graph": {
+    "agents/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/.build-index.py": {
+      "imports": [
+        "json",
+        "re",
+        "pathlib",
+        "shutil"
+      ],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/index.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/SOURCES.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/JURISPRUDENCE_SEARCH_GUIDE.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/README.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/mapping.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/PATHS.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/INDEX.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/DOC_agents.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/PLAN.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/personnel.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/REGISTRY.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/_TEMPLATE/dossier.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/rogeria-gieremek/dossier.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/joaquin-barraza/dossier.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/ariel-prado/dossier.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/juliano-noman/dossier.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/waleska-fortini/dossier.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/sandra-assali/dossier.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/source/personnel/dossiers/bruno-bartijotto/dossier.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/meta-evidence-mapper.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/cl-lpdc.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-sdc-procon-senacon.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-cf88.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/int-icao-an17.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/meta-revolvingdoor.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-lai-transparency.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-cp.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/cl-transparency-l20285.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/int-mc99.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-abear-plus.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/int-achr.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-cba.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/cl-const.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/la8159-coordinator.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/int-icao-an9.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/int-softlaw.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/int-iata-gc.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-cc.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/cl-dgac-l16752.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/cl-cach.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-lei9784.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/meta-prescription-forum.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/cl-contraloria-indh.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/meta-personnel-accountability.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/int-vccr.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/int-uncrc-hague.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-improbidade.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-oab-comissao-aero.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/int-chicago-vclt.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/meta-institutional-silence.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-anac-r400.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/la8159-orchestrator.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-oab-disciplina.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-anticorrupcao.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-cdc.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/int-icao-an6-an13.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-conflito-interesses.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/br-abrapavaa-sentra.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/cl-cpcl.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/agents/meta-adversarial.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/policies/tool-permissions.by-agent.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/policies/handoff-routes.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/knowledge/manifest.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/la8159/scripts/bootstrap_case_paths.sh": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/_meta/groups.index.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/_meta/meta-orchestrator.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/_meta/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/_meta/policies/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/_meta/policies/mcp-servers.registry.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/_meta/policies/meta-tool-permissions.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/_meta/policies/meta-handoff-routes.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/_meta/policies/mcp-bootstrap/legalpipeline.mcp-bootstrap.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/_meta/policies/mcp-bootstrap/pinocchio.mcp-bootstrap.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/PATHS.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/index.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/agents/olivia-ecosystem-coordinator.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/agents/olivia-qdrant-manager.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/agents/olivia-frontend-migration-engineer.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/agents/olivia-memory-graph.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/agents/olivia-shaders-proactive.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/agents/olivia-coordinator.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/agents/olivia-studio-ui.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/agents/olivia-discovery-intelligence.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/agents/olivia-listening-operations.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/agents/orchestrator-control-plane.agent.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ thread- O Ambiente Operacional de IA.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ p3- O Ambiente Operacional de IA.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia Workspace · Complete Feature Guide — Both Sides.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ p4- O Ambiente Operacional de IA.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/studio-project-structure.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ The AI Operating Environment.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ story - A Arvore que Aprende.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _ p2- O Ambiente Operacional de IA.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/Olivia _p1-  The AI Operating Environment.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/manifest.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/knowledge/olivia-imagine.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/skills/file-system.skill.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/skills/code-generation.skill.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/skills/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/skills/vue3-migration.skill.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/skills/vite-builder.skill.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/skills/frontend-design.skill.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/skills/manifest.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/skills/testing.skill.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/skills/refactoring.skill.md": {
+      "imports": [],
+      "imported_by": []
+    }
+  },
+  "js_cross_module_graph": {}
+}

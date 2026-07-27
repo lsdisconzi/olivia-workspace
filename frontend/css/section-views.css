@@ -275,3 +275,53 @@
 .vw-toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#1c4532;color:#fff;font-size:12px;padding:10px 16px;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:all .25s;z-index:10000;max-width:80vw}
 .vw-toast.show{opacity:1;transform:translate(-50%,0)}
 .vw-toast.error{background:#7a2e1e}
+
+/* ═══════════════════════════════════════════════════════════════════
+   CONTEXT CONFIG — user-facing context file selector (Phase 3)
+   Inline panel inside the sidebar project tab.
+   ═══════════════════════════════════════════════════════════════════ */
+.context-config-section{border-top:1px solid var(--border);margin-top:4px}
+.context-config-header{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;cursor:pointer;font-size:11px;color:var(--gray-hi);transition:background .15s}
+.context-config-header:hover{background:rgba(255,255,255,.03)}
+.context-config-header i.fa-chevron-down{font-size:10px;transition:transform .25s ease;color:var(--gray)}
+.context-config-header i.fa-chevron-down.open{transform:rotate(180deg)}
+.context-config-body{padding:0 8px 12px;font-size:11px}
+.context-config-label{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);margin-bottom:4px;margin-top:8px}
+.context-config-label:first-child{margin-top:0}
+.context-select{width:100%;padding:5px 8px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--bg);color:var(--gray-hi);margin-bottom:8px}
+.context-select:focus{outline:none;border-color:var(--amber)}
+.context-source-group{margin-bottom:8px}
+.context-source-label{font-size:10px;color:var(--gray);padding:4px 0;display:flex;align-items:center;gap:6px}
+.context-source-label i{font-size:10px;width:12px;text-align:center}
+.context-file-row{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:5px;cursor:pointer;transition:background .12s}
+.context-file-row:hover{background:rgba(255,255,255,.03)}
+.context-file-row.disabled{opacity:.45;pointer-events:none}
+.context-file-row input[type=checkbox]{accent-color:var(--amber);cursor:pointer;flex-shrink:0}
+.context-file-icon{font-size:11px;width:14px;text-align:center;flex-shrink:0}
+.context-file-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--white);font-size:11px}
+.context-file-size{font-size:9px;color:var(--gray);flex-shrink:0}
+.context-file-badge{font-size:8px;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,.06);color:var(--gray);flex-shrink:0}
+.context-actions{display:flex;gap:6px;margin-top:6px}
+.context-actions .btn{flex:1;justify-content:center}
+.context-preview-box{margin-top:8px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.context-preview-header{display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);font-size:10px;color:var(--gray)}
+.context-preview-content{padding:8px;max-height:100px;overflow-y:auto;font-family:var(--mono);font-size:10px;color:var(--gray-hi);white-space:pre-wrap;word-break:break-word;line-height:1.4}
+.context-preview-empty{padding:12px;text-align:center;color:var(--gray);font-size:10px;font-style:italic}
+.context-saved-notice{font-size:10px;color:var(--green);text-align:center;padding:4px;opacity:0;transition:opacity .3s}
+.context-saved-notice.show{opacity:1}
+.context-status-info{display:flex;align-items:center;gap:6px;padding:5px 8px;font-size:10px;color:var(--gray);border:1px solid var(--border);border-radius:5px;margin-bottom:8px;background:rgba(255,255,255,.01)}
+
+/* Context Tree View */
+.context-search-bar { width: 100%; padding: 6px; font-size: 11px; margin-bottom: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 4px; color: var(--white); box-sizing: border-box; }
+.context-search-bar:focus { outline: none; border-color: var(--blue); }
+.context-tree-node { display: flex; flex-direction: column; }
+.context-tree-row { display: flex; align-items: center; gap: 6px; padding: 4px; border-radius: 4px; cursor: pointer; transition: background 0.1s; }
+.context-tree-row:hover { background: rgba(255,255,255,0.05); }
+.context-tree-row.disabled { opacity: 0.5; pointer-events: none; }
+.context-tree-children { padding-left: 16px; border-left: 1px dashed rgba(255,255,255,0.1); margin-left: 7px; display: flex; flex-direction: column; }
+.context-tree-toggle { width: 16px; text-align: center; cursor: pointer; color: var(--gray); font-size: 10px; flex-shrink: 0; }
+.context-tree-toggle.expanded { transform: rotate(90deg); }
+.context-tree-toggle.leaf { visibility: hidden; }
+.context-tree-icon { font-size: 11px; width: 14px; text-align: center; color: var(--gray); flex-shrink: 0; }
+.context-tree-name { flex: 1; font-size: 11px; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.context-tree-checkbox { accent-color: var(--amber); margin: 0; cursor: pointer; flex-shrink: 0; }

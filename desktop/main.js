@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════
-// OliviaLegal Desktop — Electron main process
+// Olivia Desktop — Electron main process
 // ═══════════════════════════════════════════════════════════════════
 const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
@@ -53,7 +53,7 @@ function parseArgs() {
 
 const cli = parseArgs();
 const PORT = cli.port || process.env.OliviaLegal_PORT || 3229;
-const APP_URL = cli.url || `http://localhost:${PORT}/OliviaLegal/`;
+const APP_URL = cli.url || `http://localhost:${PORT}/olivia/`;
 const DEVTOOLS = cli.devtools || false;
 
 // ── Explicit Content-Security-Policy ───────────────────────────────
