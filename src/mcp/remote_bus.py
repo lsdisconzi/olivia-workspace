@@ -2,13 +2,13 @@
 """Remote-bus MCP server.
 
 Exposes a single tool `remote_bus__invoke` that posts a control message to
-the OliviaLegal remote bus (`/api/OliviaLegal/remote-bus`). The bus is consumed by the
+the Olivia remote bus (`/api/olivia/remote-bus`). The bus is consumed by the
 desktop shaders view (and/or the mobile page) to drive UI controls
 programmatically — this lets the agent say "set environment to cyberpunk"
 and actually push the command.
 
 Env:
-    OliviaLegal_BUS_URL  — full URL of the bus (default http://127.0.0.1:3229/api/OliviaLegal/remote-bus)
+    OliviaLegal_BUS_URL  — full URL of the bus (default http://127.0.0.1:3229/api/olivia/remote-bus)
     OliviaLegal_BUS_TIMEOUT_S — HTTP timeout (default 10)
 
 MCP framing: stdio JSON-RPC 2.0, protocolVersion 2024-11-05.
@@ -24,7 +24,7 @@ import urllib.request
 _default_port = os.environ.get("OliviaLegal_PORT", "3229").strip() or "3229"
 BUS_URL = os.environ.get(
     "OliviaLegal_BUS_URL",
-    f"http://127.0.0.1:{_default_port}/api/OliviaLegal/remote-bus",
+    f"http://127.0.0.1:{_default_port}/api/olivia/remote-bus",
 )
 TIMEOUT = float(os.environ.get("OliviaLegal_BUS_TIMEOUT_S", "10"))
 
@@ -132,7 +132,7 @@ TOOLS = [
     {
         "name": "remote_bus__invoke",
         "description": (
-            "Push a control message to the OliviaLegal remote bus. The desktop "
+            "Push a control message to the Olivia remote bus. The desktop "
             "shaders view (and the mobile page) long-poll this bus and apply "
             "commands — use this to drive UI controls on the user's screen "
             "without them having to tap anything. Prefer this over asking "

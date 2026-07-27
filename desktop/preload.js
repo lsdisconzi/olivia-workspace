@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════
-// OliviaLegal Desktop — Preload bridge (context-isolated)
+// Olivia Desktop — Preload bridge (context-isolated)
 // ═══════════════════════════════════════════════════════════════════
 const { contextBridge, ipcRenderer } = require('electron');
 

@@ -2,9 +2,9 @@
 
 Olivia is the central assistant and agent communication layer for this workspace runtime.
 
-## What OliviaLegal centralizes
+## What Olivia centralizes
 
-- UI and conversation entrypoint: `/OliviaLegal/`
+- UI and conversation entrypoint: `/olivia/`
 - Agent/assistant chat and SSE orchestration
 - MCP bridge exposure of VPS API endpoints as tools
 - Case context injection into every run
@@ -27,62 +27,62 @@ Start with dynamic function-sync watcher enabled:
 
 Primary URL:
 
-- `http://localhost:3229/OliviaLegal/`
+- `http://localhost:3229/olivia/`
 
-## Canonical OliviaLegal Data Roots
+## Canonical Olivia Data Roots
 
-To keep OliviaLegal agent paths stable across backup/cleanup/redeploy cycles, set canonical roots in `.env`:
+To keep Olivia agent paths stable across backup/cleanup/redeploy cycles, set canonical roots in `.env`:
 
 ```bash
 OliviaLegal_SHARED_DIR=/Users/dev/services/_shared
-OliviaLegal_LEGAL_ROUTER_ROOT=/Users/dev/agents/agents-groups/OliviaLegal/source
+OliviaLegal_LEGAL_ROUTER_ROOT=/Users/dev/agents/agents-groups/olivia/source
 OliviaLegal_VIOLATIONS_ROOT=/Users/dev/services/_shared/cases/10_violations_json/validated
 OliviaLegal_LAW_LIBRARY_ROOT=/Users/dev/services/_shared/cases/law_md
 ```
 
-When these are set, OliviaLegal resolves OliviaLegal data from shared/group-owned paths first and only falls back to legacy paths when needed.
+When these are set, Olivia resolves Olivia data from shared/group-owned paths first and only falls back to legacy paths when needed.
 
 ## Authentication Flow
 
-OliviaLegal now supports first-access onboarding with session login.
+Olivia now supports first-access onboarding with session login.
 
-1. First access redirects to `GET /OliviaLegal/login`.
+1. First access redirects to `GET /olivia/login`.
 2. If no users exist yet, the first login submission creates the initial admin account.
 3. Login requires Google-style email format (`gmail.com`) and password.
-4. After login, users land at `GET /OliviaLegal/mode-select` to choose:
-   - `Workspace` (`/OliviaLegal/olivia.html`)
+4. After login, users land at `GET /olivia/mode-select` to choose:
+   - `Workspace` (`/olivia/olivia.html`)
    - `Mobile Remote` (`/olivia/mobile.html`)
-   - `Agent Mobile` (`/OliviaLegal/agent`)
-5. Logout endpoint: `GET /OliviaLegal/logout`.
+   - `Agent Mobile` (`/olivia/agent`)
+5. Logout endpoint: `GET /olivia/logout`.
 
 Admin routes:
 
-- Activity dashboard: `GET /OliviaLegal/admin/activity`
-- Activity API: `GET /OliviaLegal/admin/activity/api`
-- Users UI: `GET /OliviaLegal/admin/users-ui`
-- Users API: `GET/POST /OliviaLegal/admin/users`
+- Activity dashboard: `GET /olivia/admin/activity`
+- Activity API: `GET /olivia/admin/activity/api`
+- Users UI: `GET /olivia/admin/users-ui`
+- Users API: `GET/POST /olivia/admin/users`
 - User management actions:
-  - `DELETE /OliviaLegal/admin/users/<email>`
-  - `POST /OliviaLegal/admin/users/<email>/reset-password`
-  - `PATCH /OliviaLegal/admin/users/<email>/assistant-permissions`
+  - `DELETE /olivia/admin/users/<email>`
+  - `POST /olivia/admin/users/<email>/reset-password`
+  - `PATCH /olivia/admin/users/<email>/assistant-permissions`
 
 ## Core flow
 
-1. User interacts with OliviaLegal UI.
+1. User interacts with Olivia UI.
 2. `serve.py` enriches prompts with workspace context and planning files.
 3. OpenClaude executes with MCP tools from `src/mcp/vps_bridge.py`.
 4. MCP bridge calls VPS gateway endpoints (`VPS_GATEWAY_URL`) for services.
 
 ## Notes
 
-- OliviaLegal reads function catalogs dynamically from the latest generated report in `reports/ecosystem/agent_functions`.
+- Olivia reads function catalogs dynamically from the latest generated report in `reports/ecosystem/agent_functions`.
 - Shaders agent operational contract and implementation guide: `docs/shaders-agent-system.md`.
 - Historical shader upgrade notes are archived in `docs/shaders-archive/`.
 - Live reload endpoint: `serve.py` exposes `POST /api/functions/reload`.
 - Automatic sync watcher: `automation/watch_functions_sync.py`
   - Watches `reports/api-audit` for new `api_endpoint_catalog_*.json`
   - Regenerates catalogs via local `endpoint_mapper.py`
-  - Calls OliviaLegal reload endpoint so API Explorer reflects updates immediately
+  - Calls Olivia reload endpoint so API Explorer reflects updates immediately
 - Manual one-shot sync:
 
 ```bash
@@ -116,7 +116,7 @@ This is intended to sit alongside the existing map mode selector in the same `Ma
 
 ### How To Verify In UI
 
-1. Open `http://localhost:3229/OliviaLegal/olivia` and go to `API Explorer > Mapa`.
+1. Open `http://localhost:3229/olivia/olivia` and go to `API Explorer > Mapa`.
 2. Change `aexMapMode` across all options and confirm the diagram updates for each mode.
 3. Click `Recarregar` and confirm the currently selected mode remains active.
 4. Refresh the page and confirm mode persistence from `OliviaLegal.aex.diagram.mode`.

@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "folder": "deploy",
+    "indexed_at": "2026-07-26T22:51:20.288769",
+    "total_files": 4,
+    "total_lines": 367,
+    "languages": {
+      "unknown": 2,
+      "bash": 2
+    }
+  },
+  "tree": {
+    "vps": {
+      "bootstrap_ubuntu_olivialegal.sh": {
+        "file_ref": "files/deploy/vps/bootstrap_ubuntu_olivialegal.sh"
+      },
+      "deploy_la8159_service.sh": {
+        "file_ref": "files/deploy/vps/deploy_la8159_service.sh"
+      },
+      "la8159.service.template": {
+        "file_ref": "files/deploy/vps/la8159.service.template"
+      },
+      "rsync-excludes.txt": {
+        "file_ref": "files/deploy/vps/rsync-excludes.txt"
+      }
+    }
+  },
+  "files": {
+    "deploy/vps/la8159.service.template": {
+      "path": "deploy/vps/la8159.service.template",
+      "language": "unknown",
+      "size_bytes": 380,
+      "lines": 18,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "deploy/vps/rsync-excludes.txt": {
+      "path": "deploy/vps/rsync-excludes.txt",
+      "language": "unknown",
+      "size_bytes": 111,
+      "lines": 10,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "deploy/vps/bootstrap_ubuntu_olivialegal.sh": {
+      "path": "deploy/vps/bootstrap_ubuntu_olivialegal.sh",
+      "language": "bash",
+      "size_bytes": 6728,
+      "lines": 243,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "deploy/vps/deploy_la8159_service.sh": {
+      "path": "deploy/vps/deploy_la8159_service.sh",
+      "language": "bash",
+      "size_bytes": 3283,
+      "lines": 96,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    }
+  },
+  "html_pages": {},
+  "modules": {
+    "deploy/vps": {
+      "files": [
+        "deploy/vps/la8159.service.template",
+        "deploy/vps/rsync-excludes.txt",
+        "deploy/vps/bootstrap_ubuntu_olivialegal.sh",
+        "deploy/vps/deploy_la8159_service.sh"
+      ],
+      "count": 4
+    }
+  },
+  "symbols_index": {},
+  "dependency_graph": {
+    "deploy/vps/la8159.service.template": {
+      "imports": [],
+      "imported_by": []
+    },
+    "deploy/vps/rsync-excludes.txt": {
+      "imports": [],
+      "imported_by": []
+    },
+    "deploy/vps/bootstrap_ubuntu_olivialegal.sh": {
+      "imports": [],
+      "imported_by": []
+    },
+    "deploy/vps/deploy_la8159_service.sh": {
+      "imports": [],
+      "imported_by": []
+    }
+  },
+  "js_cross_module_graph": {}
+}

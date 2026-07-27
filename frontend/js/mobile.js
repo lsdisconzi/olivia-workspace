@@ -1,5 +1,5 @@
 /* =====================================================================
-   js/mobile.js — Mobile touch enhancements for OliviaLegal Workspace
+   js/mobile.js — Mobile touch enhancements for Olivia Workspace
    Source: projects/frontend-mobile/writer/Current Mobile Implementation Analysis.md (section 5)
    Loaded after core scripts. Does NOT redefine toggleMobileMenu /
    toggleMobileSidebar / scrollHintsCarousel (those live in nav.js / tabs.js).

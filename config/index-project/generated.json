@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "folder": "generated",
+    "indexed_at": "2026-07-26T22:51:20.288769",
+    "total_files": 2,
+    "total_lines": 172,
+    "languages": {
+      "unknown": 2
+    }
+  },
+  "tree": {
+    "validate-olivia-pack.mjs": {
+      "file_ref": "files/generated/validate-olivia-pack.mjs"
+    },
+    "validate-pack.mjs": {
+      "file_ref": "files/generated/validate-pack.mjs"
+    }
+  },
+  "files": {
+    "generated/validate-pack.mjs": {
+      "path": "generated/validate-pack.mjs",
+      "language": "unknown",
+      "size_bytes": 2728,
+      "lines": 91,
+      "last_modified": "2026-07-17T01:07:47.844614",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "generated/validate-olivia-pack.mjs": {
+      "path": "generated/validate-olivia-pack.mjs",
+      "language": "unknown",
+      "size_bytes": 2348,
+      "lines": 81,
+      "last_modified": "2026-07-17T01:25:04.450400",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    }
+  },
+  "html_pages": {},
+  "modules": {},
+  "symbols_index": {},
+  "dependency_graph": {
+    "generated/validate-pack.mjs": {
+      "imports": [],
+      "imported_by": []
+    },
+    "generated/validate-olivia-pack.mjs": {
+      "imports": [],
+      "imported_by": []
+    }
+  },
+  "js_cross_module_graph": {}
+}

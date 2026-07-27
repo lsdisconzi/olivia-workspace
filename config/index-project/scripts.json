@@ -1,0 +1,3020 @@
+{
+  "metadata": {
+    "folder": "scripts",
+    "indexed_at": "2026-07-26T22:51:20.288769",
+    "total_files": 18,
+    "total_lines": 6150,
+    "languages": {
+      "bash": 1,
+      "python": 16,
+      "markdown": 1
+    }
+  },
+  "tree": {
+    "agent_i18n_extractor.py": {
+      "file_ref": "files/scripts/agent_i18n_extractor.py"
+    },
+    "compile_report.py": {
+      "file_ref": "files/scripts/compile_report.py"
+    },
+    "extract_assets.py": {
+      "file_ref": "files/scripts/extract_assets.py"
+    },
+    "extract_assets_dynamic.py": {
+      "file_ref": "files/scripts/extract_assets_dynamic.py"
+    },
+    "extract_svg.py": {
+      "file_ref": "files/scripts/extract_svg.py"
+    },
+    "extract_svg_dynamic.py": {
+      "file_ref": "files/scripts/extract_svg_dynamic.py"
+    },
+    "generate_skill_index.py": {
+      "file_ref": "files/scripts/generate_skill_index.py"
+    },
+    "i18n_manager.py": {
+      "file_ref": "files/scripts/i18n_manager.py"
+    },
+    "index_project.py": {
+      "file_ref": "files/scripts/index_project.py"
+    },
+    "mcp_bridge": {
+      "streamable_bridge.py": {
+        "file_ref": "files/scripts/mcp_bridge/streamable_bridge.py"
+      }
+    },
+    "smoke_runtime.sh": {
+      "file_ref": "files/scripts/smoke_runtime.sh"
+    },
+    "test_harness": {
+      "README.md": {
+        "file_ref": "files/scripts/test_harness/README.md"
+      },
+      "openapi_generator.py": {
+        "file_ref": "files/scripts/test_harness/openapi_generator.py"
+      },
+      "retest_vps_functions.py": {
+        "file_ref": "files/scripts/test_harness/retest_vps_functions.py"
+      },
+      "test_orchestrator.py": {
+        "file_ref": "files/scripts/test_harness/test_orchestrator.py"
+      },
+      "validation_updater.py": {
+        "file_ref": "files/scripts/test_harness/validation_updater.py"
+      }
+    },
+    "translate_pipeline.py": {
+      "file_ref": "files/scripts/translate_pipeline.py"
+    },
+    "translator.py": {
+      "file_ref": "files/scripts/translator.py"
+    }
+  },
+  "files": {
+    "scripts/smoke_runtime.sh": {
+      "path": "scripts/smoke_runtime.sh",
+      "language": "bash",
+      "size_bytes": 921,
+      "lines": 36,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "scripts/agent_i18n_extractor.py": {
+      "path": "scripts/agent_i18n_extractor.py",
+      "language": "python",
+      "size_bytes": 5827,
+      "lines": 161,
+      "last_modified": "2026-07-20T20:33:52.809981",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "os",
+          "re",
+          "json",
+          "hashlib"
+        ],
+        "imports_external": [
+          "bs4"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "generate_key",
+              "line": 13,
+              "end_line": 28,
+              "args": [
+                "text",
+                "used_keys"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "extract_and_tag_html",
+              "line": 33,
+              "end_line": 76,
+              "args": [
+                "html_content",
+                "used_keys"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "extract_js_strings",
+              "line": 81,
+              "end_line": 118,
+              "args": [
+                "html_content",
+                "used_keys"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 123,
+              "end_line": 158,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "process_node",
+              "line": 46,
+              "end_line": 70,
+              "args": [
+                "node"
+              ],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": []
+        }
+      }
+    },
+    "scripts/extract_svg.py": {
+      "path": "scripts/extract_svg.py",
+      "language": "python",
+      "size_bytes": 15037,
+      "lines": 457,
+      "last_modified": "2026-07-23T01:16:42.997707",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "sys",
+          "json",
+          "re",
+          "xml.etree.ElementTree",
+          "pathlib",
+          "html",
+          "argparse"
+        ],
+        "imports_external": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "get_attr",
+              "line": 56,
+              "end_line": 61,
+              "args": [
+                "element",
+                "name",
+                "default"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "strip_units",
+              "line": 64,
+              "end_line": 72,
+              "args": [
+                "value"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_viewbox",
+              "line": 75,
+              "end_line": 85,
+              "args": [
+                "viewbox_str"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "is_mm",
+              "line": 88,
+              "end_line": 92,
+              "args": [
+                "svg_root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "extract_groups_and_paths",
+              "line": 95,
+              "end_line": 161,
+              "args": [
+                "svg_root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "escape_for_template_literal",
+              "line": 164,
+              "end_line": 169,
+              "args": [
+                "s"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "escape_svg_attr",
+              "line": 172,
+              "end_line": 179,
+              "args": [
+                "s"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "generate_code",
+              "line": 182,
+              "end_line": 253,
+              "args": [
+                "groups",
+                "svg_width",
+                "svg_height",
+                "has_mm",
+                "params"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "build_asset_json",
+              "line": 256,
+              "end_line": 267,
+              "args": [
+                "meta",
+                "code"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "update_manifest",
+              "line": 270,
+              "end_line": 291,
+              "args": [
+                "manifest_path",
+                "filename"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_meta_file",
+              "line": 294,
+              "end_line": 297,
+              "args": [
+                "path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_cli_meta",
+              "line": 300,
+              "end_line": 322,
+              "args": [
+                "args"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 325,
+              "end_line": 453,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "SVG_NS",
+              "line": 44
+            },
+            {
+              "name": "DEFAULT_PARAMS",
+              "line": 47
+            }
+          ]
+        }
+      }
+    },
+    "scripts/extract_assets.py": {
+      "path": "scripts/extract_assets.py",
+      "language": "python",
+      "size_bytes": 9268,
+      "lines": 249,
+      "last_modified": "2026-07-15T05:03:42.099630",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "json",
+          "re",
+          "sys",
+          "pathlib",
+          "typing"
+        ],
+        "imports_external": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "load_json",
+              "line": 60,
+              "end_line": 62,
+              "args": [
+                "path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "iter_scenes",
+              "line": 65,
+              "end_line": 72,
+              "args": [
+                "scene_path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "load_manifest",
+              "line": 75,
+              "end_line": 80,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "on_disk_assets",
+              "line": 83,
+              "end_line": 87,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "normalize_asset",
+              "line": 93,
+              "end_line": 131,
+              "args": [
+                "raw",
+                "scene_id"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "extract",
+              "line": 137,
+              "end_line": 234,
+              "args": [
+                "dry_run",
+                "force",
+                "no_sync",
+                "quiet"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 237,
+              "end_line": 244,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "PROJECT_ROOT",
+              "line": 47
+            },
+            {
+              "name": "SCENES_DIR",
+              "line": 48
+            },
+            {
+              "name": "ASSETS_DIR",
+              "line": 49
+            },
+            {
+              "name": "MANIFEST_PATH",
+              "line": 50
+            },
+            {
+              "name": "ASSET_FIELDS",
+              "line": 53
+            },
+            {
+              "name": "ID_RE",
+              "line": 54
+            }
+          ]
+        }
+      }
+    },
+    "scripts/i18n_manager.py": {
+      "path": "scripts/i18n_manager.py",
+      "language": "python",
+      "size_bytes": 21975,
+      "lines": 545,
+      "last_modified": "2026-07-20T19:32:24.401325",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "os",
+          "re",
+          "json",
+          "argparse"
+        ],
+        "imports_external": [
+          "glob",
+          "bs4"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "generate_key",
+              "line": 369,
+              "end_line": 377,
+              "args": [
+                "text"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_html_for_keys",
+              "line": 379,
+              "end_line": 416,
+              "args": [
+                "html_content",
+                "existing_keys",
+                "used_keys"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_code_for_keys",
+              "line": 418,
+              "end_line": 426,
+              "args": [
+                "content"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "generate_docs",
+              "line": 428,
+              "end_line": 461,
+              "args": [
+                "en_dict",
+                "output_path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 463,
+              "end_line": 542,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "KNOWN_KEYS",
+              "line": 11
+            }
+          ]
+        }
+      }
+    },
+    "scripts/generate_skill_index.py": {
+      "path": "scripts/generate_skill_index.py",
+      "language": "python",
+      "size_bytes": 2405,
+      "lines": 71,
+      "last_modified": "2026-07-18T23:23:31.323285",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "pathlib",
+          "json"
+        ],
+        "imports_external": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "skill_id_from_filename",
+              "line": 16,
+              "end_line": 27,
+              "args": [
+                "name"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "discover_skills",
+              "line": 30,
+              "end_line": 45,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "write_index",
+              "line": 48,
+              "end_line": 63,
+              "args": [
+                "project"
+              ],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "ROOT",
+              "line": 13
+            },
+            {
+              "name": "AGENTS_SKILLS",
+              "line": 14
+            }
+          ]
+        }
+      }
+    },
+    "scripts/extract_assets_dynamic.py": {
+      "path": "scripts/extract_assets_dynamic.py",
+      "language": "python",
+      "size_bytes": 17905,
+      "lines": 505,
+      "last_modified": "2026-07-23T01:42:37.719842",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "json",
+          "re",
+          "sys",
+          "pathlib",
+          "typing",
+          "xml.etree.ElementTree",
+          "html"
+        ],
+        "imports_external": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_get_attr",
+              "line": 65,
+              "end_line": 69,
+              "args": [
+                "element",
+                "name",
+                "default"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_strip_units",
+              "line": 71,
+              "end_line": 78,
+              "args": [
+                "value"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_parse_viewbox",
+              "line": 80,
+              "end_line": 89,
+              "args": [
+                "viewbox_str"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_is_mm",
+              "line": 91,
+              "end_line": 94,
+              "args": [
+                "svg_root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_extract_groups_and_paths",
+              "line": 96,
+              "end_line": 147,
+              "args": [
+                "svg_root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_escape_for_template_literal",
+              "line": 149,
+              "end_line": 153,
+              "args": [
+                "s"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_escape_svg_attr",
+              "line": 155,
+              "end_line": 158,
+              "args": [
+                "s"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "generate_code_from_svg",
+              "line": 160,
+              "end_line": 264,
+              "args": [
+                "svg_path",
+                "config"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "load_json",
+              "line": 288,
+              "end_line": 290,
+              "args": [
+                "path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "iter_scenes",
+              "line": 292,
+              "end_line": 298,
+              "args": [
+                "scene_path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "load_manifest",
+              "line": 300,
+              "end_line": 305,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "on_disk_assets",
+              "line": 307,
+              "end_line": 310,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "resolve_svg_path",
+              "line": 313,
+              "end_line": 318,
+              "args": [
+                "raw_path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "normalize_and_generate",
+              "line": 321,
+              "end_line": 385,
+              "args": [
+                "declaration",
+                "scene_id",
+                "dry_run",
+                "quiet"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "process_scenes",
+              "line": 388,
+              "end_line": 489,
+              "args": [
+                "dry_run",
+                "force",
+                "no_sync",
+                "quiet"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 492,
+              "end_line": 501,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "SVG_NS",
+              "line": 63
+            },
+            {
+              "name": "PROJECT_ROOT",
+              "line": 270
+            },
+            {
+              "name": "SCENES_DIR",
+              "line": 271
+            },
+            {
+              "name": "ASSETS_DIR",
+              "line": 272
+            },
+            {
+              "name": "MANIFEST_PATH",
+              "line": 273
+            },
+            {
+              "name": "ASSET_FIELDS",
+              "line": 275
+            },
+            {
+              "name": "ID_RE",
+              "line": 276
+            },
+            {
+              "name": "DEFAULT_PARAMS",
+              "line": 279
+            }
+          ]
+        }
+      }
+    },
+    "scripts/index_project.py": {
+      "path": "scripts/index_project.py",
+      "language": "python",
+      "size_bytes": 42174,
+      "lines": 1144,
+      "last_modified": "2026-07-26T22:49:29.250029",
+      "git_commit": "",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "hashlib",
+          "json",
+          "logging",
+          "os",
+          "re",
+          "subprocess",
+          "sys",
+          "datetime",
+          "html.parser",
+          "pathlib",
+          "typing"
+        ],
+        "imports_external": [
+          "ast"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "build_file_tree",
+              "line": 77,
+              "end_line": 89,
+              "args": [
+                "root",
+                "files"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_python_file",
+              "line": 96,
+              "end_line": 176,
+              "args": [
+                "file_path",
+                "content"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_js_file",
+              "line": 183,
+              "end_line": 279,
+              "args": [
+                "file_path",
+                "content"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_js_deep",
+              "line": 327,
+              "end_line": 521,
+              "args": [
+                "file_path",
+                "content"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_find_event_target",
+              "line": 524,
+              "end_line": 539,
+              "args": [
+                "content",
+                "pos"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_html_file",
+              "line": 589,
+              "end_line": 596,
+              "args": [
+                "file_path",
+                "content"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_css_file",
+              "line": 603,
+              "end_line": 638,
+              "args": [
+                "file_path",
+                "content"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "build_dependency_graph",
+              "line": 645,
+              "end_line": 680,
+              "args": [
+                "files_data",
+                "root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "build_js_cross_module_graph",
+              "line": 687,
+              "end_line": 745,
+              "args": [
+                "files_data"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "resolve_import",
+              "line": 748,
+              "end_line": 791,
+              "args": [
+                "imp",
+                "from_file",
+                "root",
+                "files_data"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "build_symbol_index",
+              "line": 798,
+              "end_line": 828,
+              "args": [
+                "files_data"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "should_exclude",
+              "line": 835,
+              "end_line": 842,
+              "args": [
+                "path",
+                "exclude_dirs",
+                "exclude_exts"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "get_file_metadata",
+              "line": 845,
+              "end_line": 851,
+              "args": [
+                "file_path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "get_git_commit",
+              "line": 854,
+              "end_line": 863,
+              "args": [
+                "file_path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "index_project",
+              "line": 866,
+              "end_line": 996,
+              "args": [
+                "project_root",
+                "exclude_dirs",
+                "exclude_exts"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "write_folder_indexes",
+              "line": 999,
+              "end_line": 1085,
+              "args": [
+                "result",
+                "project_root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "write_root_index",
+              "line": 1088,
+              "end_line": 1093,
+              "args": [
+                "result",
+                "project_root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 1096,
+              "end_line": 1140,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "__init__",
+              "line": 547,
+              "end_line": 557,
+              "args": [
+                "self"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "handle_starttag",
+              "line": 559,
+              "end_line": 578,
+              "args": [
+                "self",
+                "tag",
+                "attrs"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "handle_data",
+              "line": 580,
+              "end_line": 582,
+              "args": [
+                "self",
+                "data"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "handle_endtag",
+              "line": 584,
+              "end_line": 586,
+              "args": [
+                "self",
+                "tag"
+              ],
+              "decorators": []
+            }
+          ],
+          "classes": [
+            {
+              "name": "HTMLStructureParser",
+              "line": 546,
+              "end_line": 586,
+              "methods": [
+                {
+                  "name": "__init__",
+                  "line": 547,
+                  "end_line": 557,
+                  "args": [
+                    "self"
+                  ]
+                },
+                {
+                  "name": "handle_starttag",
+                  "line": 559,
+                  "end_line": 578,
+                  "args": [
+                    "self",
+                    "tag",
+                    "attrs"
+                  ]
+                },
+                {
+                  "name": "handle_data",
+                  "line": 580,
+                  "end_line": 582,
+                  "args": [
+                    "self",
+                    "data"
+                  ]
+                },
+                {
+                  "name": "handle_endtag",
+                  "line": 584,
+                  "end_line": 586,
+                  "args": [
+                    "self",
+                    "tag"
+                  ]
+                }
+              ],
+              "bases": [
+                "HTMLParser"
+              ]
+            }
+          ],
+          "globals": [
+            {
+              "name": "log",
+              "line": 28
+            },
+            {
+              "name": "EXCLUDE_DIRS_DEFAULT",
+              "line": 31
+            },
+            {
+              "name": "EXCLUDE_EXTS_DEFAULT",
+              "line": 36
+            },
+            {
+              "name": "FOLDER_INDEXES",
+              "line": 42
+            },
+            {
+              "name": "LANGUAGE_MAP",
+              "line": 63
+            },
+            {
+              "name": "_JS_BUILTINS",
+              "line": 287
+            }
+          ]
+        }
+      }
+    },
+    "scripts/compile_report.py": {
+      "path": "scripts/compile_report.py",
+      "language": "python",
+      "size_bytes": 10853,
+      "lines": 212,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "json",
+          "os",
+          "sys",
+          "datetime"
+        ],
+        "imports_external": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "load_stats",
+              "line": 27,
+              "end_line": 74,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "compile_report",
+              "line": 76,
+              "end_line": 208,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "BASE",
+              "line": 9
+            },
+            {
+              "name": "REPORTS",
+              "line": 11
+            },
+            {
+              "name": "CROSS_REF",
+              "line": 18
+            },
+            {
+              "name": "MASTER_INDEX",
+              "line": 24
+            },
+            {
+              "name": "OUTPUT",
+              "line": 25
+            }
+          ]
+        }
+      }
+    },
+    "scripts/translator.py": {
+      "path": "scripts/translator.py",
+      "language": "python",
+      "size_bytes": 5,
+      "lines": 2,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [],
+        "imports_external": [],
+        "symbols": {
+          "functions": [],
+          "classes": [],
+          "globals": []
+        }
+      }
+    },
+    "scripts/extract_svg_dynamic.py": {
+      "path": "scripts/extract_svg_dynamic.py",
+      "language": "python",
+      "size_bytes": 14991,
+      "lines": 423,
+      "last_modified": "2026-07-23T01:24:53.477585",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "sys",
+          "json",
+          "re",
+          "argparse",
+          "xml.etree.ElementTree",
+          "pathlib",
+          "html"
+        ],
+        "imports_external": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "get_attr",
+              "line": 77,
+              "end_line": 81,
+              "args": [
+                "element",
+                "name",
+                "default"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "strip_units",
+              "line": 83,
+              "end_line": 90,
+              "args": [
+                "value"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_viewbox",
+              "line": 92,
+              "end_line": 101,
+              "args": [
+                "viewbox_str"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "is_mm",
+              "line": 103,
+              "end_line": 106,
+              "args": [
+                "svg_root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "extract_groups_and_paths",
+              "line": 108,
+              "end_line": 159,
+              "args": [
+                "svg_root"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "escape_for_template_literal",
+              "line": 163,
+              "end_line": 167,
+              "args": [
+                "s"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "escape_svg_attr",
+              "line": 169,
+              "end_line": 172,
+              "args": [
+                "s"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "generate_dynamic_code",
+              "line": 176,
+              "end_line": 261,
+              "args": [
+                "groups",
+                "svg_width",
+                "svg_height",
+                "has_mm",
+                "engine_vars",
+                "animation_blocks"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "build_asset_json",
+              "line": 264,
+              "end_line": 274,
+              "args": [
+                "meta",
+                "code"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 278,
+              "end_line": 419,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "SVG_NS",
+              "line": 63
+            },
+            {
+              "name": "DEFAULT_PARAMS",
+              "line": 67
+            }
+          ]
+        }
+      }
+    },
+    "scripts/translate_pipeline.py": {
+      "path": "scripts/translate_pipeline.py",
+      "language": "python",
+      "size_bytes": 4,
+      "lines": 1,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [],
+        "imports_external": [],
+        "symbols": {
+          "functions": [],
+          "classes": [],
+          "globals": []
+        }
+      }
+    },
+    "scripts/test_harness/openapi_generator.py": {
+      "path": "scripts/test_harness/openapi_generator.py",
+      "language": "python",
+      "size_bytes": 12928,
+      "lines": 390,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "json",
+          "os",
+          "re",
+          "collections",
+          "datetime",
+          "pathlib",
+          "typing"
+        ],
+        "imports_external": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_service_name",
+              "line": 28,
+              "end_line": 33,
+              "args": [
+                "file_path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_tag_from_url",
+              "line": 36,
+              "end_line": 42,
+              "args": [
+                "url"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_openapi_param_type",
+              "line": 45,
+              "end_line": 50,
+              "args": [
+                "param"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_build_schema_from_response",
+              "line": 53,
+              "end_line": 69,
+              "args": [
+                "resp_data"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_infer_response_schema",
+              "line": 72,
+              "end_line": 94,
+              "args": [
+                "body"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_infer_type",
+              "line": 97,
+              "end_line": 115,
+              "args": [
+                "value"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "generate",
+              "line": 122,
+              "end_line": 170,
+              "args": [
+                "endpoints_json_path",
+                "test_results_path",
+                "output_dir",
+                "single_service"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_build_spec",
+              "line": 173,
+              "end_line": 306,
+              "args": [
+                "svc",
+                "endpoints",
+                "test_lookup"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_ensure_path",
+              "line": 309,
+              "end_line": 314,
+              "args": [
+                "paths",
+                "url"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_slug",
+              "line": 317,
+              "end_line": 320,
+              "args": [
+                "url"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_body_schema_name",
+              "line": 323,
+              "end_line": 329,
+              "args": [
+                "ep"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 336,
+              "end_line": 385,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": []
+        }
+      }
+    },
+    "scripts/test_harness/test_orchestrator.py": {
+      "path": "scripts/test_harness/test_orchestrator.py",
+      "language": "python",
+      "size_bytes": 18164,
+      "lines": 541,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "asyncio",
+          "json",
+          "os",
+          "re",
+          "sys",
+          "time",
+          "datetime",
+          "pathlib",
+          "typing",
+          "urllib.parse",
+          "urllib.parse"
+        ],
+        "imports_external": [
+          "dataclasses",
+          "enum",
+          "aiohttp"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "load_endpoints",
+              "line": 95,
+              "end_line": 115,
+              "args": [
+                "json_path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "classify_layer",
+              "line": 122,
+              "end_line": 133,
+              "args": [
+                "ep"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "resolve_path_values",
+              "line": 168,
+              "end_line": 174,
+              "args": [
+                "ep"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "resolve_query_values",
+              "line": 177,
+              "end_line": 188,
+              "args": [
+                "ep"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "build_url",
+              "line": 191,
+              "end_line": 231,
+              "args": [
+                "base_url",
+                "ep"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "run",
+              "line": 344,
+              "end_line": 456,
+              "args": [
+                "base_url",
+                "endpoints_json_path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 463,
+              "end_line": 536,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [
+            {
+              "name": "TestLayer",
+              "line": 39,
+              "end_line": 43,
+              "methods": [],
+              "bases": [
+                "Enum"
+              ]
+            },
+            {
+              "name": "TestResult",
+              "line": 46,
+              "end_line": 54,
+              "methods": [],
+              "bases": [
+                "Enum"
+              ]
+            },
+            {
+              "name": "Endpoint",
+              "line": 58,
+              "end_line": 75,
+              "methods": [],
+              "bases": []
+            },
+            {
+              "name": "TestRun",
+              "line": 79,
+              "end_line": 88,
+              "methods": [],
+              "bases": []
+            }
+          ],
+          "globals": [
+            {
+              "name": "DEFAULT_TIMEOUT",
+              "line": 238
+            },
+            {
+              "name": "DEFAULT_CONCURRENCY",
+              "line": 239
+            }
+          ]
+        }
+      }
+    },
+    "scripts/test_harness/README.md": {
+      "path": "scripts/test_harness/README.md",
+      "language": "markdown",
+      "size_bytes": 7161,
+      "lines": 221,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "scripts/test_harness/validation_updater.py": {
+      "path": "scripts/test_harness/validation_updater.py",
+      "language": "python",
+      "size_bytes": 17514,
+      "lines": 481,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "json",
+          "os",
+          "re",
+          "datetime",
+          "pathlib",
+          "typing"
+        ],
+        "imports_external": [
+          "openapi_generator"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "compute_validation_score",
+              "line": 29,
+              "end_line": 87,
+              "args": [
+                "func",
+                "test_result"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_determine_test_status",
+              "line": 90,
+              "end_line": 106,
+              "args": [
+                "http_code",
+                "status"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_generate_fix_suggestion",
+              "line": 109,
+              "end_line": 131,
+              "args": [
+                "status",
+                "http_code",
+                "error"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "update_validation_report",
+              "line": 138,
+              "end_line": 201,
+              "args": [
+                "report_path",
+                "test_lookup",
+                "dry_run"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "update_function_files",
+              "line": 204,
+              "end_line": 264,
+              "args": [
+                "functions_dir",
+                "test_lookup",
+                "dry_run"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_status_priority",
+              "line": 267,
+              "end_line": 269,
+              "args": [
+                "status"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "regenerate_triage_report",
+              "line": 272,
+              "end_line": 341,
+              "args": [
+                "triage_json_path",
+                "triage_md_path",
+                "test_lookup",
+                "dry_run"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_render_triage_md",
+              "line": 344,
+              "end_line": 410,
+              "args": [
+                "triage"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 417,
+              "end_line": 476,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": []
+        }
+      }
+    },
+    "scripts/test_harness/retest_vps_functions.py": {
+      "path": "scripts/test_harness/retest_vps_functions.py",
+      "language": "python",
+      "size_bytes": 21122,
+      "lines": 585,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "asyncio",
+          "json",
+          "os",
+          "re",
+          "sys",
+          "time",
+          "datetime",
+          "pathlib",
+          "typing",
+          "urllib.parse"
+        ],
+        "imports_external": [
+          "__future__",
+          "dataclasses",
+          "aiohttp"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_status_priority",
+              "line": 86,
+              "end_line": 99,
+              "args": [
+                "status"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_is_template_url",
+              "line": 102,
+              "end_line": 106,
+              "args": [
+                "url"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_resolve_value",
+              "line": 109,
+              "end_line": 113,
+              "args": [
+                "name",
+                "fallback_prefix"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_replace_placeholders",
+              "line": 116,
+              "end_line": 137,
+              "args": [
+                "text"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_build_full_url",
+              "line": 140,
+              "end_line": 164,
+              "args": [
+                "base_url",
+                "url_pattern"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_normalize_function_row",
+              "line": 167,
+              "end_line": 197,
+              "args": [
+                "row"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "load_candidates",
+              "line": 200,
+              "end_line": 233,
+              "args": [
+                "source_json"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "classify_http_status",
+              "line": 236,
+              "end_line": 249,
+              "args": [
+                "http_code",
+                "error"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_headers",
+              "line": 388,
+              "end_line": 400,
+              "args": [
+                "raw_headers",
+                "bearer_token"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 403,
+              "end_line": 580,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "repl_brace",
+              "line": 119,
+              "end_line": 125,
+              "args": [
+                "match"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "repl_angle",
+              "line": 127,
+              "end_line": 133,
+              "args": [
+                "match"
+              ],
+              "decorators": []
+            }
+          ],
+          "classes": [
+            {
+              "name": "FunctionCandidate",
+              "line": 73,
+              "end_line": 83,
+              "methods": [],
+              "bases": []
+            }
+          ],
+          "globals": [
+            {
+              "name": "DEFAULT_SOURCE",
+              "line": 43
+            },
+            {
+              "name": "DEFAULT_OUTPUT",
+              "line": 44
+            },
+            {
+              "name": "SAFE_METHODS",
+              "line": 46
+            }
+          ]
+        }
+      }
+    },
+    "scripts/mcp_bridge/streamable_bridge.py": {
+      "path": "scripts/mcp_bridge/streamable_bridge.py",
+      "language": "python",
+      "size_bytes": 4328,
+      "lines": 126,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "sys",
+          "json",
+          "urllib.request",
+          "urllib.error",
+          "threading"
+        ],
+        "imports_external": [
+          "uuid"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "main",
+              "line": 28,
+              "end_line": 121,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "post",
+              "line": 41,
+              "end_line": 93,
+              "args": [
+                "payload"
+              ],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": []
+        }
+      }
+    }
+  },
+  "html_pages": {},
+  "modules": {
+    "scripts": {
+      "files": [
+        "scripts/smoke_runtime.sh",
+        "scripts/agent_i18n_extractor.py",
+        "scripts/extract_svg.py",
+        "scripts/extract_assets.py",
+        "scripts/i18n_manager.py",
+        "scripts/generate_skill_index.py",
+        "scripts/extract_assets_dynamic.py",
+        "scripts/index_project.py",
+        "scripts/compile_report.py",
+        "scripts/translator.py",
+        "scripts/extract_svg_dynamic.py",
+        "scripts/translate_pipeline.py"
+      ],
+      "count": 12
+    },
+    "scripts/test_harness": {
+      "files": [
+        "scripts/test_harness/openapi_generator.py",
+        "scripts/test_harness/test_orchestrator.py",
+        "scripts/test_harness/README.md",
+        "scripts/test_harness/validation_updater.py",
+        "scripts/test_harness/retest_vps_functions.py"
+      ],
+      "count": 5
+    }
+  },
+  "symbols_index": {
+    "main": [
+      {
+        "file": "scripts/agent_i18n_extractor.py",
+        "line": 123,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 325,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_assets.py",
+        "line": 237,
+        "type": "function"
+      },
+      {
+        "file": "scripts/i18n_manager.py",
+        "line": 463,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 492,
+        "type": "function"
+      },
+      {
+        "file": "scripts/index_project.py",
+        "line": 1096,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_svg_dynamic.py",
+        "line": 278,
+        "type": "function"
+      },
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 336,
+        "type": "function"
+      },
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 463,
+        "type": "function"
+      },
+      {
+        "file": "scripts/test_harness/validation_updater.py",
+        "line": 417,
+        "type": "function"
+      },
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 403,
+        "type": "function"
+      },
+      {
+        "file": "scripts/mcp_bridge/streamable_bridge.py",
+        "line": 28,
+        "type": "function"
+      }
+    ],
+    "__init__": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 547,
+        "type": "function"
+      }
+    ],
+    "generate_key": [
+      {
+        "file": "scripts/agent_i18n_extractor.py",
+        "line": 13,
+        "type": "function"
+      },
+      {
+        "file": "scripts/i18n_manager.py",
+        "line": 369,
+        "type": "function"
+      }
+    ],
+    "extract_and_tag_html": [
+      {
+        "file": "scripts/agent_i18n_extractor.py",
+        "line": 33,
+        "type": "function"
+      }
+    ],
+    "extract_js_strings": [
+      {
+        "file": "scripts/agent_i18n_extractor.py",
+        "line": 81,
+        "type": "function"
+      }
+    ],
+    "process_node": [
+      {
+        "file": "scripts/agent_i18n_extractor.py",
+        "line": 46,
+        "type": "function"
+      }
+    ],
+    "get_attr": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 56,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_svg_dynamic.py",
+        "line": 77,
+        "type": "function"
+      }
+    ],
+    "strip_units": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 64,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_svg_dynamic.py",
+        "line": 83,
+        "type": "function"
+      }
+    ],
+    "parse_viewbox": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 75,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_svg_dynamic.py",
+        "line": 92,
+        "type": "function"
+      }
+    ],
+    "is_mm": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 88,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_svg_dynamic.py",
+        "line": 103,
+        "type": "function"
+      }
+    ],
+    "extract_groups_and_paths": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 95,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_svg_dynamic.py",
+        "line": 108,
+        "type": "function"
+      }
+    ],
+    "escape_for_template_literal": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 164,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_svg_dynamic.py",
+        "line": 163,
+        "type": "function"
+      }
+    ],
+    "escape_svg_attr": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 172,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_svg_dynamic.py",
+        "line": 169,
+        "type": "function"
+      }
+    ],
+    "generate_code": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 182,
+        "type": "function"
+      }
+    ],
+    "build_asset_json": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 256,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_svg_dynamic.py",
+        "line": 264,
+        "type": "function"
+      }
+    ],
+    "update_manifest": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 270,
+        "type": "function"
+      }
+    ],
+    "parse_meta_file": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 294,
+        "type": "function"
+      }
+    ],
+    "parse_cli_meta": [
+      {
+        "file": "scripts/extract_svg.py",
+        "line": 300,
+        "type": "function"
+      }
+    ],
+    "load_json": [
+      {
+        "file": "scripts/extract_assets.py",
+        "line": 60,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 288,
+        "type": "function"
+      }
+    ],
+    "iter_scenes": [
+      {
+        "file": "scripts/extract_assets.py",
+        "line": 65,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 292,
+        "type": "function"
+      }
+    ],
+    "load_manifest": [
+      {
+        "file": "scripts/extract_assets.py",
+        "line": 75,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 300,
+        "type": "function"
+      }
+    ],
+    "on_disk_assets": [
+      {
+        "file": "scripts/extract_assets.py",
+        "line": 83,
+        "type": "function"
+      },
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 307,
+        "type": "function"
+      }
+    ],
+    "normalize_asset": [
+      {
+        "file": "scripts/extract_assets.py",
+        "line": 93,
+        "type": "function"
+      }
+    ],
+    "extract": [
+      {
+        "file": "scripts/extract_assets.py",
+        "line": 137,
+        "type": "function"
+      }
+    ],
+    "parse_html_for_keys": [
+      {
+        "file": "scripts/i18n_manager.py",
+        "line": 379,
+        "type": "function"
+      }
+    ],
+    "parse_code_for_keys": [
+      {
+        "file": "scripts/i18n_manager.py",
+        "line": 418,
+        "type": "function"
+      }
+    ],
+    "generate_docs": [
+      {
+        "file": "scripts/i18n_manager.py",
+        "line": 428,
+        "type": "function"
+      }
+    ],
+    "skill_id_from_filename": [
+      {
+        "file": "scripts/generate_skill_index.py",
+        "line": 16,
+        "type": "function"
+      }
+    ],
+    "discover_skills": [
+      {
+        "file": "scripts/generate_skill_index.py",
+        "line": 30,
+        "type": "function"
+      }
+    ],
+    "write_index": [
+      {
+        "file": "scripts/generate_skill_index.py",
+        "line": 48,
+        "type": "function"
+      }
+    ],
+    "_get_attr": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 65,
+        "type": "function"
+      }
+    ],
+    "_strip_units": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 71,
+        "type": "function"
+      }
+    ],
+    "_parse_viewbox": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 80,
+        "type": "function"
+      }
+    ],
+    "_is_mm": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 91,
+        "type": "function"
+      }
+    ],
+    "_extract_groups_and_paths": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 96,
+        "type": "function"
+      }
+    ],
+    "_escape_for_template_literal": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 149,
+        "type": "function"
+      }
+    ],
+    "_escape_svg_attr": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 155,
+        "type": "function"
+      }
+    ],
+    "generate_code_from_svg": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 160,
+        "type": "function"
+      }
+    ],
+    "resolve_svg_path": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 313,
+        "type": "function"
+      }
+    ],
+    "normalize_and_generate": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 321,
+        "type": "function"
+      }
+    ],
+    "process_scenes": [
+      {
+        "file": "scripts/extract_assets_dynamic.py",
+        "line": 388,
+        "type": "function"
+      }
+    ],
+    "build_file_tree": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 77,
+        "type": "function"
+      }
+    ],
+    "parse_python_file": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 96,
+        "type": "function"
+      }
+    ],
+    "parse_js_file": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 183,
+        "type": "function"
+      }
+    ],
+    "parse_js_deep": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 327,
+        "type": "function"
+      }
+    ],
+    "_find_event_target": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 524,
+        "type": "function"
+      }
+    ],
+    "parse_html_file": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 589,
+        "type": "function"
+      }
+    ],
+    "parse_css_file": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 603,
+        "type": "function"
+      }
+    ],
+    "build_dependency_graph": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 645,
+        "type": "function"
+      }
+    ],
+    "build_js_cross_module_graph": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 687,
+        "type": "function"
+      }
+    ],
+    "resolve_import": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 748,
+        "type": "function"
+      }
+    ],
+    "build_symbol_index": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 798,
+        "type": "function"
+      }
+    ],
+    "should_exclude": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 835,
+        "type": "function"
+      }
+    ],
+    "get_file_metadata": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 845,
+        "type": "function"
+      }
+    ],
+    "get_git_commit": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 854,
+        "type": "function"
+      }
+    ],
+    "index_project": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 866,
+        "type": "function"
+      }
+    ],
+    "write_folder_indexes": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 999,
+        "type": "function"
+      }
+    ],
+    "write_root_index": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 1088,
+        "type": "function"
+      }
+    ],
+    "handle_starttag": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 559,
+        "type": "function"
+      }
+    ],
+    "handle_data": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 580,
+        "type": "function"
+      }
+    ],
+    "handle_endtag": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 584,
+        "type": "function"
+      }
+    ],
+    "HTMLStructureParser": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 546,
+        "type": "class"
+      }
+    ],
+    "load_stats": [
+      {
+        "file": "scripts/compile_report.py",
+        "line": 27,
+        "type": "function"
+      }
+    ],
+    "compile_report": [
+      {
+        "file": "scripts/compile_report.py",
+        "line": 76,
+        "type": "function"
+      }
+    ],
+    "generate_dynamic_code": [
+      {
+        "file": "scripts/extract_svg_dynamic.py",
+        "line": 176,
+        "type": "function"
+      }
+    ],
+    "_service_name": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 28,
+        "type": "function"
+      }
+    ],
+    "_tag_from_url": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 36,
+        "type": "function"
+      }
+    ],
+    "_openapi_param_type": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 45,
+        "type": "function"
+      }
+    ],
+    "_build_schema_from_response": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 53,
+        "type": "function"
+      }
+    ],
+    "_infer_response_schema": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 72,
+        "type": "function"
+      }
+    ],
+    "_infer_type": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 97,
+        "type": "function"
+      }
+    ],
+    "generate": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 122,
+        "type": "function"
+      }
+    ],
+    "_build_spec": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 173,
+        "type": "function"
+      }
+    ],
+    "_ensure_path": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 309,
+        "type": "function"
+      }
+    ],
+    "_slug": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 317,
+        "type": "function"
+      }
+    ],
+    "_body_schema_name": [
+      {
+        "file": "scripts/test_harness/openapi_generator.py",
+        "line": 323,
+        "type": "function"
+      }
+    ],
+    "load_endpoints": [
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 95,
+        "type": "function"
+      }
+    ],
+    "classify_layer": [
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 122,
+        "type": "function"
+      }
+    ],
+    "resolve_path_values": [
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 168,
+        "type": "function"
+      }
+    ],
+    "resolve_query_values": [
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 177,
+        "type": "function"
+      }
+    ],
+    "build_url": [
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 191,
+        "type": "function"
+      }
+    ],
+    "run": [
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 344,
+        "type": "function"
+      }
+    ],
+    "TestLayer": [
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 39,
+        "type": "class"
+      }
+    ],
+    "TestResult": [
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 46,
+        "type": "class"
+      }
+    ],
+    "Endpoint": [
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 58,
+        "type": "class"
+      }
+    ],
+    "TestRun": [
+      {
+        "file": "scripts/test_harness/test_orchestrator.py",
+        "line": 79,
+        "type": "class"
+      }
+    ],
+    "compute_validation_score": [
+      {
+        "file": "scripts/test_harness/validation_updater.py",
+        "line": 29,
+        "type": "function"
+      }
+    ],
+    "_determine_test_status": [
+      {
+        "file": "scripts/test_harness/validation_updater.py",
+        "line": 90,
+        "type": "function"
+      }
+    ],
+    "_generate_fix_suggestion": [
+      {
+        "file": "scripts/test_harness/validation_updater.py",
+        "line": 109,
+        "type": "function"
+      }
+    ],
+    "update_validation_report": [
+      {
+        "file": "scripts/test_harness/validation_updater.py",
+        "line": 138,
+        "type": "function"
+      }
+    ],
+    "update_function_files": [
+      {
+        "file": "scripts/test_harness/validation_updater.py",
+        "line": 204,
+        "type": "function"
+      }
+    ],
+    "_status_priority": [
+      {
+        "file": "scripts/test_harness/validation_updater.py",
+        "line": 267,
+        "type": "function"
+      },
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 86,
+        "type": "function"
+      }
+    ],
+    "regenerate_triage_report": [
+      {
+        "file": "scripts/test_harness/validation_updater.py",
+        "line": 272,
+        "type": "function"
+      }
+    ],
+    "_render_triage_md": [
+      {
+        "file": "scripts/test_harness/validation_updater.py",
+        "line": 344,
+        "type": "function"
+      }
+    ],
+    "_is_template_url": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 102,
+        "type": "function"
+      }
+    ],
+    "_resolve_value": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 109,
+        "type": "function"
+      }
+    ],
+    "_replace_placeholders": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 116,
+        "type": "function"
+      }
+    ],
+    "_build_full_url": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 140,
+        "type": "function"
+      }
+    ],
+    "_normalize_function_row": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 167,
+        "type": "function"
+      }
+    ],
+    "load_candidates": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 200,
+        "type": "function"
+      }
+    ],
+    "classify_http_status": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 236,
+        "type": "function"
+      }
+    ],
+    "parse_headers": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 388,
+        "type": "function"
+      }
+    ],
+    "repl_brace": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 119,
+        "type": "function"
+      }
+    ],
+    "repl_angle": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 127,
+        "type": "function"
+      }
+    ],
+    "FunctionCandidate": [
+      {
+        "file": "scripts/test_harness/retest_vps_functions.py",
+        "line": 73,
+        "type": "class"
+      }
+    ],
+    "post": [
+      {
+        "file": "scripts/mcp_bridge/streamable_bridge.py",
+        "line": 41,
+        "type": "function"
+      }
+    ]
+  },
+  "dependency_graph": {
+    "scripts/smoke_runtime.sh": {
+      "imports": [],
+      "imported_by": []
+    },
+    "scripts/agent_i18n_extractor.py": {
+      "imports": [
+        "os",
+        "re",
+        "json",
+        "hashlib",
+        "bs4"
+      ],
+      "imported_by": []
+    },
+    "scripts/extract_svg.py": {
+      "imports": [
+        "sys",
+        "json",
+        "re",
+        "xml.etree.ElementTree",
+        "pathlib",
+        "html",
+        "argparse"
+      ],
+      "imported_by": []
+    },
+    "scripts/extract_assets.py": {
+      "imports": [
+        "argparse",
+        "json",
+        "re",
+        "sys",
+        "pathlib",
+        "typing"
+      ],
+      "imported_by": []
+    },
+    "scripts/i18n_manager.py": {
+      "imports": [
+        "os",
+        "re",
+        "json",
+        "argparse",
+        "glob",
+        "bs4"
+      ],
+      "imported_by": []
+    },
+    "scripts/generate_skill_index.py": {
+      "imports": [
+        "argparse",
+        "pathlib",
+        "json"
+      ],
+      "imported_by": []
+    },
+    "scripts/extract_assets_dynamic.py": {
+      "imports": [
+        "argparse",
+        "json",
+        "re",
+        "sys",
+        "pathlib",
+        "typing",
+        "xml.etree.ElementTree",
+        "html"
+      ],
+      "imported_by": []
+    },
+    "scripts/index_project.py": {
+      "imports": [
+        "argparse",
+        "hashlib",
+        "json",
+        "logging",
+        "os",
+        "re",
+        "subprocess",
+        "sys",
+        "datetime",
+        "html.parser",
+        "pathlib",
+        "typing",
+        "ast"
+      ],
+      "imported_by": []
+    },
+    "scripts/compile_report.py": {
+      "imports": [
+        "json",
+        "os",
+        "sys",
+        "datetime"
+      ],
+      "imported_by": []
+    },
+    "scripts/translator.py": {
+      "imports": [],
+      "imported_by": []
+    },
+    "scripts/extract_svg_dynamic.py": {
+      "imports": [
+        "sys",
+        "json",
+        "re",
+        "argparse",
+        "xml.etree.ElementTree",
+        "pathlib",
+        "html"
+      ],
+      "imported_by": []
+    },
+    "scripts/translate_pipeline.py": {
+      "imports": [],
+      "imported_by": []
+    },
+    "scripts/test_harness/openapi_generator.py": {
+      "imports": [
+        "argparse",
+        "json",
+        "os",
+        "re",
+        "collections",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "imported_by": []
+    },
+    "scripts/test_harness/test_orchestrator.py": {
+      "imports": [
+        "argparse",
+        "asyncio",
+        "json",
+        "os",
+        "re",
+        "sys",
+        "time",
+        "datetime",
+        "pathlib",
+        "typing",
+        "urllib.parse",
+        "urllib.parse",
+        "dataclasses",
+        "enum",
+        "aiohttp"
+      ],
+      "imported_by": []
+    },
+    "scripts/test_harness/README.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "scripts/test_harness/validation_updater.py": {
+      "imports": [
+        "argparse",
+        "json",
+        "os",
+        "re",
+        "datetime",
+        "pathlib",
+        "typing",
+        "openapi_generator"
+      ],
+      "imported_by": []
+    },
+    "scripts/test_harness/retest_vps_functions.py": {
+      "imports": [
+        "argparse",
+        "asyncio",
+        "json",
+        "os",
+        "re",
+        "sys",
+        "time",
+        "datetime",
+        "pathlib",
+        "typing",
+        "urllib.parse",
+        "__future__",
+        "dataclasses",
+        "aiohttp"
+      ],
+      "imported_by": []
+    },
+    "scripts/mcp_bridge/streamable_bridge.py": {
+      "imports": [
+        "sys",
+        "json",
+        "urllib.request",
+        "urllib.error",
+        "threading",
+        "uuid"
+      ],
+      "imported_by": []
+    }
+  },
+  "js_cross_module_graph": {}
+}

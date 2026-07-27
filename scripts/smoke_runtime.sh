@@ -24,8 +24,8 @@ check_endpoint() {
 failures=0
 
 check_endpoint "/health" "200" "health" || failures=$((failures + 1))
-check_endpoint "/OliviaLegal/" "200,302" "ui-entry" || failures=$((failures + 1))
-check_endpoint "/api/OliviaLegal/remote-bus?role=desktop&since=0&wait=0" "200" "remote-bus" || failures=$((failures + 1))
+check_endpoint "/olivia/" "200,302" "ui-entry" || failures=$((failures + 1))
+check_endpoint "/api/olivia/remote-bus?role=desktop&since=0&wait=0" "200" "remote-bus" || failures=$((failures + 1))
 
 if (( failures > 0 )); then
   echo "Smoke result: FAIL (${failures} checks failed)"

@@ -33,7 +33,7 @@ def _load_env_file(path: Path) -> bool:
 
 
 def bootstrap_environment(root: Path | None = None) -> list[Path]:
-    """Load standard OliviaLegal env files without overriding existing process env.
+    """Load standard Olivia env files without overriding existing process env.
 
     Load order:
     1) <root>/.env

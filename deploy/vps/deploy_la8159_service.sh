@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy OliviaLegal to a VPS and install as a systemd service.
+# Deploy Olivia to a VPS and install as a systemd service.
 #
 # Required env:
 #   VPS_HOST                 e.g. 203.0.113.10
@@ -90,6 +90,6 @@ ssh "${VPS_USER}@${VPS_HOST}" "curl -fsS 'http://127.0.0.1:${OliviaLegal_PORT}/a
 echo "Done."
 echo "Service: ${SERVICE_NAME}"
 echo "Port:    ${OliviaLegal_PORT}"
-echo "URL:     http://${VPS_HOST}:${OliviaLegal_PORT}/OliviaLegal/"
+echo "URL:     http://${VPS_HOST}:${OliviaLegal_PORT}/olivia/"
 
 rm -f "$SERVICE_TMP"

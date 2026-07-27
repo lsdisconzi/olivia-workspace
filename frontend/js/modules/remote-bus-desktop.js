@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════
    REMOTE BUS CONSUMER (desktop)
-   Long-polls /api/OliviaLegal/remote-bus for commands sent by mobile.html
+   Long-polls /api/olivia/remote-bus for commands sent by mobile.html
    and applies them to the shaders view. Supported payload "kind" values:
      - "sh3d-call"  : invoke a whitelisted window.sh3d* function with args
      - "sh-call"    : invoke a whitelisted window.sh* function
@@ -77,7 +77,7 @@
 
   async function postAck(msgId, result) {
     try {
-      await fetch('/api/olivialegal/remote-bus', {
+      await fetch('/api/olivia/remote-bus', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: ROLE, payload: { kind: 'ack', for: msgId, result: result } })
@@ -124,7 +124,7 @@
   async function loop() {
     while (!stopped) {
       try {
-        const r = await fetch('/api/olivialegal/remote-bus?role=' + ROLE + '&since=' + since + '&wait=25');
+        const r = await fetch('/api/olivia/remote-bus?role=' + ROLE + '&since=' + since + '&wait=25');
         if (!r.ok) { await sleep(2000); continue; }
         const data = await r.json();
         const prevSince = since;
@@ -180,7 +180,7 @@
         href: location.href,
         ts: Date.now()
       };
-      await fetch('/api/olivialegal/remote-bus', {
+      await fetch('/api/olivia/remote-bus', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: ROLE, payload: snapshot })

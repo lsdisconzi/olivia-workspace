@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate OliviaLegal environment configuration before startup."""
+"""Validate Olivia environment configuration before startup."""
 
 from __future__ import annotations
 

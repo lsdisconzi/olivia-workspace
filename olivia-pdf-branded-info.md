@@ -4,9 +4,9 @@ I need to improve the PDF export function to match Olivia's actual design system
 
 Looking at the existing PDF function, it has "OliviaLegal" hardcoded but lacks visual polish—no logo, generic layout, and colors that don't quite match the design system. The user wants me to improve this function to produce a more professional, branded PDF output that actually reflects the Olivia visual identity using the proper typefaces like Fraunces and Plus Jakarta Sans.
 
-I need to think through what improvements matter most: applying the correct brand colors from the design system instead of the mismatched blue, using the right font families for headings and body text, and incorporating design elements like the olive branch motif and pill shapes that define the Olivia aesthetic. initely want to make the brand name configurable at the top so it can be swapped out easily depending on context, but for this OliviaLegal workspace specifically, keeping "OliviaLegal" makes sense since that's the actual product name embedded throughout the app.
+I need to think through what improvements matter most: applying the correct brand colors from the design system instead of the mismatched blue, using the right font families for headings and body text, and incorporating design elements like the olive branch motif and pill shapes that define the Olivia aesthetic. initely want to make the brand name configurable at the top so it can be swapped out easily depending on context, but for this Olivia workspace specifically, keeping "OliviaLegal" makes sense since that's the actual product name embedded throughout the app.
 
-I'm going to design the header to show "Olivia" as the primary brand in the serif font with forest green, then add a smaller mono subtitle like "OliviaLegal · Workspace Export" underneath — this mirrors the navigation pattern I see throughout the codebase where "Olivia" is the main brand with a secondary descriptor in a span.
+I'm going to design the header to show "Olivia" as the primary brand in the serif font with forest green, then add a smaller mono subtitle like "Olivia · Workspace Export" underneath — this mirrors the navigation pattern I see throughout the codebase where "Olivia" is the main brand with a secondary descriptor in a span.
 
 …
 

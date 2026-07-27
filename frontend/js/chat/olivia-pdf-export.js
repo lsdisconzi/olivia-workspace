@@ -12,40 +12,56 @@
  * Depends on helpers defined elsewhere in the app:
  *   - _lastAssistantMessage()  → { role, html }
  *   - addSystemBubble(text)    → shows a small system toast/bubble
+ *
+ * IDEMPOTENT: this file is safe to load even if stream.js has already
+ * declared OLIVIA_PDF_BRAND and downloadLastResponseAsPdf. Uses window
+ * assignments (not const) and a load guard to avoid redeclaration errors.
  */
 
-// ─── Shared brand kit — reuse this for any other export/print surface ───
-const OLIVIA_PDF_BRAND = {
-  name: 'Olivia',
-  kicker: 'OliviaLegal · Workspace Export',
-  footerLeft: 'Olivia · AI Operating Environment',
-  colors: {
-    cream: '#faf9f6',
-    ink: '#1a1a1a',
-    forestDark: '#1c4532',
-    forestMid: '#2d785a',
-    amber: '#c4622d',
-    amberLight: '#d4733e',
-    gray: '#8a8a8a',
-    grayHi: '#5a5a5a',
-    border: 'rgba(28, 69, 50, 0.14)',
-    codeBg: 'rgba(28, 69, 50, 0.05)',
-    quoteBg: 'rgba(196, 98, 45, 0.05)',
-  },
-  // Exact mark used across Olivia surfaces (favicon / sidebar / nav)
-  logoSvg: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-    <rect width="32" height="32" rx="8" fill="#1c4532"/>
-    <g transform="translate(6,7) scale(0.31)">
-      <path d="M12 52 Q24 38,34 30 Q44 22,54 16" fill="none" stroke="#faf9f6" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
-      <path d="M28 36 Q20 26,16 18 Q24 24,28 36Z" fill="#faf9f6" opacity=".4"/>
-      <path d="M30 34 Q38 24,44 18 Q38 28,30 34Z" fill="#faf9f6" opacity=".35"/>
-      <path d="M42 24 Q36 14,34 8 Q40 14,42 24Z" fill="#faf9f6" opacity=".35"/>
-      <ellipse cx="22" cy="42" rx="4" ry="5" fill="#c4622d"/>
-    </g>
-  </svg>`
-};
+(function() {
+  // Guard: skip if already loaded or if stream.js already defined everything
+  if (window.__oliviaPdfExportLoaded) return;
+  window.__oliviaPdfExportLoaded = true;
 
-async function downloadLastResponseAsPdf() {
+  // Guard: if stream.js already exposed the function, skip ALL declarations.
+  // stream.js defines const OLIVIA_PDF_BRAND + downloadLastResponseAsPdf()
+  // and sets window.downloadLastResponseAsPdf. If we set window.OLIVIA_PDF_BRAND
+  // here first, stream.js's const OLIVIA_PDF_BRAND would fail with
+  // "Identifier has already been declared". So we must check this FIRST.
+  if (typeof window.downloadLastResponseAsPdf === 'function') return;
+
+  // ─── Shared brand kit — reuse this for any other export/print surface ───
+  window.OLIVIA_PDF_BRAND = {
+    name: 'Olivia',
+    kicker: 'Olivia · Workspace Export',
+    footerLeft: 'Olivia · AI Operating Environment',
+    colors: {
+      cream: '#faf9f6',
+      ink: '#1a1a1a',
+      forestDark: '#1c4532',
+      forestMid: '#2d785a',
+      amber: '#c4622d',
+      amberLight: '#d4733e',
+      gray: '#8a8a8a',
+      grayHi: '#5a5a5a',
+      border: 'rgba(28, 69, 50, 0.14)',
+      codeBg: 'rgba(28, 69, 50, 0.05)',
+      quoteBg: 'rgba(196, 98, 45, 0.05)',
+    },
+    // Exact mark used across Olivia surfaces (favicon / sidebar / nav)
+    logoSvg: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#1c4532"/>
+      <g transform="translate(6,7) scale(0.31)">
+        <path d="M12 52 Q24 38,34 30 Q44 22,54 16" fill="none" stroke="#faf9f6" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+        <path d="M28 36 Q20 26,16 18 Q24 24,28 36Z" fill="#faf9f6" opacity=".4"/>
+        <path d="M30 34 Q38 24,44 18 Q38 28,30 34Z" fill="#faf9f6" opacity=".35"/>
+        <path d="M42 24 Q36 14,34 8 Q40 14,42 24Z" fill="#faf9f6" opacity=".35"/>
+        <ellipse cx="22" cy="42" rx="4" ry="5" fill="#c4622d"/>
+      </g>
+    </svg>`
+  };
+
+  async function downloadLastResponseAsPdf() {
   const msg = _lastAssistantMessage();
   if (!msg) {
     addSystemBubble('Nenhuma resposta do assistente para exportar como PDF');
@@ -298,4 +314,4 @@ async function downloadLastResponseAsPdf() {
 
 // Expose to global scope so inline onclick="downloadLastResponseAsPdf()" works
 window.downloadLastResponseAsPdf = downloadLastResponseAsPdf;
-window.OLIVIA_PDF_BRAND = OLIVIA_PDF_BRAND;
+})();

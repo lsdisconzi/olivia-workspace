@@ -347,7 +347,7 @@ This document is auto-generated from the i18n translation keys.
 | `error` | Error |
 | `esc` | Esc |
 | `examplesgblassets` | examples/gbl-assets/ |
-| `explore_query_and_configure_all_olivialegal_memory` | Explore, query, and configure all OliviaLegal memory. Vector, semantic, graph, short-term, and                 long-term. |
+| `explore_query_and_configure_all_olivialegal_memory` | Explore, query, and configure all Olivia memory. Vector, semantic, graph, short-term, and                 long-term. |
 | `exportButton` | Export |
 | `exposure` | Exposure |
 | `extra` | +Extra |
@@ -430,10 +430,10 @@ This document is auto-generated from the i18n translation keys.
 | `last_updated` | Last updated |
 | `lawLibDesc` | 59 legal sources (codes, laws, regulations, treaties) with verbatim text and SHA-256. |
 | `lawLibOpen` | Open full view |
-| `lawLibTitle` | OliviaLegal Law Library |
+| `lawLibTitle` | Olivia Law Library |
 | `layer_c_corpus_comprehension_by_groups_requires_an` | Layer C — Corpus comprehension by                     groups (requires Anthropic key) |
 | `legalRouterDesc` | Resolves violation IDs, frameworks, and person dossiers from Agents Source. |
-| `legalRouterTitle` | Legal Router OliviaLegal |
+| `legalRouterTitle` | Legal Router Olivia |
 | `listeningAdvancedParams` | Advanced Endpoint Parameters |
 | `listeningAiAnalysis` | AI Analysis |
 | `listeningAiEndpoint` | Default endpoint |
@@ -540,7 +540,7 @@ This document is auto-generated from the i18n translation keys.
 | `memoryCollections` | Collections |
 | `memoryConfig` | Config |
 | `memoryCreateCollection` | New Collection |
-| `memoryDesc` | Explore, query, and configure all OliviaLegal memory. Vector, semantic, graph, short-term, and long-term. |
+| `memoryDesc` | Explore, query, and configure all Olivia memory. Vector, semantic, graph, short-term, and long-term. |
 | `memoryGraphStat` | Graph Nodes |
 | `memoryIngest` | Ingest |
 | `memoryIngestArticles` | Law Articles |
@@ -559,7 +559,7 @@ This document is auto-generated from the i18n translation keys.
 | `memorySearch` | Search |
 | `memorySearchPlaceholder` | Search memory... |
 | `memoryShortTermStat` | Short-term |
-| `memoryTitle` | OliviaLegal Memory |
+| `memoryTitle` | Olivia Memory |
 | `memoryVectorStat` | Vectors |
 | `meshy_ai_3d_generation` | Meshy AI — 3D Generation |
 | `meshy_api_key` | MESHY_API_KEY |
@@ -609,7 +609,7 @@ This document is auto-generated from the i18n translation keys.
 | `noise_reduce` | Noise                       Reduce |
 | `none` | none |
 | `olivia_workspace` | Olivia · Workspace |
-| `olivialegal_legal_router` | OliviaLegal Legal Router |
+| `olivialegal_legal_router` | Olivia Legal Router |
 | `olivialegalenv` | OliviaLegal/.env |
 | `one_per_line` | (one per line) |
 | `one_per_line_1` | (one per line) |
@@ -871,7 +871,7 @@ This document is auto-generated from the i18n translation keys.
 | `vector_qdrant` | 🔵 Vector (Qdrant) |
 | `verifyApiKey` | Verify key |
 | `violationsDesc` | 71 validated violations (BR/CL/INT) with legal basis, actors, and incident segments. |
-| `violationsTitle` | OliviaLegal Violations |
+| `violationsTitle` | Olivia Violations |
 | `voiceConfigTitle` | Voice Configuration |
 | `voiceContinuousLabel` | Continuous mode (auto-restart) |
 | `voiceHint` | Use the microphone button in chat to start and stop. Transcription appears live in the message field. |
@@ -944,7 +944,7 @@ This document is auto-generated from the i18n translation keys.
 | `studio.default.h1` | Your story <em>begins here</em> |
 | `studio.default.placeholder` | Describe a scene, a story, a world… |
 | `studio.default.tagline` | Powered by Olivia · From imagination to living worlds |
-| `studioAiAssistant` | OliviaLegal Assistant |
+| `studioAiAssistant` | Olivia Assistant |
 | `studioApiKeyOptional` | API Key (optional) |
 | `studioApiKeyPlaceholder` | sk-... (leave empty to use server key) |
 | `studioBadge` | LLM Assisted |

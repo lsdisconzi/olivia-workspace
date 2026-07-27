@@ -1,4 +1,4 @@
-/* ── OliviaLegal BRAND SYSTEM · WORKSPACE (LIGHT THEME) ── */
+/* ── Olivia BRAND SYSTEM · WORKSPACE (LIGHT THEME) ── */
 :root {
     --bg: #faf9f6;
     --bg-card: #ffffff;
@@ -1768,7 +1768,7 @@ html.dark body {
     letter-spacing: .05em
 }
 
-/* OliviaLegal conversational thinking bubble */
+/* Olivia conversational thinking bubble */
 .chat-bubble.OliviaLegal-thinking {
     align-self: center;
     background: transparent;
@@ -1780,7 +1780,7 @@ html.dark body {
     text-align: center
 }
 
-/* OliviaLegal working container - cleaner, centered feel */
+/* Olivia working container - cleaner, centered feel */
 .chat-bubble.OliviaLegal-working {
     align-self: center;
     background: rgba(28, 69, 50, .03);
@@ -5875,7 +5875,7 @@ body:has(.workspace.focus-mode) .focus-exit-btn {
    ----------------------------------------------------------------
    These themes activate ONLY when the document root carries
    data-project="havan" together with a data-theme value. They are
-   completely isolated from the default OliviaLegal workspace, so the
+   completely isolated from the default Olivia workspace, so the
    global look-and-feel above is never affected.
 
    Activation (set on <html>):

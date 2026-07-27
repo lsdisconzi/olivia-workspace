@@ -1,0 +1,112 @@
+{
+  "metadata": {
+    "folder": "planning",
+    "indexed_at": "2026-07-26T22:51:20.288769",
+    "total_files": 5,
+    "total_lines": 198,
+    "languages": {
+      "markdown": 5
+    }
+  },
+  "tree": {
+    "README.md": {
+      "file_ref": "files/planning/README.md"
+    },
+    "findings.md": {
+      "file_ref": "files/planning/findings.md"
+    },
+    "memory.md": {
+      "file_ref": "files/planning/memory.md"
+    },
+    "progress.md": {
+      "file_ref": "files/planning/progress.md"
+    },
+    "task_plan.md": {
+      "file_ref": "files/planning/task_plan.md"
+    }
+  },
+  "files": {
+    "planning/progress.md": {
+      "path": "planning/progress.md",
+      "language": "markdown",
+      "size_bytes": 2405,
+      "lines": 41,
+      "last_modified": "2026-07-26T04:45:51.208632",
+      "git_commit": "7943c2f",
+      "parsed": {}
+    },
+    "planning/task_plan.md": {
+      "path": "planning/task_plan.md",
+      "language": "markdown",
+      "size_bytes": 2569,
+      "lines": 43,
+      "last_modified": "2026-07-26T04:45:26.728289",
+      "git_commit": "7943c2f",
+      "parsed": {}
+    },
+    "planning/README.md": {
+      "path": "planning/README.md",
+      "language": "markdown",
+      "size_bytes": 3867,
+      "lines": 58,
+      "last_modified": "2026-07-19T02:37:49.926975",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "planning/memory.md": {
+      "path": "planning/memory.md",
+      "language": "markdown",
+      "size_bytes": 928,
+      "lines": 23,
+      "last_modified": "2026-07-19T02:36:39.419709",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "planning/findings.md": {
+      "path": "planning/findings.md",
+      "language": "markdown",
+      "size_bytes": 2154,
+      "lines": 33,
+      "last_modified": "2026-07-26T04:45:51.205922",
+      "git_commit": "7943c2f",
+      "parsed": {}
+    }
+  },
+  "html_pages": {},
+  "modules": {
+    "planning": {
+      "files": [
+        "planning/progress.md",
+        "planning/task_plan.md",
+        "planning/README.md",
+        "planning/memory.md",
+        "planning/findings.md"
+      ],
+      "count": 5
+    }
+  },
+  "symbols_index": {},
+  "dependency_graph": {
+    "planning/progress.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "planning/task_plan.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "planning/README.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "planning/memory.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "planning/findings.md": {
+      "imports": [],
+      "imported_by": []
+    }
+  },
+  "js_cross_module_graph": {}
+}

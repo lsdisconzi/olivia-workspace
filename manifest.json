@@ -1,7 +1,7 @@
 {
-  "name": "OliviaLegal Workspace",
+  "name": "Olivia Workspace",
   "short_name": "Olivia",
-  "description": "OliviaLegal AI legal workspace",
+  "description": "Olivia AI legal workspace",
   "start_url": "/olivia/",
   "display": "standalone",
   "background_color": "#1c4532",

@@ -1,0 +1,255 @@
+{
+  "metadata": {
+    "folder": "runtime",
+    "indexed_at": "2026-07-26T22:51:20.288769",
+    "total_files": 3,
+    "total_lines": 674,
+    "languages": {
+      "bash": 2,
+      "python": 1
+    }
+  },
+  "tree": {
+    "config_doctor.py": {
+      "file_ref": "files/runtime/config_doctor.py"
+    },
+    "start-all.sh": {
+      "file_ref": "files/runtime/start-all.sh"
+    },
+    "stop-all.sh": {
+      "file_ref": "files/runtime/stop-all.sh"
+    }
+  },
+  "files": {
+    "runtime/start-all.sh": {
+      "path": "runtime/start-all.sh",
+      "language": "bash",
+      "size_bytes": 14779,
+      "lines": 346,
+      "last_modified": "2026-07-15T14:14:34.091591",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    },
+    "runtime/config_doctor.py": {
+      "path": "runtime/config_doctor.py",
+      "language": "python",
+      "size_bytes": 6513,
+      "lines": 206,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "json",
+          "re",
+          "sys",
+          "pathlib",
+          "urllib.parse"
+        ],
+        "imports_external": [
+          "__future__"
+        ],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_strip_inline_export",
+              "line": 19,
+              "end_line": 22,
+              "args": [
+                "raw"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_unquote",
+              "line": 25,
+              "end_line": 28,
+              "args": [
+                "value"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "parse_env_file",
+              "line": 31,
+              "end_line": 59,
+              "args": [
+                "path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_validate_urlish_value",
+              "line": 62,
+              "end_line": 76,
+              "args": [
+                "key",
+                "value"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "validate",
+              "line": 79,
+              "end_line": 139,
+              "args": [
+                "entries",
+                "malformed",
+                "strict"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "build_report",
+              "line": 142,
+              "end_line": 159,
+              "args": [
+                "path",
+                "strict"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "print_report",
+              "line": 162,
+              "end_line": 185,
+              "args": [
+                "report"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 188,
+              "end_line": 201,
+              "args": [
+                "argv"
+              ],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "ENV_KEY_RE",
+              "line": 13
+            },
+            {
+              "name": "URL_KEY_RE",
+              "line": 14
+            },
+            {
+              "name": "URL_EXACT_KEYS",
+              "line": 15
+            },
+            {
+              "name": "ALLOWED_URI_SCHEMES",
+              "line": 16
+            }
+          ]
+        }
+      }
+    },
+    "runtime/stop-all.sh": {
+      "path": "runtime/stop-all.sh",
+      "language": "bash",
+      "size_bytes": 3292,
+      "lines": 122,
+      "last_modified": "2026-07-14T17:36:45",
+      "git_commit": "11b79b4",
+      "parsed": {}
+    }
+  },
+  "html_pages": {},
+  "modules": {
+    "runtime": {
+      "files": [
+        "runtime/start-all.sh",
+        "runtime/config_doctor.py",
+        "runtime/stop-all.sh"
+      ],
+      "count": 3
+    }
+  },
+  "symbols_index": {
+    "main": [
+      {
+        "file": "runtime/config_doctor.py",
+        "line": 188,
+        "type": "function"
+      }
+    ],
+    "_strip_inline_export": [
+      {
+        "file": "runtime/config_doctor.py",
+        "line": 19,
+        "type": "function"
+      }
+    ],
+    "_unquote": [
+      {
+        "file": "runtime/config_doctor.py",
+        "line": 25,
+        "type": "function"
+      }
+    ],
+    "parse_env_file": [
+      {
+        "file": "runtime/config_doctor.py",
+        "line": 31,
+        "type": "function"
+      }
+    ],
+    "_validate_urlish_value": [
+      {
+        "file": "runtime/config_doctor.py",
+        "line": 62,
+        "type": "function"
+      }
+    ],
+    "validate": [
+      {
+        "file": "runtime/config_doctor.py",
+        "line": 79,
+        "type": "function"
+      }
+    ],
+    "build_report": [
+      {
+        "file": "runtime/config_doctor.py",
+        "line": 142,
+        "type": "function"
+      }
+    ],
+    "print_report": [
+      {
+        "file": "runtime/config_doctor.py",
+        "line": 162,
+        "type": "function"
+      }
+    ]
+  },
+  "dependency_graph": {
+    "runtime/start-all.sh": {
+      "imports": [],
+      "imported_by": []
+    },
+    "runtime/config_doctor.py": {
+      "imports": [
+        "argparse",
+        "json",
+        "re",
+        "sys",
+        "pathlib",
+        "urllib.parse",
+        "__future__"
+      ],
+      "imported_by": []
+    },
+    "runtime/stop-all.sh": {
+      "imports": [],
+      "imported_by": []
+    }
+  },
+  "js_cross_module_graph": {}
+}

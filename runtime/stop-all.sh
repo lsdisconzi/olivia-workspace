@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# stop-all.sh — Stop OliviaLegal (standalone)
+# stop-all.sh — Stop Olivia (standalone)
 # Usage:  ./stop-all.sh [--port 3229] [--no-watchers] [--force-after 5]
 # -----------------------------------------------------------------------------
 set -euo pipefail

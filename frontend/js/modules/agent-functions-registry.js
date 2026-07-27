@@ -10,7 +10,7 @@
   /* ── Data source ────────────────────────────────────────────────── */
   // Resolve to an absolute gateway URL so calls work regardless of which static
   // server is hosting this page. Mirrors the logic in config.js.
-  var _runtimeCfg = (window.OliviaLegal && typeof window.OliviaLegal === 'object')
+  var _runtimeCfg = (window.Olivia && typeof window.Olivia === 'object')
     ? window.OliviaLegal
     : ((window.LA8159 && typeof window.LA8159 === 'object') ? window.LA8159 : {});
   var _gatewayOrigin = (_runtimeCfg.gateway && _runtimeCfg.gateway.base)
@@ -274,7 +274,7 @@
       }
     });
 
-    if (base.indexOf('/api/') === 0 && base.indexOf('/api/manus/') !== 0 && base.indexOf('/api/olivialegal/') !== 0) {
+    if (base.indexOf('/api/') === 0 && base.indexOf('/api/manus/') !== 0 && base.indexOf('/api/olivia/') !== 0) {
       add('/api/manus' + base);
       add('/api/olivialegal' + base);
     }

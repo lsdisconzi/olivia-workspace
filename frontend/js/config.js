@@ -6,10 +6,10 @@
 // In LA8159-standalone, serve.py handles both static files and /api/* routes.
 const _RUNTIME_NAMESPACE = (() => {
   const la = (window.LA8159 && typeof window.LA8159 === 'object') ? window.LA8159 : {};
-  const ol = (window.OliviaLegal && typeof window.OliviaLegal === 'object') ? window.OliviaLegal : {};
+  const ol = (window.Olivia && typeof window.Olivia === 'object') ? window.Olivia : {};
   const merged = Object.assign({}, la, ol);
   window.LA8159 = merged;
-  window.OliviaLegal = merged;
+  window.Olivia = merged;
   return merged;
 })();
 
