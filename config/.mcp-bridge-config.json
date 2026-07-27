@@ -1,5 +1,4 @@
 {
-  "_note": "Localhost.",
   "mcpServers": {
     "mcp-server-files": {
       "command": "npx",
@@ -11,48 +10,56 @@
       ]
     },
     "transcription-transcription": {
+      "type": "http",
       "url": "http://127.0.0.1:8121/mcp"
     },
     "transcription-transcripts": {
+      "type": "http",
       "url": "http://127.0.0.1:8122/mcp"
     },
     "transcription-meta": {
+      "type": "http",
       "url": "http://127.0.0.1:8123/mcp"
     },
     "juris-search": {
+      "type": "http",
       "url": "http://127.0.0.1:8116/mcp"
     },
     "garage-core": {
+      "type": "http",
       "url": "http://127.0.0.1:8110/mcp"
     },
     "garage-files": {
+      "type": "http",
       "url": "http://127.0.0.1:8111/mcp"
     },
     "garage-ingestion": {
+      "type": "http",
       "url": "http://127.0.0.1:8112/mcp"
     },
     "garage-prompt": {
+      "type": "http",
       "url": "http://127.0.0.1:8113/mcp"
     },
     "garage-qdrant": {
+      "type": "http",
       "url": "http://127.0.0.1:8114/mcp"
     },
     "violation-refiner": {
+      "type": "http",
       "url": "http://127.0.0.1:8124/mcp"
     },
     "ocr-main-ocr": {
+      "type": "http",
       "url": "http://127.0.0.1:8125/mcp"
     },
     "ocr-main-pdf": {
+      "type": "http",
       "url": "http://127.0.0.1:8126/mcp"
     },
     "discovery-intelligence": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "discovery-main/mcp/discovery_mcp_server.js"
-      ],
-      "cwd": "/home/disconzi1986_gmail_com/discovery-main"
+      "type": "http",
+      "url": "http://127.0.0.1:8115/mcp"
     }
   }
 }

@@ -184,7 +184,7 @@
   ],
   "overrides": {
     "deepseek-v4-flash": {
-      "hidden": false,
+      "hidden": true,
       "name": "DeepSeek V4 Flash"
     },
     "deepseek-v4-pro": {

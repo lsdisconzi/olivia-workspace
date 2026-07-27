@@ -396,6 +396,14 @@ elif _oc_root and _oc_root.is_dir():
             _openclaude_available = True
             break
 
+# Check .openclaude-runtime (npm package installation)
+if not _openclaude_available:
+    _runtime_cli = Olivia_ROOT / ".openclaude-runtime" / "node_modules" / "@gitlawb" / "openclaude" / "dist" / "cli.mjs"
+    if _runtime_cli.is_file():
+        _openclaude_cli = _runtime_cli
+        _openclaude_available = True
+        print(f"[openclaude] found at runtime path: {_runtime_cli}")
+
 # Planning files directory (the 4-file agent orchestration convention lives here)
 PLANNING_DIR = Olivia_ROOT
 PLANNING_WORKSPACE_DIR = PLANNING_DIR / "planning"

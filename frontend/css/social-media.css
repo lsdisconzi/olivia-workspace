@@ -1,6 +1,20 @@
 /* ============================================================================
    Social Media Assistant — seção do Olivia Workspace.
+   Atualmente focado em LinkedIn (extração de perfil, connection requests,
+   follow-ups, comentários, posts, job inquiries).
    Usa os tokens nativos do workspace (claro/escuro automático).
+
+   Revisão 2026-07-27:
+   - Adicionado .sm-notification (não existia — toasts renderizavam sem estilo)
+   - Removidas dependências de classes Bootstrap não carregadas no workspace,
+     substituídas por utilitários sm- (ver seção "Utilitários" abaixo)
+   - Corrigido painel mobile: agora usa o mesmo mecanismo .collapsed do
+     desktop (como overlay), em vez de depender de uma classe .open que
+     nunca era aplicada
+   - Substituídos fallbacks de cor hardcoded por tokens já usados no resto
+     do app (var(--bg), var(--white), var(--red))
+   - Adicionados estados: botão desabilitado, dica de contexto do chat,
+     botão de excluir perfil
    ============================================================================ */
 
 .social-media-view {
@@ -13,10 +27,13 @@
   position: relative;
   background: var(--bg);
 }
-.social-media-view.active { display: flex; }
+
+.social-media-view.active {
+  display: flex;
+}
 
 /* When social-media is open, hide main-content so it takes the full area */
-.workspace.sm-open > .main-content {
+.workspace.sm-open>.main-content {
   display: none !important;
 }
 
@@ -31,12 +48,24 @@
   flex-shrink: 0;
   background: var(--bg-card);
 }
-.sm-head-brand { display: flex; align-items: center; gap: 9px; }
-.sm-head i { color: var(--amber); font-size: 18px; }
+
+.sm-head-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.sm-head i {
+  color: var(--amber);
+  font-size: 18px;
+}
+
 .sm-title {
   font-family: var(--serif);
-  font-size: 16px; font-weight: 600;
-  color: var(--white); letter-spacing: -0.01em;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.01em;
 }
 
 /* ── Painéis ───────────────────────────────────────────────────────────── */
@@ -45,6 +74,7 @@
   min-height: 0;
   display: flex;
   gap: 0;
+  position: relative;
 }
 
 /* Left profile panel */
@@ -59,7 +89,13 @@
   position: relative;
   transition: width .3s, opacity .3s;
 }
-.sm-profile-panel.collapsed { width: 0; min-width: 0; overflow: hidden; opacity: 0; }
+
+.sm-profile-panel.collapsed {
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0;
+}
 
 /* Toggle button for left panel */
 .sm-toggle-btn {
@@ -81,7 +117,11 @@
   z-index: 10;
   transition: all .15s;
 }
-.sm-toggle-btn:hover { color: var(--white); border-color: var(--amber); }
+
+.sm-toggle-btn:hover {
+  color: var(--white);
+  border-color: var(--amber);
+}
 
 /* Profile card and list */
 .sm-profile-list-container {
@@ -89,6 +129,7 @@
   overflow-y: auto;
   padding: 14px;
 }
+
 .sm-profile-card {
   background: var(--bg);
   border: 1px solid var(--border);
@@ -99,14 +140,21 @@
   gap: 10px;
   align-items: flex-start;
 }
+
 .sm-profile-pic {
-  width: 36px; height: 36px;
+  width: 36px;
+  height: 36px;
   background: var(--amber-lo);
-  border: 1px solid rgba(196,98,45,.3);
+  border: 1px solid rgba(196, 98, 45, .3);
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--amber); font-size: 14px; flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--amber);
+  font-size: 14px;
+  flex-shrink: 0;
 }
+
 .sm-profile-item {
   padding: 8px 10px;
   border: 1px solid var(--border);
@@ -114,20 +162,34 @@
   margin-bottom: 6px;
   cursor: pointer;
   transition: all .15s;
-  font-size: 13px; color: var(--gray-hi);
-  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px;
+  color: var(--gray-hi);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.sm-profile-item:hover, .sm-profile-item.active {
+
+.sm-profile-item:hover,
+.sm-profile-item.active {
   border-color: var(--amber);
   color: var(--white);
   background: var(--amber-lo);
 }
-.sm-profile-item .edit-btn {
+
+.sm-profile-item .edit-btn,
+.sm-profile-item .delete-btn {
   color: var(--gray);
   cursor: pointer;
   padding: 2px 6px;
 }
-.sm-profile-item .edit-btn:hover { color: var(--amber); }
+
+.sm-profile-item .edit-btn:hover {
+  color: var(--amber);
+}
+
+.sm-profile-item .delete-btn:hover {
+  color: var(--red, #c0392b);
+}
 
 /* Chat panel (center) */
 .sm-chat-panel {
@@ -138,12 +200,24 @@
   background: var(--bg-card);
   border-right: 1px solid var(--border);
 }
+
 .sm-chat-header {
   padding: 14px 18px;
   border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   flex-shrink: 0;
 }
+
+.sm-chat-hint {
+  font-size: 11px;
+  color: var(--gray);
+  padding: 6px 18px 0;
+  flex-shrink: 0;
+  display: none;
+}
+
 .sm-chat-messages {
   flex: 1;
   overflow-y: auto;
@@ -153,6 +227,7 @@
   gap: 10px;
   background: var(--bg);
 }
+
 .sm-message {
   max-width: 85%;
   padding: 10px 14px;
@@ -160,18 +235,21 @@
   font-size: 13px;
   line-height: 1.7;
 }
+
 .sm-message.user {
   align-self: flex-end;
   background: var(--amber-lo);
-  border: 1px solid rgba(196,98,45,.25);
+  border: 1px solid rgba(196, 98, 45, .25);
   color: var(--white);
 }
+
 .sm-message.assistant {
   align-self: flex-start;
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--gray-hi);
 }
+
 .sm-chat-input-area {
   padding: 12px 16px;
   border-top: 1px solid var(--border);
@@ -192,13 +270,20 @@
   position: relative;
   transition: width .3s, opacity .3s;
 }
-.sm-output-panel.collapsed { width: 0; min-width: 0; overflow: hidden; opacity: 0; }
+
+.sm-output-panel.collapsed {
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0;
+}
 
 .sm-output-content {
   flex: 1;
   overflow-y: auto;
   padding: 14px;
 }
+
 .sm-output-preview {
   background: var(--bg);
   border: 1px solid var(--border);
@@ -212,7 +297,10 @@
 }
 
 /* ── Forms & buttons ───────────────────────────────────────────────────── */
-.sm-form-group { margin-bottom: 12px; }
+.sm-form-group {
+  margin-bottom: 12px;
+}
+
 .sm-form-label {
   display: block;
   font-size: 11px;
@@ -221,10 +309,13 @@
   letter-spacing: .06em;
   margin-bottom: 5px;
 }
-.sm-input, .sm-select, .sm-textarea {
+
+.sm-input,
+.sm-select,
+.sm-textarea {
   width: 100%;
   padding: 9px 12px;
-  background: var(--bg-input, #171715);
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--white);
@@ -233,11 +324,17 @@
   transition: border-color .15s;
   -webkit-appearance: none;
 }
-.sm-input:focus, .sm-select:focus, .sm-textarea:focus {
+
+.sm-input:focus,
+.sm-select:focus,
+.sm-textarea:focus {
   outline: none;
   border-color: var(--amber);
 }
-.sm-textarea { resize: vertical; }
+
+.sm-textarea {
+  resize: vertical;
+}
 
 .sm-btn {
   display: inline-flex;
@@ -256,75 +353,189 @@
   color: var(--gray-hi);
   white-space: nowrap;
 }
-.sm-btn:hover { color: var(--white); background: rgba(255,255,255,.05); }
+
+.sm-btn:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, .05);
+}
+
+.sm-btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .sm-btn-primary {
-  background: var(--primary-btn-bg, #ede8df);
-  border-color: var(--primary-btn-bg, #ede8df);
-  color: var(--primary-btn-fg, #191917);
+  background: var(--white);
+  border-color: var(--white);
+  color: #191917;
   font-weight: 600;
 }
+
 .sm-btn-primary:hover {
-  background: #f5f0e8;
-  border-color: #f5f0e8;
+  background: var(--white);
+  border-color: var(--white);
   color: #191917;
+  opacity: .92;
 }
+
 .sm-btn-outline {
-  border-color: rgba(196,98,45,.4);
+  border-color: rgba(196, 98, 45, .4);
   color: var(--amber);
 }
+
 .sm-btn-outline:hover {
   background: var(--amber-lo);
   color: var(--amber);
 }
-.sm-btn-sm { padding: 5px 10px; font-size: 12px; }
+
+.sm-btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+/* ── Utilitários (substituem classes Bootstrap não disponíveis) ─────────── */
+.sm-icon {
+  margin-right: 8px;
+}
+
+.sm-icon-sm {
+  margin-right: 4px;
+}
+
+.sm-flex {
+  display: flex;
+  align-items: center;
+}
+
+.sm-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.sm-flex-end {
+  justify-content: flex-end;
+}
+
+.sm-gap-2 {
+  gap: 8px;
+}
+
+.sm-mt-3 {
+  margin-top: 12px;
+}
+
+.sm-w-100 {
+  width: 100%;
+}
+
+.sm-small {
+  font-size: 12px;
+  color: var(--gray);
+  margin: 2px 0 0;
+}
+
+.sm-muted {
+  color: var(--gray);
+}
+
+.sm-danger {
+  color: var(--red, #c0392b);
+}
+
+.sm-fw-medium {
+  font-weight: 600;
+  color: var(--white);
+}
 
 /* ── Modal ──────────────────────────────────────────────────────────────── */
 .sm-modal-overlay {
   display: none;
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,0,0,0.5);
-  align-items: center; justify-content: center;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
 }
-.sm-modal-overlay.open { display: flex; }
+
+.sm-modal-overlay.open {
+  display: flex;
+}
+
 .sm-modal {
   background: var(--bg-card);
   border: 1px solid var(--border-hi);
   border-radius: var(--r);
-  width: 90%; max-width: 420px;
+  width: 90%;
+  max-width: 420px;
   padding: 20px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
+
 .sm-modal-header {
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 14px;
 }
+
 .sm-modal-title {
   font-family: var(--serif);
-  font-size: 16px; font-weight: 600;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--white);
 }
+
 .sm-modal-close {
-  background: none; border: none;
-  color: var(--gray); font-size: 20px; cursor: pointer;
+  background: none;
+  border: none;
+  color: var(--gray);
+  font-size: 20px;
+  cursor: pointer;
 }
-.sm-modal-close:hover { color: var(--white); }
+
+.sm-modal-close:hover {
+  color: var(--white);
+}
 
 /* ── Typing indicator ──────────────────────────────────────────────────── */
 .sm-typing {
-  display: flex; gap: 4px; padding: 8px 14px;
+  display: flex;
+  gap: 4px;
+  padding: 8px 14px;
   align-self: flex-start;
 }
+
 .sm-typing-dot {
-  width: 6px; height: 6px;
+  width: 6px;
+  height: 6px;
   background: var(--amber);
   border-radius: 50%;
   animation: smTyping 1.2s infinite ease-in-out;
 }
-.sm-typing-dot:nth-child(2) { animation-delay: 0.15s; }
-.sm-typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+.sm-typing-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.sm-typing-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
 @keyframes smTyping {
-  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-  30% { transform: translateY(-4px); opacity: 1; }
+
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
 }
 
 /* ── Empty states & helpers ─────────────────────────────────────────────── */
@@ -333,11 +544,73 @@
   padding: 32px 16px;
   color: var(--gray);
 }
-.sm-empty-state i { font-size: 32px; margin-bottom: 12px; display: block; color: var(--border-hi); }
+
+.sm-empty-state i {
+  font-size: 32px;
+  margin-bottom: 12px;
+  display: block;
+  color: var(--border-hi);
+}
+
+/* ── Notification / toast (segue o padrão de #mvToast etc. no workspace) ── */
+.sm-notification {
+  display: none;
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--amber);
+  color: var(--bg);
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: var(--sans);
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+}
+
+.sm-notification.show {
+  display: block;
+}
+
+.sm-notification-success {
+  background: #2d785a;
+  color: #fff;
+}
+
+.sm-notification-error {
+  background: var(--red, #c0392b);
+  color: #fff;
+}
+
+.sm-notification-info {
+  background: var(--amber);
+  color: var(--bg);
+}
 
 /* ── Responsive ────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .sm-profile-panel, .sm-output-panel { display: none; }
-  .sm-profile-panel.collapsed, .sm-output-panel.collapsed { display: none; }
-  .sm-profile-panel.open, .sm-output-panel.open { display: flex; width: 280px; }
+
+  /* Painéis viram overlays em vez de sumirem sem forma de reabrir.
+     Usam o mesmo mecanismo .collapsed do desktop, então os botões de
+     toggle já existentes continuam funcionando sem JS adicional. */
+  .sm-profile-panel,
+  .sm-output-panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 20;
+    box-shadow: 0 0 28px rgba(0, 0, 0, .35);
+  }
+
+  .sm-profile-panel {
+    left: 0;
+  }
+
+  .sm-output-panel {
+    right: 0;
+  }
 }
