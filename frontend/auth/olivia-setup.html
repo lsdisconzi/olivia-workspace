@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olivia · Setup</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%237FA98E'/><g transform='translate(6,7) scale(0.31)'><path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23FAF6EF' stroke-width='2.6' stroke-linecap='round' opacity='.75'/><ellipse cx='22' cy='42' rx='4.4' ry='5.5' fill='%23D98A5E'/></g></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #191917;
+      --bg-card: #1f1f1d;
+      --border: #2a2a28;
+      --border-hi: #363634;
+      --amber: #D98A5E;
+      --amber-lo: rgba(217,138,94,.12);
+      --green: #7FA98E;
+      --green-lo: rgba(127,169,142,.10);
+      --blue: #7AAFC5;
+      --blue-lo: rgba(122,175,197,.10);
+      --white: #ede8df;
+      --gray: #6b6b68;
+      --gray-hi: #9a9a96;
+      --btn-bg: #ede8df;
+      --btn-text: #191917;
+      --input-bg: #191917;
+      --input-border: #363634;
+      --error-bg: rgba(217,100,90,.08);
+      --error-border: rgba(217,100,90,.28);
+      --error-color: #d96a5a;
+    }
+    [data-theme="light"] {
+      --bg: #FAF6EF;
+      --bg-card: #FFFFFF;
+      --border: rgba(63,97,82,.10);
+      --border-hi: rgba(63,97,82,.22);
+      --amber: #D98A5E;
+      --amber-lo: rgba(217,138,94,.08);
+      --green: #3F6152;
+      --green-lo: rgba(63,97,82,.08);
+      --blue: #5A8DA6;
+      --blue-lo: rgba(90,141,166,.08);
+      --white: #34302A;
+      --gray: #ADA396;
+      --gray-hi: #6B6458;
+      --btn-bg: #3F6152;
+      --btn-text: #FAF6EF;
+      --input-bg: #FFFFFF;
+      --input-border: rgba(63,97,82,.20);
+      --error-bg: rgba(196,80,70,.06);
+      --error-border: rgba(196,80,70,.25);
+      --error-color: #b0453c;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      display: grid; place-items: center;
+      padding: 24px;
+      transition: background .35s, color .35s;
+    }
+    body.modal-mode {
+      min-height: auto;
+      display: block;
+      padding: 0;
+      background: transparent;
+    }
+    .container {
+      max-width: 520px; width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 34px 30px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.06);
+      transition: background .35s, border-color .35s;
+    }
+    body.modal-mode .container {
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 16px 60px rgba(0,0,0,.3);
+    }
+    .step-indicator {
+      display: flex; justify-content: space-between; margin-bottom: 28px;
+    }
+    .step-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--border-hi); transition: background .2s;
+    }
+    .step-dot.active { background: var(--amber); box-shadow: 0 0 8px var(--amber-lo); }
+    .step-dot.done { background: var(--green); }
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+    h2 { font-family: 'Fraunces', serif; font-size: 1.5rem; margin-bottom: 12px; letter-spacing: -0.02em; }
+    p { color: var(--gray-hi); line-height: 1.6; margin-bottom: 18px; font-size: .9rem; }
+    .btn {
+      display: inline-block; border: none; border-radius: 9px;
+      padding: 11px 20px; font-family: inherit; font-size: .9rem; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .15s;
+    }
+    .btn-primary {
+      background: var(--btn-bg); color: var(--btn-text);
+    }
+    .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-secondary {
+      background: transparent; border: 1px solid var(--border-hi); color: var(--gray-hi);
+    }
+    .btn-secondary:hover { border-color: var(--amber); color: var(--white); }
+    .btn-block { width: 100%; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: .7rem; color: var(--gray); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+    input, select {
+      width: 100%; background: var(--input-bg); border: 1px solid var(--input-border);
+      border-radius: 9px; color: var(--white); padding: 11px 14px;
+      font-family: inherit; font-size: .9rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus, select:focus { border-color: var(--amber); box-shadow: 0 0 0 3px var(--amber-lo); outline: none; }
+    .provider-cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+    .provider-card {
+      border: 1px solid var(--border-hi); border-radius: 10px; padding: 14px;
+      cursor: pointer; transition: border-color .15s, background .15s;
+    }
+    .provider-card:hover { border-color: var(--amber); background: var(--amber-lo); }
+    .provider-card.selected { border-color: var(--green); background: var(--green-lo); }
+    .provider-card .name { font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .provider-card .desc { font-size: .78rem; color: var(--gray-hi); }
+    .badge {
+      display: inline-block; font-size: .65rem; padding: 2px 8px; border-radius: 999px;
+      border: 1px solid var(--green); color: var(--green); background: var(--green-lo);
+      margin-left: 8px;
+    }
+    .badge-rec { border-color: var(--amber); color: var(--amber); background: var(--amber-lo); }
+    .error-box {
+      display: none; padding: 11px 15px; border-radius: 10px;
+      border: 1px solid var(--error-border); background: var(--error-bg); color: var(--error-color);
+      margin-bottom: 16px; font-size: .85rem;
+    }
+    .success-box {
+      display: none; padding: 11px 15px; border-radius: 10px;
+      border: 1px solid rgba(127,169,142,.5); background: var(--green-lo); color: var(--green);
+      margin-bottom: 16px; font-size: .85rem;
+    }
+    .model-list { max-height: 220px; overflow-y: auto; border: 1px solid var(--border-hi); border-radius: 9px; margin-bottom: 12px; }
+    .model-item {
+      padding: 10px 14px; border-bottom: 1px solid var(--border); cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .model-item:hover { background: var(--amber-lo); }
+    .model-item.selected { background: var(--green-lo); }
+    .model-item .model-name { font-size: .9rem; }
+    .model-item .model-cost { font-size: .75rem; color: var(--gray); }
+    .skip-link { color: var(--gray); text-decoration: underline; cursor: pointer; font-size: .8rem; }
+    .theme-toggle {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: 1px solid var(--border-hi); border-radius: 8px;
+      padding: 6px 10px; color: var(--gray-hi); cursor: pointer; font-size: .8rem;
+    }
+    .theme-toggle:hover { border-color: var(--amber); color: var(--white); }
+    .key-status { font-size: .8rem; margin-top: 6px; }
+    .key-status.valid { color: var(--green); }
+    .key-status.invalid { color: var(--error-color); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+
+    <div class="step-indicator">
+      <div class="step-dot active" data-step="1"></div>
+      <div class="step-dot" data-step="2"></div>
+      <div class="step-dot" data-step="3"></div>
+      <div class="step-dot" data-step="4"></div>
+    </div>
+
+    <!-- STEP 1: Welcome -->
+    <div class="step-content active" data-step="1">
+      <h2>Welcome to Olivia</h2>
+      <p>Olivia connects to the AI models <em>you</em> choose. We'll help you set up your connection in about 2 minutes.</p>
+      <button class="btn btn-primary btn-block" onclick="nextStep(2)">Start Setup</button>
+      <div class="skip-link" onclick="skipSetup()" style="text-align:center;margin-top:16px;">Continue without AI for now</div>
+    </div>
+
+    <!-- STEP 2: Language & Profile -->
+    <div class="step-content" data-step="2">
+      <h2>Your preferences</h2>
+      <div class="form-group">
+        <label for="setupLanguage">Response language</label>
+        <select id="setupLanguage">
+          <option value="auto">Auto (match input language)</option>
+          <option value="en">English</option>
+          <option value="pt">Portugues</option>
+          <option value="es">Espanol</option>
+          <option value="it">Italiano</option>
+          <option value="fr">Francais</option>
+          <option value="de">Deutsch</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveProfile()">Next</button>
+    </div>
+
+    <!-- STEP 3: Choose AI Provider -->
+    <div class="step-content" data-step="3">
+      <h2>Connect an AI</h2>
+      <p>Choose your AI provider.</p>
+      <div id="providerCards" class="provider-cards"></div>
+      <div class="form-group" id="customProviderGroup" style="display:none;">
+        <label for="customProviderUrl">Custom endpoint URL</label>
+        <input id="customProviderUrl" type="url" placeholder="https://api.example.com/v1">
+      </div>
+      <div class="skip-link" onclick="skipSetup()" style="text-align:center;">Continue without AI</div>
+    </div>
+
+    <!-- STEP 4: API Key + Model -->
+    <div class="step-content" data-step="4">
+      <h2 id="providerStepTitle">Connect Provider</h2>
+      <div id="providerInstructions"></div>
+      <div class="form-group">
+        <label id="credentialLabel" for="apiKeyInput">API Key</label>
+        <input id="apiKeyInput" type="password" placeholder="">
+      </div>
+      <div class="key-status" id="keyStatus"></div>
+      <div class="error-box" id="connectionError"></div>
+      <div class="success-box" id="connectionSuccess"></div>
+      <button class="btn btn-primary btn-block" id="testConnectionBtn" onclick="testConnection()">Verify &amp; Continue</button>
+      <div id="modelSelectionArea" style="display:none;">
+        <p style="margin-top:18px;">Select a default model:</p>
+        <div class="model-list" id="modelList"></div>
+        <button class="btn btn-primary btn-block" onclick="saveProviderAndModel()">Save &amp; Finish</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── State ──────────────────────────────────────
+    let currentStep = 1;
+    let selectedProvider = 'fireworks';
+    let customBaseUrl = '';
+    let chosenModelId = null;
+    let catalogModels = [];
+    let isModalMode = false;
+    let existingPrefs = {};
+
+    // ── Init ──────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Detect modal mode
+      if (window.parent !== window || document.body.classList.contains('modal-mode')) {
+        isModalMode = true;
+        document.body.classList.add('modal-mode');
+      }
+
+      // Load existing preferences
+      try {
+        const resp = await fetch('/api/user/preferences', { credentials: 'include' });
+        if (resp.ok) {
+          existingPrefs = await resp.json();
+          if (existingPrefs.setup_complete) {
+            // Show edit mode — pre-fill fields
+            if (existingPrefs.language && existingPrefs.language.response) {
+              document.getElementById('setupLanguage').value = existingPrefs.language.response;
+            }
+            if (existingPrefs.provider) selectedProvider = existingPrefs.provider;
+          }
+        }
+      } catch (e) {}
+
+      // Auto-detect language
+      const lang = (navigator.language || 'en').slice(0, 2);
+      const sel = document.getElementById('setupLanguage');
+      if (sel && [...sel.options].some(function(o) { return o.value === lang; })) {
+        if (!existingPrefs.language) sel.value = lang;
+      }
+
+      // Restore theme
+      var savedTheme = localStorage.getItem('olivia_setup_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+
+      renderProviderCards();
+    });
+
+    function toggleTheme() {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('olivia_setup_theme', next);
+    }
+
+    // ── Step navigation ────────────────────────────
+    function setStep(step) {
+      document.querySelectorAll('.step-content').forEach(function(el) { el.classList.remove('active'); });
+      var target = document.querySelector('.step-content[data-step="' + step + '"]');
+      if (target) target.classList.add('active');
+      document.querySelectorAll('.step-dot').forEach(function(d) {
+        var s = parseInt(d.dataset.step);
+        d.classList.remove('active', 'done');
+        if (s === step) d.classList.add('active');
+        else if (s < step) d.classList.add('done');
+      });
+      currentStep = step;
+    }
+    function nextStep(step) { setStep(step); }
+
+    async function skipSetup() {
+      try {
+        await fetch('/api/user/preferences', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ setup_complete: true, skipped: true })
+        });
+      } catch (e) {}
+      closeOrRedirect();
+    }
+
+    // ── Step 2: Save profile ──────────────────────
+    async function saveProfile() {
+      var language = document.getElementById('setupLanguage').value;
+      existingPrefs.language = { response: language, input: 'auto' };
+      try {
+        await fetch('/api/user/preferences', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ language: existingPrefs.language })
+        });
+      } catch (e) {}
+      nextStep(3);
+    }
+
+    // ── Provider cards ────────────────────────────
+    function renderProviderCards() {
+      var providers = [
+        { id: 'fireworks', name: 'Fireworks AI', desc: 'Fast inference, many open models', recommended: true },
+        { id: 'openrouter', name: 'OpenRouter', desc: 'Access Claude, GPT, Gemini, and more', recommended: false },
+        { id: 'deepseek', name: 'DeepSeek', desc: 'High-performance reasoning models', recommended: false },
+        { id: 'ollama', name: 'Ollama (local)', desc: 'Run models locally, no API key needed', recommended: false },
+        { id: 'custom', name: 'Custom provider', desc: 'OpenAI-compatible endpoint', recommended: false }
+      ];
+
+      var container = document.getElementById('providerCards');
+      var html = '';
+      providers.forEach(function(p) {
+        var badge = p.recommended ? '<span class="badge badge-rec">Recommended</span>' : '';
+        var selectedClass = (selectedProvider === p.id) ? ' selected' : '';
+        html += '<div class="provider-card' + selectedClass + '" onclick="selectProvider(\'' + p.id + '\')">';
+        html += '<div class="name">' + p.name + badge + '</div>';
+        html += '<div class="desc">' + p.desc + '</div>';
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    function selectProvider(id) {
+      selectedProvider = id;
+      renderProviderCards();
+
+      if (id === 'custom') {
+        document.getElementById('customProviderGroup').style.display = 'block';
+      } else {
+        document.getElementById('customProviderGroup').style.display = 'none';
+      }
+
+      prepareProviderStep();
+      nextStep(4);
+    }
+
+    // ── Step 4: Provider details ──────────────────
+    function prepareProviderStep() {
+      var title = document.getElementById('providerStepTitle');
+      var instructions = document.getElementById('providerInstructions');
+      var credLabel = document.getElementById('credentialLabel');
+      var input = document.getElementById('apiKeyInput');
+      var keyStatus = document.getElementById('keyStatus');
+      document.getElementById('connectionError').style.display = 'none';
+      document.getElementById('connectionSuccess').style.display = 'none';
+      document.getElementById('modelSelectionArea').style.display = 'none';
+      keyStatus.textContent = '';
+      chosenModelId = null;
+
+      var providerNames = {
+        fireworks: 'Fireworks AI',
+        openrouter: 'OpenRouter',
+        deepseek: 'DeepSeek',
+        ollama: 'Ollama',
+        custom: 'Custom Provider'
+      };
+
+      title.textContent = 'Connect ' + (providerNames[selectedProvider] || selectedProvider);
+
+      if (selectedProvider === 'ollama') {
+        instructions.innerHTML = '<p>Ollama runs locally. Enter your Ollama server URL (default: http://localhost:11434).</p>';
+        credLabel.textContent = 'Ollama Server URL';
+        input.type = 'url';
+        input.placeholder = 'http://localhost:11434';
+        input.value = existingPrefs.api_keys && existingPrefs.api_keys.ollama_url ? existingPrefs.api_keys.ollama_url : 'http://localhost:11434';
+      } else if (selectedProvider === 'custom') {
+        instructions.innerHTML = '<p>Enter your OpenAI-compatible endpoint URL and API key.</p>';
+        credLabel.textContent = 'API Key';
+        input.type = 'password';
+        input.placeholder = 'sk-...';
+        input.value = '';
+      } else {
+        var links = {
+          fireworks: '<a href="https://fireworks.ai" target="_blank">fireworks.ai</a>',
+          openrouter: '<a href="https://openrouter.ai" target="_blank">openrouter.ai</a>',
+          deepseek: '<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a>'
+        };
+        instructions.innerHTML = '<p>Get your API key from ' + (links[selectedProvider] || 'your provider') + ' and paste it below.</p>';
+        credLabel.textContent = 'API Key';
+        input.type = 'password';
+        var placeholders = { fireworks: 'fw_...', openrouter: 'sk-or-...', deepseek: 'sk-...' };
+        input.placeholder = placeholders[selectedProvider] || 'sk-...';
+        input.value = (existingPrefs.api_keys && existingPrefs.api_keys[selectedProvider]) || '';
+      }
+    }
+
+    // ── Test connection & verify key ──────────────
+    async function testConnection() {
+      var errorEl = document.getElementById('connectionError');
+      var successEl = document.getElementById('connectionSuccess');
+      var keyStatus = document.getElementById('keyStatus');
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+      keyStatus.textContent = '';
+      var btn = document.getElementById('testConnectionBtn');
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+
+      var apiKey = document.getElementById('apiKeyInput').value.trim();
+
+      // For ollama, skip key verification and go straight to model list
+      if (selectedProvider === 'ollama') {
+        try {
+          var ollamaUrl = apiKey || 'http://localhost:11434';
+          var resp = await fetch(ollamaUrl + '/api/tags');
+          if (resp.ok) {
+            var data = await resp.json();
+            var models = (data.models || []).map(function(m) {
+              return { id: m.name, name: m.name, provider: 'ollama' };
+            });
+            catalogModels = models;
+            successEl.textContent = 'Connected! ' + models.length + ' local models available.';
+            successEl.style.display = 'block';
+            if (models.length) renderModelSelection(models);
+            else {
+              successEl.textContent = 'Connected! No models found. Pull a model with: ollama pull llama3';
+            }
+          } else {
+            errorEl.textContent = 'Could not connect to Ollama at ' + ollamaUrl;
+            errorEl.style.display = 'block';
+          }
+        } catch (e) {
+          errorEl.textContent = 'Could not reach Ollama server. Make sure it is running.';
+          errorEl.style.display = 'block';
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Verify & Continue';
+        }
+        return;
+      }
+
+      if (!apiKey) {
+        errorEl.textContent = 'Please enter an API key.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Verify & Continue';
+        return;
+      }
+
+      // Verify key via backend
+      try {
+        var verifyResp = await fetch('/api/verify-key', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ provider: selectedProvider, key: apiKey })
+        });
+        var verifyData = await verifyResp.json();
+
+        if (!verifyData.valid) {
+          errorEl.textContent = verifyData.error || 'Invalid API key. Please check and try again.';
+          errorEl.style.display = 'block';
+          keyStatus.textContent = 'Invalid key';
+          keyStatus.className = 'key-status invalid';
+          btn.disabled = false;
+          btn.textContent = 'Verify & Continue';
+          return;
+        }
+
+        keyStatus.textContent = 'Key verified';
+        keyStatus.className = 'key-status valid';
+
+        // Fetch model catalog from backend
+        var catalogResp = await fetch('/api/models/catalog', { credentials: 'include' });
+        if (catalogResp.ok) {
+          var catalog = await catalogResp.json();
+          var providerModels = catalog[selectedProvider] || [];
+          catalogModels = providerModels.map(function(m) {
+            return {
+              id: m.id || m.name || m.value,
+              name: m.name || m.id || m.value,
+              provider: selectedProvider,
+              cost: m.input_cost_per_1m || 0
+            };
+          });
+        }
+
+        if (catalogModels.length) {
+          successEl.textContent = 'Key verified! ' + catalogModels.length + ' models available.';
+          successEl.style.display = 'block';
+          renderModelSelection(catalogModels);
+        } else {
+          // No models in catalog for this provider — save without model selection
+          successEl.textContent = 'Key verified! You can select a model later.';
+          successEl.style.display = 'block';
+          chosenModelId = null;
+          // Auto-save after short delay
+          setTimeout(function() { saveProviderAndModel(); }, 1200);
+        }
+      } catch (e) {
+        errorEl.textContent = 'Could not reach server. Check your connection.';
+        errorEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Verify & Continue';
+      }
+    }
+
+    function renderModelSelection(models) {
+      document.getElementById('modelSelectionArea').style.display = 'block';
+      chosenModelId = models[0] ? models[0].id : null;
+      var list = document.getElementById('modelList');
+      list.innerHTML = models.map(function(m) {
+        var costStr = m.cost ? '$' + m.cost + '/1M' : 'Free';
+        var selClass = m.id === chosenModelId ? ' selected' : '';
+        return '<div class="model-item' + selClass + '" onclick="selectModel(\'' + m.id.replace(/'/g, "\\'") + '\', this)">' +
+          '<span class="model-name">' + (m.name || m.id) + '</span>' +
+          '<span class="model-cost">' + costStr + '</span>' +
+          '</div>';
+      }).join('');
+    }
+
+    function selectModel(id, el) {
+      document.querySelectorAll('.model-item').forEach(function(i) { i.classList.remove('selected'); });
+      el.classList.add('selected');
+      chosenModelId = id;
+    }
+
+    // ── Save everything ───────────────────────────
+    async function saveProviderAndModel() {
+      var apiKey = document.getElementById('apiKeyInput').value.trim();
+      var customUrl = document.getElementById('customProviderUrl').value.trim();
+
+      var prefs = {
+        provider: selectedProvider,
+        model: chosenModelId || '',
+        api_keys: {},
+        setup_complete: true,
+        skipped: false
+      };
+
+      if (selectedProvider === 'ollama') {
+        prefs.api_keys.ollama_url = apiKey || 'http://localhost:11434';
+      } else if (selectedProvider === 'custom') {
+        prefs.api_keys.custom_url = customUrl;
+        prefs.api_keys.custom_key = apiKey;
+      } else {
+        prefs.api_keys[selectedProvider] = apiKey;
+      }
+
+      // Merge with existing prefs (keep language etc.)
+      var merged = Object.assign({}, existingPrefs, prefs);
+      merged.api_keys = Object.assign({}, existingPrefs.api_keys || {}, prefs.api_keys);
+
+      try {
+        await fetch('/api/user/preferences', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(merged)
+        });
+
+        // Also sync to localStorage for backward compat
+        var wsConfig = JSON.parse(localStorage.getItem('OliviaLegal.workspace.config') || '{}');
+        if (chosenModelId) wsConfig.model = chosenModelId;
+        wsConfig.provider = selectedProvider;
+        localStorage.setItem('OliviaLegal.workspace.config', JSON.stringify(wsConfig));
+
+        var apiKeys = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
+        if (selectedProvider !== 'ollama' && selectedProvider !== 'custom' && apiKey) {
+          apiKeys[selectedProvider] = apiKey;
+        }
+        localStorage.setItem('OliviaLegal.api.keys', JSON.stringify(apiKeys));
+      } catch (e) {}
+
+      if (isModalMode) {
+        // Notify parent window
+        try {
+          window.parent.postMessage({ type: 'olivia-setup-complete', prefs: merged }, '*');
+        } catch (e) {}
+      }
+
+      closeOrRedirect();
+    }
+
+    function closeOrRedirect() {
+      if (isModalMode) {
+        // Close modal overlay in parent
+        var overlay = document.getElementById('setup-overlay');
+        if (overlay) overlay.style.display = 'none';
+        // Also try parent
+        try {
+          var parentOverlay = window.parent.document.getElementById('setup-overlay');
+          if (parentOverlay) parentOverlay.style.display = 'none';
+        } catch (e) {}
+        // If embedded as iframe, hide self
+        document.body.style.display = 'none';
+      } else {
+        window.location.href = '/';
+      }
+    }
+  </script>
+</body>
+</html>

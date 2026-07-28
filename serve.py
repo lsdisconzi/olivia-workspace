@@ -371,6 +371,11 @@ try:
     OLLAMA_DISCOVERY_TTL = max(1.0, float(os.environ.get("OLLAMA_DISCOVERY_TTL", "12")))
 except ValueError:
     OLLAMA_DISCOVERY_TTL = 12.0
+try:
+    OLLAMA_NUM_CTX = max(4096, int(os.environ.get("OLLAMA_NUM_CTX", "32768")))
+except ValueError:
+    OLLAMA_NUM_CTX = 32768
+OLLAMA_KEEP_ALIVE = str(os.environ.get("OLLAMA_KEEP_ALIVE", "24h")).strip() or "24h"
 _OLLAMA_MODELS_CACHE: dict[str, object] = {
     "expires_at": 0.0,
     "models": [],
@@ -1947,6 +1952,34 @@ def _auth_update_permissions(email: str, assistant_access_mode: str, assistant_w
         conn.close()
 
 
+def _auth_update_preferences(email: str, preferences: dict):
+    """Update a user's preferences (provider, model, api_keys, language, etc.)."""
+    key = _normalize_user_email(email)
+    prefs_json = json.dumps(preferences, ensure_ascii=False)
+    conn = _get_db()
+    try:
+        conn.execute(
+            "UPDATE auth_users SET preferences_json = ?, updated_at = ? WHERE email = ?",
+            (prefs_json, _utc_now_iso(), key),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _auth_get_preferences(email: str) -> dict:
+    """Get a user's preferences."""
+    key = _normalize_user_email(email)
+    conn = _get_db()
+    try:
+        row = conn.execute("SELECT preferences_json FROM auth_users WHERE email = ?", (key,)).fetchone()
+        if not row or not row["preferences_json"]:
+            return {}
+        return json.loads(row["preferences_json"])
+    finally:
+        conn.close()
+
+
 def _auth_update_context_scope(email: str, context_injection_scope: str, context_selected_files: str | None = None):
     """Update a user's context injection scope and optionally selected files."""
     key = _normalize_user_email(email)
@@ -2422,6 +2455,8 @@ def _bootstrap_db_schema(conn) -> None:
             conn.execute("ALTER TABLE auth_users ADD COLUMN context_injection_scope TEXT DEFAULT ''")
         if "context_selected_files" not in cols_auth:
             conn.execute("ALTER TABLE auth_users ADD COLUMN context_selected_files TEXT DEFAULT ''")
+        if "preferences_json" not in cols_auth:
+            conn.execute("ALTER TABLE auth_users ADD COLUMN preferences_json TEXT DEFAULT '{}'")
     except Exception:
         pass
     # Legacy compatibility: normalize any historical/invalid type to openclaude.
@@ -7289,7 +7324,7 @@ def _openclaude_env(provider: str | None = None, model: str | None = None,
             env["OPENAI_API_KEY"] = api_key
         elif is_ollama:
             env["OPENAI_API_KEY"] = "ollama-no-key-needed"  # placeholder, Ollama does not require a key
-        env["OPENAI_BASE_URL"] = _base
+        env["OPENAI_BASE_URL"] = _base.rstrip('/') + '/v1'
 
         # OpenClaude detects provider by base_url and may require a
         # provider-specific env var (e.g. FIREWORKS_API_KEY).
@@ -7863,6 +7898,19 @@ def _is_ollama_request(provider: str | None = None, model: str | None = None) ->
     p = str(provider or "").strip().lower()
     m = str(model or "").strip().lower()
     return p == "ollama" or m.startswith("ollama|")
+
+
+def _is_ollama_url(base_url: str | None) -> bool:
+    """Detect if a base URL points to a local Ollama server."""
+    if not base_url:
+        return False
+    url = base_url.strip().lower()
+    # Ollama servers run on HTTP with local addresses
+    return (
+        url.startswith("http://127.0.0.1:")
+        or url.startswith("http://localhost:")
+        or url.startswith("http://0.0.0.0:")
+    )
 
 
 def _is_openrouter_request(provider: str | None = None, model: str | None = None) -> bool:
@@ -8575,6 +8623,10 @@ def _stream_llm(
         "temperature": 0.7,
         "max_tokens": int(max_tokens if max_tokens is not None else LLM_STREAM_MAX_TOKENS),
     }
+    # Ollama-specific parameters: prevent prompt truncation and keep model in memory
+    if _is_ollama_url(target_base):
+        payload["num_ctx"] = OLLAMA_NUM_CTX
+        payload["keep_alive"] = OLLAMA_KEEP_ALIVE
     if str(effective_model or "").lower().startswith("deepseek"):
         payload["thinking"] = {"type": "enabled"}
         payload["reasoning_effort"] = "high"
@@ -9256,6 +9308,34 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._json_response({"error": str(exc)}, 400)
             return
         self._json_response({"status": "ok"})
+
+    def _user_preferences_get(self):
+        """GET /api/user/preferences — return current user's preferences."""
+        email = self._auth_current_email()
+        if not email:
+            self._json_response({"error": "unauthenticated"}, 401)
+            return
+        try:
+            prefs = _auth_get_preferences(email)
+            self._json_response(prefs)
+        except Exception as exc:
+            self._json_response({"error": str(exc)}, 400)
+
+    def _user_preferences_post(self):
+        """POST /api/user/preferences — save/update user's preferences."""
+        email = self._auth_current_email()
+        if not email:
+            self._json_response({"error": "unauthenticated"}, 401)
+            return
+        body = self._read_body()
+        try:
+            # Merge with existing preferences
+            current = _auth_get_preferences(email)
+            current.update(body)
+            _auth_update_preferences(email, current)
+            self._json_response({"status": "ok", "preferences": current})
+        except Exception as exc:
+            self._json_response({"error": str(exc)}, 400)
 
     def _supplied_admin_token(self) -> str:
         direct = str(self.headers.get(_ADMIN_TOKEN_HEADER) or "").strip()
@@ -14304,6 +14384,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._user_context_files_get()
             return
 
+        if path == "/api/user/preferences":
+            self._user_preferences_get()
+            return
+
         if path == "/api/agent-groups":
             self._json_response(_agent_groups_catalog_payload())
             return
@@ -14654,6 +14738,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # ── User Context Files API ───────────────────────────────────
         if path == "/api/user/context-files":
             self._user_context_files_post()
+            return
+
+        # ── User Preferences API ─────────────────────────────────────
+        if path == "/api/user/preferences":
+            self._user_preferences_post()
             return
 
         if _is_disabled_api_path(path):

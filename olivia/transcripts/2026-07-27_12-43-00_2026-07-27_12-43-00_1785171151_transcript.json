@@ -1,0 +1,141 @@
+{
+  "filename": "2026-07-27_12-43-00_2026-07-27_12-43-00_1785171151_transcript.json",
+  "saved_at": "2026-07-27T16:58:36.365173+00:00",
+  "run_id": "2026-07-27_12-43-00_1785171151",
+  "params": {
+    "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+    "language": "",
+    "model": "large-v3",
+    "min_speakers": 1,
+    "max_speakers": 1,
+    "diarization": "true",
+    "align_output": "true",
+    "remove_silence": "false",
+    "noise_reduce": "false",
+    "voice_enhance": "true",
+    "word_timestamps": "false",
+    "vad_threshold": 0.4,
+    "whisper_temp": 0,
+    "beam_size": 9,
+    "best_of": 9,
+    "chunk_size": 30,
+    "batch_size": 24,
+    "initial_prompt": "",
+    "save_to_qdrant": "true",
+    "qdrant_collection": "italian_transcriptions",
+    "cors_mode": "auto"
+  },
+  "save_to_qdrant": true,
+  "qdrant_collection": "italian_transcriptions",
+  "data": {
+    "transcript_id": "2026-07-27_12-43-00_1785171151",
+    "segments": [
+      {
+        "index": 1,
+        "speaker": "SPEAKER_02",
+        "start": 1.51596875,
+        "end": 13.21034375,
+        "duration": 11.694,
+        "text": " La Befana vien di notte con le scarpe tutte rotte Il vestito alla romana, viva viva la Befana La Befana vien di notte con le scarpe tutte rotte"
+      },
+      {
+        "index": 2,
+        "speaker": "SPEAKER_00",
+        "start": 13.21034375,
+        "end": 18.22221875,
+        "duration": 5.012,
+        "text": " Cerote y vestita la romana, viva, viva la becana."
+      },
+      {
+        "index": 3,
+        "speaker": "SPEAKER_03",
+        "start": 18.62721875,
+        "end": 27.672218750000003,
+        "duration": 9.045,
+        "text": " Tutta notte sola sola sulla scopa vola vola Tutta notte sola sola sulla scopa vola vola"
+      },
+      {
+        "index": 4,
+        "speaker": "SPEAKER_03",
+        "start": 27.80721875,
+        "end": 27.95909375,
+        "duration": 0.152,
+        "text": ""
+      },
+      {
+        "index": 5,
+        "speaker": "SPEAKER_00",
+        "start": 27.95909375,
+        "end": 35.43471875,
+        "duration": 7.476,
+        "text": " Tendi notte con le scarpe tutte rotte, il vestito alla romana, viva viva la metana!"
+      },
+      {
+        "index": 6,
+        "speaker": "SPEAKER_01",
+        "start": 35.83971875,
+        "end": 48.96846875,
+        "duration": 13.129,
+        "text": " Quando dormirai nel letto lei ti volerà sul tetto Quando dormirai nel letto lei ti volerà sul tetto La Befana prendi notte con le scarpe tutte rotte"
+      },
+      {
+        "index": 7,
+        "speaker": "SPEAKER_00",
+        "start": 48.96846875,
+        "end": 52.96784375,
+        "duration": 3.999,
+        "text": " Vestita la romana, diva, diva la meccana."
+      }
+    ],
+    "timings": {
+      "save_s": 0,
+      "convert_s": 0,
+      "preprocess_s": 11.18,
+      "diarization_s": 29.84,
+      "model_load_s": 0,
+      "transcription_s": 320.91,
+      "total_s": 363.75
+    },
+    "params": {
+      "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+      "language": "auto",
+      "model": "large-v3",
+      "min_speakers": 1,
+      "max_speakers": 1,
+      "diarization": "true",
+      "align_output": "true",
+      "remove_silence": false,
+      "noise_reduce": false,
+      "voice_enhance": true,
+      "word_timestamps": false,
+      "vad_threshold": 0.4,
+      "whisper_temp": 0,
+      "beam_size": 9,
+      "best_of": 9,
+      "chunk_size": 30,
+      "batch_size": 24,
+      "initial_prompt": "",
+      "save_to_qdrant": "true",
+      "qdrant_collection": "italian_transcriptions",
+      "cors_mode": "auto",
+      "model_size": "large-v3",
+      "diarization_fallback": false,
+      "diarization_fallback_reason": null,
+      "temperature": 0,
+      "diarization_timeout_s": 180,
+      "min_turn_duration_s": 0,
+      "merge_gap_s": 0,
+      "max_diarization_segments": 1000,
+      "reduction_db": 25,
+      "apply_gain": true,
+      "target_lufs": -16,
+      "silence_thresh": -45,
+      "min_silence_len": 250,
+      "keep_audio_artifacts": true,
+      "saved_audio_file": "2026-07-27 12-43-00_1785171151.wav",
+      "processed_audio_file": "2026-07-27 12-43-00_1785171151_processed.wav"
+    },
+    "run_id": "2026-07-27_12-43-00_1785171151",
+    "client_run_id": "2026-07-27_12-43-00_1785171151"
+  }
+}

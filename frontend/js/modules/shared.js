@@ -258,6 +258,71 @@ function _sessionBulkDelete() {
 }
 window._sessionBulkDelete = _sessionBulkDelete;
 
+// ── Bulk Download (new) ────────────────────────────────────────────
+function _sessionBulkDownload() {
+  if (_sessionBulkSelection.size === 0) return;
+  const files = Array.from(_sessionBulkSelection).map(name => _importedFiles.get(name)).filter(Boolean);
+
+  if (files.length === 1) {
+    // Single file - direct download
+    const file = files[0];
+    _downloadFile(file);
+    return;
+  }
+
+  // Multiple files - download sequentially with small delays
+  files.forEach((file, index) => {
+    setTimeout(() => {
+      _downloadFile(file);
+    }, index * 200); // Stagger downloads
+  });
+  addSystemBubble('Downloading ' + files.length + ' file(s)...');
+}
+window._sessionBulkDownload = _sessionBulkDownload;
+
+// Helper to download a single file (handles blob URLs, server URLs, and text content)
+function _downloadFile(file) {
+  if (!file) return;
+
+  // If file has a server URL, use that directly
+  if (file.serverUrl) {
+    const link = document.createElement('a');
+    link.href = file.serverUrl;
+    link.download = file.name;
+    link.click();
+    return;
+  }
+
+  // If file has a blob URL, use that
+  if (file.url && file.url.startsWith('blob:')) {
+    const link = document.createElement('a');
+    link.href = file.url;
+    link.download = file.name;
+    link.click();
+    return;
+  }
+
+  // If file has text content, create a blob and download
+  if (file.content !== undefined && file.content !== null) {
+    const blob = new Blob([file.content], { type: file.type || 'application/octet-stream' });
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = file.name;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    return;
+  }
+
+  // Fallback: try serverUrl if available
+  if (file.serverUrl) {
+    const link = document.createElement('a');
+    link.href = file.serverUrl;
+    link.download = file.name;
+    link.click();
+  }
+}
+
 function _isImageContextFile(file) {
   const mimeType = String(file && file.type || '').toLowerCase();
   const fileName = String(file && file.name || '');
@@ -1743,20 +1808,23 @@ function updateComposeContextBar() {
     if (file.type === 'image' || file.previewType === 'image') imageCount += 1;
   }
   if (_importedFiles.size > 0) {
-    badges.push(`<span class="context-badge"><i class="fas fa-paperclip"></i> ${_importedFiles.size} arquivo(s) importado(s)</span>`);
+    const filesList = Array.from(_importedFiles.values()).map(f => f.name).join('\\n');
+    badges.push(`<span class="context-badge context-badge-imported" data-badge-type="imported" data-files="${escapeHtml(filesList)}" data-count="${_importedFiles.size}"><i class="fas fa-paperclip"></i> ${_importedFiles.size} arquivo(s) importado(s)</span>`);
   }
   if (imageCount > 0) {
     badges.push(`<span class="context-badge"><i class="fas fa-image"></i> ${imageCount} imagem(ns) visual(is)</span>`);
   }
   const ctxCount = _contextSessionFiles.size;
   if (ctxCount > 0) {
-    badges.push(`<span class="context-badge" style="border-color:var(--purple)"><i class="fas fa-brain" style="color:var(--purple)"></i> ${ctxCount} no contexto</span>`);
+    const ctxFilesList = Array.from(_contextSessionFiles.keys()).join('\\n');
+    badges.push(`<span class="context-badge context-badge-context" style="border-color:var(--purple)" data-badge-type="context" data-files="${escapeHtml(ctxFilesList)}" data-count="${ctxCount}"><i class="fas fa-brain" style="color:var(--purple)"></i> ${ctxCount} no contexto</span>`);
   }
   if (_checkedShared.size > 0) {
     badges.push(`<span class="context-badge"><i class="fas fa-share-alt"></i> ${_checkedShared.size} item(ns) _shared</span>`);
   }
   if (typeof _checkedDocs !== 'undefined' && _checkedDocs && typeof _checkedDocs.size === 'number' && _checkedDocs.size > 0) {
-    badges.push(`<span class="context-badge"><i class="fas fa-file-alt"></i> ${_checkedDocs.size} documento(s)</span>`);
+    const docsList = Array.from(_checkedDocs.keys()).join('\\n');
+    badges.push(`<span class="context-badge context-badge-docs" data-badge-type="docs" data-files="${escapeHtml(docsList)}" data-count="${_checkedDocs.size}"><i class="fas fa-file-alt"></i> ${_checkedDocs.size} documento(s)</span>`);
   }
   if (typeof _checkedArticles !== 'undefined' && _checkedArticles && typeof _checkedArticles.size === 'number' && _checkedArticles.size > 0) {
     badges.push(`<span class="context-badge"><i class="fas fa-scale-balanced"></i> ${_checkedArticles.size} artigo(s)</span>`);
@@ -1764,7 +1832,7 @@ function updateComposeContextBar() {
   if (typeof getPanelContextSelectionSummary === 'function') {
     const selectedPanels = getPanelContextSelectionSummary();
     selectedPanels.forEach(name => {
-      badges.push(`<span class="context-badge"><i class="fas fa-panels"></i> Painel: ${escapeHtml(name)}</span>`);
+      badges.push(`<span class="context-badge context-badge-panel" data-badge-type="panel" data-name="${escapeHtml(name)}"><i class="fas fa-panels"></i> Painel: ${escapeHtml(name)}</span>`);
     });
   }
   if (typeof getAssistantContextPreviewDebugEnabled === 'function' && getAssistantContextPreviewDebugEnabled()) {
@@ -1779,6 +1847,9 @@ function updateComposeContextBar() {
 
   bar.style.display = 'flex';
   bar.innerHTML = badges.join('');
+
+  // Attach hover handlers for context badges
+  attachContextBadgeHandlers();
 }
 
 // ── Active Project Chip (6.1) ──────────────────────────────────────
@@ -1843,6 +1914,165 @@ window.downloadFile = downloadFile;
 window.updateComposeContextBar = updateComposeContextBar;
 window.onCaseUploadTargetChanged = onCaseUploadTargetChanged;
 window.refreshCaseUploadTargetPath = refreshCaseUploadTargetPath;
+window._sessionBulkDownload = _sessionBulkDownload;
+window.attachContextBadgeHandlers = attachContextBadgeHandlers;
+window.showContextBadgeModal = showContextBadgeModal;
+window.hideContextBadgeModal = hideContextBadgeModal;
+
+// Attach hover handlers for context badges
+function attachContextBadgeHandlers() {
+  const bar = document.getElementById('composeContextBar');
+  if (!bar) return;
+
+  const badges = bar.querySelectorAll('.context-badge[data-badge-type]');
+  badges.forEach(badge => {
+    // Remove existing handlers to avoid duplicates
+    badge.onmouseenter = null;
+    badge.onmouseleave = null;
+    badge.onclick = null;
+
+    badge.addEventListener('mouseenter', (e) => {
+      showContextBadgeModal(e.currentTarget, e);
+    });
+    badge.addEventListener('mouseleave', (e) => {
+      hideContextBadgeModal(e.currentTarget);
+    });
+    badge.addEventListener('click', (e) => {
+      // On click, keep modal open until click outside
+      e.stopPropagation();
+      toggleContextBadgeModal(e.currentTarget);
+    });
+  });
+}
+
+// Context badge modal state
+let _contextBadgeModalTimer = null;
+let _currentModalBadge = null;
+
+function showContextBadgeModal(badge, event) {
+  if (_contextBadgeModalTimer) {
+    clearTimeout(_contextBadgeModalTimer);
+    _contextBadgeModalTimer = null;
+  }
+
+  const badgeType = badge.dataset.badgeType;
+  const filesList = badge.dataset.files;
+  const count = badge.dataset.count;
+  const panelName = badge.dataset.name;
+
+  let content = '';
+  let title = '';
+
+  switch (badgeType) {
+    case 'imported':
+      title = 'Arquivos Importados';
+      if (filesList) {
+        const files = filesList.split('\\n').filter(f => f.trim());
+        content = files.map(f => `<div class="context-modal-file"><i class="fas fa-file"></i> <span>${escapeHtml(f)}</span> <button class="context-modal-remove" onclick="removeFileContext('${escapeHtml(f)}');hideContextBadgeModal();" title="Remover"><i class="fas fa-times"></i></button></div>`).join('');
+      }
+      break;
+    case 'context':
+      title = 'Arquivos no Contexto';
+      if (filesList) {
+        const files = filesList.split('\\n').filter(f => f.trim());
+        content = files.map(f => `<div class="context-modal-file"><i class="fas fa-brain" style="color:var(--purple)"></i> <span>${escapeHtml(f)}</span> <button class="context-modal-remove" onclick="removeFileContext('${escapeHtml(f)}');hideContextBadgeModal();" title="Remover do contexto"><i class="fas fa-times"></i></button></div>`).join('');
+      }
+      break;
+    case 'docs':
+      title = 'Documentos Selecionados';
+      if (filesList) {
+        const files = filesList.split('\\n').filter(f => f.trim());
+        content = files.map(f => `<div class="context-modal-file"><i class="fas fa-file-alt"></i> <span>${escapeHtml(f)}</span> <button class="context-modal-remove" onclick="uncheckDoc('${escapeHtml(f)}');hideContextBadgeModal();" title="Desmarcar"><i class="fas fa-times"></i></button></div>`).join('');
+      }
+      break;
+    case 'panel':
+      title = 'Painel: ' + panelName;
+      content = '<div class="context-modal-file"><i class="fas fa-panels"></i> <span>Painel de contexto ativo</span></div>';
+      break;
+    default:
+      return;
+  }
+
+  // Create or update modal
+  let modal = document.getElementById('contextBadgeModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'contextBadgeModal';
+    modal.className = 'context-badge-modal';
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `
+    <div class="context-modal-header">
+      <span>${escapeHtml(title)}</span>
+      <span class="context-modal-count">${count || ''}</span>
+    </div>
+    <div class="context-modal-body">
+      ${content || '<div class="context-modal-empty">Nenhum arquivo</div>'}
+    </div>
+  `;
+
+  // Position modal in center of viewport (main screen area)
+  modal.style.top = '';
+  modal.style.left = '';
+  modal.style.right = '';
+  modal.style.bottom = '';
+  modal.style.margin = 'auto';
+  modal.style.maxWidth = '90vw';
+  modal.style.maxHeight = '80vh';
+
+  // Show with animation
+  requestAnimationFrame(() => {
+    modal.classList.add('show');
+  });
+
+  _currentModalBadge = badge;
+
+  // Add click-outside handler
+  document.addEventListener('click', closeModalOnOutsideClick, { once: true });
+}
+
+function hideContextBadgeModal(badge) {
+  if (_contextBadgeModalTimer) {
+    clearTimeout(_contextBadgeModalTimer);
+  }
+  _contextBadgeModalTimer = setTimeout(() => {
+    const modal = document.getElementById('contextBadgeModal');
+    if (modal) {
+      modal.classList.remove('show');
+    }
+    _currentModalBadge = null;
+  }, 100);
+}
+
+function toggleContextBadgeModal(badge) {
+  const modal = document.getElementById('contextBadgeModal');
+  if (modal && modal.classList.contains('show') && _currentModalBadge === badge) {
+    modal.classList.remove('show');
+    _currentModalBadge = null;
+  } else {
+    showContextBadgeModal(badge, null);
+    // Keep modal open until click outside
+    document.addEventListener('click', closeModalOnOutsideClick, { once: true });
+  }
+}
+
+function closeModalOnOutsideClick(e) {
+  const modal = document.getElementById('contextBadgeModal');
+  if (modal && modal.classList.contains('show') && !modal.contains(e.target)) {
+    const badges = document.querySelectorAll('.context-badge[data-badge-type]');
+    let clickedBadge = false;
+    badges.forEach(b => { if (b.contains(e.target)) clickedBadge = true; });
+    if (!clickedBadge) {
+      modal.classList.remove('show');
+      _currentModalBadge = null;
+    }
+  }
+}
+
+window.attachContextBadgeHandlers = attachContextBadgeHandlers;
+window.showContextBadgeModal = showContextBadgeModal;
+window.hideContextBadgeModal = hideContextBadgeModal;
 
 document.addEventListener('DOMContentLoaded', function() {
   _initCaseUploadTargetInput();

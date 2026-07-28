@@ -304,7 +304,7 @@ window.lsSaveConfig = function(){
   var cfg = {
     api_endpoint: ep,
     cors_mode: String(((document.getElementById('lsCorsMode')||{}).value || 'auto')).toLowerCase(),
-    language: (document.getElementById('lsLanguage')||{}).value || 'es-CL',
+    language: (document.getElementById('lsLanguage')||{}).value || '',
     model: (document.getElementById('lsModel')||{}).value || 'large-v3',
     min_speakers: Math.max(1, Math.round(lsCfgNum('lsMinSpeakers', 1))),
     max_speakers: Math.max(1, Math.round(lsCfgNum('lsMaxSpeakers', 4))),
@@ -701,7 +701,7 @@ async function lsTranscribeLocal(file){
   var asyncEp = lsResolveAsyncTranscribeEndpoint(ep);
   lsSetStage('upload'); lsSetProgress(15, 'Enviando áudio…');
   var fd = new FormData(); fd.append('file', file);
-  var lang = (document.getElementById('lsLanguage')||{}).value || cfg.language || 'es-CL';
+  var lang = (document.getElementById('lsLanguage')||{}).value || cfg.language || '';
   var model = (document.getElementById('lsModel')||{}).value || cfg.model || 'large-v3';
   var minS = Math.max(1, Math.round(lsReadNumericField('lsMinSpeakers', cfg.min_speakers, 1)));
   var maxS = Math.max(1, Math.round(lsReadNumericField('lsMaxSpeakers', cfg.max_speakers, 4)));
@@ -817,7 +817,7 @@ async function lsTranscribeRunpod(file){
   var timeout = Math.max(1, Math.round(lsReadNumericField('lsRunpodTimeout', rpCfg.timeout, 600))) * 1000;
   if(!apiKey||!endpointId) throw new Error('Credenciais RunPod necessárias');
   var cfg = lsGetCfg();
-  var lang = (document.getElementById('lsLanguage')||{}).value || cfg.language || 'es';
+  var lang = (document.getElementById('lsLanguage')||{}).value || cfg.language || '';
   var model = (document.getElementById('lsModel')||{}).value || cfg.model || 'large-v3';
   var minS = Math.max(1, Math.round(lsReadNumericField('lsMinSpeakers', cfg.min_speakers, 1)));
   var maxS = Math.max(1, Math.round(lsReadNumericField('lsMaxSpeakers', cfg.max_speakers, 4)));

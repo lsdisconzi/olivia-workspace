@@ -10,6 +10,7 @@ cd "$SCRIPT_DIR"
 PORT="${Olivia_PORT:-3229}"
 STOP_WATCHERS=1
 FORCE_AFTER=5
+STOP_OLLAMA=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -25,8 +26,12 @@ while [[ $# -gt 0 ]]; do
       FORCE_AFTER="$2"
       shift 2
       ;;
+    --ollama)
+      STOP_OLLAMA=1
+      shift
+      ;;
     -h|--help)
-      echo "Usage: ./stop-all.sh [--port 3229] [--no-watchers] [--force-after 5]"
+      echo "Usage: ./stop-all.sh [--port 3229] [--no-watchers] [--force-after 5] [--ollama]"
       exit 0
       ;;
     *)
@@ -114,6 +119,21 @@ if [[ -n "$ELECTRON_PIDS" ]]; then
     kill_with_fallback "$pid" "Electron desktop"
   done <<< "$ELECTRON_PIDS"
   echo "Done: Electron desktop stopped"
+fi
+
+# 4) Stop Ollama server (only when --ollama was passed)
+if [[ "$STOP_OLLAMA" -eq 1 ]]; then
+  OLLAMA_PIDS="$(pgrep -x "ollama" 2>/dev/null || true)"
+  if [[ -z "$OLLAMA_PIDS" ]]; then
+    echo "No Ollama process found"
+  else
+    found_any=1
+    while read -r pid; do
+      [[ -z "$pid" ]] && continue
+      kill_with_fallback "$pid" "Ollama server"
+    done <<< "$OLLAMA_PIDS"
+    echo "Done: Ollama server stopped"
+  fi
 fi
 
 if [[ "$found_any" -eq 0 ]]; then
