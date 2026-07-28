@@ -1,162 +1,49 @@
-<span data-i18n="html">html</span>
-<html data-theme="light" lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-BR">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="light dark" name="color-scheme"/>
-<link href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'&gt;&lt;rect width='32' height='32' rx='9' fill='%237FA98E'/&gt;&lt;g transform='translate(6,7) scale(0.31)'&gt;&lt;path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23FAF6EF' stroke-width='2.6' stroke-linecap='round' opacity='.75'/&gt;&lt;ellipse cx='22' cy='42' rx='4.4' ry='5.5' fill='%23D98A5E'/&gt;&lt;/g&gt;&lt;/svg&gt;" rel="icon" type="image/svg+xml"/>
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-<title><span data-i18n="olivia_agent_mobile">Olivia · Agent Mobile</span></title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<style>
-    /* ═══════════════════════════════════════════
-           OLIVIA WORKSPACE AGENT · BRANDED THEME
-           ═══════════════════════════════════════════ */
-    [data-theme="dark"] {
-      --bg: #191917;
-      --bg-card: #1f1f1d;
-      --bg-card-hover: #252523;
-      --border: #2a2a28;
-      --border-medium: #363634;
-      --border-strong: #444442;
-      --amber: #D98A5E;
-      --amber-light: #E7A67D;
-      --amber-lo: rgba(217, 138, 94, .12);
-      --amber-bg: rgba(217, 138, 94, .06);
-      --green-dark: #7FA98E;
-      --green-mid: #A9CBB7;
-      --green-light: #C5DDCE;
-      --green-lo: rgba(127, 169, 142, .10);
-      --green-bg: rgba(127, 169, 142, .05);
-      --blue: #7AAFC5;
-      --blue-light: #9CC5D6;
-      --blue-lo: rgba(122, 175, 197, .10);
-      --blue-bg: rgba(122, 175, 197, .05);
-      --golden: #D6B87A;
-      --white: #ede8df;
-      --gray: #6b6b68;
-      --gray-hi: #9a9a96;
-      --cream: #242422;
-      --brand-text: var(--white);
-      --btn-bg: #ede8df;
-      --btn-text: #191917;
-      --btn-hover-bg: #d6d0c6;
-      --input-bg: #191917;
-      --input-border: #363634;
-      --shadow: 0 6px 24px rgba(0, 0, 0, .22);
-      --shadow-hover: 0 14px 36px rgba(0, 0, 0, .30);
-      --notif-unread-bg: rgba(217, 138, 94, .08);
-      --notif-unread-border: rgba(217, 138, 94, .25);
-      --footer-border: #2a2a28;
-      --rail-opacity: .28;
-      --body-glow-1: rgba(214, 184, 122, .03);
-      --body-glow-2: rgba(217, 138, 94, .02);
-      --kicker-bg: #242422;
-      --kicker-border: #2a2a28;
-      --icon-verde-border: rgba(127, 169, 142, .20);
-      --icon-verde-bg: rgba(127, 169, 142, .08);
-      --icon-terra-border: rgba(217, 138, 94, .20);
-      --icon-terra-bg: rgba(217, 138, 94, .08);
-      --icon-azul-border: rgba(122, 175, 197, .18);
-      --icon-azul-bg: rgba(122, 175, 197, .06);
-    }
-
-    [data-theme="light"] {
-      --bg: #FAF6EF;
-      --bg-card: #FFFFFF;
-      --bg-card-hover: #fdfdfb;
-      --border: rgba(63, 97, 82, .10);
-      --border-medium: rgba(63, 97, 82, .18);
-      --border-strong: rgba(63, 97, 82, .28);
-      --amber: #D98A5E;
-      --amber-light: #E7A67D;
-      --amber-lo: rgba(217, 138, 94, .08);
-      --amber-bg: rgba(217, 138, 94, .05);
-      --green-dark: #3F6152;
-      --green-mid: #7FA98E;
-      --green-light: #A9CBB7;
-      --green-lo: rgba(127, 169, 142, .08);
-      --green-bg: rgba(127, 169, 142, .05);
-      --blue: #5A8DA6;
-      --blue-light: #7AAFC5;
-      --blue-lo: rgba(90, 141, 166, .08);
-      --blue-bg: rgba(90, 141, 166, .05);
-      --golden: #D6B87A;
-      --white: #34302A;
-      --gray: #ADA396;
-      --gray-hi: #6B6458;
-      --cream: #F2ECDE;
-      --brand-text: var(--green-dark);
-      --btn-bg: #3F6152;
-      --btn-text: #FAF6EF;
-      --btn-hover-bg: #345545;
-      --input-bg: #FFFFFF;
-      --input-border: rgba(63, 97, 82, .18);
-      --shadow: 0 6px 24px rgba(63, 97, 82, .05);
-      --shadow-hover: 0 14px 36px rgba(63, 97, 82, .10);
-      --notif-unread-bg: rgba(217, 138, 94, .06);
-      --notif-unread-border: rgba(217, 138, 94, .22);
-      --footer-border: rgba(63, 97, 82, .10);
-      --rail-opacity: .35;
-      --body-glow-1: rgba(214, 184, 122, .04);
-      --body-glow-2: rgba(217, 138, 94, .03);
-      --kicker-bg: #F2ECDE;
-      --kicker-border: rgba(63, 97, 82, .08);
-      --icon-verde-border: rgba(127, 169, 142, .22);
-      --icon-verde-bg: rgba(127, 169, 142, .06);
-      --icon-terra-border: rgba(217, 138, 94, .22);
-      --icon-terra-bg: rgba(217, 138, 94, .06);
-      --icon-azul-border: rgba(90, 141, 166, .18);
-      --icon-azul-bg: rgba(90, 141, 166, .05);
-    }
-
+  <meta charset="UTF-8">
+  <link rel="icon"
+    href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'&gt;&lt;rect width='32' height='32' rx='9' fill='%237FA98E'/&gt;&lt;g transform='translate(6,7) scale(0.31)'&gt;&lt;path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23FAF6EF' stroke-width='2.6' stroke-linecap='round' opacity='.75'/&gt;&lt;ellipse cx='22' cy='42' rx='4.4' ry='5.5' fill='%23D98A5E'/&gt;&lt;/g&gt;&lt;/svg&gt;"
+    type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Olivia · Agente</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,500;1,9..144,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
     :root {
-      --bg: #191917;
-      --bg-card: #1f1f1d;
-      --bg-card-hover: #252523;
-      --border: #2a2a28;
-      --border-medium: #363634;
-      --border-strong: #444442;
-      --amber: #D98A5E;
-      --amber-light: #E7A67D;
-      --amber-lo: rgba(217, 138, 94, .12);
-      --amber-bg: rgba(217, 138, 94, .06);
-      --green-dark: #7FA98E;
-      --green-mid: #A9CBB7;
-      --green-light: #C5DDCE;
-      --green-lo: rgba(127, 169, 142, .10);
-      --green-bg: rgba(127, 169, 142, .05);
-      --blue: #7AAFC5;
-      --blue-light: #9CC5D6;
-      --blue-lo: rgba(122, 175, 197, .10);
-      --blue-bg: rgba(122, 175, 197, .05);
-      --golden: #D6B87A;
-      --white: #ede8df;
-      --gray: #6b6b68;
-      --gray-hi: #9a9a96;
-      --cream: #242422;
-      --brand-text: var(--white);
-      --btn-bg: #ede8df;
-      --btn-text: #191917;
-      --btn-hover-bg: #d6d0c6;
-      --input-bg: #191917;
-      --input-border: #363634;
-      --shadow: 0 6px 24px rgba(0, 0, 0, .22);
-      --shadow-hover: 0 14px 36px rgba(0, 0, 0, .30);
-      --notif-unread-bg: rgba(217, 138, 94, .08);
-      --notif-unread-border: rgba(217, 138, 94, .25);
-      --footer-border: #2a2a28;
-      --rail-opacity: .28;
-      --body-glow-1: rgba(214, 184, 122, .03);
-      --body-glow-2: rgba(217, 138, 94, .02);
-      --kicker-bg: #242422;
-      --kicker-border: #2a2a28;
-      --icon-verde-border: rgba(127, 169, 142, .20);
-      --icon-verde-bg: rgba(127, 169, 142, .08);
-      --icon-terra-border: rgba(217, 138, 94, .20);
-      --icon-terra-bg: rgba(217, 138, 94, .08);
-      --icon-azul-border: rgba(122, 175, 197, .18);
-      --icon-azul-bg: rgba(122, 175, 197, .06);
+      --creme: #FAF7F2;
+      --creme-2: #F3EEE6;
+      --creme-3: #EDE5D8;
+      --branco: #FFFFFF;
+      --borda: #E2D9CC;
+      --borda-hi: #D0C4B4;
+      --tinta: #1A1814;
+      --tinta-2: #2C2820;
+      --escuro: #3D3830;
+      --medio: #6B6358;
+      --claro: #9A9088;
+      --palha: #C8B99A;
+      --verde: #1C4532;
+      --verde-2: #2D6A4F;
+      --verde-3: #40916C;
+      --verde-lo: rgba(28, 69, 50, 0.08);
+      --terra: #C4622D;
+      --terra-2: #E07840;
+      --terra-lo: rgba(196, 98, 45, 0.10);
+      --ouro: #B8860B;
+      --ouro-lo: rgba(184, 134, 11, 0.10);
+      --azul: #4A7C9B;
+      --azul-lo: rgba(74, 124, 155, 0.08);
+      --display: 'Fraunces', Georgia, serif;
+      --corpo: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --r: 10px;
+      --r-sm: 6px;
+      --sombra: 0 2px 16px rgba(26, 24, 20, 0.08);
+      --max: 820px;
     }
 
     *,
@@ -164,120 +51,116 @@
     *::after {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      box-sizing: border-box
     }
 
     html,
     body {
       height: 100%;
-      scroll-behavior: smooth;
+      scroll-behavior: smooth
     }
 
     body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      transition: background .35s ease, color .35s ease;
+      background: var(--creme);
+      color: var(--tinta);
+      font-family: var(--corpo);
+      -webkit-font-smoothing: antialiased
     }
 
-    /* ─── TOP BAR ─── */
     .topo {
       position: sticky;
       top: 0;
       z-index: 100;
       height: 52px;
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border);
+      background: var(--branco);
+      border-bottom: 1px solid var(--borda);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
-      gap: 16px;
-      box-shadow: var(--shadow);
+      padding: 0 28px;
+      gap: 16px
     }
 
     .marca {
       display: flex;
       align-items: baseline;
-      gap: 10px;
+      gap: 10px
     }
 
     .marca-nome {
-      font-family: 'Fraunces', Georgia, serif;
+      font-family: var(--display);
       font-size: 16px;
-      font-weight: 500;
-      color: var(--green-dark);
+      font-weight: 600;
+      color: var(--verde);
       letter-spacing: -0.01em;
-      text-decoration: none;
+      text-decoration: none
     }
 
     .marca-sub {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--mono);
       font-size: 9px;
-      color: var(--amber);
+      color: var(--palha);
       letter-spacing: 0.08em;
-      text-transform: uppercase;
+      text-transform: uppercase
     }
 
     .topo-nav {
       display: flex;
       align-items: center;
-      gap: 2px;
+      gap: 2px
     }
 
     .nav-tab {
       padding: 5px 12px;
       font-size: 11px;
       font-weight: 500;
-      color: var(--gray);
+      color: var(--claro);
       border-radius: 6px;
       transition: all .15s;
       white-space: nowrap;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 5px
     }
 
     .nav-tab:hover {
-      color: var(--amber);
-      background: var(--amber-lo);
+      color: var(--verde);
+      background: var(--verde-lo)
     }
 
     .nav-tab.ativo {
-      color: var(--amber);
-      background: var(--amber-lo);
-      font-weight: 600;
+      color: var(--verde);
+      background: var(--verde-lo);
+      font-weight: 600
     }
 
     .topo-direita {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 10px
     }
 
     .tag-versao {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--mono);
       font-size: 9px;
-      color: var(--gray);
+      color: var(--claro);
       padding: 3px 8px;
-      border: 1px solid var(--border-medium);
-      border-radius: 4px;
+      border: 1px solid var(--borda);
+      border-radius: 4px
     }
 
     .topo-sair {
       font-size: 11px;
-      color: var(--gray);
+      color: var(--claro);
       text-decoration: none;
-      transition: color .15s;
+      transition: color .15s
     }
 
     .topo-sair:hover {
-      color: var(--amber);
+      color: var(--terra)
     }
 
-    /* ─── HAMBURGER ─── */
     .hamburger {
       display: none;
       flex-direction: column;
@@ -286,28 +169,28 @@
       padding: 6px;
       background: none;
       border: none;
-      z-index: 200;
+      z-index: 200
     }
 
     .hamburger span {
       display: block;
       width: 20px;
       height: 2px;
-      background: var(--white);
+      background: var(--tinta);
       border-radius: 2px;
-      transition: all .25s;
+      transition: all .25s
     }
 
     .hamburger.open span:nth-child(1) {
-      transform: translateY(6px) rotate(45deg);
+      transform: translateY(6px) rotate(45deg)
     }
 
     .hamburger.open span:nth-child(2) {
-      opacity: 0;
+      opacity: 0
     }
 
     .hamburger.open span:nth-child(3) {
-      transform: translateY(-6px) rotate(-45deg);
+      transform: translateY(-6px) rotate(-45deg)
     }
 
     .mobile-drawer {
@@ -316,40 +199,38 @@
       top: 52px;
       left: 0;
       right: 0;
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border);
+      background: var(--branco);
+      border-bottom: 1px solid var(--borda);
       padding: 8px 20px 16px;
       z-index: 99;
-      flex-direction: column;
-      box-shadow: var(--shadow);
+      flex-direction: column
     }
 
     .mobile-drawer.open {
-      display: flex;
+      display: flex
     }
 
     .mobile-drawer a {
       display: block;
       padding: 11px 0;
       font-size: 14px;
-      color: var(--gray-hi);
+      color: var(--medio);
       text-decoration: none;
-      border-bottom: 1px solid var(--cream);
+      border-bottom: 1px solid var(--creme-2)
     }
 
     .mobile-drawer a:last-child {
-      border: none;
+      border: none
     }
 
-    /* ─── LAYOUT ─── */
     .agent-page {
       display: flex;
       flex-direction: column;
       height: calc(100vh - 52px);
-      max-width: 860px;
+      max-width: var(--max);
       width: 100%;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px
     }
 
     .context-bar {
@@ -358,123 +239,124 @@
       padding: 14px 0 10px;
       flex-shrink: 0;
       overflow-x: auto;
-      scrollbar-width: none;
+      scrollbar-width: none
     }
 
     .context-bar::-webkit-scrollbar {
-      display: none;
+      display: none
     }
 
     .ctx-chip {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 7px 12px;
-      border: 1px solid var(--border-medium);
+      padding: 7px 10px;
+      border: 1px solid var(--borda);
       border-radius: 999px;
-      background: var(--bg-card);
+      background: var(--branco);
       font-size: 10px;
       font-weight: 500;
-      color: var(--gray-hi);
+      color: var(--medio);
       cursor: pointer;
       white-space: nowrap;
       transition: all .2s;
-      flex-shrink: 0;
+      flex-shrink: 0
     }
 
     .ctx-chip:hover {
-      border-color: var(--amber);
-      color: var(--amber);
-      background: var(--amber-lo);
+      border-color: rgba(28, 69, 50, 0.3);
+      color: var(--verde);
+      background: var(--verde-lo)
+    }
+
+    .ctx-chip:active {
+      transform: scale(0.97)
     }
 
     .ctx-chip i {
       font-size: 10px;
-      opacity: .6;
+      opacity: .6
     }
 
-    /* ─── CHAT ─── */
     .chat-shell {
       flex: 1;
       display: flex;
       flex-direction: column;
       min-height: 0;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px 16px 0 0;
-      overflow: hidden;
-      box-shadow: var(--shadow);
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: var(--r) var(--r) 0 0;
+      overflow: hidden
     }
 
     .chat-head {
       padding: 10px 16px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--borda);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-shrink: 0;
-      background: var(--bg-card);
+      flex-shrink: 0
     }
 
     .chat-head-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 8px
     }
 
     .chat-head-label {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--mono);
       font-size: 10px;
-      color: var(--gray);
+      color: var(--claro);
       letter-spacing: .06em;
-      text-transform: uppercase;
+      text-transform: uppercase
     }
 
     .status-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: var(--green-mid);
-      flex-shrink: 0;
+      background: var(--verde-3);
+      flex-shrink: 0
     }
 
     .status-dot.thinking {
-      background: var(--amber);
-      animation: dotPulse 1.2s infinite;
+      background: var(--ouro);
+      animation: dotPulse 1.2s infinite
     }
 
     @keyframes dotPulse {
 
       0%,
       100% {
-        opacity: 1;
+        opacity: 1
       }
 
       50% {
-        opacity: .4;
+        opacity: .4
       }
     }
 
     .chat-head-right {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 4px
     }
 
     .chat-head-btn {
       background: none;
       border: none;
       padding: 5px 7px;
-      color: var(--gray);
+      color: var(--claro);
       cursor: pointer;
       font-size: 11px;
       transition: color .15s;
-      border-radius: 4px;
+      border-radius: 4px
     }
 
     .chat-head-btn:hover {
-      color: var(--amber);
-      background: var(--amber-lo);
+      color: var(--verde);
+      background: var(--verde-lo)
     }
 
     .chat-log {
@@ -485,176 +367,196 @@
       flex-direction: column;
       gap: 14px;
       min-height: 0;
-      background: var(--cream);
+      background: var(--creme)
     }
 
-    /* ─── BUBBLES ─── */
     .chat-bubble {
       max-width: 85%;
       font-size: 14px;
       line-height: 1.7;
-      color: var(--white);
+      color: var(--escuro)
     }
 
     .chat-bubble.user {
       align-self: flex-end;
-      background: var(--bg-card);
-      border: 1px solid var(--border-medium);
-      border-radius: 16px 16px 4px 16px;
-      padding: 10px 14px;
-      color: var(--white);
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: var(--r) var(--r) 4px var(--r);
+      padding: 10px 14px
     }
 
     .chat-bubble.agent {
       align-self: flex-start;
-      padding: 0;
+      padding: 0
     }
 
     .agent-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: var(--r);
+      overflow: hidden
     }
 
     .agent-card.streaming {
-      border-color: var(--amber);
+      border-color: rgba(28, 69, 50, 0.2)
     }
 
     .agent-card-body {
-      padding: 14px 16px;
-      color: var(--white);
+      padding: 14px 16px
     }
 
     .agent-card-body p {
       margin: 0 0 8px;
       font-size: 14px;
       line-height: 1.7;
+      color: var(--escuro)
+    }
+
+    .agent-card-body p:last-child {
+      margin-bottom: 0
     }
 
     .agent-card-body strong {
-      color: var(--green-dark);
-      font-weight: 600;
+      color: var(--tinta);
+      font-weight: 600
     }
 
     .agent-card-body a {
-      color: var(--amber);
+      color: var(--verde-2);
       text-decoration: underline;
       text-underline-offset: 2px;
+      word-break: break-word
+    }
+
+    .agent-card-body a:hover {
+      color: var(--verde)
     }
 
     .agent-card-body code {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--mono);
       font-size: 11px;
-      background: var(--cream);
+      background: var(--creme-2);
       padding: 1px 5px;
       border-radius: 3px;
-      color: var(--green-dark);
+      color: var(--verde)
     }
 
     .agent-card-body ul,
     .agent-card-body ol {
       margin: 6px 0 10px 20px;
+      padding: 0
     }
 
     .agent-card-body li {
       margin: 0 0 4px;
       font-size: 13px;
       line-height: 1.6;
+      color: var(--escuro)
     }
 
     .agent-card-body h3 {
-      font-family: 'Fraunces', Georgia, serif;
+      font-family: var(--display);
       font-size: 15px;
       font-weight: 600;
-      color: var(--green-dark);
+      color: var(--tinta);
       margin: 14px 0 6px;
-      line-height: 1.3;
+      line-height: 1.3
+    }
+
+    .agent-card-body h3:first-child {
+      margin-top: 0
     }
 
     .agent-card-body hr {
       border: none;
-      border-top: 1px solid var(--border);
-      margin: 12px 0;
+      border-top: 1px solid var(--borda);
+      margin: 12px 0
     }
 
     .detail-block {
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--borda)
     }
 
     .detail-block summary {
       padding: 10px 16px;
       font-size: 12px;
       font-weight: 500;
-      color: var(--gray);
+      color: var(--claro);
       cursor: pointer;
       list-style: none;
       display: flex;
       align-items: center;
       gap: 6px;
       transition: all .15s;
+      user-select: none
     }
 
     .detail-block summary::-webkit-details-marker {
-      display: none;
+      display: none
     }
 
     .detail-block summary::before {
       content: '';
       width: 5px;
       height: 5px;
-      border-right: 1.5px solid var(--gray);
-      border-bottom: 1.5px solid var(--gray);
+      border-right: 1.5px solid var(--claro);
+      border-bottom: 1.5px solid var(--claro);
       transform: rotate(-45deg);
       transition: transform .2s;
+      flex-shrink: 0
     }
 
     .detail-block[open] summary::before {
-      transform: rotate(45deg);
+      transform: rotate(45deg)
     }
 
     .detail-block summary:hover {
-      background: var(--cream);
-      color: var(--amber);
+      background: var(--creme);
+      color: var(--verde)
     }
 
     .detail-block-body {
       padding: 10px 16px 14px;
       font-size: 13px;
       line-height: 1.65;
-      color: var(--gray-hi);
-      border-top: 1px solid var(--border);
-      background: var(--cream);
+      color: var(--escuro);
+      border-top: 1px solid var(--borda);
+      background: var(--creme)
     }
 
     .agent-table-wrap {
       overflow-x: auto;
-      margin: 8px 0;
+      margin: 8px 0
     }
 
     .agent-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      font-size: 12px
     }
 
     .agent-table th {
       padding: 7px 10px;
       text-align: left;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--mono);
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: .06em;
-      color: var(--gray);
-      background: var(--cream);
-      border-bottom: 1px solid var(--border);
+      color: var(--claro);
+      background: var(--creme);
+      border-bottom: 1px solid var(--borda);
+      font-weight: 500
     }
 
     .agent-table td {
       padding: 8px 10px;
-      border-bottom: 1px solid var(--border);
-      color: var(--white);
+      border-bottom: 1px solid var(--creme-3);
+      color: var(--escuro);
+      vertical-align: top
+    }
+
+    .agent-table tr:last-child td {
+      border-bottom: none
     }
 
     .action-bar {
@@ -662,30 +564,35 @@
       gap: 6px;
       flex-wrap: wrap;
       padding: 10px 16px;
-      border-top: 1px solid var(--border);
-      background: var(--cream);
+      border-top: 1px solid var(--borda);
+      background: var(--creme)
     }
 
     .action-btn {
-      border: 1px solid var(--border-medium);
-      background: var(--bg-card);
-      color: var(--gray-hi);
+      border: 1px solid var(--borda);
+      background: var(--branco);
+      color: var(--medio);
       border-radius: 999px;
       padding: 5px 12px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: var(--corpo);
       font-size: 11px;
       font-weight: 500;
       cursor: pointer;
       transition: all .15s;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 5px
     }
 
     .action-btn:hover {
-      border-color: var(--amber);
-      color: var(--amber);
-      background: var(--amber-lo);
+      border-color: rgba(28, 69, 50, 0.3);
+      color: var(--verde);
+      background: var(--verde-lo)
+    }
+
+    .action-btn i {
+      font-size: 9px;
+      opacity: .6
     }
 
     .proc-line {
@@ -694,91 +601,190 @@
       align-items: center;
       gap: 10px;
       padding: 6px 0;
-      color: var(--gray-hi);
+      color: var(--medio);
       font-size: 13px;
+      animation: procIn .25s ease
+    }
+
+    @keyframes procIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
     }
 
     .proc-spinner {
       width: 18px;
       height: 18px;
-      border: 2px solid var(--border-medium);
-      border-top-color: var(--amber);
+      border: 2px solid var(--creme-3);
+      border-top-color: var(--verde-3);
       border-radius: 50%;
       animation: procSpin 1s linear infinite;
+      flex-shrink: 0
     }
 
     @keyframes procSpin {
       to {
-        transform: rotate(360deg);
+        transform: rotate(360deg)
       }
+    }
+
+    .proc-text {
+      font-size: 13px;
+      color: var(--medio)
+    }
+
+    .proc-elapsed {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--palha);
+      margin-left: 4px
+    }
+
+    .thought-log {
+      align-self: flex-start;
+      max-width: 85%;
+      font-size: 12px;
+      margin-top: -4px
+    }
+
+    .thought-toggle {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--palha);
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 0;
+      transition: color .15s
+    }
+
+    .thought-toggle:hover {
+      color: var(--medio)
+    }
+
+    .thought-toggle::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-right: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      transform: rotate(-45deg);
+      transition: transform .2s;
+      flex-shrink: 0
+    }
+
+    .thought-toggle.open::before {
+      transform: rotate(45deg)
+    }
+
+    .thought-toggle .tt-elapsed {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--palha);
+      margin-left: auto
+    }
+
+    .thought-items {
+      display: none;
+      padding: 6px 0 2px;
+      margin-left: 9px;
+      border-left: 1px solid var(--creme-3);
+      padding-left: 12px
+    }
+
+    .thought-items.open {
+      display: block
+    }
+
+    .thought-item {
+      font-size: 11px;
+      color: var(--claro);
+      line-height: 1.5;
+      padding: 1px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%
     }
 
     .chat-compose {
       padding: 12px 16px;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--borda);
       display: flex;
       gap: 8px;
       align-items: flex-end;
-      background: var(--bg-card);
+      background: var(--branco);
+      flex-shrink: 0
     }
 
     .compose-wrap {
       flex: 1;
-      position: relative;
+      position: relative
     }
 
     .compose-wrap textarea {
       width: 100%;
       padding: 10px 12px;
       padding-right: 50px;
-      border: 1px solid var(--border-medium);
-      border-radius: 8px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      border: 1px solid var(--borda);
+      border-radius: var(--r-sm);
+      font-family: var(--corpo);
       font-size: 14px;
-      color: var(--white);
-      background: var(--input-bg);
+      color: var(--tinta);
+      background: var(--branco);
       outline: none;
       resize: none;
       min-height: 42px;
       max-height: 120px;
       transition: border-color .2s;
-      line-height: 1.5;
+      line-height: 1.5
     }
 
     .compose-wrap textarea:focus {
-      border-color: var(--amber);
+      border-color: var(--verde)
     }
 
     .compose-count {
       position: absolute;
       right: 8px;
       bottom: 6px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--mono);
       font-size: 9px;
-      color: var(--gray);
-      pointer-events: none;
+      color: var(--palha);
+      pointer-events: none
     }
 
     .send-btn {
       padding: 10px 18px;
       border: none;
-      border-radius: 8px;
-      background: var(--amber);
+      border-radius: var(--r-sm);
+      background: var(--verde);
       color: #fff;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: var(--corpo);
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: all .15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0
     }
 
     .send-btn:hover {
-      background: var(--amber-light);
+      background: var(--verde-2)
     }
 
     .send-btn:disabled {
       opacity: .5;
-      cursor: not-allowed;
+      cursor: not-allowed
     }
 
     .bottom-bar {
@@ -786,7 +792,12 @@
       padding: 8px 0 20px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: center
+    }
+
+    .bottom-tools {
+      display: flex;
+      gap: 4px
     }
 
     .tool-btn {
@@ -794,340 +805,344 @@
       border: 1px solid transparent;
       padding: 4px 8px;
       font-size: 11px;
-      color: var(--gray);
+      color: var(--claro);
       cursor: pointer;
       border-radius: 4px;
       transition: all .15s;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: var(--corpo)
     }
 
     .tool-btn:hover {
-      color: var(--amber);
-      border-color: var(--border-medium);
-      background: var(--amber-lo);
+      color: var(--medio);
+      border-color: var(--borda);
+      background: var(--branco)
     }
 
     .bottom-meta {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--mono);
       font-size: 9px;
-      color: var(--gray);
+      color: var(--palha)
     }
 
-    /* History panel */
     .history-panel {
       position: fixed;
       right: 20px;
       bottom: 78px;
       width: min(420px, calc(100vw - 24px));
       max-height: 62vh;
-      background: var(--bg-card);
-      border: 1px solid var(--border-medium);
-      border-radius: 16px;
-      box-shadow: var(--shadow-hover);
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: var(--r);
+      box-shadow: var(--sombra);
       display: none;
       flex-direction: column;
-      z-index: 220;
+      z-index: 220
     }
 
     .history-panel.open {
-      display: flex;
+      display: flex
     }
 
     .history-head {
       padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--borda);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 8px
     }
 
     .history-title {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--mono);
       font-size: 10px;
-      color: var(--gray);
+      color: var(--claro);
       text-transform: uppercase;
-      letter-spacing: .06em;
+      letter-spacing: .06em
     }
 
     .history-close {
       background: none;
       border: none;
-      color: var(--gray);
+      color: var(--claro);
       cursor: pointer;
       padding: 4px 6px;
-      border-radius: 4px;
+      border-radius: 4px
     }
 
     .history-close:hover {
-      background: var(--amber-lo);
-      color: var(--amber);
+      background: var(--verde-lo);
+      color: var(--verde)
     }
 
     .history-list {
       overflow: auto;
       max-height: calc(62vh - 52px);
-      padding: 8px;
+      padding: 8px
     }
 
     .history-empty {
       font-size: 12px;
-      color: var(--gray);
-      padding: 10px;
+      color: var(--claro);
+      padding: 10px
     }
 
     .history-item {
-      border: 1px solid var(--border);
+      border: 1px solid var(--borda);
       border-radius: 8px;
       padding: 8px 9px;
       margin-bottom: 7px;
-      background: var(--cream);
+      background: var(--creme)
     }
 
     .history-item-title {
       font-size: 12px;
       font-weight: 600;
-      color: var(--white);
+      color: var(--tinta);
       line-height: 1.35;
-      margin-bottom: 4px;
+      margin-bottom: 4px
     }
 
     .history-item-preview {
       font-size: 11px;
-      color: var(--gray-hi);
+      color: var(--medio);
       line-height: 1.35;
-      margin-bottom: 6px;
+      margin-bottom: 6px
     }
 
     .history-item-meta {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--mono);
       font-size: 9px;
-      color: var(--gray);
-      margin-bottom: 6px;
+      color: var(--claro);
+      margin-bottom: 6px
     }
 
     .history-item-actions {
       display: flex;
       gap: 6px;
-      flex-wrap: wrap;
+      flex-wrap: wrap
     }
 
     .history-btn {
-      border: 1px solid var(--border-medium);
-      background: var(--bg-card);
-      color: var(--gray-hi);
+      border: 1px solid var(--borda);
+      background: var(--branco);
+      color: var(--medio);
       border-radius: 999px;
       padding: 4px 9px;
       font-size: 10px;
-      cursor: pointer;
+      cursor: pointer
     }
 
     .history-btn:hover {
-      border-color: var(--amber);
-      background: var(--amber-lo);
-      color: var(--amber);
+      border-color: rgba(28, 69, 50, 0.3);
+      background: var(--verde-lo);
+      color: var(--verde)
+    }
+
+    /* Setup modal overlay */
+    .setup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 24, 20, 0.6);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+    .setup-overlay.open { display: flex }
+    .setup-modal {
+      width: 100%;
+      max-width: 560px;
+      height: min(85vh, 720px);
+      background: var(--branco);
+      border-radius: var(--r);
+      box-shadow: 0 8px 40px rgba(26, 24, 20, 0.2);
+      overflow: hidden;
+      position: relative;
+    }
+    .setup-modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--medio);
+      font-size: 13px;
+      transition: all .15s;
+    }
+    .setup-modal-close:hover {
+      color: var(--terra);
+      border-color: var(--terra);
+    }
+    .setup-modal iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
 
     @media(max-width:768px) {
       .topo {
         padding: 0 12px;
-        height: 48px;
+        height: 48px
       }
 
       .marca-sub,
       .tag-versao {
-        display: none;
+        display: none
       }
 
       .topo-nav {
-        display: none;
+        display: none
       }
 
       .hamburger {
-        display: flex;
+        display: flex
       }
 
       .agent-page {
         padding: 0;
-        height: calc(100dvh - 48px);
+        height: calc(100dvh - 48px)
       }
 
       .context-bar {
-        padding: 10px 12px 8px;
+        padding: 10px 12px 8px
       }
 
       .chat-shell {
         border-radius: 0;
         border-left: none;
-        border-right: none;
+        border-right: none
       }
 
       .chat-log {
-        padding: 14px 10px;
+        padding: 14px 10px
       }
 
       .chat-bubble {
-        max-width: 92%;
+        max-width: 92%
       }
 
       .chat-compose {
-        padding: 10px;
+        padding: 10px
       }
 
       .chat-compose textarea {
-        font-size: 16px;
+        font-size: 16px
       }
 
       .bottom-bar {
-        padding: 6px 12px 12px;
+        padding: 6px 12px 12px
       }
     }
   </style>
-  <script>
-    // ─── Page-level i18n bootstrap for the Agent Mobile page ───
-    // Stays in sync with the main workspace language (localStorage 'olivia_workspace_lang',
-    // the same key index.html uses). Translations live in /olivia/languages/pages/agent.<lang>.json.
-    (function () {
-      var STORAGE_KEY = 'olivia_workspace_lang';
-      // JSON file base name per supported language code.
-      var FILES = {
-        en: 'english', pt: 'portuguese', es: 'spanish', fr: 'french', de: 'german',
-        it: 'italian', el: 'greek', pl: 'polish', sq: 'albanian', cs: 'czech', th: 'thai'
-      };
-      // Map a browser/HTML lang tag (e.g. pt-BR) to our two-letter code.
-      function normLang(raw) {
-        if (!raw) return null;
-        var code = String(raw).slice(0, 2).toLowerCase();
-        return FILES[code] ? code : null;
-      }
-      function detectLang() {
-        try {
-          var params = new URLSearchParams(window.location.search);
-          var q = params.get('lang');
-          if (q && FILES[q]) return q;
-        } catch (e) {}
-        try {
-          var saved = localStorage.getItem(STORAGE_KEY);
-          if (saved && FILES[saved]) return saved;
-        } catch (e) {}
-        var fromHtml = normLang(document.documentElement.getAttribute('lang'));
-        if (fromHtml) return fromHtml;
-        var nav = normLang((navigator.language || 'pt'));
-        return nav || 'pt';
-      }
-      var LANG = detectLang();
-      // Set <html lang> early so the page renders with the right locale attributes.
-      document.documentElement.setAttribute('lang', LANG);
-
-      function apply(dict) {
-        if (!dict) return;
-        var nodes = document.querySelectorAll('[data-i18n]');
-        for (var i = 0; i < nodes.length; i++) {
-          var key = nodes[i].getAttribute('data-i18n');
-          if (dict[key] != null && dict[key] !== '') nodes[i].textContent = dict[key];
-        }
-      }
-
-      function loadAndApply() {
-        var url = '/olivia/languages/pages/agent.' + FILES[LANG] + '.json';
-        fetch(url, { cache: 'no-cache' })
-          .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-          .then(apply)
-          .catch(function (err) { console.warn('[agent i18n] failed to load', url, err); });
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadAndApply);
-      } else {
-        loadAndApply();
-      }
-
-      // Expose so in-page controls (and cross-links) can switch language.
-      window.agentSetLang = function (code) {
-        if (!FILES[code]) return;
-        LANG = code;
-        document.documentElement.setAttribute('lang', code);
-        try { localStorage.setItem(STORAGE_KEY, code); } catch (e) {}
-        loadAndApply();
-      };
-    })();
-  </script>
 </head>
-<body data-theme="light">
-<span data-i18n="topo">─── TOPO ───</span>
-<div class="topo">
-<div class="marca">
-<a class="marca-nome" href="/olivia/olivia"><span data-i18n="olivia">Olivia</span></a>
-<span class="marca-sub"><span data-i18n="workspace_agent">Workspace Agent</span></span>
-</div>
-<nav class="topo-nav">
-<a class="nav-tab" href="/olivia/"><i class="fas fa-grid-2"></i><span data-i18n="workspace">Workspace</span></a>
-<a class="nav-tab ativo" href="/olivia/agent"><i class="fas fa-comments"></i><span data-i18n="agente">Agente</span></a>
-</nav>
-<div class="topo-direita">
-<span class="tag-versao"><span data-i18n="abr_2026">Abr 2026</span></span>
-<a class="topo-sair" href="/olivia/" title="Voltar"><i class="fas fa-arrow-left"></i></a>
-</div>
-<button aria-label="Menu" class="hamburger" id="hamburger" onclick="toggleDrawer()">
-<span></span><span></span><span></span>
-</button>
-</div>
-<div class="mobile-drawer" id="mobileDrawer">
-<a href="/olivia/"><span data-i18n="workspace_1">Workspace</span></a>
-<a href="/olivia/agent"><span data-i18n="agente_1">Agente</span></a>
-</div>
-<span data-i18n="agent_page">─── AGENT PAGE ───</span>
-<div class="agent-page">
-<span data-i18n="context_chips_workspace_topics">CONTEXT CHIPS ── workspace topics</span>
-<div class="context-bar">
-<button class="ctx-chip" onclick="askTopic('ws_overview')"><i class="fas fa-compass"></i><span data-i18n="visão_geral">Visão geral</span></button>
-<button class="ctx-chip" onclick="askTopic('ws_roles')"><i class="fas fa-user-group"></i><span data-i18n="para_cada_função">Para cada
-        função</span></button>
-<button class="ctx-chip" onclick="askTopic('ws_core')"><i class="fas fa-microchip"></i><span data-i18n="core_runtime">Core runtime</span></button>
-<button class="ctx-chip" onclick="askTopic('ws_agents')"><i class="fas fa-robot"></i><span data-i18n="agentes">Agentes</span></button>
-<button class="ctx-chip" onclick="askTopic('ws_studio')"><i class="fas fa-paint-brush"></i><span data-i18n="criatividade">Criatividade</span></button>
-<button class="ctx-chip" onclick="askTopic('ws_data')"><i class="fas fa-database"></i><span data-i18n="dados_ia">Dados &amp; IA</span></button>
-<button class="ctx-chip" onclick="askTopic('ws_legal')"><i class="fas fa-scale-balanced"></i><span data-i18n="legal">Legal</span></button>
-<button class="ctx-chip" onclick="askTopic('ws_demo')"><i class="fas fa-play"></i><span data-i18n="demonstração">Demonstração</span></button>
-</div>
-<span data-i18n="chat">CHAT</span>
-<div class="chat-shell">
-<div class="chat-head">
-<div class="chat-head-left">
-<span class="status-dot" id="statusDot"></span>
-<span class="chat-head-label" id="statusLabel"><span data-i18n="pronto">Pronto</span></span>
-</div>
-<div class="chat-head-right">
-<button class="chat-head-btn" onclick="openAgentHistory()" title="Histórico"><i class="fas fa-clock-rotate-left"></i></button>
-<button class="chat-head-btn" onclick="exportAgentChatTxt()" title="Exportar TXT"><i class="fas fa-download"></i></button>
-<button class="chat-head-btn" onclick="clearAgentChat()" title="Limpar"><i class="fas fa-trash"></i></button>
-</div>
-</div>
-<div class="chat-log" id="agentLog"></div>
-<div class="chat-compose">
-<div class="compose-wrap">
-<textarea id="agentInput" oninput="autoGrow(this);updateCount()" onkeydown="if(event.key==='Enter'&amp;&amp;!event.shiftKey){event.preventDefault();sendAgentMessage();}" placeholder="Pergunte sobre o Olivia Workspace, módulos, casos reais..." rows="1"></textarea>
-<span class="compose-count" id="charCount"><span data-i18n="01200">0/1200</span></span>
-</div>
-<button class="send-btn" id="sendBtn" onclick="sendAgentMessage()"><i class="fas fa-arrow-up" style="font-size:12px"></i></button>
-</div>
-</div>
-<div class="bottom-bar">
-<div class="bottom-tools">
-<button class="tool-btn" onclick="saveAgentChat()"><i class="fas fa-floppy-disk"></i><span data-i18n="salvar">Salvar</span></button>
-<button class="tool-btn" onclick="exportAgentChatJson()"><i class="fas fa-code"></i><span data-i18n="json">JSON</span></button>
-</div>
-<span class="bottom-meta"><span data-i18n="olivia_workspace_agent">Olivia · Workspace Agent</span></span>
-</div>
-</div>
-<div aria-live="polite" class="history-panel" id="agentHistoryPanel">
-<div class="history-head">
-<span class="history-title"><span data-i18n="conversas_salvas">Conversas salvas</span></span>
-<button aria-label="Fechar" class="history-close" onclick="closeAgentHistory()"><i class="fas fa-xmark"></i></button>
-</div>
-<div class="history-list" id="agentHistoryList"></div>
-</div>
-<script>
+
+<body>
+
+  <div class="topo">
+    <div class="marca">
+      <a href="/olivia/olivia" class="marca-nome">Olivia</a>
+      <span class="marca-sub">Workspace Agent</span>
+    </div>
+    <nav class="topo-nav">
+      <a href="/olivia/" class="nav-tab"><i class="fas fa-grid-2" style="font-size:9px"></i> Workspace</a>
+      <a href="/olivia/agent" class="nav-tab ativo"><i class="fas fa-comments" style="font-size:9px"></i> Agente</a>
+    </nav>
+    <div class="topo-direita">
+      <span class="tag-versao">Abr 2026</span>
+      <a href="/olivia/" class="topo-sair" title="Voltar"><i class="fas fa-arrow-left"></i></a>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-drawer" id="mobileDrawer">
+    <a href="/olivia/" onclick="closeDrawer()">Workspace</a>
+    <a href="/olivia/agent" onclick="closeDrawer()">Agente</a>
+  </div>
+
+  <div class="agent-page">
+
+    <div class="context-bar">
+      <button class="ctx-chip" onclick="askTopic('ws_overview')"><i class="fas fa-compass"></i> Visão geral</button>
+      <button class="ctx-chip" onclick="askTopic('ws_roles')"><i class="fas fa-user-group"></i> Para cada
+        função</button>
+      <button class="ctx-chip" onclick="askTopic('ws_core')"><i class="fas fa-microchip"></i> Core runtime</button>
+      <button class="ctx-chip" onclick="askTopic('ws_agents')"><i class="fas fa-robot"></i> Agentes</button>
+      <button class="ctx-chip" onclick="askTopic('ws_studio')"><i class="fas fa-paint-brush"></i> Criatividade</button>
+      <button class="ctx-chip" onclick="askTopic('ws_data')"><i class="fas fa-database"></i> Dados & IA</button>
+      <button class="ctx-chip" onclick="askTopic('ws_legal')"><i class="fas fa-scale-balanced"></i> Legal</button>
+      <button class="ctx-chip" onclick="askTopic('ws_demo')"><i class="fas fa-play"></i> Demonstração</button>
+    </div>
+
+    <div class="chat-shell">
+      <div class="chat-head">
+        <div class="chat-head-left">
+          <span class="status-dot" id="statusDot"></span>
+          <span class="chat-head-label" id="statusLabel">Pronto</span>
+        </div>
+        <div class="chat-head-right">
+          <button class="chat-head-btn" onclick="openSetupModal()" title="Configurações"><i
+              class="fas fa-gear"></i></button>
+          <button class="chat-head-btn" onclick="openAgentHistory()" title="Histórico"><i
+              class="fas fa-clock-rotate-left"></i></button>
+          <button class="chat-head-btn" onclick="exportAgentChatTxt()" title="Exportar TXT"><i
+              class="fas fa-download"></i></button>
+          <button class="chat-head-btn" onclick="clearAgentChat()" title="Limpar"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+      <div id="agentLog" class="chat-log"></div>
+      <div class="chat-compose">
+        <div class="compose-wrap">
+          <textarea id="agentInput" placeholder="Pergunte sobre o Olivia Workspace, módulos, casos reais..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAgentMessage();}"
+            oninput="autoGrow(this);updateCount()"></textarea>
+          <span class="compose-count" id="charCount">0/1200</span>
+        </div>
+        <button id="sendBtn" class="send-btn" onclick="sendAgentMessage()"><i class="fas fa-arrow-up"
+            style="font-size:12px"></i></button>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="bottom-tools">
+        <button class="tool-btn" onclick="saveAgentChat()"><i class="fas fa-floppy-disk"
+            style="margin-right:3px;font-size:10px"></i> Salvar</button>
+        <button class="tool-btn" onclick="exportAgentChatJson()"><i class="fas fa-code"
+            style="margin-right:3px;font-size:10px"></i> JSON</button>
+      </div>
+      <span class="bottom-meta">Olivia · Workspace Agent</span>
+    </div>
+
+  </div>
+
+  <div class="history-panel" id="agentHistoryPanel" aria-live="polite">
+    <div class="history-head">
+      <span class="history-title">Conversas salvas</span>
+      <button class="history-close" onclick="closeAgentHistory()" aria-label="Fechar"><i
+          class="fas fa-xmark"></i></button>
+    </div>
+    <div class="history-list" id="agentHistoryList"></div>
+  </div>
+
+  <div class="setup-overlay" id="setupOverlay">
+    <div class="setup-modal">
+      <button class="setup-modal-close" onclick="closeSetupModal()" aria-label="Fechar"><i class="fas fa-xmark"></i></button>
+      <iframe id="setupFrame" src="about:blank" title="Configuração do Olivia"></iframe>
+    </div>
+  </div>
+
+  <script src="js/modules/user-prefs.js"></script>
+  <script>
     /* ── DRAWER ── */
     function toggleDrawer() { document.getElementById('mobileDrawer').classList.toggle('open'); document.getElementById('hamburger').classList.toggle('open') }
     function closeDrawer() { document.getElementById('mobileDrawer').classList.remove('open'); document.getElementById('hamburger').classList.remove('open') }
@@ -1177,7 +1192,7 @@
 
     function askTopic(key) {
       const prompt = TOPIC_QUERIES[key] || 'Fale sobre o Olivia Workspace.';
-      sendAgentMessage({ message: prompt, model: 'deepseek-v4-flash', newSession: true });
+      sendAgentMessage({ message: prompt, newSession: true });
     }
 
     /* ── STATE ── */
@@ -1195,9 +1210,7 @@
     let savedConversationId = '';
     let hasUnsavedChanges = false;
 
-    /* ── HELPERS ── */
     function _esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') }
-
     function _safeHref(raw) {
       const v = String(raw || '').trim();
       if (!v) return '';
@@ -1205,44 +1218,24 @@
       if (/^\/(?:OliviaLegal|olivia)(?:\/|$)/i.test(v)) return `${location.origin}${v}`;
       return '';
     }
-
     function _linkifyBareTargets(html) {
       const parts = html.split(/(<a\b[^>]*>[\s\S]*?<\/a>)/gi);
       return parts.map(part => {
         if (/^<a\b/i.test(part)) return part;
         return part.replace(/(^|[\s(>])((?:https?:\/\/|\/(?:OliviaLegal|olivia)\/)[^\s<]+)/g, (m, prefix, target) => {
-          let clean = target,
-            trail = '';
-          while (/[),.;!?]$/.test(clean)) {
-            trail = clean.slice(-1) + trail;
-            clean = clean.slice(0, -1)
-          }
+          let clean = target, trail = '';
+          while (/[),.;!?]$/.test(clean)) { trail = clean.slice(-1) + trail; clean = clean.slice(0, -1) }
           const href = _safeHref(clean);
           if (!href) return m;
           return `${prefix}<a href="${href}" target="_blank" rel="noopener noreferrer">${clean}</a>${trail}`;
         });
       }).join('');
     }
-
     function _near(el, px) { if (!el) return true; return (el.scrollHeight - el.scrollTop - el.clientHeight) <= (px || 80) }
-
     function _bottom(el) { if (el) el.scrollTop = el.scrollHeight }
+    function autoGrow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px' }
+    function updateCount() { const i = document.getElementById('agentInput'), c = document.getElementById('charCount'); if (i && c) { const l = (i.value || '').length; c.textContent = l + '/1200'; c.style.color = l > 1100 ? 'var(--terra)' : 'var(--palha)' } }
 
-    function autoGrow(el) {
-      el.style.height = 'auto';
-      el.style.height = Math.min(el.scrollHeight, 120) + 'px'
-    }
-
-    function updateCount() {
-      const i = document.getElementById('agentInput'),
-      c = document.getElementById('charCount'); if (i && c) {
-        const l = (i.value || '').length;
-        c.textContent = l + '/1200';
-        c.style.color = l > 1100 ? 'var(--amber)' : 'var(--gray)'
-      }
-    }
-
-    /* ── FORMATTING ── */
     function _inline(text) {
       let html = _esc(text)
         .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, label, url) => {
@@ -1255,39 +1248,25 @@
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
         .replace(/`([^`]+)`/g, '<code>$1</code>');
     }
-
     function _parseTable(section) {
       const lines = section.split('\n').map(l => l.trim()).filter(Boolean);
       if (lines.length < 3 || !lines[0].includes('|')) return '';
       const sep = lines[1].replace(/[|:\-\s]/g, '');
       if (sep.length) return '';
       const cells = l => l.split('|').map(c => c.trim()).filter(Boolean);
-      const head = cells(lines[0]),
-        rows = lines.slice(2).map(cells).filter(r => r.length);
+      const head = cells(lines[0]), rows = lines.slice(2).map(cells).filter(r => r.length);
       if (!head.length || !rows.length) return '';
       return `<div class="agent-table-wrap"><table class="agent-table"><thead><tr>${head.map(h => `<th>${_inline(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${head.map((_, i) => `<td>${_inline(r[i] || '')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
     }
-
     function renderBody(text) {
       const sections = String(text || '').split(/\n{2,}/);
       let html = '';
       for (const raw of sections) {
-        const s = raw.trim();
-        if (!s) continue;
-        const table = _parseTable(s);
-        if (table) { html += table; continue }
-        if (s.startsWith('## ') || s.startsWith('### ')) {
-          html +=
-          `<h3>${_inline(s.replace(/^#{2,4}\s*/, '').trim())}</h3>`; continue
-        }
-        if (s.startsWith('- ')) {
-          html +=
-          `<ul>${s.split('\n').filter(l => l.trim().startsWith('- ')).map(l => `<li>${_inline(l.trim().slice(2))}</li>`).join('')}</ul>`; continue
-        }
-        if (/^\d+\.\s/.test(s)) {
-          html +=
-          `<ol>${s.split('\n').filter(l => /^\d+\.\s/.test(l.trim())).map(l => `<li>${_inline(l.trim().replace(/^\d+\.\s/, ''))}</li>`).join('')}</ol>`; continue
-        }
+        const s = raw.trim(); if (!s) continue;
+        const table = _parseTable(s); if (table) { html += table; continue }
+        if (s.startsWith('## ') || s.startsWith('### ')) { html += `<h3>${_inline(s.replace(/^#{2,4}\s*/, '').trim())}</h3>`; continue }
+        if (s.startsWith('- ')) { html += `<ul>${s.split('\n').filter(l => l.trim().startsWith('- ')).map(l => `<li>${_inline(l.trim().slice(2))}</li>`).join('')}</ul>`; continue }
+        if (/^\d+\.\s/.test(s)) { html += `<ol>${s.split('\n').filter(l => /^\d+\.\s/.test(l.trim())).map(l => `<li>${_inline(l.trim().replace(/^\d+\.\s/, ''))}</li>`).join('')}</ol>`; continue }
         if (s === '---') { html += '<hr>'; continue }
         html += `<p>${_inline(s).replace(/\n/g, '<br>')}</p>`;
       }
@@ -1300,24 +1279,17 @@
       c += '<div class="agent-card-body">' + renderBody(text) + '</div>';
       if (refs && refs.length) {
         c += '<details class="detail-block"><summary>Fontes consultadas (' + refs.length + ')</summary>';
-        c += '<div class="detail-block-body">' + refs.map(r =>
-          '<code style="font-size:11px;display:inline-block;margin:2px 4px 2px 0;padding:2px 6px;background:var(--cream);border-radius:3px;color:var(--amber)">' +
-          _esc(r) + '</code>').join('') + '</div></details>';
+        c += '<div class="detail-block-body">' + refs.map(r => '<code style="font-size:11px;display:inline-block;margin:2px 4px 2px 0;padding:2px 6px;background:var(--creme-2);border-radius:3px;color:var(--verde)">' + _esc(r) + '</code>').join('') + '</div></details>';
       }
       if (o.actions) {
         c += '<div class="action-bar">';
-        c +=
-          '<button class="action-btn" onclick="askFollowUp(\'detalhar\')"><i class="fas fa-search-plus"></i> Detalhar</button>';
-        c +=
-          '<button class="action-btn" onclick="askFollowUp(\'passos\')"><i class="fas fa-list-check"></i> Próximos passos</button>';
-        c +=
-          '<button class="action-btn" onclick="askFollowUp(\'riscos\')"><i class="fas fa-triangle-exclamation"></i> Riscos</button>';
-        c +=
-          '<button class="action-btn" onclick="askFollowUp(\'comparar\')"><i class="fas fa-arrows-left-right"></i> Comparar módulos</button>';
+        c += '<button class="action-btn" onclick="askFollowUp(\'detalhar\')"><i class="fas fa-search-plus"></i> Detalhar</button>';
+        c += '<button class="action-btn" onclick="askFollowUp(\'passos\')"><i class="fas fa-list-check"></i> Próximos passos</button>';
+        c += '<button class="action-btn" onclick="askFollowUp(\'riscos\')"><i class="fas fa-triangle-exclamation"></i> Riscos</button>';
+        c += '<button class="action-btn" onclick="askFollowUp(\'comparar\')"><i class="fas fa-arrows-left-right"></i> Comparar módulos</button>';
         c += '</div>';
       }
-      c += '</div>';
-      return c;
+      c += '</div>'; return c;
     }
 
     function askFollowUp(kind) {
@@ -1328,78 +1300,51 @@
         comparar: 'Compare dois módulos que você mencionou e explique quando usar cada um.',
       };
       const prompt = p[kind] || 'Pode elaborar?';
-      sendAgentMessage({ message: prompt, model: 'deepseek-v4-flash', newSession: true });
+      sendAgentMessage({ message: prompt, newSession: true });
     }
 
-    /* ── RENDER ── */
     function appendUser(text) {
-      const log = document.getElementById('agentLog');
-      const pin = _near(log);
-      const div = document.createElement('div');
-      div.className = 'chat-bubble user';
+      const log = document.getElementById('agentLog'); const pin = _near(log);
+      const div = document.createElement('div'); div.className = 'chat-bubble user';
       div.innerHTML = `<p>${_esc(text)}</p>`;
-      log.appendChild(div);
-      if (pin) _bottom(log);
+      log.appendChild(div); if (pin) _bottom(log);
       chatHistory.push({ role: 'user', text, timestamp: new Date().toISOString() });
       hasUnsavedChanges = true;
     }
-
     function appendAgent(text, refs, meta, opts) {
       const o = opts || { actions: true };
-      const log = document.getElementById('agentLog');
-      const pin = _near(log);
-      const div = document.createElement('div');
-      div.className = 'chat-bubble agent';
+      const log = document.getElementById('agentLog'); const pin = _near(log);
+      const div = document.createElement('div'); div.className = 'chat-bubble agent';
       div.innerHTML = buildCard(text, refs, meta, o);
-      log.appendChild(div);
-      if (pin) _bottom(log);
+      log.appendChild(div); if (pin) _bottom(log);
       if (o.store !== false) {
-        chatHistory.push({
-          role: 'agent', text, references: refs || [], meta: meta || '',
-          timestamp: new Date().toISOString()
-        });
+        chatHistory.push({ role: 'agent', text, references: refs || [], meta: meta || '', timestamp: new Date().toISOString() });
         hasUnsavedChanges = true;
       }
     }
+    function removeThinking() { const el = document.getElementById('procLine'); if (el && el.parentNode) el.parentNode.removeChild(el) }
 
-    /* ── PROCESSING INDICATOR ── */
-    const PROC_PHASES = ['Analisando a pergunta', 'Consultando o guia do Workspace', 'Conectando módulos',
-      'Buscando exemplos reais', 'Estruturando resposta'
-    ];
+    const PROC_PHASES = ['Analisando a pergunta', 'Consultando o guia do Workspace', 'Conectando módulos', 'Buscando exemplos reais', 'Estruturando resposta'];
 
     function createProcessingIndicator() {
       const log = document.getElementById('agentLog');
       const pin = _near(log);
       const line = document.createElement('div');
-      line.className = 'proc-line';
-      line.id = 'procLine';
+      line.className = 'proc-line'; line.id = 'procLine';
       const started = Date.now();
       let phaseIdx = 0;
-      line.innerHTML =
-        `<div class="proc-spinner"></div><span class="proc-text">${PROC_PHASES[0]}</span><span class="proc-elapsed">0s</span>`;
-      log.appendChild(line);
-      if (pin) _bottom(log);
+      line.innerHTML = `<div class="proc-spinner"></div><span class="proc-text">${PROC_PHASES[0]}</span><span class="proc-elapsed">0s</span>`;
+      log.appendChild(line); if (pin) _bottom(log);
 
       let thinkBuf = '';
       let entries = [];
       let contextFiles = [];
 
-      const phaseTimer = setInterval(() => {
-        phaseIdx++; const t = line.querySelector('.proc-text'); if (t) t
-          .textContent = PROC_PHASES[phaseIdx % PROC_PHASES.length]
-      }, 3500);
-      const tickTimer = setInterval(() => {
-        const e = line.querySelector('.proc-elapsed'); if (e) e.textContent =
-          Math.floor((Date.now() - started) / 1000) + 's'
-      }, 1000);
+      const phaseTimer = setInterval(() => { phaseIdx++; const t = line.querySelector('.proc-text'); if (t) t.textContent = PROC_PHASES[phaseIdx % PROC_PHASES.length] }, 3500);
+      const tickTimer = setInterval(() => { const e = line.querySelector('.proc-elapsed'); if (e) e.textContent = Math.floor((Date.now() - started) / 1000) + 's' }, 1000);
 
       return {
-        setPhase(text) {
-          if (text && text.length > 3) {
-            const t = line.querySelector('.proc-text'); if (t) t
-              .textContent = text.slice(0, 50)
-          }
-        },
+        setPhase(text) { if (text && text.length > 3) { const t = line.querySelector('.proc-text'); if (t) t.textContent = text.slice(0, 50) } },
         addThinking(content) {
           thinkBuf += content;
           if (thinkBuf.length > 30 && /[.!?\n]/.test(content)) {
@@ -1417,21 +1362,16 @@
         },
         getFiles() { return contextFiles },
         finalize() {
-          clearInterval(phaseTimer);
-          clearInterval(tickTimer);
+          clearInterval(phaseTimer); clearInterval(tickTimer);
           if (line.parentNode) line.parentNode.removeChild(line);
           if (thinkBuf.trim().length > 8) entries.push(thinkBuf.replace(/\s+/g, ' ').trim().slice(0, 120));
           if (entries.length > 0) {
             const elapsed = Math.floor((Date.now() - started) / 1000);
             const logDiv = document.createElement('div');
             logDiv.className = 'thought-log';
-            let html =
-              `<div class="thought-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Pensamento do agente (${entries.length})<span class="tt-elapsed">${elapsed}s</span></div>`;
+            let html = `<div class="thought-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Pensamento do agente (${entries.length})<span class="tt-elapsed">${elapsed}s</span></div>`;
             html += '<div class="thought-items">';
-            entries.forEach(e => {
-              html +=
-              `<div class="thought-item">${_esc(e)}</div>`
-            });
+            entries.forEach(e => { html += `<div class="thought-item">${_esc(e)}</div>` });
             html += '</div>';
             logDiv.innerHTML = html;
             log.appendChild(logDiv);
@@ -1441,56 +1381,31 @@
     }
 
     function createStreamBubble() {
-      const log = document.getElementById('agentLog');
-      let sticky = _near(log);
-      const div = document.createElement('div');
-      div.className = 'chat-bubble agent';
+      const log = document.getElementById('agentLog'); let sticky = _near(log);
+      const div = document.createElement('div'); div.className = 'chat-bubble agent';
       div.innerHTML = buildCard('...', null, null, { streaming: true });
-      log.appendChild(div);
-      if (sticky) _bottom(log);
+      log.appendChild(div); if (sticky) _bottom(log);
       let last = 0;
       return {
-        set(t) {
-          sticky = sticky && _near(log, 160);
-          div.innerHTML = buildCard(t || '...', null, null, { streaming: true }); const n = Date.now(); if (n -
-            last > 100) {
-              if (sticky) _bottom(log);
-            last = n
-          }
-        },
-        finalize(t, r, m) {
-          div.innerHTML = buildCard(t, r, m, { actions: true });
-          _bottom(log);
-          chatHistory.push({
-            role: 'agent', text: t, references: r || [], meta: m || '',
-            timestamp: new Date().toISOString()
-          });
-          hasUnsavedChanges = true
-        },
+        set(t) { sticky = sticky && _near(log, 160); div.innerHTML = buildCard(t || '...', null, null, { streaming: true }); const n = Date.now(); if (n - last > 100) { if (sticky) _bottom(log); last = n } },
+        finalize(t, r, m) { div.innerHTML = buildCard(t, r, m, { actions: true }); _bottom(log); chatHistory.push({ role: 'agent', text: t, references: r || [], meta: m || '', timestamp: new Date().toISOString() }); hasUnsavedChanges = true },
         remove() { if (div.parentNode) div.parentNode.removeChild(div) }
       };
     }
 
     function setThinking(on) {
-      const dot = document.getElementById('statusDot'),
-        label = document.getElementById('statusLabel'),
-        btn = document.getElementById('sendBtn');
+      const dot = document.getElementById('statusDot'), label = document.getElementById('statusLabel'), btn = document.getElementById('sendBtn');
       if (dot) dot.className = 'status-dot' + (on ? ' thinking' : '');
       if (label) label.textContent = on ? 'Processando' : 'Pronto';
-      if (btn) {
-        btn.disabled = on;
-        btn.innerHTML = on ? '<i class="fas fa-spinner fa-spin" style="font-size:12px"></i>' :
-          '<i class="fas fa-arrow-up" style="font-size:12px"></i>'
-      }
+      if (btn) { btn.disabled = on; btn.innerHTML = on ? '<i class="fas fa-spinner fa-spin" style="font-size:12px"></i>' : '<i class="fas fa-arrow-up" style="font-size:12px"></i>' }
     }
 
-    /* ── PERSISTENCE ── */
+    /* ── PERSISTENCE (local) ── */
     function _conversationTitleFromHistory() {
       const firstUser = chatHistory.find(item => item && item.role === 'user' && item.text);
       if (firstUser && firstUser.text) return String(firstUser.text).slice(0, 120);
       return `Conversa ${new Date().toISOString().slice(0, 16).replace('T', ' ')}`;
     }
-
     function _renderAgentConversation(items) {
       const log = document.getElementById('agentLog');
       log.innerHTML = '';
@@ -1514,16 +1429,10 @@
       }
 
       function readSavedSessions() {
-        try {
-          const raw = localStorage.getItem(LOCAL_SAVED_KEY); const parsed = raw ? JSON.parse(raw) : [];
-          return Array.isArray(parsed) ? parsed : []
-        } catch (_) { return [] }
+        try { const raw = localStorage.getItem(LOCAL_SAVED_KEY); const parsed = raw ? JSON.parse(raw) : []; return Array.isArray(parsed) ? parsed : [] }
+        catch (_) { return [] }
       }
-
-      function writeSavedSessions(items) {
-        try { localStorage.setItem(LOCAL_SAVED_KEY, JSON.stringify(items || [])) } catch (
-        _) { }
-      }
+      function writeSavedSessions(items) { try { localStorage.setItem(LOCAL_SAVED_KEY, JSON.stringify(items || [])) } catch (_) { } }
 
       const nowIso = new Date().toISOString();
       const currentId = savedConversationId || `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -1563,10 +1472,8 @@
       }
       if (!confirm('Limpar toda a conversa?')) return;
       localStorage.removeItem(STORAGE_KEY);
-      chatHistory = [];
-      sessionId = null;
-      savedConversationId = '';
-      hasUnsavedChanges = false;
+      chatHistory = []; sessionId = null;
+      savedConversationId = ''; hasUnsavedChanges = false;
       document.getElementById('agentLog').innerHTML = '';
       showWelcome();
     }
@@ -1581,10 +1488,7 @@
         const raw = localStorage.getItem(LOCAL_SAVED_KEY);
         const items = raw ? JSON.parse(raw) : [];
         const conversations = Array.isArray(items) ? items : [];
-        if (!conversations.length) {
-          list.innerHTML =
-          '<div class="history-empty">Nenhuma conversa salva ainda.</div>'; return
-        }
+        if (!conversations.length) { list.innerHTML = '<div class="history-empty">Nenhuma conversa salva ainda.</div>'; return }
         list.innerHTML = conversations.map(item => {
           const id = String(item.id || '');
           const title = _esc(item.title || 'Conversa');
@@ -1592,18 +1496,17 @@
           const updated = _esc(String(item.updated_at || '').replace('T', ' ').slice(0, 16));
           const count = Number(item.message_count || 0);
           return `<div class="history-item">
-                <div class="history-item-title">${title}</div>
-                <div class="history-item-preview">${preview || 'Sem preview'}</div>
-                <div class="history-item-meta">${count} mensagem(ns) · ${updated}</div>
-                <div class="history-item-actions">
-                  <button class="history-btn" onclick="loadAgentConversation('${id}')">Abrir</button>
-                  <button class="history-btn" onclick="deleteAgentConversation('${id}')">Excluir</button>
-                </div>
-              </div>`;
+                        <div class="history-item-title">${title}</div>
+                        <div class="history-item-preview">${preview || 'Sem preview'}</div>
+                        <div class="history-item-meta">${count} mensagem(ns) · ${updated}</div>
+                        <div class="history-item-actions">
+                            <button class="history-btn" onclick="loadAgentConversation('${id}')">Abrir</button>
+                            <button class="history-btn" onclick="deleteAgentConversation('${id}')">Excluir</button>
+                        </div>
+                    </div>`;
         }).join('');
       } catch (err) {
-        list.innerHTML =
-        `<div class="history-empty">Falha ao carregar: ${_esc(err.message || String(err))}</div>`
+        list.innerHTML = `<div class="history-empty">Falha ao carregar: ${_esc(err.message || String(err))}</div>`
       }
     }
 
@@ -1625,10 +1528,7 @@
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory)) } catch (_) { }
         closeAgentHistory();
       } catch (err) {
-        appendAgent(`Falha ao abrir: ${err.message || err}`, null, null, {
-          actions: false,
-          store: false
-        })
+        appendAgent(`Falha ao abrir: ${err.message || err}`, null, null, { actions: false, store: false })
       }
     }
 
@@ -1644,38 +1544,21 @@
         if (savedConversationId === conversationId) savedConversationId = '';
         openAgentHistory();
       } catch (err) {
-        appendAgent(`Falha ao excluir: ${err.message || err}`, null, null, {
-          actions: false,
-          store: false
-        })
+        appendAgent(`Falha ao excluir: ${err.message || err}`, null, null, { actions: false, store: false })
       }
     }
 
-    function downloadFile(n, c, m) {
-      const b = new Blob([c], { type: m }),
-      a = document.createElement('a');
-      a.href = URL.createObjectURL(b);
-      a.download = n;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(a.href)
-    }
-
+    function downloadFile(n, c, m) { const b = new Blob([c], { type: m }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = n; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href) }
     function exportAgentChatTxt() {
       if (!chatHistory.length) return;
       const lines = chatHistory.map(i => `[${i.timestamp}] ${i.role.toUpperCase()}: ${i.text}`);
-      downloadFile(`OliviaWorkspace-chat-${new Date().toISOString().slice(0, 10)}.txt`, lines.join('\n\n'),
-        'text/plain;charset=utf-8');
+      downloadFile(`OliviaWorkspace-chat-${new Date().toISOString().slice(0, 10)}.txt`, lines.join('\n\n'), 'text/plain;charset=utf-8');
     }
-
     function exportAgentChatJson() {
       if (!chatHistory.length) return;
-      downloadFile(`OliviaWorkspace-chat-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(chatHistory, null,
-        2), 'application/json;charset=utf-8');
+      downloadFile(`OliviaWorkspace-chat-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(chatHistory, null, 2), 'application/json;charset=utf-8');
     }
 
-    /* ── WELCOME ── */
     function showWelcome() {
       appendAgent(
         'Olá! Sou **Olivia**, a agente do **Olivia Workspace**.\n\nConheço cada módulo do ecossistema — do Core Runtime ao Legal, passando por Criatividade, Dados e Conectores — e também os papéis reais: caixa, bartender, compras, financeiro, vendas, almoxarifado e compliance.\n\nPergunte o que quiser: "como o bartender usa o Olivia numa sexta à noite?", "o que o módulo Memory faz?", ou "quero uma demonstração".',
@@ -1688,85 +1571,57 @@
       const presetObj = (preset && typeof preset === 'object') ? preset : null;
       const input = document.getElementById('agentInput');
       const message = ((presetObj ? presetObj.message : preset) || input.value || '').trim();
-      const requestModel = presetObj && typeof presetObj.model === 'string' && presetObj.model.trim() ? presetObj.model
-        .trim() : null;
-      if (presetObj && presetObj.newSession) {
-        sessionId = null;
-        workspaceContextSent = false
-      }
+      const requestModel = (function() {
+        if (window.OliviaUserPrefs) {
+          const m = OliviaUserPrefs.getModel();
+          if (m) return m;
+        }
+        try {
+          const cfg = JSON.parse(localStorage.getItem('OliviaLegal.workspace.config') || '{}');
+          if (cfg.model) return cfg.model;
+        } catch (_) {}
+        return null;
+      })();
+      if (presetObj && presetObj.newSession) { sessionId = null; workspaceContextSent = false }
       if (!message) return;
-      if (message.length > 1200) {
-        appendAgent('Mensagem muito longa. Limite: 1200 caracteres.', null, null, {
-          actions: false,
-          store: false
-        }); return
-      }
+      if (message.length > 1200) { appendAgent('Mensagem muito longa. Limite: 1200 caracteres.', null, null, { actions: false }); return }
 
       appendUser(message);
-      if (!preset) {
-        input.value = '';
-        autoGrow(input);
-        updateCount()
-      }
+      if (!preset) { input.value = ''; autoGrow(input); updateCount() }
       setThinking(true);
       const proc = createProcessingIndicator();
 
       try {
-        const history = chatHistory.filter(i => i && i.text).slice(-20).map(i => ({
-          role: i.role === 'agent' ?
-            'assistant' : 'user', content: i.text
-        }));
+        const history = chatHistory.filter(i => i && i.text).slice(-20).map(i => ({ role: i.role === 'agent' ? 'assistant' : 'user', content: i.text }));
         const messageForBackend = _wrapWithWorkspacePrimer(message);
         const payload = { message: messageForBackend, history, session_id: sessionId || null };
         if (requestModel) payload.model = requestModel;
         const res = await fetch(`${CLOVI_BASE_URL}/api/assistant/chat`, {
-          method: 'POST',
+          method: 'POST', credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
-        if (!res.ok) {
-          let err = ''; try { err = await res.text() } catch (_) { }
-          proc.finalize();
-          appendAgent(`Erro ao consultar (${res.status}).${err ? '\n' + err : ''}`, null, null, {
-            actions: false,
-            store: false
-          }); return
-        }
+        if (!res.ok) { let err = ''; try { err = await res.text() } catch (_) { } proc.finalize(); appendAgent(`Erro ao consultar (${res.status}).${err ? '\n' + err : ''}`, null, null, { actions: false }); return }
 
         const reader = res.body && res.body.getReader ? res.body.getReader() : null;
-        if (!reader) {
-          proc.finalize();
-          appendAgent('Streaming indisponível.', null, null, { actions: false, store: false }); return
-        }
+        if (!reader) { proc.finalize(); appendAgent('Streaming indisponível.', null, null, { actions: false }); return }
 
         const decoder = new TextDecoder('utf-8');
-        let buffer = '',
-          streamed = '',
-          streamError = '',
-          streamBubble = null;
+        let buffer = '', streamed = '', streamError = '', streamBubble = null;
 
         while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
+          const { value, done } = await reader.read(); if (done) break;
           buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
+          const lines = buffer.split('\n'); buffer = lines.pop() || '';
           for (const rawLine of lines) {
-            const line = rawLine.trim();
-            if (!line.startsWith('data:')) continue;
-            const json = line.slice(5).trim();
-            if (!json) continue;
-            let evt;
-            try { evt = JSON.parse(json) } catch (_) { continue }
+            const line = rawLine.trim(); if (!line.startsWith('data:')) continue;
+            const json = line.slice(5).trim(); if (!json) continue;
+            let evt; try { evt = JSON.parse(json) } catch (_) { continue }
 
             if (evt.type === 'token' && typeof evt.content === 'string') {
-              if (!streamBubble) {
-                removeThinking();
-                streamBubble = createStreamBubble()
-              }
-              streamed += evt.content;
-              streamBubble.set(streamed);
+              if (!streamBubble) { removeThinking(); streamBubble = createStreamBubble() }
+              streamed += evt.content; streamBubble.set(streamed);
             } else if (evt.type === 'agent_status') {
               proc.setPhase(evt.message || 'Executando');
               proc.addLog(evt.message || 'Executando');
@@ -1785,36 +1640,50 @@
         const realFiles = proc.getFiles();
         proc.finalize();
 
-        if (streamError) {
-          if (streamBubble) streamBubble.remove();
-          appendAgent(`Erro: ${streamError}`, null, null, { actions: false, store: false }); return
-        }
+        if (streamError) { if (streamBubble) streamBubble.remove(); appendAgent(`Erro: ${streamError}`, null, null, { actions: false }); return }
         const refs = realFiles.length > 0 ? realFiles : null;
-        if (streamBubble) {
-          streamBubble.finalize(streamed || 'Sem resposta.', refs,
-            'modo: OliviaWorkspace/project-aware')
-        } else {
-          appendAgent(streamed || 'Sem resposta.', refs,
-            'modo: OliviaWorkspace/project-aware')
-        }
+        if (streamBubble) { streamBubble.finalize(streamed || 'Sem resposta.', refs, 'modo: OliviaWorkspace/project-aware') }
+        else { appendAgent(streamed || 'Sem resposta.', refs, 'modo: OliviaWorkspace/project-aware') }
       } catch (err) {
         proc.finalize();
-        appendAgent(`Erro de rede: ${err.message || err}`, null, null, { actions: false, store: false });
-      } finally {
-        removeThinking();
-        setThinking(false)
-      }
+        appendAgent(`Erro de rede: ${err.message || err}`, null, null, { actions: false });
+      } finally { removeThinking(); setThinking(false) }
     }
 
-    function removeThinking() {
-      const el = document.getElementById('procLine'); if (el && el.parentNode) el.parentNode
-        .removeChild(el)
+    /* ── SETUP MODAL ── */
+    function openSetupModal() {
+      const overlay = document.getElementById('setupOverlay');
+      const frame = document.getElementById('setupFrame');
+      frame.src = '/auth/olivia-setup.html?mode=modal';
+      overlay.classList.add('open');
     }
+    function closeSetupModal() {
+      const overlay = document.getElementById('setupOverlay');
+      const frame = document.getElementById('setupFrame');
+      overlay.classList.remove('open');
+      frame.src = 'about:blank';
+    }
+    window.addEventListener('message', async function(event) {
+      if (event.data && event.data.type === 'olivia-setup-complete') {
+        closeSetupModal();
+        if (window.OliviaUserPrefs) {
+          await OliviaUserPrefs.load();
+          await OliviaUserPrefs.syncWorkspaceConfig();
+        }
+      }
+    });
 
     /* ── INIT ── */
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       if (!loadSaved()) showWelcome();
-      updateCount()
+      updateCount();
+      // Check if user has completed setup
+      if (window.OliviaUserPrefs) {
+        const prefs = await OliviaUserPrefs.load();
+        if (!prefs.setup_complete) {
+          openSetupModal();
+        }
+      }
     });
     window.addEventListener('beforeunload', (event) => {
       if (hasUnsavedChanges && chatHistory.length) {
@@ -1824,4 +1693,5 @@
     });
   </script>
 </body>
+
 </html>

@@ -191,3 +191,99 @@ body.dark .log-tc-header:hover{background:rgba(255,255,255,.05)}
 .compose-panel-context-refresh{border:1px solid var(--border);background:var(--bg);color:var(--gray-hi);width:24px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;transition:all .12s}
 .compose-panel-context-refresh:hover{color:var(--white);border-color:var(--border-hi)}
 .compose-panel-context-hint{font-size:10px;color:var(--gray);font-family:var(--mono);margin-left:auto;white-space:nowrap}
+
+/* Context Badge Modal */
+.context-badge-modal {
+  position: fixed;
+  z-index: 10000;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  min-width: 280px;
+  max-width: 400px;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.95);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  pointer-events: none;
+  /* Center in viewport */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  max-height: 80vh;
+  max-width: 90vw;
+}
+.context-badge-modal.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+.context-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--white);
+}
+.context-modal-count {
+  background: var(--accent);
+  color: var(--white);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 500;
+}
+.context-modal-body {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 4px 8px;
+}
+.context-modal-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--text);
+  transition: background 0.1s;
+}
+.context-modal-file:hover {
+  background: rgba(255,255,255,0.05);
+}
+.context-modal-file i {
+  font-size: 12px;
+  width: 16px;
+  text-align: center;
+}
+.context-modal-file span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.context-modal-remove {
+  background: none;
+  border: none;
+  color: var(--gray);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 3px;
+  opacity: 0.6;
+  transition: opacity 0.1s, color 0.1s;
+}
+.context-modal-remove:hover {
+  opacity: 1;
+  color: var(--red);
+}
+.context-modal-empty {
+  text-align: center;
+  padding: 20px;
+  color: var(--gray);
+  font-size: 11px;
+}

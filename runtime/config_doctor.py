@@ -15,6 +15,11 @@ URL_KEY_RE = re.compile(r"(?:_URL|_BASE_URL|_URI)$")
 URL_EXACT_KEYS = {"OLLAMA_HOST"}
 ALLOWED_URI_SCHEMES = {"http", "https", "bolt", "bolt+s", "neo4j", "neo4j+s"}
 
+OLLAMA_KEEP_ALIVE_RE = re.compile(r"^-1$|^\d+[mhd]?$")
+OLLAMA_MODEL_URLS_RE = re.compile(
+    r"^https?://[a-zA-Z0-9.-]+(?::\d+)?(?:/v1/models)?$"
+)
+
 
 def _strip_inline_export(raw: str) -> str:
     if raw.startswith("export "):
@@ -127,6 +132,53 @@ def validate(entries: list[dict], malformed: list[str], strict: bool) -> tuple[l
     if values_map.get("LLM_MODEL") and values_map.get("DEEPSEEK_MODEL"):
         if values_map["LLM_MODEL"] != values_map["DEEPSEEK_MODEL"]:
             warnings.append("LLM_MODEL and DEEPSEEK_MODEL differ; check intended precedence")
+
+    # ── Ollama validation ───────────────────────────────────────────────────
+    ollama_host = values_map.get("OLLAMA_HOST", "").strip()
+    if ollama_host:
+        parsed = urlparse(ollama_host)
+        if parsed.scheme not in {"http", "https"}:
+            errors.append(f"OLLAMA_HOST: unsupported scheme '{parsed.scheme}' (use http or https)")
+        elif not parsed.netloc:
+            errors.append(f"OLLAMA_HOST: missing host in '{ollama_host}'")
+    else:
+        infos.append("OLLAMA_HOST: not set (will use default http://127.0.0.1:11434)")
+
+    ollama_keep_alive = values_map.get("OLLAMA_KEEP_ALIVE", "").strip()
+    if ollama_keep_alive:
+        if ollama_keep_alive == "-1":
+            infos.append("OLLAMA_KEEP_ALIVE=-1: model stays in memory permanently (best)")
+        elif ollama_keep_alive == "24h":
+            infos.append("OLLAMA_KEEP_ALIVE=24h: model stays in memory for 24h (recommended)")
+        elif OLLAMA_KEEP_ALIVE_RE.match(ollama_keep_alive):
+            infos.append(f"OLLAMA_KEEP_ALIVE={ollama_keep_alive}")
+        else:
+            warnings.append(
+                f"OLLAMA_KEEP_ALIVE={ollama_keep_alive}: unexpected format "
+                "(use -1 for permanent, or duration like 24h, 10m)"
+            )
+
+    ollama_num_ctx = values_map.get("OLLAMA_NUM_CTX", "").strip()
+    if ollama_num_ctx:
+        try:
+            n = int(ollama_num_ctx)
+            if n < 4096:
+                warnings.append(f"OLLAMA_NUM_CTX={n}: very small context window (min 4096, recommend 32768)")
+            elif n < 16384:
+                infos.append(f"OLLAMA_NUM_CTX={n}: moderate context window (gemma4 supports 131072)")
+            elif n >= 131072:
+                infos.append(f"OLLAMA_NUM_CTX={n}: using full model capacity (131072), ensure sufficient RAM")
+            else:
+                infos.append(f"OLLAMA_NUM_CTX={n}: good context window")
+        except ValueError:
+            errors.append(f"OLLAMA_NUM_CTX={ollama_num_ctx}: must be an integer")
+
+    ollama_model_urls = values_map.get("OLLAMA_MODEL_URLS", "").strip()
+    if ollama_model_urls:
+        urls = [u.strip() for u in ollama_model_urls.split(",") if u.strip()]
+        for u in urls:
+            if not OLLAMA_MODEL_URLS_RE.match(u):
+                warnings.append(f"OLLAMA_MODEL_URLS: '{u}' does not look like a valid server URL")
 
     for item in entries:
         issue = _validate_urlish_value(item["key"], item["value"])

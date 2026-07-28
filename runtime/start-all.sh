@@ -15,6 +15,7 @@ WATCH_INTERVAL=20
 RUN_CONFIG_DOCTOR=1
 RUN_SMOKE=0
 BUILD_ELECTRON=0
+START_OLLAMA=0
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -25,6 +26,7 @@ while [[ $# -gt 0 ]]; do
     --skip-config-doctor) RUN_CONFIG_DOCTOR=0; shift ;;
     --smoke) RUN_SMOKE=1; shift ;;
     --build-electron) BUILD_ELECTRON=1; shift ;;
+    --ollama) START_OLLAMA=1; shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
@@ -152,6 +154,53 @@ if ! "$PYTHON" -c "import docx" >/dev/null 2>&1; then
 fi
 
 echo "✓  python      → $PYTHON  ($($PYTHON --version 2>&1))"
+
+# ── 3.5. Ollama server check/start (optional) ────────────────────────────
+OLLAMA_HOST="${OLLAMA_HOST:-http://127.0.0.1:11434}"
+OLLAMA_PORT="$(echo "$OLLAMA_HOST" | sed -E 's|^https?://[^:]+:?([0-9]*).*$|\1|')"
+OLLAMA_PORT="${OLLAMA_PORT:-11434}"
+
+ollama_already_running=0
+if curl -sf "${OLLAMA_HOST}/api/tags" > /dev/null 2>&1; then
+  echo "✓  ollama      → already running at $OLLAMA_HOST"
+  ollama_already_running=1
+elif curl -sf "http://127.0.0.1:${OLLAMA_PORT}/api/tags" > /dev/null 2>&1; then
+  echo "✓  ollama      → already running at http://127.0.0.1:${OLLAMA_PORT}"
+  ollama_already_running=1
+fi
+
+if [[ $START_OLLAMA -eq 1 && $ollama_already_running -eq 0 ]]; then
+  if ! command -v ollama &>/dev/null; then
+    echo "⚠  --ollama requested but 'ollama' binary not found in PATH"
+  else
+    echo "  Starting Ollama with recommended config..."
+    echo "    OLLAMA_HOST=$OLLAMA_HOST"
+    echo "    OLLAMA_KEEP_ALIVE=-1"
+    echo "    OLLAMA_FLASH_ATTENTION=1"
+    LOG_DIR="$HOME/.dev-logs"
+    mkdir -p "$LOG_DIR"
+    OLLAMA_LOG="$LOG_DIR/ollama.log"
+    OLLAMA_KEEP_ALIVE=-1 OLLAMA_FLASH_ATTENTION=1 OLLAMA_HOST="$OLLAMA_HOST" \
+      nohup ollama serve > "$OLLAMA_LOG" 2>&1 &
+    OLLAMA_PID=$!
+    echo "✓  ollama      → PID $OLLAMA_PID (log: $OLLAMA_LOG)"
+
+    # Wait up to 5 seconds for the server to become ready
+    for i in {1..10}; do
+      if curl -sf "${OLLAMA_HOST}/api/tags" > /dev/null 2>&1; then
+        echo "✓  ollama      → ready in ~$((i * 500))ms"
+        ollama_already_running=1
+        break
+      fi
+      sleep 0.5
+    done
+    if [[ $ollama_already_running -eq 0 ]]; then
+      echo "⚠  ollama      → server started but not yet responding — may still be initializing"
+    fi
+  fi
+elif [[ $START_OLLAMA -eq 0 && $ollama_already_running -eq 0 ]]; then
+  echo "   ollama      → not running (add --ollama to auto-start)"
+fi
 
 # ── 4. Validate env config (optional preflight) ─────────────────────────────
 if [[ $RUN_CONFIG_DOCTOR -eq 1 ]]; then

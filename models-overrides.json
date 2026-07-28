@@ -180,6 +180,18 @@
       "output_cost_per_1m": 1.2,
       "supports_vision": true,
       "supports_thinking": false
+    },
+    {
+      "id": "google/gemma-4-26b-a4b-it:free",
+      "name": "Google: Gemma 4 26B A4B  (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total para",
+      "context_window": 262144,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": true,
+      "supports_thinking": false
     }
   ],
   "overrides": {

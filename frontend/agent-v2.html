@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IBSCO · Agente</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,500;1,9..144,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --creme: #FAF7F2;
+            --creme-2: #F3EEE6;
+            --creme-3: #EDE5D8;
+            --branco: #FFFFFF;
+            --borda: #E2D9CC;
+            --borda-hi: #D0C4B4;
+            --tinta: #1A1814;
+            --tinta-2: #2C2820;
+            --escuro: #3D3830;
+            --medio: #6B6358;
+            --claro: #9A9088;
+            --palha: #C8B99A;
+            --verde: #1C4532;
+            --verde-2: #2D6A4F;
+            --verde-3: #40916C;
+            --verde-lo: rgba(28, 69, 50, 0.08);
+            --terra: #C4622D;
+            --terra-2: #E07840;
+            --terra-lo: rgba(196, 98, 45, 0.10);
+            --ouro: #B8860B;
+            --ouro-lo: rgba(184, 134, 11, 0.10);
+            --azul: #4A7C9B;
+            --azul-lo: rgba(74, 124, 155, 0.08);
+            --display: 'Fraunces', Georgia, serif;
+            --corpo: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --r: 10px;
+            --r-sm: 6px;
+            --sombra: 0 2px 16px rgba(26, 24, 20, 0.08);
+            --max: 820px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%;
+            scroll-behavior: smooth
+        }
+
+        body {
+            background: var(--creme);
+            color: var(--tinta);
+            font-family: var(--corpo);
+            -webkit-font-smoothing: antialiased
+        }
+
+        /* ─── TOPO ─── */
+        .topo {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 52px;
+            background: var(--branco);
+            border-bottom: 1px solid var(--borda);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            gap: 16px
+        }
+
+        .marca {
+            display: flex;
+            align-items: baseline;
+            gap: 10px
+        }
+
+        .marca-nome {
+            font-family: var(--display);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--verde);
+            letter-spacing: -0.01em;
+            text-decoration: none
+        }
+
+        .marca-sub {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--palha);
+            letter-spacing: 0.08em;
+            text-transform: uppercase
+        }
+
+        .topo-nav {
+            display: flex;
+            align-items: center;
+            gap: 2px
+        }
+
+        .nav-tab {
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--claro);
+            border-radius: 6px;
+            transition: all .15s;
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px
+        }
+
+        .nav-tab:hover {
+            color: var(--verde);
+            background: var(--verde-lo)
+        }
+
+        .nav-tab.ativo {
+            color: var(--verde);
+            background: var(--verde-lo);
+            font-weight: 600
+        }
+
+        .topo-direita {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .tag-versao {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--claro);
+            padding: 3px 8px;
+            border: 1px solid var(--borda);
+            border-radius: 4px
+        }
+
+        .topo-sair {
+            font-size: 11px;
+            color: var(--claro);
+            text-decoration: none;
+            transition: color .15s
+        }
+
+        .topo-sair:hover {
+            color: var(--terra)
+        }
+
+        /* ─── HAMBURGER ─── */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            padding: 6px;
+            background: none;
+            border: none;
+            z-index: 200
+        }
+
+        .hamburger span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--tinta);
+            border-radius: 2px;
+            transition: all .25s
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg)
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg)
+        }
+
+        .mobile-drawer {
+            display: none;
+            position: fixed;
+            top: 52px;
+            left: 0;
+            right: 0;
+            background: var(--branco);
+            border-bottom: 1px solid var(--borda);
+            padding: 8px 20px 16px;
+            z-index: 99;
+            flex-direction: column
+        }
+
+        .mobile-drawer.open {
+            display: flex
+        }
+
+        .mobile-drawer a {
+            display: block;
+            padding: 11px 0;
+            font-size: 14px;
+            color: var(--medio);
+            text-decoration: none;
+            border-bottom: 1px solid var(--creme-2)
+        }
+
+        .mobile-drawer a:last-child {
+            border: none
+        }
+
+        /* ─── LAYOUT ─── */
+        .agent-page {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 52px);
+            max-width: var(--max);
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 24px
+        }
+
+        /* CONTEXT CHIPS */
+        .context-bar {
+            display: flex;
+            gap: 6px;
+            padding: 14px 0 10px;
+            flex-shrink: 0;
+            overflow-x: auto;
+            scrollbar-width: none
+        }
+
+        .context-bar::-webkit-scrollbar {
+            display: none
+        }
+
+        .ctx-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border: 1px solid var(--borda);
+            border-radius: 999px;
+            background: var(--branco);
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--medio);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all .2s;
+            flex-shrink: 0
+        }
+
+        .ctx-chip:hover {
+            border-color: rgba(28, 69, 50, 0.3);
+            color: var(--verde);
+            background: var(--verde-lo)
+        }
+
+        .ctx-chip:active {
+            transform: scale(0.97)
+        }
+
+        .ctx-chip i {
+            font-size: 10px;
+            opacity: .6
+        }
+
+        /* ─── CHAT ─── */
+        .chat-shell {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            background: var(--branco);
+            border: 1px solid var(--borda);
+            border-radius: var(--r) var(--r) 0 0;
+            overflow: hidden
+        }
+
+        .chat-head {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--borda);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0
+        }
+
+        .chat-head-left {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .chat-head-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--claro);
+            letter-spacing: .06em;
+            text-transform: uppercase
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--verde-3);
+            flex-shrink: 0
+        }
+
+        .status-dot.thinking {
+            background: var(--ouro);
+            animation: dotPulse 1.2s infinite
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .4
+            }
+        }
+
+        .chat-head-right {
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .chat-head-btn {
+            background: none;
+            border: none;
+            padding: 5px 7px;
+            color: var(--claro);
+            cursor: pointer;
+            font-size: 11px;
+            transition: color .15s;
+            border-radius: 4px
+        }
+
+        .chat-head-btn:hover {
+            color: var(--verde);
+            background: var(--verde-lo)
+        }
+
+        .chat-log {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 0;
+            background: var(--creme)
+        }
+
+        /* ─── BUBBLES ─── */
+        .chat-bubble {
+            max-width: 85%;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--escuro)
+        }
+
+        .chat-bubble.user {
+            align-self: flex-end;
+            background: var(--branco);
+            border: 1px solid var(--borda);
+            border-radius: var(--r) var(--r) 4px var(--r);
+            padding: 10px 14px
+        }
+
+        .chat-bubble.agent {
+            align-self: flex-start;
+            padding: 0
+        }
+
+        /* Agent card */
+        .agent-card {
+            background: var(--branco);
+            border: 1px solid var(--borda);
+            border-radius: var(--r);
+            overflow: hidden
+        }
+
+        .agent-card.streaming {
+            border-color: rgba(28, 69, 50, 0.2)
+        }
+
+        .agent-card-body {
+            padding: 14px 16px
+        }
+
+        .agent-card-body p {
+            margin: 0 0 8px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--escuro)
+        }
+
+        .agent-card-body p:last-child {
+            margin-bottom: 0
+        }
+
+        .agent-card-body strong {
+            color: var(--tinta);
+            font-weight: 600
+        }
+
+        .agent-card-body a {
+            color: var(--verde-2);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            word-break: break-word
+        }
+
+        .agent-card-body a:hover {
+            color: var(--verde)
+        }
+
+        .agent-card-body code {
+            font-family: var(--mono);
+            font-size: 11px;
+            background: var(--creme-2);
+            padding: 1px 5px;
+            border-radius: 3px;
+            color: var(--verde)
+        }
+
+        .agent-card-body ul,
+        .agent-card-body ol {
+            margin: 6px 0 10px 20px;
+            padding: 0
+        }
+
+        .agent-card-body li {
+            margin: 0 0 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--escuro)
+        }
+
+        .agent-card-body h3 {
+            font-family: var(--display);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--tinta);
+            margin: 14px 0 6px;
+            line-height: 1.3
+        }
+
+        .agent-card-body h3:first-child {
+            margin-top: 0
+        }
+
+        .agent-card-body hr {
+            border: none;
+            border-top: 1px solid var(--borda);
+            margin: 12px 0
+        }
+
+        /* Collapsible detail blocks */
+        .detail-block {
+            border-top: 1px solid var(--borda)
+        }
+
+        .detail-block summary {
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--claro);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .15s;
+            user-select: none
+        }
+
+        .detail-block summary::-webkit-details-marker {
+            display: none
+        }
+
+        .detail-block summary::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-right: 1.5px solid var(--claro);
+            border-bottom: 1.5px solid var(--claro);
+            transform: rotate(-45deg);
+            transition: transform .2s;
+            flex-shrink: 0
+        }
+
+        .detail-block[open] summary::before {
+            transform: rotate(45deg)
+        }
+
+        .detail-block summary:hover {
+            background: var(--creme);
+            color: var(--verde)
+        }
+
+        .detail-block-body {
+            padding: 10px 16px 14px;
+            font-size: 13px;
+            line-height: 1.65;
+            color: var(--escuro);
+            border-top: 1px solid var(--borda);
+            background: var(--creme)
+        }
+
+        /* Tables */
+        .agent-table-wrap {
+            overflow-x: auto;
+            margin: 8px 0
+        }
+
+        .agent-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px
+        }
+
+        .agent-table th {
+            padding: 7px 10px;
+            text-align: left;
+            font-family: var(--mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--claro);
+            background: var(--creme);
+            border-bottom: 1px solid var(--borda);
+            font-weight: 500
+        }
+
+        .agent-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--creme-3);
+            color: var(--escuro);
+            vertical-align: top
+        }
+
+        .agent-table tr:last-child td {
+            border-bottom: none
+        }
+
+        /* Action bar */
+        .action-bar {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            padding: 10px 16px;
+            border-top: 1px solid var(--borda);
+            background: var(--creme)
+        }
+
+        .action-btn {
+            border: 1px solid var(--borda);
+            background: var(--branco);
+            color: var(--medio);
+            border-radius: 999px;
+            padding: 5px 12px;
+            font-family: var(--corpo);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px
+        }
+
+        .action-btn:hover {
+            border-color: rgba(28, 69, 50, 0.3);
+            color: var(--verde);
+            background: var(--verde-lo)
+        }
+
+        .action-btn i {
+            font-size: 9px;
+            opacity: .6
+        }
+
+        /* Processing indicator — minimal, persistent */
+        .proc-line {
+            align-self: flex-start;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            color: var(--medio);
+            font-size: 13px;
+            animation: procIn .25s ease
+        }
+
+        @keyframes procIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .proc-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--creme-3);
+            border-top-color: var(--verde-3);
+            border-radius: 50%;
+            animation: procSpin 1s linear infinite;
+            flex-shrink: 0
+        }
+
+        @keyframes procSpin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .proc-text {
+            font-size: 13px;
+            color: var(--medio)
+        }
+
+        .proc-elapsed {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--palha);
+            margin-left: 4px
+        }
+
+        /* Thought log — stays after completion, collapsible */
+        .thought-log {
+            align-self: flex-start;
+            max-width: 85%;
+            font-size: 12px;
+            margin-top: -4px
+        }
+
+        .thought-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--palha);
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 0;
+            transition: color .15s
+        }
+
+        .thought-toggle:hover {
+            color: var(--medio)
+        }
+
+        .thought-toggle::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            border-right: 1px solid currentColor;
+            border-bottom: 1px solid currentColor;
+            transform: rotate(-45deg);
+            transition: transform .2s;
+            flex-shrink: 0
+        }
+
+        .thought-toggle.open::before {
+            transform: rotate(45deg)
+        }
+
+        .thought-toggle .tt-elapsed {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--palha);
+            margin-left: auto
+        }
+
+        .thought-items {
+            display: none;
+            padding: 6px 0 2px;
+            margin-left: 9px;
+            border-left: 1px solid var(--creme-3);
+            padding-left: 12px
+        }
+
+        .thought-items.open {
+            display: block
+        }
+
+        .thought-item {
+            font-size: 11px;
+            color: var(--claro);
+            line-height: 1.5;
+            padding: 1px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%
+        }
+
+        .thought-item.files {
+            color: var(--verde-3)
+        }
+
+        /* ─── COMPOSE ─── */
+        .chat-compose {
+            padding: 12px 16px;
+            border-top: 1px solid var(--borda);
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            background: var(--branco);
+            flex-shrink: 0
+        }
+
+        .compose-wrap {
+            flex: 1;
+            position: relative
+        }
+
+        .compose-wrap textarea {
+            width: 100%;
+            padding: 10px 12px;
+            padding-right: 50px;
+            border: 1px solid var(--borda);
+            border-radius: var(--r-sm);
+            font-family: var(--corpo);
+            font-size: 14px;
+            color: var(--tinta);
+            background: var(--branco);
+            outline: none;
+            resize: none;
+            min-height: 42px;
+            max-height: 120px;
+            transition: border-color .2s;
+            line-height: 1.5
+        }
+
+        .compose-wrap textarea:focus {
+            border-color: var(--verde)
+        }
+
+        .compose-count {
+            position: absolute;
+            right: 8px;
+            bottom: 6px;
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--palha);
+            pointer-events: none
+        }
+
+        .send-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: var(--r-sm);
+            background: var(--verde);
+            color: #fff;
+            font-family: var(--corpo);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0
+        }
+
+        .send-btn:hover {
+            background: var(--verde-2)
+        }
+
+        .send-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed
+        }
+
+        /* Bottom bar */
+        .bottom-bar {
+            flex-shrink: 0;
+            padding: 8px 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .bottom-tools {
+            display: flex;
+            gap: 4px
+        }
+
+        .tool-btn {
+            background: none;
+            border: 1px solid transparent;
+            padding: 4px 8px;
+            font-size: 11px;
+            color: var(--claro);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all .15s;
+            font-family: var(--corpo)
+        }
+
+        .tool-btn:hover {
+            color: var(--medio);
+            border-color: var(--borda);
+            background: var(--branco)
+        }
+
+        .bottom-meta {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--palha)
+        }
+
+        /* Saved conversations panel */
+        .history-panel {
+            position: fixed;
+            right: 20px;
+            bottom: 78px;
+            width: min(420px, calc(100vw - 24px));
+            max-height: 62vh;
+            background: var(--branco);
+            border: 1px solid var(--borda);
+            border-radius: var(--r);
+            box-shadow: var(--sombra);
+            display: none;
+            flex-direction: column;
+            z-index: 220
+        }
+
+        .history-panel.open {
+            display: flex
+        }
+
+        .history-head {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--borda);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px
+        }
+
+        .history-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--claro);
+            text-transform: uppercase;
+            letter-spacing: .06em
+        }
+
+        .history-close {
+            background: none;
+            border: none;
+            color: var(--claro);
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 4px
+        }
+
+        .history-close:hover {
+            background: var(--verde-lo);
+            color: var(--verde)
+        }
+
+        .history-list {
+            overflow: auto;
+            max-height: calc(62vh - 52px);
+            padding: 8px
+        }
+
+        .history-empty {
+            font-size: 12px;
+            color: var(--claro);
+            padding: 10px
+        }
+
+        .history-item {
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            padding: 8px 9px;
+            margin-bottom: 7px;
+            background: var(--creme)
+        }
+
+        .history-item-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--tinta);
+            line-height: 1.35;
+            margin-bottom: 4px
+        }
+
+        .history-item-preview {
+            font-size: 11px;
+            color: var(--medio);
+            line-height: 1.35;
+            margin-bottom: 6px
+        }
+
+        .history-item-meta {
+            font-family: var(--mono);
+            font-size: 9px;
+            color: var(--claro);
+            margin-bottom: 6px
+        }
+
+        .history-item-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap
+        }
+
+        .history-btn {
+            border: 1px solid var(--borda);
+            background: var(--branco);
+            color: var(--medio);
+            border-radius: 999px;
+            padding: 4px 9px;
+            font-size: 10px;
+            cursor: pointer
+        }
+
+        .history-btn:hover {
+            border-color: rgba(28, 69, 50, 0.3);
+            background: var(--verde-lo);
+            color: var(--verde)
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media(max-width:768px) {
+            .topo {
+                padding: 0 12px;
+                height: 48px
+            }
+
+            .marca-sub,
+            .tag-versao {
+                display: none
+            }
+
+            .topo-nav {
+                display: none
+            }
+
+            .hamburger {
+                display: flex
+            }
+
+            .agent-page {
+                padding: 0;
+                height: calc(100dvh - 48px)
+            }
+
+            .context-bar {
+                padding: 10px 12px 8px
+            }
+
+            .chat-shell {
+                border-radius: 0;
+                border-left: none;
+                border-right: none
+            }
+
+            .chat-log {
+                padding: 14px 10px
+            }
+
+            .chat-bubble {
+                max-width: 92%
+            }
+
+            .chat-compose {
+                padding: 10px
+            }
+
+            .chat-compose textarea {
+                font-size: 16px
+            }
+
+            .bottom-bar {
+                padding: 6px 12px 12px
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ─── TOPO ─── -->
+    <div class="topo">
+        <div class="marca">
+            <a href="/IBSCO/" class="marca-nome">Awareness-AI</a>
+            <span class="marca-sub">IBSCO · Agente</span>
+        </div>
+        <nav class="topo-nav">
+            <a href="/IBSCO/" class="nav-tab"><i class="fas fa-chart-line" style="font-size:9px"></i> Painel</a>
+            <a href="/IBSCO/descoberta" class="nav-tab"><i class="fas fa-compass" style="font-size:9px"></i>
+                Descoberta</a>
+            <a href="/IBSCO/fase2-definicao" class="nav-tab"><i class="fas fa-list-check" style="font-size:9px"></i>
+                Fase 2</a>
+            <a href="/IBSCO/walkthrough" class="nav-tab">Walkthrough</a>
+            <a href="/IBSCO/proposal" class="nav-tab">Proposta</a>
+            <a href="/IBSCO/arquitetura" class="nav-tab">Arquitetura</a>
+            <a onclick="window.open('/expenses/dashboard')" class="nav-tab" style="cursor:pointer">Despesas</a>
+            <a href="/IBSCO/agente" class="nav-tab ativo"><i class="fas fa-comments" style="font-size:9px"></i>
+                Agente</a>
+            <a href="/IBSCO/tests-intelligence" class="nav-tab">Testes</a>
+        </nav>
+        <div class="topo-direita">
+            <span class="tag-versao">Abr 2026</span>
+            <a href="/IBSCO/logout" class="topo-sair"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+        <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <a href="/IBSCO/" onclick="closeDrawer()">Painel</a>
+        <a href="/IBSCO/descoberta" onclick="closeDrawer()">Descoberta</a>
+        <a href="/IBSCO/fase2-definicao" onclick="closeDrawer()">Fase 2</a>
+        <a href="/IBSCO/walkthrough" onclick="closeDrawer()">Walkthrough</a>
+        <a href="/IBSCO/proposal" onclick="closeDrawer()">Proposta</a>
+        <a href="/IBSCO/arquitetura" onclick="closeDrawer()">Arquitetura</a>
+        <a onclick="window.open('/expenses/dashboard');closeDrawer()" style="cursor:pointer">Despesas</a>
+        <a href="/IBSCO/agente" onclick="closeDrawer()">Agente</a>
+        <a href="/IBSCO/tests-intelligence" onclick="closeDrawer()">Testes</a>
+        <a href="/IBSCO/logout" onclick="closeDrawer()" style="color:var(--terra);">Sair</a>
+    </div>
+
+    <!-- ─── AGENT PAGE ─── -->
+    <div class="agent-page">
+
+        <!-- CONTEXT CHIPS — inject queries into chat -->
+        <div class="context-bar">
+            <button class="ctx-chip" onclick="askTopic('descoberta')"><i class="fas fa-compass"></i> Ler
+                Descoberta</button>
+            <button class="ctx-chip" onclick="askTopic('fase2')"><i class="fas fa-list-check"></i> Ler Fase 2</button>
+            <button class="ctx-chip" onclick="askTopic('painel')"><i class="fas fa-chart-line"></i> Explicar
+                Painel</button>
+            <button class="ctx-chip" onclick="askTopic('walkthrough')"><i class="fas fa-route"></i> Explicar
+                Walkthrough</button>
+            <button class="ctx-chip" onclick="askTopic('proposta')"><i class="fas fa-lightbulb"></i> Explicar
+                Proposta</button>
+            <button class="ctx-chip" onclick="askTopic('arquitetura')"><i class="fas fa-sitemap"></i> Explicar
+                Arquitetura</button>
+            <button class="ctx-chip" onclick="askTopic('despesas')"><i class="fas fa-wallet"></i> Explicar
+                Despesas</button>
+            <button class="ctx-chip" onclick="askTopic('agente')"><i class="fas fa-comments"></i> Explicar
+                Agente</button>
+        </div>
+
+        <!-- CHAT -->
+        <div class="chat-shell">
+            <div class="chat-head">
+                <div class="chat-head-left">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span class="chat-head-label" id="statusLabel">Pronto</span>
+                </div>
+                <div class="chat-head-right">
+                    <button class="chat-head-btn" onclick="openAgentHistory()" title="Histórico salvo"><i
+                            class="fas fa-clock-rotate-left"></i></button>
+                    <button class="chat-head-btn" onclick="exportAgentChatTxt()" title="Exportar"><i
+                            class="fas fa-download"></i></button>
+                    <button class="chat-head-btn" onclick="clearAgentChat()" title="Limpar"><i
+                            class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            <div id="agentLog" class="chat-log"></div>
+            <div class="chat-compose">
+                <div class="compose-wrap">
+                    <textarea id="agentInput" placeholder="Pergunte sobre o projeto..." rows="1"
+                        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAgentMessage();}"
+                        oninput="autoGrow(this);updateCount()"></textarea>
+                    <span class="compose-count" id="charCount">0/1200</span>
+                </div>
+                <button id="sendBtn" class="send-btn" onclick="sendAgentMessage()"><i class="fas fa-arrow-up"
+                        style="font-size:12px"></i></button>
+            </div>
+        </div>
+
+        <!-- BOTTOM BAR -->
+        <div class="bottom-bar">
+            <div class="bottom-tools">
+                <button class="tool-btn" onclick="saveAgentChat()"><i class="fas fa-floppy-disk"
+                        style="margin-right:3px;font-size:10px"></i> Salvar</button>
+                <button class="tool-btn" onclick="exportAgentChatJson()"><i class="fas fa-code"
+                        style="margin-right:3px;font-size:10px"></i> JSON</button>
+            </div>
+            <span class="bottom-meta">Clovi · projeto IBSCO · PCP + CFO</span>
+        </div>
+
+    </div>
+
+    <div class="history-panel" id="agentHistoryPanel" aria-live="polite">
+        <div class="history-head">
+            <span class="history-title">Conversas salvas (Agente)</span>
+            <button class="history-close" onclick="closeAgentHistory()" aria-label="Fechar"><i
+                    class="fas fa-xmark"></i></button>
+        </div>
+        <div class="history-list" id="agentHistoryList"></div>
+    </div>
+
+    <script>
+        /* ── DRAWER ── */
+        function toggleDrawer() { document.getElementById('mobileDrawer').classList.toggle('open'); document.getElementById('hamburger').classList.toggle('open') }
+        function closeDrawer() { document.getElementById('mobileDrawer').classList.remove('open'); document.getElementById('hamburger').classList.remove('open') }
+
+        /* ── TOPIC PRESETS — inject into chat ── */
+        const TOPIC_QUERIES = {
+            descoberta: 'Explique a pagina Descoberta em portugues do Brasil, destacando os 7 passos, o que ja foi entregue na Fase 1 e por que este material e essencial para decisao do stakeholder Marco Tulio.',
+            fase2: 'Explique a pagina Fase 2 Definicao em portugues do Brasil, com foco em priorizacao de requisitos, cenarios de investimento e decisoes que agora dependem do stakeholder Marco Tulio.',
+            painel: 'Explique a frontpage Painel (IBSCO.html) em portugues do Brasil. Quero objetivo da pagina, secoes principais, principais metricas/visuais e como ela ajuda a tomada de decisao operacional.',
+            walkthrough: 'Explique a frontpage Walkthrough em portugues do Brasil. Descreva a narrativa, os blocos de conteudo, o que o gestor deve observar e como usar essa pagina para onboarding do projeto.',
+            proposta: 'Explique a frontpage Proposta em portugues do Brasil. Resuma proposta de valor, fases, entregaveis, riscos e como interpretar o cronograma de execucao.',
+            arquitetura: 'Explique a frontpage Arquitetura em portugues do Brasil. Detalhe componentes, fluxos de dados, integracoes e como backend e frontend se conectam no ecossistema IBSCO.',
+            despesas: 'Explique a frontpage Despesas em portugues do Brasil. Mostre objetivo da pagina, filtros, leituras financeiras chave e como ela apoia acompanhamento de custos.',
+            agente: 'Explique a frontpage Agente em portugues do Brasil. Quero objetivo da pagina, fluxo de conversa, botoes de contexto, indicadores de processamento, exportacao de historico e melhores praticas de uso no dia a dia.',
+        };
+        function askTopic(key) {
+            const prompt = TOPIC_QUERIES[key] || 'Explique a frontpage Painel em portugues do Brasil.';
+            // Quick-start chips favor lower-latency answers and start a fresh session.
+            sendAgentMessage({ message: prompt, model: 'deepseek-v4-flash', newSession: true });
+        }
+
+        /* ── STATE ── */
+        const STORAGE_KEY = 'ibsco_agent_chat_v3';
+        // Route through nginx proxy instead of direct port access (SSL termination)
+        const CLOVI_BASE_URL = `${location.protocol}//${location.hostname}/ibsco-chat`;
+        const CONVERSATION_SCOPE = 'agent';
+        let chatHistory = [];
+        let sessionId = null;
+        let savedConversationId = '';
+        let hasUnsavedChanges = false;
+
+        /* ── HELPERS ── */
+        function _esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') }
+        function _safeHref(raw) {
+            const v = String(raw || '').trim();
+            if (!v) return '';
+            if (/^https?:\/\//i.test(v)) return v;
+            if (/^\/(?:IBSCO|expenses)(?:\/|$)/i.test(v)) return `${location.origin}${v}`;
+            return '';
+        }
+        function _linkifyBareTargets(html) {
+            const parts = html.split(/(<a\b[^>]*>[\s\S]*?<\/a>)/gi);
+            return parts.map(part => {
+                if (/^<a\b/i.test(part)) return part;
+                return part.replace(/(^|[\s(>])((?:https?:\/\/|\/(?:IBSCO|expenses)\/)[^\s<]+)/g, (m, prefix, target) => {
+                    let clean = target, trail = '';
+                    while (/[),.;!?]$/.test(clean)) { trail = clean.slice(-1) + trail; clean = clean.slice(0, -1) }
+                    const href = _safeHref(clean);
+                    if (!href) return m;
+                    return `${prefix}<a href="${href}" target="_blank" rel="noopener noreferrer">${clean}</a>${trail}`;
+                });
+            }).join('');
+        }
+        function _near(el, px) { if (!el) return true; return (el.scrollHeight - el.scrollTop - el.clientHeight) <= (px || 80) }
+        function _bottom(el) { if (el) el.scrollTop = el.scrollHeight }
+        function autoGrow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px' }
+        function updateCount() { const i = document.getElementById('agentInput'), c = document.getElementById('charCount'); if (i && c) { const l = (i.value || '').length; c.textContent = l + '/1200'; c.style.color = l > 1100 ? 'var(--terra)' : 'var(--palha)' } }
+
+        /* ── FORMATTING ── */
+        function _inline(text) {
+            let html = _esc(text)
+                .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, label, url) => {
+                    const href = _safeHref(url);
+                    if (!href) return `${label} (${url})`;
+                    return `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+                });
+            html = _linkifyBareTargets(html);
+            return html
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>');
+        }
+        function _parseTable(section) {
+            const lines = section.split('\n').map(l => l.trim()).filter(Boolean);
+            if (lines.length < 3 || !lines[0].includes('|')) return '';
+            const sep = lines[1].replace(/[|:\-\s]/g, '');
+            if (sep.length) return '';
+            const cells = l => l.split('|').map(c => c.trim()).filter(Boolean);
+            const head = cells(lines[0]), rows = lines.slice(2).map(cells).filter(r => r.length);
+            if (!head.length || !rows.length) return '';
+            return `<div class="agent-table-wrap"><table class="agent-table"><thead><tr>${head.map(h => `<th>${_inline(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${head.map((_, i) => `<td>${_inline(r[i] || '')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+        }
+        function renderBody(text) {
+            const sections = String(text || '').split(/\n{2,}/);
+            let html = '';
+            for (const raw of sections) {
+                const s = raw.trim(); if (!s) continue;
+                const table = _parseTable(s); if (table) { html += table; continue }
+                if (s.startsWith('## ') || s.startsWith('### ')) { html += `<h3>${_inline(s.replace(/^#{2,4}\s*/, '').trim())}</h3>`; continue }
+                if (s.startsWith('- ')) { html += `<ul>${s.split('\n').filter(l => l.trim().startsWith('- ')).map(l => `<li>${_inline(l.trim().slice(2))}</li>`).join('')}</ul>`; continue }
+                if (/^\d+\.\s/.test(s)) { html += `<ol>${s.split('\n').filter(l => /^\d+\.\s/.test(l.trim())).map(l => `<li>${_inline(l.trim().replace(/^\d+\.\s/, ''))}</li>`).join('')}</ol>`; continue }
+                if (s === '---') { html += '<hr>'; continue }
+                html += `<p>${_inline(s).replace(/\n/g, '<br>')}</p>`;
+            }
+            return html;
+        }
+
+        function buildCard(text, refs, meta, opts) {
+            const o = opts || {};
+            let c = '<div class="agent-card' + (o.streaming ? ' streaming' : '') + '">';
+            c += '<div class="agent-card-body">' + renderBody(text) + '</div>';
+            if (refs && refs.length) {
+                c += '<details class="detail-block"><summary>Fontes consultadas (' + refs.length + ')</summary>';
+                c += '<div class="detail-block-body">' + refs.map(r => '<code style="font-size:11px;display:inline-block;margin:2px 4px 2px 0;padding:2px 6px;background:var(--creme-2);border-radius:3px;color:var(--verde)">' + _esc(r) + '</code>').join('') + '</div></details>';
+            }
+            if (o.actions) {
+                c += '<div class="action-bar">';
+                c += '<button class="action-btn" onclick="askFollowUp(\'detalhar\')"><i class="fas fa-search-plus"></i> Detalhar</button>';
+                c += '<button class="action-btn" onclick="askFollowUp(\'passos\')"><i class="fas fa-list-check"></i> Próximos passos</button>';
+                c += '<button class="action-btn" onclick="askFollowUp(\'riscos\')"><i class="fas fa-triangle-exclamation"></i> Riscos</button>';
+                c += '<button class="action-btn" onclick="askFollowUp(\'comparar\')"><i class="fas fa-arrows-left-right"></i> Comparar fases</button>';
+                c += '</div>';
+            }
+            c += '</div>'; return c;
+        }
+
+        function askFollowUp(kind) {
+            const p = {
+                detalhar: 'Pode detalhar mais a resposta anterior? Preciso entender os pontos específicos com dados concretos.',
+                passos: 'Quais são os próximos passos prioritários, em ordem, com dependências e responsáveis sugeridos?',
+                riscos: 'Quais são os principais riscos e bloqueios atuais do projeto? O que pode atrasar a entrega?',
+                comparar: 'Compare o que foi proposto originalmente com o que foi entregue até agora e o que falta.',
+            };
+            const prompt = p[kind] || 'Pode elaborar?';
+            // Follow-up shortcuts also use low-latency model routing.
+            sendAgentMessage({ message: prompt, model: 'deepseek-v4-flash', newSession: true });
+        }
+
+        /* ── RENDER ── */
+        function appendUser(text) {
+            const log = document.getElementById('agentLog'); const pin = _near(log);
+            const div = document.createElement('div'); div.className = 'chat-bubble user';
+            div.innerHTML = `<p>${_esc(text)}</p>`;
+            log.appendChild(div); if (pin) _bottom(log);
+            chatHistory.push({ role: 'user', text, timestamp: new Date().toISOString() });
+            hasUnsavedChanges = true;
+        }
+        function appendAgent(text, refs, meta, opts) {
+            const o = opts || { actions: true };
+            const log = document.getElementById('agentLog'); const pin = _near(log);
+            const div = document.createElement('div'); div.className = 'chat-bubble agent';
+            div.innerHTML = buildCard(text, refs, meta, o);
+            log.appendChild(div); if (pin) _bottom(log);
+            if (o.store !== false) {
+                chatHistory.push({ role: 'agent', text, references: refs || [], meta: meta || '', timestamp: new Date().toISOString() });
+                hasUnsavedChanges = true;
+            }
+        }
+        function addThinking() { }
+        function removeThinking() { const el = document.getElementById('procLine'); if (el && el.parentNode) el.parentNode.removeChild(el) }
+
+        /* ── Processing indicator — just spinner + rotating text ── */
+        const PROC_PHASES = ['Analisando a pergunta', 'Consultando documentação', 'Conectando evidências', 'Lendo contexto do projeto', 'Cruzando dados PCP e CFO', 'Estruturando resposta'];
+
+        function createProcessingIndicator() {
+            const log = document.getElementById('agentLog');
+            const pin = _near(log);
+            // Spinner line
+            const line = document.createElement('div');
+            line.className = 'proc-line'; line.id = 'procLine';
+            const started = Date.now();
+            let phaseIdx = 0;
+            line.innerHTML = `<div class="proc-spinner"></div><span class="proc-text">${PROC_PHASES[0]}</span><span class="proc-elapsed">0s</span>`;
+            log.appendChild(line); if (pin) _bottom(log);
+
+            // State for thought log
+            let thinkBuf = '';
+            let entries = [];
+            let contextFiles = [];
+
+            const phaseTimer = setInterval(() => { phaseIdx++; const t = line.querySelector('.proc-text'); if (t) t.textContent = PROC_PHASES[phaseIdx % PROC_PHASES.length] }, 3500);
+            const tickTimer = setInterval(() => { const e = line.querySelector('.proc-elapsed'); if (e) e.textContent = Math.floor((Date.now() - started) / 1000) + 's' }, 1000);
+
+            return {
+                setPhase(text) { if (text && text.length > 3) { const t = line.querySelector('.proc-text'); if (t) t.textContent = text.slice(0, 50) } },
+                addThinking(content) {
+                    thinkBuf += content;
+                    if (thinkBuf.length > 30 && /[.!?\n]/.test(content)) {
+                        const clean = thinkBuf.replace(/\s+/g, ' ').trim();
+                        if (clean.length > 8) entries.push(clean.slice(0, 120));
+                        thinkBuf = '';
+                    }
+                },
+                addLog(text) { if (text && text.length > 2) entries.push(String(text).slice(0, 120)) },
+                setFiles(files) {
+                    if (files && files.length) {
+                        contextFiles = files.map(f => f.path || f.name || f).filter(Boolean);
+                        entries.push(`${files.length} arquivo(s) carregado(s)`);
+                    }
+                },
+                getFiles() { return contextFiles },
+                finalize() {
+                    clearInterval(phaseTimer); clearInterval(tickTimer);
+                    // Remove spinner
+                    if (line.parentNode) line.parentNode.removeChild(line);
+                    // Flush remaining think buffer
+                    if (thinkBuf.trim().length > 8) entries.push(thinkBuf.replace(/\s+/g, ' ').trim().slice(0, 120));
+                    // Create persistent thought log if there are entries
+                    if (entries.length > 0) {
+                        const elapsed = Math.floor((Date.now() - started) / 1000);
+                        const logDiv = document.createElement('div');
+                        logDiv.className = 'thought-log';
+                        let html = `<div class="thought-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Pensamento do agente (${entries.length})<span class="tt-elapsed">${elapsed}s</span></div>`;
+                        html += '<div class="thought-items">';
+                        entries.forEach(e => { html += `<div class="thought-item">${_esc(e)}</div>` });
+                        html += '</div>';
+                        logDiv.innerHTML = html;
+                        log.appendChild(logDiv);
+                    }
+                },
+            };
+        }
+
+        function createStreamBubble() {
+            const log = document.getElementById('agentLog'); let sticky = _near(log);
+            const div = document.createElement('div'); div.className = 'chat-bubble agent';
+            div.innerHTML = buildCard('...', null, null, { streaming: true });
+            log.appendChild(div); if (sticky) _bottom(log);
+            let last = 0;
+            return {
+                set(t) { sticky = sticky && _near(log, 160); div.innerHTML = buildCard(t || '...', null, null, { streaming: true }); const n = Date.now(); if (n - last > 100) { if (sticky) _bottom(log); last = n } },
+                finalize(t, r, m) { div.innerHTML = buildCard(t, r, m, { actions: true }); _bottom(log); chatHistory.push({ role: 'agent', text: t, references: r || [], meta: m || '', timestamp: new Date().toISOString() }); hasUnsavedChanges = true },
+                remove() { if (div.parentNode) div.parentNode.removeChild(div) }
+            };
+        }
+
+        /* ── THINKING STATE ── */
+        function setThinking(on) {
+            const dot = document.getElementById('statusDot'), label = document.getElementById('statusLabel'), btn = document.getElementById('sendBtn');
+            if (dot) dot.className = 'status-dot' + (on ? ' thinking' : '');
+            if (label) label.textContent = on ? 'Processando' : 'Pronto';
+            if (btn) { btn.disabled = on; btn.innerHTML = on ? '<i class="fas fa-spinner fa-spin" style="font-size:12px"></i>' : '<i class="fas fa-arrow-up" style="font-size:12px"></i>' }
+        }
+
+        /* ── PERSISTENCE ── */
+        function _conversationTitleFromHistory() {
+            const firstUser = chatHistory.find(item => item && item.role === 'user' && item.text);
+            if (firstUser && firstUser.text) return String(firstUser.text).slice(0, 120);
+            return `Conversa agente ${new Date().toISOString().slice(0, 16).replace('T', ' ')}`;
+        }
+
+        function _renderAgentConversation(items) {
+            const log = document.getElementById('agentLog');
+            log.innerHTML = '';
+            (items || []).forEach(item => {
+                if (!item || !item.text) return;
+                const role = item.role === 'assistant' ? 'agent' : item.role;
+                const div = document.createElement('div');
+                div.className = 'chat-bubble ' + (role === 'agent' ? 'agent' : 'user');
+                if (role === 'agent') div.innerHTML = buildCard(item.text, item.references, item.meta, { actions: false });
+                else div.innerHTML = `<p>${_esc(item.text)}</p>`;
+                log.appendChild(div);
+            });
+            _bottom(log);
+        }
+
+        async function saveAgentChat(options) {
+            const o = options || {};
+            if (!chatHistory.length) {
+                if (!o.silent) appendAgent('Nao ha conversa para salvar.', null, null, { actions: false, store: false });
+                return false;
+            }
+
+            const payload = {
+                scope: CONVERSATION_SCOPE,
+                conversation_id: savedConversationId || null,
+                title: _conversationTitleFromHistory(),
+                messages: chatHistory,
+            };
+
+            try {
+                const res = await fetch('/IBSCO/api/conversations', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json().catch(() => null);
+                if (!res.ok || !data || !data.conversation) {
+                    throw new Error((data && data.message) || `HTTP ${res.status}`);
+                }
+
+                savedConversationId = String(data.conversation.id || '');
+                hasUnsavedChanges = false;
+                try { localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory)) } catch (_) {/* ignore */ }
+                if (!o.silent) appendAgent('Conversa salva no servidor para uso futuro.', null, null, { actions: false, store: false });
+                return true;
+            } catch (err) {
+                if (!o.silent) appendAgent(`Falha ao salvar no servidor: ${err.message || err}`, null, null, { actions: false, store: false });
+                return false;
+            }
+        }
+
+        function loadSaved() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY); if (!raw) return false;
+                const saved = JSON.parse(raw); if (!saved || !saved.length) return false;
+                chatHistory = saved;
+                _renderAgentConversation(chatHistory);
+                hasUnsavedChanges = false;
+                return true;
+            } catch (e) { return false }
+        }
+        async function clearAgentChat() {
+            if (!chatHistory.length) return;
+            if (hasUnsavedChanges) {
+                const shouldSave = confirm('Esta conversa ainda nao foi salva no servidor. Deseja salvar antes de limpar?');
+                if (shouldSave) {
+                    const ok = await saveAgentChat({ silent: true });
+                    if (!ok) return;
+                }
+            }
+            if (!confirm('Limpar toda a conversa? Voce podera recuperar conversas salvas no historico.')) return;
+            localStorage.removeItem(STORAGE_KEY); chatHistory = []; sessionId = null;
+            savedConversationId = ''; hasUnsavedChanges = false;
+            document.getElementById('agentLog').innerHTML = ''; showWelcome();
+        }
+
+        async function openAgentHistory() {
+            const panel = document.getElementById('agentHistoryPanel');
+            const list = document.getElementById('agentHistoryList');
+            if (!panel || !list) return;
+            panel.classList.add('open');
+            list.innerHTML = '<div class="history-empty">Carregando conversas salvas...</div>';
+
+            try {
+                const res = await fetch('/IBSCO/api/conversations?scope=agent');
+                const data = await res.json().catch(() => null);
+                if (!res.ok || !data) { throw new Error((data && data.message) || `HTTP ${res.status}`) }
+                const items = Array.isArray(data.items) ? data.items : [];
+                if (!items.length) {
+                    list.innerHTML = '<div class="history-empty">Nenhuma conversa salva ainda.</div>';
+                    return;
+                }
+
+                list.innerHTML = items.map(item => {
+                    const id = String(item.id || '');
+                    const title = _esc(item.title || 'Conversa');
+                    const preview = _esc(item.last_message_preview || '');
+                    const updated = _esc(String(item.updated_at || '').replace('T', ' ').slice(0, 16));
+                    const count = Number(item.message_count || 0);
+                    return `<div class="history-item">
+        <div class="history-item-title">${title}</div>
+        <div class="history-item-preview">${preview || 'Sem preview'}</div>
+        <div class="history-item-meta">${count} mensagem(ns) · ${updated}</div>
+        <div class="history-item-actions">
+          <button class="history-btn" onclick="loadAgentConversation('${id}')">Abrir</button>
+          <button class="history-btn" onclick="deleteAgentConversation('${id}')">Excluir</button>
+        </div>
+      </div>`;
+                }).join('');
+            } catch (err) {
+                list.innerHTML = `<div class="history-empty">Falha ao carregar historico: ${_esc(err.message || String(err))}</div>`;
+            }
+        }
+
+        function closeAgentHistory() {
+            const panel = document.getElementById('agentHistoryPanel');
+            if (panel) panel.classList.remove('open');
+        }
+
+        async function loadAgentConversation(conversationId) {
+            if (!conversationId) return;
+            try {
+                const res = await fetch(`/IBSCO/api/conversations/${encodeURIComponent(conversationId)}?scope=agent`);
+                const data = await res.json().catch(() => null);
+                if (!res.ok || !data || !data.conversation) {
+                    throw new Error((data && data.message) || `HTTP ${res.status}`);
+                }
+                const conversation = data.conversation;
+                chatHistory = Array.isArray(conversation.messages) ? conversation.messages : [];
+                savedConversationId = String(conversation.id || '');
+                sessionId = null;
+                hasUnsavedChanges = false;
+                _renderAgentConversation(chatHistory);
+                try { localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory)) } catch (_) {/* ignore */ }
+                closeAgentHistory();
+            } catch (err) {
+                appendAgent(`Falha ao abrir conversa salva: ${err.message || err}`, null, null, { actions: false, store: false });
+            }
+        }
+
+        async function deleteAgentConversation(conversationId) {
+            if (!conversationId) return;
+            if (!confirm('Excluir esta conversa salva do servidor?')) return;
+            try {
+                const res = await fetch(`/IBSCO/api/conversations/${encodeURIComponent(conversationId)}?scope=agent`, { method: 'DELETE' });
+                if (!res.ok) {
+                    const data = await res.json().catch(() => null);
+                    throw new Error((data && data.message) || `HTTP ${res.status}`);
+                }
+                if (savedConversationId === conversationId) savedConversationId = '';
+                openAgentHistory();
+            } catch (err) {
+                appendAgent(`Falha ao excluir conversa salva: ${err.message || err}`, null, null, { actions: false, store: false });
+            }
+        }
+
+        function downloadFile(n, c, m) { const b = new Blob([c], { type: m }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = n; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href) }
+        function exportAgentChatTxt() {
+            if (!chatHistory.length) return;
+            const lines = chatHistory.map(i => `[${i.timestamp}] ${i.role.toUpperCase()}: ${i.text}`);
+            downloadFile(`ibsco-chat-${new Date().toISOString().slice(0, 10)}.txt`, lines.join('\n\n'), 'text/plain;charset=utf-8');
+        }
+        function exportAgentChatJson() {
+            if (!chatHistory.length) return;
+            downloadFile(`ibsco-chat-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(chatHistory, null, 2), 'application/json;charset=utf-8');
+        }
+
+        /* ── WELCOME ── */
+        function showWelcome() {
+            appendAgent(
+                'Sou o agente do projeto IBSCO. Antes de qualquer decisao, e extremamente importante que voce leia com atencao:\n\n1. /IBSCO/descoberta\n2. /IBSCO/fase2-definicao\n\nNeste momento, a continuidade e a priorizacao da Fase 2 estao nas maos do stakeholder Marco Tulio. Posso te guiar pagina por pagina e responder duvidas objetivas para apoiar essa decisao.',
+                null, null, { actions: false, store: false }
+            );
+        }
+
+        /* ── SEND ── */
+        async function sendAgentMessage(preset) {
+            const presetObj = (preset && typeof preset === 'object') ? preset : null;
+            const input = document.getElementById('agentInput');
+            const message = ((presetObj ? presetObj.message : preset) || input.value || '').trim();
+            const requestModel = presetObj && typeof presetObj.model === 'string' && presetObj.model.trim() ? presetObj.model.trim() : null;
+            if (presetObj && presetObj.newSession) { sessionId = null }
+            if (!message) return;
+            if (message.length > 1200) { appendAgent('Mensagem muito longa. Limite: 1200 caracteres.', null, null, { actions: false }); return }
+
+            appendUser(message);
+            if (!preset) { input.value = ''; autoGrow(input); updateCount() }
+            setThinking(true);
+            const proc = createProcessingIndicator();
+
+            try {
+                const history = chatHistory.filter(i => i && i.text).slice(-20).map(i => ({ role: i.role === 'agent' ? 'assistant' : 'user', content: i.text }));
+                const payload = { message, history, session_id: sessionId || null };
+                if (requestModel) payload.model = requestModel;
+                const res = await fetch(`${CLOVI_BASE_URL}/api/assistant/chat`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) { let err = ''; try { err = await res.text() } catch (_) { } proc.finalize(); appendAgent(`Erro ao consultar o assistente (${res.status}).${err ? '\n' + err : ''}`, null, null, { actions: false }); return }
+
+                const reader = res.body && res.body.getReader ? res.body.getReader() : null;
+                if (!reader) { proc.finalize(); appendAgent('Streaming não disponível.', null, null, { actions: false }); return }
+
+                const decoder = new TextDecoder('utf-8');
+                let buffer = '', streamed = '', streamError = '', streamBubble = null;
+
+                while (true) {
+                    const { value, done } = await reader.read(); if (done) break;
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n'); buffer = lines.pop() || '';
+                    for (const rawLine of lines) {
+                        const line = rawLine.trim(); if (!line.startsWith('data:')) continue;
+                        const json = line.slice(5).trim(); if (!json) continue;
+                        let evt; try { evt = JSON.parse(json) } catch (_) { continue }
+
+                        if (evt.type === 'token' && typeof evt.content === 'string') {
+                            if (!streamBubble) { removeThinking(); streamBubble = createStreamBubble() }
+                            streamed += evt.content; streamBubble.set(streamed);
+                        } else if (evt.type === 'agent_status') {
+                            proc.setPhase(evt.message || 'Executando');
+                            proc.addLog(evt.message || 'Executando');
+                        } else if (evt.type === 'thinking' && evt.content) {
+                            proc.addThinking(evt.content);
+                        } else if (evt.type === 'files_context' && Array.isArray(evt.files)) {
+                            proc.setFiles(evt.files);
+                        } else if (evt.type === 'session_id' && evt.session_id) {
+                            sessionId = evt.session_id;
+                        } else if (evt.type === 'error' || evt.event === 'error') {
+                            streamError = String(evt.message || 'Erro no stream');
+                        }
+                    }
+                }
+
+                // Get the real files that were used as context
+                const realFiles = proc.getFiles();
+                proc.finalize();
+
+                if (streamError) { if (streamBubble) streamBubble.remove(); appendAgent(`Erro: ${streamError}`, null, null, { actions: false }); return }
+                // Pass real file names as refs — not hardcoded
+                const refs = realFiles.length > 0 ? realFiles : null;
+                if (streamBubble) { streamBubble.finalize(streamed || 'Sem resposta.', refs, 'modo: clovi/project-aware') }
+                else { appendAgent(streamed || 'Sem resposta.', refs, 'modo: clovi/project-aware') }
+            } catch (err) {
+                proc.finalize();
+                appendAgent(`Erro de rede: ${err.message || err}`, null, null, { actions: false });
+            } finally { removeThinking(); setThinking(false) }
+        }
+
+        /* ── INIT ── */
+        document.addEventListener('DOMContentLoaded', () => { if (!loadSaved()) showWelcome(); updateCount() });
+        window.addEventListener('beforeunload', (event) => {
+            if (hasUnsavedChanges && chatHistory.length) {
+                event.preventDefault();
+                event.returnValue = '';
+            }
+        });
+    </script>
+</body>
+
+</html>

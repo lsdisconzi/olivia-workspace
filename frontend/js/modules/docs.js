@@ -2166,17 +2166,35 @@ function toggleDocContext(checkbox) {
   const path = checkbox.dataset.path;
   const projectId = checkbox.dataset.projectId || _activeProjectId();
   const key = _docContextKey(projectId, path);
-  
+
   if (checkbox.checked) {
     _checkedDocs.add(key);
   } else {
     _checkedDocs.delete(key);
   }
-  
+
   updateDocsContextBar();
   if(typeof updateChatContextBar!=="undefined") updateChatContextBar();
   checkbox.closest('.docs-tree-item').classList.toggle('checked', checkbox.checked);
 }
+
+// Uncheck a document by path (for modal remove button)
+function uncheckDoc(path) {
+  const projectId = _activeProjectId();
+  const key = _docContextKey(projectId, path);
+  _checkedDocs.delete(key);
+  updateDocsContextBar();
+  if(typeof updateChatContextBar!=="undefined") updateChatContextBar();
+  if (typeof updateComposeContextBar === 'function') updateComposeContextBar();
+  // Update checkbox UI if visible
+  const checkbox = document.querySelector(`.docs-tree-item input[data-path="${CSS.escape(path)}"]`);
+  if (checkbox) {
+    checkbox.checked = false;
+    checkbox.closest('.docs-tree-item').classList.remove('checked');
+  }
+  addSystemBubble('Documento removido do contexto: ' + path);
+}
+window.uncheckDoc = uncheckDoc;
 
 // Toggle article context
 function toggleArticleContext(checkbox) {

@@ -110,8 +110,17 @@
       }
 
       if (data.type === 'token' && data.content) {
-        fullContent += data.content;
-        if (onToken) onToken(data.content, fullContent);
+        // Defensive: if content is an object, extract the text field
+        let tokenText;
+        if (typeof data.content === 'string') {
+          tokenText = data.content;
+        } else if (data.content && typeof data.content === 'object') {
+          tokenText = data.content.text || data.content.content || data.content.value || '';
+        }
+        if (tokenText) {
+          fullContent += tokenText;
+          if (onToken) onToken(tokenText, fullContent);
+        }
       } else if (data.type === 'session_id' && data.session_id) {
         _sessionIds.set(sessionKey, data.session_id);
       } else if (data.type === 'error') {

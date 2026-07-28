@@ -2694,7 +2694,7 @@
                     style="font-size:10px;color:var(--gray);display:block;margin-bottom:3px"><span
                       data-i18n="listeningLanguage">Language</span></label><input id="lsLanguage" name="lsLanguage"
                     style="width:100%;box-sizing:border-box;padding:6px 8px;border:1px solid var(--border);background:var(--bg);color:var(--white);font-family:var(--mono);font-size:11px;border-radius:5px;outline:none"
-                    type="text" value="es-CL" /></div>
+                    type="text" value="" placeholder="auto" /></div>
                 <div><label for="lsModel" style="font-size:10px;color:var(--gray);display:block;margin-bottom:3px"><span
                       data-i18n="listeningModel">Model</span></label><input id="lsModel" name="lsModel"
                     style="width:100%;box-sizing:border-box;padding:6px 8px;border:1px solid var(--border);background:var(--bg);color:var(--white);font-family:var(--mono);font-size:11px;border-radius:5px;outline:none"
@@ -3584,6 +3584,7 @@
                 onchange="setPanelContextEnabled('output', this.checked)" type="checkbox" />
               <span><span data-i18n="chat_context">Chat context</span></span>
             </label>
+            <button class="tbtn" data-tip="Copy panel content" onclick="copyPanelContent('output')" style="width:26px;height:26px;font-size:11px"><i class="fas fa-copy"></i></button>
             <button class="btn btn-sm" onclick="toggleOutputPanel()"><i class="fas fa-times"></i></button>
           </div>
         </div>
@@ -3610,6 +3611,7 @@
                 onchange="setPanelContextEnabled('preview', this.checked)" type="checkbox" />
               <span><span data-i18n="chat_context_1">Chat context</span></span>
             </label>
+            <button class="tbtn" data-tip="Copy panel content" onclick="copyPanelContent('preview')" style="width:26px;height:26px;font-size:11px"><i class="fas fa-copy"></i></button>
             <button class="btn btn-sm" id="previewDownloadBtn" onclick="downloadCurrentPreview()" style="display:none"
               title="Download"><i class="fas fa-download"></i></button>
             <button class="btn btn-sm" id="previewMaximizeBtn" onclick="maximizeCurrentPreview()" style="display:none"
@@ -3650,6 +3652,7 @@
               onchange="setPanelContextEnabled('browser', this.checked)" type="checkbox" />
             <span><span data-i18n="chat_context_2">Chat context</span></span>
           </label>
+          <button class="tbtn" data-tip="Copy panel content" onclick="copyPanelContent('browser')" style="width:26px;height:26px;font-size:11px"><i class="fas fa-copy"></i></button>
           <button class="browser-nav-btn" onclick="toggleBrowserPanel()" title="Close browser"><i
               class="fas fa-times"></i></button>
         </div>
@@ -7259,6 +7262,43 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
           data-i18n="confirm_1">Confirm</span></button>
     </div>
   </div>
+<script>
+function copyPanelContent(panelId) {
+  var text = '';
+  if (panelId === 'output') {
+    var el = document.getElementById('outputBody');
+    if (el) text = el.innerText || el.textContent || '';
+  } else if (panelId === 'preview') {
+    var el = document.getElementById('previewBody');
+    if (el) text = el.innerText || el.textContent || '';
+  } else if (panelId === 'browser') {
+    var frame = document.getElementById('browserFrame');
+    try {
+      var doc = frame.contentDocument || frame.contentWindow.document;
+      if (doc) text = doc.body.innerText || doc.body.textContent || '';
+    } catch(e) { text = 'Cannot access browser content (cross-origin)'; }
+  }
+  text = (text || '').trim();
+  if (!text) return;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).catch(function() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+}
+</script>
 </body>
 
 </html>
