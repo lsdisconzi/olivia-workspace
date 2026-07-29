@@ -1,9 +1,9 @@
 {
   "metadata": {
     "folder": "desktop",
-    "indexed_at": "2026-07-26T22:51:20.288769",
+    "indexed_at": "2026-07-29T03:31:07.217980",
     "total_files": 8,
-    "total_lines": 4387,
+    "total_lines": 4415,
     "languages": {
       "javascript": 2,
       "json": 2,
@@ -48,10 +48,10 @@
     "desktop/preload.js": {
       "path": "desktop/preload.js",
       "language": "javascript",
-      "size_bytes": 1095,
+      "size_bytes": 1090,
       "lines": 25,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-26T23:33:45.378637",
+      "git_commit": "80ad0a5",
       "parsed": {
         "imports": [],
         "exports": [],
@@ -65,10 +65,10 @@
     "desktop/main.js": {
       "path": "desktop/main.js",
       "language": "javascript",
-      "size_bytes": 12327,
+      "size_bytes": 12315,
       "lines": 304,
-      "last_modified": "2026-07-21T19:34:53.682327",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T00:32:32.157234",
+      "git_commit": "fbead84",
       "parsed": {
         "imports": [],
         "exports": [],
@@ -169,10 +169,10 @@
     "desktop/package.json": {
       "path": "desktop/package.json",
       "language": "json",
-      "size_bytes": 942,
-      "lines": 37,
-      "last_modified": "2026-07-15T14:13:18.692693",
-      "git_commit": "11b79b4",
+      "size_bytes": 966,
+      "lines": 41,
+      "last_modified": "2026-07-26T23:33:46.407413",
+      "git_commit": "80ad0a5",
       "parsed": {}
     },
     "desktop/scripts/generate-icons.sh": {
@@ -209,10 +209,10 @@
     "desktop/src/renderer/waiting.html": {
       "path": "desktop/src/renderer/waiting.html",
       "language": "html",
-      "size_bytes": 4304,
-      "lines": 155,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "size_bytes": 4640,
+      "lines": 179,
+      "last_modified": "2026-07-26T23:33:46.405223",
+      "git_commit": "80ad0a5",
       "parsed": {
         "title": "Olivia — Starting...",
         "scripts": [],
@@ -230,10 +230,10 @@
     "desktop/src/renderer/style.css": {
       "path": "desktop/src/renderer/style.css",
       "language": "css",
-      "size_bytes": 2116,
+      "size_bytes": 2111,
       "lines": 100,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-26T23:33:45.379071",
+      "git_commit": "80ad0a5",
       "parsed": {
         "imports": [],
         "selectors": {

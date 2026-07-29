@@ -19,6 +19,9 @@ import os
 import re
 import subprocess
 import sys
+import urllib.parse
+import urllib.request
+import urllib.error
 from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
@@ -1117,6 +1120,11 @@ def main():
         default=list(EXCLUDE_EXTS_DEFAULT),
         help="File extensions to exclude"
     )
+    parser.add_argument(
+        "--push-to-qdrant", action="store_true",
+        help="After building the index, push parsed code symbols into Qdrant as "
+             "searchable documents in the 'olivia-dev-code' collection (Tier 1)."
+    )
 
     args = parser.parse_args()
 
@@ -1138,6 +1146,157 @@ def main():
     log.info(f"Total files: {result['metadata']['total_files']}")
     log.info(f"Total lines: {result['metadata']['total_lines']}")
     log.info(f"Languages: {result['metadata']['languages']}")
+
+    if args.push_to_qdrant:
+        _push_to_qdrant(result, args.project_root)
+
+
+def _push_to_qdrant(result: dict, project_root: Path) -> None:
+    """Push parsed code symbols into Qdrant as searchable documents.
+
+    Creates a temporary directory of structured text files (one per source
+    file with symbols), then calls the ingestion service's ingest-directory
+    to push them into the 'olivia-dev-code' collection.
+    """
+    import shutil
+    import tempfile
+    import urllib.parse
+    import urllib.error
+
+    ingestion_base = os.environ.get("INGESTION_BASE_URL", "http://127.0.0.1:8066")
+    collection = "olivia-dev-code"
+
+    files_data = result.get("files", {})
+    if not files_data:
+        log.warning("No file data to push to Qdrant.")
+        return
+
+    # Create temp directory with one text file per source directory
+    tmpdir = Path(tempfile.mkdtemp(prefix="qdrant_code_index_"))
+    doc_count = 0
+
+    try:
+        for file_key, fdata in files_data.items():
+            parsed = fdata.get("parsed", {})
+            if not parsed:
+                continue
+
+            ext = Path(file_key).suffix.lower()
+            if ext not in {".py", ".js", ".ts", ".tsx", ".jsx", ".html", ".css", ".sh", ".md"}:
+                continue
+
+            lines: list[str] = []
+            lines.append(f"File: {file_key}")
+            lines.append(f"Path: {file_key}")
+            lines.append(f"Language: {fdata.get('language', 'unknown')}")
+            lines.append("")
+
+            # Functions (stored under parsed["symbols"]["functions"])
+            symbols = parsed.get("symbols", {})
+            funcs = symbols.get("functions", [])
+            if funcs:
+                lines.append("Functions:")
+                for fn in funcs:
+                    name = fn if isinstance(fn, str) else (fn.get("name", str(fn)) if isinstance(fn, dict) else str(fn))
+                    ln = ""
+                    if isinstance(fn, dict):
+                        ln = f" (line {fn.get('line', '?')})" if fn.get("line") else ""
+                    lines.append(f"  - {name}{ln}")
+                lines.append("")
+
+            # Classes (stored under parsed["symbols"]["classes"])
+            classes = symbols.get("classes", [])
+            if classes:
+                lines.append("Classes:")
+                for cls in classes:
+                    name = cls if isinstance(cls, str) else (cls.get("name", str(cls)) if isinstance(cls, dict) else str(cls))
+                    ln = ""
+                    if isinstance(cls, dict):
+                        ln = f" (line {cls.get('line', '?')})" if cls.get("line") else ""
+                    lines.append(f"  - {name}{ln}")
+                lines.append("")
+
+            # Imports
+            imports = parsed.get("imports", [])
+            if imports:
+                lines.append("Imports:")
+                for imp in imports:
+                    if isinstance(imp, dict):
+                        lines.append(f"  - {imp.get('source', '')} → {', '.join(imp.get('names', []))}")
+                    elif isinstance(imp, str):
+                        lines.append(f"  - {imp}")
+                    else:
+                        lines.append(f"  - {str(imp)}")
+                lines.append("")
+
+            # API endpoints (JS deep parse — stored in js_deep key, not in parsed)
+            js_deep = fdata.get("js_deep", {})
+            api_endpoints = js_deep.get("api_endpoints", [])
+            if api_endpoints:
+                lines.append("API endpoints:")
+                for ep in api_endpoints:
+                    lines.append(f"  - {ep}")
+                lines.append("")
+
+            # Window exports (JS deep)
+            window_exports = js_deep.get("window_exports", [])
+            if window_exports:
+                lines.append("Window exports:")
+                for exp in window_exports:
+                    lines.append(f"  - {exp.get('name', '?')} ({exp.get('type', '?')})")
+                lines.append("")
+
+            # HTML forms/IDs (stored as parsed["forms"] and parsed["ids"])
+            forms = parsed.get("forms", [])
+            if forms:
+                lines.append("Forms:")
+                for frm in forms:
+                    fid = frm.get("id", "") if isinstance(frm, dict) else str(frm)
+                    action = frm.get("action", "") if isinstance(frm, dict) else ""
+                    lines.append(f"  - id={fid} action={action}")
+                lines.append("")
+            html_ids = parsed.get("ids", [])
+            if html_ids:
+                lines.append("Element IDs:")
+                for hid in html_ids:
+                    lines.append(f"  - {hid}")
+                lines.append("")
+
+            if len(lines) <= 5:  # header only, no real content
+                continue
+
+            # Write to a safe filename under tempdir
+            safe_name = file_key.replace("/", "__").replace("\\", "__")
+            doc_path = tmpdir / f"{safe_name}.md"
+            doc_path.write_text("\n".join(lines), encoding="utf-8")
+            doc_count += 1
+
+        if doc_count == 0:
+            log.info("No source files with parsed symbols found — nothing to push.")
+            return
+
+        log.info(f"Pushing {doc_count} code symbol documents to Qdrant collection '{collection}'...")
+
+        url = f"{ingestion_base}/v1/ingestion/ingest-directory"
+        qs = urllib.parse.quote(str(tmpdir), safe="")
+        full_url = f"{url}?directory_path={qs}&collection_name={collection}&force_recreate=true"
+        req = urllib.request.Request(full_url, data=b"", method="POST")
+        req.add_header("Content-Type", "application/json")
+
+        try:
+            with urllib.request.urlopen(req, timeout=300) as resp:
+                resp_data = resp.read().decode("utf-8")
+                log.info(f"Qdrant response: {resp_data[:300]}")
+            log.info(f"✓ Code symbols pushed to '{collection}'")
+        except urllib.error.HTTPError as e:
+            body = e.read().decode("utf-8", errors="replace")
+            log.warning(f"HTTP {e.code} from ingestion API: {body[:300]}")
+            log.warning("Code symbols were NOT pushed to Qdrant.")
+        except Exception as e:
+            log.warning(f"Failed to push code symbols to Qdrant: {e}")
+
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
 
 
 if __name__ == "__main__":

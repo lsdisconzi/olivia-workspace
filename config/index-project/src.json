@@ -1,7 +1,7 @@
 {
   "metadata": {
     "folder": "src",
-    "indexed_at": "2026-07-26T22:51:20.288769",
+    "indexed_at": "2026-07-29T03:31:07.217980",
     "total_files": 8,
     "total_lines": 2327,
     "languages": {
@@ -42,10 +42,10 @@
     "src/runtime_config.py": {
       "path": "src/runtime_config.py",
       "language": "python",
-      "size_bytes": 1423,
+      "size_bytes": 1418,
       "lines": 50,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-26T23:33:45.378570",
+      "git_commit": "80ad0a5",
       "parsed": {
         "imports": [
           "os",
@@ -919,10 +919,10 @@
     "src/mcp/remote_bus.py": {
       "path": "src/mcp/remote_bus.py",
       "language": "python",
-      "size_bytes": 8958,
+      "size_bytes": 8908,
       "lines": 231,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T00:33:24.914985",
+      "git_commit": "fbead84",
       "parsed": {
         "imports": [
           "json",
@@ -1219,13 +1219,6 @@
     }
   },
   "symbols_index": {
-    "_extract_path_params": [
-      {
-        "file": "src/endpoint_mapper.py",
-        "line": 376,
-        "type": "function"
-      }
-    ],
     "main": [
       {
         "file": "src/endpoint_mapper.py",
@@ -1240,6 +1233,13 @@
       {
         "file": "src/mcp/vps_bridge.py",
         "line": 472,
+        "type": "function"
+      }
+    ],
+    "_extract_path_params": [
+      {
+        "file": "src/endpoint_mapper.py",
+        "line": 376,
         "type": "function"
       }
     ],

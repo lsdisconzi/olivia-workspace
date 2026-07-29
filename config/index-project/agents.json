@@ -1,14 +1,14 @@
 {
   "metadata": {
     "folder": "agents",
-    "indexed_at": "2026-07-26T22:51:20.288769",
-    "total_files": 113,
-    "total_lines": 14027,
+    "indexed_at": "2026-07-29T03:31:07.217980",
+    "total_files": 114,
+    "total_lines": 14045,
     "languages": {
       "unknown": 10,
       "python": 1,
       "json": 13,
-      "markdown": 88,
+      "markdown": 89,
       "bash": 1
     }
   },
@@ -296,6 +296,9 @@
         ".DS_Store": {
           "file_ref": "files/agents/agents-groups/olivia/.DS_Store"
         },
+        "CHANGELOG.md": {
+          "file_ref": "files/agents/agents-groups/olivia/CHANGELOG.md"
+        },
         "PATHS.md": {
           "file_ref": "files/agents/agents-groups/olivia/PATHS.md"
         },
@@ -406,8 +409,8 @@
       "path": "agents/.DS_Store",
       "language": "unknown",
       "size_bytes": 10244,
-      "lines": 70,
-      "last_modified": "2026-07-21T05:42:10.830113",
+      "lines": 37,
+      "last_modified": "2026-07-27T04:08:25.628242",
       "git_commit": "",
       "parsed": {}
     },
@@ -600,10 +603,10 @@
     "agents/agents-groups/la8159/source/SOURCES.md": {
       "path": "agents/agents-groups/la8159/source/SOURCES.md",
       "language": "markdown",
-      "size_bytes": 18851,
+      "size_bytes": 18767,
       "lines": 202,
-      "last_modified": "2026-07-15T01:28:16.061063",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:55.036355",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/source/JURISPRUDENCE_SEARCH_GUIDE.md": {
@@ -618,10 +621,10 @@
     "agents/agents-groups/la8159/source/README.md": {
       "path": "agents/agents-groups/la8159/source/README.md",
       "language": "markdown",
-      "size_bytes": 4742,
+      "size_bytes": 4504,
       "lines": 54,
-      "last_modified": "2026-07-15T01:28:16.060444",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:45:09.041191",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/source/mapping.json": {
@@ -636,10 +639,10 @@
     "agents/agents-groups/la8159/source/PATHS.md": {
       "path": "agents/agents-groups/la8159/source/PATHS.md",
       "language": "markdown",
-      "size_bytes": 1976,
-      "lines": 48,
-      "last_modified": "2026-07-17T01:01:16.891686",
-      "git_commit": "11b79b4",
+      "size_bytes": 2858,
+      "lines": 61,
+      "last_modified": "2026-07-27T04:18:11.625509",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/source/INDEX.md": {
@@ -663,10 +666,10 @@
     "agents/agents-groups/la8159/source/PLAN.md": {
       "path": "agents/agents-groups/la8159/source/PLAN.md",
       "language": "markdown",
-      "size_bytes": 13021,
+      "size_bytes": 12639,
       "lines": 202,
-      "last_modified": "2026-07-15T01:28:16.059892",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:45:15.207958",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/source/personnel/.DS_Store": {
@@ -782,17 +785,17 @@
       "language": "markdown",
       "size_bytes": 3372,
       "lines": 62,
-      "last_modified": "2026-07-15T01:28:16.024732",
+      "last_modified": "2026-07-27T05:44:00.085803",
       "git_commit": "11b79b4",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/cl-lpdc.agent.md": {
       "path": "agents/agents-groups/la8159/agents/cl-lpdc.agent.md",
       "language": "markdown",
-      "size_bytes": 4338,
+      "size_bytes": 4188,
       "lines": 64,
-      "last_modified": "2026-07-15T01:28:15.994589",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.086738",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-sdc-procon-senacon.agent.md": {
@@ -800,26 +803,26 @@
       "language": "markdown",
       "size_bytes": 5075,
       "lines": 80,
-      "last_modified": "2026-07-15T01:28:15.970607",
+      "last_modified": "2026-07-27T05:44:00.087678",
       "git_commit": "11b79b4",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-cf88.agent.md": {
       "path": "agents/agents-groups/la8159/agents/br-cf88.agent.md",
       "language": "markdown",
-      "size_bytes": 4007,
+      "size_bytes": 3799,
       "lines": 64,
-      "last_modified": "2026-07-15T01:28:15.920617",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.088522",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/int-icao-an17.agent.md": {
       "path": "agents/agents-groups/la8159/agents/int-icao-an17.agent.md",
       "language": "markdown",
-      "size_bytes": 3060,
+      "size_bytes": 2912,
       "lines": 54,
-      "last_modified": "2026-07-15T01:28:16.008747",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.089546",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/meta-revolvingdoor.agent.md": {
@@ -827,7 +830,7 @@
       "language": "markdown",
       "size_bytes": 7911,
       "lines": 98,
-      "last_modified": "2026-07-15T01:28:16.027165",
+      "last_modified": "2026-07-27T05:44:00.090586",
       "git_commit": "11b79b4",
       "parsed": {}
     },
@@ -836,152 +839,152 @@
       "language": "markdown",
       "size_bytes": 7339,
       "lines": 85,
-      "last_modified": "2026-07-15T01:28:15.954017",
+      "last_modified": "2026-07-27T05:44:00.091445",
       "git_commit": "11b79b4",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-cp.agent.md": {
       "path": "agents/agents-groups/la8159/agents/br-cp.agent.md",
       "language": "markdown",
-      "size_bytes": 3608,
+      "size_bytes": 3464,
       "lines": 56,
-      "last_modified": "2026-07-15T01:28:15.939209",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.092185",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/cl-transparency-l20285.agent.md": {
       "path": "agents/agents-groups/la8159/agents/cl-transparency-l20285.agent.md",
       "language": "markdown",
-      "size_bytes": 2448,
+      "size_bytes": 2298,
       "lines": 53,
-      "last_modified": "2026-07-15T01:28:15.995506",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.092889",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/int-mc99.agent.md": {
       "path": "agents/agents-groups/la8159/agents/int-mc99.agent.md",
       "language": "markdown",
-      "size_bytes": 5688,
+      "size_bytes": 5408,
       "lines": 71,
-      "last_modified": "2026-07-15T01:28:16.020797",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.093703",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-abear-plus.agent.md": {
       "path": "agents/agents-groups/la8159/agents/br-abear-plus.agent.md",
       "language": "markdown",
-      "size_bytes": 9883,
+      "size_bytes": 9739,
       "lines": 104,
-      "last_modified": "2026-07-15T01:28:15.908811",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.094622",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/int-achr.agent.md": {
       "path": "agents/agents-groups/la8159/agents/int-achr.agent.md",
       "language": "markdown",
-      "size_bytes": 5453,
+      "size_bytes": 5173,
       "lines": 73,
-      "last_modified": "2026-07-15T01:28:15.997998",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.095519",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-cba.agent.md": {
       "path": "agents/agents-groups/la8159/agents/br-cba.agent.md",
       "language": "markdown",
-      "size_bytes": 4013,
+      "size_bytes": 3805,
       "lines": 59,
-      "last_modified": "2026-07-15T01:28:15.914459",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.096342",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/cl-const.agent.md": {
       "path": "agents/agents-groups/la8159/agents/cl-const.agent.md",
       "language": "markdown",
-      "size_bytes": 3440,
+      "size_bytes": 3290,
       "lines": 62,
-      "last_modified": "2026-07-15T01:28:15.978168",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.097141",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/la8159-coordinator.agent.md": {
       "path": "agents/agents-groups/la8159/agents/la8159-coordinator.agent.md",
       "language": "markdown",
-      "size_bytes": 3209,
+      "size_bytes": 3211,
       "lines": 47,
-      "last_modified": "2026-07-17T01:01:51.565965",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.097838",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/int-icao-an9.agent.md": {
       "path": "agents/agents-groups/la8159/agents/int-icao-an9.agent.md",
       "language": "markdown",
-      "size_bytes": 3724,
+      "size_bytes": 3576,
       "lines": 62,
-      "last_modified": "2026-07-15T01:28:16.019010",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.098551",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/int-softlaw.agent.md": {
       "path": "agents/agents-groups/la8159/agents/int-softlaw.agent.md",
       "language": "markdown",
-      "size_bytes": 4359,
+      "size_bytes": 4211,
       "lines": 62,
-      "last_modified": "2026-07-15T01:28:16.021695",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.099407",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/int-iata-gc.agent.md": {
       "path": "agents/agents-groups/la8159/agents/int-iata-gc.agent.md",
       "language": "markdown",
-      "size_bytes": 3167,
+      "size_bytes": 3019,
       "lines": 57,
-      "last_modified": "2026-07-15T01:28:16.006189",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.100280",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-cc.agent.md": {
       "path": "agents/agents-groups/la8159/agents/br-cc.agent.md",
       "language": "markdown",
-      "size_bytes": 3456,
+      "size_bytes": 3312,
       "lines": 59,
-      "last_modified": "2026-07-15T01:28:15.915270",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.101051",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/cl-dgac-l16752.agent.md": {
       "path": "agents/agents-groups/la8159/agents/cl-dgac-l16752.agent.md",
       "language": "markdown",
-      "size_bytes": 3090,
+      "size_bytes": 2940,
       "lines": 58,
-      "last_modified": "2026-07-15T01:28:15.989217",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.101816",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/cl-cach.agent.md": {
       "path": "agents/agents-groups/la8159/agents/cl-cach.agent.md",
       "language": "markdown",
-      "size_bytes": 5321,
+      "size_bytes": 5171,
       "lines": 66,
-      "last_modified": "2026-07-15T01:28:15.974073",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.102657",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-lei9784.agent.md": {
       "path": "agents/agents-groups/la8159/agents/br-lei9784.agent.md",
       "language": "markdown",
-      "size_bytes": 3361,
+      "size_bytes": 3217,
       "lines": 59,
-      "last_modified": "2026-07-15T01:28:15.959097",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.103443",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/meta-prescription-forum.agent.md": {
       "path": "agents/agents-groups/la8159/agents/meta-prescription-forum.agent.md",
       "language": "markdown",
-      "size_bytes": 5067,
+      "size_bytes": 4699,
       "lines": 75,
-      "last_modified": "2026-07-15T01:28:16.026385",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.104151",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/cl-contraloria-indh.agent.md": {
@@ -989,7 +992,7 @@
       "language": "markdown",
       "size_bytes": 5876,
       "lines": 87,
-      "last_modified": "2026-07-15T01:28:15.980466",
+      "last_modified": "2026-07-27T05:44:00.104915",
       "git_commit": "11b79b4",
       "parsed": {}
     },
@@ -998,26 +1001,26 @@
       "language": "markdown",
       "size_bytes": 7656,
       "lines": 95,
-      "last_modified": "2026-07-15T01:28:16.025884",
+      "last_modified": "2026-07-27T05:44:00.105777",
       "git_commit": "11b79b4",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/int-vccr.agent.md": {
       "path": "agents/agents-groups/la8159/agents/int-vccr.agent.md",
       "language": "markdown",
-      "size_bytes": 3638,
+      "size_bytes": 3490,
       "lines": 57,
-      "last_modified": "2026-07-15T01:28:16.023243",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.106529",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/int-uncrc-hague.agent.md": {
       "path": "agents/agents-groups/la8159/agents/int-uncrc-hague.agent.md",
       "language": "markdown",
-      "size_bytes": 4458,
+      "size_bytes": 4310,
       "lines": 64,
-      "last_modified": "2026-07-15T01:28:16.022263",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.107291",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-improbidade.agent.md": {
@@ -1025,7 +1028,7 @@
       "language": "markdown",
       "size_bytes": 4050,
       "lines": 72,
-      "last_modified": "2026-07-15T01:28:15.942523",
+      "last_modified": "2026-07-27T05:44:00.108032",
       "git_commit": "11b79b4",
       "parsed": {}
     },
@@ -1034,17 +1037,17 @@
       "language": "markdown",
       "size_bytes": 4645,
       "lines": 75,
-      "last_modified": "2026-07-15T01:28:15.960692",
+      "last_modified": "2026-07-27T05:44:00.108759",
       "git_commit": "11b79b4",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/int-chicago-vclt.agent.md": {
       "path": "agents/agents-groups/la8159/agents/int-chicago-vclt.agent.md",
       "language": "markdown",
-      "size_bytes": 4717,
+      "size_bytes": 4569,
       "lines": 67,
-      "last_modified": "2026-07-15T01:28:16.002327",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.109485",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/meta-institutional-silence.agent.md": {
@@ -1052,17 +1055,17 @@
       "language": "markdown",
       "size_bytes": 8551,
       "lines": 100,
-      "last_modified": "2026-07-15T01:28:16.025159",
+      "last_modified": "2026-07-27T05:44:00.110259",
       "git_commit": "11b79b4",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-anac-r400.agent.md": {
       "path": "agents/agents-groups/la8159/agents/br-anac-r400.agent.md",
       "language": "markdown",
-      "size_bytes": 4298,
+      "size_bytes": 4090,
       "lines": 67,
-      "last_modified": "2026-07-15T01:28:15.910781",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.111025",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/la8159-orchestrator.agent.md": {
@@ -1070,7 +1073,7 @@
       "language": "markdown",
       "size_bytes": 6432,
       "lines": 91,
-      "last_modified": "2026-07-17T01:01:51.566329",
+      "last_modified": "2026-07-27T05:44:00.111757",
       "git_commit": "11b79b4",
       "parsed": {}
     },
@@ -1079,7 +1082,7 @@
       "language": "markdown",
       "size_bytes": 11924,
       "lines": 138,
-      "last_modified": "2026-07-15T01:28:15.967069",
+      "last_modified": "2026-07-27T05:44:00.112553",
       "git_commit": "11b79b4",
       "parsed": {}
     },
@@ -1088,26 +1091,26 @@
       "language": "markdown",
       "size_bytes": 11226,
       "lines": 124,
-      "last_modified": "2026-07-15T01:28:15.913763",
+      "last_modified": "2026-07-27T05:44:00.113398",
       "git_commit": "11b79b4",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-cdc.agent.md": {
       "path": "agents/agents-groups/la8159/agents/br-cdc.agent.md",
       "language": "markdown",
-      "size_bytes": 6644,
+      "size_bytes": 6436,
       "lines": 82,
-      "last_modified": "2026-07-15T01:28:15.917568",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.114149",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/int-icao-an6-an13.agent.md": {
       "path": "agents/agents-groups/la8159/agents/int-icao-an6-an13.agent.md",
       "language": "markdown",
-      "size_bytes": 3521,
+      "size_bytes": 3373,
       "lines": 58,
-      "last_modified": "2026-07-15T01:28:16.014803",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.114822",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/br-conflito-interesses.agent.md": {
@@ -1115,7 +1118,7 @@
       "language": "markdown",
       "size_bytes": 8820,
       "lines": 112,
-      "last_modified": "2026-07-15T01:28:15.933336",
+      "last_modified": "2026-07-27T05:44:00.115543",
       "git_commit": "11b79b4",
       "parsed": {}
     },
@@ -1124,26 +1127,26 @@
       "language": "markdown",
       "size_bytes": 5976,
       "lines": 88,
-      "last_modified": "2026-07-15T01:28:15.909594",
+      "last_modified": "2026-07-27T05:44:00.116500",
       "git_commit": "11b79b4",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/cl-cpcl.agent.md": {
       "path": "agents/agents-groups/la8159/agents/cl-cpcl.agent.md",
       "language": "markdown",
-      "size_bytes": 4878,
+      "size_bytes": 4728,
       "lines": 73,
-      "last_modified": "2026-07-15T01:28:15.986436",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.117311",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/agents/meta-adversarial.agent.md": {
       "path": "agents/agents-groups/la8159/agents/meta-adversarial.agent.md",
       "language": "markdown",
-      "size_bytes": 4259,
+      "size_bytes": 4129,
       "lines": 71,
-      "last_modified": "2026-07-15T01:28:16.024425",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:44:00.118098",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/policies/tool-permissions.by-agent.json": {
@@ -1167,10 +1170,10 @@
     "agents/agents-groups/la8159/knowledge/manifest.json": {
       "path": "agents/agents-groups/la8159/knowledge/manifest.json",
       "language": "json",
-      "size_bytes": 7543,
+      "size_bytes": 7545,
       "lines": 298,
-      "last_modified": "2026-07-17T01:01:51.566358",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T04:18:24.909900",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/la8159/scripts/bootstrap_case_paths.sh": {
@@ -1185,10 +1188,10 @@
     "agents/agents-groups/_meta/groups.index.json": {
       "path": "agents/agents-groups/_meta/groups.index.json",
       "language": "json",
-      "size_bytes": 2278,
+      "size_bytes": 2337,
       "lines": 58,
-      "last_modified": "2026-07-15T01:28:15.849657",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T05:41:24.182814",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/_meta/meta-orchestrator.agent.md": {
@@ -1272,6 +1275,15 @@
       "git_commit": "",
       "parsed": {}
     },
+    "agents/agents-groups/olivia/CHANGELOG.md": {
+      "path": "agents/agents-groups/olivia/CHANGELOG.md",
+      "language": "markdown",
+      "size_bytes": 2352,
+      "lines": 38,
+      "last_modified": "2026-07-27T05:44:13.920021",
+      "git_commit": "60cd10d",
+      "parsed": {}
+    },
     "agents/agents-groups/olivia/PATHS.md": {
       "path": "agents/agents-groups/olivia/PATHS.md",
       "language": "markdown",
@@ -1284,10 +1296,10 @@
     "agents/agents-groups/olivia/index.json": {
       "path": "agents/agents-groups/olivia/index.json",
       "language": "json",
-      "size_bytes": 3500,
+      "size_bytes": 3521,
       "lines": 48,
-      "last_modified": "2026-07-18T23:27:32.395213",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T04:17:16.949661",
+      "git_commit": "60cd10d",
       "parsed": {}
     },
     "agents/agents-groups/olivia/agents/olivia-ecosystem-coordinator.agent.md": {
@@ -1659,10 +1671,11 @@
     "agents/agents-groups/olivia": {
       "files": [
         "agents/agents-groups/olivia/.DS_Store",
+        "agents/agents-groups/olivia/CHANGELOG.md",
         "agents/agents-groups/olivia/PATHS.md",
         "agents/agents-groups/olivia/index.json"
       ],
-      "count": 3
+      "count": 4
     },
     "agents/agents-groups/olivia/agents": {
       "files": [
@@ -2109,6 +2122,10 @@
       "imported_by": []
     },
     "agents/agents-groups/olivia/.DS_Store": {
+      "imports": [],
+      "imported_by": []
+    },
+    "agents/agents-groups/olivia/CHANGELOG.md": {
       "imports": [],
       "imported_by": []
     },

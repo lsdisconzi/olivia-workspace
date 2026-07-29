@@ -1,9 +1,9 @@
 {
   "metadata": {
     "folder": "runtime",
-    "indexed_at": "2026-07-26T22:51:20.288769",
+    "indexed_at": "2026-07-29T03:31:07.217980",
     "total_files": 3,
-    "total_lines": 674,
+    "total_lines": 872,
     "languages": {
       "bash": 2,
       "python": 1
@@ -24,19 +24,19 @@
     "runtime/start-all.sh": {
       "path": "runtime/start-all.sh",
       "language": "bash",
-      "size_bytes": 14779,
-      "lines": 346,
-      "last_modified": "2026-07-15T14:14:34.091591",
-      "git_commit": "11b79b4",
+      "size_bytes": 19262,
+      "lines": 451,
+      "last_modified": "2026-07-29T02:08:58.986375",
+      "git_commit": "1617706",
       "parsed": {}
     },
     "runtime/config_doctor.py": {
       "path": "runtime/config_doctor.py",
       "language": "python",
-      "size_bytes": 6513,
-      "lines": 206,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "size_bytes": 10261,
+      "lines": 279,
+      "last_modified": "2026-07-28T20:54:05.424032",
+      "git_commit": "1617706",
       "parsed": {
         "imports": [
           "argparse",
@@ -53,8 +53,8 @@
           "functions": [
             {
               "name": "_strip_inline_export",
-              "line": 19,
-              "end_line": 22,
+              "line": 24,
+              "end_line": 27,
               "args": [
                 "raw"
               ],
@@ -62,8 +62,8 @@
             },
             {
               "name": "_unquote",
-              "line": 25,
-              "end_line": 28,
+              "line": 30,
+              "end_line": 33,
               "args": [
                 "value"
               ],
@@ -71,8 +71,8 @@
             },
             {
               "name": "parse_env_file",
-              "line": 31,
-              "end_line": 59,
+              "line": 36,
+              "end_line": 64,
               "args": [
                 "path"
               ],
@@ -80,8 +80,8 @@
             },
             {
               "name": "_validate_urlish_value",
-              "line": 62,
-              "end_line": 76,
+              "line": 67,
+              "end_line": 81,
               "args": [
                 "key",
                 "value"
@@ -90,8 +90,8 @@
             },
             {
               "name": "validate",
-              "line": 79,
-              "end_line": 139,
+              "line": 84,
+              "end_line": 212,
               "args": [
                 "entries",
                 "malformed",
@@ -101,8 +101,8 @@
             },
             {
               "name": "build_report",
-              "line": 142,
-              "end_line": 159,
+              "line": 215,
+              "end_line": 232,
               "args": [
                 "path",
                 "strict"
@@ -111,8 +111,8 @@
             },
             {
               "name": "print_report",
-              "line": 162,
-              "end_line": 185,
+              "line": 235,
+              "end_line": 258,
               "args": [
                 "report"
               ],
@@ -120,8 +120,8 @@
             },
             {
               "name": "main",
-              "line": 188,
-              "end_line": 201,
+              "line": 261,
+              "end_line": 274,
               "args": [
                 "argv"
               ],
@@ -145,6 +145,14 @@
             {
               "name": "ALLOWED_URI_SCHEMES",
               "line": 16
+            },
+            {
+              "name": "OLLAMA_KEEP_ALIVE_RE",
+              "line": 18
+            },
+            {
+              "name": "OLLAMA_MODEL_URLS_RE",
+              "line": 19
             }
           ]
         }
@@ -153,10 +161,10 @@
     "runtime/stop-all.sh": {
       "path": "runtime/stop-all.sh",
       "language": "bash",
-      "size_bytes": 3292,
-      "lines": 122,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "size_bytes": 3788,
+      "lines": 142,
+      "last_modified": "2026-07-28T19:14:21.989807",
+      "git_commit": "0b469bb",
       "parsed": {}
     }
   },
@@ -175,56 +183,56 @@
     "main": [
       {
         "file": "runtime/config_doctor.py",
-        "line": 188,
+        "line": 261,
         "type": "function"
       }
     ],
     "_strip_inline_export": [
       {
         "file": "runtime/config_doctor.py",
-        "line": 19,
+        "line": 24,
         "type": "function"
       }
     ],
     "_unquote": [
       {
         "file": "runtime/config_doctor.py",
-        "line": 25,
+        "line": 30,
         "type": "function"
       }
     ],
     "parse_env_file": [
       {
         "file": "runtime/config_doctor.py",
-        "line": 31,
+        "line": 36,
         "type": "function"
       }
     ],
     "_validate_urlish_value": [
       {
         "file": "runtime/config_doctor.py",
-        "line": 62,
+        "line": 67,
         "type": "function"
       }
     ],
     "validate": [
       {
         "file": "runtime/config_doctor.py",
-        "line": 79,
+        "line": 84,
         "type": "function"
       }
     ],
     "build_report": [
       {
         "file": "runtime/config_doctor.py",
-        "line": 142,
+        "line": 215,
         "type": "function"
       }
     ],
     "print_report": [
       {
         "file": "runtime/config_doctor.py",
-        "line": 162,
+        "line": 235,
         "type": "function"
       }
     ]

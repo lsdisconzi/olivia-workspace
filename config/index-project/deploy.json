@@ -1,7 +1,7 @@
 {
   "metadata": {
     "folder": "deploy",
-    "indexed_at": "2026-07-26T22:51:20.288769",
+    "indexed_at": "2026-07-29T03:31:07.217980",
     "total_files": 4,
     "total_lines": 367,
     "languages": {
@@ -29,10 +29,10 @@
     "deploy/vps/la8159.service.template": {
       "path": "deploy/vps/la8159.service.template",
       "language": "unknown",
-      "size_bytes": 380,
+      "size_bytes": 370,
       "lines": 18,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T00:32:32.017334",
+      "git_commit": "fbead84",
       "parsed": {}
     },
     "deploy/vps/rsync-excludes.txt": {
@@ -47,19 +47,19 @@
     "deploy/vps/bootstrap_ubuntu_olivialegal.sh": {
       "path": "deploy/vps/bootstrap_ubuntu_olivialegal.sh",
       "language": "bash",
-      "size_bytes": 6728,
+      "size_bytes": 6653,
       "lines": 243,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T00:32:32.018457",
+      "git_commit": "fbead84",
       "parsed": {}
     },
     "deploy/vps/deploy_la8159_service.sh": {
       "path": "deploy/vps/deploy_la8159_service.sh",
       "language": "bash",
-      "size_bytes": 3283,
+      "size_bytes": 3223,
       "lines": 96,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T00:33:24.915115",
+      "git_commit": "fbead84",
       "parsed": {}
     }
   },
