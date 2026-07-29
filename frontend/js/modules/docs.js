@@ -1940,6 +1940,480 @@ async function openDocFile(relPath, name, projectId) {
   return openPreviewUrl(url, name || relPath, { fileType });
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// POST-RENDER PIPELINE — Mermaid, Syntax Highlight, CSV tables
+// ═══════════════════════════════════════════════════════════════════
+
+let _postRenderObserver = null;
+const _POST_RENDER_SELECTORS = '.answer-md, .olivia-doc-rich-body, .output-body, .output-rich-scroll';
+
+function _sanitizeMermaidSource(source) {
+  // Characters that break Mermaid's parser but are commonly emitted by LLMs:
+  // - Middle dot · (U+00B7) — used as separator in Gantt task names
+  // - Bullet • (U+2022) — similar usage
+  // - Em dash — (U+2014) and en dash – (U+2013)
+  // - Non-breaking spaces and zero-width characters
+  return source
+    .replace(/[\u00B7\u2022]/g, '-')   // middle dot / bullet → dash
+    .replace(/[\u2013\u2014]/g, '--')  // en/em dash → double dash
+    .replace(/\u00A0/g, ' ')           // non-breaking space → normal space
+    .replace(/[\u200B\u200C\u200D\uFEFF]/g, ''); // zero-width chars → remove
+}
+
+/**
+ * Scan a DOM element for ```mermaid code blocks and replace them with rendered SVG.
+ * Errors are caught per-block and show the original code with an error indicator.
+ */
+function _postRenderMermaid(rootEl) {
+  if (!rootEl || typeof mermaid === 'undefined') return;
+
+  const mermaidBlocks = rootEl.querySelectorAll('pre code.language-mermaid, pre code[class*="language-mermaid"]');
+  mermaidBlocks.forEach(function (codeEl) {
+    const preEl = codeEl.parentElement;
+    if (!preEl) return;
+
+    // Skip already-rendered blocks
+    if (preEl.querySelector('.mermaid-rendered') || preEl.classList.contains('mermaid-processed')) return;
+
+    const rawSource = codeEl.textContent || '';
+    const source = _sanitizeMermaidSource(rawSource);
+    const id = 'mermaid-' + Math.random().toString(36).slice(2, 10);
+
+    try {
+      // mermaid.render is sync-call compatible (returns {svg: string})
+      mermaid.render(id, source).then(function (result) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid-container mermaid-rendered';
+        wrapper.innerHTML = result.svg;
+        preEl.parentNode.replaceChild(wrapper, preEl);
+      }).catch(function (err) {
+        _showMermaidError(preEl, source, err);
+      });
+    } catch (err) {
+      _showMermaidError(preEl, source, err);
+    }
+
+    preEl.classList.add('mermaid-processed');
+  });
+
+  // Also handle <div class="mermaid"> blocks (legacy pattern used by api-explorer)
+  const legacyMermaidBlocks = rootEl.querySelectorAll('div.mermaid:not(.mermaid-processed)');
+  legacyMermaidBlocks.forEach(function (divEl) {
+    divEl.classList.add('mermaid-processed');
+    try {
+      mermaid.run({ nodes: [divEl] });
+    } catch (_) {
+      // mermaid.run will handle its own errors
+    }
+  });
+}
+
+function _showMermaidError(preEl, source, err) {
+  var msg = (err && err.message) ? err.message : 'Mermaid render error';
+  var wrapper = document.createElement('div');
+  wrapper.className = 'mermaid-container mermaid-error';
+  wrapper.innerHTML = [
+    '<div class="mermaid-error-banner">',
+      '<i class="fas fa-triangle-exclamation"></i> Diagrama inválido — ',
+      escapeHtml(msg),
+    '</div>',
+    '<pre class="olivia-doc-pre mermaid-error-source"><code>',
+      escapeHtml(source),
+    '</code></pre>',
+  ].join('');
+  if (preEl && preEl.parentNode) {
+    preEl.parentNode.replaceChild(wrapper, preEl);
+  }
+}
+
+/**
+ * Apply highlight.js to all <pre><code> blocks in the element.
+ * Skips mermaid blocks (handled separately) and already-highlighted blocks.
+ */
+function _postRenderHighlight(rootEl) {
+  if (!rootEl || typeof hljs === 'undefined') return;
+
+  var codeBlocks = rootEl.querySelectorAll('pre code');
+  codeBlocks.forEach(function (codeEl) {
+    // Skip mermaid blocks
+    if (codeEl.className.indexOf('language-mermaid') >= 0) return;
+    // Skip already highlighted
+    if (codeEl.classList.contains('hljs') || codeEl.dataset.highlighted === 'true') return;
+
+    try {
+      hljs.highlightElement(codeEl);
+      codeEl.dataset.highlighted = 'true';
+    } catch (_) {
+      // highlight.js may throw on unsupported languages — ignore
+    }
+  });
+}
+
+/**
+ * Run the full post-render pipeline on a DOM element.
+ * Call this after inserting HTML content into the DOM.
+ */
+function postRenderDom(rootEl) {
+  if (!rootEl) return;
+  _postRenderMermaid(rootEl);
+  _postRenderHighlight(rootEl);
+}
+
+/**
+ * Post-render an HTML string by wrapping it in a temp element and running the pipeline.
+ * Returns the processed HTML string.  Only synchronous transforms are applied;
+ * async mermaid rendering needs DOM insertion + postRenderDom().
+ */
+function postRenderString(html) {
+  if (!html) return html;
+  // For string-based processing, we can only apply synchronous transforms.
+  // mermaid requires DOM (async), so it's skipped here.
+  // Highlight.js can highlight if we use hljs.highlight() on the string.
+  // For simplicity, most callers should use postRenderDom() after DOM insertion.
+  return html;
+}
+
+/**
+ * Set up a MutationObserver that auto-applies post-render to dynamically added content.
+ * Safe to call multiple times (idempotent).
+ */
+function _ensurePostRenderObserver() {
+  if (_postRenderObserver) return;
+
+  _postRenderObserver = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      mutation.addedNodes.forEach(function (node) {
+        if (node.nodeType !== 1) return; // Element only
+        // If the added node itself matches our selectors, process it
+        if (node.matches && node.matches(_POST_RENDER_SELECTORS)) {
+          postRenderDom(node);
+        }
+        // Also scan inside it for matching descendants
+        var matches = node.querySelectorAll
+          ? node.querySelectorAll(_POST_RENDER_SELECTORS)
+          : [];
+        matches.forEach(function (el) { postRenderDom(el); });
+        // Additionally scan for any .mermaid or code blocks
+        _postRenderMermaid(node);
+        _postRenderHighlight(node);
+      });
+    });
+  });
+
+  _postRenderObserver.observe(document.body, { childList: true, subtree: true });
+}
+
+// Kick off the observer as soon as the script loads (but after DOM is ready)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _ensurePostRenderObserver);
+} else {
+  _ensurePostRenderObserver();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CSV TABLE RENDERER
+// ═══════════════════════════════════════════════════════════════════
+
+var _CSV_MAX_ROWS = 500;
+
+/**
+ * Parse CSV text using RFC 4180 rules. Handles quoted fields, commas in fields,
+ * embedded quotes, and newlines inside quoted fields.
+ * Returns { headers: string[], rows: string[][] } or null if not valid CSV.
+ */
+function _parseCsv(text) {
+  if (!text || typeof text !== 'string') return null;
+  var rows = [];
+  var currentRow = [];
+  var currentField = '';
+  var inQuotes = false;
+  var i = 0;
+  var len = text.length;
+
+  while (i < len) {
+    var ch = text[i];
+
+    if (inQuotes) {
+      if (ch === '"') {
+        if (i + 1 < len && text[i + 1] === '"') {
+          // Escaped quote
+          currentField += '"';
+          i += 2;
+          continue;
+        } else {
+          // End of quoted field
+          inQuotes = false;
+          i++;
+          continue;
+        }
+      } else {
+        currentField += ch;
+        i++;
+        continue;
+      }
+    }
+
+    // Not in quotes
+    if (ch === '"') {
+      if (currentField === '') {
+        inQuotes = true;
+        i++;
+        continue;
+      }
+      // Quote in the middle of an unquoted field — treat as regular char
+      currentField += ch;
+      i++;
+      continue;
+    }
+
+    if (ch === ',') {
+      currentRow.push(currentField);
+      currentField = '';
+      i++;
+      continue;
+    }
+
+    if (ch === '\n') {
+      currentRow.push(currentField);
+      if (currentRow.length > 0 && currentRow.some(function (f) { return f !== ''; })) {
+        rows.push(currentRow);
+      }
+      currentRow = [];
+      currentField = '';
+      i++;
+      continue;
+    }
+
+    if (ch === '\r') {
+      // Skip \r (handle both \r\n and standalone \r)
+      i++;
+      continue;
+    }
+
+    currentField += ch;
+    i++;
+  }
+
+  // Final field
+  if (currentField !== '' || currentRow.length > 0) {
+    currentRow.push(currentField);
+    if (currentRow.some(function (f) { return f !== ''; })) {
+      rows.push(currentRow);
+    }
+  }
+
+  if (rows.length < 2) return null;
+
+  // Validate consistent column count
+  var colCounts = rows.map(function (r) { return r.length; });
+  var maxCols = Math.max.apply(null, colCounts);
+  if (maxCols < 2) return null;
+
+  // Normalize rows to maxCols (pad shorter rows with empty strings)
+  var headers = rows[0];
+  while (headers.length < maxCols) headers.push('');
+  var dataRows = rows.slice(1).map(function (r) {
+    var copy = r.slice();
+    while (copy.length < maxCols) copy.push('');
+    return copy;
+  });
+
+  return { headers: headers, rows: dataRows };
+}
+
+/**
+ * Detect if text content looks like CSV.
+ */
+function _isCsvContent(text) {
+  if (!text || typeof text !== 'string') return false;
+  var firstLine = text.split('\n')[0] || '';
+  var commas = (firstLine.match(/,/g) || []).length;
+  var tabs = (firstLine.match(/\t/g) || []).length;
+  var semicolons = (firstLine.match(/;/g) || []).length;
+
+  // Needs at least 1 separator
+  if (commas < 1 && tabs < 1 && semicolons < 1) return false;
+
+  // Check multiple lines have consistent field counts
+  var lines = text.split('\n').filter(function (l) { return l.trim(); });
+  if (lines.length < 2) return false;
+
+  var sep = commas >= tabs && commas >= semicolons ? ',' : (tabs >= semicolons ? '\t' : ';');
+  var counts = lines.slice(0, Math.min(lines.length, 10)).map(function (l) {
+    // Simple count (doesn't handle quoted fields perfectly but good enough for detection)
+    return l.split(sep).length;
+  });
+  var unique = {};
+  counts.forEach(function (c) { unique[c] = true; });
+  var uniqueCounts = Object.keys(unique).length;
+
+  // Allow minor variation (+-1) between rows
+  return uniqueCounts <= 3 && counts[0] >= 2;
+}
+
+/**
+ * Render CSV text as an interactive HTML table.
+ * @param {string} csvText - Raw CSV content
+ * @param {object} options - { title?, separator? }
+ * @returns {string} HTML
+ */
+function renderCsvHtml(csvText, options) {
+  var opts = options && typeof options === 'object' ? options : {};
+  var title = String(opts.title || '').trim();
+  var parsed;
+
+  // Auto-detect separator: pick the most common one among comma, tab, semicolon
+  var text = String(csvText || '');
+  var firstLine = text.split('\n')[0] || '';
+  var commas = (firstLine.match(/,/g) || []).length;
+  var tabs = (firstLine.match(/\t/g) || []).length;
+  var semicolons = (firstLine.match(/;/g) || []).length;
+  var autoSep = opts.separator;
+  if (!autoSep) {
+    if (tabs > commas && tabs > semicolons) autoSep = '\t';
+    else if (semicolons > commas && semicolons > tabs) autoSep = ';';
+    else autoSep = ','; // default to comma
+  }
+
+  if (autoSep !== ',') {
+    // Convert custom separator to commas for the parser
+    text = text.split('\n').map(function (line) {
+      return line.split(autoSep).map(function (f) {
+        return f.indexOf(',') >= 0 || f.indexOf('"') >= 0 ? '"' + f.replace(/"/g, '""') + '"' : f;
+      }).join(',');
+    }).join('\n');
+  }
+
+  parsed = _parseCsv(text);
+
+  if (!parsed) {
+    // Fallback: render as pre-formatted text
+    var fallbackHead = title
+      ? '<div class="olivia-doc-rich-head"><span class="olivia-doc-rich-label">' + escapeHtml(title) + '</span></div>'
+      : '';
+    return '<article class="olivia-doc-rich">' + fallbackHead + '<div class="olivia-doc-rich-body"><pre class="olivia-doc-pre">' + escapeHtml(csvText) + '</pre></div></article>';
+  }
+
+  var headers = parsed.headers;
+  var rows = parsed.rows;
+  var totalRows = rows.length;
+  var truncated = totalRows > _CSV_MAX_ROWS;
+  if (truncated) {
+    rows = rows.slice(0, _CSV_MAX_ROWS);
+  }
+
+  var tableId = 'csv-' + Math.random().toString(36).slice(2, 10);
+
+  // Build header row
+  var theadHtml = '<tr><th class="csv-row-num">#</th>' +
+    headers.map(function (h, i) {
+      return '<th class="csv-sortable" data-col="' + i + '" onclick="_csvSortTable(\'' + tableId + '\',' + i + ',this)">' + escapeHtml(h || ('Col ' + (i + 1))) + ' <span class="csv-sort-arrow"></span></th>';
+    }).join('') +
+    '</tr>';
+
+  // Build data rows
+  var tbodyHtml = rows.map(function (row, rowIdx) {
+    return '<tr>' +
+      '<td class="csv-row-num">' + (rowIdx + 1) + '</td>' +
+      row.map(function (cell) {
+        return '<td>' + escapeHtml(cell) + '</td>';
+      }).join('') +
+      '</tr>';
+  }).join('');
+
+  var infoHtml = '';
+
+  // Pagination is automatically accounted for by chunked rendering
+  if (truncated) {
+    infoHtml = '<div class="csv-info">Mostrando ' + _CSV_MAX_ROWS + ' de ' + totalRows + ' linhas</div>';
+  } else if (totalRows > 50) {
+    infoHtml = '<div class="csv-info">Total: ' + totalRows + ' linhas, ' + headers.length + ' colunas</div>';
+  } else {
+    infoHtml = '<div class="csv-info">' + totalRows + ' linhas × ' + headers.length + ' colunas</div>';
+  }
+
+  var headHtml = title
+    ? '<div class="olivia-doc-rich-head"><span class="olivia-doc-rich-label">' + escapeHtml(title) + '</span></div>'
+    : '<div class="olivia-doc-rich-head"><span class="olivia-doc-rich-label">CSV</span>' + infoHtml + '</div>';
+
+  return [
+    '<article class="olivia-doc-rich">',
+      headHtml,
+      '<div class="olivia-doc-rich-body csv-table-wrapper">',
+        infoHtml,
+        '<div class="csv-table-scroll">',
+          '<table class="csv-table" id="' + tableId + '">',
+            '<thead>' + theadHtml + '</thead>',
+            '<tbody>' + tbodyHtml + '</tbody>',
+          '</table>',
+        '</div>',
+      '</div>',
+    '</article>',
+  ].join('');
+}
+
+/**
+ * Sort a CSV table by column index. Global function called from onclick.
+ */
+function _csvSortTable(tableId, colIdx, thEl) {
+  var table = document.getElementById(tableId);
+  if (!table) return;
+
+  var tbody = table.querySelector('tbody');
+  if (!tbody) return;
+
+  var rows = Array.from(tbody.querySelectorAll('tr'));
+  if (rows.length < 2) return;
+
+  // Determine current sort direction
+  var currentDir = thEl.getAttribute('data-sort-dir') || '';
+  var newDir = currentDir === 'asc' ? 'desc' : 'asc';
+
+  // Reset all arrows
+  table.querySelectorAll('.csv-sort-arrow').forEach(function (a) { a.className = 'csv-sort-arrow'; });
+
+  // Update this column's arrow
+  var arrow = thEl.querySelector('.csv-sort-arrow');
+  thEl.setAttribute('data-sort-dir', newDir);
+  if (arrow) {
+    arrow.className = 'csv-sort-arrow ' + newDir;
+  }
+
+  // Sort (skip row number column, colIdx is offset by 1)
+  var dataIdx = colIdx + 1;
+  rows.sort(function (a, b) {
+    var cellA = (a.children[dataIdx] && a.children[dataIdx].textContent || '').trim().toLowerCase();
+    var cellB = (b.children[dataIdx] && b.children[dataIdx].textContent || '').trim().toLowerCase();
+
+    // Try numeric sort
+    var numA = parseFloat(cellA);
+    var numB = parseFloat(cellB);
+    if (!isNaN(numA) && !isNaN(numB)) {
+      return newDir === 'asc' ? numA - numB : numB - numA;
+    }
+
+    // String sort
+    if (cellA < cellB) return newDir === 'asc' ? -1 : 1;
+    if (cellA > cellB) return newDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  // Re-append rows and update row numbers
+  rows.forEach(function (row, i) {
+    var numCell = row.querySelector('.csv-row-num');
+    if (numCell) numCell.textContent = i + 1;
+    tbody.appendChild(row);
+  });
+}
+
+/**
+ * Simple CSV detection for output artifact panel.
+ * Returns true if the content looks like tabular CSV data.
+ */
+function isCsvContent(text) {
+  return _isCsvContent(text);
+}
+
 // ─── Expose to window ───
 window.openPreviewUrl = openPreviewUrl;
 window.openDocFile    = openDocFile;
@@ -1948,6 +2422,12 @@ window.renderRichMarkdownHtml = renderRichMarkdownHtml;
 window.renderRichTextCardHtml = renderRichTextCardHtml;
 window.renderDocxIntoElement = renderDocxIntoElement;
 window.resolveSharedDocCompanion = resolveSharedDocCompanion;
+window.postRenderDom = postRenderDom;
+window._postRenderMermaid = _postRenderMermaid;
+window._postRenderHighlight = _postRenderHighlight;
+window.renderCsvHtml = renderCsvHtml;
+window.isCsvContent = isCsvContent;
+window._csvSortTable = _csvSortTable;
 window.docsOpenFilePreview = docsOpenFilePreview;
 window.docsOpenFileOutput = docsOpenFileOutput;
 window.docsOpenFileBrowser = docsOpenFileBrowser;

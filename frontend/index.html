@@ -80,7 +80,57 @@
   <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style" />
   <meta content="telephone=no" name="format-detection" />
   <link href="/olivia/manifest.json" rel="manifest" />
+  <!-- Unicode-safe btoa/atob polyfill — Mermaid 10.x uses btoa internally, which fails on non-Latin1 characters -->
+  <script>
+    (function () {
+      var _nativeBtoa = window.btoa;
+      var _nativeAtob = window.atob;
+      window.btoa = function (str) {
+        try { return _nativeBtoa(str); } catch (_) {
+          return _nativeBtoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (_, p1) {
+            return String.fromCharCode('0x' + p1);
+          }));
+        }
+      };
+      window.atob = function (str) {
+        try { return _nativeAtob(str); } catch (_) {
+          return decodeURIComponent(_nativeAtob(str).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(''));
+        }
+      };
+    })();
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.0/mermaid.min.js"></script>
+  <script>
+    // Mermaid initialization — must be called once before any render
+    (function () {
+      if (typeof mermaid === 'undefined') return;
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'sandbox',
+        themeVariables: {
+          fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+          primaryColor: '#1c4532',
+          primaryTextColor: '#f0ece6',
+          primaryBorderColor: '#5a8a6e',
+          lineColor: '#5a8a6e',
+          secondaryColor: '#2a2a2a',
+          tertiaryColor: '#c4622d',
+          background: '#1a1a1a',
+          mainBkg: '#1e1e1e',
+          nodeBorder: '#5a8a6e',
+          clusterBkg: '#1e1e1e',
+          clusterBorder: '#5a8a6e',
+          titleColor: '#f0ece6',
+          edgeLabelBackground: '#1a1a1a',
+        }
+      });
+    })();
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <script>
     // ---- In-page i18n: fetch languages/<lang>.index.json and swap [data-i18n] text in place ----
     (function () {

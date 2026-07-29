@@ -930,6 +930,11 @@ async function showOutputArtifactInPanel(id) {
         } else {
           body.innerHTML = `<pre class="output-body-content" style="padding:16px;margin:0;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:12px;color:var(--white);overflow:auto;height:100%;box-sizing:border-box">${escapeHtml(textContent)}</pre>`;
         }
+        if (typeof window.postRenderDom === 'function') {
+          setTimeout(function () { window.postRenderDom(body); }, 50);
+        }
+      } else if ((type === 'csv' || extFromTitle === 'csv' || (typeof window.isCsvContent === 'function' && window.isCsvContent(textContent))) && typeof window.renderCsvHtml === 'function') {
+        body.innerHTML = `<div class="output-rich-scroll">${window.renderCsvHtml(textContent, { title: artifact.title || artifact.id })}</div>`;
       } else {
         const richKind = (type === 'json' || extFromTitle === 'json' || contentType.includes('application/json'))
           ? 'json'
