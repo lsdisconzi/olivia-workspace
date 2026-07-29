@@ -177,10 +177,11 @@ if [[ $START_OLLAMA -eq 1 && $ollama_already_running -eq 0 ]]; then
     echo "    OLLAMA_HOST=$OLLAMA_HOST"
     echo "    OLLAMA_KEEP_ALIVE=-1"
     echo "    OLLAMA_FLASH_ATTENTION=1"
+    echo "    OLLAMA_KV_CACHE_TYPE=q8_0"
     LOG_DIR="$HOME/.dev-logs"
     mkdir -p "$LOG_DIR"
     OLLAMA_LOG="$LOG_DIR/ollama.log"
-    OLLAMA_KEEP_ALIVE=-1 OLLAMA_FLASH_ATTENTION=1 OLLAMA_HOST="$OLLAMA_HOST" \
+    OLLAMA_KEEP_ALIVE=-1 OLLAMA_FLASH_ATTENTION=1 OLLAMA_KV_CACHE_TYPE=q8_0 OLLAMA_HOST="$OLLAMA_HOST" \
       nohup ollama serve > "$OLLAMA_LOG" 2>&1 &
     OLLAMA_PID=$!
     echo "✓  ollama      → PID $OLLAMA_PID (log: $OLLAMA_LOG)"
