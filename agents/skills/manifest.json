@@ -7,6 +7,11 @@
       "description": "Generates clean, idiomatic Vue 3, JavaScript, and CSS code."
     },
     {
+      "id": "olivia-frontend",
+      "name": "Olivia Frontend",
+      "description": "Olivia Frontend design and branding"
+    },
+    {
       "id": "file-system",
       "name": "File System",
       "description": "Reads, writes, and manipulates files and directories."

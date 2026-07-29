@@ -95,22 +95,19 @@ function downloadCurrentPreview() {
   document.body.removeChild(a);
 }
 
-// Export the currently-previewed MARKDOWN file to a branded PDF using the
-// browser's print pipeline. Mirrors the panel's markdown look (amber/blue
-// Olivia accents) for visual consistency with convert_artifacts.py branding.
 function downloadPreviewAsPdf() {
   const s = window._previewState;
   if (!s || !s.url) return;
+
   const ext = (s.name || '').split('.').pop().toLowerCase();
   const previewType = (typeof window.resolvePreviewFileType === 'function')
     ? window.resolvePreviewFileType(s.name || '', { fileType: ext })
     : ext;
+
   if (previewType !== 'markdown' && previewType !== 'md') {
-    if (typeof window.toastInfo === 'function') {
-      window.toastInfo('PDF export is available for Markdown files only.');
-    } else if (typeof addSystemBubble === 'function') {
-      addSystemBubble('PDF export is available for Markdown files only.');
-    }
+    const msg = 'PDF export is available for Markdown files only.';
+    if (typeof window.toastInfo === 'function') window.toastInfo(msg);
+    else if (typeof addSystemBubble === 'function') addSystemBubble(msg);
     return;
   }
 
@@ -119,91 +116,336 @@ function downloadPreviewAsPdf() {
     try {
       const res = await fetch(s.url);
       mdText = await res.text();
-    } catch (e) {
-      if (typeof window.toastError === 'function') {
-        window.toastError('Could not load the Markdown source for PDF export.');
-      }
+    } catch (_) {
+      const msg = 'Could not load the Markdown source for PDF export.';
+      if (typeof window.toastError === 'function') window.toastError(msg);
       return;
     }
 
-    // Render Markdown -> HTML when marked is available; otherwise escape as text.
+    // Render Markdown → HTML; fall back to escaped pre-block.
     let bodyHtml = '';
     if (window.marked && typeof marked.parse === 'function') {
-      try { bodyHtml = marked.parse(mdText); } catch (_) { bodyHtml = ''; }
+      try { bodyHtml = marked.parse(mdText); } catch (_) { }
     }
     if (!bodyHtml) {
-      bodyHtml = '<pre style="white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:12px;line-height:1.5">'
-        + escapeHtml(mdText) + '</pre>';
+      bodyHtml = `<pre style="white-space:pre-wrap">${escapeHtml(mdText)}</pre>`;
     }
 
     const displayName = s.name || 'document';
-    const stamp = new Date().toLocaleString();
     const docTitle = displayName.replace(/\.(md|markdown)$/i, '');
+    const stamp = new Date().toLocaleString();
+    const isoDate = new Date().toISOString().slice(0, 10);
 
-    const printDoc = `<!DOCTYPE html>
-<html lang="pt-BR">
+    // ── Olive branch mark (matches the project favicon exactly) ──────────────
+    const oliveMark = `<svg width="28" height="28" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:block">
+  <rect width="32" height="32" rx="8" fill="#1c4532"/>
+  <g transform="translate(6,7) scale(0.31)">
+    <path d="M12 52 Q24 38,34 30 Q44 22,54 16" fill="none" stroke="#faf9f6" stroke-width="2.5" stroke-linecap="round" opacity=".65"/>
+    <path d="M28 36 Q20 26,16 18 Q24 24,28 36Z"   fill="#faf9f6" opacity=".4"/>
+    <path d="M30 34 Q38 24,44 18 Q38 28,30 34Z"   fill="#faf9f6" opacity=".38"/>
+    <path d="M42 24 Q36 14,34 8  Q40 14,42 24Z"   fill="#faf9f6" opacity=".35"/>
+    <ellipse cx="22" cy="42" rx="4" ry="5" fill="#c4622d"/>
+  </g>
+</svg>`;
+
+    const printDoc = /* html */`<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <title>${escapeHtml(docTitle)}</title>
+<!-- Olivia brand type stack: Fraunces · Plus Jakarta Sans · JetBrains Mono -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  @page { margin: 18mm 16mm; }
-  * { box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-         color: #1a1a1a; font-size: 12pt; line-height: 1.6; margin: 0; }
-  .brand-header { display:flex; align-items:center; gap:10px; border-bottom:3px solid #c4622d;
-                  padding-bottom:8px; margin-bottom:18px; }
-  .brand-mark { width:22px; height:22px; border-radius:50%;
-                background: linear-gradient(135deg,#c4622d,#e0a86a); flex:0 0 auto; }
-  .brand-name { font-weight:700; letter-spacing:.3px; color:#c4622d; font-size:13pt; }
-  .brand-meta { margin-left:auto; font-size:9pt; color:#777; text-align:right; }
-  h1,h2,h3 { color:#244a73; line-height:1.25; }
-  h1 { border-bottom:1px solid #e3e3e3; padding-bottom:4px; }
-  a { color:#244a73; }
-  code { background:#f4ece3; padding:1px 4px; border-radius:3px; font-size:.9em; }
-  pre { background:#f7f3ee; border-left:3px solid #c4622d; padding:10px 12px; border-radius:4px;
-        overflow:auto; }
-  pre code { background:none; padding:0; }
-  blockquote { border-left:3px solid #c4622d; margin:0; padding:2px 14px; color:#444; }
-  table { border-collapse:collapse; width:100%; margin:10px 0; }
-  th,td { border:1px solid #ddd; padding:6px 8px; text-align:left; }
-  th { background:#f4ece3; }
-  img { max-width:100%; }
-  hr { border:none; border-top:1px solid #e3e3e3; margin:16px 0; }
-  .brand-footer { margin-top:24px; border-top:1px solid #e3e3e3; padding-top:8px;
-                  font-size:8.5pt; color:#999; text-align:center; }
+/* ── Page geometry ───────────────────────────────────────────────────── */
+@page {
+  margin: 22mm 18mm 20mm;
+}
+@page:first {
+  margin-top: 18mm; /* header is rendered in-flow, not as a @page margin box */
+}
+
+/* ── Design tokens (mirrors the workspace CSS) ─────────────────────── */
+:root {
+  --green-dark:  #1c4532;
+  --green-mid:   #2d785a;
+  --green-light: #5a8a6e;
+  --amber:       #c4622d;
+  --amber-light: #d4733e;
+  --cream:       #f8f5ee;
+  --paper:       #fdfcf9;
+  --gray:        #9a9088;
+  --gray-hi:     #5a5a5a;
+  --ink:         #1a1a1a;
+  --border:      rgba(28, 69, 50, .14);
+  --font-serif:  'Fraunces', Georgia, serif;
+  --font-sans:   'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono:   'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 10.5pt;
+  line-height: 1.7;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ── Page header ────────────────────────────────────────────────────── */
+.doc-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  margin-bottom: 30px;
+  border-bottom: 1.5px solid var(--green-dark);
+}
+.doc-header-mark { flex-shrink: 0; line-height: 0; }
+.doc-header-brand {
+  font-family: var(--font-serif);
+  font-size: 13.5pt;
+  font-weight: 400;
+  color: var(--green-dark);
+  letter-spacing: -0.015em;
+  line-height: 1;
+}
+.doc-header-brand span {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--amber);
+  font-size: 10pt;
+  margin-left: 6px;
+  letter-spacing: 0;
+}
+.doc-header-meta {
+  margin-left: auto;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--gray);
+  line-height: 1.6;
+}
+.doc-header-meta strong {
+  display: block;
+  color: var(--gray-hi);
+  font-weight: 500;
+  font-size: 7.5pt;
+}
+
+/* ── Prose typography ────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  color: var(--green-dark);
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+  margin-top: 1.9em;
+  margin-bottom: 0.55em;
+  break-after: avoid;
+}
+h1 {
+  font-size: 18pt;
+  margin-top: 0;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--border);
+}
+h2 { font-size: 14pt; }
+h3 { font-size: 12pt; color: var(--green-mid); }
+h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-size: 8pt;
+  font-weight: 600;
+  color: var(--gray-hi);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+/* Italic within headings matches the brand pattern: em → amber italic */
+h1 em, h2 em, h3 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--amber);
+}
+
+p { margin-bottom: 0.85em; }
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: var(--green-mid);
+  text-decoration: underline;
+  text-decoration-color: rgba(45, 120, 90, .3);
+}
+
+strong, b { font-weight: 600; color: var(--green-dark); }
+
+/* ── Block elements ─────────────────────────────────────────────────── */
+/* Blockquote — mirrors the .quote component: Fraunces italic, amber rail */
+blockquote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 11pt;
+  color: var(--green-dark);
+  border-left: 2px solid var(--amber);
+  padding: 3px 14px;
+  margin: 1.3em 0;
+  break-inside: avoid;
+}
+
+/* Code — inline */
+code {
+  font-family: var(--font-mono);
+  font-size: .82em;
+  background: var(--cream);
+  color: var(--green-dark);
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+/* Code — block: cream background, amber left rail (mirrors .story-tree / pre in workspace) */
+pre {
+  background: var(--cream);
+  border-left: 2.5px solid var(--amber);
+  border-radius: 0 7px 7px 0;
+  padding: 11px 14px;
+  margin: 1.2em 0;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  break-inside: avoid;
+}
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: .85em;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+/* Lists */
+ul, ol { padding-left: 1.35em; margin-bottom: 0.85em; }
+li { margin-bottom: 0.22em; }
+li > ul, li > ol { margin-top: 0.2em; margin-bottom: 0.2em; }
+
+/* Tables — header row uses the kicker / dash-lbl monospace uppercase style */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.3em 0;
+  font-size: 9.5pt;
+  break-inside: avoid;
+}
+th {
+  background: var(--cream);
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--gray-hi);
+  padding: 7px 10px;
+  border-bottom: 1.5px solid var(--green-dark);
+  text-align: left;
+}
+td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: rgba(248, 245, 238, .45); }
+
+/* Images */
+img { max-width: 100%; height: auto; border-radius: 6px; }
+
+/* Rule — subtle, brand-tinted */
+hr { border: none; border-top: 1px solid var(--border); margin: 1.6em 0; }
+
+/* ── Page footer ─────────────────────────────────────────────────────── */
+.doc-footer {
+  margin-top: 36px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--gray);
+}
+/* Olivia wordmark — mirrors the .wm pattern used across all pages */
+.wm { display: flex; align-items: baseline; gap: 5px; }
+.wm-n { font-family: var(--font-serif); font-size: 9pt; color: var(--green-dark); letter-spacing: -0.01em; }
+.wm-s { font-size: 6.5pt; text-transform: uppercase; letter-spacing: .1em; color: var(--gray); }
+
+/* ── Print overrides ─────────────────────────────────────────────────── */
+@media print {
+  body { background: #fff; }
+  a    { color: var(--green-mid) !important; }
+  pre, blockquote, table { break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; }
+}
 </style>
 </head>
 <body>
-  <div class="brand-header">
-    <span class="brand-mark"></span>
-    <span class="brand-name">OliviaLegal</span>
-    <span class="brand-meta">${escapeHtml(displayName)}<br>${escapeHtml(stamp)}</span>
+
+  <!-- ── Header ────────────────────────────────────────────── -->
+  <div class="doc-header">
+    <div class="doc-header-mark">${oliveMark}</div>
+    <div class="doc-header-brand">Olivia <span>ecosystem</span></div>
+    <div class="doc-header-meta">
+      <strong>${escapeHtml(displayName)}</strong>
+      ${escapeHtml(stamp)}
+    </div>
   </div>
+
+  <!-- ── Body ──────────────────────────────────────────────── -->
   <div class="markdown-body">${bodyHtml}</div>
-  <div class="brand-footer">Generated from Olivia workspace preview · ${escapeHtml(new Date().toISOString().slice(0,10))}</div>
+
+  <!-- ── Footer ────────────────────────────────────────────── -->
+  <div class="doc-footer">
+    <div class="wm">
+      <span class="wm-n">Olivia</span>
+      <span class="wm-s">Awareness · AI</span>
+    </div>
+    <span>Generated from workspace preview · ${escapeHtml(isoDate)}</span>
+  </div>
+
 </body>
 </html>`;
 
+    // Create a hidden iframe and print from it.
     const iframe = document.createElement('iframe');
-    iframe.style.position = 'fixed';
-    iframe.style.right = '0';
-    iframe.style.bottom = '0';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
-    iframe.style.border = '0';
+    iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
     document.body.appendChild(iframe);
 
-    const finish = () => {
-      try { document.body.removeChild(iframe); } catch (_) {}
-    };
+    const cleanup = () => { try { document.body.removeChild(iframe); } catch (_) { } };
+
     iframe.onload = () => {
-      try {
-        iframe.contentWindow.document.title = docTitle + '.pdf';
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-      } catch (_) {}
-      setTimeout(finish, 1500);
+      const win = iframe.contentWindow;
+      const doPrint = () => {
+        try {
+          win.document.title = docTitle + '.pdf';
+          win.focus();
+          win.print();
+        } catch (_) { }
+        setTimeout(cleanup, 2000);
+      };
+
+      // Wait for Google Fonts to finish loading before triggering print,
+      // so the PDF captures Fraunces / Plus Jakarta Sans / JetBrains Mono.
+      if (win.document.fonts && typeof win.document.fonts.ready?.then === 'function') {
+        win.document.fonts.ready.then(doPrint).catch(doPrint);
+      } else {
+        setTimeout(doPrint, 700);
+      }
     };
+
     iframe.srcdoc = printDoc;
   })();
 }
@@ -247,10 +489,10 @@ async function _pollArtifactsNow() {
       const ext = file.name.split('.').pop().toLowerCase();
       const url = `${API_BASE}/api/agents/${encodeURIComponent(agent.agent_id)}/artifacts/${encodeURIComponent(file.name)}`;
       outputArtifacts.push({
-        id:    'disk:' + file.name,
+        id: 'disk:' + file.name,
         title: file.name,
-        type:  ext,
-        size:  file.size,
+        type: ext,
+        size: file.size,
         url,
         _diskFile: true,
       });
@@ -261,13 +503,13 @@ async function _pollArtifactsNow() {
       updateArtifactCount();
       renderGeneratedFiles();
     }
-  } catch(e) { /* silently ignore network errors */ }
+  } catch (e) { /* silently ignore network errors */ }
 }
 
 // Initialize all panel resize handles (horizontal col-resize)
 function initOutputResize() {
   _initPanelStateSync();
-  _initHorizResize('outputResizeHandle',  'outputPanel');
+  _initHorizResize('outputResizeHandle', 'outputPanel');
   _initHorizResize('previewResizeHandle', 'previewPanel');
   _initHorizResize('browserResizeHandle', 'browserPanel');
   _syncWorkspacePanels();
@@ -340,10 +582,10 @@ function _initPanelStateSync() {
     .filter(Boolean);
 
   if (typeof MutationObserver !== 'undefined' && targets.length) {
-    _panelStateSyncObserver = new MutationObserver(function() {
+    _panelStateSyncObserver = new MutationObserver(function () {
       _syncWorkspacePanels();
     });
-    targets.forEach(function(el) {
+    targets.forEach(function (el) {
       _panelStateSyncObserver.observe(el, { attributes: true, attributeFilter: ['class', 'style'] });
     });
   }
@@ -353,7 +595,7 @@ function _initPanelStateSync() {
 
 function _initHorizResize(handleId, panelId) {
   const handle = document.getElementById(handleId);
-  const panel  = document.getElementById(panelId);
+  const panel = document.getElementById(panelId);
   if (!handle || !panel) return;
   if (handle.dataset.resizeBound === '1') return;
   handle.dataset.resizeBound = '1';
@@ -419,7 +661,7 @@ function toggleOutputPanel() {
 
 // Toggle browser panel
 function toggleBrowserPanel() {
-  const panel  = document.getElementById('browserPanel');
+  const panel = document.getElementById('browserPanel');
   if (!panel) return;
   panel.classList.toggle('open');
   _syncWorkspacePanels();
@@ -445,7 +687,7 @@ window._refreshWorkspacePanelsBusy = _refreshWorkspacePanelsBusy;
 // so other module code can call it directly without going through window.
 function koutDarkModeToggle() {
   var isDark = document.body.classList.toggle('dark');
-  try { localStorage.setItem('OliviaLegal.darkMode', isDark ? '1' : '0'); } catch(e) {}
+  try { localStorage.setItem('OliviaLegal.darkMode', isDark ? '1' : '0'); } catch (e) { }
   var btn = document.getElementById('epDarkModeToggle');
   if (btn) btn.classList.toggle('on', isDark);
 }
@@ -464,7 +706,7 @@ function havanThemeCycle() {
 
   // Resolve the active project the same way the rest of the runtime does.
   var activePid = '';
-  try { if (typeof _activeProjectId === 'function') activePid = String(_activeProjectId() || ''); } catch (e) {}
+  try { if (typeof _activeProjectId === 'function') activePid = String(_activeProjectId() || ''); } catch (e) { }
 
   var inHavan = (root.getAttribute('data-project') === 'havan') || (activePid.toLowerCase() === 'havan');
   if (!inHavan) {
@@ -484,7 +726,7 @@ function havanThemeCycle() {
   if (idx === -1) idx = -1; // unknown/invalid → start at first
   var next = HAVAN_THEME_CYCLE[(idx + 1) % HAVAN_THEME_CYCLE.length];
   root.setAttribute('data-theme', next);
-  try { localStorage.setItem('havan.theme', next); } catch (e) {}
+  try { localStorage.setItem('havan.theme', next); } catch (e) { }
   return next;
 }
 
@@ -492,14 +734,14 @@ function havanThemeCycle() {
 function browserBack() {
   const iframe = document.getElementById('browserFrame');
   if (iframe && iframe.contentWindow) {
-    try { iframe.contentWindow.history.back(); } catch (e) {}
+    try { iframe.contentWindow.history.back(); } catch (e) { }
   }
 }
 
 function browserForward() {
   const iframe = document.getElementById('browserFrame');
   if (iframe && iframe.contentWindow) {
-    try { iframe.contentWindow.history.forward(); } catch (e) {}
+    try { iframe.contentWindow.history.forward(); } catch (e) { }
   }
 }
 
@@ -538,7 +780,7 @@ function navigateBrowser(url) {
       }
     }
     iframe.src = targetUrl;
-    
+
     // Keep URL bar in sync with user-facing URL (not the proxied internal one)
     const bar = document.getElementById('browserUrlBar');
     if (bar) bar.value = url;
@@ -677,7 +919,7 @@ async function showOutputArtifactInPanel(id) {
 
     if (textContent) {
       if (type === 'json' || extFromTitle === 'json' || contentType.includes('application/json')) {
-        try { textContent = JSON.stringify(JSON.parse(textContent), null, 2); } catch (_) {}
+        try { textContent = JSON.stringify(JSON.parse(textContent), null, 2); } catch (_) { }
       }
 
       if (type === 'markdown' || extFromTitle === 'md' || extFromTitle === 'markdown' || contentType.includes('text/markdown')) {
@@ -715,7 +957,7 @@ async function showOutputArtifactInPanel(id) {
 // Add output artifact
 function addOutputArtifact(artifact) {
   if (!artifact || !artifact.id) return;
-  
+
   // Check if artifact already exists
   const existingIndex = outputArtifacts.findIndex(a => a.id === artifact.id);
   if (existingIndex >= 0) {
@@ -723,13 +965,13 @@ function addOutputArtifact(artifact) {
   } else {
     outputArtifacts.push(artifact);
   }
-  
+
   renderOutputTabs();
   updateArtifactCount();
   renderGeneratedFiles();
-  
+
   // Auto-open output panel if closed
-  const panel  = document.getElementById('outputPanel');
+  const panel = document.getElementById('outputPanel');
   const handle = document.getElementById('outputResizeHandle');
   const autoOpenSuppressed = _isOutputAutoOpenSuppressed();
   if (panel && !panel.classList.contains('open') && !autoOpenSuppressed) {
@@ -793,7 +1035,7 @@ function renderGeneratedFiles() {
 function showOutputArtifact(id) {
   const artifact = outputArtifacts.find(a => a.id === id);
   if (!artifact) return;
-  
+
   renderArtifactModalContent(artifact);
   openArtifactModal();
 }
@@ -816,7 +1058,7 @@ function removeArtifact(id) {
   } else {
     _setActiveOutputTab(currentOutputArtifactId);
   }
-  
+
   if (currentModalArtifactId === id) {
     closeArtifactModal();
   }
@@ -835,13 +1077,13 @@ function updateArtifactCount() {
 function renderOutputTabs() {
   const container = document.getElementById('outputTabs');
   if (!container) return;
-  
+
   if (outputArtifacts.length === 0) {
     container.innerHTML = '<div class="output-empty">No artifacts yet</div>';
     currentOutputArtifactId = null;
     return;
   }
-  
+
   const html = outputArtifacts.map(artifact => `
     <div class="output-tab-item" data-artifact="${artifact.id}">
       <span class="output-tab-icon">${getArtifactIcon(artifact.type)}</span>
@@ -849,9 +1091,9 @@ function renderOutputTabs() {
       <button class="output-tab-close" onclick="removeArtifact('${artifact.id}')">&times;</button>
     </div>
   `).join('');
-  
+
   container.innerHTML = html;
-  
+
   // Add click handlers
   container.querySelectorAll('.output-tab-item').forEach(item => {
     item.addEventListener('click', e => {
@@ -893,7 +1135,7 @@ function openArtifactInTab(id) {
   const targetId = id || currentOutputArtifactId;
   const artifact = outputArtifacts.find(a => a.id === targetId);
   if (!artifact) return;
-  
+
   // Create new browser tab with artifact content
   const browser = document.getElementById('browserFrame');
   if (browser) {
@@ -909,7 +1151,7 @@ function openArtifactInTab(id) {
         .catch(err => console.error('Failed to load artifact:', err));
     }
   }
-  
+
   const browserPanel = document.getElementById('browserPanel');
   if (browserPanel && !browserPanel.classList.contains('open')) {
     toggleBrowserPanel();
@@ -933,9 +1175,9 @@ function closeArtifactModal() {
 function renderArtifactModalContent(artifact) {
   const container = document.getElementById('artifactModalBody');
   if (!container) return;
-  
+
   currentModalArtifactId = artifact.id;
-  
+
   let content = '';
   const modeSelector = artifact.type === 'image' || artifact.type === 'pdf' ? '' : `
     <div class="artifact-mode-selector">
@@ -947,7 +1189,7 @@ function renderArtifactModalContent(artifact) {
       </button>
     </div>
   `;
-  
+
   if (artifact.type === 'image') {
     content = `
       <div class="artifact-image">
@@ -1001,7 +1243,7 @@ function renderArtifactModalContent(artifact) {
   } else {
     content = `<p class="artifact-empty">No content available</p>`;
   }
-  
+
   container.innerHTML = `
     <div class="artifact-modal-header">
       <div class="artifact-title">
@@ -1043,7 +1285,7 @@ function switchArtifactView(mode) {
   if (container) {
     container.className = `output-tabs-container ${mode}`;
   }
-  
+
   document.querySelectorAll('.artifact-view-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === mode);
   });
@@ -1053,9 +1295,9 @@ function switchArtifactView(mode) {
 function downloadArtifactBlob(id) {
   const artifact = outputArtifacts.find(a => a.id === id);
   if (!artifact) return;
-  
+
   let blob, filename;
-  
+
   if (artifact.content) {
     blob = new Blob([artifact.content], { type: artifact.content_type || 'text/plain' });
     filename = artifact.title || artifact.id + '.txt';
@@ -1070,7 +1312,7 @@ function downloadArtifactBlob(id) {
     link.click();
     return;
   }
-  
+
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -1083,7 +1325,7 @@ function downloadArtifactBlob(id) {
 function openArtifactExternal(id) {
   const artifact = outputArtifacts.find(a => a.id === id);
   if (!artifact) return;
-  
+
   if (artifact.url) {
     window.open(artifact.url, '_blank');
   } else if (artifact.path) {
@@ -1106,13 +1348,13 @@ function detectOutputFiles() {
 function renderFileArtifact(file, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
-  
+
   const icon = file.name.match(/\.(jpg|jpeg|png|gif)$/i) ? '🖼️' :
-               file.name.match(/\.(pdf)$/i) ? '📕' :
-               file.name.match(/\.(html|htm)$/i) ? '🌐' :
-               file.name.match(/\.(json)$/i) ? '{}' :
-               file.name.match(/\.(txt)$/i) ? '📝' : '📄';
-  
+    file.name.match(/\.(pdf)$/i) ? '📕' :
+      file.name.match(/\.(html|htm)$/i) ? '🌐' :
+        file.name.match(/\.(json)$/i) ? '{}' :
+          file.name.match(/\.(txt)$/i) ? '📝' : '📄';
+
   const html = `
     <div class="file-artifact" data-file="${escapeHtml(file.path)}">
       <span class="file-icon">${icon}</span>
@@ -1128,7 +1370,7 @@ function renderFileArtifact(file, containerId) {
       </div>
     </div>
   `;
-  
+
   container.innerHTML = html;
 }
 
@@ -1137,18 +1379,18 @@ function initTabsDock() {
   const tabs = document.getElementById('sidebarTabs');
   const trigger = document.getElementById('tabsTrigger');
   if (!tabs || !trigger) return;
-  
+
   function expand() {
     tabs.classList.add('expanded');
     trigger.innerHTML = '<i class="fas fa-chevron-down"></i>';
     clearTimeout(_outputTabsDockTimer);
   }
-  
+
   function collapse() {
     tabs.classList.remove('expanded');
     trigger.innerHTML = '<i class="fas fa-chevron-up"></i>';
   }
-  
+
   trigger.addEventListener('click', () => {
     if (tabs.classList.contains('expanded')) {
       collapse();
@@ -1156,7 +1398,7 @@ function initTabsDock() {
       expand();
     }
   });
-  
+
   // Auto-collapse after inactivity
   tabs.addEventListener('mouseenter', expand);
   tabs.addEventListener('mouseleave', () => {
@@ -1206,7 +1448,7 @@ function updatePreviewDownloadVisibility(previewFile) {
   if (!dropdown) return;
 
   const isMd = previewFile && previewFile.name &&
-               (previewFile.name.endsWith('.md') || previewFile.name.endsWith('.markdown'));
+    (previewFile.name.endsWith('.md') || previewFile.name.endsWith('.markdown'));
 
   if (isMd) {
     dropdown.style.display = 'block';
@@ -1239,11 +1481,11 @@ window.detectOutputFiles = detectOutputFiles;
 window.renderGeneratedFiles = renderGeneratedFiles;
 window.renderFileArtifact = renderFileArtifact;
 window.initTabsDock = initTabsDock;
-window.startArtifactPolling    = startArtifactPolling;
-window.stopArtifactPolling     = stopArtifactPolling;
-window.downloadCurrentPreview  = downloadCurrentPreview;
-window.downloadPreviewAsPdf    = downloadPreviewAsPdf;
-window.maximizeCurrentPreview  = maximizeCurrentPreview;
+window.startArtifactPolling = startArtifactPolling;
+window.stopArtifactPolling = stopArtifactPolling;
+window.downloadCurrentPreview = downloadCurrentPreview;
+window.downloadPreviewAsPdf = downloadPreviewAsPdf;
+window.maximizeCurrentPreview = maximizeCurrentPreview;
 window.syncWorkspacePanels = _syncWorkspacePanels;
 window.updatePreviewDownloadVisibility = updatePreviewDownloadVisibility;
 window.closeDownloadDropdown = closeDownloadDropdown;

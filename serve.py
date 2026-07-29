@@ -2003,6 +2003,42 @@ def _auth_get_preferences(email: str) -> dict:
         conn.close()
 
 
+def _resolve_user_api_key(email: str, provider: str | None = None, model: str | None = None) -> str | None:
+    """Try to find an API key from the user's stored preferences.
+
+    Used as a fallback when no Authorization header was sent and no env var
+    is set, so the OpenClaude subprocess still receives credentials.
+    """
+    if not email:
+        return None
+    try:
+        prefs = _auth_get_preferences(email)
+        api_keys = prefs.get("api_keys", {}) if isinstance(prefs, dict) else {}
+        if not isinstance(api_keys, dict) or not api_keys:
+            return None
+        # Resolve effective provider: explicit provider → model prefix → first stored key
+        p = str(provider or "").strip().lower()
+        if p and p != "auto" and p in api_keys:
+            val = str(api_keys[p] or "").strip()
+            if val:
+                return val
+        if model:
+            m = str(model).strip().lower()
+            for prov in ("deepseek", "openrouter", "fireworks", "gemini", "ollama"):
+                if m.startswith(prov) and prov in api_keys:
+                    val = str(api_keys[prov] or "").strip()
+                    if val:
+                        return val
+        # Last resort: use the first available API key
+        for val in api_keys.values():
+            v = str(val or "").strip()
+            if v:
+                return v
+    except Exception:
+        pass
+    return None
+
+
 def _auth_update_context_scope(email: str, context_injection_scope: str, context_selected_files: str | None = None):
     """Update a user's context injection scope and optionally selected files."""
     key = _normalize_user_email(email)
@@ -3835,21 +3871,22 @@ of guessing.
 # Tells the agent to use MCP semantic-search tools instead of expecting raw
 # file content, since Phase 3 replaces raw files with compact project indexes.
 _QUADRANT_SEARCH_INSTRUCTION = (
-    "[Qdrant semantic search available]\n"
-    "Your project context is a compact structural index (file tree + key symbols), "
-    "not raw file content. If you need to inspect the actual implementation of "
-    "a specific function, class, API endpoint, or document, use the "
-    "`garage-qdrant` MCP search tool instead:\n\n"
-    "  - **Olivia dev code** (functions, classes, imports): "
-    "search the `olivia-dev-code` collection\n"
+    "[Qdrant semantic search — MANDATORY for detailed queries]\n"
+    "Your context contains ONLY a compact structural index (file tree + key symbols), "
+    "NOT raw file content. If the user's question requires inspecting actual "
+    "implementations, documents, or code details, you MUST use the "
+    "`garage-qdrant` MCP search tool BEFORE answering:\n\n"
+    "  - **Olivia dev code** (functions, classes, imports, docs): "
+    "`garage-qdrant.search(collection_name=\"olivia-dev-code\", query_text=\"...\")`\n"
     "  - **User upload documents** (across all projects): "
-    "search the `uploads-global` collection\n"
-    "  - **Per-project documents**: search the `project-<project_id>` collection "
-    "(e.g. `project-achilleas`)\n\n"
-    "Example: `search_qdrant(collection_name=\"olivia-dev-code\", "
-    "query_text=\"function name or concept\")`\n\n"
+    "`garage-qdrant.search(collection_name=\"uploads-global\", query_text=\"...\")`\n"
+    "  - **Per-project documents**: "
+    "`garage-qdrant.search(collection_name=\"project-<project_id>\", query_text=\"...\")`\n"
+    "  - **General knowledge / mission / funding**: "
+    "`garage-qdrant.search(collection_name=\"olivia-dev-code\", query_text=\"olivia mission history philosophy\")`\n\n"
+    "Do NOT answer from memory alone when Qdrant can provide authoritative content. "
     "Only read raw files with the MCP filesystem tool when you need an "
-    "exact, full-file view that the indexed summary doesn't cover."
+    "exact, full-file view that semantic search doesn't cover."
 )
 
 
@@ -6044,10 +6081,16 @@ def _read_project_index_context(max_chars: int = 3000, project_id: str | None = 
             if importer_files:
                 parts.append(f"  key dependency hubs: {', '.join(importer_files[:5])}")
 
-        # HTML pages (frontend)
+        # HTML pages (frontend) — may be a dict (path→info) or list
         html_pages = data.get("html_pages", [])
         if html_pages:
-            page_names = [p.get("title", p.get("path", "?")) for p in html_pages[:8]]
+            if isinstance(html_pages, dict):
+                page_names = [
+                    (v.get("title") if isinstance(v, dict) else None) or k
+                    for k, v in list(html_pages.items())[:8]
+                ]
+            else:
+                page_names = [p.get("title", p.get("path", "?")) for p in html_pages[:8]]
             parts.append(f"  pages: {', '.join(page_names)}")
 
         section_text = "\n".join(parts)
@@ -7483,6 +7526,12 @@ def _openclaude_env(provider: str | None = None, model: str | None = None,
 
     # For Ollama or any provider with a resolved base_url, set OpenAI-compatible
     # env vars so OpenClaude uses the /v1/chat/completions endpoint.
+    #
+    # IMPORTANT: only set CLAUDE_CODE_USE_OPENAI=1 if we can provide credentials.
+    # Without a key, OpenClaude will fail immediately with an auth error.
+    # Last-resort: re-read from os.environ at call time (may have changed since module load).
+    if not api_key and not is_ollama:
+        api_key = os.environ.get("DEEPSEEK_API_KEY", "") or os.environ.get("OPENAI_API_KEY", "") or None
     if api_key or is_ollama or _base:
         env["CLAUDE_CODE_USE_OPENAI"] = "1"
         if api_key:
@@ -7506,6 +7555,12 @@ def _openclaude_env(provider: str | None = None, model: str | None = None,
                 env["OPENROUTER_API_KEY"] = api_key
             elif "deepseek" in _base_lower:
                 env["DEEPSEEK_API_KEY"] = api_key
+        else:
+            # No API key available — explicitly clear provider-specific keys
+            # so OpenClaude doesn't inherit empty values from .env and can
+            # try fallback keys (OPENAI_API_KEY, etc.).
+            for _k in ("DEEPSEEK_API_KEY", "FIREWORKS_API_KEY", "OPENROUTER_API_KEY", "OPENAI_API_KEYS"):
+                env.pop(_k, None)
 
         # For Ollama, extract the raw model name (strip "ollama|port|" prefix)
         target_model = model or env.get("LLM_MODEL", "deepseek-v4-flash")
@@ -11031,6 +11086,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # Read per-provider API key from Authorization header
         auth_header = str(self.headers.get("Authorization") or "").strip()
         custom_api_key = auth_header[len("Bearer "):] if auth_header.lower().startswith("bearer ") else None
+        # Fallback: if no Authorization header, try user preferences stored in DB
+        if not custom_api_key:
+            user_email = self._auth_current_email()
+            custom_api_key = _resolve_user_api_key(user_email, provider=provider, model=model)
         session_id = body.get("session_id")
         agent_id = body.get("agent_id")
         project_id = _resolve_context_project_id(body.get("project_id"), agent_id)
@@ -11059,7 +11118,13 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             if saved:
                 print(f"[agent]   saved {len(saved)} imported file(s) to uploads/")
 
-        if not wants_ollama and not _openclaude_available and not DEEPSEEK_API_KEY:
+        _no_anthropic = not bool(os.environ.get("ANTHROPIC_API_KEY", "").strip())
+        _no_llm_key = not DEEPSEEK_API_KEY and not custom_api_key and _no_anthropic
+        # Block early when no auth method can work at all:
+        #   - not Ollama (needs no key)
+        #   - no DeepSeek key from .env or from API Key Manager (custom_api_key via Authorization header)
+        #   - no Anthropic key (for native OpenClaude)
+        if not wants_ollama and _no_llm_key:
             self._sse_start()
             self._sse_send({"event": "error", "message": "No LLM backend configured. Set DEEPSEEK_API_KEY or ANTHROPIC_API_KEY, or ensure openclaude is built."})
             self._sse_done()
@@ -11099,8 +11164,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # Compact project index + tree-only uploads for all providers.
         # Raw file content inflates prompts excessively — the index provides
         # structural context (~300-800 tokens) + Qdrant search for detail.
-        project_ctx = _read_project_index_context(max_chars=3000, project_id=project_id)
-        uploads_ctx = _build_scoped_uploads_context(max_chars=2000, project_id=project_id, agent_id=str(agent_id or ""), tree_only=True)
+        project_ctx = _read_project_index_context(max_chars=1500, project_id=project_id)
+        uploads_ctx = _build_scoped_uploads_context(max_chars=1000, project_id=project_id, agent_id=str(agent_id or ""), tree_only=True)
         print(f"[agent_openclaude] project_index_ctx={len(project_ctx)} chars  uploads_ctx={len(uploads_ctx)} chars  planning_ctx={len(planning_ctx)} chars")
         parts = []
         if project_ctx:
@@ -11160,8 +11225,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         wants_ollama = _is_ollama_request(provider, model)
         planning_ctx = _read_planning_context(user_email=self._auth_current_email(), project_id=project_id)
         # Compact project index + tree-only uploads for all providers.
-        project_ctx = _read_project_index_context(max_chars=3000, project_id=project_id)
-        uploads_ctx = _build_scoped_uploads_context(max_chars=2000, project_id=project_id, agent_id=str(agent_id or ""), tree_only=True)
+        project_ctx = _read_project_index_context(max_chars=1500, project_id=project_id)
+        uploads_ctx = _build_scoped_uploads_context(max_chars=1000, project_id=project_id, agent_id=str(agent_id or ""), tree_only=True)
         print(f"[agent_llm] project_index_ctx={len(project_ctx)} chars  uploads_ctx={len(uploads_ctx)} chars  planning_ctx={len(planning_ctx)} chars")
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         if project_ctx:
@@ -11249,6 +11314,12 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         model = body.get("model")
         provider = body.get("provider")
         base_url = body.get("base_url")
+
+        # Fallback: if no Authorization header, try user preferences stored in DB
+        if not custom_api_key:
+            user_email = self._auth_current_email()
+            custom_api_key = _resolve_user_api_key(user_email, provider=provider, model=model)
+
         response_format = body.get("response_format")
         max_tokens = body.get("max_tokens")
 
@@ -11296,6 +11367,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # Read per-provider API key from Authorization header (sent by frontend)
         auth_header = str(self.headers.get("Authorization") or "").strip()
         custom_api_key = auth_header[len("Bearer "):] if auth_header.lower().startswith("bearer ") else None
+        # Fallback: if no Authorization header, try user preferences stored in DB
+        if not custom_api_key:
+            user_email = self._auth_current_email()
+            custom_api_key = _resolve_user_api_key(user_email, provider=provider, model=model)
 
         message_raw = _sanitize_text_payload(body.get("message", "") or body.get("userPrompt", ""))
         message, message_omitted_chars = _cap_text_payload(message_raw, ASSISTANT_MESSAGE_MAX_CHARS)
@@ -11384,7 +11459,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 f"omitted={image_attachments_stats['omitted_items']}"
             )
 
-        if not wants_ollama and not _openclaude_available and not DEEPSEEK_API_KEY:
+        if not wants_ollama and not _openclaude_available and not DEEPSEEK_API_KEY and not custom_api_key and not bool(os.environ.get("ANTHROPIC_API_KEY", "").strip()):
             self._sse_start()
             self._sse_send({"type": "error", "message": "No LLM backend configured. Set DEEPSEEK_API_KEY or ANTHROPIC_API_KEY, or build openclaude."})
             self._sse_done()
@@ -11491,8 +11566,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # Raw file content inflates prompts to 10k–54k tokens — the index
         # provides structural context (~300–800 tokens) and the model can
         # use Qdrant MCP search for deeper detail when needed.
-        project_ctx = _read_project_index_context(max_chars=3000, project_id=project_id)
-        uploads_ctx = _build_scoped_uploads_context(max_chars=2000, project_id=project_id, agent_id=str(agent_id or ""), tree_only=True)
+        project_ctx = _read_project_index_context(max_chars=1500, project_id=project_id)
+        uploads_ctx = _build_scoped_uploads_context(max_chars=1000, project_id=project_id, agent_id=str(agent_id or ""), tree_only=True)
         print(f"[assistant]   project_index_ctx={len(project_ctx)} chars  uploads_ctx={len(uploads_ctx)} chars  planning_ctx={len(planning_ctx)} chars")
 
         # If a specific agent was selected and has a custom system_prompt stored
