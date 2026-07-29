@@ -1579,6 +1579,10 @@ async function sendAssistantMessage(message, opts) {
     if (contentEl) {
       contentEl.innerHTML = enrichChatFileLinks(contentEl.innerHTML);
       _bindChatFileLinkInteractions(bubble || contentEl);
+      // Apply post-render pipeline: Mermaid diagrams, syntax highlighting
+      if (typeof window.postRenderDom === 'function') {
+        setTimeout(function () { window.postRenderDom(contentEl); }, 30);
+      }
     }
     chatHistory.push({
       role: 'assistant',
