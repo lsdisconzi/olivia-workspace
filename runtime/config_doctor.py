@@ -173,6 +173,27 @@ def validate(entries: list[dict], malformed: list[str], strict: bool) -> tuple[l
         except ValueError:
             errors.append(f"OLLAMA_NUM_CTX={ollama_num_ctx}: must be an integer")
 
+    ollama_kv_cache = values_map.get("OLLAMA_KV_CACHE_TYPE", "").strip()
+    if ollama_kv_cache:
+        valid_kv_types = {"q8_0", "q4_0", "q4_1", "f16"}
+        if ollama_kv_cache not in valid_kv_types:
+            warnings.append(f"OLLAMA_KV_CACHE_TYPE={ollama_kv_cache}: expected one of {sorted(valid_kv_types)}")
+        else:
+            infos.append(f"OLLAMA_KV_CACHE_TYPE={ollama_kv_cache}: reduces KV cache memory (~50% vs FP16)")
+    else:
+        infos.append("OLLAMA_KV_CACHE_TYPE: not set, defaults to FP16 (high memory usage)")
+
+    ollama_flash_attn = values_map.get("OLLAMA_FLASH_ATTENTION", "").strip()
+    if ollama_flash_attn:
+        if ollama_flash_attn in {"1", "true", "yes"}:
+            infos.append("OLLAMA_FLASH_ATTENTION=1: flash attention enabled (faster eval, lower memory)")
+        elif ollama_flash_attn in {"0", "false", "no"}:
+            infos.append("OLLAMA_FLASH_ATTENTION=0: flash attention disabled")
+        else:
+            warnings.append(f"OLLAMA_FLASH_ATTENTION={ollama_flash_attn}: unexpected value (use 1 or 0)")
+    else:
+        infos.append("OLLAMA_FLASH_ATTENTION: not set (default depends on backend)")
+
     ollama_model_urls = values_map.get("OLLAMA_MODEL_URLS", "").strip()
     if ollama_model_urls:
         urls = [u.strip() for u in ollama_model_urls.split(",") if u.strip()]
