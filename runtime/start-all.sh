@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # start-all.sh — Start Olivia (standalone)
-# Usage:  ./start-all.sh [--port 3229] [--no-tail] [--watch-functions] [--watch-interval 20] [--skip-config-doctor] [--smoke]
+# Usage:  ./start-all.sh [--port 3229] [--no-tail] [--watch-functions] [--watch-interval 20] [--skip-config-doctor] [--smoke] [--ollama] [--index] [--reindex-qdrant] [--fetch-ecosystem]
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
@@ -16,6 +16,9 @@ RUN_CONFIG_DOCTOR=1
 RUN_SMOKE=0
 BUILD_ELECTRON=0
 START_OLLAMA=0
+RUN_INDEXER=0
+RUN_QDRANT_REINDEX=0
+FETCH_ECOSYSTEM=0
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -27,6 +30,9 @@ while [[ $# -gt 0 ]]; do
     --smoke) RUN_SMOKE=1; shift ;;
     --build-electron) BUILD_ELECTRON=1; shift ;;
     --ollama) START_OLLAMA=1; shift ;;
+    --index)         RUN_INDEXER=1; shift ;;
+    --reindex-qdrant) RUN_QDRANT_REINDEX=1; RUN_INDEXER=1; shift ;;
+    --fetch-ecosystem) FETCH_ECOSYSTEM=1; shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
@@ -178,10 +184,11 @@ if [[ $START_OLLAMA -eq 1 && $ollama_already_running -eq 0 ]]; then
     echo "    OLLAMA_KEEP_ALIVE=-1"
     echo "    OLLAMA_FLASH_ATTENTION=1"
     echo "    OLLAMA_KV_CACHE_TYPE=q8_0"
+    echo "    OLLAMA_NUM_CTX=8192"
     LOG_DIR="$HOME/.dev-logs"
     mkdir -p "$LOG_DIR"
     OLLAMA_LOG="$LOG_DIR/ollama.log"
-    OLLAMA_KEEP_ALIVE=-1 OLLAMA_FLASH_ATTENTION=1 OLLAMA_KV_CACHE_TYPE=q8_0 OLLAMA_HOST="$OLLAMA_HOST" \
+    OLLAMA_KEEP_ALIVE=-1 OLLAMA_FLASH_ATTENTION=1 OLLAMA_KV_CACHE_TYPE=q8_0 OLLAMA_NUM_CTX=8192 OLLAMA_HOST="$OLLAMA_HOST" \
       nohup ollama serve > "$OLLAMA_LOG" 2>&1 &
     OLLAMA_PID=$!
     echo "✓  ollama      → PID $OLLAMA_PID (log: $OLLAMA_LOG)"
@@ -203,7 +210,55 @@ elif [[ $START_OLLAMA -eq 0 && $ollama_already_running -eq 0 ]]; then
   echo "   ollama      → not running (add --ollama to auto-start)"
 fi
 
-# ── 4. Validate env config (optional preflight) ─────────────────────────────
+# ── 4. Rebuild project index (optional) ──────────────────────────────────────
+INDEX_SCRIPT="$PROJECT_ROOT/scripts/index_project.py"
+if [[ $RUN_INDEXER -eq 1 ]]; then
+  if [[ ! -f "$INDEX_SCRIPT" ]]; then
+    echo "⚠  --index requested but index_project.py not found at $INDEX_SCRIPT"
+  else
+    echo "  Rebuilding project index (config/index-project/)..."
+    "$PYTHON" "$INDEX_SCRIPT" --project-root "$PROJECT_ROOT"
+    echo "✓  project index rebuilt"
+  fi
+fi
+
+# ── 5. Rebuild Qdrant indexes (optional) ──────────────────────────────────────
+if [[ $RUN_QDRANT_REINDEX -eq 1 ]]; then
+  echo "  Rebuilding Qdrant indexes (Tier 1: dev code → olivia-dev-code)..."
+  INDEX_PUSH_SCRIPT="$PROJECT_ROOT/scripts/index_project.py"
+  if [[ -f "$INDEX_PUSH_SCRIPT" ]]; then
+    "$PYTHON" "$INDEX_PUSH_SCRIPT" --project-root "$PROJECT_ROOT" --push-to-qdrant
+    echo "✓  dev code index pushed to Qdrant"
+  else
+    echo "⚠  index_project.py not found, skipping dev code index"
+  fi
+
+  echo "  Rebuilding Qdrant indexes (Tier 2/3: uploads → Qdrant)..."
+  UPLOADS_SCRIPT="$PROJECT_ROOT/scripts/index_uploads_to_qdrant.py"
+  if [[ -f "$UPLOADS_SCRIPT" ]]; then
+    "$PYTHON" "$UPLOADS_SCRIPT" --global --all-projects
+    echo "✓  uploads indexes pushed to Qdrant"
+  else
+    echo "⚠  index_uploads_to_qdrant.py not found, skipping uploads index"
+  fi
+fi
+
+# ── 6. Fetch ecosystem metadata (optional) ────────────────────────────────────
+if [[ $FETCH_ECOSYSTEM -eq 1 ]]; then
+  FETCH_SCRIPT="$PROJECT_ROOT/scripts/fetch_ecosystem.py"
+  if [[ -f "$FETCH_SCRIPT" ]]; then
+    echo "  Fetching ecosystem metadata..."
+    if "$PYTHON" "$FETCH_SCRIPT" --skip-report; then
+      echo "✓  ecosystem metadata fetched → config/ecosystem_metadata.json"
+    else
+      echo "⚠  ecosystem fetch failed (non-fatal)"
+    fi
+  else
+    echo "⚠  fetch_ecosystem.py not found at $FETCH_SCRIPT"
+  fi
+fi
+
+# ── 7. Validate env config (optional preflight) ─────────────────────────────
 if [[ $RUN_CONFIG_DOCTOR -eq 1 ]]; then
   DOCTOR_SCRIPT="$PROJECT_ROOT/runtime/config_doctor.py"
   ENV_FILE="$PROJECT_ROOT/.env"
@@ -223,14 +278,14 @@ if [[ $RUN_CONFIG_DOCTOR -eq 1 ]]; then
   fi
 fi
 
-# ── 5. Kill anything already on the port ──────────────────────────────────────
+# ── 8. Kill anything already on the port ────────────────────────────────────
 if lsof -Pi :"$PORT" -sTCP:LISTEN -t &>/dev/null; then
   echo "  Port $PORT busy — killing existing process..."
   lsof -ti :"$PORT" -sTCP:LISTEN | xargs kill -9 2>/dev/null || true
   sleep 0.5
 fi
 
-# ── 6. Start serve.py ────────────────────────────────────────────────────────
+# ── 9. Start serve.py ────────────────────────────────────────────────────────
 echo "" > "$LOG_FILE"
 PYTHONUNBUFFERED=1 nohup "$PYTHON" -u "$PROJECT_ROOT/serve.py" --port "$PORT" \
   >> "$LOG_FILE" 2>&1 &
@@ -239,7 +294,7 @@ echo "✓  serve.py    → PID $SERVER_PID  (port $PORT)"
 echo "   Log: $LOG_FILE"
 echo ""
 
-# ── 7. Wait for server ready ─────────────────────────────────────────────────
+# ── 10. Wait for server ready ────────────────────────────────────────────────
 echo -n "   Waiting for server"
 SERVER_READY=0
 for i in {1..20}; do
@@ -267,7 +322,7 @@ echo "│  Kill       →  kill $SERVER_PID                          │"
 echo "└────────────────────────────────────────────────────────┘"
 echo ""
 
-# ── 8. Optional smoke checks ─────────────────────────────────────────────────
+# ── 11. Optional smoke checks ────────────────────────────────────────────────
 if [[ $RUN_SMOKE -eq 1 ]]; then
   SMOKE_SCRIPT="$PROJECT_ROOT/scripts/smoke_runtime.sh"
   if [[ -f "$SMOKE_SCRIPT" ]]; then
@@ -281,7 +336,7 @@ if [[ $RUN_SMOKE -eq 1 ]]; then
   fi
 fi
 
-# ── 9. Optional function-catalog watcher ───────────────────────────────────
+# ── 12. Optional function-catalog watcher ──────────────────────────────────
 if [[ $WATCH_FUNCTIONS -eq 1 ]]; then
   WATCH_SCRIPT="$PROJECT_ROOT/automation/watch_functions_sync.py"  # optional: may not exist yet
   if [[ -f "$WATCH_SCRIPT" ]]; then
@@ -303,7 +358,7 @@ if [[ $WATCH_FUNCTIONS -eq 1 ]]; then
   fi
 fi
 
-# ── 10. Launch Electron desktop wrapper ───────────────────────────────────
+# ── 13. Launch Electron desktop wrapper ───────────────────────────────────
 DESKTOP_DIR="$PROJECT_ROOT/desktop"
 if [[ -f "$DESKTOP_DIR/package.json" ]]; then
   ELECTRON_LOG="$LOG_DIR/electron.log"
@@ -388,7 +443,7 @@ else
   echo ""
 fi
 
-# ── 11. Tail logs ────────────────────────────────────────────────────────────
+# ── 14. Tail logs ────────────────────────────────────────────────────────────
 if [[ $TAIL_LOGS -eq 1 ]]; then
   echo "=== Tailing $LOG_FILE  (Ctrl-C to stop tailing, server stays up) ==="
   tail -f "$LOG_FILE"

@@ -1,9 +1,9 @@
 {
   "metadata": {
     "folder": "planning",
-    "indexed_at": "2026-07-26T22:51:20.288769",
+    "indexed_at": "2026-07-29T03:31:07.217980",
     "total_files": 5,
-    "total_lines": 198,
+    "total_lines": 127,
     "languages": {
       "markdown": 5
     }
@@ -29,19 +29,19 @@
     "planning/progress.md": {
       "path": "planning/progress.md",
       "language": "markdown",
-      "size_bytes": 2405,
-      "lines": 41,
-      "last_modified": "2026-07-26T04:45:51.208632",
-      "git_commit": "7943c2f",
+      "size_bytes": 491,
+      "lines": 24,
+      "last_modified": "2026-07-26T23:29:04.224915",
+      "git_commit": "80ad0a5",
       "parsed": {}
     },
     "planning/task_plan.md": {
       "path": "planning/task_plan.md",
       "language": "markdown",
-      "size_bytes": 2569,
-      "lines": 43,
-      "last_modified": "2026-07-26T04:45:26.728289",
-      "git_commit": "7943c2f",
+      "size_bytes": 313,
+      "lines": 18,
+      "last_modified": "2026-07-26T23:28:35.314272",
+      "git_commit": "80ad0a5",
       "parsed": {}
     },
     "planning/README.md": {
@@ -56,19 +56,19 @@
     "planning/memory.md": {
       "path": "planning/memory.md",
       "language": "markdown",
-      "size_bytes": 928,
-      "lines": 23,
-      "last_modified": "2026-07-19T02:36:39.419709",
-      "git_commit": "11b79b4",
+      "size_bytes": 179,
+      "lines": 12,
+      "last_modified": "2026-07-26T23:27:36.049592",
+      "git_commit": "80ad0a5",
       "parsed": {}
     },
     "planning/findings.md": {
       "path": "planning/findings.md",
       "language": "markdown",
-      "size_bytes": 2154,
-      "lines": 33,
-      "last_modified": "2026-07-26T04:45:51.205922",
-      "git_commit": "7943c2f",
+      "size_bytes": 260,
+      "lines": 15,
+      "last_modified": "2026-07-26T23:29:33.613868",
+      "git_commit": "80ad0a5",
       "parsed": {}
     }
   },

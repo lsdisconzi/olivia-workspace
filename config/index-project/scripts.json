@@ -1,12 +1,12 @@
 {
   "metadata": {
     "folder": "scripts",
-    "indexed_at": "2026-07-26T22:51:20.288769",
-    "total_files": 18,
-    "total_lines": 6150,
+    "indexed_at": "2026-07-29T03:31:07.217980",
+    "total_files": 20,
+    "total_lines": 6889,
     "languages": {
+      "python": 18,
       "bash": 1,
-      "python": 16,
       "markdown": 1
     }
   },
@@ -29,6 +29,9 @@
     "extract_svg_dynamic.py": {
       "file_ref": "files/scripts/extract_svg_dynamic.py"
     },
+    "fetch_ecosystem.py": {
+      "file_ref": "files/scripts/fetch_ecosystem.py"
+    },
     "generate_skill_index.py": {
       "file_ref": "files/scripts/generate_skill_index.py"
     },
@@ -37,6 +40,9 @@
     },
     "index_project.py": {
       "file_ref": "files/scripts/index_project.py"
+    },
+    "index_uploads_to_qdrant.py": {
+      "file_ref": "files/scripts/index_uploads_to_qdrant.py"
     },
     "mcp_bridge": {
       "streamable_bridge.py": {
@@ -71,13 +77,126 @@
     }
   },
   "files": {
+    "scripts/fetch_ecosystem.py": {
+      "path": "scripts/fetch_ecosystem.py",
+      "language": "python",
+      "size_bytes": 11108,
+      "lines": 285,
+      "last_modified": "2026-07-29T02:29:25.379289",
+      "git_commit": "",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "json",
+          "logging",
+          "os",
+          "sys",
+          "urllib.error",
+          "urllib.request",
+          "datetime",
+          "pathlib"
+        ],
+        "imports_external": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_fetch_json",
+              "line": 39,
+              "end_line": 43,
+              "args": [
+                "path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_fetch_text",
+              "line": 46,
+              "end_line": 50,
+              "args": [
+                "path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_substitute_url",
+              "line": 53,
+              "end_line": 56,
+              "args": [
+                "text"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_build_agent_directions",
+              "line": 59,
+              "end_line": 118,
+              "args": [
+                "metadata"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_build_mcp_tool_summary",
+              "line": 121,
+              "end_line": 145,
+              "args": [
+                "metadata"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 148,
+              "end_line": 280,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "log",
+              "line": 27
+            },
+            {
+              "name": "ECOSYSTEM_BASE",
+              "line": 29
+            },
+            {
+              "name": "SCRIPT_DIR",
+              "line": 30
+            },
+            {
+              "name": "PROJECT_ROOT",
+              "line": 31
+            },
+            {
+              "name": "CONFIG_DIR",
+              "line": 32
+            },
+            {
+              "name": "METADATA_PATH",
+              "line": 34
+            },
+            {
+              "name": "REPORT_PATH",
+              "line": 35
+            },
+            {
+              "name": "AGENTS_PATH",
+              "line": 36
+            }
+          ]
+        }
+      }
+    },
     "scripts/smoke_runtime.sh": {
       "path": "scripts/smoke_runtime.sh",
       "language": "bash",
-      "size_bytes": 921,
+      "size_bytes": 906,
       "lines": 36,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T00:32:32.017203",
+      "git_commit": "fbead84",
       "parsed": {}
     },
     "scripts/agent_i18n_extractor.py": {
@@ -420,13 +539,136 @@
         }
       }
     },
+    "scripts/index_uploads_to_qdrant.py": {
+      "path": "scripts/index_uploads_to_qdrant.py",
+      "language": "python",
+      "size_bytes": 11318,
+      "lines": 295,
+      "last_modified": "2026-07-28T23:50:34.555275",
+      "git_commit": "",
+      "parsed": {
+        "imports": [
+          "argparse",
+          "json",
+          "logging",
+          "os",
+          "sys",
+          "urllib.parse",
+          "urllib.error",
+          "pathlib"
+        ],
+        "imports_external": [],
+        "symbols": {
+          "functions": [
+            {
+              "name": "_api_post",
+              "line": 57,
+              "end_line": 75,
+              "args": [
+                "path",
+                "params",
+                "body"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "_api_get",
+              "line": 78,
+              "end_line": 91,
+              "args": [
+                "path"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "list_collections",
+              "line": 97,
+              "end_line": 113,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "collection_exists",
+              "line": 116,
+              "end_line": 117,
+              "args": [
+                "name"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "index_global",
+              "line": 123,
+              "end_line": 166,
+              "args": [],
+              "decorators": []
+            },
+            {
+              "name": "index_project",
+              "line": 172,
+              "end_line": 217,
+              "args": [
+                "project_id"
+              ],
+              "decorators": []
+            },
+            {
+              "name": "main",
+              "line": 223,
+              "end_line": 290,
+              "args": [],
+              "decorators": []
+            }
+          ],
+          "classes": [],
+          "globals": [
+            {
+              "name": "log",
+              "line": 32
+            },
+            {
+              "name": "SCRIPT_DIR",
+              "line": 35
+            },
+            {
+              "name": "PROJECT_ROOT",
+              "line": 36
+            },
+            {
+              "name": "UPLOADS_DIR",
+              "line": 37
+            },
+            {
+              "name": "PROJECTS_DIR",
+              "line": 38
+            },
+            {
+              "name": "INGESTION_BASE",
+              "line": 41
+            },
+            {
+              "name": "TEXT_EXTS",
+              "line": 44
+            },
+            {
+              "name": "BINARY_EXTS",
+              "line": 50
+            },
+            {
+              "name": "INGESTION_SUPPORTED_EXTS",
+              "line": 52
+            }
+          ]
+        }
+      }
+    },
     "scripts/i18n_manager.py": {
       "path": "scripts/i18n_manager.py",
       "language": "python",
-      "size_bytes": 21975,
+      "size_bytes": 21950,
       "lines": 545,
-      "last_modified": "2026-07-20T19:32:24.401325",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-26T23:33:45.379337",
+      "git_commit": "80ad0a5",
       "parsed": {
         "imports": [
           "os",
@@ -763,10 +1005,10 @@
     "scripts/index_project.py": {
       "path": "scripts/index_project.py",
       "language": "python",
-      "size_bytes": 42174,
-      "lines": 1144,
-      "last_modified": "2026-07-26T22:49:29.250029",
-      "git_commit": "",
+      "size_bytes": 48802,
+      "lines": 1303,
+      "last_modified": "2026-07-29T03:26:30.583139",
+      "git_commit": "80ad0a5",
       "parsed": {
         "imports": [
           "argparse",
@@ -777,20 +1019,27 @@
           "re",
           "subprocess",
           "sys",
+          "urllib.parse",
+          "urllib.request",
+          "urllib.error",
           "datetime",
           "html.parser",
           "pathlib",
-          "typing"
+          "typing",
+          "urllib.parse",
+          "urllib.error"
         ],
         "imports_external": [
-          "ast"
+          "ast",
+          "shutil",
+          "tempfile"
         ],
         "symbols": {
           "functions": [
             {
               "name": "build_file_tree",
-              "line": 77,
-              "end_line": 89,
+              "line": 80,
+              "end_line": 92,
               "args": [
                 "root",
                 "files"
@@ -799,8 +1048,8 @@
             },
             {
               "name": "parse_python_file",
-              "line": 96,
-              "end_line": 176,
+              "line": 99,
+              "end_line": 179,
               "args": [
                 "file_path",
                 "content"
@@ -809,8 +1058,8 @@
             },
             {
               "name": "parse_js_file",
-              "line": 183,
-              "end_line": 279,
+              "line": 186,
+              "end_line": 282,
               "args": [
                 "file_path",
                 "content"
@@ -819,8 +1068,8 @@
             },
             {
               "name": "parse_js_deep",
-              "line": 327,
-              "end_line": 521,
+              "line": 330,
+              "end_line": 524,
               "args": [
                 "file_path",
                 "content"
@@ -829,8 +1078,8 @@
             },
             {
               "name": "_find_event_target",
-              "line": 524,
-              "end_line": 539,
+              "line": 527,
+              "end_line": 542,
               "args": [
                 "content",
                 "pos"
@@ -839,8 +1088,8 @@
             },
             {
               "name": "parse_html_file",
-              "line": 589,
-              "end_line": 596,
+              "line": 592,
+              "end_line": 599,
               "args": [
                 "file_path",
                 "content"
@@ -849,8 +1098,8 @@
             },
             {
               "name": "parse_css_file",
-              "line": 603,
-              "end_line": 638,
+              "line": 606,
+              "end_line": 641,
               "args": [
                 "file_path",
                 "content"
@@ -859,8 +1108,8 @@
             },
             {
               "name": "build_dependency_graph",
-              "line": 645,
-              "end_line": 680,
+              "line": 648,
+              "end_line": 683,
               "args": [
                 "files_data",
                 "root"
@@ -869,8 +1118,8 @@
             },
             {
               "name": "build_js_cross_module_graph",
-              "line": 687,
-              "end_line": 745,
+              "line": 690,
+              "end_line": 748,
               "args": [
                 "files_data"
               ],
@@ -878,8 +1127,8 @@
             },
             {
               "name": "resolve_import",
-              "line": 748,
-              "end_line": 791,
+              "line": 751,
+              "end_line": 794,
               "args": [
                 "imp",
                 "from_file",
@@ -890,8 +1139,8 @@
             },
             {
               "name": "build_symbol_index",
-              "line": 798,
-              "end_line": 828,
+              "line": 801,
+              "end_line": 831,
               "args": [
                 "files_data"
               ],
@@ -899,8 +1148,8 @@
             },
             {
               "name": "should_exclude",
-              "line": 835,
-              "end_line": 842,
+              "line": 838,
+              "end_line": 845,
               "args": [
                 "path",
                 "exclude_dirs",
@@ -910,8 +1159,8 @@
             },
             {
               "name": "get_file_metadata",
-              "line": 845,
-              "end_line": 851,
+              "line": 848,
+              "end_line": 854,
               "args": [
                 "file_path"
               ],
@@ -919,8 +1168,8 @@
             },
             {
               "name": "get_git_commit",
-              "line": 854,
-              "end_line": 863,
+              "line": 857,
+              "end_line": 866,
               "args": [
                 "file_path"
               ],
@@ -928,8 +1177,8 @@
             },
             {
               "name": "index_project",
-              "line": 866,
-              "end_line": 996,
+              "line": 869,
+              "end_line": 999,
               "args": [
                 "project_root",
                 "exclude_dirs",
@@ -939,8 +1188,8 @@
             },
             {
               "name": "write_folder_indexes",
-              "line": 999,
-              "end_line": 1085,
+              "line": 1002,
+              "end_line": 1088,
               "args": [
                 "result",
                 "project_root"
@@ -949,8 +1198,8 @@
             },
             {
               "name": "write_root_index",
-              "line": 1088,
-              "end_line": 1093,
+              "line": 1091,
+              "end_line": 1096,
               "args": [
                 "result",
                 "project_root"
@@ -959,15 +1208,25 @@
             },
             {
               "name": "main",
-              "line": 1096,
-              "end_line": 1140,
+              "line": 1099,
+              "end_line": 1151,
               "args": [],
               "decorators": []
             },
             {
+              "name": "_push_to_qdrant",
+              "line": 1154,
+              "end_line": 1299,
+              "args": [
+                "result",
+                "project_root"
+              ],
+              "decorators": []
+            },
+            {
               "name": "__init__",
-              "line": 547,
-              "end_line": 557,
+              "line": 550,
+              "end_line": 560,
               "args": [
                 "self"
               ],
@@ -975,8 +1234,8 @@
             },
             {
               "name": "handle_starttag",
-              "line": 559,
-              "end_line": 578,
+              "line": 562,
+              "end_line": 581,
               "args": [
                 "self",
                 "tag",
@@ -986,8 +1245,8 @@
             },
             {
               "name": "handle_data",
-              "line": 580,
-              "end_line": 582,
+              "line": 583,
+              "end_line": 585,
               "args": [
                 "self",
                 "data"
@@ -996,8 +1255,8 @@
             },
             {
               "name": "handle_endtag",
-              "line": 584,
-              "end_line": 586,
+              "line": 587,
+              "end_line": 589,
               "args": [
                 "self",
                 "tag"
@@ -1008,21 +1267,21 @@
           "classes": [
             {
               "name": "HTMLStructureParser",
-              "line": 546,
-              "end_line": 586,
+              "line": 549,
+              "end_line": 589,
               "methods": [
                 {
                   "name": "__init__",
-                  "line": 547,
-                  "end_line": 557,
+                  "line": 550,
+                  "end_line": 560,
                   "args": [
                     "self"
                   ]
                 },
                 {
                   "name": "handle_starttag",
-                  "line": 559,
-                  "end_line": 578,
+                  "line": 562,
+                  "end_line": 581,
                   "args": [
                     "self",
                     "tag",
@@ -1031,8 +1290,8 @@
                 },
                 {
                   "name": "handle_data",
-                  "line": 580,
-                  "end_line": 582,
+                  "line": 583,
+                  "end_line": 585,
                   "args": [
                     "self",
                     "data"
@@ -1040,8 +1299,8 @@
                 },
                 {
                   "name": "handle_endtag",
-                  "line": 584,
-                  "end_line": 586,
+                  "line": 587,
+                  "end_line": 589,
                   "args": [
                     "self",
                     "tag"
@@ -1056,27 +1315,27 @@
           "globals": [
             {
               "name": "log",
-              "line": 28
-            },
-            {
-              "name": "EXCLUDE_DIRS_DEFAULT",
               "line": 31
             },
             {
+              "name": "EXCLUDE_DIRS_DEFAULT",
+              "line": 34
+            },
+            {
               "name": "EXCLUDE_EXTS_DEFAULT",
-              "line": 36
+              "line": 39
             },
             {
               "name": "FOLDER_INDEXES",
-              "line": 42
+              "line": 45
             },
             {
               "name": "LANGUAGE_MAP",
-              "line": 63
+              "line": 66
             },
             {
               "name": "_JS_BUILTINS",
-              "line": 287
+              "line": 290
             }
           ]
         }
@@ -1587,10 +1846,10 @@
     "scripts/test_harness/README.md": {
       "path": "scripts/test_harness/README.md",
       "language": "markdown",
-      "size_bytes": 7161,
+      "size_bytes": 7156,
       "lines": 221,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T00:33:24.915019",
+      "git_commit": "fbead84",
       "parsed": {}
     },
     "scripts/test_harness/validation_updater.py": {
@@ -1714,10 +1973,10 @@
     "scripts/test_harness/retest_vps_functions.py": {
       "path": "scripts/test_harness/retest_vps_functions.py",
       "language": "python",
-      "size_bytes": 21122,
+      "size_bytes": 21117,
       "lines": 585,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-27T00:33:24.915034",
+      "git_commit": "fbead84",
       "parsed": {
         "imports": [
           "argparse",
@@ -1923,10 +2182,12 @@
   "modules": {
     "scripts": {
       "files": [
+        "scripts/fetch_ecosystem.py",
         "scripts/smoke_runtime.sh",
         "scripts/agent_i18n_extractor.py",
         "scripts/extract_svg.py",
         "scripts/extract_assets.py",
+        "scripts/index_uploads_to_qdrant.py",
         "scripts/i18n_manager.py",
         "scripts/generate_skill_index.py",
         "scripts/extract_assets_dynamic.py",
@@ -1936,7 +2197,7 @@
         "scripts/extract_svg_dynamic.py",
         "scripts/translate_pipeline.py"
       ],
-      "count": 12
+      "count": 14
     },
     "scripts/test_harness": {
       "files": [
@@ -1951,6 +2212,11 @@
   },
   "symbols_index": {
     "main": [
+      {
+        "file": "scripts/fetch_ecosystem.py",
+        "line": 148,
+        "type": "function"
+      },
       {
         "file": "scripts/agent_i18n_extractor.py",
         "line": 123,
@@ -1967,6 +2233,11 @@
         "type": "function"
       },
       {
+        "file": "scripts/index_uploads_to_qdrant.py",
+        "line": 223,
+        "type": "function"
+      },
+      {
         "file": "scripts/i18n_manager.py",
         "line": 463,
         "type": "function"
@@ -1978,7 +2249,7 @@
       },
       {
         "file": "scripts/index_project.py",
-        "line": 1096,
+        "line": 1099,
         "type": "function"
       },
       {
@@ -2015,7 +2286,56 @@
     "__init__": [
       {
         "file": "scripts/index_project.py",
-        "line": 547,
+        "line": 550,
+        "type": "function"
+      }
+    ],
+    "_api_get": [
+      {
+        "file": "scripts/index_uploads_to_qdrant.py",
+        "line": 78,
+        "type": "function"
+      }
+    ],
+    "_api_post": [
+      {
+        "file": "scripts/index_uploads_to_qdrant.py",
+        "line": 57,
+        "type": "function"
+      }
+    ],
+    "_fetch_json": [
+      {
+        "file": "scripts/fetch_ecosystem.py",
+        "line": 39,
+        "type": "function"
+      }
+    ],
+    "_fetch_text": [
+      {
+        "file": "scripts/fetch_ecosystem.py",
+        "line": 46,
+        "type": "function"
+      }
+    ],
+    "_substitute_url": [
+      {
+        "file": "scripts/fetch_ecosystem.py",
+        "line": 53,
+        "type": "function"
+      }
+    ],
+    "_build_agent_directions": [
+      {
+        "file": "scripts/fetch_ecosystem.py",
+        "line": 59,
+        "type": "function"
+      }
+    ],
+    "_build_mcp_tool_summary": [
+      {
+        "file": "scripts/fetch_ecosystem.py",
+        "line": 121,
         "type": "function"
       }
     ],
@@ -2238,6 +2558,39 @@
         "type": "function"
       }
     ],
+    "list_collections": [
+      {
+        "file": "scripts/index_uploads_to_qdrant.py",
+        "line": 97,
+        "type": "function"
+      }
+    ],
+    "collection_exists": [
+      {
+        "file": "scripts/index_uploads_to_qdrant.py",
+        "line": 116,
+        "type": "function"
+      }
+    ],
+    "index_global": [
+      {
+        "file": "scripts/index_uploads_to_qdrant.py",
+        "line": 123,
+        "type": "function"
+      }
+    ],
+    "index_project": [
+      {
+        "file": "scripts/index_uploads_to_qdrant.py",
+        "line": 172,
+        "type": "function"
+      },
+      {
+        "file": "scripts/index_project.py",
+        "line": 869,
+        "type": "function"
+      }
+    ],
     "parse_html_for_keys": [
       {
         "file": "scripts/i18n_manager.py",
@@ -2360,147 +2713,147 @@
     "build_file_tree": [
       {
         "file": "scripts/index_project.py",
-        "line": 77,
+        "line": 80,
         "type": "function"
       }
     ],
     "parse_python_file": [
       {
         "file": "scripts/index_project.py",
-        "line": 96,
+        "line": 99,
         "type": "function"
       }
     ],
     "parse_js_file": [
       {
         "file": "scripts/index_project.py",
-        "line": 183,
+        "line": 186,
         "type": "function"
       }
     ],
     "parse_js_deep": [
       {
         "file": "scripts/index_project.py",
-        "line": 327,
+        "line": 330,
         "type": "function"
       }
     ],
     "_find_event_target": [
       {
         "file": "scripts/index_project.py",
-        "line": 524,
+        "line": 527,
         "type": "function"
       }
     ],
     "parse_html_file": [
       {
         "file": "scripts/index_project.py",
-        "line": 589,
+        "line": 592,
         "type": "function"
       }
     ],
     "parse_css_file": [
       {
         "file": "scripts/index_project.py",
-        "line": 603,
+        "line": 606,
         "type": "function"
       }
     ],
     "build_dependency_graph": [
       {
         "file": "scripts/index_project.py",
-        "line": 645,
+        "line": 648,
         "type": "function"
       }
     ],
     "build_js_cross_module_graph": [
       {
         "file": "scripts/index_project.py",
-        "line": 687,
+        "line": 690,
         "type": "function"
       }
     ],
     "resolve_import": [
       {
         "file": "scripts/index_project.py",
-        "line": 748,
+        "line": 751,
         "type": "function"
       }
     ],
     "build_symbol_index": [
       {
         "file": "scripts/index_project.py",
-        "line": 798,
+        "line": 801,
         "type": "function"
       }
     ],
     "should_exclude": [
       {
         "file": "scripts/index_project.py",
-        "line": 835,
+        "line": 838,
         "type": "function"
       }
     ],
     "get_file_metadata": [
       {
         "file": "scripts/index_project.py",
-        "line": 845,
+        "line": 848,
         "type": "function"
       }
     ],
     "get_git_commit": [
       {
         "file": "scripts/index_project.py",
-        "line": 854,
-        "type": "function"
-      }
-    ],
-    "index_project": [
-      {
-        "file": "scripts/index_project.py",
-        "line": 866,
+        "line": 857,
         "type": "function"
       }
     ],
     "write_folder_indexes": [
       {
         "file": "scripts/index_project.py",
-        "line": 999,
+        "line": 1002,
         "type": "function"
       }
     ],
     "write_root_index": [
       {
         "file": "scripts/index_project.py",
-        "line": 1088,
+        "line": 1091,
+        "type": "function"
+      }
+    ],
+    "_push_to_qdrant": [
+      {
+        "file": "scripts/index_project.py",
+        "line": 1154,
         "type": "function"
       }
     ],
     "handle_starttag": [
       {
         "file": "scripts/index_project.py",
-        "line": 559,
+        "line": 562,
         "type": "function"
       }
     ],
     "handle_data": [
       {
         "file": "scripts/index_project.py",
-        "line": 580,
+        "line": 583,
         "type": "function"
       }
     ],
     "handle_endtag": [
       {
         "file": "scripts/index_project.py",
-        "line": 584,
+        "line": 587,
         "type": "function"
       }
     ],
     "HTMLStructureParser": [
       {
         "file": "scripts/index_project.py",
-        "line": 546,
+        "line": 549,
         "type": "class"
       }
     ],
@@ -2819,6 +3172,20 @@
     ]
   },
   "dependency_graph": {
+    "scripts/fetch_ecosystem.py": {
+      "imports": [
+        "argparse",
+        "json",
+        "logging",
+        "os",
+        "sys",
+        "urllib.error",
+        "urllib.request",
+        "datetime",
+        "pathlib"
+      ],
+      "imported_by": []
+    },
     "scripts/smoke_runtime.sh": {
       "imports": [],
       "imported_by": []
@@ -2853,6 +3220,19 @@
         "sys",
         "pathlib",
         "typing"
+      ],
+      "imported_by": []
+    },
+    "scripts/index_uploads_to_qdrant.py": {
+      "imports": [
+        "argparse",
+        "json",
+        "logging",
+        "os",
+        "sys",
+        "urllib.parse",
+        "urllib.error",
+        "pathlib"
       ],
       "imported_by": []
     },
@@ -2898,11 +3278,18 @@
         "re",
         "subprocess",
         "sys",
+        "urllib.parse",
+        "urllib.request",
+        "urllib.error",
         "datetime",
         "html.parser",
         "pathlib",
         "typing",
-        "ast"
+        "urllib.parse",
+        "urllib.error",
+        "ast",
+        "shutil",
+        "tempfile"
       ],
       "imported_by": []
     },

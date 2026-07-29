@@ -1,18 +1,174 @@
 {
   "metadata": {
     "folder": "content",
-    "indexed_at": "2026-07-26T22:51:20.288769",
-    "total_files": 87,
-    "total_lines": 2228,
+    "indexed_at": "2026-07-29T03:31:07.217980",
+    "total_files": 129,
+    "total_lines": 8367,
     "languages": {
       "unknown": 27,
-      "json": 59,
-      "markdown": 1
+      "json": 69,
+      "markdown": 33
     }
   },
   "tree": {
     ".DS_Store": {
       "file_ref": "files/content/.DS_Store"
+    },
+    "archived_projects": {
+      "default": {
+        "ui-refinement-20260728-181102": {
+          "agent_chats": {
+            "8e99fcfa-283a-4be3-88e3-89cb64b62218": {
+              "chat_2026-07-28-04-26-31.json": {
+                "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/chat_2026-07-28-04-26-31.json"
+              },
+              "chat_2026-07-28-20-43-19.json": {
+                "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/chat_2026-07-28-20-43-19.json"
+              },
+              "fix_copy_context_panels.json": {
+                "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/fix_copy_context_panels.json"
+              }
+            }
+          },
+          "data": {
+            "session_state.json": {
+              "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/data/session_state.json"
+            }
+          },
+          "docs": {
+            "findings.md": {
+              "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/docs/findings.md"
+            },
+            "memory.md": {
+              "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/docs/memory.md"
+            },
+            "progress.md": {
+              "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/docs/progress.md"
+            },
+            "task_plan.md": {
+              "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/docs/task_plan.md"
+            }
+          },
+          "findings.md": {
+            "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/findings.md"
+          },
+          "imports": {
+            "Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md": {
+              "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/imports/Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md"
+            },
+            "Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md": {
+              "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/imports/Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md"
+            },
+            "analise-leandro-disconzi-radix.md": {
+              "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/imports/analise-leandro-disconzi-radix.md"
+            },
+            "portfolio.md": {
+              "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/imports/portfolio.md"
+            },
+            "resume.md": {
+              "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/imports/resume.md"
+            }
+          },
+          "index.json": {
+            "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/index.json"
+          },
+          "memory.md": {
+            "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/memory.md"
+          },
+          "progress.md": {
+            "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/progress.md"
+          },
+          "project.json": {
+            "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/project.json"
+          },
+          "task_plan.md": {
+            "file_ref": "files/content/archived_projects/default/ui-refinement-20260728-181102/task_plan.md"
+          }
+        },
+        "vaga-abc-technology---ais-engineer--google-cloud-20260728-192444": {
+          "agent_chats": {
+            "10dbb9f0-9849-4137-bb04-dd9881a870ca": {
+              "ABC_Technology.json": {
+                "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/agent_chats/10dbb9f0-9849-4137-bb04-dd9881a870ca/ABC_Technology.json"
+              }
+            }
+          },
+          "data": {
+            "relatorio-1-leandro-olivia.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-1-leandro-olivia.md"
+            },
+            "relatorio-2-anderson-abc-technology.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-2-anderson-abc-technology.md"
+            },
+            "relatorio-3-estrategia-abordagem.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-3-estrategia-abordagem.md"
+            },
+            "relatorio-4-alinhamento-final.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-4-alinhamento-final.md"
+            },
+            "session_state.json": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/session_state.json"
+            }
+          },
+          "docs": {
+            "findings.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/findings.md"
+            },
+            "memory.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/memory.md"
+            },
+            "progress.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/progress.md"
+            },
+            "task_plan.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/task_plan.md"
+            }
+          },
+          "findings.md": {
+            "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/findings.md"
+          },
+          "imports": {
+            "Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md"
+            },
+            "Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md"
+            },
+            "analise-leandro-disconzi-radix.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/analise-leandro-disconzi-radix.md"
+            },
+            "portfolio.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/portfolio.md"
+            },
+            "resume.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/resume.md"
+            }
+          },
+          "index.json": {
+            "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/index.json"
+          },
+          "memory.md": {
+            "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/memory.md"
+          },
+          "progress.md": {
+            "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/progress.md"
+          },
+          "project.json": {
+            "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/project.json"
+          },
+          "task_plan.md": {
+            "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/task_plan.md"
+          },
+          "writer": {
+            "Anderson Aquino.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/writer/Anderson Aquino.md"
+            },
+            "Vaga ABC Technology.md": {
+              "file_ref": "files/content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/writer/Vaga ABC Technology.md"
+            }
+          }
+        }
+      }
     },
     "examples": {
       ".DS_Store": {
@@ -923,6 +1079,384 @@
       "git_commit": "11b79b4",
       "parsed": {}
     },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/project.json": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/project.json",
+      "language": "json",
+      "size_bytes": 354,
+      "lines": 8,
+      "last_modified": "2026-07-28T00:22:01.242455",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/progress.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/progress.md",
+      "language": "markdown",
+      "size_bytes": 548,
+      "lines": 24,
+      "last_modified": "2026-07-28T00:22:01.243695",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/task_plan.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/task_plan.md",
+      "language": "markdown",
+      "size_bytes": 370,
+      "lines": 18,
+      "last_modified": "2026-07-28T00:22:01.243031",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/memory.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/memory.md",
+      "language": "markdown",
+      "size_bytes": 236,
+      "lines": 12,
+      "last_modified": "2026-07-28T00:22:01.243969",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/findings.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/findings.md",
+      "language": "markdown",
+      "size_bytes": 317,
+      "lines": 15,
+      "last_modified": "2026-07-28T00:22:01.243411",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/index.json": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/index.json",
+      "language": "json",
+      "size_bytes": 3943,
+      "lines": 167,
+      "last_modified": "2026-07-28T19:23:44.286259",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/portfolio.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/portfolio.md",
+      "language": "markdown",
+      "size_bytes": 24534,
+      "lines": 330,
+      "last_modified": "2026-07-28T00:31:42.348258",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md",
+      "language": "markdown",
+      "size_bytes": 10664,
+      "lines": 493,
+      "last_modified": "2026-07-28T00:31:42.348827",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/resume.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/resume.md",
+      "language": "markdown",
+      "size_bytes": 7194,
+      "lines": 106,
+      "last_modified": "2026-07-28T00:31:42.348479",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/analise-leandro-disconzi-radix.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/analise-leandro-disconzi-radix.md",
+      "language": "markdown",
+      "size_bytes": 16134,
+      "lines": 275,
+      "last_modified": "2026-07-28T00:31:42.348985",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md",
+      "language": "markdown",
+      "size_bytes": 22145,
+      "lines": 755,
+      "last_modified": "2026-07-28T00:31:42.348664",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/progress.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/progress.md",
+      "language": "markdown",
+      "size_bytes": 548,
+      "lines": 24,
+      "last_modified": "2026-07-28T00:22:01.243695",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/task_plan.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/task_plan.md",
+      "language": "markdown",
+      "size_bytes": 370,
+      "lines": 18,
+      "last_modified": "2026-07-28T00:22:01.243031",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/memory.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/memory.md",
+      "language": "markdown",
+      "size_bytes": 236,
+      "lines": 12,
+      "last_modified": "2026-07-28T00:22:01.243969",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/findings.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/findings.md",
+      "language": "markdown",
+      "size_bytes": 317,
+      "lines": 15,
+      "last_modified": "2026-07-28T00:22:01.243411",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/writer/Anderson Aquino.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/writer/Anderson Aquino.md",
+      "language": "markdown",
+      "size_bytes": 3805,
+      "lines": 151,
+      "last_modified": "2026-07-28T00:27:22.991213",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/writer/Vaga ABC Technology.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/writer/Vaga ABC Technology.md",
+      "language": "markdown",
+      "size_bytes": 3094,
+      "lines": 71,
+      "last_modified": "2026-07-28T00:26:38.695105",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/agent_chats/10dbb9f0-9849-4137-bb04-dd9881a870ca/ABC_Technology.json": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/agent_chats/10dbb9f0-9849-4137-bb04-dd9881a870ca/ABC_Technology.json",
+      "language": "json",
+      "size_bytes": 85375,
+      "lines": 224,
+      "last_modified": "2026-07-28T00:37:21.590721",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-2-anderson-abc-technology.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-2-anderson-abc-technology.md",
+      "language": "markdown",
+      "size_bytes": 11379,
+      "lines": 222,
+      "last_modified": "2026-07-28T00:33:52.516065",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-3-estrategia-abordagem.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-3-estrategia-abordagem.md",
+      "language": "markdown",
+      "size_bytes": 10570,
+      "lines": 220,
+      "last_modified": "2026-07-28T00:33:52.534483",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-4-alinhamento-final.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-4-alinhamento-final.md",
+      "language": "markdown",
+      "size_bytes": 11405,
+      "lines": 224,
+      "last_modified": "2026-07-28T00:33:52.565240",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/session_state.json": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/session_state.json",
+      "language": "json",
+      "size_bytes": 86994,
+      "lines": 76,
+      "last_modified": "2026-07-28T00:25:58.256373",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-1-leandro-olivia.md": {
+      "path": "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-1-leandro-olivia.md",
+      "language": "markdown",
+      "size_bytes": 8286,
+      "lines": 159,
+      "last_modified": "2026-07-28T00:33:52.463846",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/project.json": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/project.json",
+      "language": "json",
+      "size_bytes": 258,
+      "lines": 8,
+      "last_modified": "2026-07-28T00:39:08.513297",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/progress.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/progress.md",
+      "language": "markdown",
+      "size_bytes": 513,
+      "lines": 24,
+      "last_modified": "2026-07-28T00:39:08.514116",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/task_plan.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/task_plan.md",
+      "language": "markdown",
+      "size_bytes": 335,
+      "lines": 18,
+      "last_modified": "2026-07-28T00:39:08.513656",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/memory.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/memory.md",
+      "language": "markdown",
+      "size_bytes": 201,
+      "lines": 12,
+      "last_modified": "2026-07-28T00:39:08.514327",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/findings.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/findings.md",
+      "language": "markdown",
+      "size_bytes": 282,
+      "lines": 15,
+      "last_modified": "2026-07-28T00:39:08.513924",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/index.json": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/index.json",
+      "language": "json",
+      "size_bytes": 2413,
+      "lines": 121,
+      "last_modified": "2026-07-28T17:57:53.124687",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports/portfolio.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/imports/portfolio.md",
+      "language": "markdown",
+      "size_bytes": 24534,
+      "lines": 330,
+      "last_modified": "2026-07-28T18:04:25.547300",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports/Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/imports/Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md",
+      "language": "markdown",
+      "size_bytes": 10664,
+      "lines": 493,
+      "last_modified": "2026-07-28T18:04:25.548668",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports/resume.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/imports/resume.md",
+      "language": "markdown",
+      "size_bytes": 7194,
+      "lines": 106,
+      "last_modified": "2026-07-28T18:04:25.547529",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports/analise-leandro-disconzi-radix.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/imports/analise-leandro-disconzi-radix.md",
+      "language": "markdown",
+      "size_bytes": 16134,
+      "lines": 275,
+      "last_modified": "2026-07-28T18:04:25.549032",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports/Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/imports/Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md",
+      "language": "markdown",
+      "size_bytes": 22145,
+      "lines": 755,
+      "last_modified": "2026-07-28T18:04:25.547913",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/docs/progress.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/docs/progress.md",
+      "language": "markdown",
+      "size_bytes": 513,
+      "lines": 24,
+      "last_modified": "2026-07-28T00:39:08.514116",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/docs/task_plan.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/docs/task_plan.md",
+      "language": "markdown",
+      "size_bytes": 335,
+      "lines": 18,
+      "last_modified": "2026-07-28T00:39:08.513656",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/docs/memory.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/docs/memory.md",
+      "language": "markdown",
+      "size_bytes": 201,
+      "lines": 12,
+      "last_modified": "2026-07-28T00:39:08.514327",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/docs/findings.md": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/docs/findings.md",
+      "language": "markdown",
+      "size_bytes": 282,
+      "lines": 15,
+      "last_modified": "2026-07-28T00:39:08.513924",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/fix_copy_context_panels.json": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/fix_copy_context_panels.json",
+      "language": "json",
+      "size_bytes": 23265,
+      "lines": 59,
+      "last_modified": "2026-07-28T00:43:02.578040",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/chat_2026-07-28-20-43-19.json": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/chat_2026-07-28-20-43-19.json",
+      "language": "json",
+      "size_bytes": 19222,
+      "lines": 104,
+      "last_modified": "2026-07-28T17:43:19.863876",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/chat_2026-07-28-04-26-31.json": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/chat_2026-07-28-04-26-31.json",
+      "language": "json",
+      "size_bytes": 1545,
+      "lines": 29,
+      "last_modified": "2026-07-28T01:26:31.522702",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/data/session_state.json": {
+      "path": "content/archived_projects/default/ui-refinement-20260728-181102/data/session_state.json",
+      "language": "json",
+      "size_bytes": 88021,
+      "lines": 102,
+      "last_modified": "2026-07-28T17:57:54.283744",
+      "git_commit": "",
+      "parsed": {}
+    },
     "content/examples/.DS_Store": {
       "path": "content/examples/.DS_Store",
       "language": "unknown",
@@ -1154,6 +1688,84 @@
         "content/scenes/assets/svg/havan-statue.svg"
       ],
       "count": 8
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444": {
+      "files": [
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/project.json",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/progress.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/task_plan.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/memory.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/findings.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/index.json"
+      ],
+      "count": 6
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports": {
+      "files": [
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/portfolio.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/resume.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/analise-leandro-disconzi-radix.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md"
+      ],
+      "count": 5
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs": {
+      "files": [
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/progress.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/task_plan.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/memory.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/findings.md"
+      ],
+      "count": 4
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data": {
+      "files": [
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-2-anderson-abc-technology.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-3-estrategia-abordagem.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-4-alinhamento-final.md",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/session_state.json",
+        "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-1-leandro-olivia.md"
+      ],
+      "count": 5
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102": {
+      "files": [
+        "content/archived_projects/default/ui-refinement-20260728-181102/project.json",
+        "content/archived_projects/default/ui-refinement-20260728-181102/progress.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/task_plan.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/memory.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/findings.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/index.json"
+      ],
+      "count": 6
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports": {
+      "files": [
+        "content/archived_projects/default/ui-refinement-20260728-181102/imports/portfolio.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/imports/Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/imports/resume.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/imports/analise-leandro-disconzi-radix.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/imports/Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md"
+      ],
+      "count": 5
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/docs": {
+      "files": [
+        "content/archived_projects/default/ui-refinement-20260728-181102/docs/progress.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/docs/task_plan.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/docs/memory.md",
+        "content/archived_projects/default/ui-refinement-20260728-181102/docs/findings.md"
+      ],
+      "count": 4
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218": {
+      "files": [
+        "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/fix_copy_context_panels.json",
+        "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/chat_2026-07-28-20-43-19.json",
+        "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/chat_2026-07-28-04-26-31.json"
+      ],
+      "count": 3
     },
     "content/examples/svg-assets": {
       "files": [
@@ -1459,6 +2071,174 @@
       "imported_by": []
     },
     "content/scenes/assets/svg/havan-statue.svg": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/project.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/progress.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/task_plan.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/memory.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/findings.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/index.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/portfolio.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/resume.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/analise-leandro-disconzi-radix.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/imports/Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/progress.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/task_plan.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/memory.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/docs/findings.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/writer/Anderson Aquino.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/writer/Vaga ABC Technology.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/agent_chats/10dbb9f0-9849-4137-bb04-dd9881a870ca/ABC_Technology.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-2-anderson-abc-technology.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-3-estrategia-abordagem.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-4-alinhamento-final.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/session_state.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/vaga-abc-technology---ais-engineer--google-cloud-20260728-192444/data/relatorio-1-leandro-olivia.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/project.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/progress.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/task_plan.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/memory.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/findings.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/index.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports/portfolio.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports/Do PDF ao Espa_o de Trabalho Digital a demonstracao do potencial da Olivia.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports/resume.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports/analise-leandro-disconzi-radix.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/imports/Achilleas _ Projeto Inicial Olivia (Primeiro Contato).md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/docs/progress.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/docs/task_plan.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/docs/memory.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/docs/findings.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/fix_copy_context_panels.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/chat_2026-07-28-20-43-19.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/agent_chats/8e99fcfa-283a-4be3-88e3-89cb64b62218/chat_2026-07-28-04-26-31.json": {
+      "imports": [],
+      "imported_by": []
+    },
+    "content/archived_projects/default/ui-refinement-20260728-181102/data/session_state.json": {
       "imports": [],
       "imported_by": []
     },

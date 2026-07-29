@@ -1,7 +1,7 @@
 {
   "metadata": {
     "folder": "static",
-    "indexed_at": "2026-07-26T22:51:20.288769",
+    "indexed_at": "2026-07-29T03:31:07.217980",
     "total_files": 3,
     "total_lines": 16,
     "languages": {
@@ -25,10 +25,10 @@
     "static/css/OliviaLegal-brand.css": {
       "path": "static/css/OliviaLegal-brand.css",
       "language": "css",
-      "size_bytes": 116,
+      "size_bytes": 111,
       "lines": 3,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-26T23:33:45.379090",
+      "git_commit": "80ad0a5",
       "parsed": {
         "imports": [
           "/static/css/LA8159-brand.css"
@@ -65,10 +65,10 @@
     "static/css/awareness-brand.css": {
       "path": "static/css/awareness-brand.css",
       "language": "css",
-      "size_bytes": 213,
+      "size_bytes": 208,
       "lines": 10,
-      "last_modified": "2026-07-14T17:36:45",
-      "git_commit": "11b79b4",
+      "last_modified": "2026-07-26T23:33:45.379359",
+      "git_commit": "80ad0a5",
       "parsed": {
         "imports": [],
         "selectors": {

@@ -7,6 +7,12 @@ let _editingAgentId = null;
 let _selectedModalSkills = [];
 let _selectedModalQdrantCollections = [];
 let _availableMcpServers = [];
+/** Map of MCP server name → {description, tool_count, project} from ecosystem metadata */
+let _ecosystemMcpInfo = {};
+/** Map of MCP bridge config names → ecosystem canonical names for enrichment lookup */
+let _ecosystemNameMap = {};
+/** Pre-selected tool names to restore when _syncMcpToolPermissions next runs */
+let _pendingToolPermissions = null;
 let _lastAgentSelectionNotice = { key: '', at: 0 };
 let _modalAgentType = 'openclaude';
 let _agentModalBehaviorsBound = false;
@@ -1426,15 +1432,91 @@ function _renderMcpServerOptions(selectedNames) {
     const command = String(srv.command || '').trim();
     const args = Array.isArray(srv.args) ? srv.args : [];
     const detail = [command, args[0] || ''].filter(Boolean).join(' ');
+    // Look up ecosystem enrichment — try direct name first, then via name_map
+    let eco = _ecosystemMcpInfo[srv.name] || {};
+    if (!eco.tool_count && _ecosystemNameMap[srv.name]) {
+      const canonicalName = _ecosystemNameMap[srv.name];
+      eco = _ecosystemMcpInfo[canonicalName] || {};
+    }
+    const toolCount = eco.tool_count || 0;
+    const projectName = eco.project || '';
+    const description = eco.description || '';
+    const titleParts = [detail];
+    if (toolCount) titleParts.push(`${toolCount} tools`);
+    if (description) titleParts.push(description);
+    const title = titleParts.join(' · ');
+    const badge = toolCount ? ` <span class="mcp-tool-badge" style="font-size:9px;opacity:0.6">${toolCount}</span>` : '';
+    const tag = projectName ? ` <span class="mcp-project-tag" style="font-size:9px;opacity:0.5">${escapeHtml(projectName)}</span>` : '';
     const checked = selected.has(srv.name) ? 'checked' : '';
     return `<div class="tool-check">
-  <input type="checkbox" class="modal-mcp-server" id="${id}" value="${escapeHtml(srv.name)}" ${checked}><label for="${id}" title="${escapeHtml(detail)}">${escapeHtml(srv.name)}</label></div>`;
+  <input type="checkbox" class="modal-mcp-server" id="${id}" value="${escapeHtml(srv.name)}" ${checked}><label for="${id}" title="${escapeHtml(title)}">${escapeHtml(srv.name)}${badge}${tag}</label></div>`;
   }).join('');
 }
 
 function _selectedMcpServerNamesFromModal() {
   const selected = Array.from(document.querySelectorAll('.modal-mcp-server:checked')).map(el => el.value);
   return _normalizeMcpServerNames(selected);
+}
+
+/** Look up ecosystem metadata for a server by its config name (handles name_map). */
+function _ecoForServer(configName) {
+  let eco = _ecosystemMcpInfo[configName] || {};
+  if (!eco.tools && _ecosystemNameMap[configName]) {
+    eco = _ecosystemMcpInfo[_ecosystemNameMap[configName]] || {};
+  }
+  return eco;
+}
+
+/**
+ * Rebuild per-server tool permission checkboxes based on selected MCP servers.
+ * Tools that were previously checked are preserved across re-renders.
+ */
+function _syncMcpToolPermissions() {
+  const container = document.getElementById('modalMcpToolPermissions');
+  const grid = document.getElementById('modalMcpToolPermissionsGrid');
+  if (!container || !grid) return;
+
+  const selectedServers = _selectedMcpServerNamesFromModal();
+  const hasTools = selectedServers.some((name) => _ecoForServer(name).tools?.length);
+
+  if (!hasTools) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'block';
+
+  // Collect previously checked tool names so we can preserve them.
+  // Also consider _pendingToolPermissions for initial restore on edit modal load.
+  const previouslyChecked = new Set(
+    Array.from(grid.querySelectorAll('.mcp-tool-checkbox:checked')).map((cb) => cb.value)
+  );
+  if (_pendingToolPermissions) {
+    _pendingToolPermissions.forEach((t) => previouslyChecked.add(t));
+    _pendingToolPermissions = null;
+  }
+
+  let html = '';
+  for (const srvName of selectedServers) {
+    const eco = _ecoForServer(srvName);
+    const tools = Array.isArray(eco.tools) ? eco.tools : [];
+    if (!tools.length) continue;
+
+    html += `<div style="margin-top:4px;font-size:10px;font-weight:600;color:var(--text2)">${escapeHtml(srvName)} (${tools.length})</div>`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:2px 6px;margin-left:8px">`;
+    for (const tool of tools) {
+      const toolName = typeof tool === 'string' ? tool : (tool.name || tool);
+      const checked = previouslyChecked.has(toolName) ? 'checked' : '';
+      const cbId = `mcp_tool_${String(toolName).replace(/[^A-Za-z0-9_-]/g, '_')}`;
+      html += `<div class="tool-check" style="font-size:10px"><input type="checkbox" class="mcp-tool-checkbox" id="${cbId}" value="${escapeHtml(toolName)}" ${checked}><label for="${cbId}">${escapeHtml(toolName)}</label></div>`;
+    }
+    html += `</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+/** Return the list of individually permitted tool names from checkboxes. */
+function _selectedMcpToolNames() {
+  return Array.from(document.querySelectorAll('.mcp-tool-checkbox:checked')).map((cb) => cb.value);
 }
 
 async function loadMcpServerOptions(selectedNames = null) {
@@ -1459,6 +1541,28 @@ async function loadMcpServerOptions(selectedNames = null) {
     _availableMcpServers = [];
   }
 
+  // Load ecosystem metadata to enrich MCP server display and tool selection
+  try {
+    const ecoRes = await fetch(`${API_BASE}/api/ecosystem/agents`);
+    if (ecoRes.ok) {
+      const ecoData = await ecoRes.json();
+      const flatMap = {};
+      const flatServers = Array.isArray(ecoData.mcp_servers_flat) ? ecoData.mcp_servers_flat : [];
+      for (const srv of flatServers) {
+        flatMap[srv.name] = {
+          tool_count: srv.tool_count || 0,
+          project: srv.project || '',
+          description: srv.description || '',
+          tools: Array.isArray(srv.tools) ? srv.tools : [],
+        };
+      }
+      _ecosystemMcpInfo = flatMap;
+      _ecosystemNameMap = (typeof ecoData.name_map === 'object' && ecoData.name_map !== null) ? ecoData.name_map : {};
+    }
+  } catch (_e2) {
+    // Non-fatal — ecosystem data is just enrichment
+  }
+
   let selected = selectedNames;
   if (!Array.isArray(selected)) {
     selected = _availableMcpServers.map((s) => s.name);
@@ -1473,6 +1577,14 @@ async function loadMcpServerOptions(selectedNames = null) {
     selected = filteredSelected;
   }
   _renderMcpServerOptions(selected);
+  _syncMcpToolPermissions();
+
+  // Event delegation: re-render tool permissions when MCP servers are toggled
+  grid.onchange = (e) => {
+    if (e.target.classList.contains('modal-mcp-server')) {
+      _syncMcpToolPermissions();
+    }
+  };
 }
 
 // Load agents from API and update UI
@@ -2457,6 +2569,11 @@ async function showEditModal(agentId) {
     document.getElementById('modalTemperature').value = (cfg.temperature === 0 || cfg.temperature) ? String(cfg.temperature) : '';
     document.getElementById('modalUnrestrictedTools').checked = !!cfg.unrestricted_tools;
     toggleModalUnrestrictedToolsDisplay();
+    // Restore permitted_tools after MCP server options are rendered
+    if (Array.isArray(cfg.permitted_tools)) {
+      _pendingToolPermissions = cfg.permitted_tools;
+      _syncMcpToolPermissions();
+    }
     document.getElementById('modalNeo4jGraphData').value = cfg.neo4j_graph_data || '';
     document.getElementById('modalSkillSelect').value = '';
     document.getElementById('modalSkillInput').value = '';
@@ -2552,6 +2669,7 @@ function closeModal() {
   _selectedModalSkills = [];
   _selectedModalQdrantCollections = [];
   _availableMcpServers = [];
+  _ecosystemMcpInfo = {};
   _syncSectionProfileDefaultsFromName(true);
   _syncSkillsTextareaAndChips();
   _syncQdrantCollectionsTextareaAndChips();
@@ -2865,6 +2983,7 @@ async function submitCreateAgent() {
     custom_shared_paths: customSharedPaths,
     skills,
     mcp_servers: mcpServers,
+    permitted_tools: _selectedMcpToolNames(),
     model,
     temperature,
     section_profiles: sectionProfiles

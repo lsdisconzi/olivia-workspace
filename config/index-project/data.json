@@ -1,16 +1,56 @@
 {
   "metadata": {
     "folder": "data",
-    "indexed_at": "2026-07-26T22:51:20.288769",
-    "total_files": 0,
-    "total_lines": 0,
-    "languages": {}
+    "indexed_at": "2026-07-29T03:31:07.217980",
+    "total_files": 2,
+    "total_lines": 354144,
+    "languages": {
+      "markdown": 1,
+      "json": 1
+    }
   },
-  "tree": {},
-  "files": {},
+  "tree": {
+    "master_index": {
+      "master_index.json": {
+        "file_ref": "files/data/master_index/master_index.json"
+      },
+      "master_index.md": {
+        "file_ref": "files/data/master_index/master_index.md"
+      }
+    }
+  },
+  "files": {
+    "data/master_index/master_index.md": {
+      "path": "data/master_index/master_index.md",
+      "language": "markdown",
+      "size_bytes": 5167798,
+      "lines": 96390,
+      "last_modified": "2026-07-27T06:05:09.612035",
+      "git_commit": "",
+      "parsed": {}
+    },
+    "data/master_index/master_index.json": {
+      "path": "data/master_index/master_index.json",
+      "language": "json",
+      "size_bytes": 42090917,
+      "lines": 257754,
+      "last_modified": "2026-07-27T06:05:45.845986",
+      "git_commit": "",
+      "parsed": {}
+    }
+  },
   "html_pages": {},
   "modules": {},
   "symbols_index": {},
-  "dependency_graph": {},
+  "dependency_graph": {
+    "data/master_index/master_index.md": {
+      "imports": [],
+      "imported_by": []
+    },
+    "data/master_index/master_index.json": {
+      "imports": [],
+      "imported_by": []
+    }
+  },
   "js_cross_module_graph": {}
 }

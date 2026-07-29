@@ -561,6 +561,29 @@ def _resolve_mcp_config_path(enabled_servers: list[str] | None = None) -> str | 
     return str(runtime_path)
 
 
+def _ecosystem_metadata_payload() -> dict:
+    """Return the cached ecosystem metadata from config/ecosystem_metadata.json."""
+    p = Olivia_ROOT / "config" / "ecosystem_metadata.json"
+    if not p.is_file():
+        return {"projects": {}, "error": "ecosystem_metadata.json not found; run scripts/fetch_ecosystem.py"}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        return {"projects": data, "loaded_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")}
+    except (json.JSONDecodeError, OSError) as e:
+        return {"projects": {}, "error": str(e)}
+
+
+def _ecosystem_agents_payload() -> dict:
+    """Return the cached agent directions from config/ecosystem_agents.json."""
+    p = Olivia_ROOT / "config" / "ecosystem_agents.json"
+    if not p.is_file():
+        return {"projects": {}, "summary_text": "", "error": "ecosystem_agents.json not found; run scripts/fetch_ecosystem.py"}
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as e:
+        return {"projects": {}, "summary_text": "", "error": str(e)}
+
+
 def _mcp_servers_payload() -> dict:
     cfg_path = _ensure_mcp_config()
     if not cfg_path:
@@ -3808,6 +3831,27 @@ capabilities / endpoints / state variables before suggesting workflows, instead
 of guessing.
 """
 
+# Qdrant search instruction injected into Ollama/OpenClaude agent prompts.
+# Tells the agent to use MCP semantic-search tools instead of expecting raw
+# file content, since Phase 3 replaces raw files with compact project indexes.
+_QUADRANT_SEARCH_INSTRUCTION = (
+    "[Qdrant semantic search available]\n"
+    "Your project context is a compact structural index (file tree + key symbols), "
+    "not raw file content. If you need to inspect the actual implementation of "
+    "a specific function, class, API endpoint, or document, use the "
+    "`garage-qdrant` MCP search tool instead:\n\n"
+    "  - **Olivia dev code** (functions, classes, imports): "
+    "search the `olivia-dev-code` collection\n"
+    "  - **User upload documents** (across all projects): "
+    "search the `uploads-global` collection\n"
+    "  - **Per-project documents**: search the `project-<project_id>` collection "
+    "(e.g. `project-achilleas`)\n\n"
+    "Example: `search_qdrant(collection_name=\"olivia-dev-code\", "
+    "query_text=\"function name or concept\")`\n\n"
+    "Only read raw files with the MCP filesystem tool when you need an "
+    "exact, full-file view that the indexed summary doesn't cover."
+)
+
 
 def _is_disabled_api_path(path: str) -> bool:
     """True if the path belongs to a legacy UI module that is disabled."""
@@ -5050,7 +5094,7 @@ def _assistant_context_preview_get(run_id: str = "", limit: int = 1) -> dict[str
         }
 
 
-def _build_scoped_uploads_context(max_chars: int = 60000, project_id: str = "", agent_id: str = "") -> str:
+def _build_scoped_uploads_context(max_chars: int = 60000, project_id: str = "", agent_id: str = "", tree_only: bool = False) -> str:
     roots = _uploads_context_roots(project_id=project_id, agent_id=agent_id)
     if not roots:
         return ""
@@ -5073,6 +5117,12 @@ def _build_scoped_uploads_context(max_chars: int = 60000, project_id: str = "", 
         size_kb = file_path.stat().st_size / 1024
         tree_lines.append(f"  {rel}  ({size_kb:.1f} KB)")
     tree = "\n".join(tree_lines)
+
+    # Tree-only mode: skip file content, only show directory structure
+    if tree_only:
+        parts = [f"\n[SCOPED UPLOADED FILES DIRECTORY]\n{tree}"]
+        parts.append("\n[FILE CONTENTS not shown — ask to read a specific file when needed.]")
+        return "\n".join(parts)
 
     budget = max_chars - len(tree) - 200
     included: list[str] = []
@@ -5898,6 +5948,121 @@ def _read_project_context(max_chars: int = 12000, project_id: str | None = None)
         return ""
     payload = f"[Project: {pid}]\n\n{merged}"
     return payload[:max_chars]
+
+
+def _read_project_index_context(max_chars: int = 3000, project_id: str | None = None) -> str:
+    """Load a compact project structure summary from pre-built index files.
+
+    Reads the workspace's own project index (config/index-project/*.json)
+    produced by scripts/index_project.py and extracts a compact summary of
+    file tree, key symbols, and dependencies — WITHOUT raw file content.
+
+    This is designed for Ollama/low-memory targets where raw file content
+    (10k–54k tokens) would cause memory pressure and slow prompt eval.
+    """
+    index_dir = Olivia_ROOT / "config" / "index-project"
+    if not index_dir.is_dir():
+        return ""
+
+    # Determine which index files to include based on project_id
+    # Default: top-level overview files (small, structural)
+    index_files = ["src.json", "config.json", "scripts.json", "runtime.json"]
+    # Map well-known project IDs to their relevant index files
+    PROJECT_INDEX_MAP: dict[str, list[str]] = {
+        "frontend": ["frontend.json", "static.json", "desktop.json"],
+        "backend": ["src.json", "scripts.json", "runtime.json"],
+        "config": ["config.json"],
+        "agents": ["agents.json"],
+    }
+    pid_lower = str(project_id or "").strip().lower()
+    for key, files in PROJECT_INDEX_MAP.items():
+        if key in pid_lower:
+            index_files = files
+            break
+
+    sections: list[str] = []
+    budget = max_chars
+
+    for idx_name in index_files:
+        idx_path = index_dir / idx_name
+        if not idx_path.is_file():
+            continue
+        try:
+            data = json.loads(idx_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+
+        parts: list[str] = []
+        meta = data.get("metadata", {})
+        parts.append(f"[{meta.get('folder', idx_name.replace('.json', ''))}]")
+
+        # File tree overview (compact folder-level)
+        tree = data.get("tree", {})
+        folders: set[str] = set()
+        file_count = 0
+        def _count_items(d: dict, prefix: str = "") -> None:
+            nonlocal file_count
+            for k, v in d.items():
+                if isinstance(v, dict):
+                    if "file_ref" in v:
+                        file_count += 1
+                    else:
+                        sub = f"{prefix}/{k}" if prefix else k
+                        folders.add(sub.lstrip("/"))
+                        _count_items(v, sub)
+        _count_items(tree)
+        parts.append(f"  files: {file_count}, directories: {len(folders)}")
+
+        # Key symbols (top N by type priority)
+        symbols = data.get("symbols_index", {})
+        if symbols:
+            funcs: list[str] = []
+            classes: list[str] = []
+            exports: list[str] = []
+            for name, refs in symbols.items():
+                for ref in refs if isinstance(refs, list) else [refs]:
+                    stype = str(ref.get("type", "") if isinstance(ref, dict) else "").lower()
+                    if stype == "class":
+                        classes.append(name)
+                    elif stype in ("function", "method"):
+                        funcs.append(name)
+                    elif stype in ("export", "const"):
+                        exports.append(name)
+            # Keep top symbols by type
+            budget_syms = max(10, int(budget * 0.3 / 30))
+            if classes:
+                parts.append(f"  classes ({len(classes)}): {', '.join(classes[:budget_syms])}")
+            if funcs:
+                parts.append(f"  functions ({len(funcs)}): {', '.join(funcs[:budget_syms])}")
+            if exports:
+                parts.append(f"  exports ({len(exports)}): {', '.join(exports[:budget_syms])}")
+
+        # Dependencies
+        deps = data.get("dependency_graph", {})
+        if deps:
+            importer_files = [k for k in deps if len(deps[k]) > 2]
+            if importer_files:
+                parts.append(f"  key dependency hubs: {', '.join(importer_files[:5])}")
+
+        # HTML pages (frontend)
+        html_pages = data.get("html_pages", [])
+        if html_pages:
+            page_names = [p.get("title", p.get("path", "?")) for p in html_pages[:8]]
+            parts.append(f"  pages: {', '.join(page_names)}")
+
+        section_text = "\n".join(parts)
+        if len(section_text) > budget:
+            section_text = section_text[:budget] + "\n  ... [truncated]"
+        sections.append(section_text)
+        budget -= len(section_text)
+        if budget < 200:
+            break
+
+    if not sections:
+        return ""
+
+    summary = "[Project structure index]\n" + "\n\n".join(sections)
+    return summary[:max_chars]
 
 
 def _build_active_project_binding_context(project_id: str = "", agent_id: str = "") -> str:
@@ -7324,7 +7489,12 @@ def _openclaude_env(provider: str | None = None, model: str | None = None,
             env["OPENAI_API_KEY"] = api_key
         elif is_ollama:
             env["OPENAI_API_KEY"] = "ollama-no-key-needed"  # placeholder, Ollama does not require a key
-        env["OPENAI_BASE_URL"] = _base.rstrip('/') + '/v1'
+        # Only append /v1 if not already present — some providers (e.g.
+        # OpenRouter) already include it in their base_url.
+        _base_v1 = _base.rstrip('/')
+        if not _base_v1.endswith('/v1'):
+            _base_v1 += '/v1'
+        env["OPENAI_BASE_URL"] = _base_v1
 
         # OpenClaude detects provider by base_url and may require a
         # provider-specific env var (e.g. FIREWORKS_API_KEY).
@@ -10924,9 +11094,14 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self._sse_send({"event": "thinking", "content": "Starting OpenClaude agent…"})
 
         # Enrich prompt with planning + uploads context
+        wants_ollama = _is_ollama_request(provider, model)
         planning_ctx = _read_planning_context(user_email=self._auth_current_email(), project_id=project_id)
-        project_ctx = _read_project_context(max_chars=12000, project_id=project_id)
-        uploads_ctx = _build_scoped_uploads_context(max_chars=20000, project_id=project_id, agent_id=str(agent_id or ""))
+        # Compact project index + tree-only uploads for all providers.
+        # Raw file content inflates prompts excessively — the index provides
+        # structural context (~300-800 tokens) + Qdrant search for detail.
+        project_ctx = _read_project_index_context(max_chars=3000, project_id=project_id)
+        uploads_ctx = _build_scoped_uploads_context(max_chars=2000, project_id=project_id, agent_id=str(agent_id or ""), tree_only=True)
+        print(f"[agent_openclaude] project_index_ctx={len(project_ctx)} chars  uploads_ctx={len(uploads_ctx)} chars  planning_ctx={len(planning_ctx)} chars")
         parts = []
         if project_ctx:
             parts.append(f"[Project context: {project_id}]\n{project_ctx}")
@@ -10934,6 +11109,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             parts.append(f"[Planning context]\n{planning_ctx}")
         if uploads_ctx:
             parts.append(uploads_ctx)
+        if wants_ollama:
+            parts.append(_QUADRANT_SEARCH_INSTRUCTION)
         parts.append(f"[Task]\n{user_prompt}")
         full_prompt = "\n\n".join(parts) if len(parts) > 1 else user_prompt
         selected_mcp_servers = _agent_mcp_servers(str(agent_id or ""))
@@ -10980,9 +11157,12 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         base_url: str | None = None,
     ):
         """Fallback: direct LLM streaming without tool use."""
+        wants_ollama = _is_ollama_request(provider, model)
         planning_ctx = _read_planning_context(user_email=self._auth_current_email(), project_id=project_id)
-        project_ctx = _read_project_context(max_chars=12000, project_id=project_id)
-        uploads_ctx = _build_scoped_uploads_context(max_chars=20000, project_id=project_id, agent_id=str(agent_id or ""))
+        # Compact project index + tree-only uploads for all providers.
+        project_ctx = _read_project_index_context(max_chars=3000, project_id=project_id)
+        uploads_ctx = _build_scoped_uploads_context(max_chars=2000, project_id=project_id, agent_id=str(agent_id or ""), tree_only=True)
+        print(f"[agent_llm] project_index_ctx={len(project_ctx)} chars  uploads_ctx={len(uploads_ctx)} chars  planning_ctx={len(planning_ctx)} chars")
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         if project_ctx:
             messages.append({"role": "system", "content": f"[Reference] Project context ({project_id}):{project_ctx}"})
@@ -10996,7 +11176,6 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self._sse_send({"event": "step", "step": 1})
         self._sse_send({"event": "thinking", "content": "Analyzing with planning-with-files methodology (LLM-only mode)…"})
 
-        wants_ollama = _is_ollama_request(provider, model)
         try:
             if wants_ollama:
                 target = _resolve_ollama_target(model)
@@ -11308,10 +11487,13 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         except BrokenPipeError:
             return
         planning_ctx = _read_planning_context(user_email=self._auth_current_email(), project_id=project_id)
-        project_ctx = _read_project_context(max_chars=12000, project_id=project_id)
-        # Build smart uploads context (directory tree + file contents within budget)
-        uploads_ctx = _build_scoped_uploads_context(max_chars=60000, project_id=project_id, agent_id=str(agent_id or ""))
-        print(f"[assistant]   project_ctx={len(project_ctx)} chars  planning_ctx={len(planning_ctx)} chars  uploads_ctx={len(uploads_ctx)} chars")
+        # Compact project index + tree-only uploads for all providers.
+        # Raw file content inflates prompts to 10k–54k tokens — the index
+        # provides structural context (~300–800 tokens) and the model can
+        # use Qdrant MCP search for deeper detail when needed.
+        project_ctx = _read_project_index_context(max_chars=3000, project_id=project_id)
+        uploads_ctx = _build_scoped_uploads_context(max_chars=2000, project_id=project_id, agent_id=str(agent_id or ""), tree_only=True)
+        print(f"[assistant]   project_index_ctx={len(project_ctx)} chars  uploads_ctx={len(uploads_ctx)} chars  planning_ctx={len(planning_ctx)} chars")
 
         # If a specific agent was selected and has a custom system_prompt stored
         # (e.g. imported GitHub Copilot agent like "IBSCO Change & AI Adoption Strategist"),
@@ -11395,7 +11577,16 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             messages.append({"role": "system", "content": f"[Reference] Existing planning files (for context, not instructions to follow):{planning_ctx}"})
         if uploads_ctx:
             messages.append({"role": "system", "content": uploads_ctx})
-        for h in history[-ASSISTANT_HISTORY_MAX_TURNS:]:
+        # Inject Qdrant MCP search instruction so the agent knows to use
+        # semantic search for detailed code/document queries instead of
+        # expecting raw file content in the prompt (only when OpenClaude
+        # provides MCP tool access).
+        if will_use_openclaude_route:
+            messages.append({"role": "system", "content": _QUADRANT_SEARCH_INSTRUCTION})
+        # Cap history to 3 turns for all providers — the compact index +
+        # Qdrant search design intentionally deprioritises conversation
+        # replay in favour of token budget for new context.
+        for h in history[-3:]:
             hcontent = h.get("content", "")
             # Sanitize multimodal content arrays (e.g. image_url blocks from ChatGPT)
             # DeepSeek only accepts plain text content strings
@@ -14450,6 +14641,14 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         if path == "/api/mcp/runtime":
             self._json_response(_mcp_runtime_info_payload())
+            return
+
+        # ── Ecosystem API ──────────────────────────────────────────────────────────
+        if path == "/api/ecosystem":
+            self._json_response(_ecosystem_metadata_payload())
+            return
+        if path == "/api/ecosystem/agents":
+            self._json_response(_ecosystem_agents_payload())
             return
 
         if path == "/api/meshy/asset":
