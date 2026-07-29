@@ -1313,8 +1313,8 @@ function renderSessionFiles() {
     const checkedAttr = isSelected ? 'checked' : '';
 
     return `
-      <div data-session-file="${escapeHtml(safeName)}" style="display:flex;align-items:center;gap:5px;padding:4px 6px;border:1px solid ${isSelected ? 'var(--accent)' : 'var(--border)'};border-radius:5px;font-size:11px;cursor:pointer;${isSelected ? 'background:rgba(90,141,238,0.06)' : ''}" onclick="${escapeHtml(clickJs)}" title="${escapeHtml(safeName)}">
-        <input type="checkbox" ${checkedAttr} onclick="event.stopPropagation();_sessionToggleBulk(${safeId})" style="flex-shrink:0;cursor:pointer;accent-color:var(--accent)">
+      <div data-session-file="${escapeHtml(safeName)}" style="display:flex;align-items:center;gap:5px;padding:4px 6px;border:1px solid ${isSelected ? 'var(--accent)' : 'var(--border)'};border-radius:5px;font-size:11px;cursor:pointer;${isSelected ? 'background:rgba(90,141,238,0.06)' : ''}" onclick='${escapeHtml(clickJs)}' title="${escapeHtml(safeName)}">
+        <input type="checkbox" ${checkedAttr} onclick='event.stopPropagation();_sessionToggleBulk(${safeId})' style="flex-shrink:0;cursor:pointer;accent-color:var(--accent)">
         ${statusDot}
         <span style="font-size:12px;flex-shrink:0;width:14px;text-align:center">${icon}</span>
         ${contextIndicator}
@@ -1323,8 +1323,8 @@ function renderSessionFiles() {
         <span style="color:var(--gray);flex-shrink:0;font-size:10px">${file.size ? formatBytes(file.size) : ''}</span>
         <span style="color:var(--gray);flex-shrink:0;font-size:9px;opacity:.6">${ts}</span>
         <div style="display:flex;gap:3px;flex-shrink:0" onclick="event.stopPropagation()">
-          <button style="border:none;background:none;color:var(--purple);cursor:pointer;padding:2px 3px;font-size:9px;opacity:.6" onclick="_sessionToggleContext(${safeId});return false" title="${inContext ? 'Remove from context' : 'Add to context'}"><i class="fas fa-${inContext ? 'brain' : 'circle'}"></i></button>
-          <button style="border:none;background:none;color:var(--red);cursor:pointer;padding:2px 3px;font-size:9px;opacity:.6" onclick="removeFileContext(${safeId});return false" title="Remover"><i class="fas fa-trash"></i></button>
+          <button style="border:none;background:none;color:var(--purple);cursor:pointer;padding:2px 3px;font-size:9px;opacity:.6" onclick='_sessionToggleContext(${safeId});return false' title="${inContext ? 'Remove from context' : 'Add to context'}"><i class="fas fa-${inContext ? 'brain' : 'circle'}"></i></button>
+          <button style="border:none;background:none;color:var(--red);cursor:pointer;padding:2px 3px;font-size:9px;opacity:.6" onclick='removeFileContext(${safeId});return false' title="Remover"><i class="fas fa-trash"></i></button>
         </div>
       </div>`;
   }).join('');

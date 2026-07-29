@@ -2907,44 +2907,45 @@
       return;
     }
 
-    var rawName = prompt('Nome para esta conversa (deixe vazio para usar data/hora):', '') ?? null;
-    if (rawName === null) return; // user cancelled
+    shPromptModal('Nome para esta conversa (deixe vazio para usar data/hora):', function (rawName) {
+      if (rawName === null) return; // user cancelled
 
-    var sessionName = rawName.trim() || ('shaders_' + new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19));
+      var sessionName = (rawName && rawName.trim()) || ('shaders_' + new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19));
 
-    // Resolve section agent for server-side persistence
-    var sectionCtx = (typeof window.oliviaResolveSectionAgentContext === 'function')
-      ? window.oliviaResolveSectionAgentContext('shaders')
-      : null;
-    var agentId = sectionCtx && sectionCtx.agentId ? sectionCtx.agentId : null;
+      // Resolve section agent for server-side persistence
+      var sectionCtx = (typeof window.oliviaResolveSectionAgentContext === 'function')
+        ? window.oliviaResolveSectionAgentContext('shaders')
+        : null;
+      var agentId = sectionCtx && sectionCtx.agentId ? sectionCtx.agentId : null;
 
-    var persistMessages = messages.map(function (m) {
-      return { role: m.role === 'agent' ? 'assistant' : m.role, content: m.text };
-    });
+      var persistMessages = messages.map(function (m) {
+        return { role: m.role === 'agent' ? 'assistant' : m.role, content: m.text };
+      });
 
-    if (agentId && typeof API_BASE !== 'undefined') {
-      fetch(API_BASE + '/api/agents/' + encodeURIComponent(agentId) + '/chat/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: persistMessages, session_name: sessionName })
-      }).then(function (res) {
-        if (res.ok) {
-          _sh.brainMessages.push({ role: 'agent', text: '✅ Conversa salva: **' + sessionName + '**' });
-        } else {
-          _sh.brainMessages.push({ role: 'agent', text: '⚠ Falha ao salvar conversa no servidor. Salvando localmente...' });
+      if (agentId && typeof API_BASE !== 'undefined') {
+        fetch(API_BASE + '/api/agents/' + encodeURIComponent(agentId) + '/chat/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: persistMessages, session_name: sessionName })
+        }).then(function (res) {
+          if (res.ok) {
+            _sh.brainMessages.push({ role: 'agent', text: '✅ Conversa salva: **' + sessionName + '**' });
+          } else {
+            _sh.brainMessages.push({ role: 'agent', text: '⚠ Falha ao salvar conversa no servidor. Salvando localmente...' });
+            _shSaveBrainChatLocal(sessionName, persistMessages);
+          }
+          shRenderBrainChat();
+        }).catch(function () {
           _shSaveBrainChatLocal(sessionName, persistMessages);
-        }
-        shRenderBrainChat();
-      }).catch(function () {
+          _sh.brainMessages.push({ role: 'agent', text: '✅ Conversa salva localmente: **' + sessionName + '**' });
+          shRenderBrainChat();
+        });
+      } else {
         _shSaveBrainChatLocal(sessionName, persistMessages);
         _sh.brainMessages.push({ role: 'agent', text: '✅ Conversa salva localmente: **' + sessionName + '**' });
         shRenderBrainChat();
-      });
-    } else {
-      _shSaveBrainChatLocal(sessionName, persistMessages);
-      _sh.brainMessages.push({ role: 'agent', text: '✅ Conversa salva localmente: **' + sessionName + '**' });
-      shRenderBrainChat();
-    }
+      }
+    });
   }
 
   function _shSaveBrainChatLocal(name, messages) {
@@ -3188,22 +3189,67 @@
   /* ═════════════════════════════════════════════════════════════
      CREATE NEW SCENE
      ═════════════════════════════════════════════════════════════ */
+  /* ── Reusable modal prompt (replaces window.prompt for iframe-safe usage) ── */
+  function shPromptModal(label, defaultValue, callback) {
+    // Normalise args: shPromptModal(label, callback) and shPromptModal(label, defaultValue, callback)
+    if (typeof defaultValue === 'function') { callback = defaultValue; defaultValue = ''; }
+    if (!callback) return;
+
+    // Tear down any previous prompt modal
+    var prev = document.getElementById('shPromptModal');
+    if (prev) prev.remove();
+
+    defaultValue = defaultValue || '';
+
+    var m = document.createElement('div');
+    m.id = 'shPromptModal';
+    m.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(10,12,20,0.65);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+    m.innerHTML =
+      '<div style="width:min(420px,90vw);background:#141824;border:1px solid rgba(255,255,255,0.12);border-radius:10px;box-shadow:0 16px 48px rgba(0,0,0,.55);color:#eee;font-family:system-ui,sans-serif;padding:18px 20px 14px;">'
+      + '<div style="font-size:14px;font-weight:600;margin-bottom:10px;">' + escapeHtml(label) + '</div>'
+      + '<input id="shPromptInput" value="' + escapeHtml(defaultValue) + '" style="width:100%;box-sizing:border-box;background:#0c0f18;border:1px solid rgba(255,255,255,0.15);color:#eee;padding:9px 12px;border-radius:6px;font-size:13px;outline:none;" autofocus/>'
+      + '<div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end;">'
+      + '<button id="shPromptCancel" style="background:#2a2e3c;color:#ccc;border:1px solid rgba(255,255,255,0.08);padding:7px 16px;border-radius:6px;cursor:pointer;">Cancel</button>'
+      + '<button id="shPromptOk" style="background:linear-gradient(135deg,#6B8CE3,#A873E8);color:#fff;border:none;padding:7px 20px;border-radius:6px;cursor:pointer;font-weight:600;">OK</button>'
+      + '</div>'
+      + '</div>';
+    document.body.appendChild(m);
+
+    var input = document.getElementById('shPromptInput');
+
+    function dismiss(val) {
+      m.remove();
+      callback(val);
+    }
+
+    m.addEventListener('click', function (ev) { if (ev.target === m) dismiss(null); });
+    document.getElementById('shPromptCancel').addEventListener('click', function () { dismiss(null); });
+    document.getElementById('shPromptOk').addEventListener('click', function () { dismiss(input.value); });
+    input.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter') dismiss(input.value);
+      if (ev.key === 'Escape') dismiss(null);
+    });
+    input.focus();
+    input.select();
+  }
+
   window.shCreateScene = function () {
-    var name = prompt('Scene name:');
-    if (!name || !name.trim()) return;
-    var id = 'custom_' + name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/_+$/, '');
-    var sc = {
-      id: id, icon: '🎨', name: name.trim(),
-      desc: 'Custom scene — ' + name.trim(),
-      sky1: '#5B8EC4', sky2: '#87CEEB', ground: '#3D6B4F', bld: '#6B5D4F', acc: '#C4862D',
-      category: 'custom'
-    };
-    _sh.customScenes.push(sc);
-    shBuildSceneList();
-    shUpdateStats();
-    shSelectScene(id);
-    shSaveState();
-    shToast('Scene created: ' + name.trim());
+    shPromptModal('Scene name:', function (name) {
+      if (!name || !name.trim()) return;
+      var id = 'custom_' + name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/_+$/, '');
+      var sc = {
+        id: id, icon: '🎨', name: name.trim(),
+        desc: 'Custom scene — ' + name.trim(),
+        sky1: '#5B8EC4', sky2: '#87CEEB', ground: '#3D6B4F', bld: '#6B5D4F', acc: '#C4862D',
+        category: 'custom'
+      };
+      _sh.customScenes.push(sc);
+      shBuildSceneList();
+      shUpdateStats();
+      shSelectScene(id);
+      shSaveState();
+      shToast('Scene created: ' + name.trim());
+    });
   };
 
   /* ═════════════════════════════════════════════════════════════
@@ -3383,34 +3429,35 @@
   window.shCreateSceneFromCatalog = function () {
     var ids = Object.keys(_shCatalogState.picked);
     if (!ids.length) { shToast('Pick at least one asset first'); return; }
-    var name = prompt('Scene name:', 'Catalog Scene');
-    if (!name || !name.trim()) return;
+    shPromptModal('Scene name:', 'Catalog Scene', function (name) {
+      if (!name || !name.trim()) return;
 
-    var id = 'custom_' + name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/_+$/, '');
-    var code = shComposeCodeFromAssets(ids);
-    var picked = ids.map(function (i) { return window.SH_ASSETS[i].meta; });
-    var hasSnow = ids.indexOf('snowflakes') >= 0 || ids.indexOf('pine_tree_snowy') >= 0 || ids.indexOf('snowman') >= 0 || ids.indexOf('castle_ice') >= 0;
-    var sc = {
-      id: id,
-      icon: (picked[0] && picked[0].icon) || '🎨',
-      name: name.trim(),
-      desc: 'Composed from catalog: ' + picked.map(function (p) { return p.name; }).join(', '),
-      sky1: hasSnow ? '#2D3A5A' : '#5B8EC4',
-      sky2: hasSnow ? '#8AB0D8' : '#87CEEB',
-      ground: hasSnow ? '#E8F0FE' : '#3D6B4F',
-      bld: '#6B5D4F',
-      acc: '#C4862D',
-      category: 'custom',
-      code: code,
-      _assets: ids
-    };
-    _sh.customScenes.push(sc);
-    shBuildSceneList();
-    shUpdateStats();
-    shSelectScene(id);
-    shSaveState();
-    shCloseCatalog();
-    shToast('Scene created with ' + ids.length + ' assets');
+      var id = 'custom_' + name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/_+$/, '');
+      var code = shComposeCodeFromAssets(ids);
+      var picked = ids.map(function (i) { return window.SH_ASSETS[i].meta; });
+      var hasSnow = ids.indexOf('snowflakes') >= 0 || ids.indexOf('pine_tree_snowy') >= 0 || ids.indexOf('snowman') >= 0 || ids.indexOf('castle_ice') >= 0;
+      var sc = {
+        id: id,
+        icon: (picked[0] && picked[0].icon) || '🎨',
+        name: name.trim(),
+        desc: 'Composed from catalog: ' + picked.map(function (p) { return p.name; }).join(', '),
+        sky1: hasSnow ? '#2D3A5A' : '#5B8EC4',
+        sky2: hasSnow ? '#8AB0D8' : '#87CEEB',
+        ground: hasSnow ? '#E8F0FE' : '#3D6B4F',
+        bld: '#6B5D4F',
+        acc: '#C4862D',
+        category: 'custom',
+        code: code,
+        _assets: ids
+      };
+      _sh.customScenes.push(sc);
+      shBuildSceneList();
+      shUpdateStats();
+      shSelectScene(id);
+      shSaveState();
+      shCloseCatalog();
+      shToast('Scene created with ' + ids.length + ' assets');
+    });
   };
 
   window.shDeleteScene = function () {

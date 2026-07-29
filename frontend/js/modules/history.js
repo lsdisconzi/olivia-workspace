@@ -834,7 +834,19 @@ function restoreApiKeyUI() {
 function getCustomApiKey(provider) {
   try {
     const saved = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
-    return saved[provider] || '';
+    // Exact match first
+    if (provider && saved[provider]) {
+      return saved[provider];
+    }
+    // Fallback: try common provider names in priority order
+    for (const prov of ['deepseek', 'openrouter', 'fireworks', 'gemini']) {
+      if (saved[prov]) return saved[prov];
+    }
+    // Last resort: any stored key
+    for (const val of Object.values(saved)) {
+      if (val) return val;
+    }
+    return '';
   } catch {
     return '';
   }
