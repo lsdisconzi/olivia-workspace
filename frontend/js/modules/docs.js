@@ -1939,7 +1939,6 @@ async function openDocFile(relPath, name, projectId) {
   // Keep preview behavior so parsing/rendering works immediately by file type.
   return openPreviewUrl(url, name || relPath, { fileType });
 }
-
 // ═══════════════════════════════════════════════════════════════════
 // POST-RENDER PIPELINE — Mermaid, Syntax Highlight, CSV tables
 // ═══════════════════════════════════════════════════════════════════
@@ -1947,12 +1946,15 @@ async function openDocFile(relPath, name, projectId) {
 let _postRenderObserver = null;
 const _POST_RENDER_SELECTORS = '.answer-md, .olivia-doc-rich-body, .output-body, .output-rich-scroll';
 
+// ── Simple HTML escaping (used by error display) ────────────────────
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
 function _sanitizeMermaidSource(source) {
-  // Characters that break Mermaid's parser but are commonly emitted by LLMs:
-  // - Middle dot · (U+00B7) — used as separator in Gantt task names
-  // - Bullet • (U+2022) — similar usage
-  // - Em dash — (U+2014) and en dash – (U+2013)
-  // - Non-breaking spaces and zero-width characters
+  // Characters that break Mermaid's parser but are commonly emitted by LLMs
   return source
     .replace(/[\u00B7\u2022]/g, '-')   // middle dot / bullet → dash
     .replace(/[\u2013\u2014]/g, '--')  // en/em dash → double dash
@@ -1964,7 +1966,7 @@ function _sanitizeMermaidSource(source) {
  * Derive a safe base filename for mermaid exports.
  */
 function _mermaidExportBaseName() {
-  var base = (document.title || '').trim() || 'mermaid-diagram';
+  let base = (document.title || '').trim() || 'mermaid-diagram';
   return base
     .replace(/[\\/:*?"<>|]+/g, '-')
     .replace(/\s+/g, '-')
@@ -1976,18 +1978,28 @@ function _mermaidExportBaseName() {
 /**
  * Serialize an SVG element to a standalone SVG string.
  * If fixedSize is given, explicit width/height attributes are set so the
- * SVG rasterizes at predictable dimensions.
+ * SVG rasterises at predictable dimensions. Otherwise the viewBox is preserved
+ * and width/height are removed for a responsive file.
  */
 function _serializeMermaidSvg(svgEl, fixedSize) {
-  var clone = svgEl.cloneNode(true);
+  const clone = svgEl.cloneNode(true);
   if (fixedSize) {
     clone.setAttribute('width', String(Math.round(fixedSize.width)));
     clone.setAttribute('height', String(Math.round(fixedSize.height)));
   } else {
+    // Ensure a viewBox exists so the SVG remains scalable
+    const vb = clone.getAttribute('viewBox');
+    if (!vb) {
+      // Fallback to computed dimensions
+      const rect = svgEl.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        clone.setAttribute('viewBox', `0 0 ${Math.round(rect.width)} ${Math.round(rect.height)}`);
+      }
+    }
     clone.removeAttribute('width');
     clone.removeAttribute('height');
   }
-  var xml = new XMLSerializer().serializeToString(clone);
+  let xml = new XMLSerializer().serializeToString(clone);
   if (xml.indexOf('xmlns=') === -1) {
     xml = xml.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ');
   }
@@ -1996,17 +2008,16 @@ function _serializeMermaidSvg(svgEl, fixedSize) {
 
 /**
  * Compute export dimensions for a rendered mermaid SVG.
- * Prefers the viewBox (intrinsic size), falls back to the live bounding rect.
  */
 function _mermaidSvgSize(svgEl) {
-  var vb = svgEl.getAttribute('viewBox');
+  const vb = svgEl.getAttribute('viewBox');
   if (vb) {
-    var parts = String(vb).trim().split(/[\s,]+/).map(Number);
+    const parts = String(vb).trim().split(/[\s,]+/).map(Number);
     if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) {
       return { width: parts[2], height: parts[3] };
     }
   }
-  var rect = svgEl.getBoundingClientRect();
+  const rect = svgEl.getBoundingClientRect();
   if (rect.width > 4 && rect.height > 4) {
     return { width: Math.round(rect.width), height: Math.round(rect.height) };
   }
@@ -2017,204 +2028,202 @@ function _mermaidSvgSize(svgEl) {
  * Trigger a browser download for a Blob.
  */
 function _mermaidDownloadBlob(blob, filename) {
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
   a.href = url;
   a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
 }
 
 /**
  * Export a rendered mermaid SVG as a standalone .svg file.
  */
 function _exportMermaidSvg(svgEl, filename) {
-  _prepareMermaidExportSvg(svgEl).then(function (prepared) {
-    var xml = _serializeMermaidSvg(prepared, null);
+  _prepareMermaidExportSvg(svgEl).then(prepared => {
+    const xml = _serializeMermaidSvg(prepared, null);
     _mermaidDownloadBlob(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }), filename + '.svg');
   });
 }
 
 /**
- * Export a rendered mermaid SVG as a .png file (rasterized at 2x for HiDPI).
- * Falls back to SVG download if rasterization fails.
+ * Export a rendered mermaid SVG as a .png file (rasterised at 2x for HiDPI).
+ * Falls back to SVG download if rasterisation fails.
  */
 function _exportMermaidPng(svgEl, filename) {
-  _prepareMermaidExportSvg(svgEl).then(function (prepared) {
-    var size = _mermaidSvgSize(prepared);
-    var xml = _serializeMermaidSvg(prepared, size);
-    var blobUrl = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }));
-    var img = new Image();
-    img.onload = function () {
+  _prepareMermaidExportSvg(svgEl).then(prepared => {
+    const size = _mermaidSvgSize(prepared);
+    const xml = _serializeMermaidSvg(prepared, size);
+    const blobUrl = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }));
+    const img = new Image();
+    img.onload = () => {
       try {
-        var scale = 2;
-        var canvas = document.createElement('canvas');
+        const scale = 2;
+        const canvas = document.createElement('canvas');
         canvas.width = Math.round(size.width * scale);
         canvas.height = Math.round(size.height * scale);
-        var ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
         if (!ctx) return;
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(function (blob) {
+        canvas.toBlob(blob => {
           if (blob) _mermaidDownloadBlob(blob, filename + '.png');
         }, 'image/png');
       } finally {
         URL.revokeObjectURL(blobUrl);
       }
     };
-    img.onerror = function () {
+    img.onerror = () => {
       URL.revokeObjectURL(blobUrl);
-      _exportMermaidSvg(prepared, filename);
+      _exportMermaidSvg(prepared, filename);  // fallback
     };
     img.src = blobUrl;
   });
 }
 
 /**
- * Resolve the diagram SVG out of a mermaid container.
+ * Resolve the diagram SVG out of a mermaid container, handling sandboxed iframes.
  *
- * With `securityLevel: 'sandbox'` (see index.html) mermaid wraps the SVG inside
- * a sandboxed iframe whose `src` is a `data:text/html;base64,` URL, so
- * `querySelector('svg')` can't reach it — the iframe document is cross-origin.
- * Decode the data URL and parse the SVG out of it. Falls back to a direct SVG
- * child when present (non-sandbox render).
+ * When `securityLevel: 'sandbox'` is used, mermaid wraps the SVG inside a
+ * sandboxed iframe. We decode the data URL or srcdoc, parse the SVG, and adopt
+ * it into the main document so it can be manipulated (e.g. for export).
  */
 function _resolveMermaidSvg(mermaidContainer) {
-  var svgEl = mermaidContainer.querySelector('svg');
+  // Direct SVG child (non‑sandbox)
+  const svgEl = mermaidContainer.querySelector('svg');
   if (svgEl) return svgEl;
 
-  var frame = mermaidContainer.querySelector('iframe');
+  // Sandboxed – try iframe
+  const frame = mermaidContainer.querySelector('iframe');
   if (!frame) return null;
-  var src = frame.getAttribute('src') || '';
-  var m = src.match(/^data:text\/html[^,]*;base64,([\s\S]+)$/);
-  if (!m) return null;
 
-  var html;
-  try {
-    html = atob(m[1].replace(/\s+/g, ''));
-  } catch (_) {
-    return null;
+  // Mermaid may use srcdoc or a data: URL
+  const srcdoc = frame.getAttribute('srcdoc');
+  if (srcdoc && srcdoc.indexOf('<svg') !== -1) {
+    const doc = new DOMParser().parseFromString(srcdoc, 'text/html');
+    const svg = doc.querySelector('svg');
+    if (svg) return document.adoptNode(svg);
   }
-  if (!html || html.indexOf('<svg') === -1) return null;
 
-  try {
-    var doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.querySelector('svg') || null;
-  } catch (_) {
-    return null;
+  const src = frame.getAttribute('src') || '';
+  const m = src.match(/^data:text\/html[^,]*;base64,([\s\S]+)$/);
+  if (m) {
+    try {
+      const html = atob(m[1].replace(/\s+/g, ''));
+      if (html && html.indexOf('<svg') !== -1) {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const svg = doc.querySelector('svg');
+        if (svg) return document.adoptNode(svg);
+      }
+    } catch (_) { /* ignore */ }
   }
+  return null;
 }
 
-/**
- * Hidden offscreen container used to re-attach the (detached) mermaid SVG so the
- * browser resolves its embedded <style> block into computed styles. Lazily
- * created and reused across exports.
- */
-var _mermaidExportHost = null;
+// ── Hidden offscreen host for style resolution during export ────────
+let _mermaidExportHost = null;
 function _mermaidExportHostEl() {
   if (!_mermaidExportHost || !_mermaidExportHost.parentNode) {
     _mermaidExportHost = document.createElement('div');
     _mermaidExportHost.setAttribute('aria-hidden', 'true');
-    _mermaidExportHost.style.cssText = 'position:absolute;left:-20000px;top:0;width:0;height:0;overflow:hidden;';
+    _mermaidExportHost.style.cssText =
+      'position:absolute;left:-20000px;top:0;width:0;height:0;overflow:hidden;';
     document.body.appendChild(_mermaidExportHost);
   }
   return _mermaidExportHost;
 }
 
 /**
- * Inline each element's resolved (computed) rendering properties as inline
- * styles, then drop the <style> block.
- *
- * The live diagram's styling lives in a <style> block scoped under
- * `#<mermaid-id>` (e.g. `#mermaid-abc123 .node rect {...}`). Browsers apply it,
- * but desktop SVG editors (Inkscape, Illustrator, ...) ignore it — which is why
- * exported diagrams show black shapes and no strokes/labels there. Inlining the
- * computed values makes the exported file self-contained and viewer-agnostic.
+ * Flatten computed styles into inline attributes so exported SVGs look correct
+ * in desktop editors that ignore <style> blocks.
  */
 function _flattenMermaidStyles(svgEl) {
   if (svgEl.getAttribute('data-mermaid-flattened') === '1') return;
   svgEl.setAttribute('data-mermaid-flattened', '1');
-  var PROPS = [
+
+  const PROPS = [
     'fill', 'fill-opacity', 'fill-rule', 'stroke', 'stroke-opacity', 'stroke-width',
     'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin',
     'stroke-miterlimit', 'opacity', 'visibility', 'display',
     'font-family', 'font-size', 'font-weight', 'font-style', 'letter-spacing',
     'text-anchor', 'dominant-baseline'
   ];
-  var all = [svgEl].concat(Array.prototype.slice.call(svgEl.querySelectorAll('*')));
-  all.forEach(function (el) {
+  const all = [svgEl].concat(Array.from(svgEl.querySelectorAll('*')));
+  all.forEach(el => {
     if (el.tagName === 'STYLE') return;
-    var cs;
+    let cs;
     try { cs = window.getComputedStyle(el); } catch (_) { return; }
-    var inline = [];
-    for (var i = 0; i < PROPS.length; i++) {
-      var v = cs.getPropertyValue(PROPS[i]);
-      if (v) inline.push(PROPS[i] + ': ' + v);
-    }
+    const inline = [];
+    PROPS.forEach(prop => {
+      const v = cs.getPropertyValue(prop);
+      if (v) inline.push(prop + ': ' + v);
+    });
     if (inline.length) {
-      var existing = el.getAttribute('style') || '';
+      const existing = el.getAttribute('style') || '';
       el.setAttribute('style', existing ? existing + '; ' + inline.join('; ') : inline.join('; '));
     }
   });
-  Array.prototype.slice.call(svgEl.querySelectorAll('style')).forEach(function (s) {
-    s.parentNode.removeChild(s);
-  });
-  // Drop layout hints that confuse non-browser renderers; keep viewBox sizing.
+  Array.from(svgEl.querySelectorAll('style')).forEach(s => s.parentNode.removeChild(s));
   svgEl.style.maxWidth = '';
 }
 
 /**
- * Split a label element into text runs with bold/italic flags so markdown-ish
- * formatting (e.g. `**bold**`) survives conversion from HTML to SVG <text>.
+ * Split a label element into text runs with bold/italic flags.
  */
 function _mermaidTextRuns(el) {
-  var runs = [];
+  const runs = [];
   (function walk(n, bold, italic) {
     if (n.nodeType === 3) {
-      var t = n.textContent || '';
-      if (t) runs.push({ t: t, bold: bold, italic: italic });
+      const t = n.textContent || '';
+      if (t) runs.push({ t, bold, italic });
       return;
     }
     if (n.nodeType !== 1) return;
     if (n.tagName === 'BR') { runs.push({ br: true }); return; }
-    var nb = bold || n.tagName === 'STRONG' || n.tagName === 'B';
-    var ni = italic || n.tagName === 'EM' || n.tagName === 'I';
-    Array.prototype.forEach.call(n.childNodes, function (c) { walk(c, nb, ni); });
+    const nb = bold || n.tagName === 'STRONG' || n.tagName === 'B';
+    const ni = italic || n.tagName === 'EM' || n.tagName === 'I';
+    Array.from(n.childNodes).forEach(c => walk(c, nb, ni));
   })(el, false, false);
   return runs;
 }
 
 /**
- * mermaid renders labels as <foreignObject> (HTML <div>/<span>). Inkscape and
- * other desktop editors don't render foreignObject at all, so exported diagrams
- * lose every label. Replace each foreignObject with an equivalent <text>,
- * reusing the live computed font, colour, alignment and per-run formatting.
+ * Replace <foreignObject> elements with SVG <text> so labels survive in
+ * desktop vector editors that don’t render foreignObject.
  */
 function _convertMermaidForeignObjects(svgEl) {
-  var SVGNS = 'http://www.w3.org/2000/svg';
-  var fos = Array.prototype.slice.call(svgEl.querySelectorAll('foreignObject'));
-  fos.forEach(function (fo) {
-    var x = parseFloat(fo.getAttribute('x') || '0') || 0;
-    var y = parseFloat(fo.getAttribute('y') || '0') || 0;
-    var w = parseFloat(fo.getAttribute('width') || '0') || 0;
-    var h = parseFloat(fo.getAttribute('height') || '0') || 0;
-    var lines = [];
-    Array.prototype.forEach.call(fo.childNodes, function (child) {
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const fos = Array.from(svgEl.querySelectorAll('foreignObject'));
+  fos.forEach(fo => {
+    const x = parseFloat(fo.getAttribute('x') || '0') || 0;
+    const y = parseFloat(fo.getAttribute('y') || '0') || 0;
+    const w = parseFloat(fo.getAttribute('width') || '0') || 0;
+    const h = parseFloat(fo.getAttribute('height') || '0') || 0;
+
+    const lines = [];
+    Array.from(fo.childNodes).forEach(child => {
       if (child.nodeType !== 1) return;
       if (!child.textContent || !child.textContent.trim()) return;
       lines.push({ runs: _mermaidTextRuns(child) });
     });
-    if (w < 1 || h < 1 || !lines.length) { fo.parentNode.removeChild(fo); return; }
-    var styleEl = fo.querySelector('span, div, p, strong, b, em, i');
-    var cs = styleEl ? window.getComputedStyle(styleEl) : null;
-    var fs = cs ? (parseFloat(cs.fontSize) || 16) : 16;
-    var lh = cs ? (parseFloat(cs.lineHeight) || 0) : 0;
+    if (w < 1 || h < 1 || !lines.length) {
+      fo.parentNode.removeChild(fo);
+      return;
+    }
+
+    const styleEl = fo.querySelector('span, div, p, strong, b, em, i');
+    const cs = styleEl ? window.getComputedStyle(styleEl) : null;
+    const fs = cs ? (parseFloat(cs.fontSize) || 16) : 16;
+    let lh = cs ? (parseFloat(cs.lineHeight) || 0) : 0;
     if (!lh || lh <= 0) lh = Math.round(fs * 1.2);
-    var fill = (cs && cs.fill && cs.fill !== 'rgb(0, 0, 0)') ? cs.fill : (cs ? cs.color : '#000');
-    var centerX = x + w / 2;
-    var firstBaseline = y + (h - lines.length * lh) / 2 + fs * 0.75;
-    var text = document.createElementNS(SVGNS, 'text');
+    const fill =
+      (cs && cs.fill && cs.fill !== 'rgb(0, 0, 0)') ? cs.fill : (cs ? cs.color : '#000');
+
+    const centerX = x + w / 2;
+    const firstBaseline = y + (h - lines.length * lh) / 2 + fs * 0.75;
+
+    const text = document.createElementNS(SVGNS, 'text');
     text.setAttribute('x', centerX.toFixed(2));
     text.setAttribute('y', firstBaseline.toFixed(2));
     text.setAttribute('text-anchor', 'start');
@@ -2226,23 +2235,24 @@ function _convertMermaidForeignObjects(svgEl) {
       text.setAttribute('font-weight', cs.fontWeight);
     }
     if (cs && cs.fontStyle === 'italic') text.setAttribute('font-style', 'italic');
-    lines.forEach(function (line, i) {
-      var runs = line.runs.filter(function (r) { return !r.br; });
+
+    lines.forEach((line, i) => {
+      const runs = line.runs.filter(r => !r.br);
       if (!runs.length) return;
-      var dy = i > 0 ? lh : 0;
+      const dy = i > 0 ? lh : 0;
       if (runs.length === 1) {
-        var r = runs[0];
-        var ts = document.createElementNS(SVGNS, 'tspan');
+        const r = runs[0];
+        const ts = document.createElementNS(SVGNS, 'tspan');
         if (dy) ts.setAttribute('dy', dy.toFixed(2));
         if (r.bold) ts.setAttribute('font-weight', 'bold');
         if (r.italic) ts.setAttribute('font-style', 'italic');
         ts.textContent = r.t;
         text.appendChild(ts);
       } else {
-        var lineEl = document.createElementNS(SVGNS, 'tspan');
+        const lineEl = document.createElementNS(SVGNS, 'tspan');
         if (dy) lineEl.setAttribute('dy', dy.toFixed(2));
-        runs.forEach(function (r) {
-          var ts = document.createElementNS(SVGNS, 'tspan');
+        runs.forEach(r => {
+          const ts = document.createElementNS(SVGNS, 'tspan');
           if (r.bold) ts.setAttribute('font-weight', 'bold');
           if (r.italic) ts.setAttribute('font-style', 'italic');
           ts.textContent = r.t;
@@ -2254,22 +2264,18 @@ function _convertMermaidForeignObjects(svgEl) {
     fo.parentNode.replaceChild(text, fo);
   });
 
-  // Centre each converted line: measure the rendered glyph widths (the svg is
-  // attached to the live document, so fonts/lengths are available) and lay the
-  // runs out left-to-right so the block is centred on the label centre.
-  Array.prototype.slice.call(svgEl.querySelectorAll('text[data-mermaid-converted="1"]')).forEach(function (text) {
-    var cx = parseFloat(text.getAttribute('x')) || 0;
-    var lines = Array.prototype.slice.call(text.childNodes).filter(function (n) { return n.nodeType === 1; });
-    lines.forEach(function (line) {
-      var runs = line.childNodes.length
-        ? Array.prototype.slice.call(line.childNodes).filter(function (n) { return n.nodeType === 1; })
+  // Centre each converted line by measuring glyph widths
+  Array.from(svgEl.querySelectorAll('text[data-mermaid-converted="1"]')).forEach(text => {
+    const cx = parseFloat(text.getAttribute('x')) || 0;
+    const lines = Array.from(text.childNodes).filter(n => n.nodeType === 1);
+    lines.forEach(line => {
+      const runs = line.childNodes.length
+        ? Array.from(line.childNodes).filter(n => n.nodeType === 1)
         : [line];
-      var widths = runs.map(function (ts) {
-        return (ts.getComputedTextLength && ts.getComputedTextLength()) || 0;
-      });
-      var total = widths.reduce(function (a, b) { return a + b; }, 0);
-      var cursor = cx - total / 2;
-      runs.forEach(function (ts, i) {
+      const widths = runs.map(ts => (ts.getComputedTextLength && ts.getComputedTextLength()) || 0);
+      const total = widths.reduce((a, b) => a + b, 0);
+      let cursor = cx - total / 2;
+      runs.forEach((ts, i) => {
         ts.setAttribute('x', cursor.toFixed(2));
         cursor += widths[i];
       });
@@ -2278,28 +2284,24 @@ function _convertMermaidForeignObjects(svgEl) {
 }
 
 /**
- * Make a resolved mermaid SVG portable for non-browser viewers: re-attach it to
- * the live document (so CSS resolves), convert HTML labels to <text>, inline
- * computed styles, then detach. Async because style recalculation needs a couple
- * of frames. Always resolves with the (possibly unchanged) svgEl.
+ * Prepare an SVG for export: convert foreignObjects, inline computed styles.
+ * Returns a promise that resolves with the modified SVG.
  */
 function _prepareMermaidExportSvg(svgEl) {
-  return new Promise(function (resolve) {
+  return new Promise(resolve => {
     if (!svgEl || typeof window.getComputedStyle !== 'function' || typeof requestAnimationFrame !== 'function') {
       resolve(svgEl);
       return;
     }
-    var host = _mermaidExportHostEl();
+    const host = _mermaidExportHostEl();
     if (!host) { resolve(svgEl); return; }
     host.appendChild(svgEl);
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         try {
           _convertMermaidForeignObjects(svgEl);
           _flattenMermaidStyles(svgEl);
-        } catch (_) {
-          // leave the svg as-is; serialization is still safe
-        }
+        } catch (_) { /* leave svg as‑is */ }
         if (svgEl.parentNode) svgEl.parentNode.removeChild(svgEl);
         resolve(svgEl);
       });
@@ -2307,19 +2309,14 @@ function _prepareMermaidExportSvg(svgEl) {
   });
 }
 
-/**
- * Scan a DOM element for ```mermaid code blocks and replace them with rendered SVG.
- * Errors are caught per-block and show the original code with an error indicator.
- */
+// ── Mermaid rendering (called by postRenderDom) ─────────────────────
 function _postRenderMermaid(rootEl) {
   if (!rootEl || typeof mermaid === 'undefined') return;
 
   const mermaidBlocks = rootEl.querySelectorAll('pre code.language-mermaid, pre code[class*="language-mermaid"]');
-  mermaidBlocks.forEach(function (codeEl) {
+  mermaidBlocks.forEach(codeEl => {
     const preEl = codeEl.parentElement;
     if (!preEl) return;
-
-    // Skip already-rendered blocks
     if (preEl.querySelector('.mermaid-rendered') || preEl.classList.contains('mermaid-processed')) return;
 
     const rawSource = codeEl.textContent || '';
@@ -2327,13 +2324,12 @@ function _postRenderMermaid(rootEl) {
     const id = 'mermaid-' + Math.random().toString(36).slice(2, 10);
 
     try {
-      // mermaid.render is sync-call compatible (returns {svg: string})
-      mermaid.render(id, source).then(function (result) {
+      mermaid.render(id, source).then(result => {
         const wrapper = document.createElement('div');
         wrapper.className = 'mermaid-container mermaid-rendered';
         wrapper.innerHTML = result.svg;
 
-        // Add full-view expand button
+        // Expand button
         const expandBtn = document.createElement('button');
         expandBtn.className = 'mermaid-expand-btn';
         expandBtn.innerHTML = '<i class="fas fa-expand"></i>';
@@ -2341,7 +2337,7 @@ function _postRenderMermaid(rootEl) {
         expandBtn.setAttribute('aria-label', 'Open diagram in full view');
         wrapper.appendChild(expandBtn);
 
-        // Add export (PNG/SVG) button + dropdown next to expand
+        // Export button + dropdown
         const exportWrap = document.createElement('div');
         exportWrap.className = 'mermaid-export-wrap';
 
@@ -2365,9 +2361,8 @@ function _postRenderMermaid(rootEl) {
         exportWrap.appendChild(exportMenu);
         wrapper.appendChild(exportWrap);
 
-        // Wire up the export dropdown (positioned fixed so it escapes
-        // the container's overflow-x clipping)
-        function closeExportMenu() {
+        // Dropdown behaviour
+        const closeExportMenu = () => {
           if (!exportMenu.classList.contains('mermaid-export-open')) return;
           exportMenu.classList.remove('mermaid-export-open');
           exportBtn.setAttribute('aria-expanded', 'false');
@@ -2375,9 +2370,9 @@ function _postRenderMermaid(rootEl) {
           document.removeEventListener('keydown', onExportKey);
           window.removeEventListener('scroll', onWinScroll, true);
           window.removeEventListener('resize', onWinScroll);
-        }
-        function openExportMenu() {
-          var rect = exportBtn.getBoundingClientRect();
+        };
+        const openExportMenu = () => {
+          const rect = exportBtn.getBoundingClientRect();
           exportMenu.style.position = 'fixed';
           exportMenu.style.top = Math.round(rect.bottom + 4) + 'px';
           exportMenu.style.right = Math.round(window.innerWidth - rect.right) + 'px';
@@ -2388,70 +2383,60 @@ function _postRenderMermaid(rootEl) {
           document.addEventListener('keydown', onExportKey);
           window.addEventListener('scroll', onWinScroll, true);
           window.addEventListener('resize', onWinScroll);
-        }
-        function onDocClick(e) {
-          if (!exportWrap.contains(e.target)) closeExportMenu();
-        }
-        function onExportKey(e) {
-          if (e.key === 'Escape') closeExportMenu();
-        }
-        function onWinScroll() {
+        };
+        const onDocClick = e => { if (!exportWrap.contains(e.target)) closeExportMenu(); };
+        const onExportKey = e => { if (e.key === 'Escape') closeExportMenu(); };
+        const onWinScroll = () => {
           if (exportMenu.classList.contains('mermaid-export-open')) closeExportMenu();
-        }
+        };
 
-        exportBtn.addEventListener('click', function (e) {
+        exportBtn.addEventListener('click', e => {
           e.stopPropagation();
           e.preventDefault();
-          if (exportMenu.classList.contains('mermaid-export-open')) closeExportMenu();
-          else openExportMenu();
+          exportMenu.classList.contains('mermaid-export-open') ? closeExportMenu() : openExportMenu();
         });
 
-        exportMenu.addEventListener('click', function (e) {
+        exportMenu.addEventListener('click', e => {
           e.stopPropagation();
           e.preventDefault();
-          var item = e.target.closest('[data-format]');
+          const item = e.target.closest('[data-format]');
           if (!item) return;
           closeExportMenu();
-          var svgEl = _resolveMermaidSvg(wrapper);
+          const svgEl = _resolveMermaidSvg(wrapper);
           if (!svgEl) return;
-          var filename = _mermaidExportBaseName();
-          if (item.getAttribute('data-format') === 'png') _exportMermaidPng(svgEl, filename);
-          else _exportMermaidSvg(svgEl, filename);
+          const filename = _mermaidExportBaseName();
+          item.getAttribute('data-format') === 'png'
+            ? _exportMermaidPng(svgEl, filename)
+            : _exportMermaidSvg(svgEl, filename);
         });
 
         preEl.parentNode.replaceChild(wrapper, preEl);
 
-        // Wire up expand button (after DOM insertion so CSS is active)
-        expandBtn.addEventListener('click', function (e) {
+        expandBtn.addEventListener('click', e => {
           e.stopPropagation();
           e.preventDefault();
           _openMermaidFullView(wrapper);
         });
-      }).catch(function (err) {
+      }).catch(err => {
         _showMermaidError(preEl, source, err);
       });
     } catch (err) {
       _showMermaidError(preEl, source, err);
     }
-
     preEl.classList.add('mermaid-processed');
   });
 
-  // Also handle <div class="mermaid"> blocks (legacy pattern used by api-explorer)
-  const legacyMermaidBlocks = rootEl.querySelectorAll('div.mermaid:not(.mermaid-processed)');
-  legacyMermaidBlocks.forEach(function (divEl) {
+  // Legacy <div class="mermaid"> blocks
+  const legacyBlocks = rootEl.querySelectorAll('div.mermaid:not(.mermaid-processed)');
+  legacyBlocks.forEach(divEl => {
     divEl.classList.add('mermaid-processed');
-    try {
-      mermaid.run({ nodes: [divEl] });
-    } catch (_) {
-      // mermaid.run will handle its own errors
-    }
+    try { mermaid.run({ nodes: [divEl] }); } catch (_) {}
   });
 }
 
 function _showMermaidError(preEl, source, err) {
-  var msg = (err && err.message) ? err.message : 'Mermaid render error';
-  var wrapper = document.createElement('div');
+  const msg = (err && err.message) ? err.message : 'Mermaid render error';
+  const wrapper = document.createElement('div');
   wrapper.className = 'mermaid-container mermaid-error';
   wrapper.innerHTML = [
     '<div class="mermaid-error-banner">',
@@ -2468,26 +2453,24 @@ function _showMermaidError(preEl, source, err) {
 }
 
 /**
- * Open a fullscreen overlay to view a mermaid diagram with zoom & pan.
- * Handles both raw SVGs and Mermaid-sandboxed iframes.
+ * Open a full‑screen overlay for a mermaid diagram with zoom & pan (SVG only).
  */
 function _openMermaidFullView(mermaidContainer) {
-  var isSvg = !!mermaidContainer.querySelector('svg');
-  var contentEl = mermaidContainer.querySelector('svg') || mermaidContainer.querySelector('iframe');
+  const isSvg = !!mermaidContainer.querySelector('svg');
+  const contentEl = mermaidContainer.querySelector('svg') || mermaidContainer.querySelector('iframe');
 
-  // --- Build overlay ---
-  var overlay = document.createElement('div');
+  const overlay = document.createElement('div');
   overlay.className = 'mermaid-fullscreen-overlay';
   overlay.tabIndex = -1;
 
-  var toolbar = document.createElement('div');
+  const toolbar = document.createElement('div');
   toolbar.className = 'mermaid-fullscreen-toolbar';
 
-  var title = document.createElement('span');
+  const title = document.createElement('span');
   title.className = 'mermaid-fullscreen-title';
   title.textContent = 'Diagram';
 
-  var controls = document.createElement('div');
+  const controls = document.createElement('div');
   controls.className = 'mermaid-fullscreen-controls';
 
   if (isSvg) {
@@ -2499,7 +2482,7 @@ function _openMermaidFullView(mermaidContainer) {
     ].join('');
   }
 
-  var closeBtn = document.createElement('button');
+  const closeBtn = document.createElement('button');
   closeBtn.className = 'mermaid-close-btn';
   closeBtn.innerHTML = '<i class="fas fa-times"></i>';
   closeBtn.title = 'Close (Esc)';
@@ -2508,21 +2491,18 @@ function _openMermaidFullView(mermaidContainer) {
   toolbar.appendChild(title);
   toolbar.appendChild(controls);
 
-  var body = document.createElement('div');
+  const body = document.createElement('div');
   body.className = 'mermaid-fullscreen-body';
-
-  var diagramBox = document.createElement('div');
+  const diagramBox = document.createElement('div');
   diagramBox.className = 'mermaid-fullscreen-diagram';
   body.appendChild(diagramBox);
 
   overlay.appendChild(toolbar);
   overlay.appendChild(body);
 
-  // --- Clone content ---
-  var clonedContent;
+  let clonedContent;
   if (contentEl) {
     clonedContent = contentEl.cloneNode(true);
-    // Strip inline width/height on SVGs so they size naturally
     if (isSvg) {
       clonedContent.removeAttribute('width');
       clonedContent.removeAttribute('height');
@@ -2532,64 +2512,53 @@ function _openMermaidFullView(mermaidContainer) {
     }
     diagramBox.appendChild(clonedContent);
   } else {
-    // fallback: clone full container innerHTML
     diagramBox.innerHTML = mermaidContainer.innerHTML;
   }
 
   document.body.appendChild(overlay);
+  setTimeout(() => overlay.focus(), 50);
 
-  // Focus the overlay so Escape works immediately
-  setTimeout(function () { overlay.focus(); }, 50);
-
-  // --- Close handlers ---
-  function closeOverlay() {
+  const closeOverlay = () => {
     if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-    document.removeEventListener('keydown', _onKey);
-  }
-
-  function _onKey(e) {
-    if (e.key === 'Escape') closeOverlay();
-  }
-  document.addEventListener('keydown', _onKey);
+    document.removeEventListener('keydown', onKey);
+  };
+  const onKey = e => { if (e.key === 'Escape') closeOverlay(); };
+  document.addEventListener('keydown', onKey);
 
   closeBtn.addEventListener('click', closeOverlay);
-  overlay.addEventListener('click', function (e) {
+  overlay.addEventListener('click', e => {
     if (e.target === overlay) closeOverlay();
   });
 
-  // --- Zoom & Pan (SVG only) ---
+  // Zoom & Pan for SVG
   if (isSvg && clonedContent) {
-    var scale = 1, panX = 0, panY = 0;
-    var zoomPctEl = controls.querySelector('.mermaid-zoom-pct');
+    let scale = 1, panX = 0, panY = 0;
+    const zoomPctEl = controls.querySelector('.mermaid-zoom-pct');
 
-    function updateTransform() {
+    const updateTransform = () => {
       clonedContent.style.transformOrigin = '0 0';
-      clonedContent.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+      clonedContent.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
       if (zoomPctEl) zoomPctEl.textContent = Math.round(scale * 100) + '%';
-    }
+    };
 
-    // Mouse wheel zoom (pivots around cursor position)
-    diagramBox.addEventListener('wheel', function (e) {
+    diagramBox.addEventListener('wheel', e => {
       e.preventDefault();
-      var rect = diagramBox.getBoundingClientRect();
-      var mx = e.clientX - rect.left;
-      var my = e.clientY - rect.top;
-      var delta = e.deltaY > 0 ? 0.88 : 1 / 0.88;
-      var newScale = Math.max(0.1, Math.min(20, scale * delta));
-      // Adjust pan so cursor position stays fixed
-      var ratio = newScale / scale;
+      const rect = diagramBox.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const delta = e.deltaY > 0 ? 0.88 : 1 / 0.88;
+      const newScale = Math.max(0.1, Math.min(20, scale * delta));
+      const ratio = newScale / scale;
       panX = mx - (mx - panX) * ratio;
       panY = my - (my - panY) * ratio;
       scale = newScale;
       updateTransform();
     }, { passive: false });
 
-    // Click-drag to pan
-    var isDragging = false, dragStartX, dragStartY, panStartX, panStartY;
+    let isDragging = false, dragStartX, dragStartY, panStartX, panStartY;
     clonedContent.style.cursor = 'grab';
-
-    clonedContent.addEventListener('mousedown', function (e) {
-      if (e.button !== 0) return; // left click only
+    clonedContent.addEventListener('mousedown', e => {
+      if (e.button !== 0) return;
       isDragging = true;
       dragStartX = e.clientX;
       dragStartY = e.clientY;
@@ -2598,31 +2567,28 @@ function _openMermaidFullView(mermaidContainer) {
       clonedContent.style.cursor = 'grabbing';
       e.preventDefault();
     });
-
-    document.addEventListener('mousemove', function (e) {
+    document.addEventListener('mousemove', e => {
       if (!isDragging) return;
       panX = panStartX + (e.clientX - dragStartX);
       panY = panStartY + (e.clientY - dragStartY);
       updateTransform();
     });
-
-    document.addEventListener('mouseup', function () {
+    document.addEventListener('mouseup', () => {
       if (isDragging) {
         isDragging = false;
         clonedContent.style.cursor = 'grab';
       }
     });
 
-    // Button controls
-    controls.querySelector('[data-action="zoom-in"]').addEventListener('click', function () {
+    controls.querySelector('[data-action="zoom-in"]').addEventListener('click', () => {
       scale = Math.min(20, scale * 1.3);
       updateTransform();
     });
-    controls.querySelector('[data-action="zoom-out"]').addEventListener('click', function () {
+    controls.querySelector('[data-action="zoom-out"]').addEventListener('click', () => {
       scale = Math.max(0.1, scale / 1.3);
       updateTransform();
     });
-    controls.querySelector('[data-action="zoom-reset"]').addEventListener('click', function () {
+    controls.querySelector('[data-action="zoom-reset"]').addEventListener('click', () => {
       scale = 1; panX = 0; panY = 0;
       updateTransform();
     });
@@ -2631,30 +2597,23 @@ function _openMermaidFullView(mermaidContainer) {
 
 /**
  * Apply highlight.js to all <pre><code> blocks in the element.
- * Skips mermaid blocks (handled separately) and already-highlighted blocks.
  */
 function _postRenderHighlight(rootEl) {
   if (!rootEl || typeof hljs === 'undefined') return;
 
-  var codeBlocks = rootEl.querySelectorAll('pre code');
-  codeBlocks.forEach(function (codeEl) {
-    // Skip mermaid blocks
+  const codeBlocks = rootEl.querySelectorAll('pre code');
+  codeBlocks.forEach(codeEl => {
     if (codeEl.className.indexOf('language-mermaid') >= 0) return;
-    // Skip already highlighted
     if (codeEl.classList.contains('hljs') || codeEl.dataset.highlighted === 'true') return;
-
     try {
       hljs.highlightElement(codeEl);
       codeEl.dataset.highlighted = 'true';
-    } catch (_) {
-      // highlight.js may throw on unsupported languages — ignore
-    }
+    } catch (_) {}
   });
 }
 
 /**
- * Run the full post-render pipeline on a DOM element.
- * Call this after inserting HTML content into the DOM.
+ * Run the full post‑render pipeline on a DOM element.
  */
 function postRenderDom(rootEl) {
   if (!rootEl) return;
@@ -2663,55 +2622,51 @@ function postRenderDom(rootEl) {
 }
 
 /**
- * Post-render an HTML string by wrapping it in a temp element and running the pipeline.
- * Returns the processed HTML string.  Only synchronous transforms are applied;
- * async mermaid rendering needs DOM insertion + postRenderDom().
+ * Post‑render an HTML string (synchronous transforms only).
+ * For full processing, insert into DOM and call postRenderDom().
  */
 function postRenderString(html) {
-  if (!html) return html;
-  // For string-based processing, we can only apply synchronous transforms.
-  // mermaid requires DOM (async), so it's skipped here.
-  // Highlight.js can highlight if we use hljs.highlight() on the string.
-  // For simplicity, most callers should use postRenderDom() after DOM insertion.
+  // Currently a no‑op – implement synchronous highlight if needed.
   return html;
 }
 
 /**
- * Set up a MutationObserver that auto-applies post-render to dynamically added content.
- * Safe to call multiple times (idempotent).
+ * Auto‑apply post‑render to dynamically added content via MutationObserver.
  */
 function _ensurePostRenderObserver() {
   if (_postRenderObserver) return;
 
-  _postRenderObserver = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
-      mutation.addedNodes.forEach(function (node) {
-        if (node.nodeType !== 1) return; // Element only
-        // If the added node itself matches our selectors, process it
+  _postRenderObserver = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType !== 1) return;
+        // Process the node itself if it matches our selectors
         if (node.matches && node.matches(_POST_RENDER_SELECTORS)) {
           postRenderDom(node);
         }
-        // Also scan inside it for matching descendants
-        var matches = node.querySelectorAll
-          ? node.querySelectorAll(_POST_RENDER_SELECTORS)
-          : [];
-        matches.forEach(function (el) { postRenderDom(el); });
-        // Additionally scan for any .mermaid or code blocks
-        _postRenderMermaid(node);
-        _postRenderHighlight(node);
+        // Scan descendants
+        node.querySelectorAll?.(_POST_RENDER_SELECTORS).forEach(el => postRenderDom(el));
       });
     });
   });
 
-  _postRenderObserver.observe(document.body, { childList: true, subtree: true });
+  const startObserving = () => {
+    if (document.body) {
+      _postRenderObserver.observe(document.body, { childList: true, subtree: true });
+    } else {
+      window.addEventListener('DOMContentLoaded', startObserving, { once: true });
+    }
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startObserving, { once: true });
+  } else {
+    startObserving();
+  }
 }
 
-// Kick off the observer as soon as the script loads (but after DOM is ready)
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', _ensurePostRenderObserver);
-} else {
-  _ensurePostRenderObserver();
-}
+// Initialise the observer
+_ensurePostRenderObserver();
+
 
 // ═══════════════════════════════════════════════════════════════════
 // CSV TABLE RENDERER

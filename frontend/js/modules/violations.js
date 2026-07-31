@@ -1549,7 +1549,7 @@
   };
 
   /* ── MAIN-VIEW SHOW / HIDE ── */
-  var SECTION_VIEW_IDS = ['spacesView', 'listeningView', 'studioView', 'descobertaView', 'memoryView', 'shadersView', 'aexMainView', 'violationsView', 'lawLibView', 'legalRouterView'];
+  var SECTION_VIEW_IDS = ['spacesView', 'listeningView', 'studioView', 'descobertaView', 'memoryView', 'shadersView', 'mermaidView', 'aexMainView', 'violationsView', 'lawLibView', 'legalRouterView'];
 
   function _vwHideOthers(keepId) {
     SECTION_VIEW_IDS.forEach(function (vid) {
@@ -1558,7 +1558,7 @@
       if (v) { v.classList.remove('active'); v.style.display = ''; }
     });
     if (typeof window.aexHideMain === 'function') window.aexHideMain();
-    ['spacesHideView', 'listeningHideView', 'studioHideView', 'descobertaHideView', 'memoryHideView', 'shadersHideView', 'lawLibHideView', 'legalRouterHideView'].forEach(function (fn) {
+    ['spacesHideView', 'listeningHideView', 'studioHideView', 'descobertaHideView', 'memoryHideView', 'shadersHideView', 'mermaidHideView', 'lawLibHideView', 'legalRouterHideView'].forEach(function (fn) {
       if (keepId === 'violationsView') return;
       try { if (fn !== 'violationsHideView' && typeof window[fn] === 'function') window[fn](); } catch (_e) { }
     });

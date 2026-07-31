@@ -172,6 +172,9 @@ function switchSidebarTab(tab) {
   // If leaving social media, hide social media view
   const wasSocialMedia = document.querySelector('.sidebar-tab.active[onclick*="socialmedia"]');
   if (wasSocialMedia && tab !== 'socialmedia' && typeof socialMediaHideView === 'function') socialMediaHideView();
+  // If leaving mermaid, hide the mermaid view
+  const wasMermaid = document.querySelector('.sidebar-tab.active[onclick*="mermaid"]');
+  if (wasMermaid && tab !== 'mermaid' && typeof mermaidHideView === 'function') mermaidHideView();
 
   document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.sidebar-section').forEach(s => s.classList.remove('active'));
@@ -288,6 +291,9 @@ function switchSidebarTab(tab) {
   if (tab === 'sheets' && typeof sheetsShowView === 'function') {
     sheetsShowView();
   }
+
+  // Show mermaid view when Diagramas tab is selected
+  if (tab === 'mermaid' && typeof mermaidShowView === 'function') mermaidShowView();
 }
 
 // Toggle sidebar collapsed state

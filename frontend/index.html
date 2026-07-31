@@ -62,6 +62,9 @@
   <link href="css/descoberta.css" rel="stylesheet" />
   <link href="css/studio.css" rel="stylesheet" />
   <link href="css/output-panel.css" rel="stylesheet" />
+  <link href="css/mermaid.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/material-darker.min.css" rel="stylesheet" />
   <link href="css/browser-panel.css" rel="stylesheet" />
   <link href="css/shaders.css" rel="stylesheet" />
   <link href="css/meshy-studio.css" rel="stylesheet" />
@@ -1742,6 +1745,19 @@
               <!-- (optional upload form can remain or be removed – already exists inside Drive view) -->
             </div>
           </div>
+          <!-- TAB: Mermaid -->
+          <div class="sidebar-section" id="tab-mermaid">
+            <div style="padding:14px 12px">
+              <div
+                style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
+                <i class="fas fa-diagram-project" style="color:var(--amber)"></i> Diagramas
+              </div>
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Crie, edite e exporte
+                diagramas Mermaid (fluxogramas, sequências, classes, estados, gantt) com visualização em tempo real.</p>
+              <button class="btn" onclick="mermaidShowView()" style="width:100%;justify-content:center"><i
+                  class="fas fa-diagram-project"></i> Abrir Diagramas</button>
+            </div>
+          </div>
         </div>
       </div>
       <!-- ═══════ MAIN CHAT ═══════ -->
@@ -3360,6 +3376,16 @@
             <div id="architectureDetailsBody"></div>
           </div>
         </div>
+      </div>
+      <!-- ═══════ MERMAID VIEW ═══════ -->
+      <div class="mermaid-view" id="mermaidView">
+        <div class="mermaid-view-header">
+          <i class="fas fa-diagram-project" style="color:var(--amber)"></i>
+          <h1>Diagramas</h1>
+          <span class="mermaid-view-status" id="mermaidViewStatus"></span>
+          <button class="btn" onclick="mermaidHideView()" title="Fechar"><i class="fas fa-xmark"></i></button>
+        </div>
+        <div id="mermaidPanel"></div>
       </div>
       <!-- ═══════ MEMORY VIEW ═══════ -->
       <div class="memory-view" id="memoryView">
@@ -6593,6 +6619,10 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <script src="js/modules/agent-orchestration.js"></script>
   <script src="js/modules/architecture.js"></script>
   <script src="js/modules/docs.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/edit/matchbrackets.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/edit/closebrackets.js"></script>
+  <script src="js/modules/mermaid.js"></script>
   <script src="js/modules/shared.js"></script>
   <script src="js/modules/section-views.js"></script>
   <script src="js/modules/legal-router.js"></script>
