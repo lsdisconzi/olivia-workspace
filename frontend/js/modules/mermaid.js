@@ -379,11 +379,14 @@ function _mmdOpenFullView(container) {
   if (contentEl) {
     clonedContent = contentEl.cloneNode(true);
     if (isSvg) {
+      // viewBox-only SVGs collapse to 0×0 as a flex item — size explicitly,
+      // same sizing logic already used for PNG export.
+      const size = _mmdSvgSize(contentEl);
       clonedContent.removeAttribute('width');
       clonedContent.removeAttribute('height');
       clonedContent.style.maxWidth = 'none';
-      clonedContent.style.width = 'auto';
-      clonedContent.style.height = 'auto';
+      clonedContent.style.width = size.width + 'px';
+      clonedContent.style.height = size.height + 'px';
     }
     diagramBox.appendChild(clonedContent);
   } else {
