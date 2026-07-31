@@ -2289,21 +2289,23 @@ function _convertMermaidForeignObjects(svgEl) {
  */
 function _prepareMermaidExportSvg(svgEl) {
   return new Promise(resolve => {
-    if (!svgEl || typeof window.getComputedStyle !== 'function' || typeof requestAnimationFrame !== 'function') {
-      resolve(svgEl);
+    if (!svgEl) { resolve(svgEl); return; }
+    const clone = svgEl.cloneNode(true); // work on a copy — never touch the live node
+    if (typeof window.getComputedStyle !== 'function' || typeof requestAnimationFrame !== 'function') {
+      resolve(clone);
       return;
     }
     const host = _mermaidExportHostEl();
-    if (!host) { resolve(svgEl); return; }
-    host.appendChild(svgEl);
+    if (!host) { resolve(clone); return; }
+    host.appendChild(clone);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         try {
-          _convertMermaidForeignObjects(svgEl);
-          _flattenMermaidStyles(svgEl);
+          _convertMermaidForeignObjects(clone);
+          _flattenMermaidStyles(clone);
         } catch (_) { /* leave svg as‑is */ }
-        if (svgEl.parentNode) svgEl.parentNode.removeChild(svgEl);
-        resolve(svgEl);
+        if (clone.parentNode) clone.parentNode.removeChild(clone);
+        resolve(clone);
       });
     });
   });
@@ -2327,7 +2329,34 @@ function _postRenderMermaid(rootEl) {
       mermaid.render(id, source).then(result => {
         const wrapper = document.createElement('div');
         wrapper.className = 'mermaid-container mermaid-rendered';
-        wrapper.innerHTML = result.svg;
+
+        const body = document.createElement('div');
+        body.className = 'mermaid-body';
+        body.innerHTML = result.svg;
+
+        // securityLevel:'sandbox' makes mermaid.render() return an <iframe>
+        // instead of raw <svg>. Unwrap it now (not just at export time) so the
+        // iframe's unbounded intrinsic height can't blow out the layout.
+        const rawSvg = _resolveMermaidSvg(body);
+        if (rawSvg) {
+          body.innerHTML = '';
+          body.appendChild(rawSvg);
+        }
+        const svgEl = body.querySelector('svg');
+        if (svgEl) {
+          svgEl.removeAttribute('height');
+          svgEl.removeAttribute('width');
+          svgEl.style.maxWidth = 'none';
+          svgEl.style.width = '100%';
+          svgEl.style.height = 'auto';
+          svgEl.style.display = 'block';
+        } else {
+          // Could not unwrap (e.g. still on a data-URL iframe) — at least cap it.
+          const frame = body.querySelector('iframe');
+          if (frame) { frame.style.width = '100%'; frame.style.height = '100%'; frame.style.border = 'none'; }
+        }
+
+        wrapper.appendChild(body);
 
         // Expand button
         const expandBtn = document.createElement('button');
@@ -2415,7 +2444,7 @@ function _postRenderMermaid(rootEl) {
         expandBtn.addEventListener('click', e => {
           e.stopPropagation();
           e.preventDefault();
-          _openMermaidFullView(wrapper);
+          _docsOpenMermaidFullView(wrapper);
         });
       }).catch(err => {
         _showMermaidError(preEl, source, err);
@@ -2455,7 +2484,7 @@ function _showMermaidError(preEl, source, err) {
 /**
  * Open a full‑screen overlay for a mermaid diagram with zoom & pan (SVG only).
  */
-function _openMermaidFullView(mermaidContainer) {
+function _docsOpenMermaidFullView(mermaidContainer) {
   const isSvg = !!mermaidContainer.querySelector('svg');
   const contentEl = mermaidContainer.querySelector('svg') || mermaidContainer.querySelector('iframe');
 

@@ -192,22 +192,12 @@
 }
 
 
-/* ── Rendered diagram container (export controls) ──────────────── */
-.mermaid-container {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-  background: transparent;
-  border-radius: 6px;
-  resize: both;
-}
-.mermaid-container svg {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  resize: both;
-}
-
+/* ── Rendered diagram container (export controls) ────────────────
+   .mermaid-container / .mermaid-body / .mermaid-body svg layout lives in
+   output-panel.css (flex box + resizable scroll viewport). Keep resize:both /
+   inline-block out of here so the container never shows a raw browser
+   resize corner or overrides the bounded .mermaid-body layout.
+────────────────────────────────────────────────────────────────── */
 .mermaid-expand-btn,
 .mermaid-export-btn {
   position: absolute;
@@ -347,7 +337,7 @@
   display: block;
   max-width: none;
   height: auto;
-  background: transparent;
+  background: #ffffff; /* legible canvas for the expanded view, independent of app dark mode */
 }
 .mermaid-fullscreen-diagram iframe {
   border: none;

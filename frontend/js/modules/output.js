@@ -630,7 +630,7 @@ function _initHorizResize(handleId, panelId) {
   document.addEventListener('mousemove', e => {
     if (!dragging) return;
     const delta = startX - e.clientX; // dragging left = growing panel
-    const maxW = Math.max(minW, Math.floor(window.innerWidth * 0.72));
+    const maxW = Math.max(minW, Math.floor(window.innerWidth * 0.9));
     const newW = Math.min(maxW, Math.max(minW, startW + delta));
     panel.style.width = newW + 'px';
   });
