@@ -63,7 +63,7 @@ body.is-panel-resizing iframe{pointer-events:none !important}
 
 /* ── MERMAID DIAGRAM CONTAINER ── */
 .mermaid-container{
-  display:flex;justify-content:center;margin:14px 0;padding:10px;
+  display:flex;justify-content:center;margin:14px 0;padding:10px;resize: both;
   background:rgba(255,255,255,.015);border:1px solid var(--border);
   border-radius:10px;position:relative;overflow:hidden; /* clips body to rounded corners */
 }
