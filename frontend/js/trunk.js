@@ -44,7 +44,8 @@
     craudio: (typeof window.t === 'function') ? window.t('sidebar.craudio', 'Craudio') : 'Craudio',
     drive: (typeof window.t === 'function') ? window.t('sidebar.drive', 'Drive') : 'Drive',
     writer: (typeof window.t === 'function') ? window.t('sidebar.writer', 'Writer') : 'Writer',
-    socialmedia: (typeof window.t === 'function') ? window.t('sidebar.socialmedia', 'Social Media') : 'Social Media'
+    socialmedia: (typeof window.t === 'function') ? window.t('sidebar.socialmedia', 'Social Media') : 'Social Media',
+    health: (typeof window.t === 'function') ? window.t('sidebar.health', 'Health') : 'Health'
   };
 
   function getLabel(reg) {

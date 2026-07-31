@@ -66,6 +66,13 @@ let _panelContextSelection = { browser: true, preview: true, output: true };
 let _assistantDebugContextPreview = false;
 const _assistantCtxPreviewOpenedRunIds = new Set();
 const _agentRunSessions = new Map();
+
+// Stop-then-decide state: when the user taps the composer stop button the run
+// is stopped and the user is asked whether to continue or not. The last run
+// context is kept so "continue" can re-launch the same task on the same session.
+let _stopDecisionPending = false;
+let _pendingDecisionRun = null;
+let _lastRunContext = null;
 const CHAT_MESSAGE_MAX_CHARS = 240000;
 const ASSISTANT_CHAT_MESSAGE_MAX_CHARS = 120000;
 const ASSISTANT_HISTORY_ENTRY_MAX_CHARS = 24000;
@@ -1263,14 +1270,68 @@ function setThinking(active) {
   else if (sidebarDot) sidebarDot.classList.remove('running');
 }
 
-// Stop whichever stream is currently active (wired to composer stop button)
+// Stop whichever stream is currently active (wired to composer stop button),
+// then ask the user whether to continue or not.
 function stopActiveStream() {
   if (!activeStream || !activeStream.id) return;
+  _stopDecisionPending = true;
+  _pendingDecisionRun = activeStream.id;
   try { stopStream(activeStream.id, activeStream.type === 'guided'); } catch (e) { console.warn('[Stream] stopActiveStream:', e); }
   const stopBtn = document.getElementById('stopBtn');
   if (stopBtn) {
     stopBtn.disabled = true;
     stopBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  }
+  _showResumeDecision(activeStream.id);
+}
+
+// Inline "continue or not" prompt shown after the user stops the agent.
+function _showResumeDecision(runId) {
+  const log = document.getElementById(`log-${runId}`);
+  const host = log || document.getElementById('chatLog');
+  if (!host) return;
+  if (document.getElementById(`resume-decision-${runId}`)) return;
+  const bar = document.createElement('div');
+  bar.className = 'resume-decision-bar';
+  bar.id = `resume-decision-${runId}`;
+  bar.innerHTML =
+    `<div class="resume-decision-label"><i class="fas fa-pause-circle"></i> Agente interrompido. Deseja continuar?</div>` +
+    `<div class="resume-decision-actions">` +
+    `<button class="resume-continue-btn" onclick="resumeStoppedAgent('continue')"><i class="fas fa-play"></i> Continuar</button>` +
+    `<button class="resume-stop-btn" onclick="resumeStoppedAgent('stop')"><i class="fas fa-ban"></i> Encerrar</button>` +
+    `</div>`;
+  host.appendChild(bar);
+  const chatLog = document.getElementById('chatLog');
+  if (chatLog) chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+// User decision after stopping: resume the same task or leave it stopped.
+function resumeStoppedAgent(choice) {
+  const runId = _pendingDecisionRun;
+  const bar = document.getElementById(`resume-decision-${runId}`);
+  if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
+  _pendingDecisionRun = null;
+  _stopDecisionPending = false;
+
+  if (choice === 'continue') {
+    const ctx = _lastRunContext;
+    if (!ctx || !ctx.url || !ctx.body) {
+      addSystemBubble('Não foi possível continuar: contexto da execução não disponível.');
+      return;
+    }
+    // Re-launch the same task on the same session so the agent resumes with
+    // its conversation memory (the backend resumes the openclaude session).
+    // If the stopped run assigned a fresh session_id mid-flight, pick it up so
+    // the resume continues that conversation instead of starting a new one.
+    if (ctx.sessionKey) {
+      const sid = _agentRunSessions.get(ctx.sessionKey);
+      if (sid) ctx.body.session_id = sid;
+    }
+    setThinking(true);
+    const thinkingBubble = addThinkingBubble();
+    runStream(ctx.url, ctx.body, ctx.isGuided, thinkingBubble);
+  } else {
+    addSystemBubble('Execução interrompida.');
   }
 }
 
@@ -1997,6 +2058,9 @@ async function runStream(url, body, isGuided, thinkingBubble) {
   _runVisibleResponseState.set(runId, false);
   _runToolCallCount.set(runId, 0);
   _runResponseAccumulator.set(runId, '');
+  _lastRunContext = { url, body: Object.assign({}, body), isGuided: !!isGuided, sessionKey: String(body.agent_id || _selectedAgentSessionKey()) };
+  _stopDecisionPending = false;
+  _pendingDecisionRun = null;
 
   // Create streaming log container
   const streamWrap = document.createElement('div');
@@ -2051,10 +2115,12 @@ async function runStream(url, body, isGuided, thinkingBubble) {
         runHeaders.Authorization = 'Bearer ' + streamKey;
       }
     }
+    const abortController = new AbortController();
     const response = await fetch(url, {
       method: 'POST',
       headers: runHeaders,
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      signal: abortController.signal
     });
 
     if (!response.ok) {
@@ -2064,7 +2130,7 @@ async function runStream(url, body, isGuided, thinkingBubble) {
 
     activeStream = {
       id: runId,
-      abort: null,
+      abort: abortController,
       type: body.agent_mode || 'general',
       sessionKey: String(body.agent_id || _selectedAgentSessionKey()),
     };
@@ -2099,15 +2165,21 @@ async function runStream(url, body, isGuided, thinkingBubble) {
 
     onDone(runId, isGuided);
   } catch (error) {
-    var _errMsg = (error && error.message) || String(error);
-    var _isNetErr = _errMsg === 'Load failed' || _errMsg === 'Failed to fetch' || _errMsg.indexOf('NetworkError') !== -1;
-    var _agentMode = (body && body.agent_mode) || 'general';
-    if (_isNetErr && !logReady) {
-      console.error('[Stream] Connection failed — server unreachable?  mode:', _agentMode, ' url:', url);
-      onError(runId, 'Servidor inacess\xedvel. Verifique se o backend est\xe1 ativo. (' + _agentMode + ')');
+    if (_stopDecisionPending || (error && error.name === 'AbortError')) {
+      // User-initiated stop (composer or per-run stop button): the abort is
+      // expected — don't surface an error bubble.
+      console.log('[Stream] Run stopped by user; awaiting continue/stop decision.');
     } else {
-      console.error('[Stream] Error  mode:', _agentMode, ' url:', url, '\n', error);
-      onError(runId, _errMsg);
+      var _errMsg = (error && error.message) || String(error);
+      var _isNetErr = _errMsg === 'Load failed' || _errMsg === 'Failed to fetch' || _errMsg.indexOf('NetworkError') !== -1;
+      var _agentMode = (body && body.agent_mode) || 'general';
+      if (_isNetErr && !logReady) {
+        console.error('[Stream] Connection failed — server unreachable?  mode:', _agentMode, ' url:', url);
+        onError(runId, 'Servidor inacess\xedvel. Verifique se o backend est\xe1 ativo. (' + _agentMode + ')');
+      } else {
+        console.error('[Stream] Error  mode:', _agentMode, ' url:', url, '\n', error);
+        onError(runId, _errMsg);
+      }
     }
   } finally {
     _stopLA8159LoadingStageCycle(loadingStageTimer);
@@ -3671,6 +3743,12 @@ function stopStream(runId, isGuided) {
   }
   fetch(stopEndpoint, { method: 'POST' })
     .catch(function (err) { console.warn('[Stream] stopStream failed:', err && err.message || err); });
+
+  // Sever the SSE connection so the run stops instead of silently continuing
+  // in the background. The backend also kills the run on the stop endpoint.
+  if (activeStream.abort) {
+    try { activeStream.abort.abort(); } catch (e) { console.warn('[Stream] abort failed:', e); }
+  }
 
   const stopBtn = document.getElementById(`stop-${runId}`);
   if (stopBtn) {

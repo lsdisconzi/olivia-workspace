@@ -103,350 +103,162 @@ function downloadPreviewAsPdf() {
   const previewType = (typeof window.resolvePreviewFileType === 'function')
     ? window.resolvePreviewFileType(s.name || '', { fileType: ext })
     : ext;
+  const displayName = s.name || 'document';
+  const docTitle = displayName.replace(/\.(md|markdown)$/i, '');
+  const stamp = new Date().toLocaleString();
+  const isoDate = new Date().toISOString().slice(0, 10);
 
-  if (previewType !== 'markdown' && previewType !== 'md') {
-    const msg = 'PDF export is available for Markdown files only.';
-    if (typeof window.toastInfo === 'function') window.toastInfo(msg);
-    else if (typeof addSystemBubble === 'function') addSystemBubble(msg);
-    return;
+  // ── Olive branch mark ───────────────────────────────────────────────────
+  const oliveMark = '<svg width="28" height="28" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:block"><rect width="32" height="32" rx="8" fill="#1c4532"/><g transform="translate(6,7) scale(0.31)"><path d="M12 52 Q24 38,34 30 Q44 22,54 16" fill="none" stroke="#faf9f6" stroke-width="2.5" stroke-linecap="round" opacity=".65"/><path d="M28 36 Q20 26,16 18 Q24 24,28 36Z" fill="#faf9f6" opacity=".4"/><path d="M30 34 Q38 24,44 18 Q38 28,30 34Z" fill="#faf9f6" opacity=".38"/><path d="M42 24 Q36 14,34 8  Q40 14,42 24Z" fill="#faf9f6" opacity=".35"/><ellipse cx="22" cy="42" rx="4" ry="5" fill="#c4622d"/></g></svg>';
+
+  // ── Async work starts here ───────────────────────────────────────────────
+  (async function () {
+    var bodyHtml = '';
+    var previewBody = document.getElementById('previewBody');
+    if (previewBody) {
+      var clone = previewBody.cloneNode(true);
+      // Strip interactive elements that don't belong in print.
+      var interactiveSels = '.mermaid-export-wrap,.mermaid-expand-btn,.mermaid-fullscreen-overlay,button,[onclick]';
+      var nodes = clone.querySelectorAll(interactiveSels);
+      for (var i = 0; i < nodes.length; i++) {
+        try { nodes[i].parentNode.removeChild(nodes[i]); } catch (_) {}
+      }
+      // For sandboxed Mermaid iframes, leave them — they'll render inline SVGs.
+      // For HTML preview iframes, pull the srcdoc content.
+      var iframes = clone.querySelectorAll('iframe');
+      for (var j = 0; j < iframes.length; j++) {
+        var f = iframes[j];
+        if (f.srcdoc) {
+          var wrapper = document.createElement('div');
+          wrapper.innerHTML = f.srcdoc;
+          wrapper.className = 'preview-html-body';
+          f.parentNode.replaceChild(wrapper, f);
+        }
+      }
+      bodyHtml = clone.innerHTML;
+    }
+
+    // Fallback: if the body is empty, try rendering from raw source.
+    if (!bodyHtml || !bodyHtml.trim()) {
+      if (previewType === 'markdown' || previewType === 'md') {
+        try {
+          var res = await fetch(s.url);
+          var mdText = await res.text();
+          if (window.marked && typeof marked.parse === 'function') {
+            bodyHtml = marked.parse(mdText);
+          } else {
+            bodyHtml = '<pre style="white-space:pre-wrap">' + escapeHtml(mdText) + '</pre>';
+          }
+        } catch (_) {
+          bodyHtml = '<p style="color:#9a9088;font-style:italic">Preview content could not be captured for export.</p>';
+        }
+      } else {
+        bodyHtml = '<p style="color:#9a9088;font-style:italic">Preview content could not be captured for export.</p>';
+      }
+    }
+
+  // ── Collect stylesheets ──────────────────────────────────────────────────
+  var stylesheetCss = '';
+  var links = document.querySelectorAll('link[rel="stylesheet"]');
+  for (var k = 0; k < links.length; k++) {
+    var href = links[k].getAttribute('href');
+    // Skip external fonts — they're loaded separately.
+    if (href && href.indexOf('fonts.googleapis.com') < 0) {
+      try {
+        var cssRes = await fetch(href);
+        stylesheetCss += '/* ' + href + ' */\n' + (await cssRes.text()) + '\n';
+      } catch (_) {}
+    }
   }
 
-  (async () => {
-    let mdText = '';
-    try {
-      const res = await fetch(s.url);
-      mdText = await res.text();
-    } catch (_) {
-      const msg = 'Could not load the Markdown source for PDF export.';
-      if (typeof window.toastError === 'function') window.toastError(msg);
-      return;
-    }
+  // ── Assemble the print document ──────────────────────────────────────────
+  var printDoc = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>' + escapeHtml(docTitle) + '</title>\n' +
+    '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
+    '<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n' +
+    '<style>\n' +
+    '@page{ margin: 22mm 18mm 20mm; }\n' +
+    '@page:first{ margin-top: 18mm; }\n' +
+    ':root{ --green-dark:#1c4532; --green-mid:#2d785a; --green-light:#5a8a6e; --amber:#c4622d; --amber-light:#d4733e;' +
+    ' --cream:#f8f5ee; --paper:#fdfcf9; --gray:#9a9088; --gray-hi:#5a5a5a; --ink:#1a1a1a;' +
+    ' --border:rgba(28,69,50,.14);' +
+    ' --font-serif: Fraunces,Georgia,serif; --font-sans: Plus\\ Jakarta\\ Sans,system-ui,-apple-system,sans-serif;' +
+    ' --font-mono: JetBrains\\ Mono,monospace; }\n' +
+    '*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }\n' +
+    'body{ font-family:var(--font-sans); background:#fff; color:var(--ink); font-size:10.5pt; line-height:1.7;' +
+    ' -webkit-print-color-adjust:exact; print-color-adjust:exact; }\n' +
+    // header
+    '.doc-header{ display:flex; align-items:center; gap:10px; padding-bottom:12px; margin-bottom:30px; border-bottom:1.5px solid var(--green-dark); }\n' +
+    '.doc-header-mark{ flex-shrink:0; line-height:0; }\n' +
+    '.doc-header-brand{ font-family:var(--font-serif); font-size:13.5pt; font-weight:400; color:var(--green-dark); letter-spacing:-0.015em; line-height:1; }\n' +
+    '.doc-header-brand span{ font-style:italic; font-weight:300; color:var(--amber); font-size:10pt; margin-left:6px; letter-spacing:0; }\n' +
+    '.doc-header-meta{ margin-left:auto; text-align:right; font-family:var(--font-mono); font-size:7pt; color:var(--gray); line-height:1.6; }\n' +
+    '.doc-header-meta strong{ display:block; color:var(--gray-hi); font-weight:500; font-size:7.5pt; }\n' +
+    // prose
+    'h1,h2,h3,h4,h5,h6{ font-family:var(--font-serif); font-weight:400; color:var(--green-dark); line-height:1.22; letter-spacing:-0.012em; margin-top:1.9em; margin-bottom:.55em; break-after:avoid; }\n' +
+    'h1{ font-size:18pt; margin-top:0; padding-bottom:9px; border-bottom:1px solid var(--border); }\n' +
+    'h2{ font-size:14pt; } h3{ font-size:12pt; color:var(--green-mid); }\n' +
+    'h4,h5,h6{ font-family:var(--font-sans); font-size:8pt; font-weight:600; color:var(--gray-hi); text-transform:uppercase; letter-spacing:.12em; }\n' +
+    'h1 em,h2 em,h3 em{ font-style:italic; font-weight:300; color:var(--amber); }\n' +
+    'p{ margin-bottom:.85em; } p:last-child{ margin-bottom:0; }\n' +
+    'a{ color:var(--green-mid); text-decoration:underline; text-decoration-color:rgba(45,120,90,.3); }\n' +
+    'strong,b{ font-weight:600; color:var(--green-dark); }\n' +
+    'blockquote{ font-family:var(--font-serif); font-style:italic; font-size:11pt; color:var(--green-dark); border-left:2px solid var(--amber); padding:3px 14px; margin:1.3em 0; break-inside:avoid; }\n' +
+    'code{ font-family:var(--font-mono); font-size:.82em; background:var(--cream); color:var(--green-dark); padding:1px 5px; border-radius:4px; border:1px solid var(--border); }\n' +
+    'pre{ background:var(--cream); border-left:2.5px solid var(--amber); border-radius:0 7px 7px 0; padding:11px 14px; margin:1.2em 0; overflow-wrap:break-word; white-space:pre-wrap; break-inside:avoid; }\n' +
+    'pre code{ background:none; border:none; padding:0; font-size:.85em; line-height:1.6; color:var(--ink); }\n' +
+    'ul,ol{ padding-left:1.35em; margin-bottom:.85em; } li{ margin-bottom:.22em; } li>ul,li>ol{ margin-top:.2em; margin-bottom:.2em; }\n' +
+    'table{ border-collapse:collapse; width:100%; margin:1.3em 0; font-size:9.5pt; break-inside:avoid; }\n' +
+    'th{ background:var(--cream); font-family:var(--font-mono); font-size:7pt; font-weight:500; text-transform:uppercase; letter-spacing:.1em; color:var(--gray-hi); padding:7px 10px; border-bottom:1.5px solid var(--green-dark); text-align:left; }\n' +
+    'td{ padding:6px 10px; border-bottom:1px solid var(--border); vertical-align:top; } tr:last-child td{ border-bottom:none; } tr:nth-child(even) td{ background:rgba(248,245,238,.45); }\n' +
+    'img{ max-width:100%; height:auto; border-radius:6px; }\n' +
+    'hr{ border:none; border-top:1px solid var(--border); margin:1.6em 0; }\n' +
+    // mermaid diagrams
+    '.mermaid-container{ text-align:center; margin:1.2em 0; break-inside:avoid; }\n' +
+    '.mermaid-container svg{ max-width:100%; height:auto; }\n' +
+    // footer
+    '.doc-footer{ margin-top:36px; padding-top:10px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px; font-family:var(--font-mono); font-size:7pt; color:var(--gray); }\n' +
+    '.wm{ display:flex; align-items:baseline; gap:5px; } .wm-n{ font-family:var(--font-serif); font-size:9pt; color:var(--green-dark); letter-spacing:-0.01em; } .wm-s{ font-size:6.5pt; text-transform:uppercase; letter-spacing:.1em; color:var(--gray); }\n' +
+    '@media print{ body{ background:#fff; } a{ color:var(--green-mid)!important; } pre,blockquote,table{ break-inside:avoid; } h1,h2,h3{ break-after:avoid; } }\n';
 
-    // Render Markdown → HTML; fall back to escaped pre-block.
-    let bodyHtml = '';
-    if (window.marked && typeof marked.parse === 'function') {
-      try { bodyHtml = marked.parse(mdText); } catch (_) { }
-    }
-    if (!bodyHtml) {
-      bodyHtml = `<pre style="white-space:pre-wrap">${escapeHtml(mdText)}</pre>`;
-    }
+  // Append collected stylesheets (scoped under .doc-body).
+  if (stylesheetCss) {
+    printDoc += '/* Collected page stylesheets */\n' + stylesheetCss + '\n';
+  }
 
-    const displayName = s.name || 'document';
-    const docTitle = displayName.replace(/\.(md|markdown)$/i, '');
-    const stamp = new Date().toLocaleString();
-    const isoDate = new Date().toISOString().slice(0, 10);
+  printDoc += '</style>\n</head>\n<body>\n' +
+    '<div class="doc-header"><div class="doc-header-mark">' + oliveMark + '</div>' +
+    '<div class="doc-header-brand">Olivia <span>ecosystem</span></div>' +
+    '<div class="doc-header-meta"><strong>' + escapeHtml(displayName) + '</strong>' + escapeHtml(stamp) + '</div></div>\n' +
+    '<div class="doc-body">' + bodyHtml + '</div>\n' +
+    '<div class="doc-footer"><div class="wm"><span class="wm-n">Olivia</span><span class="wm-s">Awareness · AI</span></div>' +
+    '<span>Generated from workspace preview · ' + escapeHtml(isoDate) + '</span></div>\n' +
+    '</body>\n</html>';
 
-    // ── Olive branch mark (matches the project favicon exactly) ──────────────
-    const oliveMark = `<svg width="28" height="28" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:block">
-  <rect width="32" height="32" rx="8" fill="#1c4532"/>
-  <g transform="translate(6,7) scale(0.31)">
-    <path d="M12 52 Q24 38,34 30 Q44 22,54 16" fill="none" stroke="#faf9f6" stroke-width="2.5" stroke-linecap="round" opacity=".65"/>
-    <path d="M28 36 Q20 26,16 18 Q24 24,28 36Z"   fill="#faf9f6" opacity=".4"/>
-    <path d="M30 34 Q38 24,44 18 Q38 28,30 34Z"   fill="#faf9f6" opacity=".38"/>
-    <path d="M42 24 Q36 14,34 8  Q40 14,42 24Z"   fill="#faf9f6" opacity=".35"/>
-    <ellipse cx="22" cy="42" rx="4" ry="5" fill="#c4622d"/>
-  </g>
-</svg>`;
+  // ── Hidden iframe → print ────────────────────────────────────────────────
+  var iframe = document.createElement('iframe');
+  iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+  document.body.appendChild(iframe);
 
-    const printDoc = /* html */`<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>${escapeHtml(docTitle)}</title>
-<!-- Olivia brand type stack: Fraunces · Plus Jakarta Sans · JetBrains Mono -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-/* ── Page geometry ───────────────────────────────────────────────────── */
-@page {
-  margin: 22mm 18mm 20mm;
-}
-@page:first {
-  margin-top: 18mm; /* header is rendered in-flow, not as a @page margin box */
-}
+  var cleanup = function () { try { document.body.removeChild(iframe); } catch (_) {} };
 
-/* ── Design tokens (mirrors the workspace CSS) ─────────────────────── */
-:root {
-  --green-dark:  #1c4532;
-  --green-mid:   #2d785a;
-  --green-light: #5a8a6e;
-  --amber:       #c4622d;
-  --amber-light: #d4733e;
-  --cream:       #f8f5ee;
-  --paper:       #fdfcf9;
-  --gray:        #9a9088;
-  --gray-hi:     #5a5a5a;
-  --ink:         #1a1a1a;
-  --border:      rgba(28, 69, 50, .14);
-  --font-serif:  'Fraunces', Georgia, serif;
-  --font-sans:   'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono:   'JetBrains Mono', monospace;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: var(--font-sans);
-  background: #ffffff;
-  color: var(--ink);
-  font-size: 10.5pt;
-  line-height: 1.7;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-}
-
-/* ── Page header ────────────────────────────────────────────────────── */
-.doc-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-bottom: 12px;
-  margin-bottom: 30px;
-  border-bottom: 1.5px solid var(--green-dark);
-}
-.doc-header-mark { flex-shrink: 0; line-height: 0; }
-.doc-header-brand {
-  font-family: var(--font-serif);
-  font-size: 13.5pt;
-  font-weight: 400;
-  color: var(--green-dark);
-  letter-spacing: -0.015em;
-  line-height: 1;
-}
-.doc-header-brand span {
-  font-style: italic;
-  font-weight: 300;
-  color: var(--amber);
-  font-size: 10pt;
-  margin-left: 6px;
-  letter-spacing: 0;
-}
-.doc-header-meta {
-  margin-left: auto;
-  text-align: right;
-  font-family: var(--font-mono);
-  font-size: 7pt;
-  color: var(--gray);
-  line-height: 1.6;
-}
-.doc-header-meta strong {
-  display: block;
-  color: var(--gray-hi);
-  font-weight: 500;
-  font-size: 7.5pt;
-}
-
-/* ── Prose typography ────────────────────────────────────────────────── */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  color: var(--green-dark);
-  line-height: 1.22;
-  letter-spacing: -0.012em;
-  margin-top: 1.9em;
-  margin-bottom: 0.55em;
-  break-after: avoid;
-}
-h1 {
-  font-size: 18pt;
-  margin-top: 0;
-  padding-bottom: 9px;
-  border-bottom: 1px solid var(--border);
-}
-h2 { font-size: 14pt; }
-h3 { font-size: 12pt; color: var(--green-mid); }
-h4, h5, h6 {
-  font-family: var(--font-sans);
-  font-size: 8pt;
-  font-weight: 600;
-  color: var(--gray-hi);
-  text-transform: uppercase;
-  letter-spacing: .12em;
-}
-
-/* Italic within headings matches the brand pattern: em → amber italic */
-h1 em, h2 em, h3 em {
-  font-style: italic;
-  font-weight: 300;
-  color: var(--amber);
-}
-
-p { margin-bottom: 0.85em; }
-p:last-child { margin-bottom: 0; }
-
-a {
-  color: var(--green-mid);
-  text-decoration: underline;
-  text-decoration-color: rgba(45, 120, 90, .3);
-}
-
-strong, b { font-weight: 600; color: var(--green-dark); }
-
-/* ── Block elements ─────────────────────────────────────────────────── */
-/* Blockquote — mirrors the .quote component: Fraunces italic, amber rail */
-blockquote {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 11pt;
-  color: var(--green-dark);
-  border-left: 2px solid var(--amber);
-  padding: 3px 14px;
-  margin: 1.3em 0;
-  break-inside: avoid;
-}
-
-/* Code — inline */
-code {
-  font-family: var(--font-mono);
-  font-size: .82em;
-  background: var(--cream);
-  color: var(--green-dark);
-  padding: 1px 5px;
-  border-radius: 4px;
-  border: 1px solid var(--border);
-}
-
-/* Code — block: cream background, amber left rail (mirrors .story-tree / pre in workspace) */
-pre {
-  background: var(--cream);
-  border-left: 2.5px solid var(--amber);
-  border-radius: 0 7px 7px 0;
-  padding: 11px 14px;
-  margin: 1.2em 0;
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
-  break-inside: avoid;
-}
-pre code {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: .85em;
-  line-height: 1.6;
-  color: var(--ink);
-}
-
-/* Lists */
-ul, ol { padding-left: 1.35em; margin-bottom: 0.85em; }
-li { margin-bottom: 0.22em; }
-li > ul, li > ol { margin-top: 0.2em; margin-bottom: 0.2em; }
-
-/* Tables — header row uses the kicker / dash-lbl monospace uppercase style */
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 1.3em 0;
-  font-size: 9.5pt;
-  break-inside: avoid;
-}
-th {
-  background: var(--cream);
-  font-family: var(--font-mono);
-  font-size: 7pt;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  color: var(--gray-hi);
-  padding: 7px 10px;
-  border-bottom: 1.5px solid var(--green-dark);
-  text-align: left;
-}
-td {
-  padding: 6px 10px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-tr:last-child td { border-bottom: none; }
-tr:nth-child(even) td { background: rgba(248, 245, 238, .45); }
-
-/* Images */
-img { max-width: 100%; height: auto; border-radius: 6px; }
-
-/* Rule — subtle, brand-tinted */
-hr { border: none; border-top: 1px solid var(--border); margin: 1.6em 0; }
-
-/* ── Page footer ─────────────────────────────────────────────────────── */
-.doc-footer {
-  margin-top: 36px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  font-family: var(--font-mono);
-  font-size: 7pt;
-  color: var(--gray);
-}
-/* Olivia wordmark — mirrors the .wm pattern used across all pages */
-.wm { display: flex; align-items: baseline; gap: 5px; }
-.wm-n { font-family: var(--font-serif); font-size: 9pt; color: var(--green-dark); letter-spacing: -0.01em; }
-.wm-s { font-size: 6.5pt; text-transform: uppercase; letter-spacing: .1em; color: var(--gray); }
-
-/* ── Print overrides ─────────────────────────────────────────────────── */
-@media print {
-  body { background: #fff; }
-  a    { color: var(--green-mid) !important; }
-  pre, blockquote, table { break-inside: avoid; }
-  h1, h2, h3 { break-after: avoid; }
-}
-</style>
-</head>
-<body>
-
-  <!-- ── Header ────────────────────────────────────────────── -->
-  <div class="doc-header">
-    <div class="doc-header-mark">${oliveMark}</div>
-    <div class="doc-header-brand">Olivia <span>ecosystem</span></div>
-    <div class="doc-header-meta">
-      <strong>${escapeHtml(displayName)}</strong>
-      ${escapeHtml(stamp)}
-    </div>
-  </div>
-
-  <!-- ── Body ──────────────────────────────────────────────── -->
-  <div class="markdown-body">${bodyHtml}</div>
-
-  <!-- ── Footer ────────────────────────────────────────────── -->
-  <div class="doc-footer">
-    <div class="wm">
-      <span class="wm-n">Olivia</span>
-      <span class="wm-s">Awareness · AI</span>
-    </div>
-    <span>Generated from workspace preview · ${escapeHtml(isoDate)}</span>
-  </div>
-
-</body>
-</html>`;
-
-    // Create a hidden iframe and print from it.
-    const iframe = document.createElement('iframe');
-    iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
-    document.body.appendChild(iframe);
-
-    const cleanup = () => { try { document.body.removeChild(iframe); } catch (_) { } };
-
-    iframe.onload = () => {
-      const win = iframe.contentWindow;
-      const doPrint = () => {
-        try {
-          win.document.title = docTitle + '.pdf';
-          win.focus();
-          win.print();
-        } catch (_) { }
-        setTimeout(cleanup, 2000);
-      };
-
-      // Wait for Google Fonts to finish loading before triggering print,
-      // so the PDF captures Fraunces / Plus Jakarta Sans / JetBrains Mono.
-      if (win.document.fonts && typeof win.document.fonts.ready?.then === 'function') {
-        win.document.fonts.ready.then(doPrint).catch(doPrint);
-      } else {
-        setTimeout(doPrint, 700);
-      }
+  iframe.onload = function () {
+    var win = iframe.contentWindow;
+    var doPrint = function () {
+      try {
+        win.document.title = docTitle + '.pdf';
+        win.focus();
+        win.print();
+      } catch (_) {}
+      setTimeout(cleanup, 2000);
     };
+    if (win.document.fonts && typeof win.document.fonts.ready && typeof win.document.fonts.ready.then === 'function') {
+      win.document.fonts.ready.then(doPrint).catch(doPrint);
+    } else {
+      setTimeout(doPrint, 700);
+    }
+  };
 
-    iframe.srcdoc = printDoc;
+  iframe.srcdoc = printDoc;
   })();
 }
 

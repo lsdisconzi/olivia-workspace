@@ -1962,6 +1962,64 @@ html.dark body {
     background: rgba(74, 158, 112, .25)
 }
 
+/* Stop-then-decide prompt (shown after the user stops the agent) */
+.resume-decision-bar {
+    margin: 8px 0;
+    padding: 8px 12px;
+    background: rgba(158, 74, 74, .06);
+    border: 1px solid rgba(158, 74, 74, .25);
+    border-radius: 8px
+}
+
+.resume-decision-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gray-hi);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px
+}
+
+.resume-decision-actions {
+    display: flex;
+    gap: 8px
+}
+
+.resume-continue-btn {
+    background: rgba(74, 158, 112, .12);
+    border: 1px solid var(--green);
+    border-radius: 6px;
+    color: var(--green);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all .15s
+}
+
+.resume-continue-btn:hover {
+    background: rgba(74, 158, 112, .25)
+}
+
+.resume-stop-btn {
+    background: rgba(158, 74, 74, .10);
+    border: 1px solid rgba(158, 74, 74, .6);
+    border-radius: 6px;
+    color: var(--red);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all .15s
+}
+
+.resume-stop-btn:hover {
+    background: rgba(158, 74, 74, .20)
+}
+
 /* Stop button */
 .stream-stop-btn {
     background: none;
