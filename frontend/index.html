@@ -76,6 +76,7 @@
   <link href="css/responsive.css" rel="stylesheet" />
   <link href="css/responsive-mobile.css" rel="stylesheet" />
   <link href="css/drive.css" rel="stylesheet" />
+  <link href="css/health.css" rel="stylesheet" />
   <!-- Mobile-specific meta & PWA hints (frontend-mobile) -->
   <meta content="#1c4532" name="theme-color" />
   <meta content="yes" name="mobile-web-app-capable" />
@@ -1745,6 +1746,20 @@
               <!-- (optional upload form can remain or be removed – already exists inside Drive view) -->
             </div>
           </div>
+          <!-- TAB: Health -->
+          <div class="sidebar-section" id="tab-health">
+            <div style="padding:14px 12px">
+              <div
+                style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
+                <i class="fas fa-heart-pulse" style="color:#2e9a6a"></i> Health
+              </div>
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Upload exames, prontuários e
+                documentos de saúde. A Olivia extrai o texto com OCR, guarda uma linha do tempo da sua saúde e conversa
+                com você sobre os documentos.</p>
+              <button class="btn" onclick="healthShowView()" style="width:100%;justify-content:center"><i
+                  class="fas fa-heart-pulse"></i> Open Health</button>
+            </div>
+          </div>
           <!-- TAB: Mermaid -->
           <div class="sidebar-section" id="tab-mermaid">
             <div style="padding:14px 12px">
@@ -2281,6 +2296,8 @@
       <div class="sheets-view" id="sheetsView"></div>
       <!-- ═══════ DRIVE VIEW ═══════ -->
       <div class="drive-view" id="driveView"></div>
+      <!-- ═══════ HEALTH VIEW ═══════ -->
+      <div class="health-view" id="healthView"></div>
       <!-- ═══════ STUDIO BUILDER VIEW ═══════ -->
       <div class="studio-view" id="studioView">
         <div class="studio-top-bar">
@@ -6653,6 +6670,7 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <script src="js/modules/craudio.js"></script>
   <script src="js/modules/social-media.js"></script>
   <script src="js/modules/drive.js"></script>
+  <script src="js/modules/health.js"></script>
   <script src="js/modules/writer.js"></script>
   <script src="js/modules/sheets.js"></script>
   <script src="js/modules/section-generator.js"></script>

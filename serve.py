@@ -1475,7 +1475,8 @@ SECTION_REGISTRY = [
     { "id": "writer", "label": "Writer", "icon": "fa-pen-fancy", "onclick": "" },
     {"id": "sheets", "label": "Sheets", "icon": "fa-table", "onclick": "" },
     {"id": "mermaid", "label": "Diagramas", "icon": "fa-diagram-project"},
-    {"id": "socialmedia", "label": "Social Media", "icon": "fa-share-nodes"}
+    {"id": "socialmedia", "label": "Social Media", "icon": "fa-share-nodes"},
+    {"id": "health", "label": "Health", "icon": "fa-heart-pulse", "onclick": "healthShowView()"}
 ]
 SECTION_IDS = [s["id"] for s in SECTION_REGISTRY]
 SECTION_BY_ID = {s["id"]: s for s in SECTION_REGISTRY}
@@ -1499,6 +1500,7 @@ PROJECT_SECTION_FOLDERS = (
     "studio_files",
     "writer",
     "sheets",
+    "health",
 )
 
 # ── SQLite agents database ────────────────────────────────────────────────────
@@ -7725,6 +7727,7 @@ def _stream_openclaude(
         env=env,
         cwd=str(PLANNING_DIR),
     )
+    _register_agent_process(proc)
     if use_stdin:
         try:
             proc.stdin.write(prompt.encode("utf-8", errors="replace"))
@@ -7876,6 +7879,7 @@ def _stream_openclaude(
                     raise RuntimeError(f"openclaude: {subtype} — {err_msg}")
                 break
     finally:
+        _unregister_agent_process(proc)
         try:
             proc.stdout.close()
         except Exception:
@@ -7893,6 +7897,49 @@ def _stream_openclaude(
         elapsed = _t.monotonic() - _oc_t0
         rc = proc.returncode
         print(f"[openclaude:stream] ── Done ── exit={rc}  tokens={token_count}  steps={step_count}  wall={elapsed:.1f}s  stderr_lines={len(_stderr_lines)}")
+
+
+# Registry of live openclaude agent subprocesses so the frontend stop button
+# (/api/agent/stop, /api/guided/stop, /api/auditor/stop) can terminate the run
+# instead of leaving it executing in the background.
+_AGENT_PROCESSES: list = []
+_AGENT_PROCESSES_LOCK = threading.Lock()
+
+
+def _register_agent_process(proc) -> None:
+    try:
+        with _AGENT_PROCESSES_LOCK:
+            _AGENT_PROCESSES.append(proc)
+    except Exception:
+        pass
+
+
+def _unregister_agent_process(proc) -> None:
+    try:
+        with _AGENT_PROCESSES_LOCK:
+            if proc in _AGENT_PROCESSES:
+                _AGENT_PROCESSES.remove(proc)
+    except Exception:
+        pass
+
+
+def _stop_active_agent_processes() -> int:
+    """Terminate every live openclaude agent subprocess; returns kill count."""
+    killed = 0
+    try:
+        with _AGENT_PROCESSES_LOCK:
+            procs = list(_AGENT_PROCESSES)
+            _AGENT_PROCESSES.clear()
+        for proc in procs:
+            try:
+                if proc is not None and proc.poll() is None:
+                    proc.terminate()
+                    killed += 1
+            except Exception:
+                pass
+    except Exception:
+        pass
+    return killed
 
 
 def _run_openclaude_agent(
@@ -7935,6 +7982,7 @@ def _run_openclaude_agent(
         env=env,
         cwd=str(PLANNING_DIR),
     )
+    _register_agent_process(proc)
     if use_stdin:
         try:
             proc.stdin.write(prompt.encode("utf-8", errors="replace"))
@@ -8012,6 +8060,7 @@ def _run_openclaude_agent(
     except Exception as exc:
         event_q.put({"event": "error", "message": str(exc)})
     finally:
+        _unregister_agent_process(proc)
         proc.stdout.close()
         proc.stderr.close()
         try:
@@ -9163,6 +9212,302 @@ def _build_agent_status_update(event: dict, step_hint: int, is_pt: bool) -> tupl
     if detail:
         payload["detail"] = detail
     return step, payload
+
+
+# ── Health module: personal health memory & OCR pipeline ──────────────────────
+# Backs the Health view (frontend/js/modules/health.js + css/health.css).
+# Uploaded documents land in uploads/health/<upload_id>/; extracted text and the
+# generated timeline persist in data/health_store.json.
+_HEALTH_CONDITION_KEYWORDS = (
+    "diabetes", "hipertensão", "hipertensao", "hipotireoidismo", "colesterol",
+    "depressão", "depressao", "ansiedade", "asma", "alergia", "enxaqueca",
+    "migrânea", "migranea", "artrite", "gastrite", "sinusite", "bronquite",
+    "anemia", "obesidade", "insônia", "insonia", "refluxo",
+)
+_HEALTH_MEDICATION_KEYWORDS = (
+    "dipirona", "paracetamol", "ibuprofeno", "losartana", "metformina",
+    "omeprazol", "amoxicilina", "sinvastatina", "levotiroxina", "aspirina",
+    "captopril", "clonazepam", "sertralina", "fluoxetina", "prednisona",
+    "vitamina", "diazepam", "gliclazida", "atorvastatina", "enalapril",
+)
+
+
+def _health_store_path(project_id=None):
+    # When a project is active, the patient's health store lives inside the
+    # project's own health directory (uploads/projects/<pid>/health/).
+    if project_id:
+        pdir = PROJECTS_DIR / str(project_id).strip("/")
+        if pdir.is_dir():
+            return pdir / "health" / "health_store.json"
+    return PROJECT_ROOT / "data" / "health_store.json"
+
+
+def _health_store_load(project_id=None):
+    data = {}
+    path = _health_store_path(project_id)
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (OSError, ValueError):
+        data = {}
+    store = {"documents": [], "timeline": [], "last_results": None}
+    store.update({k: v for k, v in data.items() if k in store})
+    return store
+
+
+def _health_store_save(store, project_id=None):
+    path = _health_store_path(project_id)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(store, fh, ensure_ascii=False, indent=2)
+    except OSError as exc:
+        print(f"[Health] failed to persist store: {exc}", flush=True)
+
+
+def _health_tesseract_bin():
+    return shutil.which("tesseract") or "/opt/homebrew/bin/tesseract"
+
+
+def _health_ocr_image(image_path: Path):
+    """Run tesseract OCR on one image. Returns (text, ok)."""
+    exe = _health_tesseract_bin()
+    for extra in (["-l", "por+eng"], []):
+        try:
+            proc = subprocess.run(
+                [exe, str(image_path), "stdout"] + extra,
+                capture_output=True, timeout=120,
+            )
+        except (OSError, subprocess.SubprocessError) as exc:
+            print(f"[Health] tesseract failed on {image_path.name}: {exc}", flush=True)
+            return "", False
+        if proc.returncode == 0:
+            return proc.stdout.decode("utf-8", errors="replace"), True
+    return "", False
+
+
+def _health_ocr_pdf(pdf_path: Path):
+    """Extract text from a PDF: pdftotext first, then page rasterisation + tesseract."""
+    pdftotext = shutil.which("pdftotext") or "/opt/homebrew/bin/pdftotext"
+    try:
+        proc = subprocess.run([pdftotext, str(pdf_path), "-"], capture_output=True, timeout=180)
+        if proc.returncode == 0 and proc.stdout.strip():
+            return proc.stdout.decode("utf-8", errors="replace"), True
+    except (OSError, subprocess.SubprocessError) as exc:
+        print(f"[Health] pdftotext failed on {pdf_path.name}: {exc}", flush=True)
+    # Scanned PDF fallback: rasterise pages and OCR each one.
+    pdftoppm = shutil.which("pdftoppm") or "/opt/homebrew/bin/pdftoppm"
+    tmp_dir = Path(tempfile.mkdtemp(prefix="hl_pdf_"))
+    text = ""
+    ok = False
+    try:
+        proc = subprocess.run(
+            [pdftoppm, "-png", "-r", "200", str(pdf_path), str(tmp_dir / "page")],
+            capture_output=True, timeout=240,
+        )
+        if proc.returncode == 0:
+            for page in sorted(tmp_dir.glob("page-*.png")):
+                page_text, page_ok = _health_ocr_image(page)
+                if page_ok:
+                    text += page_text + "\n"
+                    ok = ok or bool(page_text.strip())
+    except (OSError, subprocess.SubprocessError) as exc:
+        print(f"[Health] pdftoppm failed on {pdf_path.name}: {exc}", flush=True)
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
+    return text, ok
+
+
+def _health_normalize_filename(filename):
+    """Strip the dedupe suffix (6 hex chars before extension) so
+    'IMG_1622-0551d2.jpg' and 'IMG_1622.jpg' map to the same stem."""
+    return re.sub(r"-[0-9a-f]{6}(\.[^.]+)$", r"\1", Path(str(filename or "")).name, flags=re.IGNORECASE)
+
+
+def _health_pdf_to_images(pdf_path: Path, images_dir: Path):
+    """Rasterise a scanned PDF into PNG pages so the pipeline script (which
+    scans images only) also processes PDF uploads. Output goes into a
+    per-pdf subdirectory; already-converted PDFs are skipped."""
+    pdftoppm = shutil.which("pdftoppm") or "/opt/homebrew/bin/pdftoppm"
+    out_dir = images_dir / f"{pdf_path.stem}_pages"
+    if out_dir.is_dir() and any(out_dir.glob("page-*.png")):
+        return
+    try:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        proc = subprocess.run(
+            [pdftoppm, "-png", "-r", "200", str(pdf_path), str(out_dir / "page")],
+            capture_output=True, timeout=300,
+        )
+        if proc.returncode != 0:
+            print(f"[Health] pdftoppm failed on {pdf_path.name}", flush=True)
+    except (OSError, subprocess.SubprocessError) as exc:
+        print(f"[Health] pdftoppm error on {pdf_path.name}: {exc}", flush=True)
+
+
+def _health_pipeline_python():
+    """Return a python interpreter that can import the pipeline script's
+    hard deps (PIL, pytesseract, pandas). Prefers the project venv; falls
+    back to the interpreter serve.py itself runs under."""
+    candidates = []
+    venv_py = PROJECT_ROOT / ".venv" / "bin" / "python"
+    if venv_py.is_file():
+        candidates.append(str(venv_py))
+    if sys.executable not in candidates:
+        candidates.append(sys.executable)
+    for py in candidates:
+        try:
+            proc = subprocess.run(
+                [py, "-c", "import PIL, pytesseract, pandas"],
+                capture_output=True, timeout=30,
+            )
+            if proc.returncode == 0:
+                return py
+        except (OSError, subprocess.SubprocessError):
+            continue
+    return sys.executable
+
+
+def _health_extract_text(file_path: Path, filename: str):
+    ext = Path(filename).suffix.lower()
+    if ext == ".pdf":
+        return _health_ocr_pdf(file_path)
+    if ext in {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".tif", ".tiff"}:
+        return _health_ocr_image(file_path)
+    if ext in {".txt", ".md", ".csv"}:
+        try:
+            return file_path.read_bytes().decode("utf-8", errors="replace"), True
+        except OSError:
+            return "", False
+    return "", False
+
+
+def _health_count_entities(store):
+    blob = " ".join(str(d.get("text") or "") for d in store.get("documents", [])).lower()
+    conditions = {kw for kw in _HEALTH_CONDITION_KEYWORDS if kw in blob}
+    medications = {kw for kw in _HEALTH_MEDICATION_KEYWORDS if kw in blob}
+    return len(conditions), len(medications)
+
+
+_HEALTH_ANALYSIS_CACHE = {}
+
+
+def _health_analysis_renaming_map(project_id):
+    """Map original upload filename -> [(subdir, suggested_name)] from pipeline
+    analysis JSONs. The pipeline renames uploads into categorised folders using
+    the suggested names, so this is the only way to resolve e.g. IMG_1647.jpg
+    (now Comprovante_Recebimento_Encaminhamentos.pdf)."""
+    if not project_id:
+        return {}
+    cached = _HEALTH_ANALYSIS_CACHE.get(project_id)
+    if cached is not None:
+        return cached
+    analysis_dir = (PROJECTS_DIR / str(project_id).strip("/") / "health"
+                    / "workspace" / "image_processing_workspace" / "analysis")
+    mapping = {}
+    if analysis_dir.is_dir():
+        try:
+            for jf in analysis_dir.glob("*_analysis.json"):
+                try:
+                    data = json.loads(jf.read_text(encoding="utf-8"))
+                except (OSError, ValueError):
+                    continue
+                meta = data.get("llm_analysis_metadata") or {}
+                orig = meta.get("original_filename") or jf.name.removesuffix("_analysis.json")
+                name = data.get("file_name_suggestion")
+                if not name:
+                    continue
+                subdir = data.get("directory_suggestion") or ""
+                mapping.setdefault(orig, []).append((subdir, name))
+        except OSError:
+            mapping = {}
+    _HEALTH_ANALYSIS_CACHE[project_id] = mapping
+    return mapping
+
+
+def _health_resolve_image_file(project_id, fname):
+    """Resolve a health store filename to the actual file on disk.
+
+    The store records the original uploaded name (e.g. IMG_1622.jpg), but the
+    pipeline renames/rasterises uploads into categorised subfolders (e.g.
+    health/images/Uncategorized/IMG_1622.pdf, or a suggested name like
+    Medical/Reports/Comprovante_Recebimento_Encaminhamentos.pdf). Search
+    layers, in order:
+      1. exact basename anywhere under images/;
+      2. same stem with any extension (IMG_1622.jpg -> IMG_1622.pdf);
+      3. the image number as a token in the filename (IMG_1625.jpg matches
+         BMD_Report_2026-05-08_XMED_1625.pdf);
+      4. the pipeline analysis suggestion map (original -> suggested path);
+      5. case-insensitive basename.
+    Returns a Path or None.
+    """
+    if not project_id or not fname:
+        return None
+    images_root = PROJECTS_DIR / str(project_id).strip("/") / "health" / "images"
+    if not images_root.is_dir():
+        return None
+    safe_name = Path(fname).name
+    stem = Path(safe_name).stem.lower()
+
+    # 1. Exact basename match anywhere under images/.
+    for candidate in images_root.rglob(safe_name):
+        if candidate.is_file():
+            return candidate
+    # 2. Same stem with any extension (pipeline converts IMG_*.jpg -> IMG_*.pdf).
+    for candidate in images_root.rglob("*"):
+        if candidate.is_file() and candidate.stem.lower() == stem:
+            return candidate
+    # 3. Image number as a token in the filename (handles *_1625.pdf variants).
+    num_match = re.search(r"(\d{2,})", stem)
+    if num_match:
+        num_token = "_" + num_match.group(1)
+        for candidate in images_root.rglob("*"):
+            if not candidate.is_file():
+                continue
+            low_name = candidate.name.lower()
+            if num_token in low_name or num_token + "." in low_name:
+                return candidate
+    # 4. Pipeline analysis suggestion map (original -> suggested relative path).
+    for subdir, name in _health_analysis_renaming_map(project_id).get(safe_name, []):
+        sug = (images_root / subdir / name) if subdir else (images_root / name)
+        for cand in (sug, sug.with_suffix(".pdf")):
+            if cand.is_file():
+                return cand
+    # 5. Case-insensitive basename fallback.
+    low = safe_name.lower()
+    for candidate in images_root.rglob("*"):
+        if candidate.is_file() and candidate.name.lower() == low:
+            return candidate
+    return None
+
+
+def _health_file_mime(path):
+    """Sniff actual content magic bytes. On-disk files are often JPEG image
+    data renamed with .pdf extensions, so the extension cannot be trusted."""
+    try:
+        with open(path, "rb") as fh:
+            head = fh.read(16)
+    except OSError:
+        return None
+    if head.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if head.startswith(b"\x89PNG"):
+        return "image/png"
+    if head.startswith(b"%PDF"):
+        return "application/pdf"
+    if head.startswith(b"GIF8"):
+        return "image/gif"
+    if head.startswith(b"RIFF") and head[8:12] == b"WEBP":
+        return "image/webp"
+    return None
+
+
+def _health_file_kind(path):
+    mime = _health_file_mime(path)
+    if mime == "application/pdf":
+        return "pdf"
+    if mime and mime.startswith("image/"):
+        return "image"
+    return "none"
 
 
 # ── Request handler ───────────────────────────────────────────────────────────
@@ -10993,13 +11338,13 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         current_email = self._auth_current_email()
-        if raw_path in {"/run", "/api/olivia/run", "/api/assistant/chat"} and not current_email:
+        if raw_path in {"/run", "/api/olivia/run", "/api/assistant/chat", "/api/health/assistant/chat"} and not current_email:
             # Allow trusted local service-to-service calls for assistant chat
             # (used by the agent-architecture proxy on :8120), and allow
             # explicit admin token requests.
             local_peer_ip = str(getattr(self, "client_address", [""])[0] or "").strip()
             local_peer_ok = local_peer_ip in {"127.0.0.1", "::1"}
-            service_auth_ok = raw_path == "/api/assistant/chat" and (local_peer_ok or self._is_admin_token_request())
+            service_auth_ok = raw_path in {"/api/assistant/chat", "/api/health/assistant/chat"} and (local_peer_ok or self._is_admin_token_request())
             if not service_auth_ok:
                 self._json_response({"error": "authentication required"}, 401)
                 return
@@ -11020,7 +11365,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         elif raw_path in {"/remote-bus", "/api/olivia/remote-bus", "/api/olivia/remote-bus"}:
             # Accept both forms because some proxies strip /api/Olivia while others preserve it.
             self._remote_bus_post()
-        elif raw_path == "/api/assistant/chat":
+        elif raw_path in {"/api/assistant/chat", "/api/health/assistant/chat"}:
             if current_email:
                 _activity_log_write(
                     email=current_email,
@@ -14975,11 +15320,22 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._drive_rclone_auth_url_get()
             return
 
+        # ── Health module (GET) ───────────────────────────────────────────
+        if path.startswith("/api/health/"):
+            self._health_api_get(path)
+            return
+
         self._json_response({})
 
     def _api_post(self, path):
         if path in {"/api/olivia/remote-bus", "/api/olivia/remote-bus", "/remote-bus"}:
             self._remote_bus_post()
+            return
+
+        # Run-control: composer stop button terminates live agent subprocesses.
+        if path in {"/api/agent/stop", "/api/guided/stop", "/api/auditor/stop"}:
+            killed = _stop_active_agent_processes()
+            self._json_response({"status": "stopped", "killed": killed})
             return
 
         if path == "/api/functions/reload":
@@ -15086,6 +15442,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             return
         if path == "/api/drive/rclone-auth-code":
             self._drive_rclone_auth_code_post()
+            return
+
+        # ── Health module (POST) ─────────────────────────────────────
+        if path.startswith("/api/health/"):
+            self._health_api_post(path)
             return
 
         # ── Section Generator API ────────────────────────────────────
@@ -15582,6 +15943,341 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._json_response([_row_to_agent(r) for r in rows])
         except Exception as e:
             self._json_response({"error": str(e)}, 500)
+
+    # ── Health module API ────────────────────────────────────────────────
+    # GET/POST /api/health/* — back the Health view. OCR/extraction helpers
+    # (_health_*) are module-level, defined before the KoutHandler class.
+    def _health_api_get(self, path):
+        # Data is scoped to the active project when project_id is supplied
+        # (health.js sends it from window.OliviaProjectId).
+        qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+        project_id = (qs.get("project_id") or [""])[0].strip() or None
+        store = _health_store_load(project_id)
+        if path == "/api/health/status":
+            conds, meds = _health_count_entities(store)
+            self._json_response({
+                "document_count": len(store.get("documents", [])),
+                "condition_count": conds,
+                "medication_count": meds,
+                "project_id": project_id,
+            })
+            return
+        if path == "/api/health/timeline":
+            self._json_response({"events": store.get("timeline", [])})
+            return
+        if path == "/api/health/results":
+            summary = store.get("last_results") or {"file_statistics": {"total_images": 0, "successful_ocr": 0}}
+            workspace = None
+            if project_id:
+                hdir = PROJECTS_DIR / project_id / "health"
+                if hdir.is_dir():
+                    workspace = str(hdir / "workspace" / "image_processing_workspace")
+            self._json_response({
+                "status": "completed" if store.get("last_results") else "none",
+                "summary": summary,
+                "workspace": workspace,
+            })
+            return
+        if path == "/api/health/knowledge-base":
+            docs = []
+            for doc in store.get("documents", []):
+                text = str(doc.get("text") or "")
+                docs.append({
+                    "id": doc.get("id"),
+                    "filename": doc.get("filename"),
+                    "uploaded_at": doc.get("uploaded_at"),
+                    "status": doc.get("status", "unknown"),
+                    "ocr_success": bool(doc.get("ocr_success")),
+                    "text_length": len(text),
+                    "preview": text[:500],
+                })
+            self._json_response({"documents": docs})
+            return
+        # ── Outputs: visualization-data.json ──────────────────────────────
+        if path == "/api/health/outputs":
+            data = {}
+            if project_id:
+                outputs_file = PROJECTS_DIR / project_id / "outputs" / "visualization-data.json"
+                if outputs_file.is_file():
+                    try:
+                        data = json.loads(outputs_file.read_text(encoding="utf-8"))
+                    except (OSError, ValueError):
+                        data = {"error": "Could not parse visualization data"}
+            self._json_response(data)
+            return
+        # ── Report: health-data-report.md ─────────────────────────────────
+        if path == "/api/health/report":
+            report = ""
+            if project_id:
+                report_file = PROJECTS_DIR / project_id / "outputs" / "health-data-report.md"
+                if report_file.is_file():
+                    try:
+                        report = report_file.read_text(encoding="utf-8")
+                    except OSError:
+                        report = ""
+            self._json_response({"report": report})
+            return
+        # ── Documents with image URLs ─────────────────────────────────────
+        if path == "/api/health/documents-detail":
+            docs = []
+            for doc in store.get("documents", []):
+                text = str(doc.get("text") or "")
+                fname = doc.get("filename", "")
+                kind = "none"
+                if project_id and fname:
+                    resolved = _health_resolve_image_file(project_id, fname)
+                    if resolved is not None:
+                        kind = _health_file_kind(resolved)
+                entry = {
+                    "id": doc.get("id"),
+                    "filename": fname,
+                    "uploaded_at": doc.get("uploaded_at"),
+                    "status": doc.get("status", "unknown"),
+                    "ocr_success": bool(doc.get("ocr_success")),
+                    "text": text,
+                    "kind": kind,
+                    "image_url": None,
+                }
+                if project_id and fname:
+                    entry["image_url"] = "/api/health/image?project_id=" + urllib.parse.quote(project_id) + "&file=" + urllib.parse.quote(fname)
+                docs.append(entry)
+            self._json_response({"documents": docs})
+            return
+        # ── Serve a health image file ─────────────────────────────────────
+        if path == "/api/health/image":
+            fname = (qs.get("file") or [""])[0].strip()
+            if not fname or not project_id:
+                self._json_response({"error": "Missing file or project_id"}, 400)
+                return
+            image_path = _health_resolve_image_file(project_id, fname)
+            if image_path is None:
+                self._json_response({"error": "Image not found"}, 404)
+                return
+            ext = image_path.suffix.lstrip(".").lower() or "jpg"
+            mime_map = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg",
+                        "gif": "image/gif", "webp": "image/webp", "bmp": "image/bmp",
+                        "pdf": "application/pdf"}
+            content_type = _health_file_mime(image_path) or mime_map.get(ext, "application/octet-stream")
+            try:
+                data = image_path.read_bytes()
+                self.send_response(200)
+                self.send_header("Content-Type", content_type)
+                self.send_header("Content-Length", str(len(data)))
+                self.send_header("Cache-Control", "public, max-age=3600")
+                self.end_headers()
+                self.wfile.write(data)
+            except OSError:
+                self._json_response({"error": "Could not read image"}, 500)
+            return
+        self._json_response({"error": "Not found"}, 404)
+
+    def _health_api_post(self, path):
+        if path == "/api/health/upload":
+            self._health_upload_post()
+            return
+        if path == "/api/health/run":
+            self._health_run_post()
+            return
+        if path == "/api/health/assistant/chat":
+            self._assistant_chat()
+            return
+        self._json_response({"error": "Not found"}, 404)
+
+    def _health_upload_post(self):
+        ctype = self.headers.get("Content-Type", "")
+        if "multipart/form-data" not in ctype:
+            self._json_response({"error": "Expected multipart/form-data"}, 400)
+            return
+        clen = int(self.headers.get("Content-Length", 0))
+        raw = self.rfile.read(clen)
+        try:
+            boundary = ctype.split("boundary=", 1)[1].strip()
+        except IndexError:
+            self._json_response({"error": "Missing multipart boundary"}, 400)
+            return
+        if boundary.startswith('"') and boundary.endswith('"'):
+            boundary = boundary[1:-1]
+        # Manual multipart parser — same stdlib-only pattern as _drive_upload_post.
+        b_boundary = ("--" + boundary).encode("utf-8")
+        b_end = ("--" + boundary + "--").encode("utf-8")
+        parts = raw.split(b_boundary)[1:]  # first split is before boundary
+        if parts and b_end in parts[-1]:
+            parts[-1] = parts[-1].split(b_end)[0]
+
+        files = []  # (filename, mime, bytes)
+        project_id = ""
+        for part in parts:
+            part = part.lstrip(b"\r\n")
+            header_end = part.find(b"\r\n\r\n")
+            if header_end < 0:
+                continue
+            header_block = part[:header_end].decode("utf-8", errors="replace")
+            body = part[header_end + 4:]
+            # Strip exactly one trailing \r\n (the delimiter before next boundary).
+            if body.endswith(b"\r\n"):
+                body = body[:-2]
+            if 'name="project_id"' in header_block:
+                project_id = body.decode("utf-8", errors="replace").strip()
+            elif 'name="files"' in header_block:
+                fn_match = re.search(r'filename="([^"]*)"', header_block)
+                fname = fn_match.group(1) if fn_match else "upload"
+                ct_match = re.search(r"Content-Type:\s*(\S+)", header_block)
+                fmime = ct_match.group(1) if ct_match else "application/octet-stream"
+                files.append((fname, fmime, body))
+        if not files:
+            self._json_response({"error": "No files part found in upload"}, 400)
+            return
+
+        upload_id = f"hl-{int(time.time() * 1000)}-{uuid.uuid4().hex[:8]}"
+        # Uploads land in the active project's health/images directory so the
+        # whole patient workspace stays inside the project.
+        pdir = (PROJECTS_DIR / str(project_id).strip("/")) if project_id else None
+        if pdir and pdir.is_dir():
+            upload_dir = pdir / "health" / "images"
+        else:
+            upload_dir = PROJECT_ROOT / "uploads" / "health" / upload_id
+        try:
+            upload_dir.mkdir(parents=True, exist_ok=True)
+            for fname, _fmime, fbytes in files:
+                safe = Path(fname).name or "upload"
+                target = upload_dir / safe
+                if target.exists():  # avoid clobbering files from earlier batches
+                    target = upload_dir / f"{target.stem}-{upload_id[-6:]}{target.suffix}"
+                target.write_bytes(fbytes)
+        except OSError as exc:
+            self._json_response({"error": f"Failed to store upload: {exc}"}, 500)
+            return
+        print(f"[Health] upload {upload_id}: {len(files)} file(s) -> {upload_dir}", flush=True)
+        self._json_response({"upload_id": upload_id, "files": [f[0] for f in files], "project_id": project_id or None})
+
+    def _health_run_post(self):
+        body = self._read_body()
+        upload_id = str(body.get("upload_id") or "").strip()
+        project_id = str(body.get("project_id") or "").strip()
+        pdir = (PROJECTS_DIR / project_id) if project_id else None
+        if not (pdir and pdir.is_dir()):
+            self._json_response({"error": "An active project is required to run the health pipeline"}, 400)
+            return
+        hdir = pdir / "health"
+        images_dir = hdir / "images"
+        images_dir.mkdir(parents=True, exist_ok=True)
+        script_src = PROJECT_ROOT / "scripts" / "health_images_to_report.py"
+        if not script_src.is_file():
+            self._json_response({"error": "health_images_to_report.py not found in scripts/"}, 500)
+            return
+        # The project owns a copy of the pipeline script (project scripts/ folder).
+        script_dst = pdir / "scripts" / "health_images_to_report.py"
+        try:
+            shutil.copyfile(script_src, script_dst)
+        except OSError as exc:
+            self._json_response({"error": f"Failed to stage pipeline script: {exc}"}, 500)
+            return
+
+        # Rasterise any PDFs so the script (which scans images) sees them too.
+        if shutil.which("pdftoppm"):
+            for f in sorted(images_dir.iterdir()):
+                if f.suffix.lower() != ".pdf" or not f.is_file():
+                    continue
+                _health_pdf_to_images(f, images_dir)
+
+        output_root = hdir / "workspace"
+        cmd = [
+            _health_pipeline_python(), str(script_dst),
+            "--input", str(images_dir),
+            "--output", str(output_root),
+        ]
+        if body.get("llm_provider"):
+            cmd += ["--llm-provider", str(body["llm_provider"])]
+        print(f"[Health] running pipeline: {' '.join(cmd)}", flush=True)
+        try:
+            proc = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=3600,
+                cwd=str(PROJECT_ROOT),
+            )
+        except (OSError, subprocess.SubprocessError) as exc:
+            self._json_response({"error": f"Pipeline failed to start: {exc}"}, 500)
+            return
+        if proc.returncode != 0:
+            tail = (proc.stderr or proc.stdout or "")[-1200:]
+            print(f"[Health] pipeline failed (rc={proc.returncode}): {tail}", flush=True)
+            self._json_response({
+                "status": "failed",
+                "error": f"Pipeline exited with code {proc.returncode}",
+                "log_tail": tail,
+            }, 500)
+            return
+
+        # The pipeline writes its summary inside <output>/image_processing_workspace/.
+        summary = {}
+        summary_path = output_root / "image_processing_workspace" / "pipeline_summary.json"
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            summary = {}
+
+        # Harvest per-file OCR results into the project health store so the
+        # timeline / knowledge-base / overview endpoints stay populated.
+        # Files that share the same deduped stem (e.g. IMG_1622-0551d2.jpg
+        # and IMG_1622.jpg) update the same document — only truly new names
+        # create additional documents or timeline events.
+        store = _health_store_load(project_id)
+        now_iso = datetime.now().isoformat(timespec="seconds")
+        today = datetime.now().strftime("%Y-%m-%d")
+        documents = list(store.get("documents", []))
+        total_files = 0
+        successful_ocr = 0
+        docs_by_stem = {}  # normalized stem → index in documents
+        new_docs_seen = set()  # stems seen for the first time this run
+        extractions_dir = output_root / "image_processing_workspace" / "extractions"
+        for xf in sorted(extractions_dir.glob("*_extraction.json")) if extractions_dir.is_dir() else []:
+            try:
+                extr = json.loads(xf.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            total_files += 1
+            text = " ".join(p.get("text") or "" for p in extr.get("pages", [])) or extr.get("text_summary") or ""
+            ok = not extr.get("error") and bool(text.strip())
+            if ok:
+                successful_ocr += 1
+            filename = extr.get("filename") or xf.name[: -len("_extraction.json")]
+            stem = _health_normalize_filename(filename)
+            doc = {
+                "id": f"{project_id}-{stem}-{int(time.time() * 1000)}",
+                "filename": filename,
+                "uploaded_at": now_iso,
+                "upload_id": upload_id or None,
+                "project_id": project_id,
+                "status": "processed" if ok else "failed",
+                "ocr_success": ok,
+                "text": text[:20000],
+            }
+            if stem in docs_by_stem:
+                documents[docs_by_stem[stem]] = doc
+            else:
+                docs_by_stem[stem] = len(documents)
+                documents.append(doc)
+            preview = " ".join(text.split())[:120]
+            description = f"Documento processado: {filename}"
+            if preview:
+                description += f" — {preview}"
+            if stem not in new_docs_seen:
+                new_docs_seen.add(stem)
+                store.setdefault("timeline", []).append({"date": today, "description": description})
+        store["documents"] = documents
+        store["last_results"] = summary
+        store["last_workspace"] = str(output_root)
+        _health_store_save(store, project_id)
+        print(f"[Health] run for project {project_id}: {total_files} file(s), {successful_ocr} OCR ok", flush=True)
+        self._json_response({
+            "status": "completed",
+            "summary": summary,
+            "workspace": str(output_root),
+            "file_statistics": {
+                "total_files": total_files,
+                "total_images": total_files,
+                "successful_ocr": successful_ocr,
+            },
+        })
 
     def _agents_api_get(self, path: str):
         """GET /api/agents/<id>[/...] — agent detail or sub-resources."""
