@@ -35,3 +35,34 @@ All notable changes to the Olivia agent group are documented here.
 
 **Files:** agents-groups/_meta/groups.index.json, agents-groups/la8159/agents/*.agent.md (27 files)
 **Validation:** pass (validate-pack.mjs, grep -c zero remaining)
+
+## 2026-07-30 — Apply best-practices guide: canonicalize contract paths + memory assignments
+
+**Changes:**
+- Created canonical `agents/generated/` contract tree (runtime resolves contract sources under `agents/generated/`, not root `generated/`):
+  - `agents/generated/policies/` — tool-permissions.by-agent.json, handoff-routes.json, orchestrator-policy.yaml
+  - `agents/generated/schemas/` — 4 schema files (fixes `../../generated/schemas/...` `$schema` refs in olivia/la8159 manifests)
+  - `agents/generated/memory-group-assignments.json` — NEW; maps all 5 groups (olivia, legal, government, coremu, la8159) to Qdrant collections / Neo4j labels; satisfies CORE_GROUPS requirement.
+- Aligned `tool-permissions.by-agent.json` with agent.md tool declarations: added `browser_use` to discovery, listening, studio; added `qdrant_ingest` to memory.
+- Synced root `generated/policies/tool-permissions.by-agent.json` to keep copies identical.
+
+**Impact:** `build_orchestration_contract_report()` now returns `ok: true` (was `missing_contract_sources`); both validator scripts pass.
+
+**Files:** agents/generated/* (new), generated/policies/tool-permissions.by-agent.json
+**Validation:** pass (contract report: 0 errors, 0 warnings; validate-olivia-pack.mjs; validate-pack.mjs)
+
+## 2026-07-30 — Review new agent groups (legal/government/coremu) + single-source policy merge
+
+**Changes:**
+- Reviewed the added `legal`, `government`, `coremu` group folders under `agents/agents-groups/`:
+  - Scaffolded 12 coremu agent files (`agents/agents-groups/coremu/agents/`) — orchestrator, NDAE coordinator, 10 residents (5 specialties).
+  - Scaffolded 8 legal specialist agent files (`agents/agents-groups/legal/agents/`) — 4 jurisdiction experts, international/consumer/criminal coordinators, legacy la8159-cult-workspace-coordinator.
+  - Added `agents/agents-groups/legal/policies/legal-orchestration.policy.json`.
+  - Canonicalized `agent_file` / `bundle_file` / `orchestrator_policy` paths in coremu + legal manifests; all agent/policy refs now resolve (0 missing).
+- Gave the olivia group a canonical per-group policy source: `agents/agents-groups/olivia/policies/{tool-permissions.by-agent.json, handoff-routes.json, orchestrator-policy.yaml}`; olivia manifest `policies` block updated to reference it.
+- Added `scripts/merge-contract-policies.py` — single-source generator: per-group policies → merged `agents/generated/policies/` aggregate (76 agents, 109 routes) → byte-identical root `generated/policies/` mirror.
+- Updated the best-practices guide §1/§2/§3/§7 to the single-source layout.
+
+**Validation:** contract report ok (76 agents, 109 routes, 0 errors; 17 informational route-coverage warnings); validate-olivia-pack + validate-pack pass; root vs `agents/generated` policies byte-identical; merge idempotent.
+
+**Files:** agents/agents-groups/{coremu,legal,olivia}/**, scripts/merge-contract-policies.py, agents/generated/policies/*, generated/policies/*

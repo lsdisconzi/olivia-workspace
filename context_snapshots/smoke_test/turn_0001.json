@@ -1,0 +1,26 @@
+{
+  "session_id": "smoke_test",
+  "turn_id": 1,
+  "timestamp": "2026-07-30T23:04:09.227906+00:00",
+  "token_budget": 1200,
+  "message_count": 3,
+  "roles": [
+    "system",
+    "system",
+    "user"
+  ],
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are Olivia, the Memory Capture Agent within the Olivia AI Operating Environment.\nYour mission is to help users capture, organize, and retrieve information effectively.\nBe concise, truthful, and when in doubt, ask to search the documentation.\n\nProject context: [Phase] Phase 7 — Orchestrator Integration\n[Decisions] reuse-before-build: Prefer wrapping existing MCP tools (garage-qdrant, garage...; ContextManager as standalone Python module: Decouples prompt assembly from ch...; Two-tier RAG: Always-on server-side Qdrant retrieval for default context inje...\n[Last update] 2026-07-30: Phase 3 RAG wiring: live Qdrant search via Garage API — Actions taken:\n\nYou have access to the following tools:\n- search_docs(query) — search planning files and documentation for relevant snippets\n- read_planning_file(filename) — read the full content of a specific planning file\n- search_knowledge(query) — semantic search across ingested knowledge collections\n\nUse these tools for factual information; do not guess. If you are unsure about something, search first.\n"
+    },
+    {
+      "role": "system",
+      "content": "[Retrieved from Olivia docs]\nmemory.md (score: 0.337): ## Do-Not-Redo\n- Do not hand-write project_summary.md — always auto-generate\n- Do not inject empty planning file templates into prompts\n- Do not dump full Qdrant search instructions into system prompt\n- Do not store context snapshots in a database until Phase 7 proves the need\nmemory.md (score: 0.251): ## Decisions & Conventions (sticky)\n\n- **Decision: reuse-before-build** — Prefer wrapping existing MCP tools (garage-qdrant, garage-ingestion) rather than building new infrastructure for retrieval.\n- **Decision: ContextManager as standalone Python module** — Decouples prompt assembly from chat fr...\nmemory.md (score: 0.202): ## Open Questions / Parked Ideas\n\n- Should history summarisation (Phase 5) use a lightweight local model or the main LLM?\n- What similarity threshold for quote de-duplication? Start at 80% and tune.\n- Should RAG retrieval be scoped per agent namespace or use a shared index? Phase 7 will decide."
+    },
+    {
+      "role": "user",
+      "content": "What are the key decisions and conventions?"
+    }
+  ]
+}

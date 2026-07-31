@@ -8,7 +8,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-CORE_GROUPS = ("olivia", "legal", "government", "coremu")
+# Phase 7 — Context Manager for orchestrator prompt assembly
+try:
+    from context_manager import ContextManager
+except ImportError:
+    # Allow the module to be imported without context_manager during
+    # contract validation (ContextManager is only needed for build_agent_prompt)
+    ContextManager = None  # type: ignore
+
+
+
+CORE_GROUPS = ("olivia", "legal", "government")
 BROADCAST_TARGET_ALIASES = {"all specialists", "all-specialists", "all_specialists", "*"}
 
 META_ROUTE_REQUEST_SCHEMA: dict[str, Any] = {
@@ -145,7 +155,11 @@ def validate_meta_route_response(payload: dict[str, Any]) -> dict[str, Any]:
     return {"ok": not errors, "errors": errors}
 
 
-def _validate_policy_coverage(tool_permissions: dict[str, Any], handoff_routes: dict[str, Any]) -> dict[str, Any]:
+def _validate_policy_coverage(
+    tool_permissions: dict[str, Any],
+    handoff_routes: dict[str, Any],
+    meta_agent_slugs: set[str] | None = None,
+) -> dict[str, Any]:
     errors: list[str] = []
     warnings: list[str] = []
 
@@ -158,7 +172,10 @@ def _validate_policy_coverage(tool_permissions: dict[str, Any], handoff_routes: 
         routes = []
 
     known_agents = set(str(name) for name in agents.keys())
-    known_agents.add("meta-orchestrator")
+    # Known cross-group targets are derived from the registry (single source of
+    # truth: groups.index.json -> meta_orchestrator.slug). Fallback keeps the
+    # historical literal when the registry block is absent.
+    known_agents.update(meta_agent_slugs or {"meta-orchestrator"})
     route_participants: set[str] = set()
 
     for route in routes:
@@ -248,7 +265,17 @@ def build_orchestration_contract_report(project_root: Path) -> dict[str, Any]:
     handoff_routes = _read_json(paths["handoff_routes"])
     memory_assignments = _read_json(paths["memory_assignments"])
 
-    policy = _validate_policy_coverage(tool_permissions, handoff_routes)
+    # Derive the meta-orchestrator known-agent from the registry so it stays the
+    # single source of truth (P1.7). Empty set falls back to the historical
+    # literal inside _validate_policy_coverage.
+    meta_block = groups_index.get("meta_orchestrator") if isinstance(groups_index, dict) else None
+    meta_agent_slugs: set[str] = set()
+    if isinstance(meta_block, dict):
+        slug = str(meta_block.get("slug") or "").strip()
+        if slug:
+            meta_agent_slugs.add(slug)
+
+    policy = _validate_policy_coverage(tool_permissions, handoff_routes, meta_agent_slugs)
     memory = _validate_memory_assignments(groups_index, memory_assignments)
 
     ok = bool(policy.get("ok")) and bool(memory.get("ok"))
@@ -274,4 +301,132 @@ def build_orchestration_contract_bundle(project_root: Path) -> dict[str, Any]:
         },
         "error_taxonomy": sorted(ERROR_TAXONOMY),
         "validation": report,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Phase 7 — Orchestrator Integration: build_agent_prompt
+# ---------------------------------------------------------------------------
+
+
+def build_agent_prompt(
+    project_root: str | Path,
+    session_id: str,
+    user_message: str,
+    project_id: str | None = None,
+    agent_role: str | None = None,
+    phase_tag: str | None = None,
+    panel_content: str | None = None,
+    panel_name: str | None = None,
+    history: list[dict[str, str]] | None = None,
+    force_retrieval: bool | None = None,
+    rag_collection: str = "olivia-memory-capture-agent",
+    token_budget: int = 1200,
+    enable_snapshots: bool = True,
+    sys_prompt_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Build an assembled prompt for an orchestrator-managed agent.
+
+    This is the primary entry point for the orchestrator to get a fully
+    assembled, RAG-augmented prompt for any agent.  It creates an isolated
+    ``ContextManager`` instance, builds the prompt, and returns both the
+    messages and detailed metadata (token count, character count, config,
+    snapshot path, etc.).
+
+    Parameters
+    ----------
+    project_root : str or Path
+        Path to the Olivia workspace root.
+    session_id : str
+        Unique session identifier for this conversation.
+    user_message : str
+        The user's current input.
+    project_id : str, optional
+        Project identifier.  Defaults to ``"olivia-memory-capture-agent"``.
+    agent_role : str, optional
+        Role label for the agent (e.g. ``"Memory Capture Agent"``).
+    phase_tag : str, optional
+        Current phase tag for retrieval biasing.
+    panel_content : str, optional
+        Content from a UI panel.
+    panel_name : str, optional
+        Panel name for annotation.
+    history : list[dict], optional
+        Previous conversation turns.
+    force_retrieval : bool, optional
+        Override automatic retrieval decision.
+    rag_collection : str
+        Qdrant collection for RAG retrieval.
+    token_budget : int
+        Maximum estimated tokens for the prompt.
+    enable_snapshots : bool
+        Whether to write context snapshots to disk.
+    sys_prompt_path : str or Path, optional
+        Path to a custom system prompt template file.  If not provided,
+        defaults to ``<workspace>/context/sys_prompt.txt``.
+
+    Returns
+    -------
+    dict
+        ``{
+            "ok": True,
+            "messages": [...],          # Assembled LLM messages
+            "config": {...},            # Effective ContextManager config
+            "token_estimate": int,      # Estimated token count
+            "char_count": int,          # Total character count
+            "message_count": int,       # Number of messages
+            "snapshot_path": str,       # Path to snapshot file
+            "project_summary": str,     # Auto-generated summary
+        }``
+    """
+    cm = ContextManager(
+        project_root=project_root,
+        session_id=session_id,
+        project_id=project_id,
+        agent_role=agent_role,
+        phase_tag=phase_tag,
+        token_budget=token_budget,
+        enable_snapshots=enable_snapshots,
+        rag_collection=rag_collection,
+        sys_prompt_path=sys_prompt_path,
+    )
+
+    messages = cm.build_prompt(
+        user_message=user_message,
+        phase_hint=phase_tag,
+        panel_content=panel_content,
+        panel_name=panel_name,
+        force_retrieval=force_retrieval,
+        history=history,
+    )
+
+    # Compute metadata
+    total_chars = sum(len(m.get("content", "")) for m in messages)
+    total_tokens = total_chars // 4
+
+    # Build the project summary separately for the return payload
+    project_summary = ""
+    for m in messages:
+        if m.get("role") == "system" and "[Phase]" in m.get("content", ""):
+            # Extract the summary line from the first system message
+            for line in m["content"].splitlines():
+                if line.startswith("[Phase]") or line.startswith("[Decisions]"):
+                    project_summary += line + "\n"
+            break
+
+    config = cm.get_effective_config()
+    snapshot_id = f"turn_{cm._turn_counter:04d}"
+    snapshot_path = str(
+        Path(project_root) / "context_snapshots" / session_id / f"{snapshot_id}.json"
+    )
+
+    return {
+        "ok": True,
+        "messages": messages,
+        "config": config,
+        "token_estimate": total_tokens,
+        "char_count": total_chars,
+        "message_count": len(messages),
+        "snapshot_path": snapshot_path,
+        "project_summary": project_summary.strip(),
     }

@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "group": "government",
+  "default_policy": {
+    "mode": "deny-by-default",
+    "require_confirmation_for": [
+      "cross_group_write",
+      "destructive_file_delete",
+      "edital_final_draft_emit"
+    ]
+  },
+  "agents": {
+    "government-orchestrator": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "terminate"],
+      "denied_tools": ["neo4j_query", "qdrant_ingest"],
+      "require_confirmation_for": ["cross_group_write"],
+      "notes": ["Runtime router. Advisory tag mandatory on all user-facing replies."]
+    },
+    "government-coordinator": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "terminate"],
+      "denied_tools": [],
+      "require_confirmation_for": ["agent_remove", "cross_group_write"],
+      "notes": ["Governance + pack regeneration + knowledge migration."]
+    },
+    "cpsi-municipal-advisor": {
+      "allowed_tools": ["str_replace_editor", "bash", "python_execute", "context_assemble", "qdrant_search", "neo4j_query", "terminate"],
+      "denied_tools": ["qdrant_ingest"],
+      "require_confirmation_for": ["edital_final_draft_emit"],
+      "notes": [
+        "CPSI (LC 182/2021) only. Never drafts final contract text.",
+        "Always recommends municipal Procuradoria for final decisions.",
+        "Flags R$ 1,6M cap and 12+12 months duration."
+      ]
+    }
+  }
+}

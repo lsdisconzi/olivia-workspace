@@ -1985,7 +1985,23 @@ function _postRenderMermaid(rootEl) {
         const wrapper = document.createElement('div');
         wrapper.className = 'mermaid-container mermaid-rendered';
         wrapper.innerHTML = result.svg;
+
+        // Add full-view expand button
+        const expandBtn = document.createElement('button');
+        expandBtn.className = 'mermaid-expand-btn';
+        expandBtn.innerHTML = '<i class="fas fa-expand"></i>';
+        expandBtn.title = 'Open diagram in full view';
+        expandBtn.setAttribute('aria-label', 'Open diagram in full view');
+        wrapper.appendChild(expandBtn);
+
         preEl.parentNode.replaceChild(wrapper, preEl);
+
+        // Wire up expand button (after DOM insertion so CSS is active)
+        expandBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          _openMermaidFullView(wrapper);
+        });
       }).catch(function (err) {
         _showMermaidError(preEl, source, err);
       });
@@ -2023,6 +2039,168 @@ function _showMermaidError(preEl, source, err) {
   ].join('');
   if (preEl && preEl.parentNode) {
     preEl.parentNode.replaceChild(wrapper, preEl);
+  }
+}
+
+/**
+ * Open a fullscreen overlay to view a mermaid diagram with zoom & pan.
+ * Handles both raw SVGs and Mermaid-sandboxed iframes.
+ */
+function _openMermaidFullView(mermaidContainer) {
+  var isSvg = !!mermaidContainer.querySelector('svg');
+  var contentEl = mermaidContainer.querySelector('svg') || mermaidContainer.querySelector('iframe');
+
+  // --- Build overlay ---
+  var overlay = document.createElement('div');
+  overlay.className = 'mermaid-fullscreen-overlay';
+  overlay.tabIndex = -1;
+
+  var toolbar = document.createElement('div');
+  toolbar.className = 'mermaid-fullscreen-toolbar';
+
+  var title = document.createElement('span');
+  title.className = 'mermaid-fullscreen-title';
+  title.textContent = 'Diagram';
+
+  var controls = document.createElement('div');
+  controls.className = 'mermaid-fullscreen-controls';
+
+  if (isSvg) {
+    controls.innerHTML = [
+      '<button class="mermaid-zbtn" data-action="zoom-out" title="Zoom out"><i class="fas fa-minus"></i></button>',
+      '<span class="mermaid-zoom-pct">100%</span>',
+      '<button class="mermaid-zbtn" data-action="zoom-in" title="Zoom in"><i class="fas fa-plus"></i></button>',
+      '<button class="mermaid-zbtn" data-action="zoom-reset" title="Reset zoom"><i class="fas fa-expand"></i></button>',
+    ].join('');
+  }
+
+  var closeBtn = document.createElement('button');
+  closeBtn.className = 'mermaid-close-btn';
+  closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+  closeBtn.title = 'Close (Esc)';
+  controls.appendChild(closeBtn);
+
+  toolbar.appendChild(title);
+  toolbar.appendChild(controls);
+
+  var body = document.createElement('div');
+  body.className = 'mermaid-fullscreen-body';
+
+  var diagramBox = document.createElement('div');
+  diagramBox.className = 'mermaid-fullscreen-diagram';
+  body.appendChild(diagramBox);
+
+  overlay.appendChild(toolbar);
+  overlay.appendChild(body);
+
+  // --- Clone content ---
+  var clonedContent;
+  if (contentEl) {
+    clonedContent = contentEl.cloneNode(true);
+    // Strip inline width/height on SVGs so they size naturally
+    if (isSvg) {
+      clonedContent.removeAttribute('width');
+      clonedContent.removeAttribute('height');
+      clonedContent.style.maxWidth = 'none';
+      clonedContent.style.width = 'auto';
+      clonedContent.style.height = 'auto';
+    }
+    diagramBox.appendChild(clonedContent);
+  } else {
+    // fallback: clone full container innerHTML
+    diagramBox.innerHTML = mermaidContainer.innerHTML;
+  }
+
+  document.body.appendChild(overlay);
+
+  // Focus the overlay so Escape works immediately
+  setTimeout(function () { overlay.focus(); }, 50);
+
+  // --- Close handlers ---
+  function closeOverlay() {
+    if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    document.removeEventListener('keydown', _onKey);
+  }
+
+  function _onKey(e) {
+    if (e.key === 'Escape') closeOverlay();
+  }
+  document.addEventListener('keydown', _onKey);
+
+  closeBtn.addEventListener('click', closeOverlay);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeOverlay();
+  });
+
+  // --- Zoom & Pan (SVG only) ---
+  if (isSvg && clonedContent) {
+    var scale = 1, panX = 0, panY = 0;
+    var zoomPctEl = controls.querySelector('.mermaid-zoom-pct');
+
+    function updateTransform() {
+      clonedContent.style.transformOrigin = '0 0';
+      clonedContent.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + scale + ')';
+      if (zoomPctEl) zoomPctEl.textContent = Math.round(scale * 100) + '%';
+    }
+
+    // Mouse wheel zoom (pivots around cursor position)
+    diagramBox.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      var rect = diagramBox.getBoundingClientRect();
+      var mx = e.clientX - rect.left;
+      var my = e.clientY - rect.top;
+      var delta = e.deltaY > 0 ? 0.88 : 1 / 0.88;
+      var newScale = Math.max(0.1, Math.min(20, scale * delta));
+      // Adjust pan so cursor position stays fixed
+      var ratio = newScale / scale;
+      panX = mx - (mx - panX) * ratio;
+      panY = my - (my - panY) * ratio;
+      scale = newScale;
+      updateTransform();
+    }, { passive: false });
+
+    // Click-drag to pan
+    var isDragging = false, dragStartX, dragStartY, panStartX, panStartY;
+    clonedContent.style.cursor = 'grab';
+
+    clonedContent.addEventListener('mousedown', function (e) {
+      if (e.button !== 0) return; // left click only
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      panStartX = panX;
+      panStartY = panY;
+      clonedContent.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function (e) {
+      if (!isDragging) return;
+      panX = panStartX + (e.clientX - dragStartX);
+      panY = panStartY + (e.clientY - dragStartY);
+      updateTransform();
+    });
+
+    document.addEventListener('mouseup', function () {
+      if (isDragging) {
+        isDragging = false;
+        clonedContent.style.cursor = 'grab';
+      }
+    });
+
+    // Button controls
+    controls.querySelector('[data-action="zoom-in"]').addEventListener('click', function () {
+      scale = Math.min(20, scale * 1.3);
+      updateTransform();
+    });
+    controls.querySelector('[data-action="zoom-out"]').addEventListener('click', function () {
+      scale = Math.max(0.1, scale / 1.3);
+      updateTransform();
+    });
+    controls.querySelector('[data-action="zoom-reset"]').addEventListener('click', function () {
+      scale = 1; panX = 0; panY = 0;
+      updateTransform();
+    });
   }
 }
 

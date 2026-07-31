@@ -1,0 +1,41 @@
+{
+  "version": "1.0.0",
+  "description": "Memory group assignments per agent group. Each group maps to the Qdrant collections and Neo4j labels that its agents may read/write. Applies the best-practices guidance: a shared project-memory for co-workers, isolated collections only where strict information boundaries are required.",
+  "groups": {
+    "olivia": {
+      "qdrant_collections": [
+        "olivia-dev-code",
+        "olivia-memory-capture-agent",
+        "olivia_project_index",
+        "uploads-global"
+      ],
+      "neo4j_labels": ["MemoryEntry"],
+      "neo4j_databases": []
+    },
+    "legal": {
+      "qdrant_collections": ["juris_br_v1"],
+      "neo4j_labels": [],
+      "neo4j_databases": []
+    },
+    "government": {
+      "qdrant_collections": [],
+      "neo4j_labels": [],
+      "neo4j_databases": []
+    },
+    "coremu": {
+      "qdrant_collections": ["transcription_transcripts", "reviewed_transcripts"],
+      "neo4j_labels": [],
+      "neo4j_databases": []
+    },
+    "la8159": {
+      "qdrant_collections": [
+        "la8159_law",
+        "la8159_emails",
+        "la8159_transcripts",
+        "la8159_master_index"
+      ],
+      "neo4j_labels": ["MemoryEntry"],
+      "neo4j_databases": []
+    }
+  }
+}

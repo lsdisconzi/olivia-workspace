@@ -1,0 +1,177 @@
+{
+  "version": "1.0.0",
+  "group": "coremu",
+  "routing": [
+    {
+      "route_id": "coremu_orch_to_darik",
+      "from": "coremu-orchestrator",
+      "to": "coremu-darik",
+      "trigger": "odontologia_case_2",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Route to Darik (Odontologia)",
+        "verification": [
+          "specialty match"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_magdi",
+      "from": "coremu-orchestrator",
+      "to": "coremu-magdi",
+      "trigger": "odontologia_case_1",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Route to Magdi (Odontologia)",
+        "verification": [
+          "specialty match"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_maira",
+      "from": "coremu-orchestrator",
+      "to": "coremu-maira",
+      "trigger": "enfermagem_case_1",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Route to Maira (Enfermagem)",
+        "verification": [
+          "specialty match"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_maria_eduarda",
+      "from": "coremu-orchestrator",
+      "to": "coremu-maria-eduarda",
+      "trigger": "enfermagem_case_2",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Route to Maria Eduarda (Enfermagem)",
+        "verification": [
+          "specialty match"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_laura",
+      "from": "coremu-orchestrator",
+      "to": "coremu-laura",
+      "trigger": "farmacia_case_1",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Route to Laura (Farmácia)",
+        "verification": [
+          "specialty match"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_jessica",
+      "from": "coremu-orchestrator",
+      "to": "coremu-jessica",
+      "trigger": "farmacia_case_2",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Route to Jéssica (Farmácia)",
+        "verification": [
+          "specialty match"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_kassio",
+      "from": "coremu-orchestrator",
+      "to": "coremu-kassio",
+      "trigger": "fisioterapia_case_1",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Route to Kássio (Fisioterapia)",
+        "verification": [
+          "specialty match"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_patricia",
+      "from": "coremu-orchestrator",
+      "to": "coremu-patricia",
+      "trigger": "fisioterapia_case_2",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Route to Patricia (Fisioterapia)",
+        "verification": [
+          "specialty match"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_ester",
+      "from": "coremu-orchestrator",
+      "to": "coremu-ester",
+      "trigger": "psicologia_case_1",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Route to Ester (Psicologia)",
+        "verification": [
+          "specialty match"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_giselle",
+      "from": "coremu-orchestrator",
+      "to": "coremu-giselle",
+      "trigger": "psicologia_case_2",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Route to Giselle (Psicologia)",
+        "verification": [
+          "specialty match"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_coordinator",
+      "from": "coremu-orchestrator",
+      "to": "coremu-coordinator",
+      "trigger": "program_governance",
+      "priority": "low",
+      "payload_template": {
+        "summary": "Governance task (NDAE)",
+        "verification": [
+          "institutional document standard applied"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_orch_to_all_specialists",
+      "from": "coremu-orchestrator",
+      "to": "all specialists",
+      "trigger": "territorial_synthesis_request",
+      "priority": "normal",
+      "payload_template": {
+        "summary": "Fan-out territorial synthesis",
+        "verification": [
+          "each specialty returned a section"
+        ]
+      }
+    },
+    {
+      "route_id": "coremu_to_meta_legal_escalation",
+      "from": "coremu-orchestrator",
+      "to": "meta-orchestrator",
+      "trigger": "clinical_malpractice_or_compliance_risk",
+      "priority": "high",
+      "requires_confirmation": true,
+      "payload_template": {
+        "summary": "Escalate to legal group (malpractice / compliance)",
+        "verification": [
+          "PII redaction applied",
+          "user confirmed"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "../../../generated/schemas/knowledge-manifest.schema.json",
+  "version": "1.0.0",
+  "group": "legal",
+  "description": "LA8159 aviation legal pack knowledge. Per-jurisdiction framework notes plus case-file indices. Source PDFs and evidence bundles are PII-sensitive and remain outside this repo.",
+  "defaults": { "pii_redaction": true, "retention": "per-case" },
+  "entries": [
+    {
+      "id": "legal.framework.brazil",
+      "title": "Legal framework overview — Brazil (CBA, CDC, CPB, ANAC Res. 400)",
+      "path": "agents-groups/government/knowledge/legal/01-legal-framework.md",
+      "kind": "doc",
+      "language": "pt-BR",
+      "owner_agents": ["brazilian-aviation-legal-expert"],
+      "consumer_agents": ["legal-orchestrator", "latin-american-consumer-protection-specialist", "latin-american-criminal-investigation-coordinator"],
+      "tags": ["brazil", "framework"],
+      "notes": "Shared canonical CPSI framework source maintained under the government group knowledge folder.",
+      "pii_sensitivity": "none"
+    },
+    {
+      "id": "legal.agents.index",
+      "path": "generated/legal/legal-agents.index.json",
+      "kind": "index",
+      "owner_agents": ["legal-coordinator"],
+      "consumer_agents": ["legal-orchestrator"],
+      "tags": ["inventory"]
+    },
+    {
+      "id": "legal.policies.orchestration",
+      "title": "Legal orchestration policy (legacy)",
+      "path": "generated/legal/policies/legal-orchestration.policy.json",
+      "kind": "doc",
+      "owner_agents": ["legal-coordinator"],
+      "consumer_agents": ["legal-orchestrator"],
+      "tags": ["policy"]
+    },
+    {
+      "id": "legal.bundles.index",
+      "title": "Legal bundles index",
+      "path": "generated/legal/bundles/index.json",
+      "kind": "index",
+      "owner_agents": ["legal-coordinator"],
+      "consumer_agents": ["legal-orchestrator"],
+      "tags": ["bundles"]
+    },
+    {
+      "id": "legal.build-pack.script",
+      "title": "Legal pack builder script",
+      "path": "generated/build-legal-pack.py",
+      "kind": "workflow",
+      "owner_agents": ["legal-coordinator"],
+      "tags": ["build", "regeneration"],
+      "notes": "Reads the external LA8159 source manifest (kout/agents/la8159-agent-manifest.json) and writes generated/legal/ artifacts."
+    }
+  ],
+  "planned_entries": [
+    { "id": "legal.framework.chile", "title": "Framework overview — Chile (CACH, Ley 16.752, DAN 17)", "owner_agents": ["chilean-aviation-legal-expert"] },
+    { "id": "legal.framework.italy", "title": "Framework overview — Italy / EU (CdN, EU 261/2004)", "owner_agents": ["italian-aviation-legal-expert"] },
+    { "id": "legal.framework.uk", "title": "Framework overview — UK CAA + Montreal Convention", "owner_agents": ["uk-aviation-legal-expert"] },
+    { "id": "legal.framework.icao", "title": "ICAO Annexes cheat sheet (6/9/10/11/13/14/17)", "owner_agents": ["international-aviation-coordinator"] },
+    { "id": "legal.comparative.consumer", "title": "BR+CL consumer protection comparative table", "owner_agents": ["latin-american-consumer-protection-specialist"] },
+    { "id": "legal.comparative.criminal", "title": "BR+CL criminal investigation coordination (MLAT) playbook", "owner_agents": ["latin-american-criminal-investigation-coordinator"] }
+  ]
+}

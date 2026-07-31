@@ -1,0 +1,56 @@
+{
+  "$schema": "../../../generated/schemas/orchestrator-policy.schema.json",
+  "version": "1.0.0",
+  "group": "legal",
+  "description": "Orchestration policy for the Legal agent group: routing, jurisdiction fan-out, cross-border aggregation, and escalation rules.",
+  "orchestrator": "legal-orchestrator",
+  "coordinator": "legal-coordinator",
+  "routing": {
+    "single_jurisdiction": {
+      "trigger": "single jurisdiction detected in request",
+      "action": "route to that jurisdiction expert"
+    },
+    "multi_jurisdiction": {
+      "trigger": "two or more jurisdictions detected",
+      "action": "route to international-aviation-coordinator",
+      "fan_out": "parallel read-only consultation of per-jurisdiction experts",
+      "aggregate": "cross-border checks + conflict-of-laws flags"
+    },
+    "consumer_protection_br_cl": {
+      "trigger": "consumer-protection angle in BR and/or CL",
+      "action": "route to latin-american-consumer-protection-specialist"
+    },
+    "criminal_investigation_br_cl": {
+      "trigger": "criminal / investigation coordination",
+      "action": "route to latin-american-criminal-investigation-coordinator"
+    },
+    "governance": {
+      "trigger": "program governance, workflow compliance, 3-file loop",
+      "action": "route to legal-coordinator"
+    }
+  },
+  "escalations": {
+    "needs_article_level_grounding": {
+      "trigger": "article-level grounding / verification flag / NEVER-rule check required",
+      "to": "meta-orchestrator",
+      "payload_tag": "needs_article_level_grounding"
+    },
+    "public_procurement_angle": {
+      "trigger": "public procurement implication detected",
+      "to": "meta-orchestrator",
+      "payload_tag": "public_procurement_angle_in_legal_case"
+    }
+  },
+  "operating_rules": [
+    "Never issue a final legal opinion directly; route and aggregate specialist outputs.",
+    "Every conclusion cites instrument + article (article-level grounding).",
+    "Flag adversarially contested extrapolations.",
+    "PII redaction is mandatory before any write to case files.",
+    "Legal group never writes outside agents-groups/legal/** without meta-orchestrator confirmation."
+  ],
+  "done_criteria": [
+    "Target specialist acknowledged with valid HandoffPayload.",
+    "Final reply: conclusion + framework citations + jurisdiction respected.",
+    "Cross-border matters aggregated via international coordinator."
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "group": "government",
+  "routing": [
+    {
+      "route_id": "gov_orch_to_cpsi",
+      "from": "government-orchestrator",
+      "to": "cpsi-municipal-advisor",
+      "trigger": "cpsi_or_lc182_detected",
+      "priority": "high",
+      "payload_template": {
+        "summary": "CPSI (LC 182/2021) municipal advisory",
+        "artifacts": [
+          { "type": "frameworks", "value": ["LC 182/2021", "Manual AGU 2025"] },
+          { "type": "observatory_cited", "value": false }
+        ],
+        "verification": [
+          "answer-first structure",
+          "problem reframed before solution",
+          "citations present (article + Manual AGU)",
+          "advisory tag present",
+          "R$ 1,6M cap checked"
+        ]
+      }
+    },
+    {
+      "route_id": "gov_orch_to_coordinator",
+      "from": "government-orchestrator",
+      "to": "government-coordinator",
+      "trigger": "governance_or_manifest_update",
+      "priority": "low",
+      "payload_template": {
+        "summary": "Governance task (manifest, policy, knowledge manifest)",
+        "verification": ["validate-pack.mjs passed"]
+      }
+    },
+    {
+      "route_id": "gov_coordinator_to_meta_for_legal",
+      "from": "government-coordinator",
+      "to": "meta-orchestrator",
+      "trigger": "legal_angle_in_public_procurement",
+      "priority": "high",
+      "requires_confirmation": true,
+      "payload_template": {
+        "summary": "Procurement case with legal nexus — escalate to legal group",
+        "verification": ["user confirmed cross-group handoff"]
+      }
+    }
+  ]
+}

@@ -5,17 +5,17 @@
     {
       "id": "garage",
       "service": "garage",
-      "description": "Garage MCP fleet (FastMCP multi-server): core, files, ingestion, qdrant, prompt.",
+      "description": "Garage MCP fleet (FastMCP multi-server): core, files, ingestion, qdrant, prompt, juris.",
       "required": true,
       "tool_name_prefixes": ["garage_", "qdrant_", "ingestion_", "legal_", "prompt_", "files_", "transcript_"],
-      "root_dir": "/Users/leandrodisconzi/2026/garage-main",
-      "mcp_dir": "/Users/leandrodisconzi/2026/garage-main/mcp",
+      "root_dir": "/Users/dev/_sell/mcp-ecosystem/garge",
+      "mcp_dir": "/Users/dev/_sell/mcp-ecosystem/garge/mcp",
       "commands": [
         {
           "id": "garage-core",
           "name": "Garage Core MCP",
           "command": "python3",
-          "args": ["/Users/leandrodisconzi/2026/garage-main/mcp/servers/core_server.py"],
+          "args": ["mcp/servers/core_server.py"],
           "env": {
             "GARAGE_BASE_URL": "http://127.0.0.1:8066",
             "GARAGE_API_KEY": ""
@@ -25,7 +25,7 @@
           "id": "garage-files",
           "name": "Garage Files MCP",
           "command": "python3",
-          "args": ["/Users/leandrodisconzi/2026/garage-main/mcp/servers/files_server.py"],
+          "args": ["mcp/servers/files_server.py"],
           "env": {
             "GARAGE_BASE_URL": "http://127.0.0.1:8066",
             "GARAGE_API_KEY": ""
@@ -35,7 +35,7 @@
           "id": "garage-ingestion",
           "name": "Garage Ingestion MCP",
           "command": "python3",
-          "args": ["/Users/leandrodisconzi/2026/garage-main/mcp/servers/ingestion_server.py"],
+          "args": ["mcp/servers/ingestion_server.py"],
           "env": {
             "GARAGE_BASE_URL": "http://127.0.0.1:8066",
             "GARAGE_API_KEY": ""
@@ -45,7 +45,7 @@
           "id": "garage-qdrant",
           "name": "Garage Qdrant MCP",
           "command": "python3",
-          "args": ["/Users/leandrodisconzi/2026/garage-main/mcp/servers/qdrant_server.py"],
+          "args": ["mcp/servers/qdrant_server.py"],
           "env": {
             "GARAGE_BASE_URL": "http://127.0.0.1:8066",
             "GARAGE_API_KEY": ""
@@ -55,7 +55,17 @@
           "id": "garage-prompt",
           "name": "Garage Prompt MCP",
           "command": "python3",
-          "args": ["/Users/leandrodisconzi/2026/garage-main/mcp/servers/prompt_server.py"],
+          "args": ["mcp/servers/prompt_server.py"],
+          "env": {
+            "GARAGE_BASE_URL": "http://127.0.0.1:8066",
+            "GARAGE_API_KEY": ""
+          }
+        },
+        {
+          "id": "garage-juris",
+          "name": "Garage Juris MCP",
+          "command": "python3",
+          "args": ["mcp/servers/juris_server.py"],
           "env": {
             "GARAGE_BASE_URL": "http://127.0.0.1:8066",
             "GARAGE_API_KEY": ""
@@ -64,31 +74,32 @@
       ],
       "discovery": {
         "type": "garage-multi",
-        "mcp_servers_example": "/Users/leandrodisconzi/2026/garage-main/mcp/mcpServers.example.json"
+        "mcp_servers_example": "/Users/dev/_sell/mcp-ecosystem/garge/mcp/mcpServers.example.json"
       },
       "readiness": {
-        "report_path": "/Users/leandrodisconzi/2026/garage-main/mcp/MCP_READINESS_REPORT_2026-04-24.md",
+        "report_path": "/Users/dev/_sell/mcp-ecosystem/garge/mcp/MCP_READINESS_REPORT_2026-04-24.md",
         "expected_status": "ready"
       },
       "notes": [
         "Garage MCP coverage report targets 100% in-scope coverage.",
-        "Destructive tools must expose confirm=true guards."
+        "Destructive tools must expose confirm=true guards.",
+        "Path updated from /Users/leandrodisconzi/2026/garage-main to /Users/dev/_sell/mcp-ecosystem/garge"
       ]
     },
     {
       "id": "bridge",
       "service": "bridge",
-      "description": "Bridge MCP server (Node.js single-server) exposing bridge_* tools.",
+      "description": "Bridge MCP server (Node.js single-server) exposing bridge_* tools for juris-search and discovery.",
       "required": true,
       "tool_name_prefixes": ["bridge_"],
-      "root_dir": "/Users/leandrodisconzi/2026/bridge-main",
-      "mcp_dir": "/Users/leandrodisconzi/2026/bridge-main/mcp",
+      "root_dir": "/Users/dev/_sell/mcp-ecosystem/juris-search",
+      "mcp_dir": "/Users/dev/_sell/mcp-ecosystem/juris-search/mcp",
       "commands": [
         {
           "id": "bridge-main",
           "name": "Bridge MCP",
           "command": "node",
-          "args": ["/Users/leandrodisconzi/2026/bridge-main/mcp/bridge_mcp_server.js"],
+          "args": ["mcp/juris_mcp_server.js"],
           "env": {
             "BRIDGE_BASE_URL": "http://127.0.0.1:3010"
           }
@@ -96,24 +107,25 @@
       ],
       "discovery": {
         "type": "bridge-single",
-        "bridge_server_file": "/Users/leandrodisconzi/2026/bridge-main/mcp/bridge_mcp_server.js"
+        "bridge_server_file": "/Users/dev/_sell/mcp-ecosystem/juris-search/mcp/juris_mcp_server.js"
       },
       "readiness": {
-        "report_path": "/Users/leandrodisconzi/2026/bridge-main/mcp/mcp_readiness_report.md",
+        "report_path": "/Users/dev/_sell/mcp-ecosystem/juris-search/mcp/mcp_readiness_report.md",
         "expected_status": "ready"
       },
       "notes": [
-        "Bridge MCP readiness report is generated by generate_readiness_artifacts.js."
+        "Bridge MCP readiness report is generated by generate_readiness_artifacts.js.",
+        "Path updated from /Users/leandrodisconzi/2026/bridge-main to /Users/dev/_sell/mcp-ecosystem/juris-search"
       ]
     },
     {
       "id": "argus",
       "service": "argus",
-      "description": "ARGUS MCP fleet (FastMCP multi-server): law and builder servers.",
+      "description": "ARGUS MCP fleet (FastMCP multi-server): law and builder servers for violation-refiner.",
       "required": true,
       "tool_name_prefixes": ["argus_"],
-      "root_dir": "/Users/leandrodisconzi/2026/argus-main",
-      "mcp_dir": "/Users/leandrodisconzi/2026/argus-main/mcp",
+      "root_dir": "/Users/dev/_sell/mcp-ecosystem/violation-refiner",
+      "mcp_dir": "/Users/dev/_sell/mcp-ecosystem/violation-refiner/mcp",
       "commands": [
         {
           "id": "argus-law",
@@ -140,14 +152,16 @@
       ],
       "discovery": {
         "type": "fastmcp-multi",
-        "mcp_servers_example": "/Users/leandrodisconzi/2026/argus-main/mcp/mcpServers.example.json"
+        "mcp_servers_example": "/Users/dev/_sell/mcp-ecosystem/violation-refiner/mcp/mcpServers.example.json"
       },
       "readiness": {
-        "report_path": "/Users/leandrodisconzi/2026/argus-main/mcp/readiness/readiness_report.json",
+        "report_path": "/Users/dev/_sell/mcp-ecosystem/violation-refiner/mcp/readiness/readiness_report.json",
         "expected_status": "ready"
       },
       "notes": [
-        "ARGUS uses python-fastmcp-multi with read-only law tools and controlled builder operations."
+        "ARGUS uses python-fastmcp-multi with read-only law tools and controlled builder operations.",
+        "Path updated from /Users/leandrodisconzi/2026/argus-main to /Users/dev/_sell/mcp-ecosystem/violation-refiner",
+        "Note: violation-refiner directory needs mcp/servers/ directory created with law_server.py and builder_server.py"
       ]
     },
     {
@@ -156,8 +170,8 @@
       "description": "RGUS MCP fleet (FastMCP multi-server): legalpipeline and framework/dashboard servers.",
       "required": true,
       "tool_name_prefixes": ["legalpipeline_", "framework_", "dashboard_"],
-      "root_dir": "/Users/leandrodisconzi/2026/rgus-main",
-      "mcp_dir": "/Users/leandrodisconzi/2026/rgus-main/mcp",
+      "root_dir": "/Users/dev/_sell/mcp-ecosystem/rgus",
+      "mcp_dir": "/Users/dev/_sell/mcp-ecosystem/rgus/mcp",
       "commands": [
         {
           "id": "rgus-legalpipeline",
@@ -184,14 +198,15 @@
       ],
       "discovery": {
         "type": "fastmcp-multi",
-        "mcp_servers_example": "/Users/leandrodisconzi/2026/rgus-main/mcp/mcpServers.example.json"
+        "mcp_servers_example": "/Users/dev/_sell/mcp-ecosystem/rgus/mcp/mcpServers.example.json"
       },
       "readiness": {
-        "report_path": "/Users/leandrodisconzi/2026/rgus-main/mcp/reports/MCP_READINESS_REPORT.json",
+        "report_path": "/Users/dev/_sell/mcp-ecosystem/rgus/mcp/reports/MCP_READINESS_REPORT.json",
         "expected_status": "ready"
       },
       "notes": [
-        "RGUS MCP uses python-fastmcp-multi with legalpipeline_ plus framework_/dashboard_ tools and readiness parity reports."
+        "RGUS MCP uses python-fastmcp-multi with legalpipeline_ plus framework_/dashboard_ tools and readiness parity reports.",
+        "Path updated from /Users/leandrodisconzi/2026/rgus-main - rgus directory needs to exist in mcp-ecosystem"
       ]
     },
     {
@@ -200,8 +215,8 @@
       "description": "OCR MCP fleet (FastMCP multi-server): OCR and PDF processing servers.",
       "required": true,
       "tool_name_prefixes": ["ocr_", "pdf_"],
-      "root_dir": "/Users/leandrodisconzi/2026/OCR-main",
-      "mcp_dir": "/Users/leandrodisconzi/2026/OCR-main/mcp",
+      "root_dir": "/Users/dev/_sell/mcp-ecosystem/ocr",
+      "mcp_dir": "/Users/dev/_sell/mcp-ecosystem/ocr/mcp",
       "commands": [
         {
           "id": "ocr-main-ocr",
@@ -228,14 +243,15 @@
       ],
       "discovery": {
         "type": "fastmcp-multi",
-        "mcp_servers_example": "/Users/leandrodisconzi/2026/OCR-main/mcp/mcpServers.example.json"
+        "mcp_servers_example": "/Users/dev/_sell/mcp-ecosystem/ocr/mcp/mcpServers.example.json"
       },
       "readiness": {
-        "report_path": "/Users/leandrodisconzi/2026/OCR-main/mcp/readiness_report.json",
+        "report_path": "/Users/dev/_sell/mcp-ecosystem/ocr/mcp/readiness_report.json",
         "expected_status": "ready"
       },
       "notes": [
-        "OCR MCP uses python-fastmcp-multi with ocr_ and pdf_ tool families and JSON readiness coverage reports."
+        "OCR MCP uses python-fastmcp-multi with ocr_ and pdf_ tool families and JSON readiness coverage reports.",
+        "Path updated from /Users/leandrodisconzi/2026/OCR-main to /Users/dev/_sell/mcp-ecosystem/ocr"
       ]
     },
     {
@@ -244,8 +260,8 @@
       "description": "Mapping MCP fleet (FastMCP multi-server): conversation and feedback servers.",
       "required": true,
       "tool_name_prefixes": ["conversation_", "feedback_", "report_generator_"],
-      "root_dir": "/Users/leandrodisconzi/2026/mapping-main",
-      "mcp_dir": "/Users/leandrodisconzi/2026/mapping-main/mpc",
+      "root_dir": "/Users/dev/_sell/mcp-ecosystem/mapping",
+      "mcp_dir": "/Users/dev/_sell/mcp-ecosystem/mapping/mpc",
       "commands": [
         {
           "id": "mapping-conversation",
@@ -270,14 +286,15 @@
       ],
       "discovery": {
         "type": "fastmcp-multi",
-        "mcp_servers_example": "/Users/leandrodisconzi/2026/mapping-main/mpc/mcpServers.example.json"
+        "mcp_servers_example": "/Users/dev/_sell/mcp-ecosystem/mapping/mpc/mcpServers.example.json"
       },
       "readiness": {
-        "report_path": "/Users/leandrodisconzi/2026/mapping-main/mpc/readiness_report.json",
+        "report_path": "/Users/dev/_sell/mcp-ecosystem/mapping/mpc/readiness_report.json",
         "expected_status": "ready"
       },
       "notes": [
-        "Mapping MCP is hosted under mpc/ (project-specific naming) and provides conversation_ and feedback_ tool domains."
+        "Mapping MCP is hosted under mpc/ (project-specific naming) and provides conversation_ and feedback_ tool domains.",
+        "Path updated from /Users/leandrodisconzi/2026/mapping-main - mapping directory needs to exist in mcp-ecosystem"
       ]
     },
     {
@@ -286,14 +303,14 @@
       "description": "Pinocchio MCP fleet (FastMCP multi-server): transcription, transcripts, and meta servers.",
       "required": true,
       "tool_name_prefixes": ["pinocchio_"],
-      "root_dir": "/Users/leandrodisconzi/2026/pinocchio-main",
-      "mcp_dir": "/Users/leandrodisconzi/2026/pinocchio-main/mcp",
+      "root_dir": "/Users/dev/_sell/mcp-ecosystem/transcription",
+      "mcp_dir": "/Users/dev/_sell/mcp-ecosystem/transcription/mcp",
       "commands": [
         {
           "id": "pinocchio-transcription",
           "name": "Pinocchio Transcription MCP",
           "command": ".venv/bin/python3",
-          "args": ["mcp/servers/transcription_server.py"],
+          "args": ["-m", "src.mcp.servers.transcription_server"],
           "env": {
             "PYANNOTE_AUTH_TOKEN": "",
             "HF_TOKEN": "",
@@ -305,7 +322,7 @@
           "id": "pinocchio-transcripts",
           "name": "Pinocchio Transcripts MCP",
           "command": ".venv/bin/python3",
-          "args": ["mcp/servers/transcripts_server.py"],
+          "args": ["-m", "src.mcp.servers.transcripts_server"],
           "env": {
             "TRANSCRIPT_DIR": "data/transcripts",
             "QDRANT_URL": "http://localhost:6333",
@@ -317,20 +334,22 @@
           "id": "pinocchio-meta",
           "name": "Pinocchio Meta MCP",
           "command": ".venv/bin/python3",
-          "args": ["mcp/servers/meta_server.py"],
+          "args": ["-m", "src.mcp.servers.meta_server"],
           "env": {}
         }
       ],
       "discovery": {
         "type": "fastmcp-multi",
-        "mcp_servers_example": "/Users/leandrodisconzi/2026/pinocchio-main/mcp/mcpServers.example.json"
+        "mcp_servers_example": "/Users/dev/_sell/mcp-ecosystem/transcription/mcp/mcpServers.example.json"
       },
       "readiness": {
-        "report_path": "/Users/leandrodisconzi/2026/pinocchio-main/mcp/MCP_READINESS_REPORT.md",
+        "report_path": "/Users/dev/_sell/mcp-ecosystem/transcription/mcp/MCP_READINESS_REPORT.md",
         "expected_status": "ready"
       },
       "notes": [
-        "Pinocchio MCP is implemented with python-fastmcp-multi and endpoint parity checks in MCP_READINESS_REPORT.md."
+        "Pinocchio MCP is implemented with python-fastmcp-multi and endpoint parity checks in MCP_READINESS_REPORT.md.",
+        "Path updated from /Users/leandrodisconzi/2026/pinocchio-main to /Users/dev/_sell/mcp-ecosystem/transcription",
+        "Uses module path src.mcp.servers.* (not mcp/servers/*.py directly)"
       ]
     },
     {
@@ -339,8 +358,8 @@
       "description": "LegalPipeline MCP fleet (FastMCP): core server exposing legalpipeline_* tools.",
       "required": true,
       "tool_name_prefixes": ["legalpipeline_"],
-      "root_dir": "/Users/leandrodisconzi/2026/legalpipeline-main",
-      "mcp_dir": "/Users/leandrodisconzi/2026/legalpipeline-main/mcp",
+      "root_dir": "/Users/dev/_sell/mcp-ecosystem/legalpipeline",
+      "mcp_dir": "/Users/dev/_sell/mcp-ecosystem/legalpipeline/mcp",
       "commands": [
         {
           "id": "legalpipeline-core",
@@ -354,14 +373,46 @@
       ],
       "discovery": {
         "type": "fastmcp-multi",
-        "mcp_servers_example": "/Users/leandrodisconzi/2026/legalpipeline-main/mcp/mcpServers.example.json"
+        "mcp_servers_example": "/Users/dev/_sell/mcp-ecosystem/legalpipeline/mcp/mcpServers.example.json"
       },
       "readiness": {
-        "report_path": "/Users/leandrodisconzi/2026/legalpipeline-main/mcp/mcp_readiness_report.md",
+        "report_path": "/Users/dev/_sell/mcp-ecosystem/legalpipeline/mcp/mcp_readiness_report.md",
         "expected_status": "ready"
       },
       "notes": [
-        "LegalPipeline MCP is implemented with python-fastmcp and parity-checked via mcp_readiness_report.md."
+        "LegalPipeline MCP is implemented with python-fastmcp and parity-checked via mcp_readiness_report.md.",
+        "Path updated from /Users/leandrodisconzi/2026/legalpipeline-main - legalpipeline directory needs to exist in mcp-ecosystem"
+      ]
+    },
+    {
+      "id": "audio",
+      "service": "audio",
+      "description": "Audio MCP server (torchaudio-based): transcription healthcheck, audio info, resample, slice, features, ASR bundles, greedy transcription, project paths.",
+      "required": true,
+      "tool_name_prefixes": ["audio_", "transcription_"],
+      "root_dir": "/Users/dev/_sell/mcp-ecosystem/audio",
+      "mcp_dir": "/Users/dev/_sell/mcp-ecosystem/audio/mcp",
+      "commands": [
+        {
+          "id": "audio-mcp",
+          "name": "Audio Torchaudio MCP",
+          "command": "python",
+          "args": ["mcp/torchaudio_mcp/server.py"],
+          "env": {}
+        }
+      ],
+      "discovery": {
+        "type": "fastmcp-single",
+        "mcp_server_file": "/Users/dev/_sell/mcp-ecosystem/audio/mcp/torchaudio_mcp/server.py"
+      },
+      "readiness": {
+        "report_path": "/Users/dev/_sell/mcp-ecosystem/audio/mcp/mcp_readiness_report.md",
+        "expected_status": "ready"
+      },
+      "notes": [
+        "Audio MCP provides transcription_healthcheck, transcription_audio_info, transcription_resample_audio, transcription_slice_audio, transcription_extract_features, transcription_list_asr_bundles, transcription_transcribe_greedy, transcription_list_project_paths.",
+        "Path updated from /Users/leandrodisconzi/2026/audio-main to /Users/dev/_sell/mcp-ecosystem/audio",
+        "Uses torchaudio_mcp/server.py structure"
       ]
     }
   ]

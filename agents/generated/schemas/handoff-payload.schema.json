@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "generated/schemas/handoff-payload.schema.json",
+  "version": "1.0.0",
+  "title": "Handoff Payload",
+  "description": "Schema for handoff payloads exchanged between orchestrators and agents. Used by meta-orchestrator for cross-group routing.",
+  "type": "object",
+  "required": ["handoff_id", "from_agent", "to_agent", "intent", "scope"],
+  "properties": {
+    "version": { "type": "string" },
+    "handoff_id": { "type": "string", "format": "uuid" },
+    "from_agent": { "type": "string" },
+    "to_agent": { "type": "string" },
+    "intent": { "type": "string" },
+    "status": { "enum": ["planned", "active", "completed", "failed"] },
+    "priority": { "enum": ["low", "normal", "high", "critical"] },
+    "scope": {
+      "type": "object",
+      "required": ["owned_paths"],
+      "properties": {
+        "owned_paths": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "payload": { "type": "object" },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

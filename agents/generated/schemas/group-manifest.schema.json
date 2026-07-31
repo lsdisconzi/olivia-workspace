@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "generated/schemas/group-manifest.schema.json",
+  "version": "1.0.0",
+  "title": "Group Manifest",
+  "description": "Schema for agent group manifests (olivia, la8159, etc.). Defines the group's orchestrator, coordinator, specialist agents, knowledge, and policy references.",
+  "type": "object",
+  "required": ["group", "version", "agents", "orchestrator"],
+  "properties": {
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "group": { "type": "string", "description": "Unique group slug" },
+    "agents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slug", "name", "role", "agent_file"],
+        "properties": {
+          "slug": { "type": "string" },
+          "agent_file": { "type": "string" },
+          "role": { "enum": ["orchestrator", "coordinator", "specialist"] }
+        }
+      }
+    },
+    "orchestrator": { "type": "object" },
+    "coordinator": { "type": "object" },
+    "policies": { "type": "object" },
+    "knowledge": { "type": "object" }
+  }
+}

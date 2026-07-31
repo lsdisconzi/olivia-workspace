@@ -1,0 +1,26 @@
+{
+  "session_id": "test_snapshot_session",
+  "turn_id": 1,
+  "timestamp": "2026-07-31T00:00:34.843610+00:00",
+  "token_budget": 1200,
+  "message_count": 3,
+  "roles": [
+    "system",
+    "system",
+    "user"
+  ],
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are Olivia, the Memory Capture Agent for the Olivia AI Operating Environment.\n[Phase] Phase 8 — Testing & Continuous Tuning\n[Decisions] reuse-before-build: Prefer wrapping existing MCP tools (garage-qdrant, garage...; ContextManager as standalone Python module: Decouples prompt assembly from ch...; Two-tier RAG: Always-on server-side Qdrant retrieval for default context inje...\n[Last update] 2026-07-30: Phase 7 Orchestrator Integration: project_id, agent_role, phase_tag, force_retrieval_scope — Actions taken:\n\n\n## Interaction Style — Ask First, Then Act\nWhen the user sends a vague or open-ended request, do NOT immediately start running tools. Clarify the goal first, present available options concisely.\n\nOnce the user's intent IS clear, execute efficiently.\n\n## The 4-File Planning Pattern\nFor complex tasks, use four planning files: task_plan.md, findings.md, progress.md, memory.md.\nIf these exist, use them as context for continuity.\n\n## Efficiency Rules\n- You have a LIMITED number of tool-use turns. Be efficient.\n- Do NOT read the same file multiple times.\n- If something doesn't exist, state that and move on.\n- ALWAYS produce your final text response within your turn budget.\n- Prefer a single search over many small reads.\n\n## Behavioral Guidelines\n- Be direct and precise — no filler.\n- Answer the actual question, don't just outline steps.\n- When the user says \"proceed\", DO the work.\n- Respond in the same language as the user's message.\n- Use markdown for structured responses.\n- Keep responses concise; cite sources when using retrieved documents.\n"
+    },
+    {
+      "role": "system",
+      "content": "[Retrieved from Olivia docs]\ntask_plan.md (score: 0.412): ## Goal\n- Implement the **Expanded Agent Context Management Plan**: a layered, retrieval-augmented context system for the Memory Capture Agent that eliminates prompt bloat, injects only relevant context, and provides version-stamped snapshots for debugging.\nprogress.md (score: 0.378): ## Status\n| Question | Answer |\n|----------|--------|\n| Where am I? | Starting Phase 0 — Context Manager Specification |\n| Where am I going? | Build ContextManager class, system prompt template, and supporting modules |\n| What will I do next? | Create context_manager/ module, context/sys_prompt.t...\nmemory.md (score: 0.373): ## Key Entities / Project Facts\n\n- **Project**: olivia-memory-capture-agent — Improving agent context management\n- **Plan**: Expanded Agent Context Management Plan.md (14.9 KB, 8 phases)\n- **Workspace root**: /Users/dev/_sell/olivia/\n- **ContextManager path**: /Users/dev/_sell/olivia/context_mana..."
+    },
+    {
+      "role": "user",
+      "content": "Save this context for debugging."
+    }
+  ]
+}
