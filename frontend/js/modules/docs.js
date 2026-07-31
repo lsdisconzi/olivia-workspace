@@ -1961,6 +1961,353 @@ function _sanitizeMermaidSource(source) {
 }
 
 /**
+ * Derive a safe base filename for mermaid exports.
+ */
+function _mermaidExportBaseName() {
+  var base = (document.title || '').trim() || 'mermaid-diagram';
+  return base
+    .replace(/[\\/:*?"<>|]+/g, '-')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^[-.]+|[-.]+$/g, '')
+    .slice(0, 80) || 'mermaid-diagram';
+}
+
+/**
+ * Serialize an SVG element to a standalone SVG string.
+ * If fixedSize is given, explicit width/height attributes are set so the
+ * SVG rasterizes at predictable dimensions.
+ */
+function _serializeMermaidSvg(svgEl, fixedSize) {
+  var clone = svgEl.cloneNode(true);
+  if (fixedSize) {
+    clone.setAttribute('width', String(Math.round(fixedSize.width)));
+    clone.setAttribute('height', String(Math.round(fixedSize.height)));
+  } else {
+    clone.removeAttribute('width');
+    clone.removeAttribute('height');
+  }
+  var xml = new XMLSerializer().serializeToString(clone);
+  if (xml.indexOf('xmlns=') === -1) {
+    xml = xml.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ');
+  }
+  return xml;
+}
+
+/**
+ * Compute export dimensions for a rendered mermaid SVG.
+ * Prefers the viewBox (intrinsic size), falls back to the live bounding rect.
+ */
+function _mermaidSvgSize(svgEl) {
+  var vb = svgEl.getAttribute('viewBox');
+  if (vb) {
+    var parts = String(vb).trim().split(/[\s,]+/).map(Number);
+    if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) {
+      return { width: parts[2], height: parts[3] };
+    }
+  }
+  var rect = svgEl.getBoundingClientRect();
+  if (rect.width > 4 && rect.height > 4) {
+    return { width: Math.round(rect.width), height: Math.round(rect.height) };
+  }
+  return { width: 1200, height: 800 };
+}
+
+/**
+ * Trigger a browser download for a Blob.
+ */
+function _mermaidDownloadBlob(blob, filename) {
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+}
+
+/**
+ * Export a rendered mermaid SVG as a standalone .svg file.
+ */
+function _exportMermaidSvg(svgEl, filename) {
+  _prepareMermaidExportSvg(svgEl).then(function (prepared) {
+    var xml = _serializeMermaidSvg(prepared, null);
+    _mermaidDownloadBlob(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }), filename + '.svg');
+  });
+}
+
+/**
+ * Export a rendered mermaid SVG as a .png file (rasterized at 2x for HiDPI).
+ * Falls back to SVG download if rasterization fails.
+ */
+function _exportMermaidPng(svgEl, filename) {
+  _prepareMermaidExportSvg(svgEl).then(function (prepared) {
+    var size = _mermaidSvgSize(prepared);
+    var xml = _serializeMermaidSvg(prepared, size);
+    var blobUrl = URL.createObjectURL(new Blob([xml], { type: 'image/svg+xml;charset=utf-8' }));
+    var img = new Image();
+    img.onload = function () {
+      try {
+        var scale = 2;
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(size.width * scale);
+        canvas.height = Math.round(size.height * scale);
+        var ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(function (blob) {
+          if (blob) _mermaidDownloadBlob(blob, filename + '.png');
+        }, 'image/png');
+      } finally {
+        URL.revokeObjectURL(blobUrl);
+      }
+    };
+    img.onerror = function () {
+      URL.revokeObjectURL(blobUrl);
+      _exportMermaidSvg(prepared, filename);
+    };
+    img.src = blobUrl;
+  });
+}
+
+/**
+ * Resolve the diagram SVG out of a mermaid container.
+ *
+ * With `securityLevel: 'sandbox'` (see index.html) mermaid wraps the SVG inside
+ * a sandboxed iframe whose `src` is a `data:text/html;base64,` URL, so
+ * `querySelector('svg')` can't reach it — the iframe document is cross-origin.
+ * Decode the data URL and parse the SVG out of it. Falls back to a direct SVG
+ * child when present (non-sandbox render).
+ */
+function _resolveMermaidSvg(mermaidContainer) {
+  var svgEl = mermaidContainer.querySelector('svg');
+  if (svgEl) return svgEl;
+
+  var frame = mermaidContainer.querySelector('iframe');
+  if (!frame) return null;
+  var src = frame.getAttribute('src') || '';
+  var m = src.match(/^data:text\/html[^,]*;base64,([\s\S]+)$/);
+  if (!m) return null;
+
+  var html;
+  try {
+    html = atob(m[1].replace(/\s+/g, ''));
+  } catch (_) {
+    return null;
+  }
+  if (!html || html.indexOf('<svg') === -1) return null;
+
+  try {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.querySelector('svg') || null;
+  } catch (_) {
+    return null;
+  }
+}
+
+/**
+ * Hidden offscreen container used to re-attach the (detached) mermaid SVG so the
+ * browser resolves its embedded <style> block into computed styles. Lazily
+ * created and reused across exports.
+ */
+var _mermaidExportHost = null;
+function _mermaidExportHostEl() {
+  if (!_mermaidExportHost || !_mermaidExportHost.parentNode) {
+    _mermaidExportHost = document.createElement('div');
+    _mermaidExportHost.setAttribute('aria-hidden', 'true');
+    _mermaidExportHost.style.cssText = 'position:absolute;left:-20000px;top:0;width:0;height:0;overflow:hidden;';
+    document.body.appendChild(_mermaidExportHost);
+  }
+  return _mermaidExportHost;
+}
+
+/**
+ * Inline each element's resolved (computed) rendering properties as inline
+ * styles, then drop the <style> block.
+ *
+ * The live diagram's styling lives in a <style> block scoped under
+ * `#<mermaid-id>` (e.g. `#mermaid-abc123 .node rect {...}`). Browsers apply it,
+ * but desktop SVG editors (Inkscape, Illustrator, ...) ignore it — which is why
+ * exported diagrams show black shapes and no strokes/labels there. Inlining the
+ * computed values makes the exported file self-contained and viewer-agnostic.
+ */
+function _flattenMermaidStyles(svgEl) {
+  if (svgEl.getAttribute('data-mermaid-flattened') === '1') return;
+  svgEl.setAttribute('data-mermaid-flattened', '1');
+  var PROPS = [
+    'fill', 'fill-opacity', 'fill-rule', 'stroke', 'stroke-opacity', 'stroke-width',
+    'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin',
+    'stroke-miterlimit', 'opacity', 'visibility', 'display',
+    'font-family', 'font-size', 'font-weight', 'font-style', 'letter-spacing',
+    'text-anchor', 'dominant-baseline'
+  ];
+  var all = [svgEl].concat(Array.prototype.slice.call(svgEl.querySelectorAll('*')));
+  all.forEach(function (el) {
+    if (el.tagName === 'STYLE') return;
+    var cs;
+    try { cs = window.getComputedStyle(el); } catch (_) { return; }
+    var inline = [];
+    for (var i = 0; i < PROPS.length; i++) {
+      var v = cs.getPropertyValue(PROPS[i]);
+      if (v) inline.push(PROPS[i] + ': ' + v);
+    }
+    if (inline.length) {
+      var existing = el.getAttribute('style') || '';
+      el.setAttribute('style', existing ? existing + '; ' + inline.join('; ') : inline.join('; '));
+    }
+  });
+  Array.prototype.slice.call(svgEl.querySelectorAll('style')).forEach(function (s) {
+    s.parentNode.removeChild(s);
+  });
+  // Drop layout hints that confuse non-browser renderers; keep viewBox sizing.
+  svgEl.style.maxWidth = '';
+}
+
+/**
+ * Split a label element into text runs with bold/italic flags so markdown-ish
+ * formatting (e.g. `**bold**`) survives conversion from HTML to SVG <text>.
+ */
+function _mermaidTextRuns(el) {
+  var runs = [];
+  (function walk(n, bold, italic) {
+    if (n.nodeType === 3) {
+      var t = n.textContent || '';
+      if (t) runs.push({ t: t, bold: bold, italic: italic });
+      return;
+    }
+    if (n.nodeType !== 1) return;
+    if (n.tagName === 'BR') { runs.push({ br: true }); return; }
+    var nb = bold || n.tagName === 'STRONG' || n.tagName === 'B';
+    var ni = italic || n.tagName === 'EM' || n.tagName === 'I';
+    Array.prototype.forEach.call(n.childNodes, function (c) { walk(c, nb, ni); });
+  })(el, false, false);
+  return runs;
+}
+
+/**
+ * mermaid renders labels as <foreignObject> (HTML <div>/<span>). Inkscape and
+ * other desktop editors don't render foreignObject at all, so exported diagrams
+ * lose every label. Replace each foreignObject with an equivalent <text>,
+ * reusing the live computed font, colour, alignment and per-run formatting.
+ */
+function _convertMermaidForeignObjects(svgEl) {
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var fos = Array.prototype.slice.call(svgEl.querySelectorAll('foreignObject'));
+  fos.forEach(function (fo) {
+    var x = parseFloat(fo.getAttribute('x') || '0') || 0;
+    var y = parseFloat(fo.getAttribute('y') || '0') || 0;
+    var w = parseFloat(fo.getAttribute('width') || '0') || 0;
+    var h = parseFloat(fo.getAttribute('height') || '0') || 0;
+    var lines = [];
+    Array.prototype.forEach.call(fo.childNodes, function (child) {
+      if (child.nodeType !== 1) return;
+      if (!child.textContent || !child.textContent.trim()) return;
+      lines.push({ runs: _mermaidTextRuns(child) });
+    });
+    if (w < 1 || h < 1 || !lines.length) { fo.parentNode.removeChild(fo); return; }
+    var styleEl = fo.querySelector('span, div, p, strong, b, em, i');
+    var cs = styleEl ? window.getComputedStyle(styleEl) : null;
+    var fs = cs ? (parseFloat(cs.fontSize) || 16) : 16;
+    var lh = cs ? (parseFloat(cs.lineHeight) || 0) : 0;
+    if (!lh || lh <= 0) lh = Math.round(fs * 1.2);
+    var fill = (cs && cs.fill && cs.fill !== 'rgb(0, 0, 0)') ? cs.fill : (cs ? cs.color : '#000');
+    var centerX = x + w / 2;
+    var firstBaseline = y + (h - lines.length * lh) / 2 + fs * 0.75;
+    var text = document.createElementNS(SVGNS, 'text');
+    text.setAttribute('x', centerX.toFixed(2));
+    text.setAttribute('y', firstBaseline.toFixed(2));
+    text.setAttribute('text-anchor', 'start');
+    text.setAttribute('fill', fill);
+    text.setAttribute('data-mermaid-converted', '1');
+    if (cs && cs.fontFamily) text.setAttribute('font-family', cs.fontFamily);
+    text.setAttribute('font-size', String(fs));
+    if (cs && cs.fontWeight && cs.fontWeight !== '400' && cs.fontWeight !== 'normal') {
+      text.setAttribute('font-weight', cs.fontWeight);
+    }
+    if (cs && cs.fontStyle === 'italic') text.setAttribute('font-style', 'italic');
+    lines.forEach(function (line, i) {
+      var runs = line.runs.filter(function (r) { return !r.br; });
+      if (!runs.length) return;
+      var dy = i > 0 ? lh : 0;
+      if (runs.length === 1) {
+        var r = runs[0];
+        var ts = document.createElementNS(SVGNS, 'tspan');
+        if (dy) ts.setAttribute('dy', dy.toFixed(2));
+        if (r.bold) ts.setAttribute('font-weight', 'bold');
+        if (r.italic) ts.setAttribute('font-style', 'italic');
+        ts.textContent = r.t;
+        text.appendChild(ts);
+      } else {
+        var lineEl = document.createElementNS(SVGNS, 'tspan');
+        if (dy) lineEl.setAttribute('dy', dy.toFixed(2));
+        runs.forEach(function (r) {
+          var ts = document.createElementNS(SVGNS, 'tspan');
+          if (r.bold) ts.setAttribute('font-weight', 'bold');
+          if (r.italic) ts.setAttribute('font-style', 'italic');
+          ts.textContent = r.t;
+          lineEl.appendChild(ts);
+        });
+        text.appendChild(lineEl);
+      }
+    });
+    fo.parentNode.replaceChild(text, fo);
+  });
+
+  // Centre each converted line: measure the rendered glyph widths (the svg is
+  // attached to the live document, so fonts/lengths are available) and lay the
+  // runs out left-to-right so the block is centred on the label centre.
+  Array.prototype.slice.call(svgEl.querySelectorAll('text[data-mermaid-converted="1"]')).forEach(function (text) {
+    var cx = parseFloat(text.getAttribute('x')) || 0;
+    var lines = Array.prototype.slice.call(text.childNodes).filter(function (n) { return n.nodeType === 1; });
+    lines.forEach(function (line) {
+      var runs = line.childNodes.length
+        ? Array.prototype.slice.call(line.childNodes).filter(function (n) { return n.nodeType === 1; })
+        : [line];
+      var widths = runs.map(function (ts) {
+        return (ts.getComputedTextLength && ts.getComputedTextLength()) || 0;
+      });
+      var total = widths.reduce(function (a, b) { return a + b; }, 0);
+      var cursor = cx - total / 2;
+      runs.forEach(function (ts, i) {
+        ts.setAttribute('x', cursor.toFixed(2));
+        cursor += widths[i];
+      });
+    });
+  });
+}
+
+/**
+ * Make a resolved mermaid SVG portable for non-browser viewers: re-attach it to
+ * the live document (so CSS resolves), convert HTML labels to <text>, inline
+ * computed styles, then detach. Async because style recalculation needs a couple
+ * of frames. Always resolves with the (possibly unchanged) svgEl.
+ */
+function _prepareMermaidExportSvg(svgEl) {
+  return new Promise(function (resolve) {
+    if (!svgEl || typeof window.getComputedStyle !== 'function' || typeof requestAnimationFrame !== 'function') {
+      resolve(svgEl);
+      return;
+    }
+    var host = _mermaidExportHostEl();
+    if (!host) { resolve(svgEl); return; }
+    host.appendChild(svgEl);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        try {
+          _convertMermaidForeignObjects(svgEl);
+          _flattenMermaidStyles(svgEl);
+        } catch (_) {
+          // leave the svg as-is; serialization is still safe
+        }
+        if (svgEl.parentNode) svgEl.parentNode.removeChild(svgEl);
+        resolve(svgEl);
+      });
+    });
+  });
+}
+
+/**
  * Scan a DOM element for ```mermaid code blocks and replace them with rendered SVG.
  * Errors are caught per-block and show the original code with an error indicator.
  */
@@ -1993,6 +2340,84 @@ function _postRenderMermaid(rootEl) {
         expandBtn.title = 'Open diagram in full view';
         expandBtn.setAttribute('aria-label', 'Open diagram in full view');
         wrapper.appendChild(expandBtn);
+
+        // Add export (PNG/SVG) button + dropdown next to expand
+        const exportWrap = document.createElement('div');
+        exportWrap.className = 'mermaid-export-wrap';
+
+        const exportBtn = document.createElement('button');
+        exportBtn.className = 'mermaid-export-btn';
+        exportBtn.innerHTML = '<i class="fas fa-download"></i>';
+        exportBtn.title = 'Export diagram';
+        exportBtn.setAttribute('aria-label', 'Export diagram');
+        exportBtn.setAttribute('aria-haspopup', 'menu');
+        exportBtn.setAttribute('aria-expanded', 'false');
+
+        const exportMenu = document.createElement('div');
+        exportMenu.className = 'mermaid-export-menu';
+        exportMenu.setAttribute('role', 'menu');
+        exportMenu.innerHTML = [
+          '<button type="button" role="menuitem" data-format="png"><i class="fas fa-file-image"></i> Export as PNG</button>',
+          '<button type="button" role="menuitem" data-format="svg"><i class="fas fa-file-code"></i> Export as SVG</button>',
+        ].join('');
+
+        exportWrap.appendChild(exportBtn);
+        exportWrap.appendChild(exportMenu);
+        wrapper.appendChild(exportWrap);
+
+        // Wire up the export dropdown (positioned fixed so it escapes
+        // the container's overflow-x clipping)
+        function closeExportMenu() {
+          if (!exportMenu.classList.contains('mermaid-export-open')) return;
+          exportMenu.classList.remove('mermaid-export-open');
+          exportBtn.setAttribute('aria-expanded', 'false');
+          document.removeEventListener('click', onDocClick);
+          document.removeEventListener('keydown', onExportKey);
+          window.removeEventListener('scroll', onWinScroll, true);
+          window.removeEventListener('resize', onWinScroll);
+        }
+        function openExportMenu() {
+          var rect = exportBtn.getBoundingClientRect();
+          exportMenu.style.position = 'fixed';
+          exportMenu.style.top = Math.round(rect.bottom + 4) + 'px';
+          exportMenu.style.right = Math.round(window.innerWidth - rect.right) + 'px';
+          exportMenu.style.maxHeight = 'none';
+          exportMenu.classList.add('mermaid-export-open');
+          exportBtn.setAttribute('aria-expanded', 'true');
+          document.addEventListener('click', onDocClick);
+          document.addEventListener('keydown', onExportKey);
+          window.addEventListener('scroll', onWinScroll, true);
+          window.addEventListener('resize', onWinScroll);
+        }
+        function onDocClick(e) {
+          if (!exportWrap.contains(e.target)) closeExportMenu();
+        }
+        function onExportKey(e) {
+          if (e.key === 'Escape') closeExportMenu();
+        }
+        function onWinScroll() {
+          if (exportMenu.classList.contains('mermaid-export-open')) closeExportMenu();
+        }
+
+        exportBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          if (exportMenu.classList.contains('mermaid-export-open')) closeExportMenu();
+          else openExportMenu();
+        });
+
+        exportMenu.addEventListener('click', function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          var item = e.target.closest('[data-format]');
+          if (!item) return;
+          closeExportMenu();
+          var svgEl = _resolveMermaidSvg(wrapper);
+          if (!svgEl) return;
+          var filename = _mermaidExportBaseName();
+          if (item.getAttribute('data-format') === 'png') _exportMermaidPng(svgEl, filename);
+          else _exportMermaidSvg(svgEl, filename);
+        });
 
         preEl.parentNode.replaceChild(wrapper, preEl);
 

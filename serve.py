@@ -11449,10 +11449,6 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # Read per-provider API key from Authorization header (sent by frontend)
         auth_header = str(self.headers.get("Authorization") or "").strip()
         custom_api_key = auth_header[len("Bearer "):] if auth_header.lower().startswith("bearer ") else None
-        # Fallback: if no Authorization header, try user preferences stored in DB
-        if not custom_api_key:
-            user_email = self._auth_current_email()
-            custom_api_key = _resolve_user_api_key(user_email, provider=provider, model=model)
 
         message_raw = _sanitize_text_payload(body.get("message", "") or body.get("userPrompt", ""))
         message, message_omitted_chars = _cap_text_payload(message_raw, ASSISTANT_MESSAGE_MAX_CHARS)
@@ -11463,6 +11459,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # OpenClaude routing works correctly (--provider flag needed for env vars).
         if str(provider or "").strip().lower() != "ollama" and model and str(model).strip().lower().startswith("ollama|"):
             provider = "ollama"
+        # Fallback: if no Authorization header, try user preferences stored in DB
+        if not custom_api_key:
+            user_email = self._auth_current_email()
+            custom_api_key = _resolve_user_api_key(user_email, provider=provider, model=model)
         history = body.get("history", []) if isinstance(body.get("history", []), list) else []
         section_system, section_system_omitted_chars = _cap_text_payload(
             str(body.get("system") or "").strip(),
