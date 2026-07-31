@@ -337,7 +337,7 @@
   display: block;
   max-width: none;
   height: auto;
-  background: #ffffff; /* legible canvas for the expanded view, independent of app dark mode */
+  background: var(--bg-card); /* keeps light-on-dark diagram text legible */
 }
 .mermaid-fullscreen-diagram iframe {
   border: none;
