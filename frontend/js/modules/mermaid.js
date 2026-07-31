@@ -1,17 +1,24 @@
 /* ═══════════════════════════════════════════════════════════════════
-   MERMAID MODULE – Diagram editing, rendering, export & full‑screen
+   MERMAID MODULE – Diagram editing, rendering, export, full‑screen,
+   direction, theme, font family & size controls
    ═══════════════════════════════════════════════════════════════════ */
 
 // ─── State ──────────────────────────────────────────────────────────
 let _mmdPanelReady = false;
 let _mmdFullscreenOverlay = null;
 let _mmdExportHost = null;
-let _mmdRenderSeq = 0; // guards against stale async renders overwriting newer ones
-const _MMD_THEME = 'base'; // 'base' | 'dark' | 'forest' | 'neutral'
+let _mmdRenderSeq = 0;
+const _MMD_THEME = 'base';
+
+// User‑configurable session settings
+window._mmdConfig = {
+  direction: 'TD',
+  theme: _MMD_THEME,
+  fontFamily: 'inherit',
+  fontSize: 16
+};
 
 // ─── CodeMirror 5 Mermaid mode ────────────────────────────────────
-// cdnjs does not ship a Mermaid mode for CodeMirror, so define one here.
-// Lightweight: highlights keywords, strings, comments, arrows and brackets.
 if (typeof CodeMirror !== 'undefined' && CodeMirror.defineMode && !CodeMirror.modes.mermaid) {
   CodeMirror.defineMode('mermaid', function () {
     const KEYWORDS = new Set([
@@ -48,10 +55,10 @@ if (typeof CodeMirror !== 'undefined' && CodeMirror.defineMode && !CodeMirror.mo
 // ─── Sanitize source for Mermaid parser ────────────────────────────
 function _mmdSanitizeSource(source) {
   return String(source || '')
-    .replace(/[\u00B7\u2022]/g, '-')      // middle dot / bullet → dash
-    .replace(/[\u2013\u2014]/g, '--')     // en/em dash → double dash
-    .replace(/\u00A0/g, ' ')              // non‑breaking space → normal space
-    .replace(/[\u200B\u200C\u200D\uFEFF]/g, ''); // zero‑width → remove
+    .replace(/[\u00B7\u2022]/g, '-')
+    .replace(/[\u2013\u2014]/g, '--')
+    .replace(/\u00A0/g, ' ')
+    .replace(/[\u200B\u200C\u200D\uFEFF]/g, '');
 }
 
 // ─── Export helpers ────────────────────────────────────────────────
@@ -225,7 +232,6 @@ function _mmdConvertForeignObjects(svgEl) {
     fo.parentNode.replaceChild(text, fo);
   });
 
-  // Centre each converted line
   svgEl.querySelectorAll('text[data-mermaid-converted="1"]').forEach(text => {
     const cx = parseFloat(text.getAttribute('x')) || 0;
     const lines = [...text.childNodes].filter(n => n.nodeType === 1);
@@ -247,7 +253,7 @@ function _mmdConvertForeignObjects(svgEl) {
 function _mmdPrepareExportSvg(svgEl) {
   return new Promise(resolve => {
     if (!svgEl) { resolve(svgEl); return; }
-    const clone = svgEl.cloneNode(true); // work on a copy — never touch the live node
+    const clone = svgEl.cloneNode(true);
     if (typeof window.getComputedStyle !== 'function' || typeof requestAnimationFrame !== 'function') {
       resolve(clone);
       return;
@@ -260,7 +266,7 @@ function _mmdPrepareExportSvg(svgEl) {
         try {
           _mmdConvertForeignObjects(clone);
           _mmdFlattenStyles(clone);
-        } catch (_) { /* leave as-is */ }
+        } catch (_) {}
         if (clone.parentNode) clone.parentNode.removeChild(clone);
         resolve(clone);
       });
@@ -322,6 +328,20 @@ function _mmdExportPng(svgEl, filename) {
   });
 }
 
+// ─── Copy SVG code to clipboard ───────────────────────────────────
+async function _mmdCopySvgCode(svgEl) {
+  if (!svgEl) return;
+  const clone = svgEl.cloneNode(true);
+  _mmdConvertForeignObjects(clone);
+  _mmdFlattenStyles(clone);
+  const xml = _mmdSerializeSvg(clone, null);
+  try {
+    await navigator.clipboard.writeText(xml);
+  } catch (err) {
+    _mmdExportSvg(svgEl, _mmdExportBaseName());
+  }
+}
+
 // ─── Full‑screen overlay ──────────────────────────────────────────
 function _mmdOpenFullView(container) {
   if (_mmdFullscreenOverlay) {
@@ -374,13 +394,10 @@ function _mmdOpenFullView(container) {
   overlay.appendChild(toolbar);
   overlay.appendChild(body);
 
-  // Clone content
   let clonedContent;
   if (contentEl) {
     clonedContent = contentEl.cloneNode(true);
     if (isSvg) {
-      // viewBox-only SVGs collapse to 0×0 as a flex item — size explicitly,
-      // same sizing logic already used for PNG export.
       const size = _mmdSvgSize(contentEl);
       clonedContent.removeAttribute('width');
       clonedContent.removeAttribute('height');
@@ -411,7 +428,6 @@ function _mmdOpenFullView(container) {
     if (e.target === overlay) closeOverlay();
   });
 
-  // Zoom & Pan for SVG
   if (isSvg && clonedContent) {
     let scale = 1, panX = 0, panY = 0;
     const zoomPctEl = controls.querySelector('.mermaid-zoom-pct');
@@ -481,11 +497,23 @@ function _mmdOpenFullView(container) {
   _mmdFullscreenOverlay = overlay;
 }
 
-// ─── Render a diagram from source into a container ──────────────
+// ─── Direction helper ─────────────────────────────────────────────
+function _mmdSetDirectionInSource(source, newDir) {
+  return source.replace(/^(graph|flowchart)\s+\w+/i, (match, keyword) => {
+    return keyword + ' ' + newDir;
+  });
+}
+
+// ─── Render diagram with current config ───────────────────────────
 async function _mmdRenderDiagram(source, targetEl) {
   const mySeq = ++_mmdRenderSeq;
   if (!targetEl) return;
-  const cleanSource = _mmdSanitizeSource(source);
+  let cleanSource = _mmdSanitizeSource(source);
+
+  // Apply direction
+  const dir = (window._mmdConfig && window._mmdConfig.direction) || 'TD';
+  cleanSource = _mmdSetDirectionInSource(cleanSource, dir);
+
   if (!cleanSource.trim()) {
     targetEl.innerHTML = '<div style="color:var(--gray);padding:20px;text-align:center;">Digite ou cole o código Mermaid para visualizar o diagrama.</div>';
     return;
@@ -496,13 +524,20 @@ async function _mmdRenderDiagram(source, targetEl) {
     return;
   }
 
-  // Initialize Mermaid once
-  if (!window._mermaidInitialized) {
-    const isDark = document.body.classList.contains('dark');
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: _MMD_THEME,
-      themeVariables: isDark ? {
+  const config = window._mmdConfig || {};
+  const isDark = document.body.classList.contains('dark');
+  const theme = config.theme || _MMD_THEME;
+  const fontFamily = config.fontFamily && config.fontFamily !== 'inherit' ? config.fontFamily : undefined;
+  const fontSize = config.fontSize ? Number(config.fontSize) : 16;
+
+  const themeVariables = {
+    fontFamily: fontFamily || (isDark ? '"Segoe UI", Roboto, sans-serif' : '"Segoe UI", Roboto, sans-serif'),
+    fontSize: fontSize,
+  };
+
+  if (theme === 'base' || theme === 'default') {
+    if (isDark) {
+      Object.assign(themeVariables, {
         background: '#1e1c1a',
         primaryColor: '#2d785a',
         primaryTextColor: '#d4cfc8',
@@ -510,7 +545,9 @@ async function _mmdRenderDiagram(source, targetEl) {
         lineColor: '#8a9a8a',
         secondaryColor: '#2a3f30',
         tertiaryColor: '#3a4a3a',
-      } : {
+      });
+    } else {
+      Object.assign(themeVariables, {
         background: '#faf9f6',
         primaryColor: '#2d785a',
         primaryTextColor: '#1a1a1a',
@@ -518,20 +555,26 @@ async function _mmdRenderDiagram(source, targetEl) {
         lineColor: '#6a7a6a',
         secondaryColor: '#e8eee8',
         tertiaryColor: '#d8e0d8',
-      },
-      logLevel: 1, // quiet
+      });
+    }
+  }
+
+  const configKey = JSON.stringify({ theme, fontFamily, fontSize });
+  if (window._mermaidLastConfig !== configKey) {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: theme,
+      themeVariables: themeVariables,
+      logLevel: 1,
       securityLevel: 'sandbox',
     });
-    window._mermaidInitialized = true;
+    window._mermaidLastConfig = configKey;
   }
 
   const id = 'mermaid-' + Math.random().toString(36).slice(2, 10);
   try {
     const result = await mermaid.render(id, cleanSource);
-    if (mySeq !== _mmdRenderSeq) return; // superseded by a newer render
-    // In sandbox mode mermaid returns an <iframe> whose inline height is the
-    // diagram's natural height (can be thousands of px), which breaks the
-    // preview layout. Resolve the real <svg> and inject it instead.
+    if (mySeq !== _mmdRenderSeq) return;
     const holder = document.createElement('div');
     holder.innerHTML = result.svg;
     const svgEl = _mmdResolveSvg(holder);
@@ -547,10 +590,9 @@ async function _mmdRenderDiagram(source, targetEl) {
       }
     }
     targetEl.querySelectorAll('.mermaid-rendered, .mermaid-container, .mermaid-error').forEach(el => el.remove());
-    // Add export button & full‑view
     _mmdAttachToolbar(targetEl);
   } catch (err) {
-    if (mySeq !== _mmdRenderSeq) return; // superseded by a newer render
+    if (mySeq !== _mmdRenderSeq) return;
     targetEl.innerHTML = `
       <div class="mermaid-error-banner">
         <i class="fas fa-triangle-exclamation"></i> Erro: ${escapeHtml(err.message || 'Erro ao renderizar')}
@@ -560,7 +602,7 @@ async function _mmdRenderDiagram(source, targetEl) {
   }
 }
 
-// ─── Attach toolbar (export, full‑view) to a rendered diagram ──
+// ─── Attach toolbar (export, full‑view, copy SVG) ────────────────
 function _mmdAttachToolbar(container) {
   let svgEl = container.querySelector('svg');
   if (!svgEl) svgEl = _mmdResolveSvg(container);
@@ -603,13 +645,14 @@ function _mmdAttachToolbar(container) {
   exportMenu.innerHTML = `
     <button type="button" role="menuitem" data-format="png"><i class="fas fa-file-image"></i> Exportar PNG</button>
     <button type="button" role="menuitem" data-format="svg"><i class="fas fa-file-code"></i> Exportar SVG</button>
+    <button type="button" role="menuitem" data-format="copy-svg"><i class="fas fa-copy"></i> Copiar código SVG</button>
   `;
 
   exportWrap.appendChild(exportBtn);
   exportWrap.appendChild(exportMenu);
   wrapper.appendChild(exportWrap);
 
-  // Wire export dropdown
+  // Dropdown behavior
   function closeExportMenu() {
     if (!exportMenu.classList.contains('mermaid-export-open')) return;
     exportMenu.classList.remove('mermaid-export-open');
@@ -632,15 +675,9 @@ function _mmdAttachToolbar(container) {
     window.addEventListener('scroll', onWinScroll, true);
     window.addEventListener('resize', onWinScroll);
   }
-  function onDocClick(e) {
-    if (!exportWrap.contains(e.target)) closeExportMenu();
-  }
-  function onExportKey(e) {
-    if (e.key === 'Escape') closeExportMenu();
-  }
-  function onWinScroll() {
-    if (exportMenu.classList.contains('mermaid-export-open')) closeExportMenu();
-  }
+  function onDocClick(e) { if (!exportWrap.contains(e.target)) closeExportMenu(); }
+  function onExportKey(e) { if (e.key === 'Escape') closeExportMenu(); }
+  function onWinScroll() { if (exportMenu.classList.contains('mermaid-export-open')) closeExportMenu(); }
 
   exportBtn.addEventListener('click', e => {
     e.stopPropagation();
@@ -657,19 +694,19 @@ function _mmdAttachToolbar(container) {
     closeExportMenu();
     const svg = _mmdResolveSvg(wrapper) || wrapper.querySelector('svg');
     if (!svg) return;
+    const format = item.getAttribute('data-format');
     const filename = _mmdExportBaseName();
-    if (item.getAttribute('data-format') === 'png') _mmdExportPng(svg, filename);
-    else _mmdExportSvg(svg, filename);
+    if (format === 'png') _mmdExportPng(svg, filename);
+    else if (format === 'svg') _mmdExportSvg(svg, filename);
+    else if (format === 'copy-svg') _mmdCopySvgCode(svg);
   });
 
-  // Full-view
   expandBtn.addEventListener('click', e => {
     e.stopPropagation();
     e.preventDefault();
     _mmdOpenFullView(wrapper);
   });
 
-  // Update export button states after render
   setTimeout(() => {
     const svgEl2 = wrapper.querySelector('svg');
     if (svgEl2) {
@@ -679,20 +716,12 @@ function _mmdAttachToolbar(container) {
   }, 50);
 }
 
-// ─── Panel UI ──────────────────────────────────────────────────────
+// ─── Panel UI with new configuration controls ─────────────────────
 function _mmdLoadPanel() {
   const panel = document.getElementById('mermaidPanel');
-  if (!panel) {
-    console.warn('[Mermaid] Panel container #mermaidPanel not found.');
-    return;
-  }
+  if (!panel) { console.warn('[Mermaid] Panel container #mermaidPanel not found.'); return; }
 
-  // Show panel, hide others (caller should handle tab visibility)
-  // We'll just build the UI if not already built.
-  if (_mmdPanelReady) {
-    panel.style.display = '';
-    return;
-  }
+  if (_mmdPanelReady) { panel.style.display = ''; return; }
 
   const initialSource = `graph TD
     A[Início] --> B{Decisão}
@@ -707,17 +736,54 @@ function _mmdLoadPanel() {
         ${cmAvailable
           ? '<div id="mermaidEditorContainer" class="mermaid-editor-cm"></div>'
           : `<textarea id="mermaidSource" class="mermaid-editor" placeholder="Digite o código Mermaid aqui…" spellcheck="false">${escapeHtml(initialSource)}</textarea>`}
-        <div class="mermaid-actions">
-          <button id="mermaidRenderBtn" class="btn btn-primary"><i class="fas fa-play"></i> Renderizar</button>
-          <button id="mermaidClearBtn" class="btn btn-sm"><i class="fas fa-eraser"></i> Limpar</button>
-          <button id="mermaidExampleBtn" class="btn btn-sm"><i class="fas fa-list"></i> Exemplos</button>
-          <div class="mermaid-example-dropdown" id="mermaidExampleDropdown" style="display:none;">
-            <button data-example="flow">Fluxograma</button>
-            <button data-example="seq">Sequência</button>
-            <button data-example="class">Classes</button>
-            <button data-example="state">Estado</button>
-            <button data-example="gantt">Gantt</button>
-          </div>
+      </div>
+      <div class="mermaid-config-row">
+        <div class="mermaid-config-group">
+          <label title="Direção do diagrama"><i class="fas fa-arrows-alt"></i></label>
+          <select id="mermaidDirectionSelect">
+            <option value="TD" selected>↓ Top-Down (TD)</option>
+            <option value="LR">→ Left-Right (LR)</option>
+            <option value="RL">← Right-Left (RL)</option>
+            <option value="BT">↑ Bottom-Top (BT)</option>
+          </select>
+        </div>
+        <div class="mermaid-config-group">
+          <label title="Tema"><i class="fas fa-palette"></i></label>
+          <select id="mermaidThemeSelect">
+            <option value="base">Base</option>
+            <option value="default">Default</option>
+            <option value="neutral">Neutral</option>
+            <option value="dark">Dark</option>
+            <option value="forest">Forest</option>
+          </select>
+        </div>
+        <div class="mermaid-config-group">
+          <label title="Fonte"><i class="fas fa-font"></i></label>
+          <select id="mermaidFontFamilySelect">
+            <option value="inherit">Padrão do sistema</option>
+            <option value="Arial, Helvetica, sans-serif">Arial / Helvetica</option>
+            <option value="'Courier New', Courier, monospace">Courier New</option>
+            <option value="'Times New Roman', Times, serif">Times New Roman</option>
+            <option value="'Georgia', serif">Georgia</option>
+            <option value="'Verdana', Geneva, sans-serif">Verdana</option>
+          </select>
+        </div>
+        <div class="mermaid-config-group">
+          <label title="Tamanho da fonte (px)"><i class="fas fa-text-height"></i></label>
+          <input type="number" id="mermaidFontSizeInput" value="16" min="8" max="40" step="1" style="width:60px;">
+        </div>
+      </div>
+      <div class="mermaid-actions">
+        <button id="mermaidRenderBtn" class="btn btn-primary"><i class="fas fa-play"></i> Renderizar</button>
+        <button id="mermaidClearBtn" class="btn btn-sm"><i class="fas fa-eraser"></i> Limpar</button>
+        <button id="mermaidCopySourceBtn" class="btn btn-sm"><i class="fas fa-copy"></i> Copiar código</button>
+        <button id="mermaidExampleBtn" class="btn btn-sm"><i class="fas fa-list"></i> Exemplos</button>
+        <div class="mermaid-example-dropdown" id="mermaidExampleDropdown" style="display:none;">
+          <button data-example="flow">Fluxograma</button>
+          <button data-example="seq">Sequência</button>
+          <button data-example="class">Classes</button>
+          <button data-example="state">Estado</button>
+          <button data-example="gantt">Gantt</button>
         </div>
       </div>
       <div id="mermaidPreview" class="mermaid-preview">
@@ -726,12 +792,7 @@ function _mmdLoadPanel() {
     </div>
   `;
 
-  const renderBtn = document.getElementById('mermaidRenderBtn');
-  const previewEl = document.getElementById('mermaidPreview');
-  const clearBtn = document.getElementById('mermaidClearBtn');
-  const exampleBtn = document.getElementById('mermaidExampleBtn');
-  const exampleDropdown = document.getElementById('mermaidExampleDropdown');
-
+  // Editor setup
   let getSource, setSource, bindSourceChange;
 
   if (cmAvailable) {
@@ -750,7 +811,7 @@ function _mmdLoadPanel() {
         'Cmd-Enter': () => doRender(),
       },
     });
-    window._mermaidCodeMirror = cmEditor; // for external use
+    window._mermaidCodeMirror = cmEditor;
     getSource = () => cmEditor.getValue();
     setSource = v => cmEditor.setValue(v);
     bindSourceChange = cb => cmEditor.on('change', () => cb());
@@ -769,84 +830,107 @@ function _mmdLoadPanel() {
     };
   }
 
-  // Dedupe: skip re-rendering when the source did not change
   let lastRenderedSource = null;
   const doRender = () => {
     const src = getSource();
     if (src === lastRenderedSource) return;
     lastRenderedSource = src;
-    _mmdRenderDiagram(src, previewEl);
+    _mmdRenderDiagram(src, document.getElementById('mermaidPreview'));
   };
 
-  if (renderBtn) {
-    renderBtn.addEventListener('click', () => {
-      lastRenderedSource = null; // always re-render on explicit click
-      doRender();
-    });
-  }
+  document.getElementById('mermaidRenderBtn').addEventListener('click', () => {
+    lastRenderedSource = null;
+    doRender();
+  });
 
-  if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      setSource('');
-      lastRenderedSource = '';
-      previewEl.innerHTML = '<div style="color:var(--gray);padding:20px;text-align:center;">Digite ou cole o código Mermaid para visualizar o diagrama.</div>';
-    });
-  }
+  document.getElementById('mermaidClearBtn').addEventListener('click', () => {
+    setSource('');
+    lastRenderedSource = '';
+    document.getElementById('mermaidPreview').innerHTML = '<div style="color:var(--gray);padding:20px;text-align:center;">Digite ou cole o código Mermaid para visualizar o diagrama.</div>';
+  });
 
-  if (exampleBtn && exampleDropdown) {
-    exampleBtn.addEventListener('click', e => {
+  // Copy source to clipboard
+  document.getElementById('mermaidCopySourceBtn').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(getSource());
+    } catch (err) { /* fallback ignored */ }
+  });
+
+  // Example dropdown
+  const exampleBtn = document.getElementById('mermaidExampleBtn');
+  const exampleDropdown = document.getElementById('mermaidExampleDropdown');
+  exampleBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    exampleDropdown.style.display = exampleDropdown.style.display === 'none' ? 'flex' : 'none';
+  });
+  document.addEventListener('click', () => {
+    if (exampleDropdown) exampleDropdown.style.display = 'none';
+  });
+  exampleDropdown.querySelectorAll('[data-example]').forEach(btn => {
+    btn.addEventListener('click', e => {
       e.stopPropagation();
-      const isOpen = exampleDropdown.style.display !== 'none';
-      exampleDropdown.style.display = isOpen ? 'none' : 'flex';
-    });
-    document.addEventListener('click', () => {
-      if (exampleDropdown) exampleDropdown.style.display = 'none';
-    });
-    exampleDropdown.querySelectorAll('[data-example]').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        const key = btn.getAttribute('data-example');
-        const examples = {
-          flow: `graph TD
+      const key = btn.getAttribute('data-example');
+      const examples = {
+        flow: `graph TD
     A[Início] --> B{Decisão}
     B -->|Sim| C[Resultado]
     B -->|Não| D[Fim]`,
-          seq: `sequenceDiagram
+        seq: `sequenceDiagram
     Alice->>John: Hello John, how are you?
     John-->>Alice: Great!
     Alice-)John: See you later!`,
-          class: `classDiagram
+        class: `classDiagram
     Animal <|-- Duck
     Animal <|-- Fish
     Animal : +int age
     Animal : +string name
     Duck : +string beakColor
     Fish : +int finCount`,
-          state: `stateDiagram-v2
+        state: `stateDiagram-v2
     [*] --> Still
     Still --> [*]
     Still --> Moving
     Moving --> Still
     Moving --> Crash
     Crash --> [*]`,
-          gantt: `gantt
+        gantt: `gantt
     title A Gantt Diagram
     dateFormat  YYYY-MM-DD
     section Section
     A task           :a1, 2026-01-01, 30d
     Another task     :after a1, 20d`
-        };
-        if (examples[key]) {
-          setSource(examples[key]);
-          lastRenderedSource = null; // force re-render of the example
-          doRender();
-          exampleDropdown.style.display = 'none';
-        }
-      });
+      };
+      if (examples[key]) {
+        setSource(examples[key]);
+        lastRenderedSource = null;
+        doRender();
+        exampleDropdown.style.display = 'none';
+      }
     });
+  });
+
+  // Configuration controls
+  function updateConfigAndRerender() {
+    window._mmdConfig.direction = document.getElementById('mermaidDirectionSelect').value;
+    window._mmdConfig.theme = document.getElementById('mermaidThemeSelect').value;
+    window._mmdConfig.fontFamily = document.getElementById('mermaidFontFamilySelect').value;
+    window._mmdConfig.fontSize = parseInt(document.getElementById('mermaidFontSizeInput').value, 10) || 16;
+
+    delete window._mermaidLastConfig;
+    lastRenderedSource = null;
+    doRender();
   }
 
-  // Live preview: auto-render 500ms after the user stops typing
+  document.getElementById('mermaidDirectionSelect').addEventListener('change', updateConfigAndRerender);
+  document.getElementById('mermaidThemeSelect').addEventListener('change', updateConfigAndRerender);
+  document.getElementById('mermaidFontFamilySelect').addEventListener('change', updateConfigAndRerender);
+  document.getElementById('mermaidFontSizeInput').addEventListener('change', updateConfigAndRerender);
+  document.getElementById('mermaidFontSizeInput').addEventListener('input', () => {
+    clearTimeout(window._fontSizeTimer);
+    window._fontSizeTimer = setTimeout(updateConfigAndRerender, 600);
+  });
+
+  // Live preview
   let debounceTimer = null;
   bindSourceChange(() => {
     const src = getSource();
@@ -856,18 +940,15 @@ function _mmdLoadPanel() {
   });
 
   _mmdPanelReady = true;
-  // Auto‑render initial example
   setTimeout(doRender, 100);
 }
 
-// ─── Full main-area view (sidebar tab integration) ────────────────
+// ─── Full main-area view ──────────────────────────────────────────
 function _mmdShowView() {
-  // Deactivate competing full-screen views
-  ['shadersView', 'listeningView', 'studioView', 'descobertaView', 'memoryView', 'spacesView', 'architectureView']
-    .forEach(id => {
-      const v = document.getElementById(id);
-      if (v) v.classList.remove('active');
-    });
+  ['shadersView', 'listeningView', 'studioView', 'descobertaView', 'memoryView', 'spacesView', 'architectureView'].forEach(id => {
+    const v = document.getElementById(id);
+    if (v) v.classList.remove('active');
+  });
   if (typeof aexHideMain === 'function') aexHideMain();
   const mc = document.querySelector('.main-content');
   if (mc) { mc._mermaidDisplay = mc.style.display; mc.style.display = 'none'; }
@@ -888,19 +969,15 @@ function _mmdHideView() {
 // ─── Expose public API ────────────────────────────────────────────
 window.loadMermaidPanel = _mmdLoadPanel;
 window.renderMermaidDiagram = _mmdRenderDiagram;
-window._mmdOpenFullView = _mmdOpenFullView; // for external use
+window._mmdOpenFullView = _mmdOpenFullView;
 window._exportMermaidPng = _mmdExportPng;
 window._exportMermaidSvg = _mmdExportSvg;
+window._copyMermaidSvgCode = _mmdCopySvgCode;
 window.mermaidShowView = _mmdShowView;
 window.mermaidHideView = _mmdHideView;
 
-// ─── Auto‑init when DOM ready ────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  // If the panel container exists, we can optionally preload it on demand.
-  // The sidebar tab will call mermaidShowView() when clicked.
-  // We'll just ensure the container exists.
   if (!document.getElementById('mermaidPanel')) {
-    // Optionally create a placeholder; but the HTML should provide it.
     console.warn('[Mermaid] No #mermaidPanel found – create a div with that id.');
   }
 });
