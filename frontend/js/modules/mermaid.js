@@ -246,21 +246,23 @@ function _mmdConvertForeignObjects(svgEl) {
 
 function _mmdPrepareExportSvg(svgEl) {
   return new Promise(resolve => {
-    if (!svgEl || typeof window.getComputedStyle !== 'function' || typeof requestAnimationFrame !== 'function') {
-      resolve(svgEl);
+    if (!svgEl) { resolve(svgEl); return; }
+    const clone = svgEl.cloneNode(true); // work on a copy — never touch the live node
+    if (typeof window.getComputedStyle !== 'function' || typeof requestAnimationFrame !== 'function') {
+      resolve(clone);
       return;
     }
     const host = _mmdExportHostEl();
-    if (!host) { resolve(svgEl); return; }
-    host.appendChild(svgEl);
+    if (!host) { resolve(clone); return; }
+    host.appendChild(clone);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         try {
-          _mmdConvertForeignObjects(svgEl);
-          _mmdFlattenStyles(svgEl);
+          _mmdConvertForeignObjects(clone);
+          _mmdFlattenStyles(clone);
         } catch (_) { /* leave as-is */ }
-        if (svgEl.parentNode) svgEl.parentNode.removeChild(svgEl);
-        resolve(svgEl);
+        if (clone.parentNode) clone.parentNode.removeChild(clone);
+        resolve(clone);
       });
     });
   });
@@ -563,7 +565,12 @@ function _mmdAttachToolbar(container) {
 
   const wrapper = document.createElement('div');
   wrapper.className = 'mermaid-container mermaid-rendered';
-  wrapper.innerHTML = container.innerHTML;
+
+  const body = document.createElement('div');
+  body.className = 'mermaid-body';
+  body.innerHTML = container.innerHTML;
+  wrapper.appendChild(body);
+
   container.innerHTML = '';
   container.appendChild(wrapper);
 
@@ -878,7 +885,7 @@ function _mmdHideView() {
 // ─── Expose public API ────────────────────────────────────────────
 window.loadMermaidPanel = _mmdLoadPanel;
 window.renderMermaidDiagram = _mmdRenderDiagram;
-window._openMermaidFullView = _mmdOpenFullView; // for external use
+window._mmdOpenFullView = _mmdOpenFullView; // for external use
 window._exportMermaidPng = _mmdExportPng;
 window._exportMermaidSvg = _mmdExportSvg;
 window.mermaidShowView = _mmdShowView;
