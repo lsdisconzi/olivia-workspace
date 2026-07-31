@@ -79,6 +79,20 @@ body.is-panel-resizing iframe{pointer-events:none !important}
 .mermaid-expand-btn:hover{color:var(--white);background:rgba(0,0,0,.75);border-color:var(--border-hi)}
 .mermaid-expand-btn:focus-visible{opacity:1;outline:2px solid var(--amber);outline-offset:2px}
 
+/* ── MERMAID EXPORT BUTTON (floating next to expand) ── */
+.mermaid-export-wrap{position:absolute;top:8px;right:44px;z-index:10}
+.mermaid-export-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:rgba(0,0,0,.55);color:var(--gray-hi);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;opacity:0;transition:opacity .2s,color .2s,background .2s}
+.mermaid-container:hover .mermaid-export-btn{opacity:1}
+.mermaid-export-btn:hover{color:var(--white);background:rgba(0,0,0,.75);border-color:var(--border-hi)}
+.mermaid-export-btn:focus-visible{opacity:1;outline:2px solid var(--amber);outline-offset:2px}
+
+/* ── MERMAID EXPORT MENU (fixed-positioned via JS to avoid overflow clipping) ── */
+.mermaid-export-menu{position:fixed;display:none;flex-direction:column;gap:2px;min-width:150px;padding:4px;border:1px solid var(--border);border-radius:8px;background:#1a1a1f;box-shadow:0 8px 24px rgba(0,0,0,.45);z-index:20}
+.mermaid-export-menu.mermaid-export-open{display:flex}
+.mermaid-export-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border:0;border-radius:6px;background:transparent;color:var(--gray-hi);font-size:12px;cursor:pointer;text-align:left;font-family:inherit;white-space:nowrap}
+.mermaid-export-menu button:hover{background:rgba(255,255,255,.06);color:var(--white)}
+.mermaid-export-menu button i{font-size:11px;width:14px;text-align:center}
+
 /* ── MERMAID FULLSCREEN OVERLAY ── */
 .mermaid-fullscreen-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:99999;background:rgba(0,0,0,.82);display:flex;flex-direction:column;outline:none;animation:mermaidFadeIn .2s ease}
 @keyframes mermaidFadeIn{from{opacity:0}to{opacity:1}}
