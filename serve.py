@@ -1474,6 +1474,7 @@ SECTION_REGISTRY = [
     {"id": "drive", "label": "Drive", "icon": "fa-cloud"},
     { "id": "writer", "label": "Writer", "icon": "fa-pen-fancy", "onclick": "" },
     {"id": "sheets", "label": "Sheets", "icon": "fa-table", "onclick": "" },
+    {"id": "mermaid", "label": "Diagramas", "icon": "fa-diagram-project"},
     {"id": "socialmedia", "label": "Social Media", "icon": "fa-share-nodes"}
 ]
 SECTION_IDS = [s["id"] for s in SECTION_REGISTRY]

@@ -235,7 +235,7 @@ window.listeningShowView = function(){
   if(mc){ mc._lsDisplay = mc.style.display; mc.style.display = 'none'; }
   // Ensure competing full-screen views are deactivated.
   if (typeof aexHideMain === 'function') aexHideMain();
-  ['studioView','descobertaView','memoryView','spacesView','shadersView'].forEach(function(vid){
+  ['studioView','descobertaView','memoryView','spacesView','shadersView','mermaidView'].forEach(function(vid){
     var viewEl = document.getElementById(vid);
     if(viewEl) viewEl.classList.remove('active');
   });

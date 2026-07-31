@@ -766,6 +766,7 @@
       'descobertaView',
       'memoryView',
       'shadersView',
+      'mermaidView',
       'aexMainView',
       'violationsView',
       'lawLibView',

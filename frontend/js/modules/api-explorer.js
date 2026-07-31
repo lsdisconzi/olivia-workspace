@@ -1958,7 +1958,7 @@
     _wasTabActive = tab && tab.classList.contains('active');
 
     // Deactivate all competing full-screen views
-    ['studioView', 'descobertaView', 'memoryView', 'spacesView', 'shadersView', 'listeningView'].forEach(function (vid) {
+    ['studioView', 'descobertaView', 'memoryView', 'spacesView', 'shadersView', 'listeningView', 'mermaidView'].forEach(function (vid) {
       var el = document.getElementById(vid);
       if (el) el.classList.remove('active');
     });

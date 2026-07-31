@@ -1325,7 +1325,7 @@ function studioShowView() {
   if (trunkBtn) trunkBtn.classList.add('active');
 
   if (typeof aexHideMain === 'function') aexHideMain();
-  ['listeningView', 'descobertaView', 'memoryView', 'spacesView', 'shadersView'].forEach(vid => {
+  ['listeningView', 'descobertaView', 'memoryView', 'spacesView', 'shadersView', 'mermaidView'].forEach(vid => {
     const viewEl = document.getElementById(vid);
     if (viewEl) viewEl.classList.remove('active');
   });

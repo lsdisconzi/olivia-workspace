@@ -383,13 +383,14 @@
     hide.forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
     var mc = document.querySelector('.main-content');
     if (mc) { mc._vwDisplay = mc.style.display; mc.style.display = 'none'; }
-    ['spacesView','listeningView','studioView','descobertaView','memoryView','shadersView','aexMainView','violationsView','lawLibView'].forEach(function (vid) {
+    ['spacesView','listeningView','studioView','descobertaView','memoryView','shadersView','mermaidView','aexMainView','violationsView','lawLibView'].forEach(function (vid) {
       var v = document.getElementById(vid); if (v) v.classList.remove('active');
     });
     if (typeof window.aexHideMain === 'function') window.aexHideMain();
     if (typeof window.violationsHideView === 'function') window.violationsHideView();
     if (typeof window.lawLibHideView === 'function') window.lawLibHideView();
     if (typeof window.spacesHideView === 'function') window.spacesHideView();
+    if (typeof window.mermaidHideView === 'function') window.mermaidHideView();
     var sv = document.getElementById('legalRouterView');
     if (sv) sv.classList.add('active');
     if (typeof window.vwInitResize === 'function') window.vwInitResize('legalRouterResize', 'legalRouterSidebar');

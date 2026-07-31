@@ -440,7 +440,7 @@
     if (mc) { mc._shDisplay = mc.style.display; mc.style.display = 'none'; }
     // Hide other views
     if (typeof aexHideMain === 'function') aexHideMain();
-    ['listeningView', 'studioView', 'descobertaView', 'memoryView', 'spacesView'].forEach(function (vid) {
+    ['listeningView', 'studioView', 'descobertaView', 'memoryView', 'spacesView', 'mermaidView'].forEach(function (vid) {
       var v = document.getElementById(vid); if (v) { v.classList.remove('active'); }
     });
     var sv = document.getElementById('shadersView');

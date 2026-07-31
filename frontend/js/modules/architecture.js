@@ -575,7 +575,7 @@
 
   window.architectureShowView = function () {
     // Hide other fullscreen views
-    ['shadersView', 'listeningView', 'studioView', 'descobertaView', 'memoryView', 'spacesView']
+    ['shadersView', 'listeningView', 'studioView', 'descobertaView', 'memoryView', 'spacesView', 'mermaidView']
       .forEach(id => { const v = document.getElementById(id); if (v) v.classList.remove('active'); });
     const mc = document.querySelector('.main-content');
     if (mc) { mc._archDisplay = mc.style.display; mc.style.display = 'none'; }

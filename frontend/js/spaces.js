@@ -74,7 +74,7 @@ window.spacesShowView = function(){
   if(mc){ mc._spDisplay = mc.style.display; mc.style.display = 'none'; }
   // Hide other views
   if (typeof aexHideMain === 'function') aexHideMain();
-  ['listeningView','studioView','descobertaView','memoryView'].forEach(function(vid){
+  ['listeningView','studioView','descobertaView','memoryView','mermaidView'].forEach(function(vid){
     var v = document.getElementById(vid); if(v){ v.classList.remove('active'); v.style.display = 'none'; }
   });
   var sv = document.getElementById('spacesView');
