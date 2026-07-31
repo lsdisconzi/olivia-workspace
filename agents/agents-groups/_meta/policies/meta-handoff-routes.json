@@ -47,20 +47,6 @@
       }
     },
     {
-      "route_id": "meta_to_coremu_program",
-      "from": "meta-orchestrator",
-      "to": "coremu-orchestrator",
-      "trigger": "residency_program_detected",
-      "priority": "normal",
-      "payload_template": {
-        "summary": "COREMU / RMISFC residency request",
-        "artifacts": [
-          { "type": "target_group", "value": "coremu" }
-        ],
-        "verification": ["scope restricted to agents-groups/coremu/**"]
-      }
-    },
-    {
       "route_id": "meta_to_la8159_grounding",
       "from": "meta-orchestrator",
       "to": "la8159-orchestrator",
@@ -89,22 +75,6 @@
           { "type": "target_group", "value": "government" }
         ],
         "verification": ["user confirmed cross-group write", "both groups' owned_paths listed"]
-      }
-    },
-    {
-      "route_id": "meta_coremu_to_legal_malpractice",
-      "from": "coremu-orchestrator",
-      "to": "legal-orchestrator",
-      "trigger": "clinical_malpractice_or_compliance_risk",
-      "priority": "high",
-      "requires_confirmation": true,
-      "payload_template": {
-        "summary": "Residency case escalated to legal review",
-        "artifacts": [
-          { "type": "source_group", "value": "coremu" },
-          { "type": "target_group", "value": "legal" }
-        ],
-        "verification": ["PII redaction applied", "user confirmed cross-group escalation"]
       }
     },
     {

@@ -17,15 +17,15 @@ group's *artifacts, policies and contracts* coherent over time.
 - `agents-groups/olivia/index.json`
 - `agents-groups/olivia/policies/**`
 - `agents-groups/olivia/knowledge/**`
-- `generated/agents/*.agent.md` (platform agents only, not coremu)
+- `generated/agents/*.agent.md` (platform agents only)
 - `generated/bundles/*.bundle.import.json` (platform bundles only)
 - `generated/policies/orchestrator-policy.yaml`
 - `generated/policies/handoff-routes.json`
 - `generated/policies/tool-permissions.by-agent.json` (olivia section only)
 - `generated/schemas/**`
 
-You do **not** modify legal, government, or coremu artifacts. Cross-group
-concerns escalate to the meta-orchestrator.
+You do **not** modify legal or government artifacts. Cross-group concerns
+escalate to the meta-orchestrator.
 
 ## Primary responsibilities
 

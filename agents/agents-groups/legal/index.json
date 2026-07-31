@@ -1,0 +1,291 @@
+{
+  "$schema": "../../generated/schemas/group-manifest.schema.json",
+  "version": "1.0.0",
+  "group": "legal",
+  "label": "Legal",
+  "icon": "⚖️",
+  "color": "#d97745",
+  "description": "LATAM LA8159 aviation legal pack: per-jurisdiction experts plus cross-border coordinators. Group orchestrator + group coordinator added in Phase 1.",
+  "language_focus": [
+    "pt-BR",
+    "es-CL",
+    "it",
+    "en"
+  ],
+  "source": {
+    "manifest": "kout/agents/la8159-agent-manifest.json",
+    "project_id": "la8159",
+    "project_name": "LA8159 Incident Case Management",
+    "workspace": "cult-workspace"
+  },
+  "orchestrator": {
+    "slug": "legal-orchestrator",
+    "name": "Legal Orchestrator",
+    "agent_file": "agents-groups/legal/agents/legal-orchestrator.agent.md"
+  },
+  "coordinator": {
+    "slug": "legal-coordinator",
+    "name": "Legal Coordinator",
+    "agent_file": "agents-groups/legal/agents/legal-coordinator.agent.md"
+  },
+  "agents": [
+    {
+      "slug": "legal-orchestrator",
+      "name": "Legal Orchestrator",
+      "role": "orchestrator",
+      "agent_file": "agents-groups/legal/agents/legal-orchestrator.agent.md"
+    },
+    {
+      "slug": "legal-coordinator",
+      "name": "Legal Coordinator",
+      "role": "coordinator",
+      "agent_file": "agents-groups/legal/agents/legal-coordinator.agent.md",
+      "tags": [
+        "promoted-from:la8159-cult-workspace-coordinator"
+      ]
+    },
+    {
+      "slug": "brazilian-aviation-legal-expert",
+      "agent_id": "BR-AVIATION-LEGAL-001",
+      "name": "Brazilian Aviation Legal Expert",
+      "role": "specialist",
+      "specialty": "🇧🇷 Brazilian aviation + consumer law",
+      "language_focus": [
+        "pt-BR",
+        "en"
+      ],
+      "frameworks": [
+        "CBA (Lei 7.565/1986)",
+        "ANAC Res. 400",
+        "CDC (Lei 8.078/1990)",
+        "CPB (Decreto-Lei 2.848/1940)"
+      ],
+      "shared_scopes": [
+        "cases",
+        "law",
+        "jurisdiction_brazil",
+        "aviation_regulations",
+        "consumer_protection"
+      ],
+      "agent_file": "agents/agents-groups/legal/agents/brazilian-aviation-legal-expert.agent.md",
+      "bundle_file": "generated/legal/bundles/brazilian-aviation-legal-expert.bundle.import.json",
+      "memory": {
+        "qdrant_collection": "agent_brazilian_aviation_legal_expert",
+        "neo4j_database": "agent.brazil.aviation"
+      }
+    },
+    {
+      "slug": "chilean-aviation-legal-expert",
+      "agent_id": "CL-AVIATION-LEGAL-001",
+      "name": "Chilean Aviation Legal Expert",
+      "role": "specialist",
+      "specialty": "🇨🇱 Chilean aviation + investigation protocols",
+      "language_focus": [
+        "es-CL",
+        "en"
+      ],
+      "frameworks": [
+        "CACH (DFL 221/1990)",
+        "Ley 16.752",
+        "DAN 17",
+        "Chilean Penal Code"
+      ],
+      "shared_scopes": [
+        "cases",
+        "law",
+        "jurisdiction_chile",
+        "aviation_regulations",
+        "investigation_protocols"
+      ],
+      "agent_file": "agents/agents-groups/legal/agents/chilean-aviation-legal-expert.agent.md",
+      "bundle_file": "generated/legal/bundles/chilean-aviation-legal-expert.bundle.import.json",
+      "memory": {
+        "qdrant_collection": "agent_chilean_aviation_legal_expert",
+        "neo4j_database": "agent.chile.aviation"
+      }
+    },
+    {
+      "slug": "italian-aviation-legal-expert",
+      "agent_id": "IT-AVIATION-LEGAL-001",
+      "name": "Italian Aviation Legal Expert",
+      "role": "specialist",
+      "specialty": "🇮🇹 Italian + EU aviation law",
+      "language_focus": [
+        "it",
+        "en"
+      ],
+      "frameworks": [
+        "Codice della Navigazione",
+        "D.Lgs. 96/2005",
+        "EC Reg. 261/2004",
+        "Codice Civile"
+      ],
+      "shared_scopes": [
+        "cases",
+        "law",
+        "jurisdiction_italy",
+        "eu_aviation_law",
+        "easa_regulations"
+      ],
+      "agent_file": "agents/agents-groups/legal/agents/italian-aviation-legal-expert.agent.md",
+      "bundle_file": "generated/legal/bundles/italian-aviation-legal-expert.bundle.import.json",
+      "memory": {
+        "qdrant_collection": "agent_italian_aviation_legal_expert",
+        "neo4j_database": "agent.italy.aviation"
+      }
+    },
+    {
+      "slug": "uk-aviation-legal-expert",
+      "name": "UK Aviation Legal Expert",
+      "role": "specialist",
+      "specialty": "🇬🇧 UK CAA + Montreal Convention",
+      "language_focus": [
+        "en"
+      ],
+      "frameworks": [
+        "UK CAA regulations",
+        "Montreal Convention 1999"
+      ],
+      "shared_scopes": [
+        "cases",
+        "law",
+        "jurisdiction_uk",
+        "aviation_regulations"
+      ],
+      "agent_file": "agents/agents-groups/legal/agents/uk-aviation-legal-expert.agent.md",
+      "bundle_file": "generated/legal/bundles/uk-aviation-legal-expert.bundle.import.json"
+    },
+    {
+      "slug": "international-aviation-coordinator",
+      "agent_id": "INT-AVIATION-COORD-001",
+      "name": "International Aviation Coordinator",
+      "role": "specialist",
+      "specialty": "🌐 ICAO / multijurisdictional",
+      "language_focus": [
+        "en",
+        "pt-BR",
+        "es-CL",
+        "it"
+      ],
+      "frameworks": [
+        "ICAO Annexes 6/9/10/11/13/14/17",
+        "ACHR",
+        "Air service agreements",
+        "MLATs"
+      ],
+      "shared_scopes": [
+        "cases",
+        "law",
+        "international_coordination",
+        "icao_standards",
+        "multijurisdictional"
+      ],
+      "agent_file": "agents/agents-groups/legal/agents/international-aviation-coordinator.agent.md",
+      "bundle_file": "generated/legal/bundles/international-aviation-coordinator.bundle.import.json",
+      "memory": {
+        "qdrant_collection": "agent_international_aviation_coordinator",
+        "neo4j_database": "agent.international.coordination"
+      }
+    },
+    {
+      "slug": "latin-american-consumer-protection-specialist",
+      "agent_id": "LATAM-CONSUMER-PROT-001",
+      "name": "Latin American Consumer Protection Specialist",
+      "role": "specialist",
+      "specialty": "🇧🇷+🇨🇱 comparative consumer protection",
+      "language_focus": [
+        "pt-BR",
+        "es-CL",
+        "en"
+      ],
+      "frameworks": [
+        "CDC (Lei 8.078/1990)",
+        "Ley 19.496",
+        "Civil Codes BR/CL",
+        "ANAC Res. 400",
+        "DGAC consumer rules"
+      ],
+      "shared_scopes": [
+        "cases",
+        "law",
+        "consumer_protection",
+        "comparative_law",
+        "brazil_chile_coordination"
+      ],
+      "agent_file": "agents/agents-groups/legal/agents/latin-american-consumer-protection-specialist.agent.md",
+      "bundle_file": "generated/legal/bundles/latin-american-consumer-protection-specialist.bundle.import.json",
+      "memory": {
+        "qdrant_collection": "agent_latin_american_consumer_protection",
+        "neo4j_database": "agent.latinam.consumer.protection"
+      }
+    },
+    {
+      "slug": "latin-american-criminal-investigation-coordinator",
+      "agent_id": "LATAM-CRIMINAL-INVEST-001",
+      "name": "Latin American Criminal Investigation Coordinator",
+      "role": "specialist",
+      "specialty": "🇧🇷+🇨🇱 criminal investigation coordination",
+      "language_focus": [
+        "pt-BR",
+        "es-CL",
+        "en"
+      ],
+      "frameworks": [
+        "CPB (Decreto-Lei 2.848/1940)",
+        "CHIPENCOD (DL 1)",
+        "Brazil-Chile MLAT"
+      ],
+      "shared_scopes": [
+        "cases",
+        "law",
+        "criminal_investigation",
+        "brazil_chile_coordination",
+        "cross_border_cooperation"
+      ],
+      "agent_file": "agents/agents-groups/legal/agents/latin-american-criminal-investigation-coordinator.agent.md",
+      "bundle_file": "generated/legal/bundles/latin-american-criminal-investigation-coordinator.bundle.import.json"
+    },
+    {
+      "slug": "la8159-cult-workspace-coordinator",
+      "name": "LA8159 Cult Workspace Coordinator (legacy)",
+      "role": "specialist",
+      "specialty": "LA8159 project operations (legacy; see legal-coordinator)",
+      "agent_file": "agents/agents-groups/legal/agents/la8159-cult-workspace-coordinator.agent.md",
+      "bundle_file": "generated/legal/bundles/la8159-cult-workspace-coordinator.bundle.import.json",
+      "tags": [
+        "deprecated",
+        "succeeded-by:legal-coordinator"
+      ]
+    }
+  ],
+  "knowledge": {
+    "folder": "agents-groups/legal/knowledge",
+    "manifest": "agents-groups/legal/knowledge/manifest.json",
+    "description": "Per-framework one-pagers, LA8159 case evidence bundle index, PII-safe references. Populated in Phase 3."
+  },
+  "memory_defaults": {
+    "qdrant_collections": [
+      "agent_brazilian_aviation_legal_expert",
+      "agent_chilean_aviation_legal_expert",
+      "agent_italian_aviation_legal_expert",
+      "agent_international_aviation_coordinator",
+      "agent_latin_american_consumer_protection"
+    ],
+    "neo4j_labels": [
+      "MemoryEntry",
+      "LegalEvidence",
+      "Jurisdiction"
+    ],
+    "neo4j_databases": [
+      "agent.brazil.aviation",
+      "agent.chile.aviation",
+      "agent.italy.aviation",
+      "agent.international.coordination"
+    ]
+  },
+  "policies": {
+    "tool_permissions": "agents-groups/legal/policies/tool-permissions.by-agent.json",
+    "handoff_routes": "agents-groups/legal/policies/handoff-routes.json",
+    "orchestrator_policy": "agents-groups/legal/policies/legal-orchestration.policy.json"
+  }
+}

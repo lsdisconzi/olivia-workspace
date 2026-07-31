@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "generated/schemas/tool-permissions.schema.json",
+  "version": "1.0.0",
+  "title": "Tool Permissions",
+  "description": "Schema for tool-permissions.by-agent.json. Defines allowed/denied tools per agent with confirmation policies.",
+  "type": "object",
+  "required": ["version", "default_policy", "agents"],
+  "properties": {
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "group": { "type": "string" },
+    "default_policy": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": { "enum": ["deny-by-default", "allow-by-default"] },
+        "require_confirmation_for": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "agents": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "allowed_tools": { "type": "array", "items": { "type": "string" } },
+          "denied_tools": { "type": "array", "items": { "type": "string" } },
+          "require_confirmation_for": { "type": "array", "items": { "type": "string" } },
+          "notes": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

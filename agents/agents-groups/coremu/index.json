@@ -1,0 +1,149 @@
+{
+  "$schema": "../../generated/schemas/group-manifest.schema.json",
+  "version": "1.0.0",
+  "group": "coremu",
+  "label": "COREMU",
+  "icon": "🏥",
+  "color": "#1c4532",
+  "description": "RMISFC residency network at UnirG Gurupi — 10 residents across 5 specialties (Odontologia, Enfermagem, Farmácia, Fisioterapia, Psicologia), plus NDAE coordinator and program orchestrator.",
+  "language_focus": ["pt-BR"],
+  "source": {
+    "project_name": "COREMU — RMISFC Residency Network (UnirG Gurupi)"
+  },
+  "orchestrator": {
+    "slug": "coremu-orchestrator",
+    "name": "COREMU Orchestrator",
+    "agent_file": "agents-groups/coremu/agents/coremu-orchestrator.agent.md"
+  },
+  "coordinator": {
+    "slug": "coremu-coordinator",
+    "name": "COREMU Coordinator (NDAE)",
+    "agent_file": "agents-groups/coremu/agents/coremu-coordinator.agent.md"
+  },
+  "agents": [
+    {
+      "slug": "coremu-orchestrator",
+      "name": "COREMU Orchestrator",
+      "role": "orchestrator",
+      "agent_file": "agents-groups/coremu/agents/coremu-orchestrator.agent.md"
+    },
+    {
+      "slug": "coremu-coordinator",
+      "name": "COREMU Coordinator (NDAE)",
+      "role": "coordinator",
+      "agent_file": "agents-groups/coremu/agents/coremu-coordinator.agent.md"
+    },
+    {
+      "slug": "coremu-magdi",
+      "agent_id": "COREMU-RES-ODO-001",
+      "name": "Magdi (Odontologia)",
+      "role": "specialist",
+      "specialty": "Odontologia — residente 1º",
+      "language_focus": ["pt-BR"],
+      "agent_file": "agents-groups/coremu/agents/coremu-magdi.agent.md",
+      "bundle_file": "generated/coremu/bundles/coremu-magdi.bundle.import.json"
+    },
+    {
+      "slug": "coremu-darik",
+      "agent_id": "COREMU-RES-ODO-002",
+      "name": "Darik (Odontologia)",
+      "role": "specialist",
+      "specialty": "Odontologia — residente 2º",
+      "language_focus": ["pt-BR"],
+      "agent_file": "agents-groups/coremu/agents/coremu-darik.agent.md",
+      "bundle_file": "generated/coremu/bundles/coremu-darik.bundle.import.json"
+    },
+    {
+      "slug": "coremu-maira",
+      "agent_id": "COREMU-RES-ENF-001",
+      "name": "Maira (Enfermagem)",
+      "role": "specialist",
+      "specialty": "Enfermagem — residente 1ª",
+      "language_focus": ["pt-BR"],
+      "agent_file": "agents-groups/coremu/agents/coremu-maira.agent.md",
+      "bundle_file": "generated/coremu/bundles/coremu-maira.bundle.import.json"
+    },
+    {
+      "slug": "coremu-maria-eduarda",
+      "agent_id": "COREMU-RES-ENF-002",
+      "name": "Maria Eduarda (Enfermagem)",
+      "role": "specialist",
+      "specialty": "Enfermagem — residente 2ª",
+      "language_focus": ["pt-BR"],
+      "agent_file": "agents-groups/coremu/agents/coremu-maria-eduarda.agent.md",
+      "bundle_file": "generated/coremu/bundles/coremu-maria-eduarda.bundle.import.json"
+    },
+    {
+      "slug": "coremu-laura",
+      "agent_id": "COREMU-RES-FAR-001",
+      "name": "Laura (Farmácia)",
+      "role": "specialist",
+      "specialty": "Farmácia — residente 1ª",
+      "language_focus": ["pt-BR"],
+      "agent_file": "agents-groups/coremu/agents/coremu-laura.agent.md",
+      "bundle_file": "generated/coremu/bundles/coremu-laura.bundle.import.json"
+    },
+    {
+      "slug": "coremu-jessica",
+      "agent_id": "COREMU-RES-FAR-002",
+      "name": "Jéssica (Farmácia)",
+      "role": "specialist",
+      "specialty": "Farmácia — residente 2ª",
+      "language_focus": ["pt-BR"],
+      "agent_file": "agents-groups/coremu/agents/coremu-jessica.agent.md",
+      "bundle_file": "generated/coremu/bundles/coremu-jessica.bundle.import.json"
+    },
+    {
+      "slug": "coremu-kassio",
+      "agent_id": "COREMU-RES-FIS-001",
+      "name": "Kássio (Fisioterapia)",
+      "role": "specialist",
+      "specialty": "Fisioterapia — residente 1º",
+      "language_focus": ["pt-BR"],
+      "agent_file": "agents-groups/coremu/agents/coremu-kassio.agent.md",
+      "bundle_file": "generated/coremu/bundles/coremu-kassio.bundle.import.json"
+    },
+    {
+      "slug": "coremu-patricia",
+      "agent_id": "COREMU-RES-FIS-002",
+      "name": "Patricia (Fisioterapia)",
+      "role": "specialist",
+      "specialty": "Fisioterapia — residente 2ª",
+      "language_focus": ["pt-BR"],
+      "agent_file": "agents-groups/coremu/agents/coremu-patricia.agent.md",
+      "bundle_file": "generated/coremu/bundles/coremu-patricia.bundle.import.json"
+    },
+    {
+      "slug": "coremu-ester",
+      "agent_id": "COREMU-RES-PSI-001",
+      "name": "Ester (Psicologia)",
+      "role": "specialist",
+      "specialty": "Psicologia — residente 1ª",
+      "language_focus": ["pt-BR"],
+      "agent_file": "agents-groups/coremu/agents/coremu-ester.agent.md",
+      "bundle_file": "generated/coremu/bundles/coremu-ester.bundle.import.json"
+    },
+    {
+      "slug": "coremu-giselle",
+      "agent_id": "COREMU-RES-PSI-002",
+      "name": "Giselle (Psicologia)",
+      "role": "specialist",
+      "specialty": "Psicologia — residente 2ª",
+      "language_focus": ["pt-BR"],
+      "agent_file": "agents-groups/coremu/agents/coremu-giselle.agent.md",
+      "bundle_file": "generated/coremu/bundles/coremu-giselle.bundle.import.json"
+    }
+  ],
+  "memory_defaults": {
+    "qdrant_collections": [
+      "transcription_transcripts",
+      "reviewed_transcripts"
+    ],
+    "neo4j_labels": [],
+    "neo4j_databases": []
+  },
+  "policies": {
+    "tool_permissions": "agents-groups/coremu/policies/tool-permissions.by-agent.json",
+    "handoff_routes": "agents-groups/coremu/policies/handoff-routes.json"
+  }
+}

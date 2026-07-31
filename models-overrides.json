@@ -192,6 +192,18 @@
       "output_cost_per_1m": 0.0,
       "supports_vision": true,
       "supports_thinking": false
+    },
+    {
+      "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+      "name": "NVIDIA: Nemotron 3 Nano Omni (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "NVIDIA Nemotron™ 3 Nano Omni is a 30B-A3B open multimodal model designed to function as a perception and context sub-age",
+      "context_window": 256000,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": true,
+      "supports_thinking": true
     }
   ],
   "overrides": {

@@ -1,0 +1,63 @@
+{
+  "$schema": "../../generated/schemas/group-manifest.schema.json",
+  "version": "1.0.0",
+  "group": "government",
+  "label": "Government",
+  "icon": "🏛️",
+  "color": "#2f6f9d",
+  "description": "Public-sector / innovation procurement agents. Today: CPSI (LC 182/2021) municipal advisor. Group orchestrator + coordinator added in Phase 1.",
+  "language_focus": ["pt-BR", "en"],
+  "source": {
+    "manifest": "agents-groups/government/knowledge/PROJECT_MANIFEST.md",
+    "project_name": "CPSI Municipal Advisor"
+  },
+  "orchestrator": {
+    "slug": "government-orchestrator",
+    "name": "Government Orchestrator",
+    "agent_file": "agents-groups/government/agents/government-orchestrator.agent.md"
+  },
+  "coordinator": {
+    "slug": "government-coordinator",
+    "name": "Government Coordinator",
+    "agent_file": "agents-groups/government/agents/government-coordinator.agent.md"
+  },
+  "agents": [
+    { "slug": "government-orchestrator", "name": "Government Orchestrator", "role": "orchestrator", "agent_file": "agents-groups/government/agents/government-orchestrator.agent.md" },
+    { "slug": "government-coordinator", "name": "Government Coordinator", "role": "coordinator", "agent_file": "agents-groups/government/agents/government-coordinator.agent.md" },
+    {
+      "slug": "cpsi-municipal-advisor",
+      "agent_id": "cpsi",
+      "name": "CPSI Municipal Advisor",
+      "role": "specialist",
+      "specialty": "Contrato Público para Solução Inovadora (LC 182/2021)",
+      "language_focus": ["pt-BR", "en"],
+      "frameworks": ["LC 182/2021", "Lei 14.133/2021", "Lei 10.973/2004", "IN SEGES/MP 5/2017"],
+      "shared_scopes": ["government", "procurement", "innovation"],
+      "agent_file": "agents-groups/government/agents/cpsi-municipal-advisor.agent.md",
+      "bundle_file": "generated/government/bundles/cpsi.bundle.import.json",
+      "memory": { "qdrant_collection": "cpsi_knowledge", "neo4j_database": "cpsi" }
+    }
+  ],
+  "knowledge": {
+    "folder": "agents-groups/government/knowledge",
+    "manifest": "agents-groups/government/knowledge/manifest.json",
+    "description": "Government-group curated CPSI knowledge base with Manual AGU 2025, CNJ CPSI 01/2025 edital + anexos, PGE-SP toolkit, Observatório CPSI dataset, and LC 182/2021 annotations."
+  },
+  "memory_defaults": {
+    "qdrant_collections": ["cpsi_knowledge"],
+    "neo4j_labels": ["MemoryEntry", "CPSIArtifact", "PublicProblem"],
+    "neo4j_databases": ["cpsi"]
+  },
+  "policies": {
+    "tool_permissions": "agents-groups/government/policies/tool-permissions.by-agent.json",
+    "handoff_routes": "agents-groups/government/policies/handoff-routes.json"
+  },
+  "roadmap": {
+    "planned_specialists": [
+      { "slug": "encomenda-tecnologica-advisor", "scope": "Lei 10.973/2004" },
+      { "slug": "licitacao-tradicional-advisor", "scope": "Lei 14.133/2021" },
+      { "slug": "lgpd-publica-advisor", "scope": "LGPD for public entities" },
+      { "slug": "transferencias-voluntarias-advisor", "scope": "Convênios e transferências voluntárias da União" }
+    ]
+  }
+}
