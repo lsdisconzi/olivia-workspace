@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@gitlawb/openclaude": "^0.24.0"
+  }
+}
