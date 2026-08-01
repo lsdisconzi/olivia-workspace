@@ -17,7 +17,7 @@ node_modules/
 # Local/Environment configs
 .env
 .env.*
-.openclaude-runtime/
+openclaude/
 
 # IDE/Editor configs
 .vscode/
@@ -36,3 +36,4 @@ _shared/
 .openclaude/
 content/archived_projects/
 config/client_secret_*.json
+
