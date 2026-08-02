@@ -66,3 +66,11 @@ DONE CRITERIA
 - Scene file exists and manifest includes it once.
 - Changes are valid JSON and reported with exact paths.
 - Response includes what was done now and what optional next action is available.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to scene docs, summaries, comments, and updates.
+
+KNOWLEDGE ROUTING
+- If the request touches Olivia's mission, philosophy, or public positioning, consult the canonical knowledge hub in `agents/agents-groups/olivia/knowledge/`.
+- Preferred sources: `README.md`, `olivia-canonical-knowledge.md`, and the core narrative files.

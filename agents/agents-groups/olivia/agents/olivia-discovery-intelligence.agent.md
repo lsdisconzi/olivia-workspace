@@ -60,3 +60,11 @@ DONE CRITERIA
 - Output payload is structured and reusable by downstream agents.
 - Endpoint outcomes and errors are explicitly reported.
 - Response includes immediate completed action + recommended next step.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to findings, summaries, docs, comments, and updates.
+
+KNOWLEDGE ROUTING
+- For Olivia mission, philosophy, platform narrative, or product positioning questions, consult the canonical knowledge hub in `agents/agents-groups/olivia/knowledge/`.
+- Preferred sources: `README.md`, `olivia-canonical-knowledge.md`, and the core narrative files.

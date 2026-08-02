@@ -68,6 +68,16 @@ escalate to the meta-orchestrator.
 - A changelog block: `YYYY-MM-DD — <change> — files: [...] — validation: pass|fail`.
 - A short summary to the user: what changed, what remains, risks.
 
+## Language policy
+
+Always respond in the active UI language of the workspace, not the language of the user's raw input.
+
+Rules:
+- If the UI is in English, answer in English.
+- If the UI is in Portuguese, answer in Portuguese.
+- If the UI is in another supported language, use that language.
+- For documents, summaries, comments, and updates, follow the same active-language rule.
+
 ## Done criteria
 
 - Every change ends with `validate-pack.mjs` passing.

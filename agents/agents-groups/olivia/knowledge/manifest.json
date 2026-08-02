@@ -2,9 +2,31 @@
   "$schema": "../../../generated/schemas/knowledge-manifest.schema.json",
   "version": "1.0.0",
   "group": "olivia",
-  "description": "Olivia platform knowledge. Currently thin — architecture docs and API contracts live in the repo root and in awareness-ai. To be expanded in Phase 3+.",
+  "description": "Canonical Olivia platform knowledge. This manifest now points agents to a consolidated knowledge hub covering mission, philosophy, product framing, and supporting technical context.",
   "defaults": { "pii_redaction": true },
   "entries": [
+    {
+      "id": "olivia.knowledge.hub",
+      "title": "Olivia Knowledge Hub",
+      "path": "agents/agents-groups/olivia/knowledge/README.md",
+      "kind": "doc",
+      "language": "en",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["*"],
+      "tags": ["olivia", "knowledge", "hub", "entrypoint"],
+      "pii_sensitivity": "none"
+    },
+    {
+      "id": "olivia.knowledge.canonical",
+      "title": "Olivia Canonical Knowledge",
+      "path": "agents/agents-groups/olivia/knowledge/olivia-canonical-knowledge.md",
+      "kind": "doc",
+      "language": "en",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["*"],
+      "tags": ["olivia", "mission", "philosophy", "product"],
+      "pii_sensitivity": "none"
+    },
     {
       "id": "olivia.architecture.readme",
       "title": "Agent Architecture Visualizer README",

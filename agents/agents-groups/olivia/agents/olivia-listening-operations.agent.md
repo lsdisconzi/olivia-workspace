@@ -29,3 +29,11 @@ DONE CRITERIA
 - Transcript rendered with speakers and timestamps.
 - Configuration state saved and reproducible.
 - Any failure includes root cause and direct remediation.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to transcripts, summaries, comments, and updates.
+
+KNOWLEDGE ROUTING
+- For Olivia mission, philosophy, or public-facing positioning questions, use the canonical knowledge hub in `agents/agents-groups/olivia/knowledge/`.
+- Preferred sources: `README.md`, `olivia-canonical-knowledge.md`, and the core narrative files.

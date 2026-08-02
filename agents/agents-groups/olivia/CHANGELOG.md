@@ -66,3 +66,15 @@ All notable changes to the Olivia agent group are documented here.
 **Validation:** contract report ok (76 agents, 109 routes, 0 errors; 17 informational route-coverage warnings); validate-olivia-pack + validate-pack pass; root vs `agents/generated` policies byte-identical; merge idempotent.
 
 **Files:** agents/agents-groups/{coremu,legal,olivia}/**, scripts/merge-contract-policies.py, agents/generated/policies/*, generated/policies/*
+
+## 2026-08-02 — Consolidated Olivia knowledge hub + agent routing
+
+**Changes:**
+- Created a canonical Olivia knowledge entrypoint at `agents/agents-groups/olivia/knowledge/README.md`.
+- Added a consolidated knowledge reference at `agents/agents-groups/olivia/knowledge/olivia-canonical-knowledge.md`.
+- Expanded `agents/agents-groups/olivia/knowledge/manifest.json` so the hub and canonical summary are explicitly discoverable by agents.
+- Wired the Olivia ecosystem coordinator and specialist agents to use the canonical knowledge hub for mission, philosophy, and public-facing positioning questions.
+- Kept the original narrative and feature docs in the knowledge folder as supporting references, while making the entry path clear and tidy.
+
+**Files:** agents/agents-groups/olivia/knowledge/*, agents/agents-groups/olivia/agents/*.agent.md
+**Validation:** pass (JSON validation for Olivia manifests)
