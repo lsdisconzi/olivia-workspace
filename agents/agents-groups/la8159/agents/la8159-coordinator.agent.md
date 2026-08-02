@@ -44,3 +44,7 @@ node generated/validate-pack.mjs
 - `scope.owned_paths`: `["agents-groups/la8159/**"]`
 - `payload.verification`: validate-pack pass, mapping.json well-formed, personnel registry append-only respected.
 - `payload.path_policy`: use relative paths rooted at `agents-groups/la8159/source/` and keep references aligned with `source/PATHS.md`.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

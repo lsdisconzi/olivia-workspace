@@ -110,3 +110,7 @@ specialists). Recommended pattern:
 - Final user-facing reply includes: **verdict**, **jurisdictions consulted**,
   **framework citations**, and the **advisory tag**.
 - No cross-group write occurred without meta-orchestrator confirmation.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

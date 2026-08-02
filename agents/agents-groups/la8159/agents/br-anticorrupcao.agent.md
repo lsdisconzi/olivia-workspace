@@ -121,3 +121,7 @@ This agent is the OWNER of corporate-anticorruption fact patterns under Lei 12.8
 - BR_ABEAR_PLUS dependency: [../BR_ABEAR_PLUS/agent.md](../BR_ABEAR_PLUS/agent.md) — its §4 carve-outs MUST be honored by this agent.
 - Last sync with reports: 2026-04-28
 - Maintainer note: this spec now uses Art. 3, not Art. 27, when preserving the natural-person track. The carve-out discipline remains non-negotiable.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

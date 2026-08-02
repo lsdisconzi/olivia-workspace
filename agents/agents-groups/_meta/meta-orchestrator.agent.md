@@ -112,3 +112,7 @@ legal). If still ambiguous, ask exactly one question.
 - In `route_and_run`, the final user-facing reply includes a header
   `→ routed via <group>/<orchestrator>` so the user can trace the path.
 - No writes occurred outside the target group folder.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

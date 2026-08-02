@@ -84,3 +84,7 @@ tags: ["la8159", "category:cl", "jurisdiction:chile"]
 - Source narratives: `branch_documentation/linkedin_data_review_extract_personnel/Archive/defensoria-penal-public-chile/`
 - Last sync: 2026-04-28.
 - Maintainer note: promoted from stub after adding official BCN caches for Constitución Arts. 5 and 98-100, Decreto 2.421 Art. 1, DFL 1-19.653 Arts. 52 and 56, Ley 20.880 Arts. 2 and 8, and Ley 20.405 Arts. 3 and 4. Prior miscites to Ley 20.880 Art. 8 as a cooling-off rule and Ley 20.405 Art. 4 as the querella anchor were corrected against the official text.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

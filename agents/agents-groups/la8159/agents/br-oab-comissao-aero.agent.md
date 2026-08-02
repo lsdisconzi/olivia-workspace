@@ -72,3 +72,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Sources cache: [../../sources/BR/L8906_OAB.md](../../sources/BR/L8906_OAB.md)
 - Last sync: 2026-04-28.
 - Maintainer note: promoted from stub after extending the local Lei 8.906 cache with the institutional OAB articles used here. Commission-regulation details beyond the Estatuto remain secondary until the relevant Regulamento Geral / provimento texts are separately cached.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

@@ -59,3 +59,7 @@ tags: ["la8159", "category:cl", "jurisdiction:chile"]
 ## 9. Provenance
 - [CL_COMPREHENSIVE_VERIFICATION_REPORT_v2.md](../source/la8159/01-violations) §3, §6.2(5)
 - Last sync: 2026-04-27
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

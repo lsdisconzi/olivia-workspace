@@ -85,3 +85,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Anchor: Sandra Assali dossier; META_RevolvingDoor case; Lei 13.460 only for the public-service interface.
 - Last sync: 2026-04-28.
 - Maintainer note: promoted from stub after local caching of CC association articles, CF/88 association-liberty clauses, and Lei 13.460 user-service provisions. ABRAPAVAA's own statute remains uncached, so this agent stays source-limited for internal article-level bylaw analysis and carries a deferred later-stage review item for any statute-specific claims.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

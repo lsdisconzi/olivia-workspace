@@ -88,3 +88,7 @@ See `mapping.json` for the full 71-violation routing table, plus META and person
 - Configuration: [`mapping.json`](../../mapping.json), [`INDEX.md`](../../INDEX.md), [`PLAN.md`](../../PLAN.md)
 - Specialist agents: all active `agent.md` files under `BR/`, `CL/`, and `INT/`
 - Last sync: 2026-04-27
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

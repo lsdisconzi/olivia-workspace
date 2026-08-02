@@ -69,3 +69,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Sources cache: `sources/BR/L8429_Improbidade.md`
 - Last sync: 2026-04-28
 - Maintainer note: this agent is now keyed to the post-2021 operative text; any future expansion should preserve the strict separation between Art. 10 dano efetivo and Art. 11 tipicidade fechada.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

@@ -92,3 +92,7 @@ user to paste it into the file (or use the editor tool to create it directly).
 - State management is centralized in Pinia stores.
 - No global functions remain; all functionality is encapsulated.
 - The old `index.html` can be safely deleted or archived.
+
+# LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status messages, summaries, comments, and generated documentation.

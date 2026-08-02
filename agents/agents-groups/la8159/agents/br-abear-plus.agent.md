@@ -101,3 +101,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - [`branch_documentation/aviation_ethics_institutional_governance.md`](../../../../services/garage-main/branch_documentation/aviation_ethics_institutional_governance.md) §4.1 (ABEAR Compliance Program)
 - Local PDF cache: `crawler_output/abear-docs/documents/www.abear.com.br/wp-content/uploads/` (15 governance PDFs)
 - Last sync: 2026-04-28 (extended from 2026-04-27)
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

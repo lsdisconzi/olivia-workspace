@@ -39,3 +39,7 @@ orchestrator and produce **supervised, PII-redacted** territorial notes.
 ## Done criteria
 
 - Note returned with conclusion, evidence reference, and supervision tag.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

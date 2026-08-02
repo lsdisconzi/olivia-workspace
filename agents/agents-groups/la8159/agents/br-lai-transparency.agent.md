@@ -82,3 +82,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Strategic anchor: [../../meta/META_Institutional_Silence/agent.md](../../meta/META_Institutional_Silence/agent.md)
 - Source cache: [../../sources/BR/L12527_LAI.md](../../sources/BR/L12527_LAI.md), [../../sources/BR/D7724_LAI_Regulamento.md](../../sources/BR/D7724_LAI_Regulamento.md)
 - Last sync: 2026-04-28
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

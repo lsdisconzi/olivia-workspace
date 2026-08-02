@@ -53,3 +53,7 @@ CBA (Lei 7.565/1986), ANAC Res. 400, CDC (Lei 8.078/1990), CPB (Decreto-Lei 2.84
 - Jurisdiction respected; cross-border matters routed to the international
   coordinator.
 - No unredacted personal data written.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

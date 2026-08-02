@@ -135,3 +135,7 @@ See [../../personnel/REGISTRY.md](../../personnel/REGISTRY.md) for full registry
 - Sources cache: [../../sources/BR/L8906_OAB.md](../../sources/BR/L8906_OAB.md), [../../sources/BR/CodEtica_OAB.md](../../sources/BR/CodEtica_OAB.md)
 - Last sync with reports: 2026-04-28
 - Maintainer note: promoted from stub after confirming the Estatuto layer against the local Planalto cache and tightening the Tier-2 CED posture around the existing partial cache. CED 2015 numbering remains caveated until the full Resolução 02/2015 text is extracted from OAB/DOU.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

@@ -52,3 +52,7 @@ CDC (Lei 8.078/1990), Ley 19.496, Civil Codes BR/CL, ANAC Res. 400, DGAC consume
 - Jurisdiction respected; cross-border matters routed to the international
   coordinator.
 - No unredacted personal data written.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

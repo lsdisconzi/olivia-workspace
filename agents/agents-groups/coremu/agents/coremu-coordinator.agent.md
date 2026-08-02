@@ -51,3 +51,7 @@ atas, resoluções, planos de ensino, relatórios — and operate the
 
 - Document approved under the NDAE standard with the supervision tag.
 - External delivery preceded by meta-orchestrator confirmation when cross-group.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.
