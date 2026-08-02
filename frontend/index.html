@@ -6488,6 +6488,40 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
           style="margin-right:4px"></i> Create Agent</button>
     </div>
   </div>
+  <!-- ═══════ AI AGENT BUILDER MODAL ═══════ -->
+  <div class="modal-overlay" id="agentAIBuilderOverlay" onclick="closeAgentAIBuilderModal()"></div>
+  <div class="modal" id="agentAIBuilderModal" style="max-width:560px">
+    <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center;">
+      <span class="modal-title" id="agentAIBuilderTitle">Criar Agente com IA</span>
+      <button class="modal-close" onclick="closeAgentAIBuilderModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="padding:12px 0">
+      <div style="margin-bottom:14px">
+        <label class="config-label" for="agentAIBuilderDesc"><span data-i18n="agent_description_prompt">Descrição do Agente</span></label>
+        <textarea class="config-textarea" id="agentAIBuilderDesc" name="agentAIBuilderDesc"
+          placeholder="Descreva o tipo de agente que você quer criar. Ex: 'Um agente de análise de dados que conecta ao BigQuery e gera relatórios semanais'" rows="4"></textarea>
+        <div style="margin-top:6px;font-size:10px;color:var(--gray)">
+          <i class="fas fa-info-circle"></i> Descreva com detalhes o propósito, habilidades e comportamento desejado. A IA preencherá todos os campos do formulário automaticamente.
+        </div>
+      </div>
+      <div id="agentAIBuilderStatus" style="display:none;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)">
+          <i class="fas fa-spinner fa-spin"></i>
+          <span>Gerando configuração do agente...</span>
+        </div>
+      </div>
+      <div id="agentAIBuilderError" style="display:none;margin-bottom:12px;padding:8px;border-radius:6px;background:rgba(239,68,68,0.1);border:1px solid var(--red);color:var(--red);font-size:12px">
+        <i class="fas fa-exclamation-triangle" style="margin-right:6px"></i>
+        <span id="agentAIBuilderErrorMsg"></span>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeAgentAIBuilderModal()">Cancelar</button>
+      <button class="btn btn-primary" id="agentAIBuilderGenerateBtn" onclick="generateAgentWithAI()" type="button">
+        <i class="fas fa-robot" style="margin-right:4px"></i> Gerar Configuração
+      </button>
+    </div>
+  </div>
   <!-- ═══════ IMPORT BUNDLE MODAL ═══════ -->
   <div class="modal-overlay" id="bundleImportOverlay" onclick="closeBundleImportModal()"></div>
   <div class="modal" id="bundleImportModal" style="max-width:480px">

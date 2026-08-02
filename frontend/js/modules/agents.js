@@ -2814,6 +2814,146 @@ function prepareAgentFormAssistantPrompt() {
   addSystemBubble('Prompt de ajuda preparado no chat. Você pode ajustar e enviar para a OliviaLegal.');
 }
 
+// ── AI Agent Builder ──────────────────────────────────────────────
+function openAgentAIBuilderModal() {
+  const overlay = document.getElementById('agentAIBuilderOverlay');
+  const modal = document.getElementById('agentAIBuilderModal');
+  if (!overlay || !modal) return;
+
+  // Reset state
+  const descInput = document.getElementById('agentAIBuilderDesc');
+  if (descInput) descInput.value = '';
+  const statusDiv = document.getElementById('agentAIBuilderStatus');
+  if (statusDiv) statusDiv.style.display = 'none';
+  const errorDiv = document.getElementById('agentAIBuilderError');
+  if (errorDiv) errorDiv.style.display = 'none';
+  const errorMsg = document.getElementById('agentAIBuilderErrorMsg');
+  if (errorMsg) errorMsg.textContent = '';
+
+  overlay.classList.add('show');
+  modal.classList.add('show');
+  if (descInput) descInput.focus();
+}
+
+function closeAgentAIBuilderModal() {
+  const overlay = document.getElementById('agentAIBuilderOverlay');
+  const modal = document.getElementById('agentAIBuilderModal');
+  if (overlay) overlay.classList.remove('show');
+  if (modal) modal.classList.remove('show');
+}
+
+async function generateAgentWithAI() {
+  const descInput = document.getElementById('agentAIBuilderDesc');
+  const desc = (descInput?.value || '').trim();
+  if (!desc) {
+    addSystemBubble('Por favor, descreva o agente que você deseja criar.');
+    return;
+  }
+
+  const statusDiv = document.getElementById('agentAIBuilderStatus');
+  const errorDiv = document.getElementById('agentAIBuilderError');
+  const errorMsg = document.getElementById('agentAIBuilderErrorMsg');
+  const generateBtn = document.getElementById('agentAIBuilderGenerateBtn');
+
+  if (statusDiv) statusDiv.style.display = 'flex';
+  if (errorDiv) errorDiv.style.display = 'none';
+  if (generateBtn) generateBtn.disabled = true;
+
+  try {
+    const response = await fetch(`${API_BASE}/api/agents/generate-config`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description: desc })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    // Populate the create agent form with AI-generated values
+    _populateAgentFormFromAI(data);
+
+    // Close the AI builder modal
+    closeAgentAIBuilderModal();
+
+    addSystemBubble('Configuração do agente gerada com IA e preenchida no formulário. Revise os campos e clique em "Create Agent".');
+  } catch (err) {
+    console.error('[AgentAIBuilder] Error:', err);
+    if (errorMsg) errorMsg.textContent = err.message || 'Erro ao gerar configuração do agente';
+    if (errorDiv) errorDiv.style.display = 'block';
+  } finally {
+    if (statusDiv) statusDiv.style.display = 'none';
+    if (generateBtn) generateBtn.disabled = false;
+  }
+}
+
+function _populateAgentFormFromAI(config) {
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val || '';
+  };
+
+  const setChecked = (id, checked) => {
+    const el = document.getElementById(id);
+    if (el) el.checked = !!checked;
+  };
+
+  const setSelect = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val) {
+      const optionToSelect = Array.from(el.options).find(o => o.value === val);
+      if (optionToSelect) el.value = val;
+    }
+  };
+
+  // Basic fields
+  setVal('modalAgentName', config.name || '');
+  setVal('modalAgentDesc', config.description || '');
+  setVal('modalAgentGroup', config.group || '');
+  setSelect('modalPreferredModel', config.preferred_model || 'deepseek-v4-pro');
+  setChecked('modalUnrestrictedTools', config.unrestricted_tools);
+
+  // Workspace scope
+  setSelect('modalWorkspaceScope', config.workspace_scope || 'workspace');
+
+  // System prompt
+  setVal('modalSystemPrompt', config.system_prompt || '');
+
+  // Skills
+  if (config.skills && Array.isArray(config.skills)) {
+    setVal('modalSkills', config.skills.join('\n'));
+    // Trigger any skill rendering if needed
+    if (typeof renderModalSkills === 'function') renderModalSkills();
+  }
+
+  // Qdrant collections
+  if (config.qdrant_collections && Array.isArray(config.qdrant_collections)) {
+    setVal('modalQdrantCollections', config.qdrant_collections.join('\n'));
+    if (typeof renderModalQdrantCollections === 'function') renderModalQdrantCollections();
+  }
+
+  // MCP servers
+  if (config.mcp_servers && Array.isArray(config.mcp_servers)) {
+    config.mcp_servers.forEach(serverName => {
+      const checkbox = document.querySelector(`#modalMcpServers input[value="${serverName}"]`);
+      if (checkbox) checkbox.checked = true;
+    });
+  }
+
+  // Shared scopes
+  if (config.shared_scopes && Array.isArray(config.shared_scopes)) {
+    config.shared_scopes.forEach(scope => {
+      const checkbox = document.querySelector(`.modal-scope[value="${scope}"]`);
+      if (checkbox) checkbox.checked = true;
+    });
+  }
+}
+
 // Load shared scopes for checkbox grid
 async function loadSharedScopes() {
   const grid = document.getElementById('sharedScopesGrid');
