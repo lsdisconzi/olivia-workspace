@@ -28,6 +28,17 @@
       "pii_sensitivity": "none"
     },
     {
+      "id": "olivia.ecosystem.rag.notes",
+      "title": "Olivia Ecosystem RAG Collection Notes",
+      "path": "_improvements/RAG-agent-context/olivia-ecosystem-rag-collection.md",
+      "kind": "doc",
+      "language": "en",
+      "owner_agents": ["olivia-coordinator"],
+      "consumer_agents": ["*"],
+      "tags": ["olivia", "ecosystem", "rag", "collection"],
+      "pii_sensitivity": "none"
+    },
+    {
       "id": "olivia.architecture.readme",
       "title": "Agent Architecture Visualizer README",
       "path": "README.md",

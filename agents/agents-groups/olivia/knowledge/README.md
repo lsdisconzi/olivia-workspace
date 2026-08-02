@@ -22,9 +22,11 @@ Use this hub whenever an agent needs to answer questions about:
 ## Retrieval guidance for agents
 
 - Start with [olivia-canonical-knowledge.md](olivia-canonical-knowledge.md) for a concise combined summary.
+- For semantic retrieval of the Olivia ecosystem narrative, query the `olivia_ecosystem` collection first.
 - Use the mission narrative for the main philosophy/history story.
 - Use the feature guide for product capabilities and user-facing framing.
 - Use the archived ecosystem reports only for deeper technical context, not for the core public narrative.
+- The usage notes for the collection live in [_improvements/RAG-agent-context/olivia-ecosystem-rag-collection.md](_improvements/RAG-agent-context/olivia-ecosystem-rag-collection.md).
 
 ## Supporting technical references
 

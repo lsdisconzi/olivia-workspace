@@ -202,7 +202,7 @@ def test_rag_search_live():
     """Phase 3: Live Qdrant search via Garage API returns real results."""
     print("\n--- Test: Live RAG Search (Garage API) ---")
     retriever = RagRetriever(
-        collection_name="olivia-memory-capture-agent",
+        collection_name="olivia-dev-code",
         top_k=2,
         min_score=0.3,
     )
@@ -226,7 +226,7 @@ def test_rag_search_live():
 
     # Graceful degradation — bad URL returns empty
     retriever3 = RagRetriever(
-        collection_name="olivia-memory-capture-agent",
+        collection_name="olivia-dev-code",
         base_url="http://127.0.0.1:1",
     )
     bad = retriever3.search("anything")

@@ -400,12 +400,19 @@ async function createProject() {
   const name = ((await window.customPrompt('Nome do projeto:')) || '').trim();
   if (!name) return;
   const description = ((await window.customPrompt('Descrição (opcional):')) || '').trim();
+  const preferredLanguage = ((await window.customPrompt('Idioma preferido para respostas e arquivos gerados:', 'English', [
+    'English',
+    'Portuguese',
+    'Spanish',
+    'French',
+    'German',
+  ])) || '').trim() || 'English';
 
   try {
     const res = await fetch(`${API_BASE}/api/projects/create`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, description }),
+      body: JSON.stringify({ name, description, preferred_language: preferredLanguage }),
     });
     const data = await res.json();
     if (!res.ok) {

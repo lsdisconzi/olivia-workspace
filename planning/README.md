@@ -48,10 +48,11 @@ These four files live in **each project’s** `planning/` directory and form the
 
 1. **Start**: read `task_plan.md` + `memory.md` for the active project.
 2. **Work**: align actions to that project's plan; record evidence in `findings.md` once verified.
-3. **After a batch**: append to `progress.md` (keep the Status table / Actions / Test Results markers).
-4. **Settle**: if a durable convention, entity, or do-not-redo emerges, write it to `memory.md`.
-5. **If scope changed**: update `task_plan.md` immediately.
-6. **Switching projects**: the server will automatically inject the new project's planning files.
+3. **Every two turns of conversation in the active project**: update the active project's planning files (`task_plan.md`, `memory.md`, `progress.md`, `findings.md`) with the latest state.
+4. **After a batch**: append to `progress.md` (keep the Status table / Actions / Test Results markers).
+5. **Settle**: if a durable convention, entity, or do-not-redo emerges, write it to `memory.md`.
+6. **If scope changed**: update `task_plan.md` immediately.
+7. **Switching projects**: the server will automatically inject the new project's planning files.
 
 ---
 

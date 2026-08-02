@@ -1784,6 +1784,7 @@ Quality and governance:
 - Protect sensitive information and use aggregated summaries for potentially personal data.
 - Always respond in the active UI language of the workspace, not the language of the user's raw input.
 - Apply the same rule to status updates, summaries, documentation, and any generated artifacts.
+- Every two turns of conversation in the active project, update the active project's planning files (`task_plan.md`, `memory.md`, `progress.md`, `findings.md`) with the latest state.
 - If constraints are unclear, state assumptions and proceed with the safest viable action.
 """
 
@@ -4142,6 +4143,11 @@ For complex tasks, use four files in the `planning/` directory:
 3. **progress.md** — Session log, error history, test results
 4. **memory.md** — Persistent cross-session context: sticky decisions/conventions, key entities, open questions, do-not-redo items
 
+For every active project, maintain the planning files on a strict cadence: update
+`task_plan.md`, `memory.md`, `progress.md`, and `findings.md` every two turns of conversation
+within the active project context. If a file is missing, create or initialize it in the
+active project root before continuing.
+
 If these planning files exist, use them as context for continuity
 between conversations. See `planning/README.md` for the full convention and
 the orchestration contract (they are auto-injected into every agent run).
@@ -4159,6 +4165,7 @@ Text files are read and included in context. All files persist in `uploads/`.
 - For file creation tasks: gather info quickly (2-3 reads max), then write the file.
 - Prefer a single `find` or `grep` over many small reads.
 - In detailed investigations, read `task_plan.md`, `findings.md`, and recent `progress.md` tail before major actions.
+- Every two turns of conversation in the active project, update the active project's planning files (`task_plan.md`, `memory.md`, `progress.md`, `findings.md`) with the latest state.
 
 ## Behavioral Guidelines
 - Be direct and precise — no filler
@@ -4208,14 +4215,15 @@ _QUADRANT_SEARCH_INSTRUCTION = (
     "NOT raw file content. If the user's question requires inspecting actual "
     "implementations, documents, or code details, you MUST use the "
     "`garage-qdrant` MCP search tool BEFORE answering:\n\n"
+    "  - **Olivia ecosystem narrative / mission / philosophy / funding** "
+    "(start here for questions like 'what is Olivia?'): "
+    "`garage-qdrant.search(collection_name=\"olivia_ecosystem\", query_text=\"Olivia mission history philosophy\")`\n"
     "  - **Olivia dev code** (functions, classes, imports, docs): "
     "`garage-qdrant.search(collection_name=\"olivia-dev-code\", query_text=\"...\")`\n"
     "  - **User upload documents** (across all projects): "
     "`garage-qdrant.search(collection_name=\"uploads-global\", query_text=\"...\")`\n"
     "  - **Per-project documents**: "
     "`garage-qdrant.search(collection_name=\"project-<project_id>\", query_text=\"...\")`\n"
-    "  - **General knowledge / mission / funding**: "
-    "`garage-qdrant.search(collection_name=\"olivia-dev-code\", query_text=\"olivia mission history philosophy\")`\n\n"
     "Do NOT answer from memory alone when Qdrant can provide authoritative content. "
     "Only read raw files with the MCP filesystem tool when you need an "
     "exact, full-file view that semantic search doesn't cover."
@@ -4236,7 +4244,42 @@ def _resolve_planning_dir() -> Path:
     return PLANNING_WORKSPACE_DIR
 
 
-def _seed_project_planning_files(pdir: Path, project_name: str) -> dict[str, Path]:
+def _normalize_preferred_language(value: object) -> str:
+    text = str(value or "English").strip()
+    return text or "English"
+
+
+def _sync_project_memory_language(project_dir: Path, preferred_language: str) -> None:
+    """Ensure memory.md contains the current preferred response language entry."""
+    project_dir = Path(project_dir)
+    memory_file = project_dir / "memory.md"
+    language_label = _normalize_preferred_language(preferred_language)
+    block = (
+        "## Preferred response language\n"
+        f"- Preferred language: {language_label}\n"
+        "- Use this language for replies and generated files unless the user explicitly overrides it.\n"
+    )
+
+    if memory_file.is_file():
+        try:
+            original = memory_file.read_text(encoding="utf-8")
+        except Exception:
+            original = ""
+        updated = re.sub(
+            r"(?ms)^## Preferred response language\n.*?(?=^## |\Z)",
+            block,
+            original,
+            count=1,
+        )
+        if updated == original:
+            updated = block + "\n" + original.lstrip("\n")
+        memory_file.write_text(updated, encoding="utf-8")
+        return
+
+    memory_file.write_text(block + "\n", encoding="utf-8")
+
+
+def _seed_project_planning_files(pdir: Path, project_name: str, preferred_language: str = "") -> dict[str, Path]:
     """Create the 4 planning files at a project's root on creation and
     register them in the project index.json under the 'arquivos' section so
     the sidebar 'Arquivos' tab surfaces them immediately.
@@ -4249,6 +4292,7 @@ def _seed_project_planning_files(pdir: Path, project_name: str) -> dict[str, Pat
     arquivos_dir = pdir / "arquivos"
     arquivos_dir.mkdir(parents=True, exist_ok=True)
 
+    language_label = _normalize_preferred_language(preferred_language)
     header = f"# {project_name or pdir.name}\n\n<!-- Olivia planning file. Auto-seeded at project creation. -->\n\n"
     defaults = {
         "task_plan.md": header + (
@@ -4272,6 +4316,9 @@ def _seed_project_planning_files(pdir: Path, project_name: str) -> dict[str, Pat
             "  | example check | ok | ok | PASS |\n"
         ),
         "memory.md": header + (
+            "## Preferred response language\n"
+            f"- Preferred language: {language_label}\n"
+            "- Use this language for replies and generated files unless the user explicitly overrides it.\n\n"
             "## Decisions & Conventions (sticky)\n\n## Key Entities / Project Facts\n\n"
             "## Open Questions / Parked Ideas\n\n## Do-Not-Redo\n"
         ),
@@ -5356,10 +5403,17 @@ def _build_assistant_context_preview(
     orchestration_probe: dict | None = None,
 ) -> dict[str, object]:
     message_outline = []
+    full_message_preview = []
     for idx, item in enumerate(messages):
         role = str(item.get("role") or "user")
         content = str(item.get("content") or "")
         message_outline.append({"idx": idx + 1, "role": role, "chars": len(content)})
+        full_message_preview.append({
+            "idx": idx + 1,
+            "role": role,
+            "chars": len(content),
+            "preview": _redact_context_preview_text(content, limit=ASSISTANT_CONTEXT_PREVIEW_TEXT_LIMIT),
+        })
 
     files_sample = []
     for meta in files_meta[:15]:
@@ -5385,6 +5439,24 @@ def _build_assistant_context_preview(
         if isinstance(orchestration_probe.get("panel_context"), dict):
             probe_meta["panel_context"] = orchestration_probe.get("panel_context")
 
+    context_blocks = [
+        _context_preview_block("system_prompt", system_prompt),
+        _context_preview_block("section_routing_context", section_system),
+        _context_preview_block("project_context", project_ctx),
+        _context_preview_block("planning_context", planning_ctx),
+        _context_preview_block("scoped_uploads_context", uploads_ctx),
+    ]
+    for idx, item in enumerate(messages):
+        role = str(item.get("role") or "")
+        content = str(item.get("content") or "")
+        if role != "system":
+            continue
+        if "[Retrieved from Olivia docs]" not in content:
+            continue
+        context_blocks.append(
+            _context_preview_block(f"retrieved_context_{idx + 1}", content)
+        )
+
     return {
         "run_id": run_id,
         "created_at": _utc_now_iso(),
@@ -5409,13 +5481,7 @@ def _build_assistant_context_preview(
             "clean_chars": len(str(clean_message or "")),
             "clean_preview": _redact_context_preview_text(clean_message, limit=900),
         },
-        "context_blocks": [
-            _context_preview_block("system_prompt", system_prompt),
-            _context_preview_block("section_routing_context", section_system),
-            _context_preview_block("project_context", project_ctx),
-            _context_preview_block("planning_context", planning_ctx),
-            _context_preview_block("scoped_uploads_context", uploads_ctx),
-        ],
+        "context_blocks": context_blocks,
         "history": {
             "entries_in_request": len(history),
             "entries_used": min(len(history), 20),
@@ -5424,6 +5490,7 @@ def _build_assistant_context_preview(
             "count": len(messages),
             "total_chars": sum(int(entry.get("chars") or 0) for entry in message_outline),
             "outline": message_outline,
+            "messages": full_message_preview,
         },
         "files_context": {
             "count": len(files_meta),
@@ -12212,7 +12279,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 project_id=project_id or None,
                 agent_role=agent_role_label,
                 history=[],
-                force_retrieval=False,
+                force_retrieval=None,
                 token_budget=1200,
                 enable_snapshots=True,
             )
@@ -12290,7 +12357,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 project_id=project_id or None,
                 agent_role="Olivia Assistant",
                 history=[],
-                force_retrieval=False,
+                force_retrieval=None,
                 token_budget=1200,
                 enable_snapshots=False,
             )
@@ -12730,7 +12797,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 agent_role=agent_role_label,
                 planning_context=planning_ctx if planning_ctx.strip() else None,
                 history=history,
-                force_retrieval=False,
+                force_retrieval=None,
                 token_budget=1200,
                 enable_snapshots=True,
             )
@@ -18125,6 +18192,24 @@ Exemplo de formato:
             self._json_response({"error": "forbidden: project not accessible"}, 403)
             return
 
+        project_dir = PROJECTS_DIR / pid
+
+        if sub == "settings":
+            meta_file = project_dir / "project.json"
+            meta = {}
+            if meta_file.is_file():
+                try:
+                    meta = json.loads(meta_file.read_text(encoding="utf-8"))
+                except Exception:
+                    meta = {}
+            self._json_response({
+                "project_id": pid,
+                "preferred_language": _normalize_preferred_language(meta.get("preferred_language") or meta.get("language") or "English"),
+                "name": str(meta.get("name") or pid),
+                "description": str(meta.get("description") or ""),
+            })
+            return
+
         if sub == "export":
             self._send_project_zip(pid)
             return
@@ -18413,6 +18498,7 @@ Exemplo de formato:
                 return
             owner_email = self._auth_current_email() or ""
             slug = re.sub(r"[^a-z0-9_-]", "-", name.lower()).strip("-")[:64]
+            preferred_language = _normalize_preferred_language(body.get("preferred_language") or "English")
             pdir = PROJECTS_DIR / slug
             pdir.mkdir(parents=True, exist_ok=True)
             for section in PROJECT_SECTION_FOLDERS:
@@ -18421,15 +18507,38 @@ Exemplo de formato:
                 "project_id": slug,
                 "name": name,
                 "description": body.get("description", ""),
+                "preferred_language": preferred_language,
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "owner_email": owner_email,
                 "path": str(pdir),
             }
             (pdir / "project.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
-            _seed_project_planning_files(pdir, name)
+            _seed_project_planning_files(pdir, name, preferred_language=preferred_language)
             _project_record_create(slug, name, body.get("description", ""), owner_email, json.dumps(meta, ensure_ascii=False))
             _write_projects_manifest()
             self._json_response({"project": meta})
+            return
+
+        if path.startswith("/api/projects/") and path.endswith("/settings"):
+            pid = path[len("/api/projects/"):-len("/settings")]
+            project_dir = PROJECTS_DIR / pid
+            if not project_dir.is_dir():
+                self._json_response({"detail": "project not found"}, 404)
+                return
+            preferred_language = _normalize_preferred_language(body.get("preferred_language") or "English")
+            meta_file = project_dir / "project.json"
+            meta = {}
+            if meta_file.is_file():
+                try:
+                    meta = json.loads(meta_file.read_text(encoding="utf-8"))
+                except Exception:
+                    meta = {}
+            meta["preferred_language"] = preferred_language
+            meta_file.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+            _sync_project_memory_language(project_dir, preferred_language)
+            _project_record_create(pid, str(meta.get("name") or pid), str(meta.get("description") or ""), str(meta.get("owner_email") or ""), json.dumps(meta, ensure_ascii=False))
+            _write_projects_manifest()
+            self._json_response({"ok": True, "preferred_language": preferred_language})
             return
 
         if path == "/api/projects/assign":

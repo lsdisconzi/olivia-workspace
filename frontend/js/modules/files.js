@@ -198,6 +198,31 @@ function _planningRenderMD(text) {
   return '<div style="font-size:11px;line-height:1.5;color:var(--gray-hi,#ccc);overflow-wrap:break-word">' + html + '</div>';
 }
 
+window.saveProjectLanguagePreference = async function (projectId) {
+  const select = document.getElementById('projectLanguagePreferenceSelect');
+  const pid = String(projectId || '').trim() || (typeof getCurrentProjectId === 'function' ? getCurrentProjectId() : '');
+  if (!pid || !select) return;
+
+  const preferredLanguage = String(select.value || 'English').trim();
+  try {
+    const res = await fetch(`${window.API_BASE || ''}/api/projects/${encodeURIComponent(pid)}/settings`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ preferred_language: preferredLanguage }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+    await loadProjectPlanningOverview(true);
+    if (typeof toast === 'function') {
+      toast(`Idioma do projeto atualizado para ${preferredLanguage}`, 'success');
+    }
+  } catch (e) {
+    if (typeof toast === 'function') {
+      toast(`Falha ao atualizar idioma do projeto: ${e.message || e}`, 'error');
+    }
+  }
+};
+
 // Toggle a planning card expanded state
 window._togglePlanningCard = async function (filename) {
   const container = document.getElementById('planningOverviewContent');
@@ -360,6 +385,29 @@ async function loadProjectPlanningOverview(force) {
           <div style="font-size:11px;color:var(--gray-hi, #ddd);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${direction.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
         </div>`;
       }
+
+      let currentLanguage = 'English';
+      try {
+        const settingsRes = await fetch(`${window.API_BASE || ''}/api/projects/${encodeURIComponent(pid)}/settings`);
+        if (settingsRes.ok) {
+          const settingsData = await settingsRes.json().catch(() => ({}));
+          currentLanguage = String(settingsData.preferred_language || settingsData.language || 'English').trim() || 'English';
+        }
+      } catch (_) { /* ignore */ }
+
+      const languageOptions = ['English', 'Portuguese', 'Spanish', 'French', 'German'];
+      const languageMarkup = languageOptions.map((lang) => {
+        const selected = lang === currentLanguage ? ' selected' : '';
+        return `<option value="${escapeHtmlAttr(lang)}"${selected}>${escapeHtml(lang)}</option>`;
+      }).join('');
+
+      html += `<div style="margin-top:8px;padding:8px;border:1px solid var(--border);border-radius:7px;background:rgba(255,255,255,0.03)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px">
+          <div style="font-size:10px;font-weight:700;color:var(--gray-hi)">Preferred response language</div>
+          <button class="btn btn-xs" type="button" onclick="saveProjectLanguagePreference('${pid}')"><i class="fas fa-floppy-disk"></i> Save</button>
+        </div>
+        <select id="projectLanguagePreferenceSelect" class="context-select" style="width:100%">${languageMarkup}</select>
+      </div>`;
 
       // Auto-expand previously expanded cards - load content after render
       setTimeout(() => {

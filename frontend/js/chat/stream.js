@@ -1947,6 +1947,34 @@ function updateAssistantProgressUi(ui, evt) {
     const openedUrl = _openAssistantContextPreviewInBrowser(evt);
     const fallbackUrl = _resolveAssistantContextPreviewUrl(endpoint, runId);
     const openTarget = openedUrl || fallbackUrl;
+
+    const contextBlocks = Array.isArray(evt.blocks) ? evt.blocks : [];
+    const finalMessages = evt.final_messages && typeof evt.final_messages === 'object'
+      ? evt.final_messages
+      : {};
+    const messageList = Array.isArray(finalMessages.messages) ? finalMessages.messages : [];
+
+    const previewLines = [];
+    if (contextBlocks.length) {
+      previewLines.push('Context blocks:');
+      contextBlocks.forEach(function mapBlock(block) {
+        const name = String(block && block.name ? block.name : 'block').trim() || 'block';
+        const chars = Number(block && block.chars || 0);
+        const preview = String(block && block.preview ? block.preview : '').trim();
+        previewLines.push(`- ${name} (${chars} chars): ${preview}`);
+      });
+    }
+    if (messageList.length) {
+      previewLines.push('Final prompt messages:');
+      messageList.forEach(function mapMessage(item) {
+        const role = String(item && item.role ? item.role : 'user').trim() || 'user';
+        const chars = Number(item && item.chars || 0);
+        const preview = String(item && item.preview ? item.preview : '').trim();
+        previewLines.push(`- ${role} (${chars} chars): ${preview}`);
+      });
+    }
+
+    const detailText = previewLines.join('\n\n');
     upsertAssistantStep(ui, 'context-preview', {
       title: 'Debug de contexto',
       description: runId
@@ -1954,7 +1982,7 @@ function updateAssistantProgressUi(ui, evt) {
           ? `Preview de contexto aberto no Browser Panel (${runId}).`
           : `Preview de contexto registrado (${runId}).`)
         : (openedUrl ? 'Preview de contexto aberto no Browser Panel.' : 'Preview de contexto registrado.'),
-      detail: openTarget ? `Open Preview: ${openTarget}` : '',
+      detail: detailText || (openTarget ? `Open Preview: ${openTarget}` : ''),
     });
     if (ui.statusEl) {
       ui.statusEl.textContent = openedUrl

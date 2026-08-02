@@ -46,6 +46,7 @@ This folder is a grounded legal-spec library for the LA8159 matter. Each `agent.
 2. When adding or revising an agent, update the spec, [INDEX.md](INDEX.md), and [mapping.json](mapping.json) together.
 3. If a source cache changes verification status, update [SOURCES.md](SOURCES.md) and the affected Section 2 and Section 3 blocks.
 4. Use [_TEMPLATE/agent.md](_TEMPLATE/agent.md) for any new specialist or meta spec.
+5. For every active project, keep the project-level planning loop fresh: update `task_plan.md`, `memory.md`, `progress.md`, and `findings.md` every two turns of conversation in the active project context.
 
 ## Authoritative inputs (do not contradict)
 - BR Verification and Strategic Narrative: [la8159/01-violations/](la8159/01-violations/)

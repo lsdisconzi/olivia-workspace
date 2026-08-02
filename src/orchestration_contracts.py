@@ -321,7 +321,7 @@ def build_agent_prompt(
     planning_context: str | None = None,
     history: list[dict[str, str]] | None = None,
     force_retrieval: bool | None = None,
-    rag_collection: str = "olivia-memory-capture-agent",
+    rag_collection: str = "olivia_ecosystem",
     token_budget: int = 1200,
     enable_snapshots: bool = True,
     sys_prompt_path: str | Path | None = None,
