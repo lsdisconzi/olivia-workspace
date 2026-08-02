@@ -223,6 +223,104 @@ function _syncProjectIdGlobal() {
   window.OliviaProjectId = _currentProjectId || '';
 }
 
+function _closeProjectImportModal() {
+  const overlay = document.getElementById('projectImportModalOverlay');
+  if (overlay) overlay.remove();
+}
+
+function openProjectImportModal() {
+  const existing = document.getElementById('projectImportModalOverlay');
+  if (existing) {
+    existing.remove();
+  }
+
+  const overlay = document.createElement('div');
+  overlay.id = 'projectImportModalOverlay';
+  overlay.style.position = 'fixed';
+  overlay.style.inset = '0';
+  overlay.style.background = 'rgba(0,0,0,0.72)';
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+  overlay.style.zIndex = '2000';
+  overlay.innerHTML = `
+    <div style="width:min(560px, 92vw);max-height:82vh;overflow:auto;background:var(--bg-elev,#1a1a1f);border:1px solid var(--border,#333);border-radius:14px;padding:18px 18px 16px;color:var(--white,#fff);box-shadow:0 18px 48px rgba(0,0,0,0.35)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px">
+        <div>
+          <div style="font-size:13px;font-weight:700">Importar projeto arquivado</div>
+          <div style="font-size:11px;color:var(--gray);margin-top:2px">Escolha um projeto arquivado para restaurar para a lista ativa.</div>
+        </div>
+        <button type="button" class="project-action-pill" onclick="_closeProjectImportModal()" title="Fechar"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="projectImportModalBody" style="display:flex;flex-direction:column;gap:8px;min-height:120px">
+        <div style="font-size:11px;color:var(--gray);padding:12px 0">Carregando projetos arquivados...</div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  fetch(`${API_BASE}/api/projects/archives`)
+    .then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then((data) => {
+      const body = document.getElementById('projectImportModalBody');
+      if (!body) return;
+      const archives = Array.isArray(data && data.archives) ? data.archives : [];
+      if (!archives.length) {
+        body.innerHTML = '<div style="font-size:11px;color:var(--gray);padding:12px 0">Nenhum projeto arquivado encontrado.</div>';
+        return;
+      }
+
+      body.innerHTML = archives.map((item) => {
+        const label = escapeHtml(item.name || item.project_id || item.archive_path || 'Projeto arquivado');
+        const sub = escapeHtml(item.subfolder || 'default');
+        const date = escapeHtml(item.archived_at || '');
+        const archivePath = escapeHtmlAttr(item.archive_path || '');
+        return `
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,0.03)">
+            <div style="min-width:0">
+              <div style="font-size:12px;font-weight:600;color:var(--white);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</div>
+              <div style="font-size:10px;color:var(--gray);margin-top:2px">${sub}${date ? ` · ${date}` : ''}</div>
+            </div>
+            <button type="button" class="add-agent-btn" data-archive-path="${archivePath}" onclick="restoreArchivedProject(this.getAttribute('data-archive-path'))" style="padding:6px 10px;font-size:11px">Importar</button>
+          </div>`;
+      }).join('');
+    })
+    .catch((e) => {
+      const body = document.getElementById('projectImportModalBody');
+      if (body) {
+        body.innerHTML = `<div style="font-size:11px;color:var(--red);padding:12px 0">Falha ao carregar projetos arquivados: ${escapeHtml(e.message || String(e))}</div>`;
+      }
+      toast('Falha ao carregar projetos arquivados', 'error');
+    });
+}
+
+async function restoreArchivedProject(archivePath) {
+  const path = String(archivePath || '').trim();
+  if (!path) return;
+  const label = path.split('/').pop() || path;
+  const ok = await window.customConfirm(`Restaurar o projeto arquivado "${label}" para a lista ativa?`, 'Restaurar projeto');
+  if (!ok) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/projects/restore`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ archive_path: path }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.detail || data.error || `HTTP ${res.status}`);
+    addSystemBubble(`Projeto arquivado restaurado: ${label}`);
+    toast('Projeto restaurado', 'success');
+    _closeProjectImportModal();
+    await loadProjects();
+  } catch (e) {
+    addSystemBubble(`Falha ao restaurar projeto: ${e.message}`);
+    toast('Falha ao restaurar projeto', 'error');
+  }
+}
+
 function _renderProjectList() {
   const list = document.getElementById('projectList');
   const current = document.getElementById('projectCurrent');
@@ -838,6 +936,9 @@ window.onProjectUploadTargetChanged = onProjectUploadTargetChanged;
 window.exportProject = exportProject;
 window.archiveProject = archiveProject;
 window.deleteProject = deleteProject;
+window.openProjectImportModal = openProjectImportModal;
+window.restoreArchivedProject = restoreArchivedProject;
+window._closeProjectImportModal = _closeProjectImportModal;
 window.fetchProjectFilesSnapshot = fetchProjectFilesSnapshot;
 window.clearProjectFilesSnapshotCache = _clearProjectFilesCache;
 window.renderArquivosPanel = renderArquivosPanel;

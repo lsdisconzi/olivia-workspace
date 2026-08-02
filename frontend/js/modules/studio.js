@@ -2471,19 +2471,26 @@ async function _studioFetchProjectFile(projectId, filePath) {
   return res.text();
 }
 
-function studioImportProject() {
+function studioImportProject(projectId) {
   const input = document.getElementById('studioProjectInput');
-  if (input) input.click();
+  if (!input) return;
+  if (projectId) {
+    input.dataset.targetProjectId = String(projectId);
+  } else {
+    delete input.dataset.targetProjectId;
+  }
+  input.click();
 }
 
 async function studioHandleProjectImport(input) {
   const files = Array.from(input.files || []);
   if (!files.length) return;
 
-  const projectId = _studioGetActiveProjectId();
+  const projectId = String(input.dataset.targetProjectId || _studioGetActiveProjectId() || '').trim() || null;
   if (!projectId) {
     alert('Nenhum projeto ativo. Ative um projeto primeiro.');
     input.value = '';
+    delete input.dataset.targetProjectId;
     return;
   }
 
@@ -2491,11 +2498,13 @@ async function studioHandleProjectImport(input) {
   if (zipFile) {
     await studioLoadProjectFromZip(zipFile, projectId);
     input.value = '';
+    delete input.dataset.targetProjectId;
     return;
   }
 
   await studioLoadProjectFromFiles(files, projectId);
   input.value = '';
+  delete input.dataset.targetProjectId;
 }
 
 // New project – fix #6: clear project state

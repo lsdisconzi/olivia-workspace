@@ -864,12 +864,12 @@
                 </div>
                 <!-- CONTEXT CONFIG PANEL (Context Injection) -->
                 <div class="context-config-section" style="margin-top:12px">
-                  <div class="context-config-header" onclick="toggleContextConfigPanel()"
+                  <div class="context-config-header" role="button" tabindex="0" aria-controls="contextConfigBody" aria-expanded="false" onclick="toggleContextConfigPanel()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleContextConfigPanel();}"
                     style="cursor:pointer;padding:8px 12px;background:var(--bg2);border-radius:6px;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600;color:var(--purple)">
                     <span><i class="fas fa-sliders"></i> Context Injection</span>
                     <i class="fas fa-chevron-down" id="contextConfigChevron"></i>
                   </div>
-                  <div class="context-config-body" id="contextConfigBody" style="display:none">
+                  <div class="context-config-body" id="contextConfigBody" aria-hidden="true" style="display:none">
                     <div id="contextConfigLoading"
                       style="text-align:center;padding:12px;color:var(--gray);font-size:11px">
                       <i class="fas fa-spinner fa-spin"></i> Loading context config...
@@ -985,9 +985,10 @@
                   data-i18n="loading_projects">Loading
                   projects...</span></p>
             </div>
-            <div style="padding:0 8px 8px;display:flex;gap:6px">
-              <button class="add-agent-btn" onclick="createProject()" style="flex:1"><i class="fas fa-plus"></i> New
+            <div style="padding:0 8px 8px;display:flex;gap:6px;flex-wrap:wrap">
+              <button class="add-agent-btn" onclick="createProject()" style="flex:1 1 100%"><i class="fas fa-plus"></i> New
                 Project</button>
+              <button class="add-agent-btn" onclick="openProjectImportModal()" style="flex:1 1 calc(50% - 3px)"><i class="fas fa-file-import"></i> Import Archived</button>
               <button class="add-agent-btn" onclick="loadProjects()" style="flex:0 0 auto;padding:8px 10px"
                 title="Reload projects"><i class="fas fa-sync-alt"></i></button>
             </div>
@@ -6071,6 +6072,13 @@ https://.../side.png" rows="3"
           onclick="const modalUploadInput=document.getElementById('modalAgentMdFile'); if(modalUploadInput){modalUploadInput.click();} else {console.error('[OliviaLegal] modalAgentMdFile input missing');}"
           type="button">
           <i class="fas fa-upload"></i>
+        </button>
+        <button class="btn btn-xs btn-icon-reveal"
+          onclick="openAgentAIBuilderModal()"
+          type="button"
+          id="agentAIBuilderBtn"
+          title="Criar agente com ajuda da IA">
+          <i class="fas fa-robot"></i>
         </button>
         <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
       </div>

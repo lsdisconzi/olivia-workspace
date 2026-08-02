@@ -318,6 +318,7 @@ def build_agent_prompt(
     phase_tag: str | None = None,
     panel_content: str | None = None,
     panel_name: str | None = None,
+    planning_context: str | None = None,
     history: list[dict[str, str]] | None = None,
     force_retrieval: bool | None = None,
     rag_collection: str = "olivia-memory-capture-agent",
@@ -351,6 +352,8 @@ def build_agent_prompt(
         Content from a UI panel.
     panel_name : str, optional
         Panel name for annotation.
+    planning_context : str, optional
+        Pre-collected planning context (task plans, findings, etc.) to inject.
     history : list[dict], optional
         Previous conversation turns.
     force_retrieval : bool, optional
@@ -396,6 +399,7 @@ def build_agent_prompt(
         phase_hint=phase_tag,
         panel_content=panel_content,
         panel_name=panel_name,
+        planning_context=planning_context,
         force_retrieval=force_retrieval,
         history=history,
     )

@@ -166,6 +166,7 @@ class ContextManager:
         phase_hint: Optional[str] = None,
         panel_content: Optional[str] = None,
         panel_name: Optional[str] = None,
+        planning_context: Optional[str] = None,
         force_retrieval: Optional[bool] = None,
         history: Optional[list[dict[str, str]]] = None,
     ) -> list[dict[str, str]]:
@@ -194,6 +195,9 @@ class ContextManager:
             Content from a UI panel (e.g., browser preview).
         panel_name : str, optional
             Name of the panel (e.g., "browser", "preview").
+        planning_context : str, optional
+            Pre-collected planning context (task plans, findings, etc.)
+            to inject into the system message.
         force_retrieval : bool, optional
             Override the instance-level ``force_retrieval_scope``:
             - ``True`` forces RAG regardless of query length
@@ -225,6 +229,11 @@ class ContextManager:
             project_summary=project_summary,
             phase_context=phase_context,
         )
+        
+        # Inject planning context if provided
+        if planning_context and planning_context.strip():
+            system_msg += f"\n\n[Planning Context]\n{planning_context.strip()}"
+        
         messages: list[dict[str, str]] = [
             {"role": "system", "content": system_msg},
         ]

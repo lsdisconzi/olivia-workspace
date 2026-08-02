@@ -1950,8 +1950,9 @@ function attachContextBadgeHandlers() {
 // Context badge modal state
 let _contextBadgeModalTimer = null;
 let _currentModalBadge = null;
+let _modalPersistent = false; // Track if modal was opened by click (persistent mode)
 
-function showContextBadgeModal(badge, event) {
+function showContextBadgeModal(badge, event, persistent = false) {
   if (_contextBadgeModalTimer) {
     clearTimeout(_contextBadgeModalTimer);
     _contextBadgeModalTimer = null;
@@ -1970,21 +1971,21 @@ function showContextBadgeModal(badge, event) {
       title = 'Arquivos Importados';
       if (filesList) {
         const files = filesList.split('\\n').filter(f => f.trim());
-        content = files.map(f => `<div class="context-modal-file"><i class="fas fa-file"></i> <span>${escapeHtml(f)}</span> <button class="context-modal-remove" onclick="removeFileContext('${escapeHtml(f)}');hideContextBadgeModal();" title="Remover"><i class="fas fa-times"></i></button></div>`).join('');
+        content = files.map(f => `<div class="context-modal-file"><i class="fas fa-file"></i> <span>${escapeHtml(f)}</span> <button class="context-modal-remove" onclick="removeFileContext('${escapeHtml(f)}');closeContextBadgeModal();" title="Remover"><i class="fas fa-times"></i></button></div>`).join('');
       }
       break;
     case 'context':
       title = 'Arquivos no Contexto';
       if (filesList) {
         const files = filesList.split('\\n').filter(f => f.trim());
-        content = files.map(f => `<div class="context-modal-file"><i class="fas fa-brain" style="color:var(--purple)"></i> <span>${escapeHtml(f)}</span> <button class="context-modal-remove" onclick="removeFileContext('${escapeHtml(f)}');hideContextBadgeModal();" title="Remover do contexto"><i class="fas fa-times"></i></button></div>`).join('');
+        content = files.map(f => `<div class="context-modal-file"><i class="fas fa-brain" style="color:var(--purple)"></i> <span>${escapeHtml(f)}</span> <button class="context-modal-remove" onclick="removeFileContext('${escapeHtml(f)}');closeContextBadgeModal();" title="Remover do contexto"><i class="fas fa-times"></i></button></div>`).join('');
       }
       break;
     case 'docs':
       title = 'Documentos Selecionados';
       if (filesList) {
         const files = filesList.split('\\n').filter(f => f.trim());
-        content = files.map(f => `<div class="context-modal-file"><i class="fas fa-file-alt"></i> <span>${escapeHtml(f)}</span> <button class="context-modal-remove" onclick="uncheckDoc('${escapeHtml(f)}');hideContextBadgeModal();" title="Desmarcar"><i class="fas fa-times"></i></button></div>`).join('');
+        content = files.map(f => `<div class="context-modal-file"><i class="fas fa-file-alt"></i> <span>${escapeHtml(f)}</span> <button class="context-modal-remove" onclick="uncheckDoc('${escapeHtml(f)}');closeContextBadgeModal();" title="Desmarcar"><i class="fas fa-times"></i></button></div>`).join('');
       }
       break;
     case 'panel':
@@ -2006,8 +2007,13 @@ function showContextBadgeModal(badge, event) {
 
   modal.innerHTML = `
     <div class="context-modal-header">
-      <span>${escapeHtml(title)}</span>
-      <span class="context-modal-count">${count || ''}</span>
+      <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span>${escapeHtml(title)}</span>
+          <span class="context-modal-count">${count || ''}</span>
+        </div>
+        <button class="context-modal-close" onclick="closeContextBadgeModal();" title="Fechar" style="background:none; border:none; font-size:18px; cursor:pointer; color:var(--foreground); padding:0; display:flex; align-items:center;"><i class="fas fa-times"></i></button>
+      </div>
     </div>
     <div class="context-modal-body">
       ${content || '<div class="context-modal-empty">Nenhum arquivo</div>'}
@@ -2029,12 +2035,23 @@ function showContextBadgeModal(badge, event) {
   });
 
   _currentModalBadge = badge;
+  _modalPersistent = persistent;
 
-  // Add click-outside handler
-  document.addEventListener('click', closeModalOnOutsideClick, { once: true });
+  if (persistent) {
+    // In persistent mode, only close on outside click or explicit close button
+    document.addEventListener('click', closeModalOnOutsideClick);
+  } else {
+    // In hover mode, add one-time click-outside handler
+    document.addEventListener('click', closeModalOnOutsideClick, { once: true });
+  }
 }
 
 function hideContextBadgeModal(badge) {
+  // Only auto-hide if NOT in persistent mode
+  if (_modalPersistent) {
+    return; // Don't auto-hide when modal was opened by click
+  }
+  
   if (_contextBadgeModalTimer) {
     clearTimeout(_contextBadgeModalTimer);
   }
@@ -2044,18 +2061,31 @@ function hideContextBadgeModal(badge) {
       modal.classList.remove('show');
     }
     _currentModalBadge = null;
+    _modalPersistent = false;
   }, 100);
+}
+
+function closeContextBadgeModal() {
+  const modal = document.getElementById('contextBadgeModal');
+  if (modal) {
+    modal.classList.remove('show');
+  }
+  _currentModalBadge = null;
+  _modalPersistent = false;
+  if (_contextBadgeModalTimer) {
+    clearTimeout(_contextBadgeModalTimer);
+    _contextBadgeModalTimer = null;
+  }
+  // Clean up listeners
+  document.removeEventListener('click', closeModalOnOutsideClick);
 }
 
 function toggleContextBadgeModal(badge) {
   const modal = document.getElementById('contextBadgeModal');
   if (modal && modal.classList.contains('show') && _currentModalBadge === badge) {
-    modal.classList.remove('show');
-    _currentModalBadge = null;
+    closeContextBadgeModal();
   } else {
-    showContextBadgeModal(badge, null);
-    // Keep modal open until click outside
-    document.addEventListener('click', closeModalOnOutsideClick, { once: true });
+    showContextBadgeModal(badge, null, true); // true = persistent mode for click
   }
 }
 
@@ -2066,8 +2096,7 @@ function closeModalOnOutsideClick(e) {
     let clickedBadge = false;
     badges.forEach(b => { if (b.contains(e.target)) clickedBadge = true; });
     if (!clickedBadge) {
-      modal.classList.remove('show');
-      _currentModalBadge = null;
+      closeContextBadgeModal();
     }
   }
 }
@@ -2075,6 +2104,7 @@ function closeModalOnOutsideClick(e) {
 window.attachContextBadgeHandlers = attachContextBadgeHandlers;
 window.showContextBadgeModal = showContextBadgeModal;
 window.hideContextBadgeModal = hideContextBadgeModal;
+window.closeContextBadgeModal = closeContextBadgeModal;
 
 document.addEventListener('DOMContentLoaded', function() {
   _initCaseUploadTargetInput();
