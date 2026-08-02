@@ -52,3 +52,7 @@ UK CAA regulations, Montreal Convention 1999
 - Jurisdiction respected; cross-border matters routed to the international
   coordinator.
 - No unredacted personal data written.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

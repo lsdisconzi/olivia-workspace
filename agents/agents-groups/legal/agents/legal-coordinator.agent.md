@@ -84,3 +84,7 @@ you handle governance.
 - Every active case has a current `task_plan.md` / `progress.md` / `findings.md`
   trio.
 - Changelog entry appended: `YYYY-MM-DD — <change> — files: [...] — validation: pass`.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

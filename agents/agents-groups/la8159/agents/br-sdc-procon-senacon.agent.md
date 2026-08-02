@@ -77,3 +77,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Sources cache: `sources/BR/L8078_CDC.md`, `sources/BR/D2181_SNDC.md`, `sources/BR/R400_ANAC.md`
 - Last sync: 2026-04-28.
 - Maintainer note: this agent now owns the BR-018 consumer-protection carve-out with both substantive CDC anchors and the operative SNDC/ANAC enforcement path.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

@@ -52,3 +52,7 @@ Codice della Navigazione, D.Lgs. 96/2005, EC Reg. 261/2004, Codice Civile
 - Jurisdiction respected; cross-border matters routed to the international
   coordinator.
 - No unredacted personal data written.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

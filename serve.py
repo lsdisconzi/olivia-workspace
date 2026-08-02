@@ -1782,6 +1782,8 @@ Execution guidance:
 Quality and governance:
 - Follow project conventions and maintain concise operational logs.
 - Protect sensitive information and use aggregated summaries for potentially personal data.
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, documentation, and any generated artifacts.
 - If constraints are unclear, state assumptions and proceed with the safest viable action.
 """
 
@@ -4079,6 +4081,10 @@ Instead:
 1. **Ask what the user wants** — clarify the goal in 1-2 sentences.
 2. **Present available VPS API tools** — show a concise categorized list so the user
    can pick what to explore. Use this reference:
+
+## Language policy
+- Always respond in the active UI language of the workspace, not necessarily the language of the user's raw input.
+- Apply the same rule to every response, status update, summary, documentation change, and file update.
 
 ### Available VPS API Endpoints (via MCP tools)
 

@@ -68,3 +68,7 @@ tags: ["la8159", "category:meta", "jurisdiction:cross-framework"]
 - [BR_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations)
 - [INT_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations)
 - Last sync: 2026-04-27
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

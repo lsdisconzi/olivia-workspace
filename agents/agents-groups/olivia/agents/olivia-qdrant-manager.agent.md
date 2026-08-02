@@ -28,3 +28,7 @@ DONE CRITERIA
 - Requested Qdrant operation executed and verified.
 - Result includes before/after status where applicable.
 - Risks and rollback options are documented for destructive changes.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

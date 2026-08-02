@@ -95,3 +95,7 @@ See [../../personnel/REGISTRY.md](../../personnel/REGISTRY.md). Three of five se
 - Personnel registry: [../../personnel/REGISTRY.md](../../personnel/REGISTRY.md)
 - Last sync with reports: 2026-04-25
 - Maintainer note: routing matrix tightened against the current extension layer on 2026-04-28; civil-society branch remains source-limited until ABRAPAVAA statutory/bylaw materials are further cached.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

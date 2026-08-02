@@ -59,3 +59,7 @@ tags: ["la8159", "category:meta", "jurisdiction:cross-framework"]
 - All specialist agents' Section 6 tables
 - `_shared/cases/...` corpus (evidence repository)
 - Last sync: 2026-04-27
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

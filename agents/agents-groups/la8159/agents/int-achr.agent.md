@@ -70,3 +70,7 @@ tags: ["la8159", "category:int", "jurisdiction:international"]
 - [INT_COMPREHENSIVE_VERIFICATION_REPORT.md](../source/la8159/01-violations) §§2.4, 3, 7
 - [INT_STRATEGIC_LEGAL_NARRATIVE.md](../source/la8159/01-violations) §§2.1–2.4
 - Last sync: 2026-04-27
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

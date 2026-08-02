@@ -92,3 +92,7 @@ See [../../personnel/REGISTRY.md](../../personnel/REGISTRY.md). All five seed do
 - Personnel registry: [../../personnel/REGISTRY.md](../../personnel/REGISTRY.md)
 - Last sync with reports: 2026-04-25
 - Maintainer note: corrected on 2026-04-28 to use Lei 12.846 Art. 3, not Art. 27, for preservation of the natural-person track. Cross-link with META_Institutional_Silence remains critical.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

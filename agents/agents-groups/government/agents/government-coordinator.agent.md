@@ -69,3 +69,7 @@ by [government-orchestrator](./government-orchestrator.agent.md).
   `.agent.md`, `.bundle.import.json`, and policy entry.
 - Knowledge manifest lists every PDF / dataset actually on disk.
 - Changelog entry appended.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

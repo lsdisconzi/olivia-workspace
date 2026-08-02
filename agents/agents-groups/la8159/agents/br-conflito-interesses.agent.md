@@ -109,3 +109,7 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 - Sources cache: `sources/BR/L12813_ConflitoInteresses.md`, `sources/BR/D7203_Nepotismo.md`; Lei 14.133 cross-reference confirmed against official Planalto text on 2026-04-28.
 - Last sync with reports: 2026-04-28
 - Maintainer note: canonical route remains Juliano Noman; exact SAC exit date remains the decisive factual input for Art. 6º quarantine computation.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.

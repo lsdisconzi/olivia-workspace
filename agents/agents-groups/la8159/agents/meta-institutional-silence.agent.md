@@ -97,3 +97,7 @@ See [../../personnel/REGISTRY.md](../../personnel/REGISTRY.md). Three of five se
 - Personnel registry: [../../personnel/REGISTRY.md](../../personnel/REGISTRY.md)
 - Last sync with reports: 2026-04-25
 - Maintainer note: tightened on 2026-04-28 against the current extension layer; civil-society silence remains source-limited pending deeper ABRAPAVAA grounding.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to status updates, summaries, comments, and generated docs.
