@@ -1,16 +1,12 @@
 {
   "version": "1.0.0",
-  "group": "olivia",
+  "group": "olivia-ecosystem",
   "default_policy": {
-    "mode": "allow-by-default",
-    "require_confirmation_for": [
-      "cross_group_write",
-      "destructive_file_delete",
-      "production_endpoint_write"
-    ]
+    "mode": "deny-by-default",
+    "require_confirmation_for": []
   },
   "agents": {
-    "orchestrator-control-plane": {
+    "Olivia Orchestrator Control Panel": {
       "allowed_tools": [
         "add_authority_stub_tool",
         "add_element_grid_tool",
@@ -183,181 +179,43 @@
         "transcription_extract_features",
         "transcription_get_status",
         "transcription_healthcheck",
-        "transcription_jobs",
-        "transcription_languages",
-        "transcription_pause_job",
-        "transcription_polling_interval",
-        "transcription_pricing",
-        "transcription_receipt",
-        "transcription_reschedule_job",
-        "transcription_results",
-        "transcription_resume_job",
-        "neo4j_query",
-        "terminate",
-        "bash",
-        "python_execute",
-        "context_assemble",
-        "terminate",
-        "str_replace_editor",
-        "bash",
-        "python_execute",
-        "context_assemble",
-        "terminate",
-        "grep",
-        "cat",
-        "find",
-        "echo",
-        "ls"
-      ],
-      "denied_tools": [],
-      "require_confirmation_for": [
-        "cross_group_write"
-      ],
-      "notes": [
-        "Runtime router. Routes to Olivia specialists."
-      ]
-    },
-    "olivia-coordinator": {
-      "allowed_tools": [
-        "str_replace_editor",
-        "bash",
-        "python_execute",
-        "context_assemble",
-        "terminate"
-      ],
-      "denied_tools": [],
-      "require_confirmation_for": [
-        "cross_group_write",
-        "destructive_file_delete"
-      ],
-      "notes": [
-        "Governance coordinator. Owns manifest, policies, schemas."
-      ]
-    },
-    "olivia-ecosystem-coordinator": {
-      "allowed_tools": [
-        "context_assemble",
-        "terminate"
-      ],
-      "denied_tools": [
-        "bash",
-        "python_execute",
-        "str_replace_editor"
-      ],
-      "require_confirmation_for": [],
-      "notes": [
-        "Public-facing Q&A only. No filesystem access."
-      ]
-    },
-    "shaders": {
-      "allowed_tools": [
-        "str_replace_editor",
-        "bash",
-        "python_execute",
-        "context_assemble",
-        "terminate"
+        "transcription_list_asr_bundles",
+        "transcription_list_models",
+        "transcription_list_project_paths",
+        "transcription_resample_audio",
+        "transcription_segment_speakers",
+        "transcription_sentiment",
+        "transcription_slice_audio",
+        "transcription_speaker_id",
+        "transcription_summarize",
+        "transcription_transcribe_audio",
+        "transcription_transcribe_audio_async",
+        "transcription_transcribe_greedy",
+        "transcription_translate",
+        "verify_enrichment_tool",
+        "verify_human_attested_tool",
+        "verify_statute_external_fetch_tool",
+        "verify_statute_in_bundle_tool",
+        "write_violation_json_tool",
+        "zip_bundle_tool",
+        "mcp__mcp-server-files__read_text_file",
+        "mcp__mcp-server-files__list_directory",
+        "mcp__mcp-server-files__list_directory_recursive",
+        "mcp__mcp-server-files__write_file",
+        "mcp__mcp-server-files__create_directory",
+        "mcp__mcp-server-files__delete_file",
+        "mcp__mcp-server-files__move_file",
+        "mcp__mcp-server-files__copy_file",
+        "mcp__mcp-server-files__get_file_info",
+        "mcp__mcp-server-files__search_files"
       ],
       "denied_tools": [],
       "require_confirmation_for": [],
       "notes": [
-        "2D SVG + 3D WebGL scene creator."
-      ]
-    },
-    "discovery": {
-      "allowed_tools": [
-        "str_replace_editor",
-        "bash",
-        "python_execute",
-        "browser_use",
-        "context_assemble",
-        "qdrant_search",
-        "terminate"
-      ],
-      "denied_tools": [],
-      "require_confirmation_for": [],
-      "notes": [
-        "Document intelligence / NLP pipeline."
-      ]
-    },
-    "listening": {
-      "allowed_tools": [
-        "str_replace_editor",
-        "bash",
-        "python_execute",
-        "browser_use",
-        "context_assemble",
-        "terminate"
-      ],
-      "denied_tools": [],
-      "require_confirmation_for": [],
-      "notes": [
-        "Audio capture + transcription."
-      ]
-    },
-    "memory": {
-      "allowed_tools": [
-        "str_replace_editor",
-        "bash",
-        "python_execute",
-        "context_assemble",
-        "qdrant_search",
-        "qdrant_ingest",
-        "neo4j_query",
-        "terminate"
-      ],
-      "denied_tools": [],
-      "require_confirmation_for": [
-        "collection_delete"
-      ],
-      "notes": [
-        "Qdrant + Neo4j memory plane."
-      ]
-    },
-    "studio": {
-      "allowed_tools": [
-        "str_replace_editor",
-        "bash",
-        "python_execute",
-        "browser_use",
-        "context_assemble",
-        "terminate"
-      ],
-      "denied_tools": [],
-      "require_confirmation_for": [],
-      "notes": [
-        "UI components + preview agent."
-      ]
-    },
-    "qdrant": {
-      "allowed_tools": [
-        "str_replace_editor",
-        "bash",
-        "python_execute",
-        "context_assemble",
-        "qdrant_search",
-        "qdrant_ingest",
-        "terminate"
-      ],
-      "denied_tools": [],
-      "require_confirmation_for": [
-        "collection_delete"
-      ],
-      "notes": [
-        "Standalone Qdrant ops."
-      ]
-    },
-    "frontend-engineer": {
-      "allowed_tools": [
-        "str_replace_editor",
-        "bash",
-        "python_execute",
-        "context_assemble",
-        "terminate"
-      ],
-      "denied_tools": [],
-      "require_confirmation_for": [],
-      "notes": [
-        "Senior frontend architect and migration specialist."
+        "All 290 MCP tools from the ecosystem report (8 projects) pre-approved for Olivia Orchestrator",
+        "Projects: transcription, juris-search, garge, violation-refiner, ocr, discovery, audio, ops-dashboard",
+        "Tools sourced from ecosystem_report_latest.md generated 2026-08-02",
+        "Added general MCP filesystem tools (mcp-server-files) to avoid permission denials during project work"
       ]
     }
   }

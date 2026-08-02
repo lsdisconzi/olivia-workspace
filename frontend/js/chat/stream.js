@@ -64,6 +64,7 @@ if (!window.Olivia_KNOWLEDGE || typeof window.Olivia_KNOWLEDGE !== 'object') {
 const PANEL_CONTEXT_PREF_KEY = 'olivia.panelContextSelection.v1';
 let _panelContextSelection = { browser: true, preview: true, output: true };
 let _assistantDebugContextPreview = false;
+let _sessionFilesPermissionAllowAll = false;
 const _assistantCtxPreviewOpenedRunIds = new Set();
 const _agentRunSessions = new Map();
 
@@ -1196,6 +1197,26 @@ function useHint(key) {
     if (input) { input.value = key; autoGrow(input); input.focus(); }
   }
 }
+window.useHint = useHint;
+
+function setSessionFilesToolPermissionMode(enabled) {
+  _sessionFilesPermissionAllowAll = !!enabled;
+  const els = Array.from(document.querySelectorAll('[data-session-files-permission-toggle]'));
+  els.forEach(el => {
+    const active = !!enabled;
+    el.classList.toggle('active', active);
+    el.setAttribute('data-active', active ? 'true' : 'false');
+    const label = el.getAttribute('data-active-label') || 'Allow tools';
+    const inactiveLabel = el.getAttribute('data-inactive-label') || 'Allow tools';
+    if (el.textContent && el.textContent.trim()) {
+      el.innerHTML = active ? label : inactiveLabel;
+    }
+  });
+  if (typeof addSystemBubble === 'function') {
+    addSystemBubble(enabled ? 'Ferramentas permitidas para esta sessão a partir dos arquivos de sessão.' : 'Modo de permissão de ferramentas desativado para os arquivos de sessão.');
+  }
+}
+window.setSessionFilesToolPermissionMode = setSessionFilesToolPermissionMode;
 
 // Scroll mobile hints carousel left/right
 function scrollHintsCarousel(direction) {
@@ -1412,8 +1433,10 @@ async function sendMessage(presetText) {
 
   const importedFilesPayload = {};
   const imageAttachmentsPayload = [];
+  const useSessionFileSelection = !!(_contextSessionFiles && typeof _contextSessionFiles.size === 'number' && _contextSessionFiles.size > 0);
   if (_importedFiles.size > 0) {
     for (const [name, info] of _importedFiles) {
+      if (useSessionFileSelection && !_contextSessionFiles.has(name)) continue;
       if (info.type === 'text' && info.content) importedFilesPayload[name] = info.content;
       const isImage = info && (info.type === 'image' || info.previewType === 'image');
       if (!isImage || info.contextEligible === false) continue;
@@ -1741,6 +1764,7 @@ function createAssistantProgressUi() {
     tokenSeen: false,
     stepMap: new Map(),
     thinkingText: '',
+    runId,
   };
 }
 
@@ -1825,6 +1849,23 @@ function _filesContextRootsInfo(roots) {
 function updateAssistantProgressUi(ui, evt) {
   if (!ui || !evt) return;
   const eventType = evt.event || evt.type;
+
+  if (eventType === 'permission_request') {
+    const toolName = String(evt.tool_name || evt.tool || '').trim() || 'ferramenta';
+    setChatRuntimeRoute('openclaude_tools', `permission_request: ${toolName}`);
+    upsertAssistantStep(ui, 'permission-request', {
+      title: 'Permissão de ferramenta',
+      description: `Aguardando decisão para ${toolName}.`,
+      detail: evt.description || 'O agente está pedindo autorização para executar uma ferramenta.',
+    });
+    onPermissionRequest(evt, ui.stepsEl || ui.root);
+    return;
+  }
+
+  if (eventType === 'permission_resolved') {
+    onPermissionResolved(evt, ui.stepsEl || ui.root);
+    return;
+  }
 
   if (eventType === 'status') {
     const msg = String(evt.message || '').trim();
@@ -2284,6 +2325,108 @@ function onAwaitingInput(toolName) {
   req.className = 'log-input-request';
   req.innerHTML = `<i class="fas fa-keyboard"></i> Aguardando entrada para ${escapeHtml(toolName)}`;
   log.appendChild(req);
+}
+
+// ── Permission-request dialog ──────────────────────────────────────────────
+// Called when the backend emits a `permission_request` SSE event.
+// Shows an inline allow/deny card in the chat log or assistant progress UI.
+function onPermissionRequest(evt, targetEl) {
+  const runId = currentRunId || (evt && evt.run_id) || '';
+  const log = runId ? document.getElementById(`log-${runId}`) : null;
+  const container = targetEl || log || document.body;
+
+  const pid = evt.pid;
+  const requestId = evt.request_id;
+  if (_sessionFilesPermissionAllowAll) {
+    _resolvePermission(requestId, pid, 'allow_all', null);
+    return;
+  }
+  const toolName = evt.tool_name || 'ferramenta';
+  const description = evt.description || '';
+  const inputObj = evt.input || {};
+
+  // Build a short summary of the tool input
+  const inputLines = Object.entries(inputObj)
+    .slice(0, 5)
+    .map(([k, v]) => `<span class="perm-key">${escapeHtml(k)}:</span> ${escapeHtml(String(v).slice(0, 200))}`);
+  const inputSummary = inputLines.length ? `<div class="perm-input">${inputLines.join('<br>')}</div>` : '';
+
+  const cardId = `perm-card-${requestId}`;
+  const card = document.createElement('div');
+  card.id = cardId;
+  card.className = 'perm-request-card';
+  card.innerHTML = `
+    <div class="perm-header">
+      <i class="fas fa-shield-alt"></i>
+      <span>Permissão necessária: <strong>${escapeHtml(toolName)}</strong></span>
+    </div>
+    ${description ? `<div class="perm-description">${escapeHtml(description)}</div>` : ''}
+    ${inputSummary}
+    <div class="perm-suggestion" id="perm-suggestion-${requestId}">Carregando sugestão...</div>
+    <div class="perm-actions">
+      <button class="perm-btn perm-allow" onclick="_resolvePermission('${escapeHtml(requestId)}', ${pid}, 'allow', this)">Permitir</button>
+      <button class="perm-btn perm-allow-all" onclick="_resolvePermission('${escapeHtml(requestId)}', ${pid}, 'allow_all', this)">Permitir tudo nesta sessão</button>
+      <button class="perm-btn perm-deny"  onclick="_resolvePermission('${escapeHtml(requestId)}', ${pid}, 'deny',  this)">Negar</button>
+    </div>
+  `;
+  if (container && typeof container.appendChild === 'function') {
+    container.appendChild(card);
+  } else {
+    document.body.appendChild(card);
+  }
+
+  // Fetch permission suggestions for this tool
+  fetch(`/api/permission-suggestions?limit=10`)
+    .then(response => response.json())
+    .then(data => {
+      const suggestionEl = document.getElementById(`perm-suggestion-${requestId}`);
+      if (!suggestionEl) return; // Element might have been removed
+      const suggestion = data.suggestions.find(s => s.tool === toolName);
+      if (suggestion) {
+        suggestionEl.textContent = `Sugestão: Com base no seu uso (${suggestion.allow_count} allows, ${suggestion.deny_count} negações), considere permitir esta ferramenta sempre.`;
+        // Add a click-to-apply behavior? For now, just show the message.
+      } else {
+        suggestionEl.textContent = 'Nenhuma sugestão disponível.';
+      }
+    })
+    .catch(err => {
+      console.error('Failed to fetch permission suggestions:', err);
+      const suggestionEl = document.getElementById(`perm-suggestion-${requestId}`);
+      if (suggestionEl) suggestionEl.textContent = 'Não foi possível carregar sugestão.';
+    });
+}
+
+// Called by the allow/deny buttons inside a permission card.
+async function _resolvePermission(requestId, pid, behavior, btnEl) {
+  const card = btnEl ? btnEl.closest('.perm-request-card') : document.getElementById(`perm-card-${requestId}`);
+  if (card) {
+    card.querySelectorAll('.perm-btn').forEach(b => { b.disabled = true; });
+    const chosenSelector = behavior === 'allow_all' ? '.perm-allow-all' : `.perm-${behavior}`;
+    card.querySelector(chosenSelector)?.classList.add('perm-chosen');
+  }
+  try {
+    const res = await fetch(`${API_BASE}/api/permission-response`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pid, request_id: requestId, behavior }),
+    });
+    const data = await res.json();
+    console.log('[perm] response sent:', data);
+  } catch (err) {
+    console.error('[perm] failed to send response:', err);
+    if (card) card.classList.add('perm-error');
+  }
+}
+window._resolvePermission = _resolvePermission;
+
+// Called when the backend confirms the decision was delivered (permission_resolved SSE).
+function onPermissionResolved(evt) {
+  const card = document.getElementById(`perm-card-${evt.request_id}`);
+  if (!card) return;
+  const behaviorClass = evt.behavior === 'allow_all' ? 'perm-allow-all' : `perm-${evt.behavior}`;
+  card.classList.add('perm-resolved', behaviorClass);
+  // Auto-remove after a short delay so it doesn't litter the log
+  setTimeout(() => card.remove(), 3000);
 }
 
 // Handle agent thinking/reasoning events
@@ -3639,6 +3782,12 @@ function handleStreamEvent(data, runId, isGuided) {
         addOutputArtifact(artifact);
         _autoOpenGeneratedHtmlArtifact(artifact);
       }
+      break;
+    case 'permission_request':
+      onPermissionRequest(data);
+      break;
+    case 'permission_resolved':
+      onPermissionResolved(data);
       break;
     default:
       console.log('Unhandled stream event:', eventType, data);

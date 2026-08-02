@@ -407,9 +407,11 @@ function refreshCaseUploadTargetPath() {
 // Get imported files context
 function getImportedFilesContext() {
   if (_importedFiles.size === 0) return '';
+  const useSessionFileSelection = !!(_contextSessionFiles && typeof _contextSessionFiles.size === 'number' && _contextSessionFiles.size > 0);
   const textParts = [];
   const imageParts = [];
   for (const [name, info] of _importedFiles) {
+    if (useSessionFileSelection && !_contextSessionFiles.has(name)) continue;
     if (info.type === 'text' && info.content) {
       textParts.push(`--- ${name} (${(info.size/1024).toFixed(1)} KB) ---\n${info.content}`);
       continue;

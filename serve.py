@@ -646,6 +646,202 @@ _MEMORY_GRAPH_STATS_CACHE: dict[str, object] = {
 _MCP_TRANSPORT_HINTS_LOCK = threading.Lock()
 _MCP_TRANSPORT_HINTS: dict[str, str] = {}
 
+# ── Permission-request bridge (OpenClaude → UI) ──────────────────────────────
+# Maps PID → {request_id: queue.Queue} so the POST endpoint can unblock the
+# stream thread waiting for an allow/deny decision from the frontend.
+_PERMISSION_QUEUES_LOCK = threading.Lock()
+_PERMISSION_QUEUES: dict[int, dict[str, "queue.Queue"]] = {}  # pid → {req_id → Queue}
+_PERMISSION_ALLOW_ALL_LOCK = threading.Lock()
+_PERMISSION_ALLOW_ALL_PIDS: set[int] = set()
+
+# Permission memory system: tracks user decisions to reduce permission prompts
+_PERMISSION_MEMORY_LOCK = threading.Lock()
+# Structure: {tool_name: {"allow_count": int, "deny_count": int, "last_seen": float}}
+_PERMISSION_MEMORY: dict[str, dict] = {}
+
+# Permission suggestion system: suggests broader permissions based on usage patterns
+_PERMISSION_SUGGESTION_LOCK = threading.Lock()
+# Structure: {tool_pattern: {"use_count": int, "last_used": float}}
+_PERMISSION_USAGE_STATS: dict[str, dict] = {}
+
+# Counter for periodic cleanup of permission memory
+_PERMISSION_REQUEST_COUNT = 0
+_PERMISSION_REQUEST_COUNT_LOCK = threading.Lock()
+
+
+def _perm_register(pid: int, request_id: str) -> "queue.Queue":
+    """Create a one-shot queue for a pending permission request."""
+    q: queue.Queue = queue.Queue(maxsize=1)
+    with _PERMISSION_QUEUES_LOCK:
+        _PERMISSION_QUEUES.setdefault(pid, {})[request_id] = q
+    return q
+
+
+def _perm_resolve(pid: int, request_id: str, decision: dict) -> bool:
+    """Deliver a decision to the waiting stream thread. Returns True on success."""
+    with _PERMISSION_QUEUES_LOCK:
+        pid_map = _PERMISSION_QUEUES.get(pid, {})
+        q = pid_map.get(request_id)
+    if q is None:
+        return False
+    try:
+        q.put_nowait(decision)
+        return True
+    except queue.Full:
+        return False
+
+
+def _perm_enable_allow_all(pid: int) -> None:
+    """Enable session-scoped allow-all behavior for a live agent process."""
+    with _PERMISSION_ALLOW_ALL_LOCK:
+        _PERMISSION_ALLOW_ALL_PIDS.add(pid)
+
+
+def _perm_is_allow_all_enabled(pid: int) -> bool:
+    """Return True when allow-all is enabled for the current agent process."""
+    with _PERMISSION_ALLOW_ALL_LOCK:
+        return pid in _PERMISSION_ALLOW_ALL_PIDS
+
+
+def _perm_cleanup(pid: int):
+    """Remove all pending queues for a process (called on process exit)."""
+    with _PERMISSION_QUEUES_LOCK:
+        _PERMISSION_QUEUES.pop(pid, None)
+    with _PERMISSION_ALLOW_ALL_LOCK:
+        _PERMISSION_ALLOW_ALL_PIDS.discard(pid)
+
+
+def _perm_record_decision(tool_name: str | None, decision: str) -> None:
+    """Record a user permission decision for memory-based suggestions."""
+    if not tool_name:
+        return
+
+    normalized = str(tool_name).strip()
+    if not normalized:
+        return
+
+    with _PERMISSION_MEMORY_LOCK:
+        if normalized not in _PERMISSION_MEMORY:
+            _PERMISSION_MEMORY[normalized] = {
+                "allow_count": 0,
+                "deny_count": 0,
+                "last_seen": time.time()
+            }
+
+        if decision == "allow":
+            _PERMISSION_MEMORY[normalized]["allow_count"] += 1
+        elif decision == "deny":
+            _PERMISSION_MEMORY[normalized]["deny_count"] += 1
+
+        _PERMISSION_MEMORY[normalized]["last_seen"] = time.time()
+
+
+def _perm_get_decision_memory(tool_name: str | None) -> dict | None:
+    """Get stored permission decision statistics for a tool."""
+    if not tool_name:
+        return None
+
+    normalized = str(tool_name).strip()
+    if not normalized:
+        return None
+
+    with _PERMISSION_MEMORY_LOCK:
+        return _PERMISSION_MEMORY.get(normalized)
+
+
+def _perm_should_suggest_broader_permission(tool_name: str | None) -> bool:
+    """Determine if we should suggest broader permissions based on usage patterns."""
+    if not tool_name:
+        return False
+
+    normalized = str(tool_name).strip()
+    if not normalized:
+        return False
+
+    # Check if we have enough positive history to suggest broader permissions
+    memory = _perm_get_decision_memory(normalized)
+    if not memory:
+        return False
+
+    total_decisions = memory["allow_count"] + memory["deny_count"]
+    if total_decisions < 3:  # Need at least 3 decisions to make a suggestion
+        return False
+
+    # If 80% or more are allows, suggest broader permission
+    allow_ratio = memory["allow_count"] / total_decisions
+    return allow_ratio >= 0.8
+
+
+def _perm_record_usage(tool_name: str | None) -> None:
+    """Record tool usage for pattern analysis."""
+    if not tool_name:
+        return
+
+    normalized = str(tool_name).strip()
+    if not normalized:
+        return
+
+    with _PERMISSION_SUGGESTION_LOCK:
+        if normalized not in _PERMISSION_USAGE_STATS:
+            _PERMISSION_USAGE_STATS[normalized] = {
+                "use_count": 0,
+                "last_used": time.time()
+            }
+
+        _PERMISSION_USAGE_STATS[normalized]["use_count"] += 1
+        _PERMISSION_USAGE_STATS[normalized]["last_used"] = time.time()
+
+
+def _perm_cleanup_memory() -> None:
+    """Clean up old permission memory entries to prevent memory leaks."""
+    current_time = time.time()
+    max_age = 24 * 60 * 60  # 24 hours
+
+    with _PERMISSION_MEMORY_LOCK:
+        to_delete = [
+            tool for tool, data in _PERMISSION_MEMORY.items()
+            if current_time - data["last_seen"] > max_age
+        ]
+        for tool in to_delete:
+            del _PERMISSION_MEMORY[tool]
+
+    with _PERMISSION_SUGGESTION_LOCK:
+        to_delete = [
+            tool for tool, data in _PERMISSION_USAGE_STATS.items()
+            if current_time - data["last_used"] > max_age
+        ]
+        for tool in to_delete:
+            del _PERMISSION_USAGE_STATS[tool]
+
+
+def _perm_get_suggestions(limit: int = 10) -> list[dict]:
+    """Get permission suggestions based on usage patterns and user decisions."""
+    suggestions = []
+    current_time = time.time()
+
+    with _PERMISSION_MEMORY_LOCK, _PERMISSION_SUGGESTION_LOCK:
+        for tool_name, memory in _PERMISSION_MEMORY.items():
+            total_decisions = memory["allow_count"] + memory["deny_count"]
+            if total_decisions >= 3:  # Need at least 3 decisions to make a suggestion
+                allow_ratio = memory["allow_count"] / total_decisions
+                if allow_ratio >= 0.8:  # 80% or more are allows
+                    usage_data = _PERMISSION_USAGE_STATS.get(tool_name, {"use_count": 0, "last_used": 0})
+                    suggestions.append({
+                        "tool": tool_name,
+                        "allow_count": memory["allow_count"],
+                        "deny_count": memory["deny_count"],
+                        "total_decisions": total_decisions,
+                        "allow_ratio": allow_ratio,
+                        "use_count": usage_data["use_count"],
+                        "last_used": usage_data["last_used"],
+                        "suggestion": "allow_all" if allow_ratio >= 0.95 else "allow",
+                        "reason": f"User has allowed {memory['allow_count']}/{total_decisions} ({allow_ratio:.0%}) of requests"
+                    })
+
+        # Sort by allow_ratio descending, then by use_count descending
+        suggestions.sort(key=lambda x: (x["allow_ratio"], x["use_count"]), reverse=True)
+        return suggestions[:limit]
+
 
 def _mcp_transport_hint_get(server_name: str) -> str:
     key = str(server_name or "").strip().lower()
@@ -7588,6 +7784,49 @@ def _openclaude_env(provider: str | None = None, model: str | None = None,
     return env
 
 
+_PERMISSION_AUTO_ALLOW_TOOLS = {
+    "read_file",
+    "read_text_file",
+    "list_directory",
+    "write_file",
+    "search_files",
+}
+
+# Permission memory system: tracks user decisions to reduce permission prompts
+_PERMISSION_MEMORY_LOCK = threading.Lock()
+# Structure: {tool_name: {"allow_count": int, "deny_count": int, "last_seen": float}}
+_PERMISSION_MEMORY: dict[str, dict] = {}
+
+# Permission suggestion system: suggests broader permissions based on usage patterns
+_PERMISSION_SUGGESTION_LOCK = threading.Lock()
+# Structure: {tool_pattern: {"use_count": int, "last_used": float}}
+_PERMISSION_USAGE_STATS: dict[str, dict] = {}
+
+
+def _should_auto_allow_permission(tool_name: str | None) -> bool:
+    if not tool_name:
+        return False
+    normalized = str(tool_name).strip()
+    if not normalized:
+        return False
+    if normalized in _PERMISSION_AUTO_ALLOW_TOOLS:
+        return True
+    if "__" in normalized:
+        suffix = normalized.rsplit("__", 1)[-1]
+        return suffix in _PERMISSION_AUTO_ALLOW_TOOLS
+
+    # Check permission memory for auto-allow suggestions based on user history
+    memory = _perm_get_decision_memory(normalized)
+    if memory:
+        total_decisions = memory["allow_count"] + memory["deny_count"]
+        if total_decisions >= 3:  # Need at least 3 decisions to make a suggestion
+            allow_ratio = memory["allow_count"] / total_decisions
+            if allow_ratio >= 0.8:  # 80% or more allows
+                return True
+
+    return False
+
+
 def _openclaude_uses_deepseek_bridge(provider: str | None = None, model: str | None = None) -> bool:
     if str(provider or "").strip().lower() == "deepseek":
         return True
@@ -7613,8 +7852,18 @@ def _openclaude_cmd(
     fork_session: bool = False,
     prompt_via_stdin: bool = False,
     mcp_servers: list[str] | None = None,
+    permission_bridge: bool = False,
 ) -> list[str]:
-    """Build the subprocess argv for openclaude."""
+    """Build the subprocess argv for openclaude.
+
+    permission_bridge=True is used by the interactive chat path: it enables
+    stream-json input (stdin stays open for control_response) and permission
+    mode "default" so openclaude emits control_request events that the backend
+    relays to the frontend via SSE instead of silently denying everything.
+    The autonomous-agent path keeps permission_bridge=False (legacy behavior):
+    the prompt may arrive as raw text on stdin, and non-root runs skip the
+    permission prompt entirely since no human is in the loop to answer it.
+    """
     cli = str(_openclaude_cli)
     cmd: list[str] = ["node", cli] if cli.endswith(".mjs") else [cli]
     cmd += [
@@ -7624,8 +7873,21 @@ def _openclaude_cmd(
         "--bare",
         "--max-turns", str(max_turns),
     ]
-    # OpenClaude blocks this flag under root/sudo; keep startup compatible on VPS.
-    if os.geteuid() != 0:
+    if permission_bridge:
+        # Valid modes: acceptEdits, bypassPermissions, default, dontAsk, fullAccess, plan, auto
+        cmd += ["--input-format", "stream-json"]  # stdin stays open for control_response
+        # --permission-prompt-tool stdio is what makes openclaude emit
+        # can_use_tool control_requests on stdout instead of silently denying
+        # "ask" decisions in non-interactive --print mode (the CLI only wires
+        # the structuredIO permission path when the flag is exactly "stdio").
+        # Under root/sudo OpenClaude rejects --permission-mode; use the legacy
+        # skip flag so VPS deploys stay compatible.
+        if os.geteuid() == 0:
+            cmd.append("--dangerously-skip-permissions")
+        else:
+            cmd += ["--permission-mode", "default"]
+            cmd += ["--permission-prompt-tool", "stdio"]
+    elif os.geteuid() != 0:
         cmd.append("--dangerously-skip-permissions")
     # Pass provider explicitly so openclaude keeps OpenAI/OpenRouter mode and
     # honors OPENAI_MODEL (otherwise it deletes CLAUDE_CODE_USE_OPENAI and
@@ -7694,6 +7956,8 @@ def _stream_openclaude(
     out_session_id — a list; after streaming, [0] will contain the session_id openclaude used
     fork_session — if True and session_id is set, uses --fork-session (new ID, keeps history)
     """
+    # With --input-format=stream-json the prompt must arrive as a user message on
+    # stdin; we always keep stdin as PIPE so we can send control_response later.
     cmd = _openclaude_cmd(
         prompt,
         model=model,
@@ -7704,14 +7968,14 @@ def _stream_openclaude(
         partial_messages=True,
         persist=True,   # always save session so next turn can resume
         fork_session=fork_session,
-        prompt_via_stdin=_prompt_too_big_for_argv(prompt),
+        prompt_via_stdin=True,  # always via stdin when using stream-json input
         mcp_servers=mcp_servers,
+        permission_bridge=True,  # enable control_request relay → UI permission modal
     )
     env = _openclaude_env(provider=provider, model=model, api_key=api_key, base_url=base_url)
     print(f"[openclaude:stream]   debug _openclaude_env: api_key={'set (' + str(len(api_key)) + ' chars)' if api_key else 'None'}, base_url={base_url}", flush=True)
-    use_stdin = _prompt_too_big_for_argv(prompt)
     # ── Logging: show the command being launched ──
-    safe_cmd = ' '.join(cmd[:6]) + f' ... ({len(cmd)} args, prompt={len(prompt)} chars{", via stdin" if use_stdin else ""})'
+    safe_cmd = ' '.join(cmd[:6]) + f' ... ({len(cmd)} args, prompt={len(prompt)} chars, via stream-json stdin)'
     print(f"[openclaude:stream] ── Launching ──")
     print(f"[openclaude:stream]   cmd: {safe_cmd}")
     print(f"[openclaude:stream]   session_id={session_id!r}  persist=True  max_turns={MAX_AGENT_TURNS}")
@@ -7721,20 +7985,36 @@ def _stream_openclaude(
 
     proc = subprocess.Popen(
         cmd,
-        stdin=subprocess.PIPE if use_stdin else subprocess.DEVNULL,
+        stdin=subprocess.PIPE,   # always open — needed for stream-json input + control_response
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         env=env,
         cwd=str(PLANNING_DIR),
     )
     _register_agent_process(proc)
-    if use_stdin:
+
+    # Send the prompt as a stream-json user message on stdin.
+    # The stdin channel stays open so we can later send control_response messages.
+    _stdin_lock = threading.Lock()
+
+    def _send_stdin_json(obj: dict):
+        """Thread-safe write of one newline-delimited JSON line to stdin."""
         try:
-            proc.stdin.write(prompt.encode("utf-8", errors="replace"))
-        finally:
-            try: proc.stdin.close()
-            except Exception: pass
-    print(f"[openclaude:stream]   PID={proc.pid}")
+            with _stdin_lock:
+                if proc.stdin and not proc.stdin.closed:
+                    proc.stdin.write((json.dumps(obj, ensure_ascii=False) + "\n").encode("utf-8"))
+                    proc.stdin.flush()
+        except Exception as exc:
+            print(f"[openclaude:stdin] write error: {exc}")
+
+    # Deliver the initial user prompt
+    _send_stdin_json({
+        "type": "user",
+        "session_id": session_id or "",
+        "message": {"role": "user", "content": prompt},
+        "parent_tool_use_id": None,
+    })
+    print(f"[openclaude:stream]   PID={proc.pid}  stdin=stream-json")
 
     # Drain stderr in a background thread so it doesn't block
     _stderr_lines: list[str] = []
@@ -7758,7 +8038,7 @@ def _stream_openclaude(
     streamed_text_in_current_msg = False
     heartbeat_interval = 15.0
     last_stdout_at = _t.monotonic()
-    stdout_q = queue.Queue()
+    stdout_q: queue.Queue = queue.Queue()
 
     def _drain_stdout():
         try:
@@ -7772,6 +8052,9 @@ def _stream_openclaude(
 
     _stdout_t = threading.Thread(target=_drain_stdout, daemon=True)
     _stdout_t.start()
+
+    # Permission-request timeout: how long to wait for the UI to respond (seconds).
+    _PERM_TIMEOUT = 120.0
 
     try:
         while True:
@@ -7819,6 +8102,109 @@ def _stream_openclaude(
                         thinking = delta.get("thinking", "")
                         if thinking:
                             yield {"type": "thinking", "content": thinking}
+            elif mtype == "control_request":
+                # ── Permission bridge: openclaude is asking if a tool may run ──
+                req = msg.get("request", {})
+                request_id = msg.get("request_id", "")
+                subtype = req.get("subtype", "")
+                if subtype == "can_use_tool" and request_id:
+                    tool_name = req.get("tool_name", "")
+                    tool_input = req.get("input", {})
+                    tool_use_id = req.get("tool_use_id", "")
+                    description = req.get("description") or req.get("action_description") or ""
+                    if _perm_is_allow_all_enabled(proc.pid):
+                        print(f"[openclaude:perm]   allow-all-session: tool={tool_name}  request_id={request_id}")
+                        resp_payload = {
+                            "subtype": "success",
+                            "request_id": request_id,
+                            "response": {
+                                "behavior": "allow",
+                                "updatedInput": tool_input,
+                                "toolUseID": tool_use_id,
+                            },
+                        }
+                        _send_stdin_json({"type": "control_response", "response": resp_payload})
+                        yield {
+                            "type": "permission_resolved",
+                            "request_id": request_id,
+                            "behavior": "allow",
+                            "allow_all": True,
+                        }
+                        continue
+                    if _should_auto_allow_permission(tool_name):
+                        print(f"[openclaude:perm]   auto-allow: tool={tool_name}  request_id={request_id}")
+                        resp_payload = {
+                            "subtype": "success",
+                            "request_id": request_id,
+                            "response": {
+                                "behavior": "allow",
+                                "updatedInput": tool_input,
+                                "toolUseID": tool_use_id,
+                            },
+                        }
+                        _send_stdin_json({"type": "control_response", "response": resp_payload})
+                        yield {
+                            "type": "permission_resolved",
+                            "request_id": request_id,
+                            "behavior": "allow",
+                        }
+                        continue
+                    print(f"[openclaude:perm]   permission_request: tool={tool_name}  request_id={request_id}")
+                    # Register a one-shot queue so the HTTP handler can deliver the decision
+                    perm_q = _perm_register(proc.pid, request_id)
+                    # Emit the SSE event so the frontend can show the allow/deny dialog
+                    yield {
+                        "type": "permission_request",
+                        "pid": proc.pid,
+                        "request_id": request_id,
+                        "tool_use_id": tool_use_id,
+                        "tool_name": tool_name,
+                        "input": tool_input,
+                        "description": description,
+                    }
+                    # Block this thread until the UI responds or timeout
+                    try:
+                        decision = perm_q.get(timeout=_PERM_TIMEOUT)
+                    except queue.Empty:
+                        # Timeout → auto-deny
+                        decision = {"behavior": "deny", "message": "Timeout aguardando resposta do usuario."}
+                        print(f"[openclaude:perm]   timeout: auto-deny for request_id={request_id}")
+                    # Forward the decision back to openclaude via stdin
+                    behavior = decision.get("behavior", "deny")
+                    # Record the decision for memory and suggestion systems
+                    _perm_record_decision(tool_name, behavior)
+                    _perm_record_usage(tool_name)
+                    if behavior == "allow":
+                        resp_payload = {
+                            "subtype": "success",
+                            "request_id": request_id,
+                            "response": {
+                                "behavior": "allow",
+                                "updatedInput": decision.get("updatedInput", tool_input),
+                                "toolUseID": tool_use_id,
+                            },
+                        }
+                    else:
+                        resp_payload = {
+                            "subtype": "success",
+                            "request_id": request_id,
+                            "response": {
+                                "behavior": "deny",
+                                "message": decision.get("message", "Negado pelo usuario."),
+                                "toolUseID": tool_use_id,
+                            },
+                        }
+                    _send_stdin_json({"type": "control_response", "response": resp_payload})
+                    print(f"[openclaude:perm]   sent control_response: behavior={behavior}  request_id={request_id}")
+                    # Emit a follow-up SSE so the UI can close the dialog
+                    yield {
+                        "type": "permission_resolved",
+                        "request_id": request_id,
+                        "behavior": behavior,
+                    }
+                else:
+                    # Other control_request subtypes: log and ignore
+                    print(f"[openclaude:stream]   control_request subtype={subtype!r} (not handled)")
             elif mtype == "assistant":
                 # Multi-turn: openclaude emits full assistant messages (tool_use, text blocks)
                 content = msg.get("message", {}).get("content", [])
@@ -7879,7 +8265,15 @@ def _stream_openclaude(
                     raise RuntimeError(f"openclaude: {subtype} — {err_msg}")
                 break
     finally:
+        _perm_cleanup(proc.pid)
         _unregister_agent_process(proc)
+        # Close stdin gracefully so openclaude knows we're done
+        try:
+            with _stdin_lock:
+                if proc.stdin and not proc.stdin.closed:
+                    proc.stdin.close()
+        except Exception:
+            pass
         try:
             proc.stdout.close()
         except Exception:
@@ -15338,6 +15732,41 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._json_response({"status": "stopped", "killed": killed})
             return
 
+        # Permission bridge: frontend sends allow/deny for a pending tool-use request.
+        if path == "/api/permission-response":
+            body = self._read_body()
+            pid = int(body.get("pid", 0))
+            request_id = str(body.get("request_id", "")).strip()
+            behavior = str(body.get("behavior", "deny")).strip()
+            message = str(body.get("message", "Negado pelo usuario.")).strip()
+            updated_input = body.get("updatedInput")  # optional
+            if not pid:
+                self._json_response({"status": "error", "message": "pid e obrigatorio"}, 400)
+                return
+            if behavior == "allow_all":
+                _perm_enable_allow_all(pid)
+                decision: dict = {"behavior": "allow", "allow_all": True}
+                if request_id:
+                    ok = _perm_resolve(pid, request_id, decision)
+                else:
+                    ok = True
+                self._json_response({"status": "ok", "behavior": behavior, "allow_all": True})
+                return
+            if not request_id:
+                self._json_response({"status": "error", "message": "request_id e obrigatorio"}, 400)
+                return
+            decision: dict = {"behavior": behavior}
+            if behavior == "allow" and updated_input is not None:
+                decision["updatedInput"] = updated_input
+            elif behavior != "allow":
+                decision["message"] = message
+            ok = _perm_resolve(pid, request_id, decision)
+            if ok:
+                self._json_response({"status": "ok", "behavior": behavior})
+            else:
+                self._json_response({"status": "not_found", "message": "Nenhuma requisicao pendente encontrada para esse request_id/pid"}, 404)
+            return
+
         if path == "/api/functions/reload":
             catalog = _functions_catalog_reload()
             payload = {
@@ -15462,6 +15891,13 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # ── User Preferences API ─────────────────────────────────────
         if path == "/api/user/preferences":
             self._user_preferences_post()
+            return
+
+        # Permission suggestions: get suggestions for broader permissions based on usage
+        if path == "/api/permission-suggestions":
+            limit = int(body.get("limit", "10")) if isinstance(body.get("limit"), str) else body.get("limit", 10)
+            suggestions = _perm_get_suggestions(limit=limit)
+            self._json_response({"suggestions": suggestions})
             return
 
         if _is_disabled_api_path(path):
