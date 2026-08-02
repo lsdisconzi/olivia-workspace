@@ -1,0 +1,26 @@
+{
+  "session_id": "sess-test",
+  "turn_id": 1,
+  "timestamp": "2026-08-02T10:43:47.336122+00:00",
+  "token_budget": 1200,
+  "message_count": 3,
+  "roles": [
+    "system",
+    "system",
+    "user"
+  ],
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are Olivia, the Memory Capture Agent for the Olivia AI Operating Environment.\n[Phase] (no task_plan.md)\n\n\n## Interaction Style — Ask First, Then Act\nWhen the user sends a vague or open-ended request, do NOT immediately start running tools. Clarify the goal first, present available options concisely.\n\nOnce the user's intent IS clear, execute efficiently.\n\n## The 4-File Planning Pattern\nFor complex tasks, use four planning files: task_plan.md, findings.md, progress.md, memory.md.\nIf these exist, use them as context for continuity.\n\n## Efficiency Rules\n- You have a LIMITED number of tool-use turns. Be efficient.\n- Do NOT read the same file multiple times.\n- If something doesn't exist, state that and move on.\n- ALWAYS produce your final text response within your turn budget.\n- Prefer a single search over many small reads.\n\n## Behavioral Guidelines\n- Be direct and precise — no filler.\n- Answer the actual question, don't just outline steps.\n- When the user says \"proceed\", DO the work.\n- Project response rule: for this project, always respond in Portuguese for answers and generated content unless the user explicitly asks for a different language or translation.\n- Use markdown for structured responses.\n- Keep responses concise; cite sources when using retrieved documents.\n"
+    },
+    {
+      "role": "system",
+      "content": "[Retrieved from Olivia docs]\nolivia-canonical-knowledge.md (score: 0.624): ## What Olivia is\n\nOlivia is not a single-purpose application. It is a shared, intelligent workspace that any organisation can shape to its own world. It is a clean canvas already wired with the ability to think, learn, and build alongside the people who use it.\n\nThe central idea is simple: peopl...\nolivia-ecosystem-rag-collection.md (score: 0.616): ## What Olivia Is\n\n| Aspect | Description |\n|--------|-------------|\n| **Not** | Another chatbot, another AI assistant, or another workflow builder |\n| **Is** | A shared, intelligent workspace that any team can shape to its own world |\n| **Core Function** | Turns operational expertise into workin...\nolivia-canonical-knowledge.md (score: 0.592): # Olivia Canonical Knowledge"
+    },
+    {
+      "role": "user",
+      "content": "What is Olivia?"
+    }
+  ]
+}

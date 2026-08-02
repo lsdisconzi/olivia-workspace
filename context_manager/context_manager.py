@@ -49,6 +49,7 @@ SNAPSHOTS_DIR = Path(__file__).resolve().parent.parent / "context_snapshots"
 
 
 DEFAULT_PROJECT_ID = "olivia-memory-capture-agent"
+DEFAULT_RAG_COLLECTION = "olivia_ecosystem"
 
 RETRIEVAL_SCOPE_AUTO = "auto"
 RETRIEVAL_SCOPE_ALL = "all"
@@ -83,7 +84,7 @@ class ContextManager:
         ``<workspace>/context/sys_prompt.txt``.
     rag_collection : str, optional
         Qdrant collection name for RAG retrieval. Defaults to
-        ``"olivia-memory-capture-agent"``.
+        ``"olivia_ecosystem"``.
     token_budget : int, optional
         Maximum tokens for the assembled prompt (default 1200).
     enable_snapshots : bool, optional
@@ -99,7 +100,7 @@ class ContextManager:
         phase_tag: str | None = None,
         force_retrieval_scope: str = RETRIEVAL_SCOPE_AUTO,
         sys_prompt_path: str | Path | None = None,
-        rag_collection: str = "olivia-memory-capture-agent",
+        rag_collection: str = DEFAULT_RAG_COLLECTION,
         rag_base_url: str | None = None,
         token_budget: int = DEFAULT_TOKEN_BUDGET,
         enable_snapshots: bool = True,
@@ -159,6 +160,19 @@ class ContextManager:
             "project_dir": str(self._project_dir),
             "sys_prompt_path": str(self.sys_prompt_path),
         }
+
+    def _resolve_project_language(self) -> str:
+        """Read the saved project response-language preference from project.json."""
+        meta_file = self._project_dir / "project.json"
+        if not meta_file.is_file():
+            return "English"
+        try:
+            meta = json.loads(meta_file.read_text(encoding="utf-8"))
+        except Exception:
+            return "English"
+
+        language = str(meta.get("preferred_language") or meta.get("language") or "English").strip()
+        return language or "English"
 
     def build_prompt(
         self,
@@ -224,10 +238,12 @@ class ContextManager:
             if effective_phase
             else ""
         )
+        project_language = self._resolve_project_language()
         system_msg = self._load_system_template().format(
             agent_role=self.agent_role,
             project_summary=project_summary,
             phase_context=phase_context,
+            project_language=project_language,
         )
         
         # Inject planning context if provided

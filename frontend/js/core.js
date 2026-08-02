@@ -161,13 +161,14 @@ window.initMobile = initMobile;
 window.applyMobileLayout = applyMobileLayout;
 
 // window.customPrompt - a beautiful custom async prompt modal dialog
-window.customPrompt = function (message, defaultValue) {
+window.customPrompt = function (message, defaultValue, options) {
   return new Promise((resolve) => {
     const overlay = document.getElementById('promptModalOverlay');
     const modal = document.getElementById('promptModal');
     const title = document.getElementById('promptModalTitle');
     const label = document.getElementById('promptModalLabel');
     const input = document.getElementById('promptModalInput');
+    const select = document.getElementById('promptModalSelect');
     const confirmBtn = document.getElementById('promptModalConfirmBtn');
     const cancelBtn = document.getElementById('promptModalCancelBtn');
     const closeBtn = document.getElementById('promptModalCloseBtn');
@@ -175,21 +176,47 @@ window.customPrompt = function (message, defaultValue) {
     if (!overlay || !modal) {
       // Fallback
       try {
-        resolve(prompt(message, defaultValue));
+        const fallbackOptions = Array.isArray(options) ? options : null;
+        if (fallbackOptions && fallbackOptions.length) {
+          resolve((defaultValue || fallbackOptions[0]) || null);
+        } else {
+          resolve(prompt(message, defaultValue));
+        }
       } catch (e) {
         resolve(null);
       }
       return;
     }
 
+    const selectOptions = Array.isArray(options) ? options : [];
+    const useSelect = selectOptions.length > 0;
+
     title.textContent = 'Entrada';
     label.textContent = message;
-    input.value = defaultValue || '';
+
+    input.style.display = useSelect ? 'none' : 'block';
+    if (select) select.style.display = useSelect ? 'block' : 'none';
+
+    if (useSelect) {
+      select.innerHTML = selectOptions.map((opt) => {
+        const value = String(opt && opt.value !== undefined ? opt.value : opt);
+        const labelText = String(opt && opt.label !== undefined ? opt.label : opt);
+        const selected = (defaultValue || selectOptions[0]) === value ? ' selected' : '';
+        return `<option value="${escapeHtmlAttr(value)}"${selected}>${escapeHtml(labelText)}</option>`;
+      }).join('');
+      select.value = String(defaultValue || selectOptions[0] || '');
+    } else {
+      input.value = defaultValue || '';
+    }
 
     overlay.style.display = 'block';
     modal.style.display = 'block';
-    input.focus();
-    input.select();
+    if (useSelect) {
+      select.focus();
+    } else {
+      input.focus();
+      input.select();
+    }
 
     function cleanUp() {
       overlay.style.display = 'none';
@@ -198,10 +225,11 @@ window.customPrompt = function (message, defaultValue) {
       cancelBtn.onclick = null;
       closeBtn.onclick = null;
       input.onkeydown = null;
+      if (select) select.onkeydown = null;
     }
 
     confirmBtn.onclick = () => {
-      const val = input.value;
+      const val = useSelect ? (select ? select.value : '') : input.value;
       cleanUp();
       resolve(val);
     };
@@ -211,7 +239,8 @@ window.customPrompt = function (message, defaultValue) {
       resolve(null);
     };
 
-    input.onkeydown = (e) => {
+    const activeField = useSelect ? select : input;
+    activeField.onkeydown = (e) => {
       if (e.key === 'Enter') {
         confirmBtn.click();
       } else if (e.key === 'Escape') {
