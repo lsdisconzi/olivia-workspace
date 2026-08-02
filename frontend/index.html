@@ -2253,7 +2253,7 @@
             <button class="compose-voice-btn" id="voiceInputBtn" onclick="voiceToggleQuick()"
               title="Tap to start/stop recording"><i class="fas fa-microphone"></i></button>
             <textarea class="compose-textarea" id="chatInput" name="chatInput" oninput="autoGrow(this)"
-              onkeydown="if(event.key==='Enter'&amp;&amp;!event.shiftKey){event.preventDefault();sendMessage()}"
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"
               placeholder="Send a message to OliviaLegal..." rows="1"></textarea>
             <button class="compose-send compose-stop" id="stopBtn" onclick="stopActiveStream()"
               style="display:none;background:#c0392b" title="Stop agent"><i class="fas fa-stop"></i></button>
@@ -2779,7 +2779,7 @@
                 <h2><i class="fas fa-search-minus"></i> Gaps</h2>
                 <div class="dsc-search"><i class="fas fa-search"></i><input id="discEnrichedSearchInput"
                     name="discEnrichedSearchInput"
-                    onkeydown="if(event.key==='Enter'&amp;&amp;typeof discEnrichedSearchRun==='function')discEnrichedSearchRun()"
+                    onkeydown="if(event.key==='Enter'&&typeof discEnrichedSearchRun==='function')discEnrichedSearchRun()"
                     placeholder="Enriched search..." style="padding-left:24px" type="text" /><button class="btn-xs"
                     onclick="if(typeof discEnrichedSearchRun==='function')discEnrichedSearchRun()"
                     style="margin-left:4px"><i class="fas fa-search"></i></button></div>
@@ -5677,7 +5677,7 @@ https://.../side.png" rows="3"
             <div class="sp-search">
               <div class="sp-search-box">
                 <input id="spSearchInput" name="spSearchInput"
-                  onkeydown="if(event.key==='Enter'&amp;&amp;typeof spacesSearch==='function')spacesSearch(this.value)"
+                  onkeydown="if(event.key==='Enter'&& typeof spacesSearch==='function')spacesSearch(this.value)"
                   placeholder="Search contracts..." type="text" />
                 <button
                   onclick="if(typeof spacesSearch==='function')spacesSearch(document.getElementById('spSearchInput').value)"><i
@@ -5798,7 +5798,7 @@ https://.../side.png" rows="3"
                 <i class="fas fa-chevron-left"></i> <!-- or fa-bars / fa-times -->
               </button>
               <input id="violationsSearchInput"
-                onkeydown="if(event.key==='Enter'&amp;&amp;typeof violationsSearch==='function')violationsSearch(this.value)"
+                onkeydown="if(event.key==='Enter'&&typeof violationsSearch==='function')violationsSearch(this.value)"
                 placeholder="Search violation..." type="search" />
               <div class="vw-chips" id="violationsJurChips">
                 <span class="vw-chip active" data-jur="all"
@@ -5875,7 +5875,7 @@ https://.../side.png" rows="3"
           <div class="vw-sidebar" id="lawLibSidebar">
             <div class="vw-sidebar-head">
               <input id="lawLibSearchInput"
-                onkeydown="if(event.key==='Enter'&amp;&amp;typeof lawLibSearch==='function')lawLibSearch(this.value)"
+                onkeydown="if(event.key==='Enter'&&typeof lawLibSearch==='function')lawLibSearch(this.value)"
                 placeholder="Search legal source..." type="search" />
               <div class="vw-chips" id="lawLibJurChips">
                 <span class="vw-chip active" data-jur="all"
@@ -6013,7 +6013,7 @@ https://.../side.png" rows="3"
           <div class="vw-sidebar" id="legalRouterSidebar">
             <div class="vw-sidebar-head">
               <input id="legalRouterQuery"
-                onkeydown="if(event.key==='Enter'&amp;&amp;typeof legalRouterResolve==='function')legalRouterResolve()"
+                onkeydown="if(event.key==='Enter'&& typeof legalRouterResolve==='function')legalRouterResolve()"
                 placeholder="BR-014, sandra-assali, MC99…" type="search" />
               <div class="vw-chips" id="legalRouterRoleChips">
                 <span class="vw-chip active" data-role="all"
