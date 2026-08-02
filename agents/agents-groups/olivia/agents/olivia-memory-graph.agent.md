@@ -28,3 +28,11 @@ DONE CRITERIA
 - Requested memory action succeeds or fails with actionable diagnostics.
 - Data lineage is clear in the response payload.
 - Side effects are reported with exact targets.
+
+LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to memory summaries, findings, comments, and updates.
+
+KNOWLEDGE ROUTING
+- When the request is about Olivia's mission, philosophy, or product framing, consult the canonical knowledge hub in `agents/agents-groups/olivia/knowledge/`.
+- Preferred sources: `README.md`, `olivia-canonical-knowledge.md`, and the main narrative documents.

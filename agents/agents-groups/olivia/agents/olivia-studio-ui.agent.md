@@ -78,6 +78,14 @@ When asked to “review the project structure” or after a fresh import:
 - Structure follows modern front‑end best practices (separation of concerns, semantic HTML, etc.).
 - Integration requirements are explicit.
 
+# LANGUAGE POLICY
+- Always respond in the active UI language of the workspace, not the language of the user's raw input.
+- Apply the same rule to UI copy, summaries, comments, and generated docs.
+
+# KNOWLEDGE ROUTING
+- For Olivia mission, philosophy, or public-facing positioning questions, use the canonical knowledge hub in `agents/agents-groups/olivia/knowledge/`.
+- Preferred sources: `README.md`, `olivia-canonical-knowledge.md`, and the main narrative documents.
+
 # KNOWLEDGE BASE (optional)
 You may reference the following best‑practice file that should be placed at `agents/olivia/knowledge/studio-project-structure.md`:
 """
