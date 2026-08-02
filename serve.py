@@ -672,6 +672,14 @@ _PERMISSION_REQUEST_COUNT = 0
 _PERMISSION_REQUEST_COUNT_LOCK = threading.Lock()
 
 
+def _perm_increment_request_count() -> int:
+    """Increment the permission cleanup counter and return the new value."""
+    global _PERMISSION_REQUEST_COUNT
+    with _PERMISSION_REQUEST_COUNT_LOCK:
+        _PERMISSION_REQUEST_COUNT += 1
+        return _PERMISSION_REQUEST_COUNT
+
+
 def _perm_register(pid: int, request_id: str) -> "queue.Queue":
     """Create a one-shot queue for a pending permission request."""
     q: queue.Queue = queue.Queue(maxsize=1)
@@ -8018,16 +8026,6 @@ _PERMISSION_AUTO_ALLOW_TOOLS = {
     "search_files",
 }
 
-# Permission memory system: tracks user decisions to reduce permission prompts
-_PERMISSION_MEMORY_LOCK = threading.Lock()
-# Structure: {tool_name: {"allow_count": int, "deny_count": int, "last_seen": float}}
-_PERMISSION_MEMORY: dict[str, dict] = {}
-
-# Permission suggestion system: suggests broader permissions based on usage patterns
-_PERMISSION_SUGGESTION_LOCK = threading.Lock()
-# Structure: {tool_pattern: {"use_count": int, "last_used": float}}
-_PERMISSION_USAGE_STATS: dict[str, dict] = {}
-
 
 def _should_auto_allow_permission(tool_name: str | None) -> bool:
     if not tool_name:
@@ -8267,14 +8265,7 @@ def _stream_openclaude(
     stdout_q: queue.Queue = queue.Queue()
 
     def _drain_stdout():
-        try:
-            while True:
-                raw = proc.stdout.readline()
-                if not raw:
-                    break
-                stdout_q.put(raw)
-        finally:
-            stdout_q.put(None)
+        _drain_stdout_to_queue(proc, stdout_q)
 
     _stdout_t = threading.Thread(target=_drain_stdout, daemon=True)
     _stdout_t.start()
@@ -8400,6 +8391,10 @@ def _stream_openclaude(
                     # Record the decision for memory and suggestion systems
                     _perm_record_decision(tool_name, behavior)
                     _perm_record_usage(tool_name)
+                    # Periodically prune stale memory entries (every 50 requests)
+                    request_count = _perm_increment_request_count()
+                    if request_count % 50 == 0:
+                        _perm_cleanup_memory()
                     if behavior == "allow":
                         resp_payload = {
                             "subtype": "success",
@@ -8524,6 +8519,31 @@ def _stream_openclaude(
 # instead of leaving it executing in the background.
 _AGENT_PROCESSES: list = []
 _AGENT_PROCESSES_LOCK = threading.Lock()
+
+
+def _drain_stdout_to_queue(proc, stdout_q: "queue.Queue") -> None:
+    """Move stdout lines into a queue while tolerating closed pipes and read errors."""
+    try:
+        stdout = getattr(proc, "stdout", None)
+        if stdout is None:
+            return
+        while True:
+            try:
+                raw = stdout.readline()
+            except (AttributeError, OSError, ValueError) as exc:
+                print(f"[openclaude:stream]   stdout drain warning: {exc}")
+                break
+            except Exception as exc:
+                print(f"[openclaude:stream]   stdout drain warning: {exc}")
+                break
+            if not raw:
+                break
+            stdout_q.put(raw)
+    finally:
+        try:
+            stdout_q.put_nowait(None)
+        except Exception:
+            pass
 
 
 def _register_agent_process(proc) -> None:
@@ -15946,6 +15966,19 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._health_api_get(path)
             return
 
+        # Permission suggestions: get suggestions for broader permissions based
+        # on usage patterns and user decisions (GET, used by the chat UI).
+        if path == "/api/permission-suggestions":
+            parsed = urllib.parse.urlparse(self.path)
+            qs = urllib.parse.parse_qs(parsed.query)
+            try:
+                limit = int((qs.get("limit") or ["10"])[0])
+            except (TypeError, ValueError):
+                limit = 10
+            suggestions = _perm_get_suggestions(limit=limit)
+            self._json_response({"suggestions": suggestions})
+            return
+
         self._json_response({})
 
     def _api_post(self, path):
@@ -16123,9 +16156,19 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._user_preferences_post()
             return
 
-        # Permission suggestions: get suggestions for broader permissions based on usage
+        # Permission suggestions: get suggestions for broader permissions based on usage.
+        # (GET is the primary path used by the chat UI; POST kept for compatibility.)
         if path == "/api/permission-suggestions":
-            limit = int(body.get("limit", "10")) if isinstance(body.get("limit"), str) else body.get("limit", 10)
+            try:
+                body = self._read_body()
+            except Exception:
+                body = {}
+            if not isinstance(body, dict):
+                body = {}
+            try:
+                limit = int(body.get("limit", 10))
+            except (TypeError, ValueError):
+                limit = 10
             suggestions = _perm_get_suggestions(limit=limit)
             self._json_response({"suggestions": suggestions})
             return
