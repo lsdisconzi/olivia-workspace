@@ -34,6 +34,7 @@ import os
 import re
 import sqlite3
 import ssl
+import logging
 import shutil
 import subprocess
 import sys
@@ -94,6 +95,8 @@ PROJECT_CONTEXT_FILES = [
 
 # Load .env defaults from root and optional shared environment file.
 bootstrap_environment(Olivia_ROOT)
+
+logger = logging.getLogger(__name__)
 
 
 def _Olivia_env(name: str, default: str = "") -> str:
@@ -3146,6 +3149,16 @@ def _normalize_upload_rel_path(raw_path: str) -> str:
     if marker in rel:
         rel = rel.split(marker, 1)[1]
     return rel.lstrip("/")
+
+
+def _sanitize_upload_rel_path(raw_filename: str) -> Path | None:
+    name = str(raw_filename or "").strip().replace("\\", "/")
+    name = re.sub(r"^[A-Za-z]:", "", name)
+    name = name.lstrip("/")
+    parts = [p for p in name.split("/") if p and p not in (".", "..")]
+    if not parts:
+        return None
+    return Path(*parts)
 
 
 def _path_is_within(base: Path, child: Path) -> bool:
@@ -6628,6 +6641,11 @@ _TIMELINE_LIST_RE = re.compile(
 
 _TIMELINE_TARGET_RE = re.compile(
     r"(?:transcript(?:ion)?|transcri(?:pt|ç[aã]o))\s+([A-Za-z0-9_@.\-]+)",
+    re.IGNORECASE,
+)
+
+_TIMELINE_HTML_REF_RE = re.compile(
+    r"(?:`([^`]+?\.html?)`|['\"]([^'\"]+?\.html?)['\"])",
     re.IGNORECASE,
 )
 
@@ -18915,18 +18933,6 @@ Exemplo de formato:
         """Handle multipart file uploads from project/workspace/bridge endpoints."""
         import time as _time
         from urllib.parse import parse_qs, urlparse
-
-        def _sanitize_upload_rel_path(raw_filename: str) -> Path | None:
-            """Normalize client-provided filename into a safe, relative path."""
-            name = str(raw_filename or "").strip().replace("\\", "/")
-            # Drop Windows drive prefix (e.g. C:/folder/file.txt)
-            name = re.sub(r"^[A-Za-z]:", "", name)
-            # Keep paths relative even when the client sends /absolute/path
-            name = name.lstrip("/")
-            parts = [p for p in name.split("/") if p and p not in (".", "..")]
-            if not parts:
-                return None
-            return Path(*parts)
 
         t0 = _time.monotonic()
         try:
