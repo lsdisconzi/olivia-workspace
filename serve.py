@@ -5440,6 +5440,38 @@ def _uploads_files_meta_scoped(project_id: str = "", agent_id: str = "") -> list
     return files_meta
 
 
+def _normalize_context_selection_entries(entries: object, valid_names: set[str] | None = None) -> list[str]:
+    """Normalize selection entries to the allowed planning filenames.
+
+    The UI can submit either bare filenames (task_plan.md) or relative paths such as
+    planning/findings.md or ./progress.md; the backend should preserve only the
+    basename when it matches an expected planning file.
+    """
+    allowed = valid_names or set(PLANNING_FILENAMES)
+    normalized: list[str] = []
+    if not isinstance(entries, list):
+        return normalized
+    for entry in entries:
+        if not isinstance(entry, str):
+            continue
+        raw = entry.strip()
+        if not raw:
+            continue
+        raw = raw.replace('\\', '/')
+        while raw.startswith('./'):
+            raw = raw[2:]
+        while raw.startswith('/'):
+            raw = raw[1:]
+        if raw.startswith('planning/'):
+            raw = raw[len('planning/'):]
+        elif raw.startswith('uploads/'):
+            raw = raw[len('uploads/'):]
+        name = raw.split('/')[-1].strip()
+        if name in allowed and name not in normalized:
+            normalized.append(name)
+    return normalized
+
+
 def _get_user_context_config(user_email: str | None = None) -> tuple[str, list[str]]:
     """Return (scope, selected_files) for a user.
 
@@ -5466,7 +5498,7 @@ def _get_user_context_config(user_email: str | None = None) -> tuple[str, list[s
         try:
             parsed = json.loads(selected_raw)
             if isinstance(parsed, list):
-                selected_files = [s.strip() for s in parsed if isinstance(s, str) and s.strip()]
+                selected_files = _normalize_context_selection_entries(parsed)
         except (json.JSONDecodeError, TypeError):
             selected_files = []
     return (scope, selected_files)
@@ -5597,6 +5629,76 @@ def _archive_project(project_id: str, target_sub: str = "default") -> bool:
     shutil.move(str(root), str(dest))
     _cleanup_project_registration(pid)
     return True
+
+
+def _list_archived_projects() -> list[dict]:
+    """List archived project folders that still contain a project.json metadata file."""
+    out: list[dict] = []
+    if not ARCHIVED_PROJECTS_DIR.is_dir():
+        return out
+    for subdir in sorted(ARCHIVED_PROJECTS_DIR.iterdir()):
+        if not subdir.is_dir():
+            continue
+        for archived_dir in sorted(subdir.iterdir()):
+            if not archived_dir.is_dir():
+                continue
+            meta_file = archived_dir / "project.json"
+            if not meta_file.is_file():
+                continue
+            try:
+                meta = json.loads(meta_file.read_text(encoding="utf-8"))
+            except Exception:
+                meta = {}
+            pid = str(meta.get("project_id") or archived_dir.name).strip()
+            if not pid:
+                continue
+            out.append({
+                "project_id": pid,
+                "name": str(meta.get("name") or pid),
+                "description": str(meta.get("description") or ""),
+                "subfolder": subdir.name,
+                "archive_path": str(archived_dir.resolve()),
+                "archived_at": str(meta.get("archived_at") or ""),
+            })
+    return out
+
+
+def _restore_project_from_archive(archive_path: str) -> tuple[bool, str | None]:
+    """Move an archived project directory back into uploads/projects and recreate its registration."""
+    raw = str(archive_path or "").strip()
+    if not raw:
+        return False, "archive_path required"
+    archive_dir = Path(raw).expanduser()
+    if not archive_dir.is_absolute():
+        archive_dir = (Path.cwd() / archive_dir).resolve()
+    else:
+        archive_dir = archive_dir.resolve()
+
+    if not archive_dir.is_dir() or not (archive_dir / "project.json").is_file():
+        return False, "archived project not found"
+    if not str(archive_dir).startswith(str(ARCHIVED_PROJECTS_DIR.resolve())):
+        return False, "invalid archive path"
+
+    try:
+        meta = json.loads((archive_dir / "project.json").read_text(encoding="utf-8"))
+    except Exception as exc:
+        return False, f"invalid project.json: {exc}"
+
+    pid = str(meta.get("project_id") or archive_dir.name).strip()
+    if not pid:
+        return False, "project_id missing"
+    target_dir = PROJECTS_DIR / pid
+    if target_dir.exists():
+        return False, "project already exists"
+
+    target_dir.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(str(archive_dir), str(target_dir))
+    owner_email = str(meta.get("owner_email") or "")
+    meta_payload = dict(meta)
+    meta_payload.setdefault("path", str(target_dir))
+    _project_record_create(pid, str(meta_payload.get("name") or pid), str(meta_payload.get("description") or ""), owner_email, json.dumps(meta_payload, ensure_ascii=False))
+    _write_projects_manifest()
+    return True, None
 
 
 def _delete_project(project_id: str) -> bool:
@@ -10296,9 +10398,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         selected_files_json = ""
         if selected_files_raw is not None:
             if isinstance(selected_files_raw, list):
-                # Validate filenames
+                # Normalize possible relative paths to the supported planning filenames.
                 valid_names = set(PLANNING_FILENAMES)
-                cleaned = [s for s in selected_files_raw if isinstance(s, str) and s.strip() in valid_names]
+                cleaned = _normalize_context_selection_entries(selected_files_raw, valid_names)
                 selected_files_json = json.dumps(cleaned)
             else:
                 self._json_response({"error": "selected_files must be an array of filenames"}, 400)
@@ -12476,6 +12578,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 user_message=clean_message,
                 project_id=project_id or None,
                 agent_role=agent_role_label,
+                planning_context=planning_ctx if planning_ctx.strip() else None,
                 history=history,
                 force_retrieval=False,
                 token_budget=1200,
@@ -17695,6 +17798,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._json_response(_write_projects_manifest())
             return
 
+        if path == "/api/projects/archives":
+            self._json_response({"archives": _list_archived_projects()})
+            return
+
         if path == "/api/projects/list":
             current_email = self._auth_current_email()
             is_admin = self._auth_is_admin()
@@ -18052,6 +18159,15 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         parts = rest.split("/", 1)
         pid = parts[0]
         sub = parts[1] if len(parts) > 1 else ""
+
+        if path == "/api/projects/restore":
+            archive_path = str(body.get("archive_path") or "").strip()
+            ok, detail = _restore_project_from_archive(archive_path)
+            if not ok:
+                self._json_response({"detail": detail or "restore failed"}, 400)
+                return
+            self._json_response({"status": "ok", "archive_path": archive_path})
+            return
 
         if path == "/api/projects/create":
             name = (body.get("name") or "").strip()

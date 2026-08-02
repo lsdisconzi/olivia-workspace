@@ -59,14 +59,39 @@ function _ctxFormatBytes(n) {
   return (n / 1048576).toFixed(1) + ' MB';
 }
 
+function _ctxNormalizeSelectionValue(value) {
+  if (value == null) return '';
+  const raw = String(value).trim().replace(/\\/g, '/');
+  if (!raw) return '';
+  const withoutLeading = raw.replace(/^\.\//, '').replace(/^\//, '');
+  const withoutPrefix = withoutLeading.replace(/^planning\//, '').replace(/^uploads\//, '');
+  return withoutPrefix.split('/').pop() || '';
+}
+
+function _ctxSelectionSet(selectedFiles) {
+  if (!Array.isArray(selectedFiles)) return new Set();
+  const values = selectedFiles.map(_ctxNormalizeSelectionValue).filter(Boolean);
+  return new Set(values);
+}
+
+function _ctxIsFileSelected(file, selectedFiles) {
+  if (!file) return false;
+  const selected = _ctxSelectionSet(selectedFiles);
+  const candidates = [file.name, file.path, file.name && file.name.split('/').pop(), file.path && file.path.split('/').pop()].filter(Boolean);
+  return candidates.some(candidate => selected.has(_ctxNormalizeSelectionValue(candidate))) || Boolean(file.selected);
+}
+
 /* ── Toggle panel open/close ── */
 function toggleContextConfigPanel() {
   const body = document.getElementById('contextConfigBody');
   const chevron = document.getElementById('contextConfigChevron');
+  const header = document.querySelector('.context-config-header');
   if (!body) return;
   const isOpen = body.style.display !== 'none';
   body.style.display = isOpen ? 'none' : '';
+  body.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
   if (chevron) chevron.classList.toggle('open', !isOpen);
+  if (header) header.setAttribute('aria-expanded', (!isOpen).toString());
   // Load on first open
   if (!isOpen && !_ctxConfig) {
     loadContextConfig();
@@ -134,7 +159,7 @@ function renderContextConfig(data) {
 
   if (container) {
     if (!Array.isArray(data.sources) || data.sources.length === 0) {
-      container.innerHTML = '<div style="padding:12px;text-align:center;color:var(--gray);font-size:10px"><i class="fas fa-info-circle"></i> No context files available.</div>';
+      container.innerHTML = '<div style="padding:12px;text-align:center;color:var(--gray);font-size:10px"><i class="fas fa-info-circle"></i> No context files available for this project yet.</div>';
       return;
     }
 
@@ -142,6 +167,7 @@ function renderContextConfig(data) {
     let selectedCount = 0;
     let totalAvailable = 0;
     const isCustom = data.scope === 'custom';
+    const selectedFiles = Array.isArray(data.selected_files) ? data.selected_files : [];
 
     function buildTree(items, level) {
       let out = '';
@@ -166,7 +192,7 @@ function renderContextConfig(data) {
         } else {
           // File node
           totalAvailable++;
-          if (item.selected) selectedCount++;
+          if (_ctxIsFileSelected(item, selectedFiles)) selectedCount++;
           
           let icon = 'fa-file-lines';
           let color = 'var(--gray)';
@@ -178,12 +204,14 @@ function renderContextConfig(data) {
           if (_PLANNING_COLORS[item.name]) color = _PLANNING_COLORS[item.name];
           
           const sizeStr = _ctxFormatBytes(item.size);
-          const checked = item.selected ? 'checked' : '';
+          const checked = _ctxIsFileSelected(item, selectedFiles) ? 'checked' : '';
           const disabled = !isCustom ? 'disabled' : '';
+          const fileName = item.name || item.path || '';
+          const normalizedFileName = _ctxNormalizeSelectionValue(fileName);
 
-          out += '<label class="context-tree-row file-row ' + disabled + '" data-search="' + _ctxEscape(item.name).toLowerCase() + '">';
+          out += '<label class="context-tree-row file-row ' + disabled + '" data-search="' + _ctxEscape(normalizedFileName).toLowerCase() + '">';
           out += '<i class="fas fa-fw context-tree-toggle leaf"></i>';
-          out += '<input type="checkbox" class="context-tree-checkbox file-checkbox" data-filename="' + _ctxEscape(item.path) + '" ' + checked + ' ' + disabled + ' onchange="toggleContextFile(\'' + _ctxEscape(item.path) + '\')" />';
+          out += '<input type="checkbox" class="context-tree-checkbox file-checkbox" data-filename="' + _ctxEscape(normalizedFileName) + '" ' + checked + ' ' + disabled + ' onchange="toggleContextFile(\'' + _ctxEscape(normalizedFileName) + '\')" />';
           out += '<i class="fas ' + icon + ' context-tree-icon" style="color:' + color + '"></i>';
           out += '<span class="context-tree-name">' + _ctxEscape(item.name) + '</span>';
           out += '<span class="context-file-size" style="font-size:9px;color:var(--gray);flex-shrink:0">' + _ctxEscape(sizeStr) + '</span>';
@@ -253,29 +281,59 @@ function toggleFolderSelection(e, folderId) {
   if (!folder) return;
   const checkboxes = folder.querySelectorAll('.file-checkbox');
   const isChecked = e.target.checked;
-  
+  const selected = Array.isArray(_ctxConfig.selected_files) ? _ctxConfig.selected_files.slice() : [];
+
   checkboxes.forEach(cb => {
     cb.checked = isChecked;
     const filename = cb.getAttribute('data-filename');
-    if (filename) {
-      var selected = Array.isArray(_ctxConfig.selected_files) ? _ctxConfig.selected_files.slice() : [];
-      var idx = selected.indexOf(filename);
-      if (isChecked && idx < 0) {
-        selected.push(filename);
-      } else if (!isChecked && idx >= 0) {
-        selected.splice(idx, 1);
-      }
-      _ctxConfig.selected_files = selected;
+    if (!filename) return;
+    const normalized = _ctxNormalizeSelectionValue(filename);
+    const idx = selected.indexOf(normalized);
+    if (isChecked && idx < 0) {
+      selected.push(normalized);
+    } else if (!isChecked && idx >= 0) {
+      selected.splice(idx, 1);
     }
   });
-  
+
+  _ctxConfig.selected_files = selected;
   _ctxDirty = true;
   const saveBtn = document.getElementById('contextSaveBtn');
   if (saveBtn) saveBtn.style.opacity = '1';
-  
-  // Re-render to update counts, but that might collapse folders, so let's just trigger a save intent
+  updateContextSelectionSummary();
 }
 window.toggleFolderSelection = toggleFolderSelection;
+
+function updateContextSelectionSummary() {
+  const statusText = document.getElementById('contextStatusText');
+  if (!statusText || !_ctxConfig) return;
+  const selected = Array.isArray(_ctxConfig.selected_files) ? _ctxConfig.selected_files : [];
+  let totalAvailable = 0;
+  let selectedCount = 0;
+  if (_ctxConfig.sources) {
+    _ctxConfig.sources.forEach(function(source) {
+      (source.files || []).forEach(function(file) {
+        if (file.type === 'directory') return;
+        totalAvailable++;
+        if (_ctxIsFileSelected(file, selected)) {
+          selectedCount++;
+        }
+      });
+    });
+  }
+  var scopeLabels = {
+    'workspace_and_project': 'Full context: all files from workspace + project.',
+    'project_only': 'Project-only context: workspace planning excluded.',
+    'custom': 'Custom selection: only checked files are injected.',
+  };
+  var scopeMsg = scopeLabels[_ctxConfig.scope] || '';
+  if (_ctxConfig.scope === 'custom') {
+    scopeMsg += ' (' + selectedCount + '/' + totalAvailable + ' selected)';
+  }
+  statusText.textContent = scopeMsg;
+  const statusInfo = document.getElementById('contextStatusInfo');
+  if (statusInfo) statusInfo.style.display = scopeMsg ? '' : 'none';
+}
 
 function onContextSearch() {
   const input = document.getElementById('contextSearchInput');
@@ -332,45 +390,26 @@ window.onContextScopeChange = onContextScopeChange;
 function toggleContextFile(filename) {
   if (!_ctxConfig || _ctxConfig.scope !== 'custom') return;
 
-  // Toggle in selected_files
-  var selected = Array.isArray(_ctxConfig.selected_files) ? _ctxConfig.selected_files.slice() : [];
-  var idx = selected.indexOf(filename);
+  const normalizedFilename = _ctxNormalizeSelectionValue(filename);
+  const selected = Array.isArray(_ctxConfig.selected_files) ? _ctxConfig.selected_files.slice() : [];
+  const idx = selected.indexOf(normalizedFilename);
   if (idx >= 0) {
     selected.splice(idx, 1);
   } else {
-    selected.push(filename);
+    selected.push(normalizedFilename);
   }
   _ctxConfig.selected_files = selected;
   _ctxDirty = true;
 
-  // Update checkbox state without full re-render
-  // Note: browser already toggled the checkbox via the native click event,
-  // so we just sync it to match the array state (no manual re-toggle)
   var checkboxes = document.querySelectorAll('#contextFilesContainer input[type=checkbox]');
   checkboxes.forEach(function(cb) {
     var fn = cb.getAttribute('data-filename');
-    if (fn === filename) {
-      cb.checked = (selected.indexOf(filename) >= 0);
+    if (fn === filename || _ctxNormalizeSelectionValue(fn) === normalizedFilename) {
+      cb.checked = (selected.indexOf(normalizedFilename) >= 0);
     }
   });
 
-  // Update count in status text
-  var totalAvailable = 0;
-  var selectedCount = 0;
-  if (_ctxConfig.sources) {
-    _ctxConfig.sources.forEach(function(s) {
-      (s.files || []).forEach(function(f) {
-        if (f.available) {
-          totalAvailable++;
-          if (selected.indexOf(f.name) >= 0) selectedCount++;
-        }
-      });
-    });
-  }
-  var statusText = document.getElementById('contextStatusText');
-  if (statusText && _ctxConfig.scope === 'custom') {
-    statusText.textContent = 'Custom selection: only checked files are injected. (' + selectedCount + '/' + totalAvailable + ' files selected)';
-  }
+  updateContextSelectionSummary();
 }
 window.toggleContextFile = toggleContextFile;
 
@@ -404,7 +443,7 @@ async function previewContextContent() {
           } else if (scope === 'project_only') {
             include = source.source === 'project';
           } else if (scope === 'custom') {
-            include = selected.indexOf(file.name) >= 0;
+            include = _ctxIsFileSelected(file, selected);
           }
           if (include) {
             filesToPreview.push({
@@ -508,7 +547,9 @@ async function saveContextConfig() {
 
     // Include selected_files when scope is custom, or pass empty array for project_only
     if (_ctxConfig.scope === 'custom') {
-      body.selected_files = Array.isArray(_ctxConfig.selected_files) ? _ctxConfig.selected_files : [];
+      body.selected_files = Array.isArray(_ctxConfig.selected_files)
+        ? _ctxConfig.selected_files.map(_ctxNormalizeSelectionValue).filter(Boolean)
+        : [];
     } else {
       body.selected_files = [];
     }
