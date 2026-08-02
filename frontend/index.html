@@ -937,6 +937,11 @@
                   <button class="ss-sort-btn" data-sort="name" onclick="_sessionSetSort('name')" style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer" title="Sort by name"><i class="fas fa-sort-alpha-down"></i></button>
                   <button class="ss-sort-btn" data-sort="size" onclick="_sessionSetSort('size')" style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer" title="Sort by size"><i class="fas fa-sort-size-down"></i></button>
                 </div>
+                <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap">
+                  <button data-session-files-permission-toggle data-active="false" data-active-label="<i class='fas fa-shield-check'></i> Allow tools" data-inactive-label="<i class='fas fa-shield-alt'></i> Allow tools" onclick="setSessionFilesToolPermissionMode(this.getAttribute('data-active') !== 'true')" style="font-size:10px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--white);cursor:pointer">
+                    <i class="fas fa-shield-alt"></i> Allow tools
+                  </button>
+                </div>
                 <div id="importedFilesList" style="display:flex;flex-direction:column;gap:4px">
                   <p style="color:var(--gray);font-size:11px;text-align:center;padding:12px 0;font-style:italic"><span
                       data-i18n="no_imported_files_yet">No
