@@ -288,6 +288,28 @@ body.dark .log-tc-header:hover{background:rgba(255,255,255,.05)}
   font-size: 11px;
 }
 
+/* AI Agent Builder Modal */
+#agentAIBuilderOverlay.show,
+#agentAIBuilderModal.show {
+  display: block;
+}
+#agentAIBuilderOverlay {
+  display: none;
+}
+#agentAIBuilderModal {
+  display: none;
+}
+.context-modal-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--foreground);
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
 /* ── Permission-request card (shown inline in agent log) ── */
 .perm-request-card{margin:10px 0;border:1px solid rgba(251,191,36,.45);border-radius:8px;overflow:hidden;background:rgba(251,191,36,.05);animation:permCardIn .25s ease}
 @keyframes permCardIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}

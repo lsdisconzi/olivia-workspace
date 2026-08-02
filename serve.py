@@ -2897,6 +2897,112 @@ def _normalize_agent_type(value) -> str:
     return "openclaude"
 
 
+def _call_llm_for_agent_config(prompt: str) -> str | None:
+    """Call an LLM to generate agent configuration from a description."""
+    try:
+        # Try using the configured LLM provider
+        import requests
+        
+        # Use the same LLM configuration as the main assistant
+        api_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("DEEPSEEK_API_KEY")
+        if not api_key:
+            return None
+            
+        base_url = os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+        model = os.environ.get("LLM_MODEL", "deepseek/deepseek-chat")
+        
+        response = requests.post(
+            f"{base_url}/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": "Você é um assistente especializado em configuração de agentes de IA. Sempre retorne apenas JSON válido."},
+                    {"role": "user", "content": prompt}
+                ],
+                "temperature": 0.7,
+                "max_tokens": 2000,
+            },
+            timeout=30
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+            # Extract JSON from response (handle potential markdown wrapping)
+            content = content.strip()
+            if content.startswith("```json"):
+                content = content[7:]
+            if content.endswith("```"):
+                content = content[:-3]
+            return content.strip()
+    except Exception as e:
+        print(f"[agents_api_generate_config] LLM call failed: {e}")
+    
+    return None
+
+
+def _generate_fallback_agent_config(description: str) -> dict:
+    """Generate a basic agent config from description when AI is unavailable."""
+    # Extract keywords from description for basic config
+    desc_lower = description.lower()
+    
+    # Determine agent type based on keywords
+    if any(kw in desc_lower for kw in ["analise", "análise", "dados", "relatório", "relatorio"]):
+        agent_type = "Analysis"
+        model = "deepseek-v4-pro"
+        skills = ["analysis/quality-review", "research/docs-explorer"]
+        collections = ["awa_documents"]
+        mcp_servers = ["brave-search", "filesystem"]
+        shared_scopes = ["docs", "ontology"]
+        system_prompt = f"Você é um agente de análise de dados especializado. Sua função é analisar dados, identificar padrões e gerar relatórios claros e acionáveis. Trabalhe com precisão e sempre cite suas fontes."
+    elif any(kw in desc_lower for kw in ["pesquisa", "research", "documento", "documentos"]):
+        agent_type = "Research"
+        model = "deepseek-v4-pro"
+        skills = ["research/docs-explorer", "analysis/quality-review"]
+        collections = ["awa_documents", "agent_custom_collection"]
+        mcp_servers = ["brave-search", "filesystem", "notion"]
+        shared_scopes = ["docs", "corpus"]
+        system_prompt = f"Você é um agente de pesquisa especializado. Sua função é coletar, organizar e sintetizar informações de diversas fontes. Trabalhe de forma metódica e sempre verifique a confiabilidade das fontes."
+    elif any(kw in desc_lower for kw in ["operação", "operacional", "workflow", "processo"]):
+        agent_type = "Operations"
+        model = "deepseek-v4-pro"
+        skills = ["analysis/quality-review"]
+        collections = ["awa_documents"]
+        mcp_servers = ["brave-search", "filesystem"]
+        shared_scopes = ["docs"]
+        system_prompt = f"Você é um agente de operações especializado. Sua função é otimizar processos, gerenciar workflows e garantir a eficiência operacional. Trabalhe com foco em resultados e melhoria contínua."
+    else:
+        agent_type = "General"
+        model = "deepseek-v4-pro"
+        skills = ["research/docs-explorer"]
+        collections = ["awa_documents"]
+        mcp_servers = ["brave-search", "filesystem"]
+        shared_scopes = ["docs"]
+        system_prompt = f"Você é um agente de IA especializado. Sua função é auxiliar o usuário com base na descrição fornecida: {description}"
+    
+    # Generate a name from the description
+    name = f"agent-{agent_type.lower()}-{uuid.uuid4().hex[:8]}"
+    
+    return {
+        "name": name,
+        "description": description[:200],
+        "group": agent_type,
+        "preferred_model": model,
+        "unrestricted_tools": False,
+        "workspace_scope": "workspace",
+        "system_prompt": system_prompt,
+        "skills": skills,
+        "qdrant_collections": collections,
+        "mcp_servers": mcp_servers,
+        "shared_scopes": shared_scopes,
+        "temperature": 0.7,
+    }
+
+
 def _resolve_project_path(raw_path: str) -> Path | None:
     """Resolve a repo-relative or absolute path for agent-group assets."""
     candidate = str(raw_path or "").strip()
@@ -15903,6 +16009,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         if path == "/api/agents/create":
             self._agents_api_create()
             return
+        if path == "/api/agents/generate-config":
+            self._agents_api_generate_config()
+            return
         if path in {"/api/agents/import/bundle", "/api/agents/bundle/import"}:
             self._agents_api_import_bundle()
             return
@@ -17002,6 +17111,67 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._json_response(_row_to_agent(row), 201)
         except sqlite3.IntegrityError:
             self._json_response({"error": f"Agent name '{name}' already exists"}, 409)
+        except Exception as e:
+            self._json_response({"error": str(e)}, 500)
+
+    def _agents_api_generate_config(self):
+        """POST /api/agents/generate-config — generate agent config from AI description."""
+        try:
+            body = self._read_body()
+            description = body.get("description", "").strip()
+            if not description:
+                self._json_response({"error": "description is required"}, 400)
+                return
+
+            # Build a prompt for the AI to generate agent configuration
+            prompt = f"""Você é um especialista em configuração de agentes de IA. Com base na descrição do usuário, gere uma configuração completa para um novo agente. Retorne APENAS JSON válido, sem explicações adicionais.
+
+Descrição do usuário: "{description}"
+
+Gere um objeto JSON com as seguintes chaves:
+- "name": nome do agente (formato kebab-case, sem espaços)
+- "description": descrição curta do propósito do agente
+- "group": grupo/categoria do agente (ex: "Research", "Operations", "Analysis")
+- "preferred_model": modelo de IA recomendado (ex: "deepseek-v4-pro", "gpt-4o", "claude-3-5-sonnet")
+- "unrestricted_tools": booleano indicando se precisa de acesso irrestrito a ferramentas
+- "workspace_scope": escopo do workspace ("workspace", "uploads_projects", "own", "parent")
+- "system_prompt": prompt de sistema detalhado para o agente (2-3 parágrafos)
+- "skills": array de strings com skills recomendadas
+- "qdrant_collections": array de strings com coleções Qdrant sugeridas
+- "mcp_servers": array de strings com servidores MCP sugeridos
+- "shared_scopes": array de strings com shared scopes sugeridos
+- "temperature": número entre 0 e 1 para temperatura do modelo
+
+Exemplo de formato:
+{{
+  "name": "data-analysis-agent",
+  "description": "Agente para análise de dados e geração de relatórios",
+  "group": "Analysis",
+  "preferred_model": "deepseek-v4-pro",
+  "unrestricted_tools": false,
+  "workspace_scope": "workspace",
+  "system_prompt": "Você é um agente de análise de dados especializado...",
+  "skills": ["analysis/quality-review", "research/docs-explorer"],
+  "qdrant_collections": ["awa_documents"],
+  "mcp_servers": ["brave-search", "filesystem"],
+  "shared_scopes": ["docs", "ontology"],
+  "temperature": 0.7
+}}"""
+
+            # Try to use the AI to generate the config
+            try:
+                ai_response = _call_llm_for_agent_config(prompt)
+                if ai_response:
+                    # Parse the JSON response
+                    config = json.loads(ai_response)
+                    self._json_response(config, 200)
+                    return
+            except (json.JSONDecodeError, Exception) as e:
+                print(f"[agents_api_generate_config] AI generation failed: {e}")
+
+            # Fallback: generate a basic config based on description
+            config = _generate_fallback_agent_config(description)
+            self._json_response(config, 200)
         except Exception as e:
             self._json_response({"error": str(e)}, 500)
 
