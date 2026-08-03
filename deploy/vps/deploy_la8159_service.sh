@@ -6,8 +6,8 @@
 #
 # Optional env:
 #   VPS_USER                 default: root
-#   VPS_APP_DIR              default: /opt/OliviaLegal
-#   SERVICE_NAME             default: OliviaLegal
+#   VPS_APP_DIR              default: /opt/Olivia
+#   SERVICE_NAME             default: Olivia
 #   Olivia_PORT              default: 3229
 #   VPS_GATEWAY_URL          default: http://127.0.0.1:8183
 #   DEPLOY_EXCLUDES_FILE     default: deploy/vps/rsync-excludes.txt
@@ -22,8 +22,8 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 VPS_HOST="${VPS_HOST:-}"
 VPS_USER="${VPS_USER:-root}"
-VPS_APP_DIR="${VPS_APP_DIR:-/opt/OliviaLegal}"
-SERVICE_NAME="${SERVICE_NAME:-OliviaLegal}"
+VPS_APP_DIR="${VPS_APP_DIR:-/opt/Olivia}"
+SERVICE_NAME="${SERVICE_NAME:-Olivia}"
 Olivia_PORT="${Olivia_PORT:-3229}"
 VPS_GATEWAY_URL="${VPS_GATEWAY_URL:-http://127.0.0.1:8183}"
 DEPLOY_EXCLUDES_FILE="${DEPLOY_EXCLUDES_FILE:-$ROOT_DIR/deploy/vps/rsync-excludes.txt}"

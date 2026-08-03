@@ -204,7 +204,7 @@ function loadFallback(reason) {
     mainWindow?.loadFile(waitingPath, { query: { port: String(PORT), reason } });
   } else {
     // Minimal inline fallback
-    mainWindow?.loadURL(`data:text/html,<html><body style="background:#0d1117;color:#e6edf3;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0"><div style="text-align:center"><h2>OliviaLegal</h2><p>Server not reachable on port ${PORT}</p><p style="color:#8b949e">Run <code>./runtime/start-all.sh</code> first</p><button onclick="window.location.href='${APP_URL}'" style="padding:8px 16px;background:#d4a72c;border:none;border-radius:6px;color:#0d1117;cursor:pointer;font-size:14px">Retry</button></div></body></html>`);
+    mainWindow?.loadURL(`data:text/html,<html><body style="background:#0d1117;color:#e6edf3;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0"><div style="text-align:center"><h2>Olivia</h2><p>Server not reachable on port ${PORT}</p><p style="color:#8b949e">Run <code>./runtime/start-all.sh</code> first</p><button onclick="window.location.href='${APP_URL}'" style="padding:8px 16px;background:#d4a72c;border:none;border-radius:6px;color:#0d1117;cursor:pointer;font-size:14px">Retry</button></div></body></html>`);
   }
 }
 

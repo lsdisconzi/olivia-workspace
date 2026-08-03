@@ -11,7 +11,7 @@
 #
 # Example:
 #   sudo ./deploy/vps/bootstrap_ubuntu_olivialegal.sh \
-#     --repo-url https://github.com/your-org/OliviaLegal.git \
+#     --repo-url https://github.com/your-org/olivia.git \
 #     --app-dir /opt/Olivia \
 #     --git-ref main \
 #     --port 3229 \
@@ -19,10 +19,10 @@
 
 set -euo pipefail
 
-APP_DIR="/opt/OliviaLegal"
+APP_DIR="/opt/Olivia"
 REPO_URL=""
 GIT_REF="main"
-SERVICE_NAME="OliviaLegal"
+SERVICE_NAME="Olivia"
 SERVICE_USER="root"
 Olivia_PORT="3229"
 VPS_GATEWAY_URL="http://127.0.0.1:8183"
@@ -34,9 +34,9 @@ Usage: bootstrap_ubuntu_olivialegal.sh [options]
 
 Options:
   --repo-url URL         Git repository URL to clone when app dir is missing
-  --app-dir PATH         Install/update directory (default: /opt/OliviaLegal)
+  --app-dir PATH         Install/update directory (default: /opt/Olivia)
   --git-ref REF          Git branch/tag/commit to checkout (default: main)
-  --service-name NAME    systemd service name (default: OliviaLegal)
+  --service-name NAME    systemd service name (default: Olivia)
   --service-user USER    systemd service user (default: root)
   --port PORT            Olivia port (default: 3229)
   --gateway-url URL      VPS gateway URL (default: http://127.0.0.1:8183)
