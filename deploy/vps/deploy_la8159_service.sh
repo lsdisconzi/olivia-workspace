@@ -33,8 +33,8 @@ if [[ -z "$VPS_HOST" ]]; then
   exit 1
 fi
 
-if [[ ! -f "$ROOT_DIR/deploy/vps/OliviaLegal.service.template" ]]; then
-  echo "ERROR: missing service template at deploy/vps/OliviaLegal.service.template"
+if [[ ! -f "$ROOT_DIR/deploy/vps/la8159.service.template" ]]; then
+  echo "ERROR: missing service template at deploy/vps/la8159.service.template"
   exit 1
 fi
 
@@ -43,7 +43,7 @@ SERVICE_TMP="$(mktemp)"
 sed \
   -e "s#{{SERVICE_USER}}#${VPS_USER}#g" \
   -e "s#{{APP_DIR}}#${VPS_APP_DIR}#g" \
-  "$ROOT_DIR/deploy/vps/OliviaLegal.service.template" > "$SERVICE_TMP"
+  "$ROOT_DIR/deploy/vps/la8159.service.template" > "$SERVICE_TMP"
 
 echo "[2/6] Creating remote app directory"
 ssh "${VPS_USER}@${VPS_HOST}" "mkdir -p '${VPS_APP_DIR}'"

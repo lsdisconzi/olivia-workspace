@@ -1140,7 +1140,7 @@ def _mcp_framed_request(runtime_spec: dict, method: str, params: dict | None = N
                 "params": {
                     "protocolVersion": "2024-11-05",
                     "capabilities": {},
-                    "clientInfo": {"name": "OliviaLegal", "version": "1.0.0"},
+                    "clientInfo": {"name": "Olivia", "version": "1.0.0"},
                 },
             },
         )
@@ -1193,7 +1193,7 @@ def _mcp_jsonl_request(runtime_spec: dict, method: str, params: dict | None = No
                 "params": {
                     "protocolVersion": "2024-11-05",
                     "capabilities": {},
-                    "clientInfo": {"name": "OliviaLegal", "version": "1.0.0"},
+                    "clientInfo": {"name": "Olivia", "version": "1.0.0"},
                 },
             },
         )
@@ -1623,7 +1623,7 @@ def _resolve_shared_root() -> Path:
 
 SHARED_ROOT = _resolve_shared_root()
 SHARED_CASES_ROOT = SHARED_ROOT / "cases"
-Olivia_GROUP_SOURCE_ROOT = Olivia_ROOT.parent / "agents" / "agents-groups" / "OliviaLegal" / "source"
+Olivia_GROUP_SOURCE_ROOT = Olivia_ROOT.parent / "agents" / "agents-groups" / "la8159" / "source"
 
 LEGAL_ROUTER_ROOT_CANDIDATES = (
     Path(os.environ.get("Olivia_LEGAL_ROUTER_ROOT", "")).expanduser() if os.environ.get("Olivia_LEGAL_ROUTER_ROOT") else None,
@@ -1631,7 +1631,7 @@ LEGAL_ROUTER_ROOT_CANDIDATES = (
     Path(os.environ.get("LEGAL_ROUTER_ROOT", "")).expanduser() if os.environ.get("LEGAL_ROUTER_ROOT") else None,
     Olivia_GROUP_SOURCE_ROOT,
     SHARED_CASES_ROOT / "agents",
-    Olivia_ROOT.parent / "OliviaLegal-incident" / "0_agents",
+    Olivia_ROOT.parent / "olivia-incident" / "0_agents",
 )
 
 
@@ -1655,19 +1655,8 @@ VIOLATIONS_ROOT_CANDIDATES = (
     SHARED_CASES_ROOT / "10_violations_json" / "validated",
     Olivia_ROOT / "data" / "source" / "10_violations_json" / "validated",
     Olivia_ROOT / "olivia" / "data" / "violations",
-    Olivia_ROOT.parent / "OliviaLegal-incident" / "10_violations_json" / "validated",
+    Olivia_ROOT.parent / "olivia-incident" / "10_violations_json" / "validated",
 )
-
-
-def _resolve_violations_root() -> Path:
-    for candidate in VIOLATIONS_ROOT_CANDIDATES:
-        if candidate and candidate.is_dir():
-            return candidate.resolve()
-    return (SHARED_CASES_ROOT / "10_violations_json" / "validated").resolve()
-
-
-VIOLATIONS_ROOT = _resolve_violations_root()
-MASTER_INDEX_ROOT = PROJECT_ROOT / "data" / "master_index"
 
 LAW_LIBRARY_ROOT_CANDIDATES = (
     Path(os.environ.get("Olivia_LAW_LIBRARY_ROOT", "")).expanduser() if os.environ.get("Olivia_LAW_LIBRARY_ROOT") else None,
@@ -1677,7 +1666,7 @@ LAW_LIBRARY_ROOT_CANDIDATES = (
     Olivia_GROUP_SOURCE_ROOT / "sources",
     Olivia_ROOT / "data" / "source",
     Olivia_ROOT / "olivia" / "data" / "law_library",
-    Olivia_ROOT.parent / "OliviaLegal-incident" / "0_agents" / "sources",
+    Olivia_ROOT.parent / "olivia-incident" / "0_agents" / "sources",
 )
 
 
@@ -1690,7 +1679,7 @@ def _resolve_law_library_root() -> Path:
 
 LAW_LIBRARY_ROOT = _resolve_law_library_root()
 
-CASE_PROJECT_ID = "OliviaLegal-project"
+CASE_PROJECT_ID = "olivia-project"
 CASE_PROJECT_NAME = "Olivia Workspace"
 
 # --- Navigation "tree trunk" section registry ---------------------------------
@@ -3477,7 +3466,7 @@ def _project_supports_legacy_outputs(project_id: str) -> bool:
     pid = str(project_id or "").strip().lower()
     if not pid:
         return False
-    return pid in {"OliviaLegal", str(CASE_PROJECT_ID).strip().lower()}
+    return pid in {"olivia", str(CASE_PROJECT_ID).strip().lower()}
 
 
 def _project_legacy_outputs_entries(project_id: str, project_root: Path) -> list[dict]:
@@ -4227,7 +4216,7 @@ Text files are read and included in context. All files persist in `uploads/`.
     3) Next concrete action
 
 ## Workspace Agent Architecture Map
-OliviaLegal-workspace exposes 8 canonical in-app agents (authoritative spec in the
+olivia-workspace exposes 8 canonical in-app agents (authoritative spec in the
 `agent-architecture` service; full JSON at `/api/architecture/agents`, bundles
 at `/api/architecture/bundles`, skills at `/api/architecture/skills`, UI map at
 the `Arquitetura` sidebar tab). When the user asks about agents, their
@@ -4278,7 +4267,7 @@ def _is_disabled_api_path(path: str) -> bool:
 
 
 def _resolve_planning_dir() -> Path:
-    """Pick the planning directory with preference for OliviaLegal-workspace."""
+    """Pick the planning directory with preference for olivia-workspace."""
     candidates = [PLANNING_WORKSPACE_DIR, UPLOADS_DIR]
     for candidate in candidates:
         if (candidate / "task_plan.md").is_file():
@@ -5340,7 +5329,7 @@ def _uploads_rel_for_agent(file_path: Path) -> str:
 
 _LEGACY_CONTEXT_LINE_PATTERNS = (
     re.compile(r"olivia-workspace", re.IGNORECASE),
-    re.compile(r"OliviaLegal-ai/olivia/", re.IGNORECASE),
+    re.compile(r"olivia-ai/olivia/", re.IGNORECASE),
     re.compile(r"/users/[^/]+/vps_ecosystem/", re.IGNORECASE),
     re.compile(r"case_files/.+?-generated/", re.IGNORECASE),
     re.compile(r"agent-architecture-generated", re.IGNORECASE),
@@ -5353,7 +5342,7 @@ def _is_legacy_generated_case_relpath(rel_path: str) -> bool:
     rel = str(rel_path or "").replace("\\", "/").lower()
     if not rel:
         return False
-    if "olivia-workspace" in rel or "OliviaLegal-ai/olivia/" in rel:
+    if "olivia-workspace" in rel or "olivia-ai/olivia/" in rel:
         return True
     if "agent-architecture-generated" in rel:
         return True
@@ -7388,7 +7377,7 @@ _PINOCCHIO_BODY_SCHEMAS: dict[str, dict] = {
             "num_speakers": {"type": "integer|null", "description": "Exact count or null for auto"},
         },
         "example": {
-            "file_path": "/root/vps_projects-main/OliviaLegal-ai/pinocchio/data/audio/Pedro_Pablo_Dartnell_2.m4a",
+            "file_path": "/opt/olivia/pinocchio/data/audio/sample.m4a",
             "start": 689.13,
             "end": 793.66,
             "min_speakers": 1,
@@ -7502,17 +7491,17 @@ def _service_from_source_file(source_file: str | None) -> str | None:
 
 _FUNCTION_SERVICE_ALIASES = {
     "agent_architecture": "agent-architecture",
-    "agents": "OliviaLegal",
-    "Olivia_gateway": "gateway",
-    "Olivia_qdrant": "OliviaLegal-qdrant",
+    "agents": "olivia",
+    "olivia_gateway": "gateway",
+    "olivia_qdrant": "olivia-qdrant",
     "bridge": "bridge",
     "bridge_res": "bridge",
     "bridge_residencia": "bridge",
     "bridge_ui": "bridge-ui",
     "frontend_public": "frontend-public",
     "ops_dashboard": "ops-dashboard",
-    "qdrant": "OliviaLegal-qdrant",
-    "qdrant_api": "OliviaLegal-qdrant",
+    "qdrant": "olivia-qdrant",
+    "qdrant_api": "olivia-qdrant",
     "shared": "_shared",
     "shared_layer": "_shared",
     "thebridge": "bridge",
@@ -7523,8 +7512,8 @@ _FUNCTION_SERVICE_ALIASES = {
 _FUNCTION_SERVICE_DEFAULT_BASE_URLS = {
     "_shared": "http://72.60.143.139:8199",
     "agent-architecture": "http://127.0.0.1:8220",
-    "OliviaLegal": f"http://127.0.0.1:{DEFAULT_PORT}",
-    "OliviaLegal-qdrant": "http://127.0.0.1:8179",
+    "olivia": f"http://127.0.0.1:{DEFAULT_PORT}",
+    "olivia-qdrant": "http://127.0.0.1:8179",
     "bridge": "http://72.60.143.139:3010",
     "bridge-ui": "http://72.60.143.139:8175",
     "clovi": "http://127.0.0.1:3107",
@@ -7540,7 +7529,7 @@ _FUNCTION_GATEWAY_PROXY_HINTS: tuple[tuple[str, str], ...] = (
     ("/api/agent-architecture", "agent-architecture"),
     ("/api/observatory", "ops-dashboard"),
     ("/api/garage", "garage"),
-    ("/api/qdrant", "OliviaLegal-qdrant"),
+    ("/api/qdrant", "olivia-qdrant"),
     ("/api/pinocchio", "pinocchio"),
     ("/api/bridge-residencia", "bridge"),
     ("/api/bridge", "bridge"),
@@ -7548,11 +7537,11 @@ _FUNCTION_GATEWAY_PROXY_HINTS: tuple[tuple[str, str], ...] = (
     ("/api/frontend-public", "frontend-public"),
     ("/api/olivia", "olivia"),
     ("/api/clovi", "clovi"),
-    ("/api/OliviaLegal", "OliviaLegal"),
+    ("/api/olivia", "olivia"),
     ("/api/shared", "_shared"),
-    ("/api/agents", "OliviaLegal"),
-    ("/api/models", "OliviaLegal"),
-    ("/api/memory", "OliviaLegal"),
+    ("/api/agents", "olivia"),
+    ("/api/models", "olivia"),
+    ("/api/memory", "olivia"),
     ("/api/functions", "gateway"),
     ("/api/steps", "gateway"),
     ("/api/ops", "ops-dashboard"),
@@ -8709,7 +8698,7 @@ def _run_openclaude_agent(
     base_url: str | None = None,
     system_prompt: str | None = None,
 ):
-    """Run openclaude as an autonomous agent; push OliviaLegal-format events onto event_q."""
+    """Run openclaude as an autonomous agent; push Olivia-format events onto event_q."""
     use_stdin = _prompt_too_big_for_argv(prompt)
     cmd = _openclaude_cmd(
         prompt,
@@ -9180,7 +9169,7 @@ def _openrouter_models_catalog() -> dict:
     """
     url = "https://openrouter.ai/api/v1/models"
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "OliviaLegal/1.0"})
+        req = urllib.request.Request(url, headers={"User-Agent": "Olivia/1.0"})
         with urllib.request.urlopen(req, timeout=15) as resp:
             raw = json.loads(resp.read().decode("utf-8"))
     except Exception:
@@ -9298,7 +9287,7 @@ def _fireworks_models_catalog() -> dict:
     """
     url = "https://fireworks.ai/models"
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "OliviaLegal/1.0"})
+        req = urllib.request.Request(url, headers={"User-Agent": "Olivia/1.0"})
         with urllib.request.urlopen(req, timeout=15) as resp:
             html = resp.read().decode("utf-8")
     except Exception:
@@ -10270,19 +10259,19 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
     _ROOT_ALIASES = {
         "/",
-        "/OliviaLegal",
+        "/olivia",
         "/olivia/",
-        "/OliviaLegal",
+        "/olivia",
         "/olivia/",
     }
     _WORKSPACE_ALIASES = {
         "/",
-        "/OliviaLegal",
+        "/olivia",
         "/olivia/",
         "/olivia/olivia",
         "/olivia/olivia/",
         "/olivia/olivia.html",
-        "/OliviaLegal",
+        "/olivia",
         "/olivia/olivia",
         "/olivia/olivia/",
         "/olivia/olivia.html",
@@ -10719,13 +10708,13 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
     # Public static paths served without authentication
     _PUBLIC_STATIC_PATHS = {
-        "/olivia/olivia-OliviaLegal.html",
-        "/olivia/olivia-OliviaLegal-en.html",
-        "/olivia/olivia-OliviaLegal-it.html",
-        "/olivia/olivia-OliviaLegal-gr.html",
-        "/olivia/olivia-OliviaLegal-th.html",
-        "/olivia/olivia-OliviaLegal-cl.html",
-        "/olivia/olivia-OliviaLegal-pt.html",
+        "/olivia/olivia-olivia.html",
+        "/olivia/olivia-olivia-en.html",
+        "/olivia/olivia-olivia-it.html",
+        "/olivia/olivia-olivia-gr.html",
+        "/olivia/olivia-olivia-th.html",
+        "/olivia/olivia-olivia-cl.html",
+        "/olivia/olivia-olivia-pt.html",
         "/olivia/gurupi-narrativa.html",
         "/olivia/gurupi-business-plan.html",
         "/olivia/IDSC/yearly_data/CSV-Bundles_filtered/ANALISE_IDSC_TOCANTINS_GURUPI.md",
@@ -10930,7 +10919,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         # Map the legacy /olivia/* URL namespace to the moved frontend/ directory.
         # Anything not under /olivia/* falls through to root resolution below so the
-        # unmoved pages (olivia-OliviaLegal*.html, gurupi-*.html, IDSC/) keep working.
+        # unmoved pages (olivia-olivia*.html, gurupi-*.html, IDSC/) keep working.
         candidate: "Path | None" = None
         if raw_path in ("/olivia/", "/olivia"):
             candidate = WEB_ROOT / "index.html"
@@ -11988,31 +11977,31 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             if not self._serve_static_with_tracker(self.path):
                 super().do_GET()
         elif raw_path in self._OLIVIA_BR_ALIASES:
-            self.path = "/olivia/olivia-OliviaLegal.html"
+            self.path = "/olivia/olivia-olivia.html"
             if not self._serve_static_with_tracker(self.path):
                 super().do_GET()
         elif raw_path in self._OLIVIA_PT_ALIASES:
-            self.path = "/olivia/olivia-OliviaLegal-pt.html"
+            self.path = "/olivia/olivia-olivia-pt.html"
             if not self._serve_static_with_tracker(self.path):
                 super().do_GET()
         elif raw_path in self._OLIVIA_EN_ALIASES:
-            self.path = "/olivia/olivia-OliviaLegal-en.html"
+            self.path = "/olivia/olivia-olivia-en.html"
             if not self._serve_static_with_tracker(self.path):
                 super().do_GET()
         elif raw_path in self._OLIVIA_IT_ALIASES:
-            self.path = "/olivia/olivia-OliviaLegal-it.html"
+            self.path = "/olivia/olivia-olivia-it.html"
             if not self._serve_static_with_tracker(self.path):
                 super().do_GET()
         elif raw_path in self._OLIVIA_GR_ALIASES:
-            self.path = "/olivia/olivia-OliviaLegal-gr.html"
+            self.path = "/olivia/olivia-olivia-gr.html"
             if not self._serve_static_with_tracker(self.path):
                 super().do_GET()
         elif raw_path in self._OLIVIA_TH_ALIASES:
-            self.path = "/olivia/olivia-OliviaLegal-th.html"
+            self.path = "/olivia/olivia-olivia-th.html"
             if not self._serve_static_with_tracker(self.path):
                 super().do_GET()
         elif raw_path in self._OLIVIA_CL_ALIASES:
-            self.path = "/olivia/olivia-OliviaLegal-cl.html"
+            self.path = "/olivia/olivia-olivia-cl.html"
             if not self._serve_static_with_tracker(self.path):
                 super().do_GET()
         elif raw_path in self._GURUPI_NARRATIVA_ALIASES:
