@@ -64,7 +64,7 @@ def _post_bus(payload: dict) -> dict:
     req = urllib.request.Request(
         BUS_URL,
         data=body,
-        headers={"Content-Type": "application/json", "User-Agent": "OliviaLegal-remote-bus-mcp/1.0"},
+        headers={"Content-Type": "application/json", "User-Agent": "olivia-remote-bus-mcp/1.0"},
         method="POST",
     )
     try:

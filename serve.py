@@ -4205,7 +4205,7 @@ Text files are read and included in context. All files persist in `uploads/`.
 - Respond in the same language as the user's message
 - Use markdown for structured responses
 
-## Detailed Investigation Mode (Default in OliviaLegal)
+## Detailed Investigation Mode (Default in Olivia)
 - Assume the user is running a detailed investigation unless they ask for brainstorming.
 - Prioritize validated evidence, traceability, and uncertainty boundaries.
 - Avoid large recommendation blocks and multi-horizon action plans unless explicitly requested.
@@ -7369,7 +7369,7 @@ _PINOCCHIO_BODY_SCHEMAS: dict[str, dict] = {
     "api/diarization/excerpt-by-path": {
         "content_type": "application/json",
         "properties": {
-            "file_path": {"type": "string", "required": True, "description": "Server path, e.g. /root/vps_projects-main/OliviaLegal-ai/pinocchio/data/audio/Pedro_Pablo_Dartnell_2.m4a"},
+            "file_path": {"type": "string", "required": True, "description": "Server path, e.g. /opt/olivia/pinocchio/data/audio/sample.m4a"},
             "start": {"type": "float", "required": True, "description": "Start time in seconds"},
             "end": {"type": "float", "required": True, "description": "End time in seconds"},
             "min_speakers": {"type": "integer", "default": 1},
@@ -12059,24 +12059,14 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         if raw_path in {"/olivia/admin/notifications/read-all", "/olivia/admin/notifications/read-all/"}:
             self._admin_notifications_mark_all_read()
             return
-        # Public conversational endpoint — no authentication required
-        if raw_path in {"/api/public/OliviaLegal-ask", "/api/olivia/public/ask", "/public/ask"}:
+        if raw_path in {"/api/public/olivia-ask", "/api/olivia/public/ask", "/public/ask"}:
             self._public_Olivia_ask()
             return
-        if raw_path in {"/olivia/admin/users", "/olivia/admin/users"}:
-            self._admin_users_create()
-            return
-        reset_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/users/([^/]+)/reset-password/?$", raw_path)
+        reset_match = re.match(r"^/(?:olivia|olivia)/admin/users/([^/]+)/reset-password/?$", raw_path)
         if reset_match:
             self._admin_users_reset_password(urllib.parse.unquote(reset_match.group(1)))
             return
-        if raw_path in {"/olivia/admin/models", "/olivia/admin/models/"}:
-            self._admin_models_create()
-            return
-        if raw_path in {"/olivia/admin/ollama-servers", "/olivia/admin/ollama-servers/"}:
-            self._admin_ollama_servers_post()
-            return
-        restore_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/models/([^/]+)/restore/?$", raw_path)
+        restore_match = re.match(r"^/(?:olivia|olivia)/admin/models/([^/]+)/restore/?$", raw_path)
         if restore_match:
             self._admin_models_restore(urllib.parse.unquote(restore_match.group(1)))
             return
@@ -12147,10 +12137,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         parsed = urllib.parse.urlparse(self.path)
         raw_path = parsed.path
         admin_user_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/users/([^/]+)/?$", raw_path)
+        admin_user_match = re.match(r"^/(?:olivia|olivia)/admin/users/([^/]+)/?$", raw_path)
         if admin_user_match:
             self._admin_users_delete(urllib.parse.unquote(admin_user_match.group(1)))
             return
-        admin_model_match = re.match(r"^/(?:OliviaLegal|OliviaLegal)/admin/models/([^/]+)/?$", raw_path)
+        admin_model_match = re.match(r"^/(?:olivia|olivia)/admin/models/([^/]+)/?$", raw_path)
         if admin_model_match:
             self._admin_models_delete(urllib.parse.unquote(admin_model_match.group(1)))
             return
@@ -12172,15 +12163,15 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
     def do_PATCH(self):
         parsed = urllib.parse.urlparse(self.path)
         raw_path = parsed.path
-        admin_perms_match = re.match(r"^/(?:OliviaLegal|Olivia|olivia)/admin/users/([^/]+)/assistant-permissions/?$", raw_path)
+        admin_perms_match = re.match(r"^/(?:olivia|olivia)/admin/users/([^/]+)/assistant-permissions/?$", raw_path)
         if admin_perms_match:
             self._admin_users_permissions_patch(urllib.parse.unquote(admin_perms_match.group(1)))
             return
-        admin_ctx_scope_match = re.match(r"^/(?:OliviaLegal|Olivia|olivia)/admin/users/([^/]+)/context-scope/?$", raw_path)
+        admin_ctx_scope_match = re.match(r"^/(?:olivia|olivia)/admin/users/([^/]+)/context-scope/?$", raw_path)
         if admin_ctx_scope_match:
             self._admin_users_context_scope_patch(urllib.parse.unquote(admin_ctx_scope_match.group(1)))
             return
-        admin_model_match = re.match(r"^/(?:OliviaLegal|Olivia|olivia)/admin/models/([^/]+)/?$", raw_path)
+        admin_model_match = re.match(r"^/(?:olivia|olivia)/admin/models/([^/]+)/?$", raw_path)
         if admin_model_match:
             self._admin_models_patch(urllib.parse.unquote(admin_model_match.group(1)))
             return
@@ -12435,7 +12426,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._sse_send({"event": "error", "message": str(e)})
         self._sse_done()
 
-    # ── Public Olivia ask: POST /api/public/OliviaLegal-ask → SSE (no auth) ───────
+    # ── Public Olivia ask: POST /api/public/olivia-ask → SSE (no auth) ───────
     def _public_Olivia_ask(self):
         _PUBLIC_SYSTEM = (
             "Você é o Agente Olivia — assistente acadêmico e operacional do programa de "
@@ -15799,7 +15790,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
     def _api_get(self, path):
         # Accept both the canonical path and the nginx-stripped variant
-        # (OliviaLegal-gateway proxy_pass removes the /api/olivia/ prefix).
+        # (olivia-gateway proxy_pass removes the /api/olivia/ prefix).
         if path in {"/api/olivia/remote-bus", "/api/olivia/remote-bus", "/remote-bus"}:
             self._remote_bus_get()
             return
@@ -19311,7 +19302,7 @@ Exemplo de formato:
     def _serve_health(self):
         self._json_response({
             "status": "ok",
-            "service": "OliviaLegal",
+            "service": "olivia",
             "llm_configured": bool(DEEPSEEK_API_KEY),
             "correlation_id": self._ensure_correlation_id(),
             "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
@@ -19365,7 +19356,7 @@ Exemplo de formato:
         ok = all(checks.values())
         return {
             "ok": ok,
-            "service": "OliviaLegal",
+            "service": "olivia",
             "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "correlation_id": self._ensure_correlation_id(),
             "checks": checks,
@@ -20255,7 +20246,7 @@ Exemplo de formato:
             return
         try:
             req = urllib.request.Request(target, method="GET", headers={
-                "User-Agent": "OliviaLegal-meshy-proxy/1.0",
+                "User-Agent": "olivia-meshy-proxy/1.0",
                 "Accept": "*/*",
             })
             with urllib.request.urlopen(req, timeout=60) as upstream:
