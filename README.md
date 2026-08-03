@@ -70,7 +70,9 @@ Runtime-tunable config lives at the root as `ollama-servers.json` (Ollama discov
 | `planning/` | Planning artifacts (`task_plan.md`, `progress.md`, `findings.md`) |
 | `pluggins/craudio` | Git submodule (`craudio-para-adevogados`) |
 
-Runtime-only directories — created locally and gitignored: `.venv/`, `.openclaude-runtime/`, `_shared/`, `uploads/`, `data/`, `outputs/`, `context_snapshots/`, `_improvements/`, `project-index.json`.
+Runtime-only directories — created locally and gitignored: `.venv/`, `_shared/`, `uploads/`, `data/`, `outputs/`, `context_snapshots/`, `_improvements/`, `project-index.json`.
+
+> Note: `.openclaude-runtime/` (the vendored OpenClaude CLI runtime) is tracked in the repo, not runtime-only.
 
 ## Indexing (Qdrant / project index)
 

@@ -3217,8 +3217,8 @@ async function _bundleImportLoadPlugins() {
   if (list) list.innerHTML = '<div class="plugin-list-loading"><i class="fas fa-spinner fa-spin"></i> Descobrindo plugins...</div>';
 
   const knownPaths = [
-    '/Users/dev/_sell/olivia/pluggins/craudio',
-    '/Users/dev/_sell/olivia/pluggins/olisidian',
+    'pluggins/craudio',
+    'pluggins/olisidian',
   ];
 
   const plugins = [];

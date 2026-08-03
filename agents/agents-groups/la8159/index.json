@@ -5,7 +5,7 @@
   "label": "LA8159 Grounding",
   "icon": "🛬",
   "color": "#7d4ea8",
-  "description": "LA8159 incident legal grounding library: 33 jurisdiction specialists (BR / CL / INT) plus 6 META cross-framework agents, backed by 59 cached source files. Promoted from /Users/dev/LA8159-incident/0_agents.",
+  "description": "LA8159 incident legal grounding library: 33 jurisdiction specialists (BR / CL / INT) plus 6 META cross-framework agents, backed by 59 cached source files. Promoted from the LA8159 incident upstream library.",
   "language_focus": [
     "pt-BR",
     "es-CL",
@@ -16,7 +16,7 @@
     "project_id": "la8159-grounding",
     "project_name": "LA8159 Legal Grounding Library",
     "workspace": "LA8159-incident",
-    "upstream_path": "/Users/dev/LA8159-incident/0_agents"
+    "upstream_path": "LA8159-incident/0_agents"
   },
   "orchestrator": {
     "slug": "la8159-orchestrator",
@@ -892,7 +892,7 @@
   "knowledge": {
     "folder": "agents-groups/la8159/knowledge",
     "manifest": "agents-groups/la8159/knowledge/manifest.json",
-    "description": "Source caches (BR/CL/INT statutes), personnel dossiers, and routing tables imported from /Users/dev/LA8159-incident/0_agents."
+    "description": "Source caches (BR/CL/INT statutes), personnel dossiers, and routing tables imported from the LA8159 incident upstream library (<upstream>)."
   },
   "memory_defaults": {
     "qdrant_collections": [

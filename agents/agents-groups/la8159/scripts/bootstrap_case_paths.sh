@@ -70,8 +70,18 @@ safe_link() {
   fi
 
   mkdir -p "$(dirname "$target_path")"
+
+  # Prefer workspace-relative links so tracked symlinks stay portable
+  # (PATHS.md: never output absolute local filesystem paths).
+  local link_target="$source_path"
+  if [[ "$source_path" == "$WORKSPACE_ROOT/"* ]] && command -v python3 >/dev/null 2>&1; then
+    local target_dir
+    target_dir="$(cd "$(dirname "$target_path")" && pwd)"
+    link_target="$(python3 -c 'import os,sys;print(os.path.relpath(sys.argv[1],sys.argv[2]))' "$source_path" "$target_dir")"
+  fi
+
   rm -f "$target_path"
-  ln -s "$source_path" "$target_path"
+  ln -s "$link_target" "$target_path"
   echo "[ok] $label -> $target_path"
 }
 

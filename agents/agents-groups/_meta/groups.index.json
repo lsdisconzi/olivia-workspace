@@ -50,7 +50,7 @@
       "label": "LA8159 Grounding",
       "icon": "🛬",
       "color": "#7d4ea8",
-      "description": "LA8159 incident legal grounding library: 33 jurisdiction specialists (BR / CL / INT) plus 6 META cross-framework agents, backed by 59 cached source files. Promoted from /Users/dev/LA8159-incident/0_agents.",
+      "description": "LA8159 incident legal grounding library: 33 jurisdiction specialists (BR / CL / INT) plus 6 META cross-framework agents, backed by 59 cached source files. Promoted from the LA8159 incident upstream library.",
       "manifest": "agents/agents-groups/la8159/index.json"
     }
   ]

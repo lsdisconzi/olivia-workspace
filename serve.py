@@ -534,15 +534,48 @@ def _agent_unrestricted_tools(agent_id: str) -> bool:
     return _coerce_bool(config.get("unrestricted_tools"))
 
 
+def _expand_mcp_config_tokens(servers: dict) -> dict:
+    """Expand {PROJECT_ROOT}/${PROJECT_ROOT} tokens in MCP server args.
+
+    The tracked .mcp-bridge-config.json stays portable; tokens are replaced
+    with the runtime project root before the config reaches an MCP client.
+    """
+    root = str(Olivia_ROOT)
+    out: dict[str, object] = {}
+    for name, spec in servers.items():
+        if not isinstance(spec, dict):
+            out[name] = spec
+            continue
+        copy = dict(spec)
+        args = copy.get("args")
+        if isinstance(args, list):
+            copy["args"] = [
+                str(a).replace("${PROJECT_ROOT}", root).replace("{PROJECT_ROOT}", root)
+                for a in args
+            ]
+        out[name] = copy
+    return out
+
+
+def _mcp_config_has_tokens(servers: dict) -> bool:
+    for spec in servers.values():
+        if not isinstance(spec, dict):
+            continue
+        args = spec.get("args")
+        if not isinstance(args, list):
+            continue
+        for arg in args:
+            if "${PROJECT_ROOT}" in str(arg) or "{PROJECT_ROOT}" in str(arg):
+                return True
+    return False
+
+
 def _resolve_mcp_config_path(enabled_servers: list[str] | None = None) -> str | None:
     cfg_path = _ensure_mcp_config()
     if not cfg_path:
         return None
 
     selected = _normalize_mcp_server_names(enabled_servers or [])
-    if not selected:
-        return cfg_path
-
     try:
         base_cfg = json.loads(Path(cfg_path).read_text(encoding="utf-8"))
     except Exception:
@@ -552,15 +585,24 @@ def _resolve_mcp_config_path(enabled_servers: list[str] | None = None) -> str | 
     if not isinstance(servers, dict):
         return cfg_path
 
-    filtered = {name: servers[name] for name in selected if name in servers}
-    if not filtered:
+    if selected:
+        filtered = {name: servers[name] for name in selected if name in servers}
+        if not filtered:
+            return cfg_path
+    else:
+        filtered = dict(servers)
+
+    # Tracked config is portable; only materialize a runtime copy when a
+    # token needs expanding or a server subset is requested.
+    if not selected and not _mcp_config_has_tokens(filtered):
         return cfg_path
 
-    key = hashlib.sha1(",".join(selected).encode("utf-8", errors="ignore")).hexdigest()[:12]
+    expanded = _expand_mcp_config_tokens(filtered)
+    key = hashlib.sha1(",".join(selected or sorted(expanded)).encode("utf-8", errors="ignore")).hexdigest()[:12]
     runtime_dir = Olivia_ROOT / "uploads" / "runtime"
     runtime_dir.mkdir(parents=True, exist_ok=True)
     runtime_path = runtime_dir / f"mcp-config-{key}.json"
-    runtime_path.write_text(json.dumps({"mcpServers": filtered}, indent=2), encoding="utf-8")
+    runtime_path.write_text(json.dumps({"mcpServers": expanded}, indent=2), encoding="utf-8")
     return str(runtime_path)
 
 
@@ -17429,15 +17471,15 @@ Exemplo de formato:
             self._json_response({"error": str(e)}, 500)
 
     def _plugins_api_discover(self):
-        """GET /api/plugins/discover?path=<absolute_path> — discover a plugin."""
+        """GET /api/plugins/discover?path=<repo-relative-or-absolute> — discover a plugin."""
         parsed = urllib.parse.urlparse(self.path)
         qs = urllib.parse.parse_qs(parsed.query)
         plugin_path = str((qs.get("path") or [""])[0] or "").strip()
         if not plugin_path:
             self._json_response({"error": "path query parameter is required"}, 400)
             return
-        p = Path(plugin_path).expanduser().resolve()
-        if not p.is_dir():
+        p = _resolve_project_path(plugin_path)
+        if p is None or not p.is_dir():
             self._json_response({"error": f"Path is not a directory: {plugin_path}"}, 400)
             return
         try:
@@ -17495,8 +17537,8 @@ Exemplo de formato:
             if not plugin_path:
                 self._json_response({"error": "path is required"}, 400)
                 return
-            p = Path(plugin_path).expanduser().resolve()
-            if not p.is_dir():
+            p = _resolve_project_path(plugin_path)
+            if p is None or not p.is_dir():
                 self._json_response({"error": f"Path is not a directory: {plugin_path}"}, 400)
                 return
             skills_found = 0

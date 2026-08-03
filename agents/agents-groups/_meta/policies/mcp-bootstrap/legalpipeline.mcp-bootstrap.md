@@ -1,7 +1,7 @@
 # LegalPipeline MCP Bootstrap Instructions
 
-Project root: /Users/leandrodisconzi/2026/legalpipeline-main
-MCP folder: /Users/leandrodisconzi/2026/legalpipeline-main/mcp
+Project root: <project>/legalpipeline
+MCP folder: <project>/legalpipeline/mcp
 
 Use the standard in docs/MCP_BOOTSTRAP_STANDARD.md.
 

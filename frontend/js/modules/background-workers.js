@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════
    BACKGROUND WORKERS MODULE - Header badge and slide-over panel
-   Reference: /Users/dev/_sell/olivia/uploads/projects/agents---ui/writer/Background Agent Visibility _ UI Feature Specification.md
+   Reference: uploads/projects/agents---ui/writer/Background Agent Visibility _ UI Feature Specification.md
    ═══════════════════════════════════════════════════════════════════ */
 
 // ─── State ──────────────────────────────────────────────────────────────────

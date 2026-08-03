@@ -54,8 +54,8 @@ This is a Chilean fact pattern \u2014 Brazilian disciplinary frameworks do not r
   - PDI office observations (Letter of Onboarding shown)
   - CCTV footage (referenced)
 - Linked agent specs:
-  - [/Users/dev/LA8159-incident/0_agents/CL/CL_CPCL/agent.md](../../../CL/CL_CPCL/agent.md)
-  - [/Users/dev/LA8159-incident/0_agents/CL/CL_DGAC_L16752/agent.md](../../../CL/CL_DGAC_L16752/agent.md)
-  - [/Users/dev/LA8159-incident/0_agents/INT/INT_ICAO_AN17/agent.md](../../../INT/INT_ICAO_AN17/agent.md)
+  - [CL/CL_CPCL/agent.md](../../../CL/CL_CPCL/agent.md)
+  - [CL/CL_DGAC_L16752/agent.md](../../../CL/CL_DGAC_L16752/agent.md)
+  - [INT/INT_ICAO_AN17/agent.md](../../../INT/INT_ICAO_AN17/agent.md)
 - Last updated: 2026-04-28 (initial seed)
 - Maintainer note: First non-Brazilian dossier in registry. Anchors the Chilean side of LA8159 personnel mapping. Liderman corporate-level liability (ISO 18788 private security; Chilean private-security regulations) to be expanded in next pass.

@@ -46,7 +46,7 @@ Per `branch_documentation/ABEAR_CONTENT_REPORT.md` §"Sandra Assali — Victim �
   - `branch_documentation/OAB-Etics-Report.md` §1.2 (OAB-SP + Special Commission + SENTRA)
   - `branch_documentation/aviation_ethics_institutional_governance.md` §1.6 (ABRAPAVAA founding 1997, TAM Flight 402)
 - Linked agent specs:
-  - [/Users/dev/LA8159-incident/0_agents/BR/BR_OAB_DISCIPLINA/agent.md](../../../BR/BR_OAB_DISCIPLINA/agent.md)
-  - [/Users/dev/LA8159-incident/0_agents/BR/BR_ABRAPAVAA_SENTRA/agent.md](../../../BR/BR_ABRAPAVAA_SENTRA/agent.md)
+  - [BR/BR_OAB_DISCIPLINA/agent.md](../../../BR/BR_OAB_DISCIPLINA/agent.md)
+  - [BR/BR_ABRAPAVAA_SENTRA/agent.md](../../../BR/BR_ABRAPAVAA_SENTRA/agent.md)
 - Last updated: 2026-04-28 (OAB inscription confirmed via OAB Special Commission on Aeronautical Law membership)
 - Maintainer note: Enhanced ethical duties under OAB Commission framework now grounded; BR_OAB_DISCIPLINA upgraded from ⏳ conditional to primary.

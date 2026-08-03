@@ -13,7 +13,7 @@ You own the **integrity of the la8159 group**: manifest, agent files, source cac
 
 - `agents-groups/la8159/index.json` — group manifest
 - `agents-groups/la8159/agents/**` — all `*.agent.md` specs
-- `agents-groups/la8159/source/**` — upstream library mirror (treat as the source of truth; resync from `/Users/dev/LA8159-incident/0_agents/` when upstream changes)
+- `agents-groups/la8159/source/**` — upstream library mirror (treat as the source of truth; resync from `<upstream>` when upstream changes)
 - `agents-groups/la8159/policies/**` — tool permissions and handoff routes
 - `agents-groups/la8159/knowledge/**` — knowledge manifest pointing at source caches
 
@@ -31,8 +31,8 @@ You own the **integrity of the la8159 group**: manifest, agent files, source cac
 ## Sync workflow (upstream → group)
 
 ```bash
-rsync -a --delete --exclude .git /Users/dev/LA8159-incident/0_agents/ \
-  /Users/dev/agents/agents-groups/la8159/source/
+rsync -a --delete --exclude .git <upstream>/ \
+  agents-groups/la8159/source/
 python3 agents-groups/la8159/.build-index.py   # regenerates agents/ + manifest scaffolding
 node generated/validate-pack.mjs
 ```

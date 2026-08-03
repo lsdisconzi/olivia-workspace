@@ -11,16 +11,10 @@
 
   var MI_JSON_PATHS = [
     './data/master_index/master_index.json',
-    '/home/disconzi1986_gmail_com/olivia/data/master_index/master_index.json',
-    './data/master_index/master_index.json',
-    '/home/disconzi1986_gmail_com/olivia/data/master_index/master_index.json',
   ];
 
   var MI_MD_PATHS = [
     './data/master_index/master_index.md',
-    '/home/disconzi1986_gmail_com/olivia/data/master_index/master_index.md',
-    './data/master_index/master_index.md',
-    '/home/disconzi1986_gmail_com/olivia/data/master_index/master_index.md',
   ];
 
   var MI_STATUS_API = '/api/master-index/status';
@@ -34,8 +28,8 @@
     index: null,
     markdown: '',
     sourcePaths: {
-      json: '/home/disconzi1986_gmail_com/olivia/data/master_index/master_index.json',
-      md: '/home/disconzi1986_gmail_com/olivia/data/master_index/master_index.md',
+      json: './data/master_index/master_index.json',
+      md: './data/master_index/master_index.md',
     },
     selected: { type: 'overview' }, // overview | markdown | doc
     filterCourt: 'all',

@@ -43,8 +43,8 @@ If Fortini is OAB-inscrita (probable, given co-authorship of a published profess
   - `branch_documentation/OAB-Etics-Report.md` §1.3 (full identification)
   - `branch_documentation/aviation_ethics_institutional_governance.md` §1.6, line 71 (downstream coordination)
 - Linked agent specs:
-  - [/Users/dev/LA8159-incident/0_agents/BR/BR_OAB_DISCIPLINA/agent.md](../../../BR/BR_OAB_DISCIPLINA/agent.md)
-  - [/Users/dev/LA8159-incident/0_agents/meta/META_Personnel_Accountability/agent.md](../../../meta/META_Personnel_Accountability/agent.md)
-  - [/Users/dev/LA8159-incident/0_agents/meta/META_Institutional_Silence/agent.md](../../../meta/META_Institutional_Silence/agent.md)
+  - [BR/BR_OAB_DISCIPLINA/agent.md](../../../BR/BR_OAB_DISCIPLINA/agent.md)
+  - [meta/META_Personnel_Accountability/agent.md](../../../meta/META_Personnel_Accountability/agent.md)
+  - [meta/META_Institutional_Silence/agent.md](../../../meta/META_Institutional_Silence/agent.md)
 - Last updated: 2026-04-28 (initial seed)
 - Maintainer note: v0.1 stub. Confirms META_Personnel_Accountability hierarchy claim (Prado → Fortini downstream coordination). OAB inscription verification is the priority for next pass.

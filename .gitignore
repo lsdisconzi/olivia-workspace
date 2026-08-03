@@ -41,3 +41,9 @@ _shared/
 content/archived_projects/
 config/client_secret_*.json
 
+# Generated i18n report
+translations/mapping_report.json
+
+# Generated project index (config/index-project/)
+config/index-project/
+

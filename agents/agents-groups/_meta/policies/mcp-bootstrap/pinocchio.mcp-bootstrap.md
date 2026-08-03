@@ -1,7 +1,7 @@
 # Pinocchio MCP Bootstrap Instructions
 
-Project root: /Users/leandrodisconzi/2026/pinocchio-main
-MCP folder: /Users/leandrodisconzi/2026/pinocchio-main/mcp
+Project root: <project>/pinocchio
+MCP folder: <project>/pinocchio/mcp
 
 Use the standard in docs/MCP_BOOTSTRAP_STANDARD.md.
 

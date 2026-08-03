@@ -249,7 +249,8 @@ async function generatePdfs() {
 
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: '/Users/leandrodisconzi/.cache/puppeteer/chrome/mac_arm-151.0.7922.47/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing',
+    // Use puppeteer's bundled Chrome by default; override with PUPPETEER_EXECUTABLE_PATH.
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
 

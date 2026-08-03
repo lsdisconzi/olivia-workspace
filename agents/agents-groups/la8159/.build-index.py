@@ -10,7 +10,7 @@ SRC = ROOT / "source"
 AGENTS_DIR = ROOT / "agents"
 AGENTS_DIR.mkdir(exist_ok=True)
 
-REPO_ROOT = ROOT.parent.parent  # /Users/dev/agents
+REPO_ROOT = ROOT.parent.parent  # <project root>
 BUNDLES_DIR = REPO_ROOT / "generated" / "la8159" / "bundles"
 BUNDLES_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -263,7 +263,7 @@ def main():
         '## Owned scope\n\n'
         '- `agents-groups/la8159/index.json` — group manifest\n'
         '- `agents-groups/la8159/agents/**` — all `*.agent.md` specs\n'
-        '- `agents-groups/la8159/source/**` — upstream library mirror (treat as the source of truth; resync from `/Users/dev/LA8159-incident/0_agents/` when upstream changes)\n'
+        '- `agents-groups/la8159/source/**` — upstream library mirror (treat as the source of truth; resync from `<upstream>` when upstream changes)\n'
         '- `agents-groups/la8159/policies/**` — tool permissions and handoff routes\n'
         '- `agents-groups/la8159/knowledge/**` — knowledge manifest pointing at source caches\n\n'
         '## Operating rules\n\n'
@@ -274,8 +274,8 @@ def main():
         '5. **Cross-group handoffs require user confirmation** before writing into another group folder.\n\n'
         '## Sync workflow (upstream → group)\n\n'
         '```bash\n'
-        'rsync -a --delete --exclude .git /Users/dev/LA8159-incident/0_agents/ \\\n'
-        '  /Users/dev/agents/agents-groups/la8159/source/\n'
+        'rsync -a --delete --exclude .git <upstream>/ \\\n'
+        '  agents-groups/la8159/source/\n'
         'python3 agents-groups/la8159/.build-index.py   # regenerates agents/ + manifest scaffolding\n'
         'node generated/validate-pack.mjs\n'
         '```\n\n'
@@ -324,7 +324,7 @@ def main():
                 "version": "1.0.0",
                 "format": "BundleImportRequest",
                 "notes": [
-                    "Generated from agents-groups/la8159/source (mirror of /Users/dev/LA8159-incident/0_agents).",
+                    "Generated from agents-groups/la8159/source (mirror of <upstream>).",
                     "Each file can be POSTed to /api/agents/import/bundle.",
                 ],
                 "files": bundle_files,
@@ -342,14 +342,14 @@ def main():
         "label": "LA8159 Grounding",
         "icon": "🛬",
         "color": "#7d4ea8",
-        "description": "LA8159 incident legal grounding library: 33 jurisdiction specialists (BR / CL / INT) plus 6 META cross-framework agents, backed by 59 cached source files. Promoted from /Users/dev/LA8159-incident/0_agents.",
+        "description": "LA8159 incident legal grounding library: 33 jurisdiction specialists (BR / CL / INT) plus 6 META cross-framework agents, backed by 59 cached source files. Promoted from the LA8159 incident upstream library.",
         "language_focus": ["pt-BR", "es-CL", "en"],
         "source": {
             "manifest": "agents-groups/la8159/source/INDEX.md",
             "project_id": "la8159-grounding",
             "project_name": "LA8159 Legal Grounding Library",
             "workspace": "LA8159-incident",
-            "upstream_path": "/Users/dev/LA8159-incident/0_agents",
+            "upstream_path": "LA8159-incident/0_agents",
         },
         "orchestrator": {
             "slug": orchestrator_slug,
@@ -365,7 +365,7 @@ def main():
         "knowledge": {
             "folder": "agents-groups/la8159/knowledge",
             "manifest": "agents-groups/la8159/knowledge/manifest.json",
-            "description": "Source caches (BR/CL/INT statutes), personnel dossiers, and routing tables imported from /Users/dev/LA8159-incident/0_agents.",
+            "description": "Source caches (BR/CL/INT statutes), personnel dossiers, and routing tables imported from the upstream mirror (LA8159-incident/0_agents).",
         },
         "memory_defaults": {
             "qdrant_collections": ["la8159_grounding"],

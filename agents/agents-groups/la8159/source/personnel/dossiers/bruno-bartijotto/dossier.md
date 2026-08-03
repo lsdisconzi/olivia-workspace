@@ -45,7 +45,7 @@ The documented complaint cycle in §3.1 establishes a 4-month period of total si
   - `branch_documentation/aviation_ethics_institutional_governance.md` §1.1 (LATAM personnel directory)
   - `branch_documentation/OAB-Etics-Report.md` §1.1, §3.1 (LinkedIn cycle Jul 31 – Nov 24, 2025)
 - Linked agent specs:
-  - [/Users/dev/LA8159-incident/0_agents/BR/BR_OAB_DISCIPLINA/agent.md](../../../BR/BR_OAB_DISCIPLINA/agent.md)
-  - [/Users/dev/LA8159-incident/0_agents/BR/BR_ABEAR_PLUS/agent.md](../../../BR/BR_ABEAR_PLUS/agent.md)
+  - [BR/BR_OAB_DISCIPLINA/agent.md](../../../BR/BR_OAB_DISCIPLINA/agent.md)
+  - [BR/BR_ABEAR_PLUS/agent.md](../../../BR/BR_ABEAR_PLUS/agent.md)
 - Last updated: 2026-04-28 (enriched from OAB-Etics-Report.md attachment)
 - Maintainer note: v0.1 stub; OAB number / seccional and specific Art. 34 incisos / CED articles still pending verification report grounding.
