@@ -1,123 +1,99 @@
 # Olivia — Workspace Runtime
 
-Olivia is the central assistant and agent communication layer for this workspace runtime.
+Olivia is the central assistant and agent-communication layer for the Olivia legal workspace: UI/chat orchestration, an MCP bridge that exposes VPS endpoints as tools, case-context injection into every run, and planning continuity.
 
-## What Olivia centralizes
-
-- UI and conversation entrypoint: `/olivia/`
-- Agent/assistant chat and SSE orchestration
-- MCP bridge exposure of VPS API endpoints as tools
-- Case context injection into every run
-- Planning continuity via `olivia/task_plan.md`, `findings.md`, `progress.md`
-
-## Start
+## Quick start
 
 ```bash
-cd 
-cp .env.example .env
-# edit .env with VPS_GATEWAY_URL and API keys
-./start-all.sh
+# Start the full stack: venv setup, deps, serve.py on :3229, Electron desktop
+./runtime/start-all.sh
+
+# Useful flags (see runtime/start-all.sh for the full list)
+./runtime/start-all.sh --smoke            # run smoke checks after boot
+./runtime/start-all.sh --ollama           # auto-start Ollama
+./runtime/start-all.sh --index            # rebuild project-index.json
+./runtime/start-all.sh --reindex-qdrant   # rebuild + push Qdrant indexes
 ```
 
-Start with dynamic function-sync watcher enabled:
+Primary URLs:
+
+- UI: `http://localhost:3229/olivia/`
+- API root: `http://localhost:3229/api`
+- Health: `http://localhost:3229/api/health`
+
+To stop: `./runtime/stop-all.sh`.
+
+## Prerequisites
+
+- Node.js ≥ 20 (OpenClaude CLI runtime)
+- Python ≥ 3.10
+- Optional: Ollama (`--ollama`), Qdrant (`--reindex-qdrant`)
+
+## Authentication
+
+First access redirects to `GET /olivia/login`. If no users exist yet, the first login creates the initial admin account. After login users land at `GET /olivia/mode-select` to choose `Workspace`, `Mobile Remote`, or `Agent Mobile`. Logout: `GET /olivia/logout`.
+
+## Configuration
+
+Create a `.env` file at the project root. `runtime/config_doctor.py` validates it at startup (`--skip-config-doctor` bypasses). Key variables:
+
+| Group | Variables |
+|-------|-----------|
+| Model providers | `ANTHROPIC_API_KEY`, `OPENROUTER_API_KEY`, `OPENROUTER_BASE_URL`, `DEEPSEEK_API_KEY`, `FIREWORKS_API_KEY`, `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL` |
+| VPS gateway / MCP | `VPS_GATEWAY_URL`, `MCP_SERVER_RUNPOD_API`, `RUNPOD_API_KEY` |
+| Shared data | `SHARED_DIR`, `AWARENESS_SHARED_DIR`, `LEGAL_ROUTER_ROOT`, `AWARENESS_LAW_LIBRARY_ROOT`, `AWARENESS_VIOLATIONS_ROOT` |
+| Ollama | `OLLAMA_HOST`, `OLLAMA_MODEL_URLS`, `OLLAMA_KEEP_ALIVE`, `OLLAMA_NUM_CTX` |
+| Qdrant | `QDRANT_URL`, `QDRANT_API_KEY` |
+| Admin | `ADMIN_USERNAME`, `ADMIN_PASSWORD` |
+
+Runtime-tunable config lives at the root as `ollama-servers.json` (Ollama discovery endpoints) and `models-overrides.json` (model/base-url overrides).
+
+## Repository layout
+
+| Path | Purpose |
+|------|---------|
+| `serve.py` | Main HTTP server (`http.server`), serves the UI from `frontend/` under `/olivia/*`, plus `/api` endpoints, SSE chat, and the MCP bridge |
+| `runtime/` | Launcher scripts (`start-all.sh`, `stop-all.sh`) and `config_doctor.py` |
+| `src/` | Python packages — MCP bridge, orchestration contracts, runtime config |
+| `frontend/` | Web UI served at `/olivia/` (no build step) |
+| `desktop/` | Electron desktop wrapper |
+| `agents/` | Agent groups, skills, and knowledge |
+| `context/` | System prompt (`context/sys_prompt.txt`) |
+| `context_manager/` | Context, history, and RAG management |
+| `scripts/` | Tooling: indexing, i18n, smoke tests |
+| `config/` | Runtime config, `requirements.txt`, index-project, ecosystem metadata |
+| `tests/` | Pytest suite |
+| `translations/` | Generated i18n dictionaries |
+| `generated/` | Generated bundles, schemas, policies |
+| `content/` | Case/project content (runtime data) |
+| `deploy/` | Deployment scripts (`deploy/vps/`) |
+| `planning/` | Planning artifacts (`task_plan.md`, `progress.md`, `findings.md`) |
+| `pluggins/craudio` | Git submodule (`craudio-para-adevogados`) |
+
+Runtime-only directories — created locally and gitignored: `.venv/`, `.openclaude-runtime/`, `_shared/`, `uploads/`, `data/`, `outputs/`, `context_snapshots/`, `_improvements/`, `project-index.json`.
+
+## Indexing (Qdrant / project index)
+
+- `scripts/index_project.py` — builds `project-index.json`; `--push-to-qdrant` also indexes dev code into Qdrant.
+- `scripts/index_uploads_to_qdrant.py` — indexes uploaded documents (Tier 2/3).
+- `scripts/fetch_ecosystem.py` — refreshes `config/ecosystem_metadata.json`.
+
+## i18n
+
+`scripts/i18n_mapper.py` is the unified extractor; regenerate `translations/` with:
 
 ```bash
-./start-all.sh --watch-functions --watch-interval 20
+python scripts/i18n_mapper.py --project-root . --output-dir translations
 ```
 
-Primary URL:
-
-- `http://localhost:3229/olivia/`
-
-## Canonical Olivia Data Roots
-
-To keep Olivia agent paths stable across backup/cleanup/redeploy cycles, set canonical roots in `.env`:
+## Tests
 
 ```bash
-Olivia_SHARED_DIR=/Users/dev/services/_shared
-Olivia_LEGAL_ROUTER_ROOT=/Users/dev/agents/agents-groups/olivia/source
-Olivia_VIOLATIONS_ROOT=/Users/dev/services/_shared/cases/10_violations_json/validated
-Olivia_LAW_LIBRARY_ROOT=/Users/dev/services/_shared/cases/law_md
+./.venv/bin/python -m pytest tests/
 ```
-
-When these are set, Olivia resolves Olivia data from shared/group-owned paths first and only falls back to legacy paths when needed.
-
-## Authentication Flow
-
-Olivia now supports first-access onboarding with session login.
-
-1. First access redirects to `GET /olivia/login`.
-2. If no users exist yet, the first login submission creates the initial admin account.
-3. Login requires Google-style email format (`gmail.com`) and password.
-4. After login, users land at `GET /olivia/mode-select` to choose:
-   - `Workspace` (`/olivia/olivia.html`)
-   - `Mobile Remote` (`/olivia/mobile.html`)
-   - `Agent Mobile` (`/olivia/agent`)
-5. Logout endpoint: `GET /olivia/logout`.
-
-Admin routes:
-
-- Activity dashboard: `GET /olivia/admin/activity`
-- Activity API: `GET /olivia/admin/activity/api`
-- Users UI: `GET /olivia/admin/users-ui`
-- Users API: `GET/POST /olivia/admin/users`
-- User management actions:
-  - `DELETE /olivia/admin/users/<email>`
-  - `POST /olivia/admin/users/<email>/reset-password`
-  - `PATCH /olivia/admin/users/<email>/assistant-permissions`
-
-## Core flow
-
-1. User interacts with Olivia UI.
-2. `serve.py` enriches prompts with workspace context and planning files.
-3. OpenClaude executes with MCP tools from `src/mcp/vps_bridge.py`.
-4. MCP bridge calls VPS gateway endpoints (`VPS_GATEWAY_URL`) for services.
 
 ## Notes
 
-- Olivia reads function catalogs dynamically from the latest generated report in `reports/ecosystem/agent_functions`.
-- Shaders agent operational contract and implementation guide: `docs/shaders-agent-system.md`.
-- Historical shader upgrade notes are archived in `docs/shaders-archive/`.
-- Live reload endpoint: `serve.py` exposes `POST /api/functions/reload`.
-- Automatic sync watcher: `automation/watch_functions_sync.py`
-  - Watches `reports/api-audit` for new `api_endpoint_catalog_*.json`
-  - Regenerates catalogs via local `endpoint_mapper.py`
-  - Calls Olivia reload endpoint so API Explorer reflects updates immediately
-- Manual one-shot sync:
-
-```bash
-cd OliviaLegal
-./.venv/bin/python automation/watch_functions_sync.py --once
-```
-
-- To pick up changed project docs for context, restart OliviaLegal.
-- Endpoint catalog updates no longer require restarting OliviaLegal.
-- If using a remote VPS gateway, ensure `VPS_GATEWAY_URL` points to the externally reachable gateway base URL.
-
-## API Explorer Map Navigation
-
-`API Explorer > Mapa` now supports map mode switching to improve navigation for large inventories:
-
-- `Mapa: Funções`: renders the local function-catalog flow (`/api/functions/diagram`).
-- `Mapa: VPS MCP`: renders a Mermaid topology grouped from live VPS MCP tools.
-- `Mapa: Funções + VPS MCP`: renders a combined high-level view of local functions and VPS MCP runtime.
-
-The selected map mode is persisted in browser local storage (`OliviaLegal.aex.diagram.mode`).
-
-### Planned Layout Style Selector
-
-To further improve readability at scale, the next UI step is a second selector for layout style:
-
-- `Flow`: balanced graph for quick exploration.
-- `Service-centric`: emphasize server/service nodes and their tool families.
-- `Endpoint-centric`: emphasize route groups and endpoint density.
-
-This is intended to sit alongside the existing map mode selector in the same `Mapa` toolbar.
-
-### How To Verify In UI
-
-1. Open `http://localhost:3229/olivia/olivia` and go to `API Explorer > Mapa`.
-2. Change `aexMapMode` across all options and confirm the diagram updates for each mode.
-3. Click `Recarregar` and confirm the currently selected mode remains active.
-4. Refresh the page and confirm mode persistence from `OliviaLegal.aex.diagram.mode`.
-5. For large inventories, validate that the map remains navigable with pan/scroll in each mode.
+- MCP tools are exposed via `src/mcp/`; the VPS gateway endpoints are bridged as tools for OpenClaude.
+- `start-all.sh` installs the prebuilt `@gitlawb/openclaude` CLI into `.openclaude-runtime/` when no local `openclaude/` source build exists.
+- Function-catalog reload endpoint: `POST /api/functions/reload`.
