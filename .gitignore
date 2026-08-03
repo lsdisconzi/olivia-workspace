@@ -30,6 +30,8 @@ Thumbs.db
 
 # Project-specific large/temp dirs
 _improvements/
+context_snapshots/
+project-index.json
 uploads/
 outputs/
 data/
