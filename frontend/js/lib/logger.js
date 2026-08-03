@@ -107,7 +107,8 @@
   function _isNoisyPath(path) {
     var p = String(path || '');
     if (/^blob:/i.test(p)) return true;
-    if (/\/api\/olivialegal\/remote-bus(?:\?|$)/i.test(p)) return true;
+    if (/\/api\/olivia\/remote-bus(?:\?|$)/i.test(p)) return true;
+    if (/\/api\/agents\/background\/status(?:\?|$)/i.test(p)) return true;
     return false;
   }
 
@@ -321,6 +322,7 @@
   });
   window.LA8159 = runtimeNamespace;
   window.Olivia = runtimeNamespace;
+  window.OliviaLegal = runtimeNamespace;
 
   /* ── Boot banner ─────────────────────────────────────────────────── */
   if (cfg.enabled) {

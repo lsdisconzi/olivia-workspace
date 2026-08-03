@@ -140,6 +140,7 @@ let _s3 = {
   sceneConfig: null,      // last-loaded 3D scene config
   stats: { triangles: 0, meshes: 0, fps: 0, _fpsFrames: 0, _fpsLast: 0 },
   onModelLoaded: null,    // callback
+  _webglFailed: false,    // track if WebGL init failed to prevent retry spam
   // ── Selection (for targeted controls) ─────────────────────────
   selectedName: null,     // null = main model, else the sh3dExtra_*/sh3dPrim_* name
   selectionBox: null,     // THREE.BoxHelper currently drawn
@@ -153,6 +154,15 @@ function _initRenderer() {
   const canvas = document.getElementById('sh3dCanvas');
   if (!canvas) return false;
   if (_s3.renderer) return true; // already initialised
+  if (_s3._webglFailed) return false; // WebGL already failed, don't retry
+
+  // Ensure canvas has valid dimensions before creating WebGL context
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  if (w < 4 || h < 4) {
+    console.warn('[scene3d] Canvas has no valid dimensions yet (w=' + w + ', h=' + h + '), deferring renderer init');
+    return false;
+  }
 
   _s3.canvas = canvas;
   _s3.clock = new THREE.Clock();
@@ -755,22 +765,26 @@ function _syncSettingsUI() {
 
 /** Activate 3D mode — initialises renderer, shows canvas */
 window.sh3dActivate = function () {
+  // First ensure canvas is visible so it gets dimensions
+  const canvas = document.getElementById('sh3dCanvas');
+  if (canvas) canvas.style.display = 'block';
+  const svgEl = document.getElementById('shPreviewSVG');
+  if (svgEl) svgEl.style.display = 'none';
+  const fxEl = document.getElementById('shPreviewFxLayer');
+  if (fxEl) fxEl.style.display = 'none';
+
+  // Force a reflow to ensure canvas has dimensions
+  if (canvas) canvas.offsetHeight;
+
   if (!_initRenderer()) {
     _s3.active = false;
     console.warn('[scene3d] Cannot activate 3D — WebGL unavailable');
     return;
   }
   _s3.active = true;
-  const canvas = document.getElementById('sh3dCanvas');
-  const svgEl = document.getElementById('shPreviewSVG');
-  const fxEl = document.getElementById('shPreviewFxLayer');
   const hudEl = document.getElementById('sh3dHud');
   const ctrl2dEl = document.getElementById('sh3dCtrl2D');
   const ctrl3dEl = document.getElementById('sh3dCtrl3D');
-
-  if (canvas) canvas.style.display = 'block';
-  if (svgEl) svgEl.style.display = 'none';
-  if (fxEl) fxEl.style.display = 'none';
   if (hudEl) hudEl.style.display = 'flex';
   if (ctrl2dEl) ctrl2dEl.style.display = 'none';
   if (ctrl3dEl) ctrl3dEl.style.display = 'flex';

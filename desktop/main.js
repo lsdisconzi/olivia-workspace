@@ -25,12 +25,11 @@ if (_isHeadlessContainer) {
   app.disableHardwareAcceleration();
 } else {
   // Desktop with a display: keep the NATIVE GPU backend (Metal on macOS,
-  // GL on Linux/X11) so WebGL works through the normal driver path. Do NOT
-  // force `--use-angle=swiftshader` — on macOS that overrides Metal with a
-  // software backend that Electron does not reliably ship, which DISABLES
-  // WebGL instead of enabling it. We only (a) allow Chromium to fall back to
-  // software WebGL when no GPU is present, and (b) ignore any GPU blocklist.
-  app.commandLine.appendSwitch('enable-unsafe-swiftshader');
+  // GL on Linux/X11) so WebGL works through the normal driver path.
+  // Do not force a software ANGLE/SwiftShader backend, because that can
+  // disable the real WebGL pipeline instead of enabling it. We only allow
+  // Chromium to fall back to software WebGL when the GPU is absent and
+  // ignore any GPU blocklist.
   app.commandLine.appendSwitch('ignore-gpu-blocklist');
 }
 

@@ -10,6 +10,7 @@ const _RUNTIME_NAMESPACE = (() => {
   const merged = Object.assign({}, la, ol);
   window.LA8159 = merged;
   window.Olivia = merged;
+  window.OliviaLegal = merged;
   return merged;
 })();
 

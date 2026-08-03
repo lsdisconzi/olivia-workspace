@@ -716,7 +716,21 @@ function _mmdAttachToolbar(container) {
   }, 50);
 }
 
-// ─── Panel UI with new configuration controls ─────────────────────
+// ─── Sidebar collapse / expand ─────────────────────────────────────
+function _mmdSetSidebarCollapsed(collapsed) {
+  const sidebar = document.getElementById('mermaidSidebar');
+  const expandBtn = document.getElementById('mermaidSidebarExpandBtn');
+  if (!sidebar) return;
+  sidebar.classList.toggle('mermaid-sidebar-collapsed', collapsed);
+  if (expandBtn) expandBtn.classList.toggle('mermaid-sidebar-expand-visible', collapsed);
+  window._mmdSidebarCollapsed = collapsed;
+  // CodeMirror needs a nudge to redraw once its container becomes visible/resized again
+  if (!collapsed && window._mermaidCodeMirror) {
+    setTimeout(() => window._mermaidCodeMirror.refresh(), 200);
+  }
+}
+
+// ─── Panel UI with side‑panel layout + configuration controls ────
 function _mmdLoadPanel() {
   const panel = document.getElementById('mermaidPanel');
   if (!panel) { console.warn('[Mermaid] Panel container #mermaidPanel not found.'); return; }
@@ -732,62 +746,85 @@ function _mmdLoadPanel() {
 
   panel.innerHTML = `
     <div class="mermaid-panel">
-      <div class="mermaid-toolbar">
-        ${cmAvailable
-          ? '<div id="mermaidEditorContainer" class="mermaid-editor-cm"></div>'
-          : `<textarea id="mermaidSource" class="mermaid-editor" placeholder="Digite o código Mermaid aqui…" spellcheck="false">${escapeHtml(initialSource)}</textarea>`}
-      </div>
-      <div class="mermaid-config-row">
-        <div class="mermaid-config-group">
-          <label title="Direção do diagrama"><i class="fas fa-arrows-alt"></i></label>
-          <select id="mermaidDirectionSelect">
-            <option value="TD" selected>↓ Top-Down (TD)</option>
-            <option value="LR">→ Left-Right (LR)</option>
-            <option value="RL">← Right-Left (RL)</option>
-            <option value="BT">↑ Bottom-Top (BT)</option>
-          </select>
+      <aside class="mermaid-sidebar" id="mermaidSidebar">
+        <div class="mermaid-sidebar-header">
+          <div class="mermaid-sidebar-title"><i class="fas fa-code"></i> Código</div>
+          <div class="mermaid-sidebar-header-actions">
+            <button id="mermaidExampleBtn" title="Exemplos"><i class="fas fa-list"></i></button>
+            <button id="mermaidSidebarCollapseBtn" class="mermaid-sidebar-collapse-btn" title="Ocultar painel de código"><i class="fas fa-angles-left"></i></button>
+          </div>
+          <div class="mermaid-example-dropdown" id="mermaidExampleDropdown" style="display:none;">
+            <button data-example="flow">Fluxograma</button>
+            <button data-example="seq">Sequência</button>
+            <button data-example="class">Classes</button>
+            <button data-example="state">Estado</button>
+            <button data-example="gantt">Gantt</button>
+          </div>
         </div>
-        <div class="mermaid-config-group">
-          <label title="Tema"><i class="fas fa-palette"></i></label>
-          <select id="mermaidThemeSelect">
-            <option value="base">Base</option>
-            <option value="default">Default</option>
-            <option value="neutral">Neutral</option>
-            <option value="dark">Dark</option>
-            <option value="forest">Forest</option>
-          </select>
+        <div class="mermaid-sidebar-body">
+          <div class="mermaid-toolbar">
+            ${cmAvailable
+              ? '<div id="mermaidEditorContainer" class="mermaid-editor-cm"></div>'
+              : `<textarea id="mermaidSource" class="mermaid-editor" placeholder="Digite o código Mermaid aqui…" spellcheck="false">${escapeHtml(initialSource)}</textarea>`}
+          </div>
+          <div class="mermaid-actions">
+            <button id="mermaidRenderBtn" class="btn btn-primary"><i class="fas fa-play"></i> Renderizar</button>
+            <button id="mermaidClearBtn" class="btn btn-sm"><i class="fas fa-eraser"></i> Limpar</button>
+            <button id="mermaidCopySourceBtn" class="btn btn-sm"><i class="fas fa-copy"></i> Copiar código</button>
+          </div>
+          <div class="mermaid-settings" id="mermaidSettings">
+            <button type="button" class="mermaid-settings-toggle" id="mermaidSettingsToggle">
+              <i class="fas fa-sliders"></i> Aparência do diagrama
+              <i class="fas fa-chevron-down mermaid-settings-chevron"></i>
+            </button>
+            <div class="mermaid-settings-body mermaid-config-row">
+              <div class="mermaid-config-group">
+                <label title="Direção do diagrama"><i class="fas fa-arrows-alt"></i></label>
+                <select id="mermaidDirectionSelect">
+                  <option value="TD" selected>↓ Top-Down (TD)</option>
+                  <option value="LR">→ Left-Right (LR)</option>
+                  <option value="RL">← Right-Left (RL)</option>
+                  <option value="BT">↑ Bottom-Top (BT)</option>
+                </select>
+              </div>
+              <div class="mermaid-config-group">
+                <label title="Tema"><i class="fas fa-palette"></i></label>
+                <select id="mermaidThemeSelect">
+                  <option value="base">Base</option>
+                  <option value="default">Default</option>
+                  <option value="neutral">Neutral</option>
+                  <option value="dark">Dark</option>
+                  <option value="forest">Forest</option>
+                </select>
+              </div>
+              <div class="mermaid-config-group">
+                <label title="Fonte"><i class="fas fa-font"></i></label>
+                <select id="mermaidFontFamilySelect">
+                  <option value="inherit">Padrão do sistema</option>
+                  <option value="Arial, Helvetica, sans-serif">Arial / Helvetica</option>
+                  <option value="'Courier New', Courier, monospace">Courier New</option>
+                  <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                  <option value="'Georgia', serif">Georgia</option>
+                  <option value="'Verdana', Geneva, sans-serif">Verdana</option>
+                </select>
+              </div>
+              <div class="mermaid-config-group">
+                <label title="Tamanho da fonte (px)"><i class="fas fa-text-height"></i></label>
+                <input type="number" id="mermaidFontSizeInput" value="16" min="8" max="40" step="1">
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="mermaid-config-group">
-          <label title="Fonte"><i class="fas fa-font"></i></label>
-          <select id="mermaidFontFamilySelect">
-            <option value="inherit">Padrão do sistema</option>
-            <option value="Arial, Helvetica, sans-serif">Arial / Helvetica</option>
-            <option value="'Courier New', Courier, monospace">Courier New</option>
-            <option value="'Times New Roman', Times, serif">Times New Roman</option>
-            <option value="'Georgia', serif">Georgia</option>
-            <option value="'Verdana', Geneva, sans-serif">Verdana</option>
-          </select>
+      </aside>
+
+      <button id="mermaidSidebarExpandBtn" class="mermaid-sidebar-expand-btn" title="Mostrar painel de código">
+        <i class="fas fa-code"></i> Código
+      </button>
+
+      <div class="mermaid-canvas">
+        <div id="mermaidPreview" class="mermaid-preview">
+          <div style="color:var(--gray);padding:20px;text-align:center;">Digite ou cole o código Mermaid para visualizar o diagrama.</div>
         </div>
-        <div class="mermaid-config-group">
-          <label title="Tamanho da fonte (px)"><i class="fas fa-text-height"></i></label>
-          <input type="number" id="mermaidFontSizeInput" value="16" min="8" max="40" step="1" style="width:60px;">
-        </div>
-      </div>
-      <div class="mermaid-actions">
-        <button id="mermaidRenderBtn" class="btn btn-primary"><i class="fas fa-play"></i> Renderizar</button>
-        <button id="mermaidClearBtn" class="btn btn-sm"><i class="fas fa-eraser"></i> Limpar</button>
-        <button id="mermaidCopySourceBtn" class="btn btn-sm"><i class="fas fa-copy"></i> Copiar código</button>
-        <button id="mermaidExampleBtn" class="btn btn-sm"><i class="fas fa-list"></i> Exemplos</button>
-        <div class="mermaid-example-dropdown" id="mermaidExampleDropdown" style="display:none;">
-          <button data-example="flow">Fluxograma</button>
-          <button data-example="seq">Sequência</button>
-          <button data-example="class">Classes</button>
-          <button data-example="state">Estado</button>
-          <button data-example="gantt">Gantt</button>
-        </div>
-      </div>
-      <div id="mermaidPreview" class="mermaid-preview">
-        <div style="color:var(--gray);padding:20px;text-align:center;">Digite ou cole o código Mermaid para visualizar o diagrama.</div>
       </div>
     </div>
   `;
@@ -856,7 +893,7 @@ function _mmdLoadPanel() {
     } catch (err) { /* fallback ignored */ }
   });
 
-  // Example dropdown
+  // Example dropdown (now lives in the sidebar header)
   const exampleBtn = document.getElementById('mermaidExampleBtn');
   const exampleDropdown = document.getElementById('mermaidExampleDropdown');
   exampleBtn.addEventListener('click', e => {
@@ -930,6 +967,17 @@ function _mmdLoadPanel() {
     window._fontSizeTimer = setTimeout(updateConfigAndRerender, 600);
   });
 
+  // Collapsible "Aparência do diagrama" settings section (closed by default to save space)
+  const settingsBox = document.getElementById('mermaidSettings');
+  document.getElementById('mermaidSettingsToggle').addEventListener('click', () => {
+    settingsBox.classList.toggle('mermaid-settings-open');
+  });
+
+  // Sidebar collapse / expand (gives the canvas more room, mirrors mermaidchart.com)
+  document.getElementById('mermaidSidebarCollapseBtn').addEventListener('click', () => _mmdSetSidebarCollapsed(true));
+  document.getElementById('mermaidSidebarExpandBtn').addEventListener('click', () => _mmdSetSidebarCollapsed(false));
+  _mmdSetSidebarCollapsed(false);
+
   // Live preview
   let debounceTimer = null;
   bindSourceChange(() => {
@@ -973,6 +1021,7 @@ window._mmdOpenFullView = _mmdOpenFullView;
 window._exportMermaidPng = _mmdExportPng;
 window._exportMermaidSvg = _mmdExportSvg;
 window._copyMermaidSvgCode = _mmdCopySvgCode;
+window._mmdSetSidebarCollapsed = _mmdSetSidebarCollapsed;
 window.mermaidShowView = _mmdShowView;
 window.mermaidHideView = _mmdHideView;
 

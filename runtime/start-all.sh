@@ -407,12 +407,18 @@ if [[ -f "$DESKTOP_DIR/package.json" ]]; then
     fi
   fi
 
-  # Launch Electron with flags needed for headless / container environments.
+  # Launch Electron with flags needed for desktop and headless/container runs.
   # --no-sandbox: required when running as root or without kernel sandbox support
-  # --disable-gpu: avoids GPU process crashes on headless servers
+  # --disable-gpu / --disable-software-rasterizer: only for true headless
+  #   container launches where the GPU process is unsafe; desktop sessions
+  #   must keep the native GPU/WebGL path enabled for Three.js scenes.
   # --disable-dev-shm-usage: prevents /dev/shm exhaustion in containers
-  # --ozone-platform=x11: forces X11 backend (avoids Wayland crashes under xvfb)
-  ELECTRON_FLAGS="--no-sandbox --disable-gpu --disable-dev-shm-usage --disable-software-rasterizer --disable-features=dbus --ozone-platform=x11"
+  # --ozone-platform=x11: forces X11 backend for Linux headless runs
+  if [[ "$(uname -s)" == "Linux" && -z "${DISPLAY:-}" && -z "${WAYLAND_DISPLAY:-}" ]]; then
+    ELECTRON_FLAGS="--no-sandbox --disable-gpu --disable-dev-shm-usage --disable-software-rasterizer --disable-features=dbus --ozone-platform=x11"
+  else
+    ELECTRON_FLAGS="--no-sandbox --disable-dev-shm-usage --disable-features=dbus"
+  fi
 
   if [[ $BUILD_ELECTRON -eq 1 && -n "$ELECTRON_APP_BIN" ]]; then
     # Launch the packaged app directly; pass the port via the macOS/Linux URL

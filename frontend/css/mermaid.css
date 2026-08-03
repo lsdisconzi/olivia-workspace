@@ -1,34 +1,40 @@
-/* ── FULL MAIN-AREA VIEW (sidebar tab) ─────────────────────────────── */
+/* ============================================================================
+   Mermaid — Diagram editor inside Olivia Workspace.
+   Uses workspace CSS variables.
+   ============================================================================ */
+
+/* ── Full‑main‑area view (sidebar tab) ───────────────────────────────── */
 .mermaid-view {
   display: none;
   flex: 1;
   min-height: 0;
   flex-direction: column;
   overflow: hidden;
-  background: var(--bg, #0c0c0c);
+  background: var(--bg);
 }
 .mermaid-view.active {
   display: flex;
 }
+
 .mermaid-view-header {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
-  background: var(--bg-card, #141210);
-  border-bottom: 1px solid var(--border, #2e2b27);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 .mermaid-view-header h1 {
   margin: 0;
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-primary, #d4cfc8);
+  color: var(--white);
 }
 .mermaid-view-status {
   margin-left: auto;
   font-size: 12px;
-  color: var(--gray, #9a958d);
+  color: var(--gray);
 }
 .mermaid-view #mermaidPanel {
   flex: 1;
@@ -36,110 +42,219 @@
   min-height: 0;
 }
 
-/* ── MERMAID PANEL ─────────────────────────────────────────────────── */
+/* ── Panel layout ────────────────────────────────────────────────────── */
 #mermaidPanel {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--bg-secondary, #1e1c1a);
-  padding: 12px;
+  background: var(--bg);
+  padding: 0;
   box-sizing: border-box;
   overflow: hidden;
 }
 
+/* Panel is now a side‑by‑side split: code sidebar (left) + canvas (right),
+   instead of the old top‑editor / bottom‑preview stack. */
 .mermaid-panel {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: stretch;
   height: 100%;
-  gap: 12px;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
 }
 
+/* ── Sidebar (code + settings + actions) ────────────────────────────── */
+.mermaid-sidebar {
+  flex: 0 0 340px;
+  width: 340px;
+  max-width: 45vw;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: width 0.18s ease, flex-basis 0.18s ease, opacity 0.15s ease, border-color 0.18s ease;
+}
+.mermaid-sidebar.mermaid-sidebar-collapsed {
+  flex-basis: 0;
+  width: 0;
+  min-width: 0;
+  border-right-color: transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mermaid-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.mermaid-sidebar-header .mermaid-sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+}
+.mermaid-sidebar-header .mermaid-sidebar-title i {
+  color: var(--amber);
+  font-size: 13px;
+}
+.mermaid-sidebar-header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.mermaid-sidebar-header-actions button {
+  background: transparent;
+  border: none;
+  color: var(--gray);
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: background 0.15s, color 0.15s;
+}
+.mermaid-sidebar-header-actions button:hover {
+  background: var(--bg-code);
+  color: var(--white);
+}
+.mermaid-sidebar-collapse-btn {
+  font-size: 14px !important;
+}
+
+.mermaid-sidebar-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Floating tab to re‑open a collapsed sidebar */
+.mermaid-sidebar-expand-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 6;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--white);
+  border-radius: var(--r);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+  transition: background 0.15s, border-color 0.15s;
+}
+.mermaid-sidebar-expand-btn.mermaid-sidebar-expand-visible {
+  display: flex;
+}
+.mermaid-sidebar-expand-btn:hover {
+  background: var(--bg-code);
+  border-color: var(--amber);
+}
+.mermaid-sidebar-expand-btn i {
+  color: var(--amber);
+  font-size: 12px;
+}
+
+/* ── Toolbar (now just wraps the editor inside the sidebar) ─────────── */
 .mermaid-toolbar {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 0;
 }
 
+/* ── Editor (textarea fallback) ─────────────────────────────────────── */
 .mermaid-editor {
-  flex: 1 1 100%;
-  min-height: 200px;
-  font-family: 'JetBrains Mono', monospace;
+  flex: 1 1 auto;
+  min-height: 220px;
+  font-family: var(--mono), monospace;
   font-size: 13px;
-  background: var(--bg-input, #111);
-  color: var(--text-primary, #d4cfc8);
-  border: 1px solid var(--border, #2e2b27);
-  border-radius: 8px;
+  background: var(--bg);
+  color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
   padding: 10px 12px;
   resize: vertical;
   tab-size: 2;
   line-height: 1.5;
-  transition: border-color .15s;
+  transition: border-color 0.15s;
 }
 .mermaid-editor:focus {
   outline: none;
-  border-color: var(--amber, #c4622d);
+  border-color: var(--amber);
 }
 
-/* CodeMirror editor (used when available; the textarea fallback uses
-   .mermaid-editor above) */
+/* CodeMirror editor (when available) */
 .mermaid-editor-cm {
-  flex: 1 1 100%;
-  min-height: 200px;
-  border: 1px solid var(--border, #2e2b27);
-  border-radius: 8px;
+  flex: 1 1 auto;
+  min-height: 220px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
   overflow: hidden;
 }
 .mermaid-editor-cm .CodeMirror {
-  height: 220px;
+  height: 100%;
+  min-height: 220px;
   max-height: 45vh;
-  background: var(--bg-input, #111);
-  color: var(--text-primary, #d4cfc8);
-  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--mono), 'SF Mono', Monaco, monospace;
   font-size: 13px;
   line-height: 1.5;
 }
 .mermaid-editor-cm .CodeMirror-gutters {
-  background: var(--bg-secondary, #1e1c1a);
-  border-right: 1px solid var(--border, #2e2b27);
+  background: var(--bg-code);
+  border-right: 1px solid var(--border);
 }
 .mermaid-editor-cm .CodeMirror-linenumber {
-  color: var(--gray, #9a958d);
+  color: var(--gray);
 }
 .mermaid-editor-cm .CodeMirror-cursor {
-  border-left-color: var(--amber, #c4622d);
+  border-left-color: var(--amber);
 }
 .mermaid-editor-cm .CodeMirror-selected {
-  background: rgba(196, 98, 45, .22);
+  background: rgba(196, 98, 45, 0.22);
 }
 
+/* ── Action buttons ─────────────────────────────────────────────────── */
 .mermaid-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
-  width: 100%;
+  flex-shrink: 0;
 }
-.mermaid-actions .btn {
-  padding: 6px 14px;
-  font-size: 13px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--bg-surface, #2a2825);
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: background .15s;
-}
-.mermaid-actions .btn:hover {
-  background: var(--bg-hover, #3a3835);
-}
+/* Keep custom primary/sm buttons; base .btn inherits from workspace global */
 .mermaid-actions .btn-primary {
-  background: var(--amber, #c4622d);
-  border-color: var(--amber, #c4622d);
+  background: var(--amber);
+  border-color: var(--amber);
   color: #fff;
 }
 .mermaid-actions .btn-primary:hover {
-  background: #d4733e;
+  background: #d4733e;               /* slightly lighter amber */
   border-color: #d4733e;
 }
 .mermaid-actions .btn-sm {
@@ -147,43 +262,100 @@
   font-size: 12px;
 }
 
+/* ── Examples dropdown ─────────────────────────────────────────────── */
 .mermaid-example-dropdown {
   display: none;
   flex-direction: column;
-  background: var(--bg-surface);
+  background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--r);
   padding: 4px 0;
   position: absolute;
   z-index: 10;
   min-width: 140px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 .mermaid-example-dropdown button {
   background: transparent;
   border: none;
   padding: 6px 14px;
   text-align: left;
-  color: var(--text-primary);
+  color: var(--white);
   cursor: pointer;
   font-size: 13px;
 }
 .mermaid-example-dropdown button:hover {
-  background: var(--bg-hover);
+  background: var(--bg-code);
 }
 
+/* ── Settings (direction / theme / font) — collapsible section ──────── */
+.mermaid-settings {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.mermaid-settings-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg);
+  border: none;
+  color: var(--gray);
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+}
+.mermaid-settings-toggle:hover {
+  color: var(--white);
+}
+.mermaid-settings-toggle i.mermaid-settings-chevron {
+  margin-left: auto;
+  transition: transform 0.15s;
+  font-size: 11px;
+}
+.mermaid-settings.mermaid-settings-open .mermaid-settings-chevron {
+  transform: rotate(180deg);
+}
+.mermaid-settings-body {
+  display: none;
+  padding: 10px;
+  border-top: 1px solid var(--border);
+}
+.mermaid-settings.mermaid-settings-open .mermaid-settings-body {
+  display: flex;
+}
+
+/* ── Canvas (diagram area) ───────────────────────────────────────────── */
+.mermaid-canvas {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--bg);
+}
+
+/* ── Preview area ──────────────────────────────────────────────────── */
 .mermaid-preview {
   flex: 1;
-  min-height: 300px;
-  background: var(--bg-surface, #1e1c1a);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  min-height: 0;
+  background: var(--bg-card);
+  border: none;
   overflow: auto;
-  padding: 16px;
+  padding: 24px;
   position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  background-image:
+    radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: -11px -11px;
 }
 .mermaid-preview svg {
   max-width: 100%;
@@ -191,37 +363,31 @@
   background: transparent;
 }
 
-
-/* ── Rendered diagram container (export controls) ────────────────
-   .mermaid-container / .mermaid-body / .mermaid-body svg layout lives in
-   output-panel.css (flex box + resizable scroll viewport). Keep resize:both /
-   inline-block out of here so the container never shows a raw browser
-   resize corner or overrides the bounded .mermaid-body layout.
-────────────────────────────────────────────────────────────────── */
+/* Overlay expand / export buttons */
 .mermaid-expand-btn,
 .mermaid-export-btn {
   position: absolute;
   top: 8px;
   z-index: 5;
-  background: rgba(0,0,0,.6);
+  background: rgba(0, 0, 0, 0.6);
   color: #ddd;
   border: none;
   border-radius: 4px;
   padding: 4px 8px;
   font-size: 14px;
   cursor: pointer;
-  opacity: 1;
-  transition: background .15s;
+  transition: background 0.15s;
   backdrop-filter: blur(4px);
 }
 .mermaid-expand-btn { right: 46px; }
-.mermaid-export-btn { right: 8px; }
+.mermaid-export-btn  { right: 8px; }
 .mermaid-expand-btn:hover,
 .mermaid-export-btn:hover {
-  background: rgba(0,0,0,.8);
+  background: rgba(0, 0, 0, 0.8);
   color: #fff;
 }
 
+/* Export menu popup */
 .mermaid-export-wrap {
   position: relative;
   display: inline-block;
@@ -229,12 +395,12 @@
 .mermaid-export-menu {
   display: none;
   position: fixed;
-  background: var(--bg-surface, #2a2825);
+  background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--r);
   padding: 4px 0;
   min-width: 140px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
 .mermaid-export-menu.mermaid-export-open {
@@ -245,13 +411,13 @@
   border: none;
   padding: 6px 14px;
   text-align: left;
-  color: var(--text-primary);
+  color: var(--white);
   cursor: pointer;
   font-size: 13px;
   width: 100%;
 }
 .mermaid-export-menu button:hover {
-  background: var(--bg-hover, #3a3835);
+  background: var(--bg-code);
 }
 .mermaid-export-menu button i {
   margin-right: 8px;
@@ -259,11 +425,11 @@
   text-align: center;
 }
 
-/* ── Full‑screen overlay ────────────────────────────────────────── */
+/* ── Full‑screen overlay ───────────────────────────────────────────── */
 .mermaid-fullscreen-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.85);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
   z-index: 9999;
   display: flex;
@@ -277,8 +443,8 @@
   align-items: center;
   padding: 8px 12px;
   color: #eee;
-  background: rgba(0,0,0,.4);
-  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: var(--r);
   margin-bottom: 12px;
   flex-shrink: 0;
 }
@@ -292,24 +458,24 @@
   gap: 8px;
 }
 .mermaid-fullscreen-controls button {
-  background: rgba(255,255,255,.12);
+  background: rgba(255, 255, 255, 0.12);
   border: none;
   color: #eee;
   border-radius: 4px;
   padding: 4px 10px;
   cursor: pointer;
   font-size: 14px;
-  transition: background .15s;
+  transition: background 0.15s;
 }
 .mermaid-fullscreen-controls button:hover {
-  background: rgba(255,255,255,.25);
+  background: rgba(255, 255, 255, 0.25);
 }
 .mermaid-close-btn {
-  background: rgba(220,80,80,.5) !important;
+  background: rgba(220, 80, 80, 0.5) !important;
   margin-left: 8px;
 }
 .mermaid-close-btn:hover {
-  background: rgba(220,80,80,.8) !important;
+  background: rgba(220, 80, 80, 0.8) !important;
 }
 .mermaid-zoom-pct {
   font-size: 13px;
@@ -328,8 +494,8 @@
   max-width: 100%;
   max-height: 100%;
   overflow: auto;
-  background: rgba(255,255,255,.04);
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--r);
   padding: 16px;
   box-sizing: border-box;
 }
@@ -337,7 +503,7 @@
   display: block;
   max-width: none;
   height: auto;
-  background: var(--bg-card); /* keeps light-on-dark diagram text legible */
+  background: var(--bg-card);
 }
 .mermaid-fullscreen-diagram iframe {
   border: none;
@@ -345,12 +511,12 @@
   height: 80vh;
 }
 
-/* ── Error states ────────────────────────────────────────────────── */
+/* ── Error states ──────────────────────────────────────────────────── */
 .mermaid-error-banner {
-  background: rgba(200,60,60,.15);
-  color: var(--red, #d45d5d);
+  background: rgba(200, 60, 60, 0.15);
+  color: var(--red);
   padding: 10px 14px;
-  border-radius: 6px;
+  border-radius: var(--r);
   margin-bottom: 8px;
   display: flex;
   align-items: center;
@@ -361,9 +527,9 @@
   font-size: 18px;
 }
 .mermaid-error-source {
-  background: rgba(0,0,0,.3);
+  background: rgba(0, 0, 0, 0.3);
   padding: 12px;
-  border-radius: 6px;
+  border-radius: var(--r);
   overflow: auto;
   max-height: 300px;
   font-size: 12px;
@@ -372,97 +538,74 @@
 }
 .mermaid-error-source code {
   background: transparent !important;
-  color: var(--text-primary) !important;
+  color: var(--white) !important;
 }
 
-/* ── NEW CONFIGURATION ROW (direction, theme, font) ─────────────── */
+/* ── Configuration row (direction, theme, font) ──────────────────── */
 .mermaid-config-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
-  padding: 6px 0;
+  width: 100%;
 }
-
 .mermaid-config-group {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: var(--text-primary, #d4cfc8);
+  color: var(--white);
 }
-
 .mermaid-config-group label {
   display: flex;
   align-items: center;
   cursor: help;
-  color: var(--gray, #9a958d);
+  color: var(--gray);
 }
-
 .mermaid-config-group select,
 .mermaid-config-group input[type="number"] {
-  background: var(--bg-input, #111);
-  color: var(--text-primary, #d4cfc8);
-  border: 1px solid var(--border, #2e2b27);
-  border-radius: 4px;
+  background: var(--bg);
+  color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
   padding: 4px 8px;
   font-size: 13px;
   height: 30px;
 }
-
 .mermaid-config-group select {
-  min-width: 140px;
+  min-width: 0;
+  flex: 1;
 }
-
 .mermaid-config-group input[type="number"] {
   width: 60px;
   text-align: center;
 }
 
-/* Keep the existing action buttons layout */
-.mermaid-actions {
-  justify-content: flex-start;
+/* In the narrow sidebar, let settings stack two‑per‑row instead of one long row */
+.mermaid-settings-body.mermaid-config-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
-.mermaid-config-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  padding: 6px 0;
-}
-
-.mermaid-config-group {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--text-primary, #d4cfc8);
-}
-
-.mermaid-config-group label {
-  display: flex;
-  align-items: center;
-  cursor: help;
-  color: var(--gray, #9a958d);
-}
-
-.mermaid-config-group select,
-.mermaid-config-group input[type="number"] {
-  background: var(--bg-input, #111);
-  color: var(--text-primary, #d4cfc8);
-  border: 1px solid var(--border, #2e2b27);
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 13px;
-  height: 30px;
-}
-
-.mermaid-config-group select {
-  min-width: 140px;
-}
-
-.mermaid-config-group input[type="number"] {
-  width: 60px;
-  text-align: center;
+/* ── Responsive: collapse the split into a stack on narrow viewports ── */
+@media (max-width: 760px) {
+  .mermaid-panel {
+    flex-direction: column;
+  }
+  .mermaid-sidebar {
+    flex-basis: auto;
+    width: 100% !important;
+    max-width: none;
+    max-height: 46vh;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .mermaid-sidebar.mermaid-sidebar-collapsed {
+    max-height: 0;
+    border-bottom-color: transparent;
+  }
+  .mermaid-sidebar-expand-btn {
+    top: auto;
+    bottom: 12px;
+  }
 }
