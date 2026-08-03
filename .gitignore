@@ -18,6 +18,7 @@ node_modules/
 .env
 .env.*
 openclaude/
+.pytest_cache/*
 
 # IDE/Editor configs
 .vscode/
@@ -28,6 +29,7 @@ openclaude/
 Thumbs.db
 
 # Project-specific large/temp dirs
+_improvements/
 uploads/
 outputs/
 data/
