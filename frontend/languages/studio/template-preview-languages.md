@@ -18,7 +18,7 @@
 |--------|-------|
 | Title | `Olivia — Sua história começa` |
 | H1 | `Sua história <em>começa aqui</em>` |
-| Paragraph | `Este é o Olivia Studio — uma tela viva onde você descreve um mundo e ele ganha vida. Edite o código à esquerda e veja o resultado se transformar instantaneamente à direita.` |
+| Paragraph | `Este é a Olivia Studio — uma tela viva onde você descreve um mundo e ele ganha vida. Edite o código à esquerda e veja o resultado se transformar instantaneamente à direita.` |
 | Placeholder | `Descreva uma cena, uma história, um mundo…` |
 | Aria‑label | `Descreva uma cena, uma história, um mundo` |
 | Send button aria‑label | `Enviar` |

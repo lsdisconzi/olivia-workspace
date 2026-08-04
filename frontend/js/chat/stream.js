@@ -3366,6 +3366,10 @@ function onToolCall(toolName, args) {
   const runId = currentRunId;
   const log = document.getElementById(`log-${runId}`);
   if (!log) return;
+
+  if (String(toolName || '').trim().toLowerCase() === 'browser_use' && typeof window.handleBrowserUseTool === 'function') {
+    window.handleBrowserUseTool(args);
+  }
   if (runId) {
     const count = Number(_runToolCallCount.get(runId) || 0);
     _runToolCallCount.set(runId, count + 1);

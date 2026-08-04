@@ -842,7 +842,7 @@
   "structured_analysis_via_apibridgeintelligence_and_": "Análise estruturada via /api/bridge/intelligence/* e /case-state/*",
   "studio.default.title": "Olivia — Sua história começa aqui",
   "studio.default.h1": "Sua história <em>começa aqui</em>",
-  "studio.default.desc": "Este é o Olivia Studio — uma tela viva onde você descreve um mundo e ele ganha vida. Edite o código à esquerda, veja o resultado se transformar instantaneamente à direita.",
+  "studio.default.desc": "Este é a Olivia Studio — uma tela viva onde você descreve um mundo e ele ganha vida. Edite o código à esquerda, veja o resultado se transformar instantaneamente à direita.",
   "studio.default.placeholder": "Descreva uma cena, uma história, um mundo…",
   "studio.default.ariaInput": "Descreva uma cena, uma história, um mundo",
   "studio.default.ariaSend": "Enviar",

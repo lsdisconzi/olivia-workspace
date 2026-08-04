@@ -13,37 +13,27 @@
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* ── REVAMPED DARK MODE PALETTE ── */
     :root {
-      --creme: #FAF7F2;
-      --creme-2: #F3EEE6;
-      --creme-3: #EDE5D8;
-      --branco: #FFFFFF;
-      --borda: #E2D9CC;
-      --borda-hi: #D0C4B4;
-      --tinta: #1A1814;
-      --tinta-2: #2C2820;
-      --escuro: #3D3830;
-      --medio: #6B6358;
-      --claro: #9A9088;
-      --palha: #C8B99A;
-      --verde: #1C4532;
-      --verde-2: #2D6A4F;
-      --verde-3: #40916C;
-      --verde-lo: rgba(28, 69, 50, 0.08);
-      --terra: #C4622D;
-      --terra-2: #E07840;
-      --terra-lo: rgba(196, 98, 45, 0.10);
-      --ouro: #B8860B;
-      --ouro-lo: rgba(184, 134, 11, 0.10);
-      --azul: #4A7C9B;
-      --azul-lo: rgba(74, 124, 155, 0.08);
+      --bg-app: #0a0a0c;
+      --bg-card: #151517;
+      --bg-card-secondary: #1c1c1e;
+      --border-subtle: #2c2c2e;
+      --border-high: #3a3a3c;
+      --text-primary: #ffffff;
+      --text-secondary: #a1a1a6;
+      --text-tertiary: #6e6e73;
+      --accent: #64b5f6;
+      --accent-bg: rgba(100, 181, 246, 0.1);
+      --danger: #ff453a;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --max-w: 820px;
       --display: 'Fraunces', Georgia, serif;
       --corpo: 'Plus Jakarta Sans', system-ui, sans-serif;
       --mono: 'JetBrains Mono', monospace;
-      --r: 10px;
-      --r-sm: 6px;
-      --sombra: 0 2px 16px rgba(26, 24, 20, 0.08);
-      --max: 820px;
+      --shadow: 0 -8px 40px rgba(0, 0, 0, 0.6);
     }
 
     *,
@@ -51,624 +41,319 @@
     *::after {
       margin: 0;
       padding: 0;
-      box-sizing: border-box
-    }
-
-    html,
-    body {
-      height: 100%;
-      scroll-behavior: smooth
+      box-sizing: border-box;
     }
 
     body {
-      background: var(--creme);
-      color: var(--tinta);
+      height: 100dvh;
+      background: var(--bg-app);
+      color: var(--text-primary);
       font-family: var(--corpo);
-      -webkit-font-smoothing: antialiased
-    }
-
-    .topo {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      height: 52px;
-      background: var(--branco);
-      border-bottom: 1px solid var(--borda);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-      gap: 16px
-    }
-
-    .marca {
-      display: flex;
-      align-items: baseline;
-      gap: 10px
-    }
-
-    .marca-nome {
-      font-family: var(--display);
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--verde);
-      letter-spacing: -0.01em;
-      text-decoration: none
-    }
-
-    .marca-sub {
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--palha);
-      letter-spacing: 0.08em;
-      text-transform: uppercase
-    }
-
-    .topo-nav {
-      display: flex;
-      align-items: center;
-      gap: 2px
-    }
-
-    .nav-tab {
-      padding: 5px 12px;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--claro);
-      border-radius: 6px;
-      transition: all .15s;
-      white-space: nowrap;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px
-    }
-
-    .nav-tab:hover {
-      color: var(--verde);
-      background: var(--verde-lo)
-    }
-
-    .nav-tab.ativo {
-      color: var(--verde);
-      background: var(--verde-lo);
-      font-weight: 600
-    }
-
-    .topo-direita {
-      display: flex;
-      align-items: center;
-      gap: 10px
-    }
-
-    .tag-versao {
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--claro);
-      padding: 3px 8px;
-      border: 1px solid var(--borda);
-      border-radius: 4px
-    }
-
-    .topo-sair {
-      font-size: 11px;
-      color: var(--claro);
-      text-decoration: none;
-      transition: color .15s
-    }
-
-    .topo-sair:hover {
-      color: var(--terra)
-    }
-
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      cursor: pointer;
-      padding: 6px;
-      background: none;
-      border: none;
-      z-index: 200
-    }
-
-    .hamburger span {
-      display: block;
-      width: 20px;
-      height: 2px;
-      background: var(--tinta);
-      border-radius: 2px;
-      transition: all .25s
-    }
-
-    .hamburger.open span:nth-child(1) {
-      transform: translateY(6px) rotate(45deg)
-    }
-
-    .hamburger.open span:nth-child(2) {
-      opacity: 0
-    }
-
-    .hamburger.open span:nth-child(3) {
-      transform: translateY(-6px) rotate(-45deg)
-    }
-
-    .mobile-drawer {
-      display: none;
-      position: fixed;
-      top: 52px;
-      left: 0;
-      right: 0;
-      background: var(--branco);
-      border-bottom: 1px solid var(--borda);
-      padding: 8px 20px 16px;
-      z-index: 99;
-      flex-direction: column
-    }
-
-    .mobile-drawer.open {
-      display: flex
-    }
-
-    .mobile-drawer a {
-      display: block;
-      padding: 11px 0;
-      font-size: 14px;
-      color: var(--medio);
-      text-decoration: none;
-      border-bottom: 1px solid var(--creme-2)
-    }
-
-    .mobile-drawer a:last-child {
-      border: none
-    }
-
-    .agent-page {
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 52px);
-      max-width: var(--max);
+    }
+
+    /* ── ROOT CONTAINER ── */
+    #app-root {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      max-width: var(--max-w);
       width: 100%;
       margin: 0 auto;
-      padding: 0 24px
+      position: relative;
     }
 
-    .context-bar {
-      display: flex;
-      gap: 6px;
-      padding: 14px 0 10px;
-      flex-shrink: 0;
-      overflow-x: auto;
-      scrollbar-width: none
-    }
-
-    .context-bar::-webkit-scrollbar {
-      display: none
-    }
-
-    .ctx-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 10px;
-      border: 1px solid var(--borda);
-      border-radius: 999px;
-      background: var(--branco);
-      font-size: 10px;
-      font-weight: 500;
-      color: var(--medio);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all .2s;
-      flex-shrink: 0
-    }
-
-    .ctx-chip:hover {
-      border-color: rgba(28, 69, 50, 0.3);
-      color: var(--verde);
-      background: var(--verde-lo)
-    }
-
-    .ctx-chip:active {
-      transform: scale(0.97)
-    }
-
-    .ctx-chip i {
-      font-size: 10px;
-      opacity: .6
-    }
-
-    .chat-shell {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      background: var(--branco);
-      border: 1px solid var(--borda);
-      border-radius: var(--r) var(--r) 0 0;
-      overflow: hidden
-    }
-
-    .chat-head {
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--borda);
+    /* ── SUBTLE HEADER ── */
+    .app-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-shrink: 0
+      padding: 16px 20px 12px;
+      flex-shrink: 0;
     }
-
-    .chat-head-left {
+    .app-header .title {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .app-header .actions {
       display: flex;
-      align-items: center;
-      gap: 8px
+      gap: 8px;
     }
-
-    .chat-head-label {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--claro);
-      letter-spacing: .06em;
-      text-transform: uppercase
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--verde-3);
-      flex-shrink: 0
-    }
-
-    .status-dot.thinking {
-      background: var(--ouro);
-      animation: dotPulse 1.2s infinite
-    }
-
-    @keyframes dotPulse {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: .4
-      }
-    }
-
-    .chat-head-right {
-      display: flex;
-      align-items: center;
-      gap: 4px
-    }
-
-    .chat-head-btn {
+    .app-header .actions button {
       background: none;
       border: none;
-      padding: 5px 7px;
-      color: var(--claro);
+      color: var(--text-tertiary);
+      font-size: 16px;
+      padding: 6px 8px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 11px;
-      transition: color .15s;
-      border-radius: 4px
+      transition: all 0.2s;
+    }
+    .app-header .actions button:hover {
+      background: var(--bg-card-secondary);
+      color: var(--text-secondary);
     }
 
-    .chat-head-btn:hover {
-      color: var(--verde);
-      background: var(--verde-lo)
-    }
-
+    /* ── CHAT LOG ── */
     .chat-log {
       flex: 1;
       overflow-y: auto;
-      padding: 20px 16px;
+      padding: 8px 16px 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       min-height: 0;
-      background: var(--creme)
+    }
+    .chat-log::-webkit-scrollbar {
+      width: 4px;
+    }
+    .chat-log::-webkit-scrollbar-thumb {
+      background: var(--border-subtle);
+      border-radius: 4px;
     }
 
+    /* ── CHAT BUBBLES (Dark Card Aesthetic) ── */
     .chat-bubble {
-      max-width: 85%;
+      max-width: 92%;
       font-size: 14px;
-      line-height: 1.7;
-      color: var(--escuro)
+      line-height: 1.6;
+      color: var(--text-secondary);
     }
-
     .chat-bubble.user {
       align-self: flex-end;
-      background: var(--branco);
-      border: 1px solid var(--borda);
-      border-radius: var(--r) var(--r) 4px var(--r);
-      padding: 10px 14px
+      background: var(--accent);
+      color: #000;
+      border-radius: var(--radius-md) var(--radius-md) 4px var(--radius-md);
+      padding: 10px 14px;
+      font-weight: 500;
     }
-
     .chat-bubble.agent {
       align-self: flex-start;
-      padding: 0
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
     }
 
     .agent-card {
-      background: var(--branco);
-      border: 1px solid var(--borda);
-      border-radius: var(--r);
-      overflow: hidden
+      background: var(--bg-card-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
-
     .agent-card.streaming {
-      border-color: rgba(28, 69, 50, 0.2)
+      border-color: var(--accent);
     }
-
     .agent-card-body {
-      padding: 14px 16px
+      padding: 16px 18px;
     }
-
     .agent-card-body p {
-      margin: 0 0 8px;
+      margin: 0 0 10px;
       font-size: 14px;
-      line-height: 1.7;
-      color: var(--escuro)
+      line-height: 1.6;
+      color: var(--text-secondary);
     }
-
     .agent-card-body p:last-child {
-      margin-bottom: 0
+      margin-bottom: 0;
     }
-
     .agent-card-body strong {
-      color: var(--tinta);
-      font-weight: 600
+      color: var(--text-primary);
+      font-weight: 600;
     }
-
     .agent-card-body a {
-      color: var(--verde-2);
+      color: var(--accent);
       text-decoration: underline;
       text-underline-offset: 2px;
-      word-break: break-word
+      word-break: break-word;
     }
-
-    .agent-card-body a:hover {
-      color: var(--verde)
-    }
-
     .agent-card-body code {
       font-family: var(--mono);
-      font-size: 11px;
-      background: var(--creme-2);
-      padding: 1px 5px;
-      border-radius: 3px;
-      color: var(--verde)
+      font-size: 12px;
+      background: var(--bg-app);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--accent);
+      border: 1px solid var(--border-subtle);
     }
-
     .agent-card-body ul,
     .agent-card-body ol {
-      margin: 6px 0 10px 20px;
-      padding: 0
+      margin: 6px 0 10px 18px;
+      padding: 0;
     }
-
     .agent-card-body li {
       margin: 0 0 4px;
       font-size: 13px;
       line-height: 1.6;
-      color: var(--escuro)
+      color: var(--text-secondary);
     }
-
     .agent-card-body h3 {
       font-family: var(--display);
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
-      color: var(--tinta);
-      margin: 14px 0 6px;
-      line-height: 1.3
+      color: var(--text-primary);
+      margin: 16px 0 8px;
+      line-height: 1.3;
     }
-
-    .agent-card-body h3:first-child {
-      margin-top: 0
-    }
-
     .agent-card-body hr {
       border: none;
-      border-top: 1px solid var(--borda);
-      margin: 12px 0
+      border-top: 1px solid var(--border-subtle);
+      margin: 16px 0;
     }
 
+    /* Action / Details block inside agent card */
     .detail-block {
-      border-top: 1px solid var(--borda)
+      border-top: 1px solid var(--border-subtle);
     }
-
     .detail-block summary {
       padding: 10px 16px;
       font-size: 12px;
       font-weight: 500;
-      color: var(--claro);
+      color: var(--text-tertiary);
       cursor: pointer;
       list-style: none;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all .15s;
-      user-select: none
+      gap: 8px;
+      transition: all 0.15s;
+      user-select: none;
     }
-
     .detail-block summary::-webkit-details-marker {
-      display: none
+      display: none;
     }
-
     .detail-block summary::before {
       content: '';
       width: 5px;
       height: 5px;
-      border-right: 1.5px solid var(--claro);
-      border-bottom: 1.5px solid var(--claro);
+      border-right: 1.5px solid var(--text-tertiary);
+      border-bottom: 1.5px solid var(--text-tertiary);
       transform: rotate(-45deg);
-      transition: transform .2s;
-      flex-shrink: 0
+      transition: transform 0.2s;
+      flex-shrink: 0;
     }
-
     .detail-block[open] summary::before {
-      transform: rotate(45deg)
+      transform: rotate(45deg);
     }
-
     .detail-block summary:hover {
-      background: var(--creme);
-      color: var(--verde)
+      background: var(--bg-app);
+      color: var(--text-secondary);
     }
-
     .detail-block-body {
       padding: 10px 16px 14px;
       font-size: 13px;
-      line-height: 1.65;
-      color: var(--escuro);
-      border-top: 1px solid var(--borda);
-      background: var(--creme)
+      line-height: 1.6;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-app);
+    }
+    .detail-block-body code {
+      background: var(--bg-card-secondary);
     }
 
-    .agent-table-wrap {
-      overflow-x: auto;
-      margin: 8px 0
-    }
-
-    .agent-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px
-    }
-
-    .agent-table th {
-      padding: 7px 10px;
-      text-align: left;
-      font-family: var(--mono);
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: var(--claro);
-      background: var(--creme);
-      border-bottom: 1px solid var(--borda);
-      font-weight: 500
-    }
-
-    .agent-table td {
-      padding: 8px 10px;
-      border-bottom: 1px solid var(--creme-3);
-      color: var(--escuro);
-      vertical-align: top
-    }
-
-    .agent-table tr:last-child td {
-      border-bottom: none
-    }
-
+    /* Action Bar for follow-ups */
     .action-bar {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
-      padding: 10px 16px;
-      border-top: 1px solid var(--borda);
-      background: var(--creme)
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-app);
     }
-
     .action-btn {
-      border: 1px solid var(--borda);
-      background: var(--branco);
-      color: var(--medio);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card-secondary);
+      color: var(--text-secondary);
       border-radius: 999px;
-      padding: 5px 12px;
+      padding: 4px 12px;
       font-family: var(--corpo);
       font-size: 11px;
       font-weight: 500;
       cursor: pointer;
-      transition: all .15s;
+      transition: all 0.15s;
       display: inline-flex;
       align-items: center;
-      gap: 5px
+      gap: 4px;
     }
-
     .action-btn:hover {
-      border-color: rgba(28, 69, 50, 0.3);
-      color: var(--verde);
-      background: var(--verde-lo)
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-bg);
     }
 
-    .action-btn i {
-      font-size: 9px;
-      opacity: .6
-    }
-
+    /* Processing indicator */
     .proc-line {
       align-self: flex-start;
       display: flex;
       align-items: center;
       gap: 10px;
       padding: 6px 0;
-      color: var(--medio);
+      color: var(--text-tertiary);
       font-size: 13px;
-      animation: procIn .25s ease
+      animation: procIn .25s ease;
     }
-
     @keyframes procIn {
       from {
         opacity: 0;
-        transform: translateY(4px)
+        transform: translateY(4px);
       }
-
       to {
         opacity: 1;
-        transform: none
+        transform: none;
       }
     }
-
     .proc-spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--creme-3);
-      border-top-color: var(--verde-3);
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border-subtle);
+      border-top-color: var(--accent);
       border-radius: 50%;
       animation: procSpin 1s linear infinite;
-      flex-shrink: 0
+      flex-shrink: 0;
     }
-
     @keyframes procSpin {
       to {
-        transform: rotate(360deg)
+        transform: rotate(360deg);
       }
     }
-
     .proc-text {
       font-size: 13px;
-      color: var(--medio)
+      color: var(--text-tertiary);
     }
-
     .proc-elapsed {
       font-family: var(--mono);
       font-size: 10px;
-      color: var(--palha);
-      margin-left: 4px
+      color: var(--text-tertiary);
+      margin-left: 4px;
     }
 
+    /* Thought log */
     .thought-log {
       align-self: flex-start;
-      max-width: 85%;
+      max-width: 90%;
       font-size: 12px;
-      margin-top: -4px
+      margin-top: -6px;
+      margin-bottom: 4px;
     }
-
     .thought-toggle {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       font-size: 11px;
-      color: var(--palha);
+      color: var(--text-tertiary);
       cursor: pointer;
       user-select: none;
       padding: 4px 0;
-      transition: color .15s
+      transition: color .15s;
     }
-
     .thought-toggle:hover {
-      color: var(--medio)
+      color: var(--text-secondary);
     }
-
     .thought-toggle::before {
       content: '';
       width: 4px;
@@ -677,311 +362,497 @@
       border-bottom: 1px solid currentColor;
       transform: rotate(-45deg);
       transition: transform .2s;
-      flex-shrink: 0
+      flex-shrink: 0;
     }
-
     .thought-toggle.open::before {
-      transform: rotate(45deg)
+      transform: rotate(45deg);
     }
-
-    .thought-toggle .tt-elapsed {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--palha);
-      margin-left: auto
-    }
-
     .thought-items {
       display: none;
       padding: 6px 0 2px;
       margin-left: 9px;
-      border-left: 1px solid var(--creme-3);
-      padding-left: 12px
+      border-left: 1px solid var(--border-subtle);
+      padding-left: 12px;
     }
-
     .thought-items.open {
-      display: block
+      display: block;
     }
-
     .thought-item {
       font-size: 11px;
-      color: var(--claro);
+      color: var(--text-tertiary);
       line-height: 1.5;
       padding: 1px 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 100%
+      max-width: 100%;
     }
 
-    .chat-compose {
-      padding: 12px 16px;
-      border-top: 1px solid var(--borda);
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-      background: var(--branco);
-      flex-shrink: 0
-    }
-
-    .compose-wrap {
-      flex: 1;
-      position: relative
-    }
-
-    .compose-wrap textarea {
-      width: 100%;
-      padding: 10px 12px;
-      padding-right: 50px;
-      border: 1px solid var(--borda);
-      border-radius: var(--r-sm);
-      font-family: var(--corpo);
-      font-size: 14px;
-      color: var(--tinta);
-      background: var(--branco);
-      outline: none;
-      resize: none;
-      min-height: 42px;
-      max-height: 120px;
-      transition: border-color .2s;
-      line-height: 1.5
-    }
-
-    .compose-wrap textarea:focus {
-      border-color: var(--verde)
-    }
-
-    .compose-count {
-      position: absolute;
-      right: 8px;
-      bottom: 6px;
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--palha);
-      pointer-events: none
-    }
-
-    .send-btn {
-      padding: 10px 18px;
-      border: none;
-      border-radius: var(--r-sm);
-      background: var(--verde);
-      color: #fff;
-      font-family: var(--corpo);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all .15s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0
-    }
-
-    .send-btn:hover {
-      background: var(--verde-2)
-    }
-
-    .send-btn:disabled {
-      opacity: .5;
-      cursor: not-allowed
-    }
-
-    .bottom-bar {
+    /* ── FLOATING INPUT CARD (THE CORE LAYOUT) ── */
+    .input-floating-container {
+      position: sticky;
+      bottom: 0;
+      padding: 12px 12px 20px;
+      background: linear-gradient(to top, var(--bg-app) 85%, transparent);
       flex-shrink: 0;
-      padding: 8px 0 20px;
+      z-index: 50;
+      backdrop-filter: blur(2px);
+    }
+    .input-floating-card {
       display: flex;
-      justify-content: space-between;
-      align-items: center
-    }
-
-    .bottom-tools {
-      display: flex;
-      gap: 4px
-    }
-
-    .tool-btn {
-      background: none;
-      border: 1px solid transparent;
-      padding: 4px 8px;
-      font-size: 11px;
-      color: var(--claro);
-      cursor: pointer;
-      border-radius: 4px;
-      transition: all .15s;
-      font-family: var(--corpo)
-    }
-
-    .tool-btn:hover {
-      color: var(--medio);
-      border-color: var(--borda);
-      background: var(--branco)
-    }
-
-    .bottom-meta {
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--palha)
-    }
-
-    .history-panel {
-      position: fixed;
-      right: 20px;
-      bottom: 78px;
-      width: min(420px, calc(100vw - 24px));
-      max-height: 62vh;
-      background: var(--branco);
-      border: 1px solid var(--borda);
-      border-radius: var(--r);
-      box-shadow: var(--sombra);
-      display: none;
       flex-direction: column;
-      z-index: 220
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 8px 14px 14px;
+      box-shadow: var(--shadow);
+      transition: border-color .2s;
     }
-
-    .history-panel.open {
-      display: flex
+    .input-floating-card:focus-within {
+      border-color: var(--border-high);
     }
-
-    .history-head {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--borda);
+    .input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .input-controls {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 8px
-    }
-
-    .history-title {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--claro);
-      text-transform: uppercase;
-      letter-spacing: .06em
-    }
-
-    .history-close {
-      background: none;
-      border: none;
-      color: var(--claro);
-      cursor: pointer;
-      padding: 4px 6px;
-      border-radius: 4px
-    }
-
-    .history-close:hover {
-      background: var(--verde-lo);
-      color: var(--verde)
-    }
-
-    .history-list {
-      overflow: auto;
-      max-height: calc(62vh - 52px);
-      padding: 8px
-    }
-
-    .history-empty {
-      font-size: 12px;
-      color: var(--claro);
-      padding: 10px
-    }
-
-    .history-item {
-      border: 1px solid var(--borda);
-      border-radius: 8px;
-      padding: 8px 9px;
-      margin-bottom: 7px;
-      background: var(--creme)
-    }
-
-    .history-item-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--tinta);
-      line-height: 1.35;
-      margin-bottom: 4px
-    }
-
-    .history-item-preview {
-      font-size: 11px;
-      color: var(--medio);
-      line-height: 1.35;
-      margin-bottom: 6px
-    }
-
-    .history-item-meta {
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--claro);
-      margin-bottom: 6px
-    }
-
-    .history-item-actions {
-      display: flex;
       gap: 6px;
-      flex-wrap: wrap
+      padding: 4px 0;
+      flex-shrink: 0;
     }
-
-    .history-btn {
-      border: 1px solid var(--borda);
-      background: var(--branco);
-      color: var(--medio);
-      border-radius: 999px;
-      padding: 4px 9px;
-      font-size: 10px;
-      cursor: pointer
-    }
-
-    .history-btn:hover {
-      border-color: rgba(28, 69, 50, 0.3);
-      background: var(--verde-lo);
-      color: var(--verde)
-    }
-
-    /* Setup modal overlay */
-    .setup-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(26, 24, 20, 0.6);
-      z-index: 500;
-      display: none;
+    .input-controls button {
+      background: var(--bg-card-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-tertiary);
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      backdrop-filter: blur(4px);
     }
-    .setup-overlay.open { display: flex }
-    .setup-modal {
-      width: 100%;
-      max-width: 560px;
-      height: min(85vh, 720px);
-      background: var(--branco);
-      border-radius: var(--r);
-      box-shadow: 0 8px 40px rgba(26, 24, 20, 0.2);
-      overflow: hidden;
-      position: relative;
+    .input-controls button:hover {
+      background: var(--border-subtle);
+      color: var(--text-secondary);
     }
-    .setup-modal-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 10;
-      background: var(--branco);
-      border: 1px solid var(--borda);
+    .btn-model-pill {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px !important;
+      border-radius: 20px !important;
+      color: var(--text-secondary) !important;
+      gap: 6px;
+      min-width: 70px;
+      white-space: nowrap;
+    }
+
+    .input-floating-card textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: var(--corpo);
+      font-size: 15px;
+      line-height: 1.5;
+      resize: none;
+      outline: none;
+      min-height: 20px;
+      max-height: 100px;
+      padding: 2px 0;
+    }
+    .input-floating-card textarea::placeholder {
+      color: var(--text-tertiary);
+    }
+    .send-btn {
+      background: var(--text-primary);
+      color: #000;
+      border: none;
       border-radius: 50%;
       width: 30px;
       height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 14px;
       cursor: pointer;
-      color: var(--medio);
+      transition: all .2s;
+      flex-shrink: 0;
+      margin-bottom: 2px;
+    }
+    .send-btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+    .send-btn:hover:not(:disabled) {
+      background: var(--accent);
+      transform: scale(1.05);
+    }
+
+    /* ── BOTTOM ACTION SHEET ── */
+    .action-sheet-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      animation: fadeIn .2s ease;
+    }
+    .action-sheet-overlay.open {
+      display: flex;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    @keyframes slideUp {
+      from {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    .action-sheet {
+      width: 100%;
+      max-width: var(--max-w);
+      background: var(--bg-card);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 20px 24px 40px;
+      animation: slideUp .3s ease;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .action-sheet-header {
+      font-family: var(--display);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .action-sheet-header button {
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .action-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .action-grid-item {
+      background: var(--bg-app);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 16px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-tertiary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .action-grid-item:hover {
+      border-color: var(--text-tertiary);
+      color: var(--text-secondary);
+      background: var(--bg-card-secondary);
+    }
+    .action-grid-item i {
+      font-size: 20px;
+    }
+
+    .action-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
       font-size: 13px;
+    }
+    .action-list-item:last-child {
+      border-bottom: none;
+    }
+    .action-list-item .toggle-switch {
+      width: 40px;
+      height: 22px;
+      background: var(--border-subtle);
+      border-radius: 20px;
+      position: relative;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .action-list-item .toggle-switch.active {
+      background: var(--accent);
+    }
+    .action-list-item .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      transition: .2s;
+    }
+    .action-list-item .toggle-switch.active::after {
+      left: 20px;
+    }
+
+    /* ── MODEL PICKER MODAL ── */
+    .model-picker-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+    .model-picker-overlay.open {
+      display: flex;
+    }
+    .model-picker-card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      animation: slideUp .3s ease;
+    }
+    .model-picker-card h4 {
+      color: var(--text-primary);
+      font-family: var(--display);
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+    .model-picker-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px;
+    }
+    .model-picker-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 6px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .model-picker-list li:hover {
+      color: var(--text-primary);
+    }
+    .model-picker-list li .model-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .model-picker-list li .model-badge {
+      background: var(--accent-bg);
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .model-picker-list li .checkmark {
+      display: none;
+      color: var(--accent);
+    }
+    .model-picker-list li.active .checkmark {
+      display: block;
+    }
+    .model-picker-list li.active {
+      color: var(--text-primary);
+      background: var(--bg-app);
+      border-radius: 6px;
+      padding: 12px 6px;
+    }
+    .model-config-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      color: var(--text-tertiary);
+      font-size: 13px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .model-config-row span:last-child {
+      color: var(--text-secondary);
+    }
+
+    /* ── HISTORY PANEL ── */
+    .history-panel {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: var(--max-w);
+      background: var(--bg-card);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      border: 1px solid var(--border-subtle);
+      border-bottom: none;
+      max-height: 70dvh;
+      display: none;
+      flex-direction: column;
+      z-index: 150;
+      box-shadow: var(--shadow);
+      padding-bottom: 20px;
+    }
+    .history-panel.open {
+      display: flex;
+      animation: slideUp .3s ease;
+    }
+    .history-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .history-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .history-close {
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .history-list {
+      overflow-y: auto;
+      padding: 12px 16px;
+      flex: 1;
+    }
+    .history-empty {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      text-align: center;
+      padding: 20px 0;
+    }
+    .history-item {
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-bottom: 10px;
+      background: var(--bg-app);
+    }
+    .history-item-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .history-item-preview {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .history-item-meta {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      font-family: var(--mono);
+      margin-bottom: 8px;
+    }
+    .history-item-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .history-btn {
+      background: var(--bg-card-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .history-btn:hover {
+      border-color: var(--text-secondary);
+      color: var(--text-primary);
+    }
+
+    /* ── ONBOARDING/SETUP MODAL ── */
+    .setup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(6px);
+    }
+    .setup-overlay.open {
+      display: flex;
+    }
+    .setup-modal {
+      width: 100%;
+      max-width: 560px;
+      height: min(85dvh, 720px);
+      background: var(--bg-card-secondary);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+    .setup-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 10;
+      background: var(--bg-app);
+      border: 1px solid var(--border-subtle);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 14px;
       transition: all .15s;
     }
     .setup-modal-close:hover {
-      color: var(--terra);
-      border-color: var(--terra);
+      color: var(--text-primary);
+      border-color: var(--text-secondary);
     }
     .setup-modal iframe {
       width: 100%;
@@ -989,58 +860,39 @@
       border: none;
     }
 
-    @media(max-width:768px) {
-      .topo {
-        padding: 0 12px;
-        height: 48px
+    /* ── RESPONSIVE TWEAKS ── */
+    @media(max-width: 480px) {
+      .app-header {
+        padding: 12px 16px 8px;
       }
-
-      .marca-sub,
-      .tag-versao {
-        display: none
+      .app-header .title {
+        font-size: 16px;
       }
-
-      .topo-nav {
-        display: none
-      }
-
-      .hamburger {
-        display: flex
-      }
-
-      .agent-page {
-        padding: 0;
-        height: calc(100dvh - 48px)
-      }
-
-      .context-bar {
-        padding: 10px 12px 8px
-      }
-
-      .chat-shell {
-        border-radius: 0;
-        border-left: none;
-        border-right: none
-      }
-
-      .chat-log {
-        padding: 14px 10px
-      }
-
       .chat-bubble {
-        max-width: 92%
+        max-width: 100%;
       }
-
-      .chat-compose {
-        padding: 10px
+      .input-floating-container {
+        padding: 8px 10px 12px;
       }
-
-      .chat-compose textarea {
-        font-size: 16px
+      .input-floating-card {
+        padding: 6px 10px 10px;
       }
-
-      .bottom-bar {
-        padding: 6px 12px 12px
+      .input-controls button {
+        padding: 2px 6px;
+      }
+      .send-btn {
+        width: 28px;
+        height: 28px;
+      }
+      .action-sheet {
+        padding: 16px 16px 30px;
+      }
+      .action-grid-3 {
+        gap: 8px;
+      }
+      .action-grid-item {
+        padding: 12px 8px;
+        font-size: 11px;
       }
     }
   </style>
@@ -1048,106 +900,127 @@
 
 <body>
 
-  <div class="topo">
-    <div class="marca">
-      <a href="/olivia/olivia" class="marca-nome">Olivia</a>
-      <span class="marca-sub">Workspace Agent</span>
-    </div>
-    <nav class="topo-nav">
-      <a href="/olivia/" class="nav-tab"><i class="fas fa-grid-2" style="font-size:9px"></i> Workspace</a>
-      <a href="/olivia/agent" class="nav-tab ativo"><i class="fas fa-comments" style="font-size:9px"></i> Agente</a>
-    </nav>
-    <div class="topo-direita">
-      <span class="tag-versao">Abr 2026</span>
-      <a href="/olivia/" class="topo-sair" title="Voltar"><i class="fas fa-arrow-left"></i></a>
-    </div>
-    <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-  <div class="mobile-drawer" id="mobileDrawer">
-    <a href="/olivia/" onclick="closeDrawer()">Workspace</a>
-    <a href="/olivia/agent" onclick="closeDrawer()">Agente</a>
-  </div>
+  <div id="app-root">
 
-  <div class="agent-page">
-
-    <div class="context-bar">
-      <button class="ctx-chip" onclick="askTopic('ws_overview')"><i class="fas fa-compass"></i> Visão geral</button>
-      <button class="ctx-chip" onclick="askTopic('ws_roles')"><i class="fas fa-user-group"></i> Para cada
-        função</button>
-      <button class="ctx-chip" onclick="askTopic('ws_core')"><i class="fas fa-microchip"></i> Core runtime</button>
-      <button class="ctx-chip" onclick="askTopic('ws_agents')"><i class="fas fa-robot"></i> Agentes</button>
-      <button class="ctx-chip" onclick="askTopic('ws_studio')"><i class="fas fa-paint-brush"></i> Criatividade</button>
-      <button class="ctx-chip" onclick="askTopic('ws_data')"><i class="fas fa-database"></i> Dados & IA</button>
-      <button class="ctx-chip" onclick="askTopic('ws_legal')"><i class="fas fa-scale-balanced"></i> Legal</button>
-      <button class="ctx-chip" onclick="askTopic('ws_demo')"><i class="fas fa-play"></i> Demonstração</button>
-    </div>
-
-    <div class="chat-shell">
-      <div class="chat-head">
-        <div class="chat-head-left">
-          <span class="status-dot" id="statusDot"></span>
-          <span class="chat-head-label" id="statusLabel">Pronto</span>
-        </div>
-        <div class="chat-head-right">
-          <button class="chat-head-btn" onclick="openSetupModal()" title="Configurações"><i
-              class="fas fa-gear"></i></button>
-          <button class="chat-head-btn" onclick="openAgentHistory()" title="Histórico"><i
-              class="fas fa-clock-rotate-left"></i></button>
-          <button class="chat-head-btn" onclick="exportAgentChatTxt()" title="Exportar TXT"><i
-              class="fas fa-download"></i></button>
-          <button class="chat-head-btn" onclick="clearAgentChat()" title="Limpar"><i class="fas fa-trash"></i></button>
-        </div>
+    <!-- Subtle Top Header -->
+    <header class="app-header">
+      <div class="title">Olivia</div>
+      <div class="actions">
+        <button onclick="openAgentHistory()" title="Histórico"><i class="fas fa-clock-rotate-left"></i></button>
+        <button onclick="clearAgentChat()" title="Nova conversa"><i class="fas fa-pen-to-square"></i></button>
       </div>
-      <div id="agentLog" class="chat-log"></div>
-      <div class="chat-compose">
-        <div class="compose-wrap">
-          <textarea id="agentInput" placeholder="Pergunte sobre o Olivia Workspace, módulos, casos reais..." rows="1"
+    </header>
+
+    <!-- Main Chat Area -->
+    <div id="agentLog" class="chat-log"></div>
+
+    <!-- Floating Input Card -->
+    <div class="input-floating-container">
+      <div class="input-floating-card">
+        <div class="input-row">
+          <div class="input-controls">
+            <button onclick="toggleActionSheet()"><i class="fas fa-plus"></i></button>
+            <button class="btn-model-pill" onclick="toggleModelPicker()">
+              <i class="fas fa-robot" style="font-size: 10px;"></i> Sonnet 5
+            </button>
+          </div>
+          <textarea id="agentInput" placeholder="Pergunte sobre a Olivia Workspace..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAgentMessage();}"
-            oninput="autoGrow(this);updateCount()"></textarea>
-          <span class="compose-count" id="charCount">0/1200</span>
+            oninput="autoGrow(this)"></textarea>
+          <button id="sendBtn" class="send-btn" onclick="sendAgentMessage()"><i class="fas fa-arrow-up"></i></button>
         </div>
-        <button id="sendBtn" class="send-btn" onclick="sendAgentMessage()"><i class="fas fa-arrow-up"
-            style="font-size:12px"></i></button>
       </div>
     </div>
-
-    <div class="bottom-bar">
-      <div class="bottom-tools">
-        <button class="tool-btn" onclick="saveAgentChat()"><i class="fas fa-floppy-disk"
-            style="margin-right:3px;font-size:10px"></i> Salvar</button>
-        <button class="tool-btn" onclick="exportAgentChatJson()"><i class="fas fa-code"
-            style="margin-right:3px;font-size:10px"></i> JSON</button>
-      </div>
-      <span class="bottom-meta">Olivia · Workspace Agent</span>
-    </div>
-
   </div>
 
-  <div class="history-panel" id="agentHistoryPanel" aria-live="polite">
+  <!-- ACTION SHEET (Camera, Photos, Files, Config) -->
+  <div class="action-sheet-overlay" id="actionSheet">
+    <div class="action-sheet">
+      <div class="action-sheet-header">
+        Adicionar ao chat
+        <button onclick="toggleActionSheet()"><i class="fas fa-xmark"></i></button>
+      </div>
+      <div class="action-grid-3">
+        <div class="action-grid-item"><i class="fas fa-camera"></i> Câmera</div>
+        <div class="action-grid-item"><i class="fas fa-image"></i> Fotos</div>
+        <div class="action-grid-item"><i class="fas fa-file-lines"></i> Arquivos</div>
+      </div>
+      <div class="action-list-item">
+        Busca na web
+        <div class="toggle-switch" onclick="this.classList.toggle('active')"></div>
+      </div>
+      <div class="action-list-item">
+        Acesso a ferramentas
+        <span><i class="fas fa-chevron-right" style="font-size: 10px;"></i></span>
+      </div>
+      <div class="action-list-item" style="border-bottom: none;">
+        Contexto do Workspace
+        <button class="action-btn" style="border:none; background: var(--bg-app);">Geral</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODEL PICKER MODAL -->
+  <div class="model-picker-overlay" id="modelPicker">
+    <div class="model-picker-card">
+      <h4>Selecionar modelo</h4>
+      <ul class="model-picker-list">
+        <li><span class="model-name">Fable 5 <span class="model-badge">Pro</span></span> <span class="checkmark"><i class="fas fa-check"></i></span></li>
+        <li><span class="model-name">Opus 5 <span class="model-badge">Pro</span></span> <span class="checkmark"><i class="fas fa-check"></i></span></li>
+        <li class="active"><span class="model-name">Sonnet 5</span> <span class="checkmark"><i class="fas fa-check"></i></span></li>
+        <li><span class="model-name">Haiku 4.5</span> <span class="checkmark"><i class="fas fa-check"></i></span></li>
+      </ul>
+      <div class="model-config-row">
+        Esforço <span>Médio <i class="fas fa-chevron-right" style="font-size: 10px; margin-left: 4px;"></i></span>
+      </div>
+      <div class="model-config-row" style="border-top: none; margin-top: 0;">
+        <span style="font-size: 12px; color: var(--text-tertiary);">Mais modelos <i class="fas fa-chevron-right" style="font-size: 10px; margin-left: 4px;"></i></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY PANEL -->
+  <div class="history-panel" id="agentHistoryPanel">
     <div class="history-head">
       <span class="history-title">Conversas salvas</span>
-      <button class="history-close" onclick="closeAgentHistory()" aria-label="Fechar"><i
-          class="fas fa-xmark"></i></button>
+      <button class="history-close" onclick="closeAgentHistory()"><i class="fas fa-xmark"></i></button>
     </div>
     <div class="history-list" id="agentHistoryList"></div>
   </div>
 
+  <!-- SETUP/ONBOARDING MODAL -->
   <div class="setup-overlay" id="setupOverlay">
     <div class="setup-modal">
-      <button class="setup-modal-close" onclick="closeSetupModal()" aria-label="Fechar"><i class="fas fa-xmark"></i></button>
+      <button class="setup-modal-close" onclick="closeSetupModal()"><i class="fas fa-xmark"></i></button>
       <iframe id="setupFrame" src="about:blank" title="Configuração do Olivia"></iframe>
     </div>
   </div>
 
   <script src="js/modules/user-prefs.js"></script>
   <script>
-    /* ── DRAWER ── */
-    function toggleDrawer() { document.getElementById('mobileDrawer').classList.toggle('open'); document.getElementById('hamburger').classList.toggle('open') }
-    function closeDrawer() { document.getElementById('mobileDrawer').classList.remove('open'); document.getElementById('hamburger').classList.remove('open') }
+    /* ── UI FUNCTIONS (TOGGLES, SHEETS, MODALS) ── */
+    function toggleActionSheet() {
+      const sheet = document.getElementById('actionSheet');
+      sheet.classList.toggle('open');
+    }
+    function toggleModelPicker() {
+      const picker = document.getElementById('modelPicker');
+      picker.classList.toggle('open');
+    }
+    function closeAgentHistory() {
+      document.getElementById('agentHistoryPanel').classList.remove('open');
+    }
 
-    /* ── OLIVIA WORKSPACE PRIMER ── */
+    // Close modals on background click
+    document.addEventListener('click', function(e) {
+      const actionSheet = document.getElementById('actionSheet');
+      if (e.target === actionSheet) actionSheet.classList.remove('open');
+      
+      const modelPicker = document.getElementById('modelPicker');
+      if (e.target === modelPicker) modelPicker.classList.remove('open');
+    });
+
+    /* ── OLIVIA WORKSPACE PRIMER (PRESERVED) ── */
     const WORKSPACE_PRIMER = [
       'Você é Olivia, a agente do Olivia Workspace — um ecossistema de IA que adapta software às pessoas.',
       'Conhece cada módulo do guia de funcionalidades: Core Runtime, Agents & Orchestration, Creativity & Studio, Data & Analysis, Legal & Compliance, Communication & Media, Connectors & Extensions, UI & Navigation.',
@@ -1178,20 +1051,20 @@
       return WORKSPACE_PRIMER + '\n' + message;
     }
 
-    /* ── TOPIC PRESETS ── */
+    /* ── TOPIC PRESETS (Context Chips preserved via script) ── */
     const TOPIC_QUERIES = {
       ws_overview: 'Dê uma visão geral do Olivia Workspace: visão, módulos principais e para quem ele serve.',
-      ws_roles: 'Explique como o Olivia Workspace atende diferentes funções: caixa, bartender, compras, financeiro, vendas, almoxarifado e compliance. Dê um exemplo real de cada.',
+      ws_roles: 'Explique como a Olivia Workspace atende diferentes funções: caixa, bartender, compras, financeiro, vendas, almoxarifado e compliance. Dê um exemplo real de cada.',
       ws_core: 'Descreva o módulo Core Runtime e como ele garante que o workspace funcione de forma consistente em qualquer dispositivo.',
       ws_agents: 'Como funcionam os agentes no Olivia? Fale sobre criação, exportação e roteamento por seção.',
-      ws_studio: 'Quais ferramentas de criatividade o Olivia oferece? Dê exemplos de uso real (formulário de vendas, treinamento de bartender, preview 3D para cliente).',
+      ws_studio: 'Quais ferramentas de criatividade a Olivia oferece? Dê exemplos de uso real (formulário de vendas, treinamento de bartender, preview 3D para cliente).',
       ws_data: 'Explique os recursos de dados e análise: memória vetorial, pipeline de descoberta, documentos compartilhados. Como um financeiro usa isso no fechamento mensal?',
       ws_legal: 'Quais são os módulos legais do Olivia? Como um oficial de compliance localiza rapidamente uma regulamentação ou um caso de violação?',
-      ws_demo: 'Quero agendar uma demonstração. O que devo dizer sobre minha equipe e como o Olivia pode ajudar?',
+      ws_demo: 'Quero agendar uma demonstração. O que devo dizer sobre minha equipe e como a Olivia pode ajudar?',
     };
 
     function askTopic(key) {
-      const prompt = TOPIC_QUERIES[key] || 'Fale sobre o Olivia Workspace.';
+      const prompt = TOPIC_QUERIES[key] || 'Fale sobre a Olivia Workspace.';
       sendAgentMessage({ message: prompt, newSession: true });
     }
 
@@ -1233,8 +1106,7 @@
     }
     function _near(el, px) { if (!el) return true; return (el.scrollHeight - el.scrollTop - el.clientHeight) <= (px || 80) }
     function _bottom(el) { if (el) el.scrollTop = el.scrollHeight }
-    function autoGrow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px' }
-    function updateCount() { const i = document.getElementById('agentInput'), c = document.getElementById('charCount'); if (i && c) { const l = (i.value || '').length; c.textContent = l + '/1200'; c.style.color = l > 1100 ? 'var(--terra)' : 'var(--palha)' } }
+    function autoGrow(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 80) + 'px' }
 
     function _inline(text) {
       let html = _esc(text)
@@ -1248,22 +1120,12 @@
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
         .replace(/`([^`]+)`/g, '<code>$1</code>');
     }
-    function _parseTable(section) {
-      const lines = section.split('\n').map(l => l.trim()).filter(Boolean);
-      if (lines.length < 3 || !lines[0].includes('|')) return '';
-      const sep = lines[1].replace(/[|:\-\s]/g, '');
-      if (sep.length) return '';
-      const cells = l => l.split('|').map(c => c.trim()).filter(Boolean);
-      const head = cells(lines[0]), rows = lines.slice(2).map(cells).filter(r => r.length);
-      if (!head.length || !rows.length) return '';
-      return `<div class="agent-table-wrap"><table class="agent-table"><thead><tr>${head.map(h => `<th>${_inline(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${head.map((_, i) => `<td>${_inline(r[i] || '')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
-    }
+
     function renderBody(text) {
       const sections = String(text || '').split(/\n{2,}/);
       let html = '';
       for (const raw of sections) {
         const s = raw.trim(); if (!s) continue;
-        const table = _parseTable(s); if (table) { html += table; continue }
         if (s.startsWith('## ') || s.startsWith('### ')) { html += `<h3>${_inline(s.replace(/^#{2,4}\s*/, '').trim())}</h3>`; continue }
         if (s.startsWith('- ')) { html += `<ul>${s.split('\n').filter(l => l.trim().startsWith('- ')).map(l => `<li>${_inline(l.trim().slice(2))}</li>`).join('')}</ul>`; continue }
         if (/^\d+\.\s/.test(s)) { html += `<ol>${s.split('\n').filter(l => /^\d+\.\s/.test(l.trim())).map(l => `<li>${_inline(l.trim().replace(/^\d+\.\s/, ''))}</li>`).join('')}</ol>`; continue }
@@ -1279,7 +1141,7 @@
       c += '<div class="agent-card-body">' + renderBody(text) + '</div>';
       if (refs && refs.length) {
         c += '<details class="detail-block"><summary>Fontes consultadas (' + refs.length + ')</summary>';
-        c += '<div class="detail-block-body">' + refs.map(r => '<code style="font-size:11px;display:inline-block;margin:2px 4px 2px 0;padding:2px 6px;background:var(--creme-2);border-radius:3px;color:var(--verde)">' + _esc(r) + '</code>').join('') + '</div></details>';
+        c += '<div class="detail-block-body">' + refs.map(r => '<code style="display:inline-block;margin:2px 4px 2px 0;padding:2px 6px;border-radius:4px;">' + _esc(r) + '</code>').join('') + '</div></details>';
       }
       if (o.actions) {
         c += '<div class="action-bar">';
@@ -1295,7 +1157,7 @@
     function askFollowUp(kind) {
       const p = {
         detalhar: 'Pode detalhar mais a resposta anterior, com exemplos práticos de uso no dia a dia?',
-        passos: 'Quais seriam os próximos passos para uma equipe começar a usar o Olivia Workspace?',
+        passos: 'Quais seriam os próximos passos para uma equipe começar a usar a Olivia Workspace?',
         riscos: 'Quais são os principais riscos ou desafios na adoção do Olivia em um ambiente real?',
         comparar: 'Compare dois módulos que você mencionou e explique quando usar cada um.',
       };
@@ -1324,7 +1186,7 @@
     }
     function removeThinking() { const el = document.getElementById('procLine'); if (el && el.parentNode) el.parentNode.removeChild(el) }
 
-    const PROC_PHASES = ['Analisando a pergunta', 'Consultando o guia do Workspace', 'Conectando módulos', 'Buscando exemplos reais', 'Estruturando resposta'];
+    const PROC_PHASES = ['Analisando', 'Consultando guia', 'Conectando módulos', 'Estruturando'];
 
     function createProcessingIndicator() {
       const log = document.getElementById('agentLog');
@@ -1394,13 +1256,11 @@
     }
 
     function setThinking(on) {
-      const dot = document.getElementById('statusDot'), label = document.getElementById('statusLabel'), btn = document.getElementById('sendBtn');
-      if (dot) dot.className = 'status-dot' + (on ? ' thinking' : '');
-      if (label) label.textContent = on ? 'Processando' : 'Pronto';
-      if (btn) { btn.disabled = on; btn.innerHTML = on ? '<i class="fas fa-spinner fa-spin" style="font-size:12px"></i>' : '<i class="fas fa-arrow-up" style="font-size:12px"></i>' }
+      const btn = document.getElementById('sendBtn');
+      if (btn) { btn.disabled = on; btn.innerHTML = on ? '<i class="fas fa-spinner fa-spin"></i>' : '<i class="fas fa-arrow-up"></i>' }
     }
 
-    /* ── PERSISTENCE (local) ── */
+    /* ── PERSISTENCE (Same logic, new UI) ── */
     function _conversationTitleFromHistory() {
       const firstUser = chatHistory.find(item => item && item.role === 'user' && item.text);
       if (firstUser && firstUser.text) return String(firstUser.text).slice(0, 120);
@@ -1510,8 +1370,6 @@
       }
     }
 
-    function closeAgentHistory() { document.getElementById('agentHistoryPanel').classList.remove('open') }
-
     async function loadAgentConversation(conversationId) {
       if (!conversationId) return;
       try {
@@ -1548,20 +1406,9 @@
       }
     }
 
-    function downloadFile(n, c, m) { const b = new Blob([c], { type: m }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = n; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href) }
-    function exportAgentChatTxt() {
-      if (!chatHistory.length) return;
-      const lines = chatHistory.map(i => `[${i.timestamp}] ${i.role.toUpperCase()}: ${i.text}`);
-      downloadFile(`OliviaWorkspace-chat-${new Date().toISOString().slice(0, 10)}.txt`, lines.join('\n\n'), 'text/plain;charset=utf-8');
-    }
-    function exportAgentChatJson() {
-      if (!chatHistory.length) return;
-      downloadFile(`OliviaWorkspace-chat-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(chatHistory, null, 2), 'application/json;charset=utf-8');
-    }
-
     function showWelcome() {
       appendAgent(
-        'Olá! Sou **Olivia**, a agente do **Olivia Workspace**.\n\nConheço cada módulo do ecossistema — do Core Runtime ao Legal, passando por Criatividade, Dados e Conectores — e também os papéis reais: caixa, bartender, compras, financeiro, vendas, almoxarifado e compliance.\n\nPergunte o que quiser: "como o bartender usa o Olivia numa sexta à noite?", "o que o módulo Memory faz?", ou "quero uma demonstração".',
+        'Olá! Sou **Olivia**, a agente do **Olivia Workspace**.\n\nConheço cada módulo do ecossistema — do Core Runtime ao Legal, passando por Criatividade, Dados e Conectores — e também os papéis reais: caixa, bartender, compras, financeiro, vendas, almoxarifado e compliance.\n\nPergunte o que quiser: "como o bartender usa a Olivia numa sexta à noite?", "o que o módulo Memory faz?", ou "quero uma demonstração".',
         null, null, { actions: false, store: false }
       );
     }
@@ -1584,10 +1431,9 @@
       })();
       if (presetObj && presetObj.newSession) { sessionId = null; workspaceContextSent = false }
       if (!message) return;
-      if (message.length > 1200) { appendAgent('Mensagem muito longa. Limite: 1200 caracteres.', null, null, { actions: false }); return }
-
+      
       appendUser(message);
-      if (!preset) { input.value = ''; autoGrow(input); updateCount() }
+      if (!preset) { input.value = ''; autoGrow(input) }
       setThinking(true);
       const proc = createProcessingIndicator();
 
@@ -1654,7 +1500,7 @@
     function openSetupModal() {
       const overlay = document.getElementById('setupOverlay');
       const frame = document.getElementById('setupFrame');
-      frame.src = '/auth/olivia-setup.html?mode=modal';
+      frame.src = '/olivia/auth/olivia-setup.html?mode=modal';
       overlay.classList.add('open');
     }
     function closeSetupModal() {
@@ -1676,7 +1522,6 @@
     /* ── INIT ── */
     document.addEventListener('DOMContentLoaded', async () => {
       if (!loadSaved()) showWelcome();
-      updateCount();
       // Check if user has completed setup
       if (window.OliviaUserPrefs) {
         const prefs = await OliviaUserPrefs.load();

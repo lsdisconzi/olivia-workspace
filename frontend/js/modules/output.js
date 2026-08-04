@@ -12,6 +12,12 @@ let _outputAutoOpenSuppressedUntil = 0;
 let _panelStateSyncObserver = null;
 let _panelStateSyncBound = false;
 const OUTPUT_AUTO_OPEN_SUPPRESS_MS = 45000;
+window.__oliviaBrowserShareState = window.__oliviaBrowserShareState || {
+  shared: false,
+  url: '',
+  title: '',
+  updatedAt: 0,
+};
 
 // ── Disk artifact polling (artifacts/ folder) ──
 let _artifactPollTimer = null;
@@ -471,6 +477,20 @@ function toggleOutputPanel() {
   _syncWorkspacePanels();
 }
 
+function openBrowserPanel() {
+  const panel = document.getElementById('browserPanel');
+  if (!panel) return;
+  panel.classList.add('open');
+  _syncWorkspacePanels();
+}
+
+function closeBrowserPanel() {
+  const panel = document.getElementById('browserPanel');
+  if (!panel) return;
+  panel.classList.remove('open');
+  _syncWorkspacePanels();
+}
+
 // Toggle browser panel
 function toggleBrowserPanel() {
   const panel = document.getElementById('browserPanel');
@@ -478,6 +498,101 @@ function toggleBrowserPanel() {
   panel.classList.toggle('open');
   _syncWorkspacePanels();
 }
+
+function syncBrowserSharedState(url, title, shared) {
+  const state = window.__oliviaBrowserShareState || (window.__oliviaBrowserShareState = {});
+  const bar = document.getElementById('browserUrlBar');
+  const sourceUrl = String(url || (bar && bar.value) || state.url || '').trim();
+  const sourceTitle = String(title || (document.title || state.title || '')).trim();
+  state.shared = !!shared;
+  state.url = sourceUrl;
+  state.title = sourceTitle;
+  state.updatedAt = Date.now();
+  const shareBtn = document.getElementById('browserShareBtn');
+  if (shareBtn) {
+    shareBtn.classList.toggle('active', state.shared);
+    shareBtn.setAttribute('aria-pressed', state.shared ? 'true' : 'false');
+    shareBtn.title = state.shared ? 'Browser page shared with the agent' : 'Share this browser page with the agent';
+    shareBtn.innerHTML = state.shared
+      ? '<i class="fas fa-share-alt"></i><span class="browser-share-dot"></span>'
+      : '<i class="fas fa-share-alt"></i>';
+  }
+  try {
+    window.dispatchEvent(new CustomEvent('olivia:browser-shared', {
+      detail: {
+        shared: state.shared,
+        url: state.url,
+        title: state.title,
+        updatedAt: state.updatedAt,
+      },
+    }));
+  } catch (_) { }
+  if (typeof window.refreshPanelContextStatus === 'function') {
+    window.refreshPanelContextStatus();
+  }
+}
+
+function shareBrowserPageWithAgent() {
+  const bar = document.getElementById('browserUrlBar');
+  const frame = document.getElementById('browserFrame');
+  const browserUrl = String((bar && bar.value) || (frame && frame.src) || '').trim();
+  const browserTitle = String((frame && frame.contentDocument && frame.contentDocument.title) || document.title || '').trim();
+  const hasPage = !!browserUrl && browserUrl !== 'about:blank';
+  if (!hasPage) return;
+  openBrowserPanel();
+  syncBrowserSharedState(browserUrl, browserTitle, true);
+}
+
+function handleBrowserUseTool(args) {
+  const payload = args && typeof args === 'object' ? args : {};
+  const action = String(payload.action || payload.mode || payload.type || payload.command || '').trim().toLowerCase();
+  const rawUrl = String(payload.url || payload.href || payload.target_url || payload.targetUrl || payload.value || '').trim();
+  const panel = document.getElementById('browserPanel');
+  if (panel && !panel.classList.contains('open')) {
+    openBrowserPanel();
+  }
+
+  if (!action || action === 'navigate' || action === 'visit' || action === 'open' || action === 'go') {
+    if (rawUrl) {
+      navigateBrowser(rawUrl);
+      syncBrowserSharedState(rawUrl, '', true);
+    } else {
+      shareBrowserPageWithAgent();
+    }
+    return;
+  }
+
+  if (action === 'share') {
+    shareBrowserPageWithAgent();
+    return;
+  }
+
+  if (action === 'back') {
+    browserBack();
+    return;
+  }
+
+  if (action === 'forward') {
+    browserForward();
+    return;
+  }
+
+  if (action === 'reload') {
+    browserReload();
+    return;
+  }
+
+  if (action === 'read' || action === 'snapshot') {
+    shareBrowserPageWithAgent();
+    return;
+  }
+}
+
+window.openBrowserPanel = openBrowserPanel;
+window.closeBrowserPanel = closeBrowserPanel;
+window.shareBrowserPageWithAgent = shareBrowserPageWithAgent;
+window.handleBrowserUseTool = handleBrowserUseTool;
+window.syncBrowserSharedState = syncBrowserSharedState;
 
 // Count how many side panels (output / preview / browser) are currently
 // open and toggle the .panels-busy class on .workspace so the main chat
@@ -598,6 +713,7 @@ function navigateBrowser(url) {
     if (bar) bar.value = url;
   }
   if (typeof window.refreshPanelContextStatus === 'function') window.refreshPanelContextStatus();
+  syncBrowserSharedState(url, '', true);
 }
 
 function _setActiveOutputTab(id) {

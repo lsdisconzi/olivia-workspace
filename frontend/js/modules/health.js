@@ -15,7 +15,7 @@
     };
 
     var HEALTH_PRIMER = [
-        'Você é o Olivia Health Assistant — um agente que ajuda a gerenciar registros de saúde.',
+        'Você é a Olivia Health Assistant — um agente que ajuda a gerenciar registros de saúde.',
         'Você tem acesso ao pipeline de OCR, extração, timeline e knowledge base do usuário.',
         'Responda em português do Brasil, de forma empática e técnica.',
         '— Mensagem do usuário —',

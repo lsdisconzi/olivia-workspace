@@ -1106,7 +1106,7 @@
 <div class="chat-log" id="agentLog"></div>
 <div class="chat-compose">
 <div class="compose-wrap">
-<textarea id="agentInput" oninput="autoGrow(this);updateCount()" onkeydown="if(event.key==='Enter'&amp;&amp;!event.shiftKey){event.preventDefault();sendAgentMessage();}" placeholder="Pergunte sobre o Olivia Workspace, módulos, casos reais..." rows="1"></textarea>
+<textarea id="agentInput" oninput="autoGrow(this);updateCount()" onkeydown="if(event.key==='Enter'&amp;&amp;!event.shiftKey){event.preventDefault();sendAgentMessage();}" placeholder="Pergunte sobre a Olivia Workspace, módulos, casos reais..." rows="1"></textarea>
 <span class="compose-count" id="charCount"><span data-i18n="01200">0/1200</span></span>
 </div>
 <button class="send-btn" id="sendBtn" onclick="sendAgentMessage()"><i class="fas fa-arrow-up" style="font-size:12px"></i></button>
@@ -1166,17 +1166,17 @@
     /* ── TOPIC PRESETS ── */
     const TOPIC_QUERIES = {
       ws_overview: 'Dê uma visão geral do Olivia Workspace: visão, módulos principais e para quem ele serve.',
-      ws_roles: 'Explique como o Olivia Workspace atende diferentes funções: caixa, bartender, compras, financeiro, vendas, almoxarifado e compliance. Dê um exemplo real de cada.',
+      ws_roles: 'Explique como a Olivia Workspace atende diferentes funções: caixa, bartender, compras, financeiro, vendas, almoxarifado e compliance. Dê um exemplo real de cada.',
       ws_core: 'Descreva o módulo Core Runtime e como ele garante que o workspace funcione de forma consistente em qualquer dispositivo.',
       ws_agents: 'Como funcionam os agentes no Olivia? Fale sobre criação, exportação e roteamento por seção.',
-      ws_studio: 'Quais ferramentas de criatividade o Olivia oferece? Dê exemplos de uso real (formulário de vendas, treinamento de bartender, preview 3D para cliente).',
+      ws_studio: 'Quais ferramentas de criatividade a Olivia oferece? Dê exemplos de uso real (formulário de vendas, treinamento de bartender, preview 3D para cliente).',
       ws_data: 'Explique os recursos de dados e análise: memória vetorial, pipeline de descoberta, documentos compartilhados. Como um financeiro usa isso no fechamento mensal?',
       ws_legal: 'Quais são os módulos legais do Olivia? Como um oficial de compliance localiza rapidamente uma regulamentação ou um caso de violação?',
-      ws_demo: 'Quero agendar uma demonstração. O que devo dizer sobre minha equipe e como o Olivia pode ajudar?',
+      ws_demo: 'Quero agendar uma demonstração. O que devo dizer sobre minha equipe e como a Olivia pode ajudar?',
     };
 
     function askTopic(key) {
-      const prompt = TOPIC_QUERIES[key] || 'Fale sobre o Olivia Workspace.';
+      const prompt = TOPIC_QUERIES[key] || 'Fale sobre a Olivia Workspace.';
       sendAgentMessage({ message: prompt, model: 'deepseek-v4-flash', newSession: true });
     }
 
@@ -1323,7 +1323,7 @@
     function askFollowUp(kind) {
       const p = {
         detalhar: 'Pode detalhar mais a resposta anterior, com exemplos práticos de uso no dia a dia?',
-        passos: 'Quais seriam os próximos passos para uma equipe começar a usar o Olivia Workspace?',
+        passos: 'Quais seriam os próximos passos para uma equipe começar a usar a Olivia Workspace?',
         riscos: 'Quais são os principais riscos ou desafios na adoção do Olivia em um ambiente real?',
         comparar: 'Compare dois módulos que você mencionou e explique quando usar cada um.',
       };
@@ -1678,7 +1678,7 @@
     /* ── WELCOME ── */
     function showWelcome() {
       appendAgent(
-        'Olá! Sou **Olivia**, a agente do **Olivia Workspace**.\n\nConheço cada módulo do ecossistema — do Core Runtime ao Legal, passando por Criatividade, Dados e Conectores — e também os papéis reais: caixa, bartender, compras, financeiro, vendas, almoxarifado e compliance.\n\nPergunte o que quiser: "como o bartender usa o Olivia numa sexta à noite?", "o que o módulo Memory faz?", ou "quero uma demonstração".',
+        'Olá! Sou **Olivia**, a agente do **Olivia Workspace**.\n\nConheço cada módulo do ecossistema — do Core Runtime ao Legal, passando por Criatividade, Dados e Conectores — e também os papéis reais: caixa, bartender, compras, financeiro, vendas, almoxarifado e compliance.\n\nPergunte o que quiser: "como o bartender usa a Olivia numa sexta à noite?", "o que o módulo Memory faz?", ou "quero uma demonstração".',
         null, null, { actions: false, store: false }
       );
     }
