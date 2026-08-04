@@ -12059,6 +12059,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         if raw_path in {"/olivia/admin/notifications/read-all", "/olivia/admin/notifications/read-all/"}:
             self._admin_notifications_mark_all_read()
             return
+        if raw_path in {"/olivia/admin/users", "/olivia/admin/users/"}:
+            self._admin_users_create()
+            return
         if raw_path in {"/api/public/olivia-ask", "/api/olivia/public/ask", "/public/ask"}:
             self._public_Olivia_ask()
             return
