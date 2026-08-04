@@ -77,3 +77,13 @@
 .studio-file-tree .folder::before { content: '\f07b'; font-family: 'Font Awesome 5 Free'; margin-right: 4px; }
 .studio-file-tree .file::before { content: '\f15b'; font-family: 'Font Awesome 5 Free'; margin-right: 4px; }
 
+/* ── Studio Inspect Mode ── */
+.studio-inspect-btn.active{color:var(--green);background:rgba(34,160,107,.12)}
+.studio-inspect-btn.active:hover{color:var(--green);background:rgba(34,160,107,.18)}
+.studio-inspected-chips{display:none;flex-wrap:wrap;gap:6px;padding:6px 10px;margin:0;border-top:1px solid var(--border)}
+.studio-inspected-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:rgba(28,69,50,.08);border:1px solid rgba(28,69,50,.2);border-radius:6px;font-size:11px;color:var(--gray-hi);font-family:var(--mono);white-space:nowrap}
+.studio-inspected-chip-tag{color:var(--amber);font-weight:600;text-transform:uppercase;font-size:10px}
+.studio-inspected-chip-label{max-width:140px;overflow:hidden;text-overflow:ellipsis}
+.studio-inspected-chip-remove{background:none;border:none;color:var(--gray);cursor:pointer;font-size:13px;padding:0 2px;line-height:1}
+.studio-inspected-chip-remove:hover{color:var(--red)}
+

@@ -92,15 +92,12 @@ app.on('second-instance', () => {
 let mainWindow = null;
 
 function createWindow() {
-  const isMac = process.platform === 'darwin';
-
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     minWidth: 900,
     minHeight: 600,
-    frame: false,
-    titleBarStyle: isMac ? 'hidden' : 'default',
+    frame: false,              // removes native title bar + traffic lights on all OSes
     backgroundColor: '#0d1117',
     show: false,
     webPreferences: {
@@ -210,7 +207,6 @@ function loadFallback(reason) {
 
 // ── Title bar injection ───────────────────────────────────────────────
 function injectTitleBar(win) {
-  const isMac = process.platform === 'darwin';
   const titlebarPath = path.join(__dirname, 'src', 'renderer', 'titlebar.html');
   const stylePath = path.join(__dirname, 'src', 'renderer', 'style.css');
 
@@ -239,7 +235,7 @@ function injectTitleBar(win) {
         bar.setAttribute('data-platform', '${process.platform}');
         document.body.prepend(bar);
         // Push body content down
-        document.body.style.paddingTop = '36px';
+        document.body.style.paddingTop = '14px';
         // Wire buttons via electronAPI
         const minBtn = bar.querySelector('#ol-titlebar-minimize');
         const maxBtn = bar.querySelector('#ol-titlebar-maximize');

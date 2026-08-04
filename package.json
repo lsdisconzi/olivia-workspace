@@ -10,6 +10,7 @@
     "nodemon": "^3.0.1"
   },
   "dependencies": {
+    "docx": "^9.7.1",
     "marked": "^18.0.7",
     "puppeteer": "^25.4.0"
   }

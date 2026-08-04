@@ -535,10 +535,43 @@ function syncBrowserSharedState(url, title, shared) {
 function shareBrowserPageWithAgent() {
   const bar = document.getElementById('browserUrlBar');
   const frame = document.getElementById('browserFrame');
-  const browserUrl = String((bar && bar.value) || (frame && frame.src) || '').trim();
-  const browserTitle = String((frame && frame.contentDocument && frame.contentDocument.title) || document.title || '').trim();
-  const hasPage = !!browserUrl && browserUrl !== 'about:blank';
-  if (!hasPage) return;
+  let browserUrl = String((bar && bar.value) || (frame && frame.src) || '').trim();
+  let browserTitle = String((frame && frame.contentDocument && frame.contentDocument.title) || document.title || '').trim();
+  let hasPage = !!browserUrl && browserUrl !== 'about:blank';
+
+  // Fallback: when the Browser panel is empty but the Studio preview is active,
+  // share the Studio preview document instead of silently doing nothing. This is
+  // the common case inside Olivia Studio, where the user is editing a page in the
+  // preview but the separate Browser panel has never been navigated.
+  if (!hasPage) {
+    const studioView = document.getElementById('studioView');
+    const studioActive = !!(studioView && studioView.classList.contains('active'));
+    if (studioActive && typeof _studio !== 'undefined' && _studio && typeof studioBuildPreviewDocument === 'function') {
+      try {
+        const doc = String(_studio.documentSource || '').trim();
+        if (doc) {
+          const html = studioBuildPreviewDocument(doc);
+          const pageName = (_studioProject && _studioProject.currentPage)
+            || (_studio.currentTab ? ('file.' + _studio.currentTab) : 'preview.html');
+          const sharedUrl = 'studio://preview/' + encodeURIComponent(String(pageName).replace(/^.*\//, ''));
+          if (frame) frame.srcdoc = html;
+          if (bar) bar.value = sharedUrl;
+          browserUrl = sharedUrl;
+          hasPage = true;
+          if (typeof toast === 'function') toast('Browser vazio — compartilhando o preview do Studio.', 'success');
+        }
+      } catch (e) {
+        console.error('Failed to share Studio preview:', e);
+      }
+    }
+  }
+
+  if (!hasPage) {
+    openBrowserPanel();
+    if (typeof toast === 'function') toast('Nada para compartilhar — abra uma página no Browser primeiro.', 'error');
+    return;
+  }
+
   openBrowserPanel();
   syncBrowserSharedState(browserUrl, browserTitle, true);
 }

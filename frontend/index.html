@@ -2387,6 +2387,7 @@
                     class="fas fa-desktop"></i></button>
                 <button class="studio-mode-btn" onclick="studioRefreshPreview()" title="Refresh"><i
                     class="fas fa-sync-alt"></i></button>
+                <button class="studio-mode-btn studio-inspect-btn" id="studioInspectBtn" onclick="studioToggleInspectMode()" title="Click elements in the preview to capture for the agent"><i class="fas fa-mouse-pointer"></i></button>
               </div>
             </div>
             <div class="studio-preview-stage">
@@ -2449,6 +2450,7 @@
                     onclick="this.classList.toggle('active');studioSyncAssistantContext()"
                     title="Include current selection when available"><i class="fas fa-i-cursor"></i> Selection</button>
                 </div>
+                <div class="studio-inspected-chips" id="studioInspectedChips"></div>
                 <button class="btn btn-sm" onclick="studioSendAiMsg()"
                   style="background:rgba(28,69,50,.1);border-color:rgba(28,69,50,.3);color:var(--amber)"><i
                     class="fas fa-paper-plane"></i> Send</button>

@@ -12,6 +12,8 @@ let _studio = {
   documentSource: '',
   viewState: null,
   selection: null,
+  inspectMode: false,
+  inspectedElements: [],
   editorBound: false,
   syncingView: false,
   sourceIsDefault: false,   // true while documentSource is the unedited localized default template
@@ -820,8 +822,65 @@ function studioBindPreviewSelection(previewFrame) {
       textSample: studioNormalizeText((target.textContent || '').replace(/\s+/g, ' ').trim()).slice(0, 220),
     };
 
-    studioApplyPreviewSelection(payload);
+    if (_studio.inspectMode) {
+      studioAddInspectedElement(payload);
+    } else {
+      studioApplyPreviewSelection(payload);
+    }
   }, true);
+}
+
+/* ── Inspect Mode ── */
+function studioToggleInspectMode() {
+  _studio.inspectMode = !_studio.inspectMode;
+  const btn = document.getElementById('studioInspectBtn');
+  if (btn) btn.classList.toggle('active', _studio.inspectMode);
+
+  // Update preview iframe cursor style
+  const frame = document.getElementById('studioPreviewFrame');
+  if (frame) {
+    try {
+      const doc = frame.contentDocument;
+      if (doc && doc.body) {
+        doc.body.style.cursor = _studio.inspectMode ? 'crosshair' : '';
+      }
+    } catch (_e) { /* cross-origin */ }
+  }
+}
+
+function studioAddInspectedElement(payload) {
+  if (!payload) return;
+  // Avoid duplicates by selector
+  if (_studio.inspectedElements.some(el => el.selector === payload.selector)) return;
+
+  _studio.inspectedElements.push(payload);
+  studioRenderInspectedChips();
+}
+
+function studioRemoveInspectedElement(index) {
+  _studio.inspectedElements.splice(index, 1);
+  studioRenderInspectedChips();
+}
+
+function studioRenderInspectedChips() {
+  const container = document.getElementById('studioInspectedChips');
+  if (!container) return;
+
+  if (!_studio.inspectedElements.length) {
+    container.innerHTML = '';
+    container.style.display = 'none';
+    return;
+  }
+
+  container.style.display = 'flex';
+  container.innerHTML = _studio.inspectedElements.map((el, i) => {
+    const label = el.id ? `#${el.id}` : (el.classNames && el.classNames.length ? `.${el.classNames[0]}` : el.tagName);
+    return `<span class="studio-inspected-chip" title="${_studioEscHtml(el.selector || el.tagName)}">
+      <span class="studio-inspected-chip-tag">${_studioEscHtml(el.tagName)}</span>
+      <span class="studio-inspected-chip-label">${_studioEscHtml(label)}</span>
+      <button class="studio-inspected-chip-remove" onclick="studioRemoveInspectedElement(${i})" title="Remove">&times;</button>
+    </span>`;
+  }).join('');
 }
 
 
@@ -2017,6 +2076,7 @@ async function studioSendAiMsg() {
     currentView: useCtx && _studio.viewState ? studioGetViewContent(_studio.viewState, _studio.currentTab) : '',
     fullDocument: useCtx ? _studio.documentSource : '',
     selection: studioGetSelectionContext(),
+    inspectedElements: _studio.inspectMode ? _studio.inspectedElements.slice() : [],
     panelContextText: panelContext.text || '',
   };
 
@@ -2098,6 +2158,13 @@ async function _studioCallLLM(prompt, context) {
     }
   } else {
     chunks.push('No active selection.');
+  }
+
+  if (context.inspectedElements && context.inspectedElements.length) {
+    const inspectedList = context.inspectedElements.map(el =>
+      `${el.tagName}${el.id ? '#' + el.id : ''} (${el.selector || ''}): ${el.textSample || ''}`
+    ).join('\n');
+    chunks.push(`Inspected elements from preview (user clicked these):\n${inspectedList}`);
   }
 
   if (context.currentView) {
