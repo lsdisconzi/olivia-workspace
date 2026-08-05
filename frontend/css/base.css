@@ -5919,6 +5919,86 @@ body:has(.workspace.focus-mode) .focus-exit-btn {
     background: var(--amber)
 }
 
+/* ── SETTINGS SIDEBAR ── */
+.settings-overlay {
+    position: fixed; inset: 0; z-index: 10001;
+    background: rgba(0,0,0,.45); opacity: 0; visibility: hidden;
+    transition: opacity .25s, visibility .25s;
+}
+.settings-overlay.open { opacity: 1; visibility: visible; }
+
+.settings-sidebar {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 10002;
+    width: 320px; max-width: 90vw;
+    background: var(--bg-card); border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform var(--panel-transition);
+    box-shadow: -8px 0 32px rgba(0,0,0,.25);
+}
+.settings-sidebar.open { transform: translateX(0); }
+
+.settings-sidebar-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.settings-sidebar-header h3 {
+    font-family: var(--serif); font-size: 15px; font-weight: 500; color: var(--white);
+}
+.settings-sidebar-close {
+    width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border);
+    background: transparent; color: var(--gray-hi); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+    transition: all .15s;
+}
+.settings-sidebar-close:hover { border-color: var(--amber); color: var(--amber); }
+
+.settings-sidebar-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+
+.settings-section { margin-bottom: 24px; }
+.settings-section-label {
+    font-size: 10px; font-family: var(--mono); letter-spacing: .08em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 10px;
+}
+
+.settings-nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 8px;
+    color: var(--gray-hi); text-decoration: none; font-size: 13px;
+    transition: all .15s; margin-bottom: 2px;
+}
+.settings-nav-item:hover { background: rgba(255,255,255,.04); color: var(--white); }
+.settings-nav-item.active { color: var(--amber); background: rgba(196,98,45,.08); }
+.settings-nav-item i { font-size: 12px; width: 18px; text-align: center; color: var(--amber); }
+
+.settings-toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; border-radius: 8px;
+    transition: background .15s;
+}
+.settings-toggle-row:hover { background: rgba(255,255,255,.03); }
+.settings-toggle-label {
+    font-size: 13px; color: var(--gray-hi); display: flex; align-items: center; gap: 8px;
+}
+.settings-toggle-label i { font-size: 11px; width: 14px; text-align: center; color: var(--amber); }
+
+/* Small toggle switch */
+.settings-switch {
+    position: relative; width: 40px; height: 22px; flex-shrink: 0;
+}
+.settings-switch input { opacity: 0; width: 0; height: 0; }
+.settings-switch .slider {
+    position: absolute; inset: 0; background: var(--border); border-radius: 22px;
+    cursor: pointer; transition: background .2s;
+}
+.settings-switch .slider::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 18px; height: 18px; background: #fff; border-radius: 50%;
+    transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.settings-switch input:checked + .slider { background: var(--amber); }
+.settings-switch input:checked + .slider::after { transform: translateX(18px); }
+
 @media (max-width: 768px) {
     .nav-links-desktop {
         display: none !important

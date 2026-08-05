@@ -666,6 +666,9 @@ function koutDarkModeToggle() {
   try { localStorage.setItem('OliviaLegal.darkMode', isDark ? '1' : '0'); } catch (e) { }
   var btn = document.getElementById('epDarkModeToggle');
   if (btn) btn.classList.toggle('on', isDark);
+  // Sync settings sidebar dark mode toggle
+  var dmToggle = document.getElementById('settingsDarkModeToggle');
+  if (dmToggle) dmToggle.checked = isDark;
 }
 
 // HAVAN project theme cycler.
@@ -704,6 +707,64 @@ function havanThemeCycle() {
   root.setAttribute('data-theme', next);
   try { localStorage.setItem('havan.theme', next); } catch (e) { }
   return next;
+}
+
+// ── Settings Sidebar ────────────────────────────────────────────────────────
+function toggleSettingsSidebar() {
+  var overlay = document.getElementById('settingsOverlay');
+  var sidebar = document.getElementById('settingsSidebar');
+  if (!overlay || !sidebar) return;
+  var isOpen = sidebar.classList.contains('open');
+  if (isOpen) {
+    overlay.classList.remove('open');
+    sidebar.classList.remove('open');
+  } else {
+    // Sync toggle states before opening
+    syncSettingsToggles();
+    overlay.classList.add('open');
+    sidebar.classList.add('open');
+  }
+}
+
+function syncSettingsToggles() {
+  // Dark mode
+  var dmToggle = document.getElementById('settingsDarkModeToggle');
+  if (dmToggle) {
+    dmToggle.checked = document.body.classList.contains('dark');
+  }
+  // Runpod
+  var rpToggle = document.getElementById('settingsRunpodToggle');
+  if (rpToggle) {
+    try { rpToggle.checked = localStorage.getItem('olivia.runpod.enabled') !== '0'; } catch(e) {}
+  }
+}
+
+// ── Runpod Toggle ───────────────────────────────────────────────────────────
+// Toggles the checkbox and applies the state (called from row click)
+function toggleRunpodEnabled() {
+  var rpToggle = document.getElementById('settingsRunpodToggle');
+  if (rpToggle) rpToggle.checked = !rpToggle.checked;
+  applyRunpodState();
+}
+
+// Applies runpod state based on current checkbox value (called from switch onchange)
+function applyRunpodState() {
+  var rpToggle = document.getElementById('settingsRunpodToggle');
+  var enabled = rpToggle ? rpToggle.checked : true;
+  try { localStorage.setItem('olivia.runpod.enabled', enabled ? '1' : '0'); } catch(e) {}
+  var fab = document.getElementById('runpod-fab');
+  if (fab) {
+    fab.style.display = enabled ? '' : 'none';
+  }
+}
+
+// Sync runpod state on page load (called on DOMContentLoaded or via init)
+function initRunpodState() {
+  try {
+    var enabled = localStorage.getItem('olivia.runpod.enabled') !== '0';
+    var fab = document.getElementById('runpod-fab');
+    if (fab && !enabled) fab.style.display = 'none';
+  } catch(e) {}
 }
 
 // Browser navigation
@@ -1394,6 +1455,10 @@ window.toggleOutputPanel = toggleOutputPanel;
 window.toggleBrowserPanel = toggleBrowserPanel;
 window.koutDarkModeToggle = koutDarkModeToggle;
 window.havanThemeCycle = havanThemeCycle;
+window.toggleSettingsSidebar = toggleSettingsSidebar;
+window.toggleRunpodEnabled = toggleRunpodEnabled;
+window.applyRunpodState = applyRunpodState;
+window.initRunpodState = initRunpodState;
 window.browserBack = browserBack;
 window.browserForward = browserForward;
 window.browserReload = browserReload;
@@ -1470,4 +1535,7 @@ window.downloadPreviewAsPdf = downloadPreviewAsPdf;
 window.maximizeCurrentPreview = maximizeCurrentPreview;
 window.syncWorkspacePanels = _syncWorkspacePanels;
 window.updatePreviewDownloadVisibility = updatePreviewDownloadVisibility;
+
+// Initialize runpod state on load
+initRunpodState();
 window.closeDownloadDropdown = closeDownloadDropdown;

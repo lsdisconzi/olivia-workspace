@@ -315,13 +315,9 @@
     <a class="nav-logo" href="/olivia/">Olivia <span class="nav-logo-sub" id="navWorkspaceLabel"
         onclick="resetToWelcome(event)"><span data-i18n="navWorkspace">Workspace</span></span></a>
     <div class="nav-links-desktop">
-      <a class="nav-link" href="/olivia/"><span data-i18n="navHome">Home</span></a>
-      <a class="nav-link" href="/olivia/arquitetura"><span data-i18n="sidebarArchitecture">Architecture</span></a>
-      <a class="nav-link" href="/olivia/agent"><span data-i18n="navAgent">Mobile Agent</span></a>
-      <a class="nav-link active" href="/olivia/olivia.html"><span data-i18n="navWorkspace">Workspace</span></a>
       <select aria-label="Language" class="vw-lang-select" id="langSelect"
         style="margin-left:14px;background:#10141c;color:#cfe3ff;border:1px solid #2a3550;border-radius:6px;padding:3px 6px;font-size:12px;cursor:pointer;"></select>
-      <div class="desktop-mode-toggle agent" id="desktopModeToggle" title="Single mode: Agent">
+      <div class="desktop-mode-toggle agent" id="desktopModeToggle" title="Settings" onclick="toggleSettingsSidebar()">
         <span class="mode-label" id="desktopModeLabel"><span data-i18n="apiAgent">Agent</span></span>
         <span class="mode-dot"></span>
       </div>
@@ -6661,9 +6657,42 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <!-- ═══════════════════════════════════════════════════════════════════
      ENDPOINT CONFIG WIDGET
      ═══════════════════════════════════════════════════════════════════ -->
-  <!-- Theme toggle: single button flips light/dark directly (only two themes) -->
-  <button class="ep-gear" onclick="koutDarkModeToggle()" title="Toggle dark mode"><i class="fas fa-leaf"
-      style="font-size:5px"></i></button>
+  <!-- ═══════ SETTINGS SIDEBAR ═══════ -->
+  <div class="settings-overlay" id="settingsOverlay" onclick="toggleSettingsSidebar()"></div>
+  <div class="settings-sidebar" id="settingsSidebar">
+    <div class="settings-sidebar-header">
+      <h3>Settings</h3>
+      <button class="settings-sidebar-close" onclick="toggleSettingsSidebar()" aria-label="Close settings">&times;</button>
+    </div>
+    <div class="settings-sidebar-body">
+      <!-- Navigation -->
+      <div class="settings-section">
+        <div class="settings-section-label">Navigation</div>
+        <a class="settings-nav-item" href="/olivia/"><i class="fas fa-home"></i>Home</a>
+        <a class="settings-nav-item" href="/olivia/arquitetura"><i class="fas fa-sitemap"></i>Architecture</a>
+        <a class="settings-nav-item" href="/olivia/agent"><i class="fas fa-comments"></i>Mobile Agent</a>
+        <a class="settings-nav-item active" href="/olivia/olivia.html"><i class="fas fa-th-large"></i>Workspace</a>
+      </div>
+      <!-- Settings -->
+      <div class="settings-section">
+        <div class="settings-section-label">Settings</div>
+        <div class="settings-toggle-row" onclick="koutDarkModeToggle()" style="cursor:pointer">
+          <span class="settings-toggle-label"><i class="fas fa-moon"></i>Dark Mode</span>
+          <label class="settings-switch" onclick="event.stopPropagation()">
+            <input type="checkbox" id="settingsDarkModeToggle" onchange="koutDarkModeToggle()">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="settings-toggle-row" onclick="toggleRunpodEnabled()" style="cursor:pointer">
+          <span class="settings-toggle-label"><i class="fas fa-cloud"></i>RunPod</span>
+          <label class="settings-switch" onclick="event.stopPropagation()">
+            <input type="checkbox" id="settingsRunpodToggle" onchange="applyRunpodState()">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="ep-toast" id="epToast"></div>
   <datalist id="epSuggestions"></datalist>
   <!-- ═══ JS Modules ═══ -->
