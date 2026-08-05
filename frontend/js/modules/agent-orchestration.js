@@ -320,18 +320,16 @@
   // rebuild the bar and rebind its listeners).
   function _renderRuntimeBarLabels() {
     var titleEl = document.querySelector('#oliviaRuntimeBar .olivia-runtime-title');
-    if (titleEl) titleEl.textContent = _t('ui.orchestratorControls', 'Orchestrator Controls');
+    if (titleEl) {
+      var label = _t('ui.orchestratorControls', 'Orchestrator Controls');
+      var collapsed = !!_runtime.runtimeBarCollapsed;
+      titleEl.textContent = (collapsed ? '▶ ' : '▼ ') + label;
+    }
     var labels = document.querySelectorAll('#oliviaRuntimeBar .olivia-runtime-label');
     var labelKeys = ['ui.mainAgent', 'ui.secondaryAgent'];
     labels.forEach(function (el, i) {
       if (labelKeys[i]) el.textContent = _t(labelKeys[i], el.textContent);
     });
-    var toggle = document.getElementById('oliviaRuntimeCollapseBtn');
-    if (toggle) {
-      var expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.querySelector('span').textContent = expanded ? _t('ui.hide', 'Hide') : _t('ui.show', 'Show');
-      toggle.title = expanded ? _t('ui.hide', 'Hide') + ' orchestration controls' : _t('ui.show', 'Show') + ' orchestration controls';
-    }
     var secBtn = document.getElementById('oliviaToggleSecondaryBtn');
     if (secBtn) secBtn.textContent = _t('ui.secondaryChat', 'Secondary chat');
   }
@@ -346,8 +344,7 @@
       bar.className = 'olivia-runtime-bar';
       bar.innerHTML = [
         '<div class="olivia-runtime-head">',
-          '<div class="olivia-runtime-title">' + _t('ui.orchestratorControls', 'Orchestrator Controls') + '</div>',
-          '<button id="oliviaRuntimeCollapseBtn" class="olivia-runtime-btn olivia-runtime-toggle" type="button" aria-expanded="true" title="' + _t('ui.hide', 'Hide') + ' orchestration controls"><i class="fas fa-chevron-up"></i><span>' + _t('ui.hide', 'Hide') + '</span></button>',
+          '<div class="olivia-runtime-title" role="button" tabindex="0" aria-expanded="true" title="' + _t('ui.hide', 'Hide') + ' orchestration controls">' + _t('ui.orchestratorControls', 'Orchestrator Controls') + '</div>',
         '</div>',
         '<div id="oliviaRuntimeBody" class="olivia-runtime-body">',
         '<div class="olivia-runtime-row">',
@@ -392,14 +389,22 @@
       toggleBtn.dataset.bound = 'true';
     }
 
-    var runtimeToggleBtn = document.getElementById('oliviaRuntimeCollapseBtn');
-    if (runtimeToggleBtn && !runtimeToggleBtn.dataset.bound) {
-      runtimeToggleBtn.addEventListener('click', function () {
+    var runtimeTitle = document.querySelector('#oliviaRuntimeBar .olivia-runtime-title');
+    if (runtimeTitle && !runtimeTitle.dataset.bound) {
+      runtimeTitle.addEventListener('click', function () {
         _runtime.runtimeBarCollapsed = !_runtime.runtimeBarCollapsed;
         _saveRuntimeState();
         _renderRuntimeBarCollapsedState();
       });
-      runtimeToggleBtn.dataset.bound = 'true';
+      runtimeTitle.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          _runtime.runtimeBarCollapsed = !_runtime.runtimeBarCollapsed;
+          _saveRuntimeState();
+          _renderRuntimeBarCollapsedState();
+        }
+      });
+      runtimeTitle.dataset.bound = 'true';
     }
 
     var sendBtn = document.getElementById('oliviaSecondarySend');
@@ -472,15 +477,16 @@
   function _renderRuntimeBarCollapsedState() {
     var bar = document.getElementById('oliviaRuntimeBar');
     var body = document.getElementById('oliviaRuntimeBody');
-    var toggleBtn = document.getElementById('oliviaRuntimeCollapseBtn');
+    var titleEl = document.querySelector('#oliviaRuntimeBar .olivia-runtime-title');
     var collapsed = !!_runtime.runtimeBarCollapsed;
 
     if (bar) bar.classList.toggle('is-collapsed', collapsed);
     if (body) body.classList.toggle('is-collapsed', collapsed);
-    if (toggleBtn) {
-      toggleBtn.innerHTML = '<i class="fas ' + (collapsed ? '.' : 'fa-chevron-up') + '"></i><span>' + (collapsed ? '...' : _t('ui.hide', 'Hide')) + '</span>';
-      toggleBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
-      toggleBtn.title = collapsed ? _t('ui.show', 'Show') + ' orchestration controls' : _t('ui.hide', 'Hide') + ' orchestration controls';
+    if (titleEl) {
+      var label = _t('ui.orchestratorControls', 'Orchestrator Controls');
+      titleEl.textContent = (collapsed ? '▶ ' : '▼ ') + label;
+      titleEl.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      titleEl.title = collapsed ? _t('ui.show', 'Show') + ' orchestration controls' : _t('ui.hide', 'Hide') + ' orchestration controls';
     }
   }
 

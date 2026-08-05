@@ -22,6 +22,8 @@
   letter-spacing: 0.08em;
   font-weight: 500;
   opacity: 0.82;
+  cursor: pointer;
+  user-select: none;
   transition: color 160ms ease, font-size 160ms ease, font-weight 160ms ease,
     opacity 160ms ease, transform 160ms ease;
 }
@@ -39,16 +41,6 @@
   font-weight: 700;
   opacity: 1;
   transform: translateY(-0.5px);
-}
-
-.olivia-runtime-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.olivia-runtime-toggle i {
-  font-size: 10px;
 }
 
 .olivia-runtime-body {

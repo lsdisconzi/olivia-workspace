@@ -1347,7 +1347,7 @@ html.dark body {
 
 .chat-agent-name {
     font-family: var(--serif);
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 500
 }
 

@@ -1329,6 +1329,7 @@ function resolvePreviewFileType(name, options) {
     if (['docm'].includes(value)) return 'docx';
     if (['mdown', 'mkd'].includes(value)) return 'markdown';
     if (['txt', 'csv', 'xml', 'yaml', 'yml', 'toml', 'log', 'sql', 'sh', 'env', 'cfg', 'ini', 'py', 'js', 'ts', 'tsx', 'jsx', 'css', 'rst'].includes(value)) return 'text';
+    if (['cypher', 'cql'].includes(value)) return 'cypher';
     return value;
   };
 
@@ -1779,7 +1780,7 @@ async function openPreviewUrl(url, name, options) {
     const iconMap = { docx:'fa-file-word', doc:'fa-file-word', pdf:'fa-file-pdf', html:'fa-file-code',
                       htm:'fa-file-code', md:'fa-file-lines', json:'fa-file-code', txt:'fa-file-lines',
                       png:'fa-file-image', jpg:'fa-file-image', jpeg:'fa-file-image', svg:'fa-file-image',
-                      image:'fa-file-image', audio:'fa-file-audio', markdown:'fa-file-lines', text:'fa-file-lines' };
+                      image:'fa-file-image', audio:'fa-file-audio', markdown:'fa-file-lines', text:'fa-file-lines', cypher:'fa-diagram-project', cql:'fa-diagram-project' };
     const iconCls = iconMap[previewType] || iconMap[ext] || 'fa-file';
     panelTitle.innerHTML = `<i class="fas ${iconCls}" style="margin-right:6px;font-size:12px;color:var(--blue)"></i> ${escapeHtml(displayName || name)}`;
   }
@@ -1904,6 +1905,26 @@ async function openPreviewUrl(url, name, options) {
       attachAudioPreviewMeta(body, url);
     } else if (previewType === 'image' || ['png','jpg','jpeg','gif','svg','webp'].includes(ext)) {
       body.innerHTML = `<div style="padding:16px;overflow-y:auto;height:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;"><img src="${escapeHtml(url)}" style="max-width:100%;max-height:90%;object-fit:contain;border-radius:4px;"></div>`;
+    } else if (previewType === 'cypher') {
+      const res = await fetch(url);
+      const text = await res.text();
+      body.innerHTML = [
+        '<div class="output-rich-scroll">',
+          '<article class="olivia-doc-rich">',
+            '<div class="olivia-doc-rich-head"><span class="olivia-doc-rich-label">', escapeHtml(displayName || name), '</span></div>',
+            '<div class="olivia-doc-rich-body"><pre><code class="language-cypher">', escapeHtml(text), '</code></pre></div>',
+          '</article>',
+        '</div>'
+      ].join('');
+      // Apply highlight.js post-render pipeline
+      if (typeof postRenderDom === 'function') {
+        postRenderDom(body);
+      } else if (typeof hljs !== 'undefined') {
+        const codeEl = body.querySelector('pre code.language-cypher');
+        if (codeEl) {
+          try { hljs.highlightElement(codeEl); codeEl.dataset.highlighted = 'true'; } catch (_) {}
+        }
+      }
     } else {
       const res = await fetch(url);
       const text = await res.text();
