@@ -1,0 +1,55 @@
+<!-- Scene 6/13 — scene-book (Livro — Ontologia) — extracted from _lsd/morphs/index-br.html -->
+<svg viewBox="0 0 280 260" xmlns="http://www.w3.org/2000/svg">
+  <style>
+@keyframes sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(1.2deg); }
+}
+@keyframes fruit-glow {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+  </style>
+  <g style="transform-origin: 140px 130px; animation: sway 10s ease-in-out infinite">
+              <!-- Spine / trunk of the book -->
+              <path d="M140 235 Q140 200, 140 165 Q140 130, 140 90" fill="none" stroke="#1c4532" stroke-width="3.5" stroke-linecap="round" opacity="0.55"/>
+
+              <!-- Left page -->
+              <path d="M140 90 Q130 88, 80 85 Q65 84, 58 90 Q55 95, 56 100 L65 220 Q68 228, 80 228 Q110 226, 140 220" fill="none" stroke="#2d785a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
+
+              <!-- Right page -->
+              <path d="M140 90 Q150 88, 200 85 Q215 84, 222 90 Q225 95, 224 100 L215 220 Q212 228, 200 228 Q170 226, 140 220" fill="none" stroke="#2d785a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
+
+              <!-- Text lines on left page -->
+              <g opacity="0.2">
+                <path d="M80 110 L125 108" fill="none" stroke="#2d785a" stroke-width="0.8" stroke-linecap="round"/>
+                <path d="M82 125 L122 123" fill="none" stroke="#2d785a" stroke-width="0.8" stroke-linecap="round"/>
+                <path d="M84 140 L120 138" fill="none" stroke="#2d785a" stroke-width="0.8" stroke-linecap="round"/>
+                <path d="M86 155 L118 153" fill="none" stroke="#2d785a" stroke-width="0.6" stroke-linecap="round"/>
+                <path d="M88 170 L116 168" fill="none" stroke="#2d785a" stroke-width="0.6" stroke-linecap="round"/>
+              </g>
+
+              <!-- Text lines on right page -->
+              <g opacity="0.2">
+                <path d="M155 108 L200 110" fill="none" stroke="#2d785a" stroke-width="0.8" stroke-linecap="round"/>
+                <path d="M158 123 L198 125" fill="none" stroke="#2d785a" stroke-width="0.8" stroke-linecap="round"/>
+                <path d="M160 138 L196 140" fill="none" stroke="#2d785a" stroke-width="0.8" stroke-linecap="round"/>
+                <path d="M162 153 L194 155" fill="none" stroke="#2d785a" stroke-width="0.6" stroke-linecap="round"/>
+                <path d="M164 168 L192 170" fill="none" stroke="#2d785a" stroke-width="0.6" stroke-linecap="round"/>
+              </g>
+
+              <!-- Olives as bookmarks / knowledge fruits -->
+              <ellipse cx="140" cy="82" rx="5.5" ry="7" fill="#c4622d" opacity="0.9" style="animation: fruit-glow 4s ease-in-out infinite"/>
+              <ellipse cx="139" cy="80" rx="2.2" ry="2.8" fill="#d4733e" opacity="0.4"/>
+
+              <ellipse cx="95" cy="195" rx="3.5" ry="4.5" fill="#c4622d" opacity="0.65" style="animation: fruit-glow 4s ease-in-out 0.5s infinite"/>
+              <ellipse cx="185" cy="195" rx="3.5" ry="4.5" fill="#c4622d" opacity="0.65" style="animation: fruit-glow 4s ease-in-out 1s infinite"/>
+
+              <!-- Small leaf flourishes -->
+              <path d="M130 85 Q122 78, 118 72" fill="none" stroke="#1c4532" stroke-width="0.8" opacity="0.3" stroke-linecap="round"/>
+              <path d="M150 85 Q158 78, 162 72" fill="none" stroke="#1c4532" stroke-width="0.8" opacity="0.3" stroke-linecap="round"/>
+
+              <!-- Base -->
+              <path d="M110 238 Q140 244, 170 238" fill="none" stroke="#1c4532" stroke-width="1" opacity="0.15" stroke-linecap="round"/>
+            </g>
+</svg>

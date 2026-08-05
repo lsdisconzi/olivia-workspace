@@ -1,0 +1,53 @@
+<!-- Scene 5/11 — scene-network (Intelligence) — extracted from frontend/index-i18n.html:1676 -->
+<svg viewBox="0 0 260 280" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes fruit-glow {
+      0%, 100% { opacity: .85; filter: brightness(1); }
+      50%      { opacity: 1;   filter: brightness(1.15); }
+    }
+    @keyframes subtle-pulse {
+      0%, 100% { opacity: .4; }
+      50%      { opacity: .6; }
+    }
+  </style>
+  <g style="transform-origin:130px 130px">
+    <path d="M130 240 Q130 200,130 160 Q130 140,130 130" fill="none" opacity=".5" stroke="#1c4532"
+      stroke-linecap="round" stroke-width="3"></path>
+    <circle cx="130" cy="120" fill="none" opacity=".5" r="12" stroke="#2d785a" stroke-width="2"></circle>
+    <ellipse cx="130" cy="120" fill="#c4622d" opacity=".85" rx="6" ry="7"
+      style="animation:fruit-glow 4s ease-in-out infinite"></ellipse>
+    <path d="M130 120 Q110 100,70 75" fill="none" opacity=".4" stroke="#2d785a" stroke-linecap="round"
+      stroke-width="1.2" style="animation:subtle-pulse 5s ease-in-out infinite"></path>
+    <path d="M130 120 Q150 100,190 75" fill="none" opacity=".4" stroke="#2d785a" stroke-linecap="round"
+      stroke-width="1.2" style="animation:subtle-pulse 5s ease-in-out .5s infinite"></path>
+    <path d="M130 120 Q90 125,50 140" fill="none" opacity=".35" stroke="#2d785a" stroke-linecap="round"
+      stroke-width="1.2" style="animation:subtle-pulse 5s ease-in-out 1s infinite"></path>
+    <path d="M130 120 Q170 125,210 140" fill="none" opacity=".35" stroke="#2d785a"
+      stroke-linecap="round" stroke-width="1.2"
+      style="animation:subtle-pulse 5s ease-in-out 1.5s infinite"></path>
+    <path d="M130 120 Q110 90,95 55" fill="none" opacity=".3" stroke="#2d785a" stroke-linecap="round"
+      stroke-width="1"></path>
+    <path d="M130 120 Q150 90,165 55" fill="none" opacity=".3" stroke="#2d785a" stroke-linecap="round"
+      stroke-width="1"></path>
+    <circle cx="70" cy="75" fill="none" opacity=".4" r="8" stroke="#2d785a" stroke-width="1.2"></circle>
+    <ellipse cx="70" cy="75" fill="#c4622d" opacity=".75" rx="4" ry="5"
+      style="animation:fruit-glow 4s ease-in-out .3s infinite"></ellipse>
+    <circle cx="190" cy="75" fill="none" opacity=".4" r="8" stroke="#2d785a" stroke-width="1.2"></circle>
+    <ellipse cx="190" cy="75" fill="#c4622d" opacity=".75" rx="4" ry="5"
+      style="animation:fruit-glow 4s ease-in-out .6s infinite"></ellipse>
+    <circle cx="50" cy="140" fill="none" opacity=".35" r="7" stroke="#2d785a" stroke-width="1"></circle>
+    <ellipse cx="50" cy="140" fill="#c4622d" opacity=".65" rx="3.5" ry="4.5"
+      style="animation:fruit-glow 4s ease-in-out .9s infinite"></ellipse>
+    <circle cx="210" cy="140" fill="none" opacity=".35" r="7" stroke="#2d785a" stroke-width="1"></circle>
+    <ellipse cx="210" cy="140" fill="#c4622d" opacity=".65" rx="3.5" ry="4.5"
+      style="animation:fruit-glow 4s ease-in-out 1.2s infinite"></ellipse>
+    <circle cx="95" cy="55" fill="none" opacity=".3" r="6" stroke="#2d785a" stroke-width="1"></circle>
+    <ellipse cx="95" cy="55" fill="#c4622d" opacity=".6" rx="3" ry="4"></ellipse>
+    <circle cx="165" cy="55" fill="none" opacity=".3" r="6" stroke="#2d785a" stroke-width="1"></circle>
+    <ellipse cx="165" cy="55" fill="#c4622d" opacity=".6" rx="3" ry="4"></ellipse>
+    <path d="M70 75 Q60 60,95 55" fill="none" opacity=".2" stroke="#2d785a" stroke-linecap="round"
+      stroke-width=".6"></path>
+    <path d="M190 75 Q180 60,165 55" fill="none" opacity=".2" stroke="#2d785a" stroke-linecap="round"
+      stroke-width=".6"></path>
+  </g>
+</svg>

@@ -3296,6 +3296,121 @@ window.cflOpenExternal = cflOpenExternal;
 window.cflRespondSaveIntent = cflRespondSaveIntent;
 window.enrichChatFileLinks = enrichChatFileLinks;
 
+// ── Link context menu (right-click on external links in chat) ──
+var _ctxMenuLinkUrl = null;
+
+function _showLinkContextMenu(linkUrl, x, y) {
+  var menu = document.getElementById('linkContextMenu');
+  if (!menu) return;
+  _ctxMenuLinkUrl = linkUrl;
+  // Position the menu, clamping to viewport edges
+  var menuW = menu.offsetWidth || 200;
+  var menuH = menu.offsetHeight || 120;
+  var vw = window.innerWidth;
+  var vh = window.innerHeight;
+  var left = x + menuW > vw ? vw - menuW - 8 : x;
+  var top = y + menuH > vh ? vh - menuH - 8 : y;
+  menu.style.left = Math.max(4, left) + 'px';
+  menu.style.top = Math.max(4, top) + 'px';
+  menu.classList.add('open');
+}
+
+function _hideLinkContextMenu() {
+  var menu = document.getElementById('linkContextMenu');
+  if (menu) menu.classList.remove('open');
+  _ctxMenuLinkUrl = null;
+}
+
+function _handleLinkContextMenuAction(action) {
+  var url = _ctxMenuLinkUrl;
+  if (!url) return;
+  _hideLinkContextMenu();
+  switch (action) {
+    case 'browser':
+      if (typeof window.navigateBrowser === 'function') {
+        window.navigateBrowser(url);
+        var bp = document.getElementById('browserPanel');
+        if (bp && !bp.classList.contains('open') && typeof toggleBrowserPanel === 'function') {
+          toggleBrowserPanel();
+        }
+      } else {
+        window.open(url, '_blank');
+      }
+      break;
+    case 'tab':
+      window.open(url, '_blank', 'noopener');
+      break;
+    case 'copy':
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).catch(function () {
+          _fallbackCopyLink(url);
+        });
+      } else {
+        _fallbackCopyLink(url);
+      }
+      break;
+  }
+}
+
+function _fallbackCopyLink(url) {
+  var ta = document.createElement('textarea');
+  ta.value = url;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+function _initLinkContextMenu() {
+  var chatLog = document.getElementById('chatLog');
+  if (!chatLog) return;
+
+  // Right-click on links inside chat messages
+  chatLog.addEventListener('contextmenu', function (ev) {
+    var anchor = ev.target.closest('a[href]');
+    if (!anchor) return;
+    var href = anchor.getAttribute('href');
+    // Only handle external http(s) links (not internal, not javascript:, not #)
+    if (!href || !/^https?:\/\//i.test(href)) return;
+    ev.preventDefault();
+    _showLinkContextMenu(href, ev.clientX, ev.clientY);
+  });
+
+  // Click on context menu items
+  var menu = document.getElementById('linkContextMenu');
+  if (menu) {
+    menu.addEventListener('click', function (ev) {
+      var item = ev.target.closest('.link-cm-item');
+      if (!item) return;
+      var action = item.getAttribute('data-action');
+      _handleLinkContextMenuAction(action);
+    });
+  }
+
+  // Dismiss on click outside
+  document.addEventListener('click', function (ev) {
+    var menu = document.getElementById('linkContextMenu');
+    if (!menu || !menu.classList.contains('open')) return;
+    if (!menu.contains(ev.target)) _hideLinkContextMenu();
+  }, true);
+
+  // Dismiss on Esc
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape') _hideLinkContextMenu();
+  });
+}
+
+window.initLinkContextMenu = _initLinkContextMenu;
+
+// Auto-init once DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _initLinkContextMenu);
+} else {
+  _initLinkContextMenu();
+}
+
 // Open a stream artifact in the output panel
 function openStreamArtifact(artifactJson) {
   try {

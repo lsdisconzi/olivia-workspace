@@ -1,0 +1,208 @@
+/* ═══════════════════════════════════════════════════════════════════
+   OLIVIA MORPHING SVG — extracted CSS
+   Source: frontend/css/base.css lines 1529–1650 (and 5738 mobile override)
+   Extracted for documentation at _lsd/morphs. Do not edit the project from
+   this file — edit frontend/css/base.css and re-extract.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Morph stage container ──────────────────────────────────────────── */
+.morph-stage {
+    position: relative;
+    width: 160px;
+    height: 180px;
+}
+
+/* ── Individual scene layer (absolutely stacked, cross-faded) ──────── */
+.morph-scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 2.5s ease-in-out;
+    pointer-events: none;
+}
+
+.morph-scene.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.morph-scene svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ── Eco palette (defined at base.css :root, line 1557) ────────────── */
+:root {
+    --eco-verde: #2d785a;      /* olive green — trunks, branches, strokes */
+    --eco-verde-3: #4a9e70;    /* lighter green (unused in scenes) */
+    --eco-terra: #c4622d;      /* terra — fruit/berries/accents */
+    --eco-terra-light: #d4733e;/* lighter terra (unused in scenes) */
+}
+
+/* ── Keyframe animations ────────────────────────────────────────────── */
+
+/* Sidebar olive-tree mark (NOT part of the welcome morph) */
+@keyframes leaf-rustle {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50%      { transform: translate(0.6px, -0.6px) rotate(1.2deg); }
+}
+
+/* Primary sway — trunks, stems, main branches */
+@keyframes sway {
+    0%, 100% { transform: rotate(-1.5deg); }
+    50%      { transform: rotate(1.5deg); }
+}
+
+/* Reverse sway — secondary twigs (delayed for organic feel) */
+@keyframes sway-r {
+    0%, 100% { transform: rotate(1.2deg); }
+    50%      { transform: rotate(-1.2deg); }
+}
+
+/* Book pages (scene-knowledge) */
+@keyframes page-flutter {
+    0%, 100% { transform: scaleX(1); }
+    50%      { transform: scaleX(1.03); }
+}
+
+/* Fruit / berries / accents */
+@keyframes fruit-glow {
+    0%, 100% { opacity: .85; filter: brightness(1); }
+    50%      { opacity: 1;   filter: brightness(1.15); }
+}
+
+/* Balance arm (scene-scale) */
+@keyframes scale-balance {
+    0%, 100% { transform: rotate(0deg); }
+    25%      { transform: rotate(2deg); }
+    75%      { transform: rotate(-2deg); }
+}
+
+/* Network spokes (scene-network) */
+@keyframes subtle-pulse {
+    0%, 100% { opacity: .4; }
+    50%      { opacity: .6; }
+}
+
+/* ── Mobile override (base.css line 5738) ───────────────────────────── */
+@media (max-width: 600px) {
+    .welcome-logo,
+    .morph-stage {
+        width: 110px;
+        height: 124px;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECOND MORPH SYSTEM — index-br.html (Awareness-AI marketing hero)
+   Source: _lsd/morphs/index-br.html lines 126–150 (container) and
+   48–84 (keyframes). 13 scenes on a 280×260 artboard, JS-driven
+   cycling (unlike the welcome morph above, which is CSS-only).
+   NOTE: several keyframe names below REDEFINE the ones above — the
+   index-br variants differ in rotation angles / effects. Scenes that
+   reference these names must use the index-br definitions; the two
+   morph systems are never live on the same page.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Morph stage container (280×260) ───────────────────────────────── */
+.morph-stage {
+    position: relative;
+    width: 280px;
+    height: 260px;
+    margin: 0 auto 40px;
+}
+
+/* ── Individual scene layer (cross-fade + zoom-in) ─────────────────── */
+.morph-scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.94);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    pointer-events: none;
+}
+
+.morph-scene.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+/* ── Eco palette (pt-BR var names, index-br.html :root lines 10–27) ──
+   Palette is the same family as the welcome morph but with different
+   variable names and a slightly darker trunk green:
+     --eco-verde      #1c4532   (trunks — the welcome morph uses #2d785a here)
+     --eco-verde-3    #2d785a   (main strokes)
+     --eco-terra      #c4622d   (fruit)
+     --eco-terra-light #d4733e  (fruit highlight)
+     --eco-tinta      #1a1814   (pencil lead)
+     --eco-claro      #9a9088   (pencil ferrule)
+   Unused in scenes: --eco-verde-2 #163a2a, --eco-verde-light #5a8a6e,
+   --eco-verde-lo rgba(28,69,50,.06)                                */
+
+/* ── Keyframe animations (index-br variants) ───────────────────────── */
+
+/* Primary sway — differs from welcome morph: rest angle is 0°, peak +1.2° */
+@keyframes sway {
+    0%, 100% { transform: rotate(0deg); }
+    50%      { transform: rotate(1.2deg); }
+}
+
+/* Reverse sway — rest 0°, peak −1° (welcome morph is ±1.2° inverted) */
+@keyframes sway-r {
+    0%, 100% { transform: rotate(0deg); }
+    50%      { transform: rotate(-1deg); }
+}
+
+/* Fruit glow — opacity only, NO brightness filter (welcome morph adds it) */
+@keyframes fruit-glow {
+    0%, 100% { opacity: 0.85; }
+    50%      { opacity: 1; }
+}
+
+/* Leaf rustle — rotation + scale, no translate (welcome morph differs) */
+@keyframes leaf-rustle {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50%      { transform: rotate(3deg) scale(1.02); }
+}
+
+/* Network spokes / ECG trace — identical to welcome morph */
+@keyframes subtle-pulse {
+    0%, 100% { opacity: 0.4; }
+    50%      { opacity: 0.6; }
+}
+
+/* Balance arm (scene-scale) — identical to welcome morph */
+@keyframes scale-balance {
+    0%, 100% { transform: rotate(0deg); }
+    25%      { transform: rotate(2deg); }
+    75%      { transform: rotate(-2deg); }
+}
+
+/* NEW — heartbeat cross (scene-pulse), only in index-br.html */
+@keyframes pulse-beat {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.04); }
+}
+
+/* Hero entrance / scroll hint — page-level, not used inside scenes */
+@keyframes float-up {
+    0%      { opacity: 0; transform: translateY(30px); }
+    100%    { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float-down {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(6px); }
+}
+
+/* ── Mobile pill carousel (index-br.html lines 1855–1998) ───────────── */
+/* JS-driven: 2 pills visible, auto-rotate every 5s, edge taps to flip.
+   Carousel classes: .carousel-pos-0 / .carousel-pos-1 / .carousel-exit.
+   Defined inline in index-br.html <style>; not re-listed here.       */

@@ -1,0 +1,43 @@
+<!-- Scene 8/13 — scene-dna (DNA — Ciências da Vida) — extracted from _lsd/morphs/index-br.html -->
+<svg viewBox="0 0 280 260" xmlns="http://www.w3.org/2000/svg">
+  <style>
+@keyframes sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(1.2deg); }
+}
+@keyframes sway-r {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-1deg); }
+}
+@keyframes fruit-glow {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+@keyframes leaf-rustle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(3deg) scale(1.02); }
+}
+  </style>
+  <g style="transform-origin:140px 130px">
+              <path d="M105 40 Q125 65,105 95 Q85 125,105 155 Q125 185,105 215 Q95 230,90 245" fill="none" stroke="#2d785a" stroke-width="2" stroke-linecap="round" opacity=".55" style="animation:sway 9s ease-in-out infinite"/>
+              <path d="M175 40 Q155 65,175 95 Q195 125,175 155 Q155 185,175 215 Q185 230,190 245" fill="none" stroke="#2d785a" stroke-width="2" stroke-linecap="round" opacity=".55" style="animation:sway-r 9s ease-in-out infinite"/>
+              <g opacity=".35">
+                <path d="M112 55 Q140 50,168 55" fill="none" stroke="#2d785a" stroke-width="1" stroke-linecap="round"/>
+                <path d="M102 95 Q140 100,178 95" fill="none" stroke="#2d785a" stroke-width="1" stroke-linecap="round"/>
+                <path d="M112 135 Q140 130,168 135" fill="none" stroke="#2d785a" stroke-width="1" stroke-linecap="round"/>
+                <path d="M102 175 Q140 180,178 175" fill="none" stroke="#2d785a" stroke-width="1" stroke-linecap="round"/>
+                <path d="M112 215 Q140 210,168 215" fill="none" stroke="#2d785a" stroke-width="1" stroke-linecap="round"/>
+              </g>
+              <ellipse cx="140" cy="52" rx="5" ry="6" fill="#c4622d" opacity=".85" style="animation:fruit-glow 4s ease-in-out infinite"/>
+              <ellipse cx="140" cy="97" rx="5.5" ry="7" fill="#c4622d" opacity=".9" style="animation:fruit-glow 4s ease-in-out .5s infinite"/>
+              <ellipse cx="140" cy="132" rx="5" ry="6" fill="#c4622d" opacity=".85" style="animation:fruit-glow 4s ease-in-out 1s infinite"/>
+              <ellipse cx="140" cy="177" rx="5.5" ry="7" fill="#c4622d" opacity=".9" style="animation:fruit-glow 4s ease-in-out 1.5s infinite"/>
+              <ellipse cx="140" cy="212" rx="4.5" ry="5.5" fill="#c4622d" opacity=".8" style="animation:fruit-glow 4s ease-in-out .7s infinite"/>
+              <g style="animation:leaf-rustle 5s ease-in-out .2s infinite;transform-origin:100px 95px">
+                <ellipse cx="95" cy="95" rx="8" ry="5" fill="#2d785a" opacity=".15" transform="rotate(-20 95 95)"/>
+              </g>
+              <g style="animation:leaf-rustle 5.5s ease-in-out .7s infinite;transform-origin:185px 175px">
+                <ellipse cx="185" cy="175" rx="8" ry="5" fill="#2d785a" opacity=".15" transform="rotate(20 185 175)"/>
+              </g>
+            </g>
+</svg>

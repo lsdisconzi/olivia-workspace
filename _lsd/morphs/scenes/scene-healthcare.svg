@@ -1,0 +1,36 @@
+<!-- Scene 10/11 — scene-healthcare (Healthcare) — extracted from frontend/index-i18n.html:1859 -->
+<svg viewBox="0 0 260 280" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes sway {
+      0%, 100% { transform: rotate(-1.5deg); }
+      50%      { transform: rotate(1.5deg); }
+    }
+    @keyframes sway-r {
+      0%, 100% { transform: rotate(1.2deg); }
+      50%      { transform: rotate(-1.2deg); }
+    }
+    @keyframes fruit-glow {
+      0%, 100% { opacity: .85; filter: brightness(1); }
+      50%      { opacity: 1;   filter: brightness(1.15); }
+    }
+  </style>
+  <g style="transform-origin:130px 150px;animation:sway 7s ease-in-out infinite">
+    <path d="M130 260 Q130 220,130 180 Q130 150,130 120" fill="none" opacity=".5" stroke="#1c4532"
+      stroke-linecap="round" stroke-width="3"></path>
+    <g style="animation:sway-r 5s ease-in-out .2s infinite;transform-origin:130px 100px">
+      <path d="M130 60 L130 140" fill="none" opacity=".4" stroke="#2d785a" stroke-linecap="round"
+        stroke-width="12"></path>
+      <path d="M90 100 L170 100" fill="none" opacity=".4" stroke="#2d785a" stroke-linecap="round"
+        stroke-width="12"></path>
+    </g>
+    <ellipse cx="130" cy="60" fill="#c4622d" opacity=".85" rx="5" ry="6"
+      style="animation:fruit-glow 4s ease-in-out infinite"></ellipse>
+    <ellipse cx="170" cy="100" fill="#c4622d" opacity=".85" rx="5" ry="6"
+      style="animation:fruit-glow 4s ease-in-out .4s infinite"></ellipse>
+    <ellipse cx="90" cy="100" fill="#c4622d" opacity=".85" rx="5" ry="6"
+      style="animation:fruit-glow 4s ease-in-out .8s infinite"></ellipse>
+    <ellipse cx="130" cy="140" fill="#c4622d" opacity=".85" rx="5" ry="6"
+      style="animation:fruit-glow 4s ease-in-out 1.2s infinite"></ellipse>
+    <path d="M60 260 Q130 266,200 260" fill="none" opacity=".12" stroke="#1c4532" stroke-width="1"></path>
+  </g>
+</svg>

@@ -1,0 +1,53 @@
+<!-- Scene 12/13 — scene-school (Escola — Educação) — extracted from _lsd/morphs/index-br.html -->
+<svg viewBox="0 0 280 260" xmlns="http://www.w3.org/2000/svg">
+  <style>
+@keyframes sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(1.2deg); }
+}
+@keyframes sway-r {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-1deg); }
+}
+@keyframes fruit-glow {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+  </style>
+  <g style="transform-origin:140px 130px">
+              <g style="animation:sway 9s ease-in-out infinite;transform-origin:140px 130px">
+                <path d="M140 75 Q125 73,78 72 Q62 72,55 80 Q52 88,54 95 L62 210 Q65 220,78 220 Q108 218,140 212" fill="none" stroke="#2d785a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".45"/>
+                <path d="M140 75 Q155 73,202 72 Q218 72,225 80 Q228 88,226 95 L218 210 Q215 220,202 220 Q172 218,140 212" fill="none" stroke="#2d785a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".45"/>
+                <path d="M140 72 L140 215" fill="none" stroke="#1c4532" stroke-width="2.5" stroke-linecap="round" opacity=".5"/>
+              </g>
+              <g opacity=".15">
+                <path d="M70 95 L130 94" stroke="#2d785a" stroke-width=".6"/>
+                <path d="M71 108 L129 107" stroke="#2d785a" stroke-width=".6"/>
+                <path d="M72 121 L128 120" stroke="#2d785a" stroke-width=".6"/>
+                <path d="M73 134 L127 133" stroke="#2d785a" stroke-width=".6"/>
+                <path d="M74 147 L126 146" stroke="#2d785a" stroke-width=".6"/>
+                <path d="M75 160 L125 159" stroke="#2d785a" stroke-width=".6"/>
+                <path d="M76 173 L124 172" stroke="#2d785a" stroke-width=".6"/>
+              </g>
+              <g opacity=".2">
+                <path d="M152 95 Q170 93,195 95" stroke="#2d785a" stroke-width=".8" stroke-linecap="round"/>
+                <path d="M153 108 Q168 106,188 108" stroke="#2d785a" stroke-width=".8" stroke-linecap="round"/>
+                <path d="M154 121 Q175 119,200 121" stroke="#2d785a" stroke-width=".8" stroke-linecap="round"/>
+                <path d="M155 134 Q172 132,192 134" stroke="#2d785a" stroke-width=".8" stroke-linecap="round"/>
+              </g>
+              <g style="animation:sway-r 7s ease-in-out infinite;transform-origin:140px 42px">
+                <path d="M100 48 L140 32 L180 48 L140 58 Z" fill="#2d785a" opacity=".3"/>
+                <path d="M100 48 L140 32 L180 48 L140 58 Z" fill="none" stroke="#2d785a" stroke-width="1.2" opacity=".5"/>
+                <path d="M180 48 Q185 52,182 62 Q180 70,178 75" fill="none" stroke="#c4622d" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+                <ellipse cx="177" cy="78" rx="3" ry="3.5" fill="#c4622d" opacity=".6"/>
+              </g>
+              <ellipse cx="140" cy="68" rx="5" ry="6.5" fill="#c4622d" opacity=".9" style="animation:fruit-glow 4s ease-in-out infinite"/>
+              <ellipse cx="139" cy="66" rx="2" ry="2.5" fill="#d4733e" opacity=".4"/>
+              <ellipse cx="80" cy="200" rx="3.5" ry="4.5" fill="#c4622d" opacity=".6" style="animation:fruit-glow 4s ease-in-out .5s infinite"/>
+              <ellipse cx="200" cy="200" rx="3.5" ry="4.5" fill="#c4622d" opacity=".6" style="animation:fruit-glow 4s ease-in-out 1s infinite"/>
+              <g opacity=".35">
+                <path d="M165 185 Q195 160,210 145" fill="none" stroke="#2d785a" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M210 145 L216 139 L213 148 Z" fill="#1c4532" opacity=".5"/>
+              </g>
+            </g>
+</svg>

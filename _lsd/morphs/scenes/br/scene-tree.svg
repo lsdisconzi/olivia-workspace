@@ -1,0 +1,89 @@
+<!-- Scene 4/13 — scene-tree (Oliveira completa — Ecossistema) — extracted from _lsd/morphs/index-br.html -->
+<svg viewBox="0 0 280 260" xmlns="http://www.w3.org/2000/svg">
+  <style>
+@keyframes sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(1.2deg); }
+}
+@keyframes sway-r {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-1deg); }
+}
+@keyframes fruit-glow {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+@keyframes leaf-rustle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(3deg) scale(1.02); }
+}
+  </style>
+  <g style="transform-origin: 140px 150px;">
+              <!-- Trunk -->
+              <path d="M140 245 Q138 215, 137 185 Q136 160, 138 140 Q140 125, 141 112" 
+                    fill="none" 
+                    stroke="#1c4532" 
+                    stroke-width="4" 
+                    stroke-linecap="round"
+                    opacity="0.6"
+                    style="animation: sway 9s ease-in-out infinite"/>
+            
+              <!-- Ground line -->
+              <path d="M100 248 Q140 254, 180 248" fill="none" stroke="#1c4532" stroke-width="1" opacity="0.15" stroke-linecap="round"/>
+            
+              <!-- Main branches -->
+              <g style="animation: sway 7s ease-in-out infinite; transform-origin: 140px 120px;">
+              
+                <!-- Left main branch -->
+                <g style="animation: sway-r 6s ease-in-out 0.2s infinite; transform-origin: 100px 100px;">
+                  <path d="M138 125 Q115 115, 85 108" fill="none" stroke="#1c4532" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+                  <path d="M100 112 Q85 100, 72 92" fill="none" stroke="#1c4532" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+                  <path d="M95 115 Q80 120, 65 118" fill="none" stroke="#1c4532" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+                  <!-- Leaves cluster -->
+                  <ellipse cx="70" cy="95" rx="18" ry="12" fill="#2d785a" opacity="0.25" transform="rotate(-20 70 95)" style="animation: leaf-rustle 5s ease-in-out infinite"/>
+                  <ellipse cx="62" cy="115" rx="14" ry="10" fill="#2d785a" opacity="0.2" transform="rotate(-10 62 115)" style="animation: leaf-rustle 6s ease-in-out 0.5s infinite"/>
+                  <!-- Olives -->
+                  <ellipse cx="78" cy="105" rx="4.5" ry="5.5" fill="#c4622d" opacity="0.85" style="animation: fruit-glow 4s ease-in-out infinite"/>
+                </g>
+              
+                <!-- Right main branch -->
+                <g style="animation: sway 5.5s ease-in-out 0.4s infinite; transform-origin: 180px 95px;">
+                  <path d="M142 120 Q165 108, 195 98" fill="none" stroke="#1c4532" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+                  <path d="M175 105 Q195 92, 210 82" fill="none" stroke="#1c4532" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+                  <path d="M185 100 Q205 105, 220 102" fill="none" stroke="#1c4532" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+                  <!-- Leaves cluster -->
+                  <ellipse cx="208" cy="88" rx="18" ry="13" fill="#2d785a" opacity="0.25" transform="rotate(15 208 88)" style="animation: leaf-rustle 5.5s ease-in-out 0.3s infinite"/>
+                  <ellipse cx="218" cy="100" rx="14" ry="9" fill="#2d785a" opacity="0.2" transform="rotate(8 218 100)" style="animation: leaf-rustle 6.5s ease-in-out 0.7s infinite"/>
+                  <!-- Olives -->
+                  <ellipse cx="198" cy="95" rx="5" ry="6" fill="#c4622d" opacity="0.85" style="animation: fruit-glow 4s ease-in-out 0.5s infinite"/>
+                </g>
+              
+                <!-- Top branches -->
+                <g style="animation: sway-r 5s ease-in-out 0.6s infinite; transform-origin: 140px 80px;">
+                  <path d="M140 112 Q130 90, 118 70" fill="none" stroke="#1c4532" stroke-width="1.5" stroke-linecap="round" opacity="0.45"/>
+                  <path d="M141 108 Q150 85, 162 65" fill="none" stroke="#1c4532" stroke-width="1.5" stroke-linecap="round" opacity="0.45"/>
+                  <path d="M140 105 Q140 80, 140 55" fill="none" stroke="#1c4532" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+                  <!-- Top leaves -->
+                  <ellipse cx="115" cy="65" rx="16" ry="11" fill="#2d785a" opacity="0.28" transform="rotate(-25 115 65)" style="animation: leaf-rustle 4.5s ease-in-out infinite"/>
+                  <ellipse cx="165" cy="62" rx="16" ry="11" fill="#2d785a" opacity="0.28" transform="rotate(25 165 62)" style="animation: leaf-rustle 5s ease-in-out 0.4s infinite"/>
+                  <ellipse cx="140" cy="50" rx="18" ry="12" fill="#2d785a" opacity="0.3" transform="rotate(0 140 50)" style="animation: leaf-rustle 5.5s ease-in-out 0.2s infinite"/>
+                  <!-- Top olives -->
+                  <ellipse cx="140" cy="58" rx="5.5" ry="7" fill="#c4622d" opacity="0.9" style="animation: fruit-glow 4s ease-in-out 0.8s infinite"/>
+                  <ellipse cx="139" cy="56" rx="2.2" ry="2.8" fill="#d4733e" opacity="0.4"/>
+                </g>
+              
+                <!-- Lower side branches -->
+                <g style="animation: sway 6.5s ease-in-out 0.3s infinite; transform-origin: 110px 145px;">
+                  <path d="M137 145 Q115 140, 90 145" fill="none" stroke="#1c4532" stroke-width="1.3" stroke-linecap="round" opacity="0.4"/>
+                  <ellipse cx="92" cy="142" rx="12" ry="8" fill="#2d785a" opacity="0.18" transform="rotate(-5 92 142)"/>
+                  <ellipse cx="102" cy="148" rx="4" ry="5" fill="#c4622d" opacity="0.7" style="animation: fruit-glow 4s ease-in-out 1.2s infinite"/>
+                </g>
+                <g style="animation: sway-r 6s ease-in-out 0.5s infinite; transform-origin: 170px 150px;">
+                  <path d="M143 150 Q165 145, 190 152" fill="none" stroke="#1c4532" stroke-width="1.3" stroke-linecap="round" opacity="0.4"/>
+                  <ellipse cx="188" cy="148" rx="12" ry="8" fill="#2d785a" opacity="0.18" transform="rotate(5 188 148)"/>
+                  <ellipse cx="178" cy="152" rx="4" ry="5" fill="#c4622d" opacity="0.7" style="animation: fruit-glow 4s ease-in-out 1s infinite"/>
+                </g>
+              
+              </g>
+            </g>
+</svg>

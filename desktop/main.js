@@ -282,6 +282,12 @@ ipcMain.handle('window:isMaximized', () => {
 
 // ── App lifecycle ────────────────────────────────────────────────────
 app.whenReady().then(() => {
+  // Dev mode only: packaged builds get their icon from the .app bundle,
+  // but `npm start` would otherwise show the default Electron icon.
+  if (!app.isPackaged && process.platform === 'darwin') {
+    const devIcon = path.join(__dirname, 'build', 'icon.png');
+    if (fs.existsSync(devIcon)) app.dock.setIcon(devIcon);
+  }
   createWindow();
 
   app.on('activate', () => {

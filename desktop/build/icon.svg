@@ -1,18 +1,66 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <!-- Scales of justice — Olivia icon -->
-  <circle cx="256" cy="256" r="240" fill="#0d1117" stroke="#d4a72c" stroke-width="8"/>
-  <!-- Central pillar -->
-  <line x1="256" y1="140" x2="256" y2="360" stroke="#d4a72c" stroke-width="8" stroke-linecap="round"/>
-  <!-- Crossbar -->
-  <line x1="180" y1="220" x2="332" y2="220" stroke="#d4a72c" stroke-width="7" stroke-linecap="round"/>
-  <!-- Left scale -->
-  <path d="M180 220 C160 180, 130 165, 110 170" stroke="#d4a72c" stroke-width="5" fill="none"/>
-  <path d="M100 170 Q95 155 110 160 Q125 155 120 170" stroke="#d4a72c" stroke-width="3" fill="none"/>
-  <!-- Right scale -->
-  <path d="M332 220 C352 180, 382 165, 402 170" stroke="#d4a72c" stroke-width="5" fill="none"/>
-  <path d="M412 170 Q417 155 402 160 Q387 155 392 170" stroke="#d4a72c" stroke-width="3" fill="none"/>
-  <!-- Base -->
-  <rect x="226" y="355" width="60" height="12" rx="4" fill="#d4a72c" opacity="0.7"/>
-  <!-- Text -->
-  <text x="256" y="420" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="28" font-weight="300" letter-spacing="6">OL</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="none">
+  <!-- Olivia icon — full olive tree (scene 4/13 "scene-tree", from the "Morphing Olivia" SVG) -->
+  <!-- Same 1024x1024 canvas, margin and stroke as the previous icon.svg — only the background
+       shape (circle -> rounded square) and the artwork inside have changed. -->
+  <rect x="32" y="32" width="960" height="960" rx="210" ry="210" fill="#0d1117"/>
+
+  <!-- Tree scaled + centered into the square. Visible artwork bounds in the original 280x260
+       artboard are ~184x216, centered at (140,146). Scaled 4.0x so the tree fills ~90% of the
+       square height, matching the bolder, edge-filling look of the neighboring dock icons, then
+       translated so its center lands on (512,512), the center of the square. -->
+  <g transform="translate(-48 -72) scale(4.0)">
+
+    <!-- Trunk -->
+    <path d="M140 245 Q138 215, 137 185 Q136 160, 138 140 Q140 125, 141 112"
+      fill="none" stroke="#1c4532" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+
+    <!-- Ground line -->
+    <path d="M100 248 Q140 254, 180 248"
+      fill="none" stroke="#1c4532" stroke-width="1" opacity="0.15" stroke-linecap="round"/>
+
+    <!-- Left main branch -->
+    <g>
+      <path d="M138 125 Q115 115, 85 108" fill="none" stroke="#1c4532" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <path d="M100 112 Q85 100, 72 92" fill="none" stroke="#1c4532" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+      <path d="M95 115 Q80 120, 65 118" fill="none" stroke="#1c4532" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+      <ellipse cx="70" cy="95" rx="18" ry="12" fill="#2d785a" opacity="0.25" transform="rotate(-20 70 95)"/>
+      <ellipse cx="62" cy="115" rx="14" ry="10" fill="#2d785a" opacity="0.2" transform="rotate(-10 62 115)"/>
+      <ellipse cx="78" cy="105" rx="4.5" ry="5.5" fill="#c4622d" opacity="0.85"/>
+    </g>
+
+    <!-- Right main branch -->
+    <g>
+      <path d="M142 120 Q165 108, 195 98" fill="none" stroke="#1c4532" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <path d="M175 105 Q195 92, 210 82" fill="none" stroke="#1c4532" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+      <path d="M185 100 Q205 105, 220 102" fill="none" stroke="#1c4532" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+      <ellipse cx="208" cy="88" rx="18" ry="13" fill="#2d785a" opacity="0.25" transform="rotate(15 208 88)"/>
+      <ellipse cx="218" cy="100" rx="14" ry="9" fill="#2d785a" opacity="0.2" transform="rotate(8 218 100)"/>
+      <ellipse cx="198" cy="95" rx="5" ry="6" fill="#c4622d" opacity="0.85"/>
+    </g>
+
+    <!-- Top branches -->
+    <g>
+      <path d="M140 112 Q130 90, 118 70" fill="none" stroke="#1c4532" stroke-width="1.5" stroke-linecap="round" opacity="0.45"/>
+      <path d="M141 108 Q150 85, 162 65" fill="none" stroke="#1c4532" stroke-width="1.5" stroke-linecap="round" opacity="0.45"/>
+      <path d="M140 105 Q140 80, 140 55" fill="none" stroke="#1c4532" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+      <ellipse cx="115" cy="65" rx="16" ry="11" fill="#2d785a" opacity="0.28" transform="rotate(-25 115 65)"/>
+      <ellipse cx="165" cy="62" rx="16" ry="11" fill="#2d785a" opacity="0.28" transform="rotate(25 165 62)"/>
+      <ellipse cx="140" cy="50" rx="18" ry="12" fill="#2d785a" opacity="0.3"/>
+      <ellipse cx="140" cy="58" rx="5.5" ry="7" fill="#c4622d" opacity="0.9"/>
+      <ellipse cx="139" cy="56" rx="2.2" ry="2.8" fill="#d4733e" opacity="0.4"/>
+    </g>
+
+    <!-- Lower side branches -->
+    <g>
+      <path d="M137 145 Q115 140, 90 145" fill="none" stroke="#1c4532" stroke-width="1.3" stroke-linecap="round" opacity="0.4"/>
+      <ellipse cx="92" cy="142" rx="12" ry="8" fill="#2d785a" opacity="0.18" transform="rotate(-5 92 142)"/>
+      <ellipse cx="102" cy="148" rx="4" ry="5" fill="#c4622d" opacity="0.7"/>
+    </g>
+    <g>
+      <path d="M143 150 Q165 145, 190 152" fill="none" stroke="#1c4532" stroke-width="1.3" stroke-linecap="round" opacity="0.4"/>
+      <ellipse cx="188" cy="148" rx="12" ry="8" fill="#2d785a" opacity="0.18" transform="rotate(5 188 148)"/>
+      <ellipse cx="178" cy="152" rx="4" ry="5" fill="#c4622d" opacity="0.7"/>
+    </g>
+
+  </g>
 </svg>

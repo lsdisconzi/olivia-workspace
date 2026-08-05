@@ -3893,6 +3893,8 @@
         <i class="fas fa-columns"></i>
         <span class="edge-label"></span>
       </button>
+      <!-- ═══════ OUTPUT RESIZE HANDLE ═══════ -->
+      <div class="output-resize-handle" id="outputResizeHandle"></div>
       <!-- ═══════ OUTPUT PANEL ═══════ -->
       <div class="output-panel" id="outputPanel">
         <div class="output-header">
@@ -6692,6 +6694,12 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
         </div>
       </div>
     </div>
+  </div>
+  <!-- ═══════ LINK CONTEXT MENU (right-click on links in chat) ═══════ -->
+  <div class="link-context-menu" id="linkContextMenu">
+    <button class="link-cm-item" data-action="browser"><i class="fas fa-globe"></i>Open in Browser Panel</button>
+    <button class="link-cm-item" data-action="tab"><i class="fas fa-external-link-alt"></i>Open in New Tab</button>
+    <button class="link-cm-item" data-action="copy"><i class="fas fa-copy"></i>Copy Link</button>
   </div>
   <div class="ep-toast" id="epToast"></div>
   <datalist id="epSuggestions"></datalist>

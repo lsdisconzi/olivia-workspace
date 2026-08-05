@@ -1,6 +1,6 @@
 /* ── WORKSPACE LAYOUT ── */
-main{padding-top:56px;display:flex;flex-direction:column;height:100vh;min-height:0}
-.workspace{flex:1;display:flex;min-height:0;position:relative}
+main{flex:1 1 0;min-height:0;display:flex;flex-direction:column;padding-top:56px;overflow:hidden;position:relative}
+.workspace{flex:1 1 0;display:flex;min-height:0;position:relative;overflow:hidden}
 
 /* ── SIDEBAR ── */
 .sidebar{
@@ -33,19 +33,20 @@ main{padding-top:56px;display:flex;flex-direction:column;height:100vh;min-height
 .sidebar-collapsed-strip{
   display:none;flex-direction:column;align-items:center;
   padding:0;height:100%;position:relative;
+  overflow:hidden;            /* no spill */
 }
 .sidebar.collapsed .sidebar-collapsed-strip{display:flex}
 
 /* ── SIDEBAR SECTION SCROLLING ── */
 .sidebar-section {
-    flex: 1;
+    flex: 1 1 0;
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
 .sidebar-body {
-    flex: 1;
+    flex: 1 1 0;
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
@@ -63,6 +64,7 @@ main{padding-top:56px;display:flex;flex-direction:column;height:100vh;min-height
     transform: translateX(-100%);
     z-index: 400;
     box-shadow: none;
+    overflow: hidden;
   }
 
   .sidebar.mobile-open {
@@ -86,6 +88,7 @@ main{padding-top:56px;display:flex;flex-direction:column;height:100vh;min-height
     height: auto;
     padding: 8px 0;
     z-index: 390;
+    overflow: hidden;
   }
 }
 

@@ -1,0 +1,42 @@
+<!-- Scene 7/13 — scene-heart (Coração — Terceiro Setor) — extracted from _lsd/morphs/index-br.html -->
+<svg viewBox="0 0 280 260" xmlns="http://www.w3.org/2000/svg">
+  <style>
+@keyframes sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(1.2deg); }
+}
+@keyframes sway-r {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-1deg); }
+}
+@keyframes fruit-glow {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+@keyframes leaf-rustle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(3deg) scale(1.02); }
+}
+  </style>
+  <g style="transform-origin:140px 130px">
+              <g style="animation:sway 8s ease-in-out infinite;transform-origin:140px 120px">
+                <path d="M140 210 Q100 175,80 140 Q60 105,75 78 Q88 55,110 55 Q130 55,140 75" fill="none" stroke="#2d785a" stroke-width="2.2" stroke-linecap="round" opacity=".6"/>
+                <path d="M140 210 Q180 175,200 140 Q220 105,205 78 Q192 55,170 55 Q150 55,140 75" fill="none" stroke="#2d785a" stroke-width="2.2" stroke-linecap="round" opacity=".6"/>
+              </g>
+              <g style="animation:sway-r 6s ease-in-out .3s infinite;transform-origin:85px 110px">
+                <path d="M85 115 Q72 108,65 100" fill="none" stroke="#2d785a" stroke-width=".8" stroke-linecap="round" opacity=".3"/>
+                <ellipse cx="63" cy="98" rx="10" ry="6" fill="#2d785a" opacity=".18" transform="rotate(-30 63 98)" style="animation:leaf-rustle 5s ease-in-out infinite"/>
+              </g>
+              <g style="animation:sway 5.5s ease-in-out .5s infinite;transform-origin:195px 110px">
+                <path d="M195 115 Q208 108,215 100" fill="none" stroke="#2d785a" stroke-width=".8" stroke-linecap="round" opacity=".3"/>
+                <ellipse cx="217" cy="98" rx="10" ry="6" fill="#2d785a" opacity=".18" transform="rotate(30 217 98)"/>
+              </g>
+              <ellipse cx="90" cy="145" rx="5" ry="6.5" fill="#c4622d" opacity=".9" transform="rotate(10 90 145)" style="animation:fruit-glow 4s ease-in-out infinite"/>
+              <ellipse cx="190" cy="145" rx="5" ry="6.5" fill="#c4622d" opacity=".9" transform="rotate(-10 190 145)" style="animation:fruit-glow 4s ease-in-out .4s infinite"/>
+              <ellipse cx="78" cy="95" rx="4.5" ry="5.5" fill="#c4622d" opacity=".8" style="animation:fruit-glow 4s ease-in-out .8s infinite"/>
+              <ellipse cx="202" cy="95" rx="4.5" ry="5.5" fill="#c4622d" opacity=".8" style="animation:fruit-glow 4s ease-in-out 1.2s infinite"/>
+              <ellipse cx="140" cy="70" rx="5.5" ry="7" fill="#c4622d" opacity=".9" style="animation:fruit-glow 4s ease-in-out .6s infinite"/>
+              <ellipse cx="139" cy="68" rx="2.2" ry="2.8" fill="#d4733e" opacity=".4"/>
+              <path d="M140 210 Q140 225,140 240" fill="none" stroke="#2d785a" stroke-width="1.5" stroke-linecap="round" opacity=".35"/>
+            </g>
+</svg>

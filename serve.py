@@ -20283,6 +20283,69 @@ Exemplo de formato:
                 pass
 
     def _url_proxy(self):
+
+        def _rewrite_proxied_urls(text, origin):
+            """Rewrite absolute same-origin URLs in HTML/CSS to go through /api/proxy."""
+            import re
+
+            # 1. HTML attributes: src="...", href="...", srcset="..."
+            def _rewrite_attr(m):
+                attr = m.group(1)
+                quote = m.group(2)
+                url = m.group(3)
+
+                if url.startswith(origin):
+                    return f'{attr}={quote}/api/proxy?url={urllib.parse.quote(url, safe="")}{quote}'
+                # Protocol-relative same-origin: //host/path
+                if url.startswith('//'):
+                    host_part = url[2:].split('/')[0]
+                    origin_host = origin.split('://', 1)[1].split('/')[0]
+                    if host_part == origin_host:
+                        rebuilt = origin.split('://')[0] + ':' + url
+                        return f'{attr}={quote}/api/proxy?url={urllib.parse.quote(rebuilt, safe="")}{quote}'
+                return m.group(0)
+
+            text = re.sub(
+                r'''(src|href|srcset)\s*=\s*(["'])((?:https?:)?//[^'"\s]+)(["'])''',
+                _rewrite_attr,
+                text,
+                flags=re.IGNORECASE,
+            )
+
+            # 2. CSS url() references in inline <style> blocks and style="" attributes
+            def _rewrite_css_url(m):
+                quote = m.group(1) or ''
+                url = m.group(2) or m.group(3)  # quoted or bare
+                if not url:
+                    return m.group(0)
+                url = url.strip()
+                if url.startswith('/api/proxy') or url.startswith('data:'):
+                    return m.group(0)
+                # Absolute same-origin
+                parsed_url = urllib.parse.urlparse(url)
+                url_origin = f"{parsed_url.scheme}://{parsed_url.netloc}"
+                if parsed_url.scheme and url_origin == origin:
+                    proxied = '/api/proxy?url=' + urllib.parse.quote(url, safe='')
+                    return f'url({quote}{proxied}{quote})'
+                # Protocol-relative same-origin: //host/path
+                if url.startswith('//'):
+                    host_part = url[2:].split('/')[0]
+                    origin_host = origin.split('://', 1)[1].split('/')[0]
+                    if host_part == origin_host:
+                        rebuilt = origin.split('://')[0] + ':' + url
+                        proxied = '/api/proxy?url=' + urllib.parse.quote(rebuilt, safe='')
+                        return f'url({quote}{proxied}{quote})'
+                return m.group(0)
+
+            text = re.sub(
+                r'''url\(\s*(?:(['"])(.*?)\1|([^'")\s]+))\s*\)''',
+                _rewrite_css_url,
+                text,
+                flags=re.IGNORECASE,
+            )
+
+            return text
+
         try:
             qs = urllib.parse.urlparse(self.path).query
             params = urllib.parse.parse_qs(qs)
@@ -20308,40 +20371,95 @@ Exemplo de formato:
             with urllib.request.urlopen(req, timeout=15) as upstream:
                 status = upstream.status
                 ctype = upstream.headers.get("Content-Type") or "text/html"
-                
+
                 # Fetch full content
                 body_bytes = upstream.read()
-                
-                # If it's HTML, inject <base href="..."> so that all relative links resolve against the original site
-                if "text/html" in ctype.lower():
-                    # Construct base URL (e.g. protocol + host + path directory)
-                    base_url = target
-                    if not base_url.endswith("/"):
-                        # If it does not end with a slash and has no extension, or has extension but we need folder
-                        # A simple way: use urljoin or just target
-                        pass
-                    
+                is_html = "text/html" in ctype.lower()
+                is_css = "text/css" in ctype.lower() or target.lower().endswith(".css")
+
+                # Build origin info for URL rewriting
+                proxy_origin = f"{parsed.scheme}://{parsed.netloc}"
+
+                if is_html:
                     try:
                         html_text = body_bytes.decode("utf-8", errors="ignore")
                     except Exception:
                         html_text = ""
-                    
+
                     if html_text:
-                        # Find insertion point: ideally after <head> or <html>
+                        # Inject <base> tag for relative URLs
                         head_idx = html_text.lower().find("<head>")
                         if head_idx != -1:
                             insert_pos = head_idx + len("<head>")
-                            base_tag = f'\n<base href="{base_url}">\n'
+                            base_tag = f'\n<base href="{target}">\n'
                             html_text = html_text[:insert_pos] + base_tag + html_text[insert_pos:]
                         else:
                             html_idx = html_text.lower().find("<html>")
                             if html_idx != -1:
                                 insert_pos = html_idx + len("<html>")
-                                base_tag = f'\n<head><base href="{base_url}"></head>\n'
+                                base_tag = f'\n<head><base href="{target}"></head>\n'
                                 html_text = html_text[:insert_pos] + base_tag + html_text[insert_pos:]
                             else:
-                                html_text = f'<base href="{base_url}">\n' + html_text
+                                html_text = f'<base href="{target}">\n' + html_text
+
+                        # Inject SPA routing shim: overrides window.location so
+                        # React Router / Vue Router / etc. see the original URL
+                        # pathname instead of /api/proxy. Must run before any app code.
+                        _spa_shim = (
+                            '<script>'
+                            '(function(){'
+                            'var _t=' + json.dumps(target) + ';'
+                            'var _u=new URL(_t);'
+                            'var _nav=function(url){window.top.postMessage({type:"olivia-proxy-nav",url:url},"*");};'
+                            'var _loc={'
+                            'get href(){return _u.href;},'
+                            'set href(v){_u=new URL(v,_u.origin);_nav(_u.href);},'
+                            'get pathname(){return _u.pathname;},'
+                            'set pathname(v){_u.pathname=v;_nav(_u.href);},'
+                            'get search(){return _u.search;},'
+                            'set search(v){_u.search=v;_nav(_u.href);},'
+                            'get hash(){return _u.hash;},'
+                            'set hash(v){_u.hash=v;_nav(_u.href);},'
+                            'get host(){return _u.host;},'
+                            'get hostname(){return _u.hostname;},'
+                            'get origin(){return _u.origin;},'
+                            'get protocol(){return _u.protocol;},'
+                            'get port(){return _u.port;},'
+                            'assign:function(u){_nav(u);},'
+                            'replace:function(u){_nav(u);},'
+                            'reload:function(){window.top.location.reload();},'
+                            'toString:function(){return _u.href;},'
+                            'ancestorOrigins:window.location.ancestorOrigins'
+                            '};'
+                            'try{Object.defineProperty(window,"location",{get:function(){return _loc;},set:function(v){_nav(String(v));},configurable:!0,enumerable:!0});}catch(e){}'
+                            'var _ps=history.pushState.bind(history);'
+                            'var _rs=history.replaceState.bind(history);'
+                            'history.pushState=function(s,t,u){if(typeof u==="string"&&u.indexOf("://")===-1){u="/api/proxy?url="+encodeURIComponent(_u.origin+u);}_ps(s,t,u);};'
+                            'history.replaceState=function(s,t,u){if(typeof u==="string"&&u.indexOf("://")===-1){u="/api/proxy?url="+encodeURIComponent(_u.origin+u);}_rs(s,t,u);};'
+                            'window.addEventListener("popstate",function(){_u=new URL(window._olTP||_t);});'
+                            '})();'
+                            '</script>'
+                        )
+                        # Place shim right after <base> or <head>, before any app scripts
+                        if head_idx != -1:
+                            html_text = html_text[:insert_pos] + _spa_shim + html_text[insert_pos:]
+                        elif html_idx != -1:
+                            html_text = html_text[:insert_pos] + _spa_shim + html_text[insert_pos:]
+                        else:
+                            html_text = _spa_shim + html_text
+
+                        # Rewrite absolute same-origin URLs so they also go through the proxy
+                        html_text = _rewrite_proxied_urls(html_text, proxy_origin)
+
                         body_bytes = html_text.encode("utf-8", errors="ignore")
+
+                elif is_css:
+                    try:
+                        css_text = body_bytes.decode("utf-8", errors="ignore")
+                        css_text = _rewrite_proxied_urls(css_text, proxy_origin)
+                        body_bytes = css_text.encode("utf-8", errors="ignore")
+                    except Exception:
+                        pass
 
                 self.send_response(status)
                 self.send_header("Content-Type", ctype)

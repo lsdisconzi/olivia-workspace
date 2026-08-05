@@ -29,6 +29,17 @@ fi
 
 P1024="$BUILD_DIR/icon-1024.png"
 
+# ── Background transparency fix ────────────────────────────────────────
+# qlmanage renders transparent SVG areas as opaque white, which would give
+# the .icns/.ico/.png white square corners. Flood-fill the background region
+# (connected to the top-left corner) to make it truly transparent.
+if command -v magick &>/dev/null || command -v convert &>/dev/null; then
+  IMAGEMAGICK="${IMAGEMAGICK:-convert}"
+  command -v magick &>/dev/null && IMAGEMAGICK="magick"
+  "$IMAGEMAGICK" "$P1024" -fuzz 6% -fill none -draw "color 0,0 floodfill" "$P1024"
+  echo "  ✓ transparent background applied"
+fi
+
 # ── macOS .icns ────────────────────────────────────────────────────────
 echo "Generating icon.icns..."
 ICONSET="$BUILD_DIR/icon.iconset"

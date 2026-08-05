@@ -1,0 +1,36 @@
+<!-- Scene 1/11 — scene-branch (Origin) — extracted from frontend/index-i18n.html:1549 -->
+<svg viewBox="0 0 260 280" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes sway {
+      0%, 100% { transform: rotate(-1.5deg); }
+      50%      { transform: rotate(1.5deg); }
+    }
+    @keyframes sway-r {
+      0%, 100% { transform: rotate(1.2deg); }
+      50%      { transform: rotate(-1.2deg); }
+    }
+    @keyframes fruit-glow {
+      0%, 100% { opacity: .85; filter: brightness(1); }
+      50%      { opacity: 1;   filter: brightness(1.15); }
+    }
+  </style>
+  <g style="transform-origin:130px 130px">
+    <path d="M85 220 Q90 190,100 165 Q115 130,135 105 Q155 80,180 60 Q200 45,215 38" fill="none"
+      opacity=".7" stroke="#2d785a" stroke-linecap="round" stroke-width="2.2"
+      style="animation:sway 8s ease-in-out infinite"></path>
+    <g style="animation:sway-r 6s ease-in-out .3s infinite;transform-origin:108px 155px">
+      <path d="M108 158 Q98 148,90 142" fill="none" opacity=".35" stroke="#2d785a"
+        stroke-linecap="round" stroke-width="1"></path>
+    </g>
+    <g style="animation:sway 5.5s ease-in-out .5s infinite;transform-origin:145px 95px">
+      <path d="M145 98 Q138 88,132 82" fill="none" opacity=".3" stroke="#2d785a" stroke-linecap="round"
+        stroke-width="1"></path>
+    </g>
+    <ellipse cx="110" cy="160" fill="#c4622d" opacity=".9" rx="5" ry="6.5"
+      style="animation:fruit-glow 4s ease-in-out infinite" transform="rotate(-15 110 160)"></ellipse>
+    <ellipse cx="145" cy="100" fill="#c4622d" opacity=".9" rx="5.5" ry="7"
+      style="animation:fruit-glow 4s ease-in-out .5s infinite" transform="rotate(-25 145 100)"></ellipse>
+    <ellipse cx="190" cy="52" fill="#c4622d" opacity=".9" rx="6" ry="7.5"
+      style="animation:fruit-glow 4s ease-in-out 1s infinite" transform="rotate(-35 190 52)"></ellipse>
+  </g>
+</svg>
