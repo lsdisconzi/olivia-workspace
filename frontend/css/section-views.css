@@ -17,17 +17,21 @@
 .workspace > .browser-resize-handle{order:10}
 
 /* ─── Chat collapse: when 2+ side panels are open, shrink the main chat
-   to a compact compose-only strip so the panels get real estate. ─── */
-.workspace.panels-busy .main-content{flex:0 0 280px;min-width:0}
-.workspace.panels-busy .main-content > .chat-log,
-.workspace.panels-busy .main-content > #chatLog,
+   to a compact strip showing last message + compose input. ─── */
+.workspace.panels-busy .main-content{flex:0 0 280px;min-width:0;display:flex;flex-direction:column;justify-content:flex-end}
 .workspace.panels-busy .main-content > .chat-header,
 .workspace.panels-busy .main-content > #chatHeader,
 .workspace.panels-busy .main-content > #chatToolbar,
 .workspace.panels-busy .main-content > .welcome-state,
 .workspace.panels-busy .main-content > #welcomeState{display:none !important}
-.workspace.panels-busy .main-content{display:flex;flex-direction:column;justify-content:flex-end}
-.workspace.panels-busy .main-content::before{content:'Chat';display:block;padding:8px 14px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);border-bottom:1px solid var(--border);background:var(--bg-card)}
+/* Keep the log but show only the last message */
+.workspace.panels-busy .main-content > .chat-log,
+.workspace.panels-busy .main-content > #chatLog{flex:0 1 auto;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:8px 12px;min-height:0}
+.workspace.panels-busy .chat-log .message:not(:last-child),
+.workspace.panels-busy #chatLog .message:not(:last-child){display:none}
+.workspace.panels-busy .chat-log .message:last-child,
+.workspace.panels-busy #chatLog .message:last-child{opacity:.65;max-height:60px;overflow:hidden}
+.workspace.panels-busy .main-content::before{content:'Chat (minimized)';display:block;padding:6px 14px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);border-bottom:1px solid var(--border);background:var(--bg-card)}
 
 /* Left-edge resize grip — drag to set the section view's own width when
    sharing the row with output/preview/browser panels.                  */

@@ -1538,9 +1538,9 @@
                   off</span></span></button>
             <button class="btn btn-sm header-opt" onclick="toggleFocusMode()" title="Focus mode"><i
                 class="fas fa-expand-alt"></i></button>
-            <button class="btn btn-sm header-opt" onclick="toggleOutputPanel()" title="Output panel"><i
+            <button class="btn btn-sm header-opt panel-toggle" id="outputToggleBtn" onclick="toggleOutputPanel()" title="Output panel"><i
                 class="fas fa-columns"></i></button>
-            <button class="btn btn-sm header-opt" id="browserToggleBtn" onclick="toggleBrowserPanel()"
+            <button class="btn btn-sm header-opt panel-toggle" id="browserToggleBtn" onclick="toggleBrowserPanel()"
               title="Browser view"><i class="fas fa-globe"></i></button>
             <button class="btn btn-sm header-opt" onclick="clearChat()"><i class="fas fa-trash"></i></button>
           </div>
@@ -2013,7 +2013,7 @@
               title="Auto-read new responses"><i class="fas fa-headphones"></i> Auto</span>
           </div>
           <div class="toolbar-group">
-            <button class="tbtn" data-tip="Output Panel" onclick="toggleOutputPanel()"><i
+            <button class="tbtn panel-toggle" id="sidebarOutputToggleBtn" data-tip="Output Panel" onclick="toggleOutputPanel()"><i
                 class="fas fa-columns"></i></button>
             <button class="tbtn danger" data-tip="Clear" onclick="clearChat()"><i class="fas fa-trash"></i></button>
           </div>
@@ -2046,7 +2046,7 @@
             <button class="btn btn-sm" onclick="studioOpenCfgModal()"
               style="background:rgba(28,69,50,.1);border-color:rgba(28,69,50,.3);color:var(--amber)"><i
                 class="fas fa-cog"></i> AI</button>
-            <button class="btn btn-sm" id="studioAiFabBtn" onclick="studioToggleAiPanel()" title="AI Assistant"><i
+            <button class="btn btn-sm panel-toggle" id="studioAiFabBtn" onclick="studioToggleAiPanel()" title="AI Assistant"><i
                 class="fas fa-wand-magic-sparkles"></i></button>
             <button class="btn btn-sm" id="studioSidebarBtn" onclick="studioToggleMainSidebar()"
               title="Show/hide the trunk (sidebar menu)"><i class="fas fa-bars"></i></button>

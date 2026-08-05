@@ -565,7 +565,7 @@ html.dark body {
     left: 50%;
     transform: translateX(-50%);
     background: var(--bg-card);
-    border: 1px solid var(--border-hi);
+    border: 0.3px solid var(--border-hi);
     color: var(--white);
     font-size: 10px;
     font-family: var(--sans);
@@ -1441,6 +1441,14 @@ html.dark body {
 .chat-header-right .header-opt.show {
     display: inline-flex !important;
     align-items: center;
+}
+
+/* Panel toggle buttons — active state when panel is open */
+.header-opt.panel-toggle.active,
+.tbtn.panel-toggle.active {
+    color: var(--amber);
+    background: rgba(196, 98, 45, .12);
+    border-color: var(--amber);
 }
 
 /* Welcome/empty state - Claude-style centered */
@@ -2975,7 +2983,7 @@ body:has(.workspace.focus-mode) .focus-exit-btn {
     flex-direction: column;
     overflow: hidden;
     flex-shrink: 0;
-    transition: width .28s ease, min-width .28s ease
+    transition: width var(--panel-transition), min-width var(--panel-transition)
 }
 
 .studio-ai-panel.open {

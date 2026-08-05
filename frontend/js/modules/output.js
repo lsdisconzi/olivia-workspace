@@ -385,6 +385,22 @@ function _syncWorkspacePanels() {
   if (previewHandle) previewHandle.classList.toggle('visible', previewOpen);
   if (browserHandle) browserHandle.classList.toggle('visible', browserOpen);
 
+  // Update toolbar toggle buttons to reflect panel open/closed state
+  const outputToggleBtn = document.getElementById('outputToggleBtn');
+  const sidebarOutputBtn = document.getElementById('sidebarOutputToggleBtn');
+  const browserToggleBtn = document.getElementById('browserToggleBtn');
+  if (outputToggleBtn) outputToggleBtn.classList.toggle('active', outputOpen);
+  if (sidebarOutputBtn) sidebarOutputBtn.classList.toggle('active', outputOpen);
+  if (browserToggleBtn) browserToggleBtn.classList.toggle('active', browserOpen);
+
+  // Update docs tree action buttons to reflect panel open/closed state
+  document.querySelectorAll('.docs-action-btn[data-panel]').forEach(btn => {
+    const panel = btn.dataset.panel;
+    if (panel === 'preview') btn.classList.toggle('active', previewOpen);
+    else if (panel === 'output') btn.classList.toggle('active', outputOpen);
+    else if (panel === 'browser') btn.classList.toggle('active', browserOpen);
+  });
+
   _refreshWorkspacePanelsBusy();
   if (typeof window.refreshPanelContextStatus === 'function') {
     window.refreshPanelContextStatus();

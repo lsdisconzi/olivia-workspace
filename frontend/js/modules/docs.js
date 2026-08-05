@@ -211,6 +211,12 @@ async function docsOpenFilePreview(relPath, name, projectId, size) {
     addSystemBubble('Selecione um projeto ativo para abrir documentos.');
     return;
   }
+  // Toggle: if preview panel is already open, close it
+  const previewPanel = document.getElementById('previewPanel');
+  if (previewPanel && previewPanel.classList.contains('open')) {
+    if (typeof window.togglePreviewPanel === 'function') window.togglePreviewPanel(false);
+    return;
+  }
   return openPreviewUrl(url, name || relPath, _docFilePreviewOptions(name || relPath, size));
 }
 
@@ -219,6 +225,13 @@ async function docsOpenFileOutput(relPath, name, projectId, size) {
   const url = _docProjectFileUrl(relPath, pid);
   if (!url) {
     addSystemBubble('Selecione um projeto ativo para abrir documentos.');
+    return;
+  }
+
+  // Toggle: if output panel is already open, close it
+  const outputPanel = document.getElementById('outputPanel');
+  if (outputPanel && outputPanel.classList.contains('open')) {
+    if (typeof toggleOutputPanel === 'function') toggleOutputPanel();
     return;
   }
 
@@ -271,6 +284,13 @@ function docsOpenFileBrowser(relPath, name, projectId) {
     return;
   }
 
+  // Toggle: if browser panel is already open, close it
+  const browserPanelEl = document.getElementById('browserPanel');
+  if (browserPanelEl && browserPanelEl.classList.contains('open')) {
+    if (typeof toggleBrowserPanel === 'function') toggleBrowserPanel();
+    return;
+  }
+
   const iframe = document.getElementById('browserFrame');
   const bar = document.getElementById('browserUrlBar');
   if (!iframe) {
@@ -278,10 +298,8 @@ function docsOpenFileBrowser(relPath, name, projectId) {
     return;
   }
 
-  const panel = document.getElementById('browserPanel');
-  if (panel && !panel.classList.contains('open') && typeof toggleBrowserPanel === 'function') {
-    toggleBrowserPanel();
-  }
+  // Panel is closed at this point — open it
+  if (typeof toggleBrowserPanel === 'function') toggleBrowserPanel();
 
   const fileType = resolvePreviewFileType(name || relPath);
   if (bar) bar.value = url;
@@ -437,6 +455,12 @@ function _sharedFileType(name, path) {
 }
 
 function sharedOpenFilePreview(path, name) {
+  // Toggle: if preview panel is already open, close it
+  const previewPanel = document.getElementById('previewPanel');
+  if (previewPanel && previewPanel.classList.contains('open')) {
+    if (typeof window.togglePreviewPanel === 'function') window.togglePreviewPanel(false);
+    return;
+  }
   if (typeof previewSharedFile === 'function') {
     return previewSharedFile(path, name);
   }
@@ -450,6 +474,12 @@ function sharedOpenFilePreview(path, name) {
 }
 
 async function sharedOpenFileOutput(path, name) {
+  // Toggle: if output panel is already open, close it
+  const outputPanel = document.getElementById('outputPanel');
+  if (outputPanel && outputPanel.classList.contains('open')) {
+    if (typeof toggleOutputPanel === 'function') toggleOutputPanel();
+    return;
+  }
   const url = _sharedRawUrl(path);
   const title = name || String(path || '').split('/').pop() || 'shared-file';
   const fileType = _sharedFileType(title, path);
@@ -517,10 +547,15 @@ async function sharedOpenFileBrowser(path, name) {
     return;
   }
 
-  const panel = document.getElementById('browserPanel');
-  if (panel && !panel.classList.contains('open') && typeof toggleBrowserPanel === 'function') {
-    toggleBrowserPanel();
+  // Toggle: if browser panel is already open, close it
+  const browserPanelEl = document.getElementById('browserPanel');
+  if (browserPanelEl && browserPanelEl.classList.contains('open')) {
+    if (typeof toggleBrowserPanel === 'function') toggleBrowserPanel();
+    return;
   }
+
+  // Panel is closed at this point — open it
+  if (typeof toggleBrowserPanel === 'function') toggleBrowserPanel();
   if (bar) bar.value = url;
 
   const openRawUrl = () => {
@@ -883,9 +918,9 @@ function renderDocsNodes(nodes, projectId) {
       : '';
     const actionsHtml = `
       <div class="docs-tree-actions" onclick="event.stopPropagation()">
-        <button class="docs-action-btn" onclick='docsOpenFilePreview(${previewArgs})' title="Preview"><i class="fas fa-eye"></i></button>
-        <button class="docs-action-btn" onclick='docsOpenFileOutput(${previewArgs})' title="Output panel"><i class="fas fa-columns"></i></button>
-        <button class="docs-action-btn" onclick='docsOpenFileBrowser(${JSON.stringify(filePath)},${JSON.stringify(n.name)},${JSON.stringify(pid)})' title="Browser panel"><i class="fas fa-globe"></i></button>
+        <button class="docs-action-btn" data-panel="preview" onclick='docsOpenFilePreview(${previewArgs})' title="Preview"><i class="fas fa-eye"></i></button>
+        <button class="docs-action-btn" data-panel="output" onclick='docsOpenFileOutput(${previewArgs})' title="Output panel"><i class="fas fa-columns"></i></button>
+        <button class="docs-action-btn" data-panel="browser" onclick='docsOpenFileBrowser(${JSON.stringify(filePath)},${JSON.stringify(n.name)},${JSON.stringify(pid)})' title="Browser panel"><i class="fas fa-globe"></i></button>
         <button class="docs-action-btn pin-btn ${pinned ? 'active' : ''}" data-pin-abs="${escapeHtmlAttr(absPath)}" onclick='toggleDocsFilePin(${JSON.stringify(filePath)},${JSON.stringify(n.name)},${JSON.stringify(pid)},this)' title="${pinned ? 'Desafixar path do contexto' : 'Fixar path no contexto do agente'}"><i class="fas fa-thumbtack"></i></button>
         <a class="docs-action-btn" href="${escapeHtmlAttr(fileUrl)}" target="_blank" rel="noopener noreferrer" title="Abrir em nova guia"><i class="fas fa-external-link-alt"></i></a>
         <button class="docs-action-btn danger" onclick='docsDeleteProjectFile(${JSON.stringify(filePath)},${JSON.stringify(n.name)},${JSON.stringify(pid)})' title="Excluir arquivo"><i class="fas fa-trash"></i></button>
@@ -1081,8 +1116,6 @@ async function previewLawArticle(fullPath, articleNumber) {
 }
 
 // Open document file
-let _previewPanelOpenTimer = null;
-let _previewPanelCloseTimer = null;
 
 window.togglePreviewPanel = function(show) {
   const panel  = document.getElementById('previewPanel');
@@ -1090,42 +1123,18 @@ window.togglePreviewPanel = function(show) {
   if (!panel) return;
   if (show === undefined) show = !panel.classList.contains('open');
 
-  if (_previewPanelOpenTimer) {
-    clearTimeout(_previewPanelOpenTimer);
-    _previewPanelOpenTimer = null;
-  }
-  if (_previewPanelCloseTimer) {
-    clearTimeout(_previewPanelCloseTimer);
-    _previewPanelCloseTimer = null;
-  }
+  // Clear stale inline width on close so CSS width:0 can take effect
+  if (!show && panel.style.width) panel.style.width = '';
 
-  if (show) {
-    panel.style.display = 'flex';
-    // Small delay to allow display:flex to apply before transition
-    _previewPanelOpenTimer = setTimeout(() => {
-      panel.classList.add('open');
-      if (typeof window.syncWorkspacePanels === 'function') {
-        window.syncWorkspacePanels();
-      } else {
-        if (handle) handle.classList.add('visible');
-        if (typeof window._refreshWorkspacePanelsBusy === 'function') window._refreshWorkspacePanelsBusy();
-      }
-    }, 10);
+  panel.classList.toggle('open', show);
+
+  if (typeof window.syncWorkspacePanels === 'function') {
+    window.syncWorkspacePanels();
   } else {
-    panel.classList.remove('open');
-    if (typeof window.syncWorkspacePanels === 'function') {
-      window.syncWorkspacePanels();
-    } else if (handle) {
-      handle.classList.remove('visible');
+    if (handle) handle.classList.toggle('visible', show);
+    if (typeof window._refreshWorkspacePanelsBusy === 'function') {
+      window._refreshWorkspacePanelsBusy();
     }
-    _previewPanelCloseTimer = setTimeout(() => {
-      if (!panel.classList.contains('open')) panel.style.display = 'none';
-      if (typeof window.syncWorkspacePanels === 'function') {
-        window.syncWorkspacePanels();
-      } else if (typeof window._refreshWorkspacePanelsBusy === 'function') {
-        window._refreshWorkspacePanelsBusy();
-      }
-    }, 300);
   }
 };
 
@@ -3848,9 +3857,9 @@ function _renderSharedEntries(basePath, entries) {
       : '';
     const actionsHtml = `
       <div class="docs-tree-actions shared-file-actions" onclick="event.stopPropagation()">
-        <button class="docs-action-btn" onclick="sharedOpenFilePreview('${_sharedJsQuote(fullPath)}','${_sharedJsQuote(fileName)}')" title="Preview"><i class="fas fa-eye"></i></button>
-        <button class="docs-action-btn" onclick="sharedOpenFileOutput('${_sharedJsQuote(fullPath)}','${_sharedJsQuote(fileName)}')" title="Output panel"><i class="fas fa-columns"></i></button>
-        <button class="docs-action-btn" onclick="sharedOpenFileBrowser('${_sharedJsQuote(fullPath)}','${_sharedJsQuote(fileName)}')" title="Browser panel"><i class="fas fa-globe"></i></button>
+        <button class="docs-action-btn" data-panel="preview" onclick="sharedOpenFilePreview('${_sharedJsQuote(fullPath)}','${_sharedJsQuote(fileName)}')" title="Preview"><i class="fas fa-eye"></i></button>
+        <button class="docs-action-btn" data-panel="output" onclick="sharedOpenFileOutput('${_sharedJsQuote(fullPath)}','${_sharedJsQuote(fileName)}')" title="Output panel"><i class="fas fa-columns"></i></button>
+        <button class="docs-action-btn" data-panel="browser" onclick="sharedOpenFileBrowser('${_sharedJsQuote(fullPath)}','${_sharedJsQuote(fileName)}')" title="Browser panel"><i class="fas fa-globe"></i></button>
         <button class="docs-action-btn pin-btn ${pinned ? 'active' : ''}" data-pin-abs="${escapeHtmlAttr(absPath)}" onclick="toggleSharedFilePin('${_sharedJsQuote(fullPath)}','${_sharedJsQuote(fileName)}',this)" title="${pinned ? 'Desafixar path do contexto' : 'Fixar path no contexto do agente'}"><i class="fas fa-thumbtack"></i></button>
         <a class="docs-action-btn" href="${escapeHtmlAttr(rawUrl)}" target="_blank" rel="noopener noreferrer" title="Abrir em nova guia"><i class="fas fa-external-link-alt"></i></a>
         ${lawExpander}
