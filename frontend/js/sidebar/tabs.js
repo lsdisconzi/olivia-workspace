@@ -163,6 +163,12 @@ function switchSidebarTab(tab) {
   // If leaving craudio, hide craudio view
   const wasCraudio = document.querySelector('.sidebar-tab.active[onclick*="craudio"]');
   if (wasCraudio && tab !== 'craudio' && typeof craudioHideView === 'function') craudioHideView();
+  // If leaving outreach, hide outreach view
+  const wasOutreach = document.querySelector('.sidebar-tab.active[onclick*="outreach"]');
+  if (wasOutreach && tab !== 'outreach' && typeof outreachHideView === 'function') outreachHideView();
+  // If leaving comfyui, hide comfyui workflow view
+  const wasComfyui = document.querySelector('.sidebar-tab.active[onclick*="comfyui"]');
+  if (wasComfyui && tab !== 'comfyui' && typeof comfyuiHideView === 'function') comfyuiHideView();
   // If leaving drive, hide drive view
   const wasDrive = document.querySelector('.sidebar-tab.active[onclick*="drive"]');
   if (wasDrive && tab !== 'drive' && typeof driveHideView === 'function') driveHideView();
@@ -275,6 +281,12 @@ function switchSidebarTab(tab) {
 
   // Show craudio view when Craudio tab is selected
   if (tab === 'craudio' && typeof craudioShowView === 'function') craudioShowView();
+
+  // Show outreach view when Outreach tab is selected
+  if (tab === 'outreach' && typeof outreachShowView === 'function') outreachShowView();
+
+  // Show comfyui workflow view when ComfyUI tab is selected
+  if (tab === 'comfyui' && typeof comfyuiShowView === 'function') comfyuiShowView();
 
   // Show drive view when Drive tab is selected
   if (tab === 'drive' && typeof driveShowView === 'function') {

@@ -74,6 +74,7 @@
       padding: 16px 20px 12px;
       flex-shrink: 0;
     }
+
     .app-header .title {
       font-family: var(--display);
       font-size: 18px;
@@ -81,10 +82,12 @@
       letter-spacing: -0.02em;
       color: var(--text-primary);
     }
+
     .app-header .actions {
       display: flex;
       gap: 8px;
     }
+
     .app-header .actions button {
       background: none;
       border: none;
@@ -95,6 +98,7 @@
       cursor: pointer;
       transition: all 0.2s;
     }
+
     .app-header .actions button:hover {
       background: var(--bg-card-secondary);
       color: var(--text-secondary);
@@ -110,9 +114,11 @@
       gap: 12px;
       min-height: 0;
     }
+
     .chat-log::-webkit-scrollbar {
       width: 4px;
     }
+
     .chat-log::-webkit-scrollbar-thumb {
       background: var(--border-subtle);
       border-radius: 4px;
@@ -125,6 +131,7 @@
       line-height: 1.6;
       color: var(--text-secondary);
     }
+
     .chat-bubble.user {
       align-self: flex-end;
       background: var(--accent);
@@ -133,6 +140,7 @@
       padding: 10px 14px;
       font-weight: 500;
     }
+
     .chat-bubble.agent {
       align-self: flex-start;
       padding: 0;
@@ -148,31 +156,38 @@
       display: flex;
       flex-direction: column;
     }
+
     .agent-card.streaming {
       border-color: var(--accent);
     }
+
     .agent-card-body {
       padding: 16px 18px;
     }
+
     .agent-card-body p {
       margin: 0 0 10px;
       font-size: 14px;
       line-height: 1.6;
       color: var(--text-secondary);
     }
+
     .agent-card-body p:last-child {
       margin-bottom: 0;
     }
+
     .agent-card-body strong {
       color: var(--text-primary);
       font-weight: 600;
     }
+
     .agent-card-body a {
       color: var(--accent);
       text-decoration: underline;
       text-underline-offset: 2px;
       word-break: break-word;
     }
+
     .agent-card-body code {
       font-family: var(--mono);
       font-size: 12px;
@@ -182,17 +197,20 @@
       color: var(--accent);
       border: 1px solid var(--border-subtle);
     }
+
     .agent-card-body ul,
     .agent-card-body ol {
       margin: 6px 0 10px 18px;
       padding: 0;
     }
+
     .agent-card-body li {
       margin: 0 0 4px;
       font-size: 13px;
       line-height: 1.6;
       color: var(--text-secondary);
     }
+
     .agent-card-body h3 {
       font-family: var(--display);
       font-size: 16px;
@@ -201,6 +219,7 @@
       margin: 16px 0 8px;
       line-height: 1.3;
     }
+
     .agent-card-body hr {
       border: none;
       border-top: 1px solid var(--border-subtle);
@@ -211,6 +230,7 @@
     .detail-block {
       border-top: 1px solid var(--border-subtle);
     }
+
     .detail-block summary {
       padding: 10px 16px;
       font-size: 12px;
@@ -224,9 +244,11 @@
       transition: all 0.15s;
       user-select: none;
     }
+
     .detail-block summary::-webkit-details-marker {
       display: none;
     }
+
     .detail-block summary::before {
       content: '';
       width: 5px;
@@ -237,13 +259,16 @@
       transition: transform 0.2s;
       flex-shrink: 0;
     }
+
     .detail-block[open] summary::before {
       transform: rotate(45deg);
     }
+
     .detail-block summary:hover {
       background: var(--bg-app);
       color: var(--text-secondary);
     }
+
     .detail-block-body {
       padding: 10px 16px 14px;
       font-size: 13px;
@@ -252,6 +277,7 @@
       border-top: 1px solid var(--border-subtle);
       background: var(--bg-app);
     }
+
     .detail-block-body code {
       background: var(--bg-card-secondary);
     }
@@ -265,6 +291,7 @@
       border-top: 1px solid var(--border-subtle);
       background: var(--bg-app);
     }
+
     .action-btn {
       border: 1px solid var(--border-subtle);
       background: var(--bg-card-secondary);
@@ -280,6 +307,7 @@
       align-items: center;
       gap: 4px;
     }
+
     .action-btn:hover {
       border-color: var(--accent);
       color: var(--accent);
@@ -297,16 +325,19 @@
       font-size: 13px;
       animation: procIn .25s ease;
     }
+
     @keyframes procIn {
       from {
         opacity: 0;
         transform: translateY(4px);
       }
+
       to {
         opacity: 1;
         transform: none;
       }
     }
+
     .proc-spinner {
       width: 16px;
       height: 16px;
@@ -316,15 +347,18 @@
       animation: procSpin 1s linear infinite;
       flex-shrink: 0;
     }
+
     @keyframes procSpin {
       to {
         transform: rotate(360deg);
       }
     }
+
     .proc-text {
       font-size: 13px;
       color: var(--text-tertiary);
     }
+
     .proc-elapsed {
       font-family: var(--mono);
       font-size: 10px;
@@ -340,6 +374,7 @@
       margin-top: -6px;
       margin-bottom: 4px;
     }
+
     .thought-toggle {
       display: flex;
       align-items: center;
@@ -351,9 +386,11 @@
       padding: 4px 0;
       transition: color .15s;
     }
+
     .thought-toggle:hover {
       color: var(--text-secondary);
     }
+
     .thought-toggle::before {
       content: '';
       width: 4px;
@@ -364,9 +401,11 @@
       transition: transform .2s;
       flex-shrink: 0;
     }
+
     .thought-toggle.open::before {
       transform: rotate(45deg);
     }
+
     .thought-items {
       display: none;
       padding: 6px 0 2px;
@@ -374,9 +413,11 @@
       border-left: 1px solid var(--border-subtle);
       padding-left: 12px;
     }
+
     .thought-items.open {
       display: block;
     }
+
     .thought-item {
       font-size: 11px;
       color: var(--text-tertiary);
@@ -398,6 +439,7 @@
       z-index: 50;
       backdrop-filter: blur(2px);
     }
+
     .input-floating-card {
       display: flex;
       flex-direction: column;
@@ -408,15 +450,18 @@
       box-shadow: var(--shadow);
       transition: border-color .2s;
     }
+
     .input-floating-card:focus-within {
       border-color: var(--border-high);
     }
+
     .input-row {
       display: flex;
       align-items: flex-end;
       gap: 8px;
       margin-top: 6px;
     }
+
     .input-controls {
       display: flex;
       align-items: center;
@@ -424,6 +469,7 @@
       padding: 4px 0;
       flex-shrink: 0;
     }
+
     .input-controls button {
       background: var(--bg-card-secondary);
       border: 1px solid var(--border-subtle);
@@ -436,10 +482,12 @@
       align-items: center;
       justify-content: center;
     }
+
     .input-controls button:hover {
       background: var(--border-subtle);
       color: var(--text-secondary);
     }
+
     .btn-model-pill {
       font-size: 11px;
       font-weight: 500;
@@ -465,9 +513,11 @@
       max-height: 100px;
       padding: 2px 0;
     }
+
     .input-floating-card textarea::placeholder {
       color: var(--text-tertiary);
     }
+
     .send-btn {
       background: var(--text-primary);
       color: #000;
@@ -484,10 +534,12 @@
       flex-shrink: 0;
       margin-bottom: 2px;
     }
+
     .send-btn:disabled {
       opacity: .4;
       cursor: not-allowed;
     }
+
     .send-btn:hover:not(:disabled) {
       background: var(--accent);
       transform: scale(1.05);
@@ -505,27 +557,33 @@
       backdrop-filter: blur(4px);
       animation: fadeIn .2s ease;
     }
+
     .action-sheet-overlay.open {
       display: flex;
     }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
       }
+
       to {
         opacity: 1;
       }
     }
+
     @keyframes slideUp {
       from {
         transform: translateY(100px);
         opacity: 0;
       }
+
       to {
         transform: translateY(0);
         opacity: 1;
       }
     }
+
     .action-sheet {
       width: 100%;
       max-width: var(--max-w);
@@ -535,6 +593,7 @@
       animation: slideUp .3s ease;
       border-top: 1px solid var(--border-subtle);
     }
+
     .action-sheet-header {
       font-family: var(--display);
       font-size: 16px;
@@ -544,6 +603,7 @@
       display: flex;
       justify-content: space-between;
     }
+
     .action-sheet-header button {
       background: none;
       border: none;
@@ -551,12 +611,14 @@
       font-size: 18px;
       cursor: pointer;
     }
+
     .action-grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       margin-bottom: 20px;
     }
+
     .action-grid-item {
       background: var(--bg-app);
       border: 1px solid var(--border-subtle);
@@ -571,11 +633,13 @@
       cursor: pointer;
       transition: all .2s;
     }
+
     .action-grid-item:hover {
       border-color: var(--text-tertiary);
       color: var(--text-secondary);
       background: var(--bg-card-secondary);
     }
+
     .action-grid-item i {
       font-size: 20px;
     }
@@ -589,9 +653,11 @@
       color: var(--text-secondary);
       font-size: 13px;
     }
+
     .action-list-item:last-child {
       border-bottom: none;
     }
+
     .action-list-item .toggle-switch {
       width: 40px;
       height: 22px;
@@ -601,9 +667,11 @@
       cursor: pointer;
       transition: .2s;
     }
+
     .action-list-item .toggle-switch.active {
       background: var(--accent);
     }
+
     .action-list-item .toggle-switch::after {
       content: '';
       position: absolute;
@@ -615,6 +683,7 @@
       border-radius: 50%;
       transition: .2s;
     }
+
     .action-list-item .toggle-switch.active::after {
       left: 20px;
     }
@@ -631,9 +700,11 @@
       padding: 20px;
       backdrop-filter: blur(6px);
     }
+
     .model-picker-overlay.open {
       display: flex;
     }
+
     .model-picker-card {
       width: 100%;
       max-width: 400px;
@@ -643,17 +714,20 @@
       padding: 24px;
       animation: slideUp .3s ease;
     }
+
     .model-picker-card h4 {
       color: var(--text-primary);
       font-family: var(--display);
       font-size: 16px;
       margin-bottom: 16px;
     }
+
     .model-picker-list {
       list-style: none;
       padding: 0;
       margin: 0 0 16px;
     }
+
     .model-picker-list li {
       display: flex;
       justify-content: space-between;
@@ -665,14 +739,17 @@
       cursor: pointer;
       transition: all .15s;
     }
+
     .model-picker-list li:hover {
       color: var(--text-primary);
     }
+
     .model-picker-list li .model-name {
       display: flex;
       align-items: center;
       gap: 6px;
     }
+
     .model-picker-list li .model-badge {
       background: var(--accent-bg);
       color: var(--accent);
@@ -681,19 +758,23 @@
       padding: 2px 6px;
       border-radius: 4px;
     }
+
     .model-picker-list li .checkmark {
       display: none;
       color: var(--accent);
     }
+
     .model-picker-list li.active .checkmark {
       display: block;
     }
+
     .model-picker-list li.active {
       color: var(--text-primary);
       background: var(--bg-app);
       border-radius: 6px;
       padding: 12px 6px;
     }
+
     .model-config-row {
       display: flex;
       justify-content: space-between;
@@ -703,6 +784,7 @@
       font-size: 13px;
       border-top: 1px solid var(--border-subtle);
     }
+
     .model-config-row span:last-child {
       color: var(--text-secondary);
     }
@@ -726,10 +808,12 @@
       box-shadow: var(--shadow);
       padding-bottom: 20px;
     }
+
     .history-panel.open {
       display: flex;
       animation: slideUp .3s ease;
     }
+
     .history-head {
       padding: 16px 20px;
       border-bottom: 1px solid var(--border-subtle);
@@ -737,11 +821,13 @@
       justify-content: space-between;
       align-items: center;
     }
+
     .history-title {
       font-size: 14px;
       font-weight: 500;
       color: var(--text-primary);
     }
+
     .history-close {
       background: none;
       border: none;
@@ -749,17 +835,20 @@
       font-size: 16px;
       cursor: pointer;
     }
+
     .history-list {
       overflow-y: auto;
       padding: 12px 16px;
       flex: 1;
     }
+
     .history-empty {
       font-size: 13px;
       color: var(--text-tertiary);
       text-align: center;
       padding: 20px 0;
     }
+
     .history-item {
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
@@ -767,12 +856,14 @@
       margin-bottom: 10px;
       background: var(--bg-app);
     }
+
     .history-item-title {
       font-size: 13px;
       font-weight: 500;
       color: var(--text-primary);
       margin-bottom: 4px;
     }
+
     .history-item-preview {
       font-size: 12px;
       color: var(--text-tertiary);
@@ -781,16 +872,19 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .history-item-meta {
       font-size: 10px;
       color: var(--text-tertiary);
       font-family: var(--mono);
       margin-bottom: 8px;
     }
+
     .history-item-actions {
       display: flex;
       gap: 8px;
     }
+
     .history-btn {
       background: var(--bg-card-secondary);
       border: 1px solid var(--border-subtle);
@@ -801,6 +895,7 @@
       cursor: pointer;
       transition: all .2s;
     }
+
     .history-btn:hover {
       border-color: var(--text-secondary);
       color: var(--text-primary);
@@ -818,9 +913,11 @@
       padding: 20px;
       backdrop-filter: blur(6px);
     }
+
     .setup-overlay.open {
       display: flex;
     }
+
     .setup-modal {
       width: 100%;
       max-width: 560px;
@@ -832,6 +929,7 @@
       position: relative;
       box-shadow: var(--shadow);
     }
+
     .setup-modal-close {
       position: absolute;
       top: 12px;
@@ -850,10 +948,12 @@
       font-size: 14px;
       transition: all .15s;
     }
+
     .setup-modal-close:hover {
       color: var(--text-primary);
       border-color: var(--text-secondary);
     }
+
     .setup-modal iframe {
       width: 100%;
       height: 100%;
@@ -865,31 +965,40 @@
       .app-header {
         padding: 12px 16px 8px;
       }
+
       .app-header .title {
         font-size: 16px;
       }
+
       .chat-bubble {
         max-width: 100%;
       }
+
       .input-floating-container {
         padding: 8px 10px 12px;
       }
+
       .input-floating-card {
         padding: 6px 10px 10px;
       }
+
       .input-controls button {
         padding: 2px 6px;
       }
+
       .send-btn {
         width: 28px;
         height: 28px;
       }
+
       .action-sheet {
         padding: 16px 16px 30px;
       }
+
       .action-grid-3 {
         gap: 8px;
       }
+
       .action-grid-item {
         padding: 12px 8px;
         font-size: 11px;
@@ -920,9 +1029,6 @@
         <div class="input-row">
           <div class="input-controls">
             <button onclick="toggleActionSheet()"><i class="fas fa-plus"></i></button>
-            <button class="btn-model-pill" onclick="toggleModelPicker()">
-              <i class="fas fa-robot" style="font-size: 10px;"></i> Sonnet 5
-            </button>
           </div>
           <textarea id="agentInput" placeholder="Pergunte sobre a Olivia Workspace..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAgentMessage();}"
@@ -953,9 +1059,15 @@
         Acesso a ferramentas
         <span><i class="fas fa-chevron-right" style="font-size: 10px;"></i></span>
       </div>
-      <div class="action-list-item" style="border-bottom: none;">
+      <div class="action-list-item">
         Contexto do Workspace
         <button class="action-btn" style="border:none; background: var(--bg-app);">Geral</button>
+      </div>
+      <div class="action-list-item" style="border-bottom: none; cursor: pointer;" onclick="toggleModelPicker(); toggleActionSheet();">
+        Modelo de IA
+        <button class="btn-model-pill" id="modelPillBtn" onclick="event.stopPropagation(); toggleModelPicker(); toggleActionSheet();">
+          <i class="fas fa-robot" style="font-size: 14px; margin-top: 1px;"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -963,18 +1075,18 @@
   <!-- MODEL PICKER MODAL -->
   <div class="model-picker-overlay" id="modelPicker">
     <div class="model-picker-card">
-      <h4>Selecionar modelo</h4>
-      <ul class="model-picker-list">
-        <li><span class="model-name">Fable 5 <span class="model-badge">Pro</span></span> <span class="checkmark"><i class="fas fa-check"></i></span></li>
-        <li><span class="model-name">Opus 5 <span class="model-badge">Pro</span></span> <span class="checkmark"><i class="fas fa-check"></i></span></li>
-        <li class="active"><span class="model-name">Sonnet 5</span> <span class="checkmark"><i class="fas fa-check"></i></span></li>
-        <li><span class="model-name">Haiku 4.5</span> <span class="checkmark"><i class="fas fa-check"></i></span></li>
-      </ul>
-      <div class="model-config-row">
-        Esforço <span>Médio <i class="fas fa-chevron-right" style="font-size: 10px; margin-left: 4px;"></i></span>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h4 style="margin: 0;">Selecionar modelo</h4>
+        <div style="font-size: 11px; color: var(--text-muted); background: var(--bg-tertiary, #2a2a2a); padding: 4px 8px; border-radius: 12px; border: 1px solid var(--border);">
+          <span id="currentModelDisplay">Carregando...</span>
+        </div>
       </div>
-      <div class="model-config-row" style="border-top: none; margin-top: 0;">
-        <span style="font-size: 12px; color: var(--text-tertiary);">Mais modelos <i class="fas fa-chevron-right" style="font-size: 10px; margin-left: 4px;"></i></span>
+      <!-- Provider tabs -->
+      <div class="provider-tabs" id="modelPickerProviderTabs" style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;"></div>
+      <!-- Model cards container -->
+      <div class="model-cards" id="modelPickerModelCards" style="max-height:400px;overflow-y:auto;"></div>
+      <div class="model-config-row" style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px;">
+        <button class="btn btn-sm" onclick="closeModelPicker()" style="width:100%;">Fechar</button>
       </div>
     </div>
   </div>
@@ -1006,16 +1118,155 @@
     function toggleModelPicker() {
       const picker = document.getElementById('modelPicker');
       picker.classList.toggle('open');
+      if (picker.classList.contains('open')) {
+        loadModelPickerData();
+      }
+    }
+    function closeModelPicker() {
+      document.getElementById('modelPicker').classList.remove('open');
+    }
+
+    // Model picker data loading
+    let currentPickerProvider = null;
+    async function loadModelPickerData() {
+      const providerTabs = document.getElementById('modelPickerProviderTabs');
+      const modelCards = document.getElementById('modelPickerModelCards');
+
+      // Get active provider
+      const activeProvider = window.OliviaUserPrefs ? OliviaUserPrefs.getProvider() : 'deepseek';
+      currentPickerProvider = activeProvider;
+
+      // Provider definitions
+      const providers = [
+        { id: 'deepseek', name: 'DeepSeek', icon: 'fa-brain', color: 'var(--amber)' },
+        { id: 'openrouter', name: 'OpenRouter', icon: 'fa-network-wired', color: 'var(--blue)' },
+        { id: 'ollama', name: 'Ollama', icon: 'fa-hard-drive', color: 'var(--gray)' },
+        { id: 'fireworks', name: 'Fireworks', icon: 'fa-fire', color: 'var(--red)' }
+      ];
+
+      // Render provider tabs
+      providerTabs.innerHTML = providers.map(p => `
+        <button class="provider-tab${p.id === activeProvider ? ' active' : ''}"
+                data-provider="${p.id}"
+                onclick="selectModelPickerProvider('${p.id}')"
+                style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);font-size:11px;color:var(--text);cursor:pointer;">
+          <i class="fas ${p.icon}" style="font-size:10px;color:${p.color}"></i> ${p.name}
+        </button>
+      `).join('');
+
+      // Fetch models for active provider
+      await fetchModelsForProvider(activeProvider);
+    }
+
+    async function selectModelPickerProvider(providerId) {
+      currentPickerProvider = providerId;
+
+      // Update tab UI
+      document.querySelectorAll('#modelPickerProviderTabs .provider-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.provider === providerId);
+      });
+
+      await fetchModelsForProvider(providerId);
+    }
+
+    async function fetchModelsForProvider(providerId) {
+      const modelCards = document.getElementById('modelPickerModelCards');
+      modelCards.innerHTML = '<div style="padding:20px;text-align:center;color:var(--gray);font-size:12px;">Carregando modelos...</div>';
+
+      try {
+        const res = await fetch(`${CLOVI_BASE_URL}/api/models/catalog`, {
+          credentials: 'include'
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        // Filter models by provider on frontend
+        const allModels = data.models || [];
+        const models = allModels.filter(m => m.provider === providerId);
+        const activeModel = window.OliviaUserPrefs ? OliviaUserPrefs.getModel() : '';
+
+        if (!models.length) {
+          modelCards.innerHTML = '<div style="padding:20px;text-align:center;color:var(--gray);font-size:12px;">Nenhum modelo disponível para este provedor.</div>';
+          return;
+        }
+
+        modelCards.innerHTML = models.map(model => `
+          <div class="model-card${model.id === activeModel ? ' active' : ''}"
+               data-model="${model.id}"
+               style="border:1px solid var(--border);border-radius:12px;padding:12px;background:var(--bg-card);margin-bottom:8px;${model.id === activeModel ? 'border-color:var(--green);' : ''}">
+            <div class="model-card-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span class="model-card-name" style="font-weight:600;font-size:13px;">${model.name}</span>
+              ${model.free ? '<span class="model-badge" style="font-size:9px;padding:1px 6px;border-radius:4px;background:var(--green-lo);color:var(--green);">Free</span>' : ''}
+            </div>
+            <div class="model-card-desc" style="font-size:11px;color:var(--gray);margin-bottom:8px;">${model.description || model.best_for || ''}</div>
+            <div class="model-card-pricing" style="font-size:10px;color:var(--gray);margin-bottom:8px;">
+              ${model.context_window ? `■ ${formatNumber(model.context_window)} ctx` : ''}
+              ${model.input_cost_per_1m !== undefined ? ` · $${model.input_cost_per_1m}/$${model.output_cost_per_1m} per 1M` : ''}
+            </div>
+            <div class="model-card-footer" style="margin-top:8px;">
+              <button class="btn btn-sm"
+                      onclick="selectModel('${model.id}')"
+                      style="font-size:11px;width:100%;${model.id === activeModel ? 'background:var(--green);color:var(--bg);' : ''}">
+                ${model.id === activeModel ? '<i class="fas fa-check"></i> Selecionado' : 'Selecionar'}
+              </button>
+            </div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        console.error('Failed to fetch models:', err);
+        modelCards.innerHTML = `<div style="padding:20px;text-align:center;color:var(--red);font-size:12px;">Erro ao carregar modelos: ${err.message}</div>`;
+      }
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+
+    function selectModel(modelId) {
+      // Update user prefs
+      if (window.OliviaUserPrefs) {
+        OliviaUserPrefs.setModel(modelId);
+        // Also update workspace config for immediate use
+        try {
+          const cfg = JSON.parse(localStorage.getItem('OliviaLegal.workspace.config') || '{}');
+          cfg.model = modelId;
+          localStorage.setItem('OliviaLegal.workspace.config', JSON.stringify(cfg));
+        } catch (_) {}
+      }
+
+      // Update UI
+      const displayName = document.querySelector(`#modelPickerModelCards .model-card[data-model="${modelId}"] .model-card-name`);
+      if (displayName) {
+        document.getElementById('currentModelDisplay').textContent = displayName.textContent.trim();
+      }
+
+      // Update active state in picker
+      document.querySelectorAll('#modelPickerModelCards .model-card').forEach(card => {
+        const isActive = card.dataset.model === modelId;
+        card.classList.toggle('active', isActive);
+        card.style.borderColor = isActive ? 'var(--green)' : 'var(--border)';
+        const btn = card.querySelector('button');
+        if (btn) {
+          btn.textContent = isActive ? '✓ Selecionado' : 'Selecionar';
+          btn.style.background = isActive ? 'var(--green)' : '';
+          btn.style.color = isActive ? 'var(--bg)' : '';
+        }
+      });
+
+      closeModelPicker();
     }
     function closeAgentHistory() {
       document.getElementById('agentHistoryPanel').classList.remove('open');
     }
 
     // Close modals on background click
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       const actionSheet = document.getElementById('actionSheet');
       if (e.target === actionSheet) actionSheet.classList.remove('open');
-      
+
       const modelPicker = document.getElementById('modelPicker');
       if (e.target === modelPicker) modelPicker.classList.remove('open');
     });
@@ -1418,20 +1669,15 @@
       const presetObj = (preset && typeof preset === 'object') ? preset : null;
       const input = document.getElementById('agentInput');
       const message = ((presetObj ? presetObj.message : preset) || input.value || '').trim();
-      const requestModel = (function() {
-        if (window.OliviaUserPrefs) {
-          const m = OliviaUserPrefs.getModel();
-          if (m) return m;
-        }
-        try {
-          const cfg = JSON.parse(localStorage.getItem('OliviaLegal.workspace.config') || '{}');
-          if (cfg.model) return cfg.model;
-        } catch (_) {}
-        return null;
-      })();
+
+      // Get active provider and model from user prefs
+      const provider = window.OliviaUserPrefs ? OliviaUserPrefs.getProvider() : 'deepseek';
+      const model = window.OliviaUserPrefs ? OliviaUserPrefs.getModel() : 'deepseek-v4-flash';
+      const apiKey = window.OliviaUserPrefs ? OliviaUserPrefs.getApiKey(provider) : '';
+
       if (presetObj && presetObj.newSession) { sessionId = null; workspaceContextSent = false }
       if (!message) return;
-      
+
       appendUser(message);
       if (!preset) { input.value = ''; autoGrow(input) }
       setThinking(true);
@@ -1440,11 +1686,16 @@
       try {
         const history = chatHistory.filter(i => i && i.text).slice(-20).map(i => ({ role: i.role === 'agent' ? 'assistant' : 'user', content: i.text }));
         const messageForBackend = _wrapWithWorkspacePrimer(message);
-        const payload = { message: messageForBackend, history, session_id: sessionId || null };
-        if (requestModel) payload.model = requestModel;
+        const payload = { message: messageForBackend, history, session_id: sessionId || null, provider, model };
+
+        const headers = { 'Content-Type': 'application/json' };
+        if (apiKey) {
+          headers.Authorization = `Bearer ${apiKey}`;
+        }
+
         const res = await fetch(`${CLOVI_BASE_URL}/api/assistant/chat`, {
           method: 'POST', credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify(payload)
         });
 
@@ -1509,12 +1760,13 @@
       overlay.classList.remove('open');
       frame.src = 'about:blank';
     }
-    window.addEventListener('message', async function(event) {
+    window.addEventListener('message', async function (event) {
       if (event.data && event.data.type === 'olivia-setup-complete') {
         closeSetupModal();
         if (window.OliviaUserPrefs) {
           await OliviaUserPrefs.load();
           await OliviaUserPrefs.syncWorkspaceConfig();
+          updateModelPillDisplay();
         }
       }
     });
@@ -1527,9 +1779,19 @@
         const prefs = await OliviaUserPrefs.load();
         if (!prefs.setup_complete) {
           openSetupModal();
+        } else {
+          // Update model pill display
+          updateModelPillDisplay();
         }
       }
     });
+
+    function updateModelPillDisplay() {
+      const model = window.OliviaUserPrefs ? OliviaUserPrefs.getModel() : '';
+      if (model) {
+        document.getElementById('currentModelDisplay').textContent = model;
+      }
+    }
     window.addEventListener('beforeunload', (event) => {
       if (hasUnsavedChanges && chatHistory.length) {
         event.preventDefault();

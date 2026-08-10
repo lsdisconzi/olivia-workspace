@@ -76,6 +76,8 @@
   <link href="css/responsive-mobile.css" rel="stylesheet" />
   <link href="css/drive.css" rel="stylesheet" />
   <link href="css/health.css" rel="stylesheet" />
+  <link href="css/outreach.css" rel="stylesheet" />
+  <link href="css/comfyui-workflow.css" rel="stylesheet" />
   <!-- Mobile-specific meta & PWA hints (frontend-mobile) -->
   <meta content="#1c4532" name="theme-color" />
   <meta content="yes" name="mobile-web-app-capable" />
@@ -1696,6 +1698,33 @@
                   class="fas fa-gavel"></i> Open Craudio</button>
             </div>
           </div>
+          <!-- TAB: Outreach -->
+          <div class="sidebar-section" id="tab-outreach">
+            <div style="padding:14px 12px">
+              <div
+                style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
+                <i class="fas fa-share-nodes" style="color:var(--amber)"></i> Outreach
+              </div>
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Pesquisa → evidência →
+                entendimento → ponte. Pipeline de inteligência relacional para preparar introduções profundamente
+                contextualizadas entre Olivia e uma pessoa ou organização.</p>
+              <button class="btn" onclick="outreachShowView()" style="width:100%;justify-content:center"><i
+                  class="fas fa-share-nodes"></i> Open Outreach</button>
+            </div>
+          </div>
+          <!-- TAB: ComfyUI -->
+          <div class="sidebar-section" id="tab-comfyui">
+            <div style="padding:14px 12px">
+              <div
+                style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
+                <i class="fas fa-cube" style="color:var(--amber)"></i> ComfyUI
+              </div>
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Importe, visualize e refine
+                workflows ComfyUI — nós, máscaras e parâmetros com edição granular.</p>
+              <button class="btn" onclick="comfyuiShowView()" style="width:100%;justify-content:center"><i
+                  class="fas fa-cube"></i> Open ComfyUI</button>
+            </div>
+          </div>
           <!-- TAB: Social Media -->
           <div class="sidebar-section" id="tab-socialmedia">
             <div style="padding:14px 12px">
@@ -2298,6 +2327,10 @@
       <div class="drive-view" id="driveView"></div>
       <!-- ═══════ HEALTH VIEW ═══════ -->
       <div class="health-view" id="healthView"></div>
+      <!-- ═══════ OUTREACH CONCIERGE VIEW ═══════ -->
+      <div class="outreach-view" id="outreachView"></div>
+      <!-- ═══════ COMFYUI WORKFLOW VIEW ═══════ -->
+      <div class="comfyui-workflow-view" id="comfyuiWorkflowView"></div>
       <!-- ═══════ STUDIO BUILDER VIEW ═══════ -->
       <div class="studio-view" id="studioView">
         <div class="studio-top-bar">
@@ -6756,6 +6789,8 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <script src="js/modules/social-media.js"></script>
   <script src="js/modules/drive.js"></script>
   <script src="js/modules/health.js"></script>
+  <script src="js/modules/outreach.js"></script>
+  <script src="js/modules/comfyui-workflow.js"></script>
   <script src="js/modules/writer.js"></script>
   <script src="js/modules/sheets.js"></script>
   <script src="js/modules/section-generator.js"></script>

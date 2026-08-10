@@ -1709,6 +1709,8 @@ SECTION_REGISTRY = [
     {"id": "shaders", "label": "Espaço de Shaders", "icon": "fa-palette"},
     {"id": "apiexplorer", "label": "API Explorer", "icon": "fa-plug", "onclick": "aexInit()"},
     {"id": "craudio", "label": "Craudio", "icon": "fa-gavel"},
+    {"id": "outreach", "label": "Outreach", "icon": "fa-share-nodes", "onclick": "outreachShowView()"},
+    {"id": "comfyui", "label": "ComfyUI", "icon": "fa-cube", "onclick": "comfyuiShowView()"},
     {"id": "drive", "label": "Drive", "icon": "fa-cloud"},
     { "id": "writer", "label": "Writer", "icon": "fa-pen-fancy", "onclick": "" },
     {"id": "sheets", "label": "Sheets", "icon": "fa-table", "onclick": "" },
@@ -5860,6 +5862,15 @@ def _archive_project(project_id: str, target_sub: str = "default") -> bool:
     shutil.move(str(root), str(dest))
     _cleanup_project_registration(pid)
     return True
+
+
+def _count_project_files(project_dir: Path) -> int:
+    """Count all files in a project directory (excluding metadata files)."""
+    count = 0
+    for f in project_dir.rglob("*"):
+        if f.is_file() and f.name not in ("project.json", "index.json"):
+            count += 1
+    return count
 
 
 def _list_archived_projects() -> list[dict]:
@@ -15456,6 +15467,48 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         except Exception as exc:
             self._json_response({"error": "save_failed", "message": str(exc)}, 500)
 
+    # ── Workflows (ComfyUI) persistence ────────────────────────────────────
+    _WORKFLOWS_LOCAL_DIR = PROJECT_ROOT / "olivia" / "workflows"
+
+    def _workflows_api_save(self):
+        """POST /api/workflows/save — persist a ComfyUI workflow to olivia/workflows/.
+
+        Body: { workflow: {...}, name?: string }
+        The workflow object is written verbatim (valid ComfyUI JSON), so a saved
+        file can be re-imported with the module's Import button or in ComfyUI
+        itself. Repeated saves with the same name overwrite.
+        """
+        body = self._read_body() or {}
+        workflow = body.get("workflow")
+        if not isinstance(workflow, dict):
+            self._json_response({"error": "workflow object required"}, 400)
+            return
+        # Sanitize filename: keep only safe chars; force .json suffix.
+        raw_name = str(body.get("name") or body.get("filename") or "").strip()
+        safe = re.sub(r"[^\w.\-]", "_", raw_name)
+        safe = re.sub(r"_{2,}", "_", safe).strip("_")
+        if not safe:
+            safe = "workflow_" + str(int(time.time()))
+        if not safe.lower().endswith(".json"):
+            safe += ".json"
+
+        try:
+            self._WORKFLOWS_LOCAL_DIR.mkdir(parents=True, exist_ok=True)
+            target = self._WORKFLOWS_LOCAL_DIR / safe
+            target.write_text(json.dumps(workflow, ensure_ascii=False, indent=2), encoding="utf-8")
+            try:
+                rel = str(target.relative_to(PROJECT_ROOT))
+            except Exception:
+                rel = str(target)
+            self._json_response({
+                "status": "ok",
+                "filename": safe,
+                "path": rel,
+                "absolute_path": str(target),
+            })
+        except Exception as exc:
+            self._json_response({"error": "save_failed", "message": str(exc)}, 500)
+
     def _send_raw(self, raw: bytes, content_type: str, status: int = 200) -> None:
         try:
             self.send_response(status)
@@ -16179,6 +16232,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # Transcripts persistence: actually write the file (not a stub).
         if path == "/api/transcripts/save":
             self._transcripts_api_save()
+            return
+
+        # ComfyUI workflow persistence.
+        if path == "/api/workflows/save":
+            self._workflows_api_save()
             return
 
         if path == "/api/mcp/tools/execute":
@@ -18165,6 +18223,7 @@ Exemplo de formato:
                         "name": meta.get("name", d.name),
                         "description": meta.get("description", ""),
                         "created_at": meta.get("created_at", ""),
+                        "files_count": _count_project_files(d),
                         "owner_email": _project_owner_email(pid),
                     })
             self._json_response({"projects": projects})
@@ -18191,6 +18250,7 @@ Exemplo de formato:
                     "project_id": project_id,
                     "name": project_id,
                     "description": "",
+                    "files_count": _count_project_files(project_dir),
                 }
                 meta_file = project_dir / "project.json"
                 if meta_file.is_file():

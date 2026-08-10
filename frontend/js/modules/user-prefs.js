@@ -85,6 +85,20 @@
     return 'deepseek-v4-flash';
   }
 
+  // Set active model
+  async function setModel(model) {
+    const prefs = await loadUserPrefs();
+    prefs.model = model;
+    await saveUserPrefs(prefs);
+
+    // Also update workspace config
+    try {
+      const config = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      config.model = model;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+    } catch (err) {}
+  }
+
   // Get API key for provider
   function getApiKey(provider) {
     try {
@@ -157,6 +171,7 @@
     save: saveUserPrefs,
     getProvider: getActiveProvider,
     getModel: getActiveModel,
+    setModel: setModel,
     getApiKey: getApiKey,
     saveApiKey: saveApiKey,
     isSetupComplete: isSetupComplete,

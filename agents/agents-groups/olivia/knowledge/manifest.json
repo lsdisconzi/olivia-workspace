@@ -117,6 +117,17 @@
       "owner_agents": ["olivia-coordinator"],
       "consumer_agents": ["*"],
       "tags": ["schema", "knowledge"]
+    },
+    {
+      "id": "olivia.knowledge.outreach.runtime",
+      "title": "Outreach Concierge Runtime & Tooling Notes",
+      "path": "agents/agents-groups/olivia/knowledge/outreach/runtime-and-tooling.md",
+      "kind": "doc",
+      "language": "en",
+      "owner_agents": ["olivia-coordinator", "outreach-concierge-v1"],
+      "consumer_agents": ["outreach-concierge-v1"],
+      "tags": ["outreach", "runtime", "tooling", "write-path"],
+      "pii_sensitivity": "none"
     }
   ]
 }

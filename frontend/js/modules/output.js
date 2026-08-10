@@ -231,6 +231,15 @@ function downloadPreviewAsPdf() {
     printDoc += '/* Collected page stylesheets */\n' + stylesheetCss + '\n';
   }
 
+  // The app's global CSS was written for a desktop-app shell —
+  // css/base.css sets `html, body { height: 100dvh; overflow: hidden; }`.
+  // Inlined here it wins the cascade over the print styles above and
+  // clips the body to a single page, so "Export as PDF" only produced
+  // the first page. Re-assert the print document's own layout.
+  printDoc += '/* Neutralize app chrome leaking into the print document */\n' +
+    'html, body{ height:auto !important; overflow:visible !important; min-height:0 !important; max-height:none !important; }\n' +
+    'body{ display:block !important; background:#fff !important; color:var(--ink) !important; }\n';
+
   printDoc += '</style>\n</head>\n<body>\n' +
     '<div class="doc-header"><div class="doc-header-mark">' + oliveMark + '</div>' +
     '<div class="doc-header-brand">Olivia <span>ecosystem</span></div>' +

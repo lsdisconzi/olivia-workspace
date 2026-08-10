@@ -639,7 +639,7 @@
     var names = ['violationsShowView', 'lawLibShowView', 'masterIndexShowView',
       'legalRouterShowView', 'spacesShowView', 'listeningShowView', 'studioShowView',
       'descobertaShowView', 'memoryShowView', 'shadersShowView', 'architectureShowView',
-      'socialMediaShowView', 'resetToWelcome', 'aexToggleMain'];
+      'socialMediaShowView', 'comfyuiShowView', 'resetToWelcome', 'aexToggleMain'];
     names.forEach(function (n) {
       var orig = window[n];
       if (typeof orig !== 'function' || orig._crWrapped) return;

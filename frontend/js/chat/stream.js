@@ -6,57 +6,83 @@ if (typeof window.oliviaMode !== 'string') {
   window.oliviaMode = 'agent';
 }
 
+// ── i18n helpers ─────────────────────────────────────────────────────────
+// Resolve strings through the runtime dictionary (window.t) so the chat
+// engine follows the language selected in the workspace <select id="langSelect">.
+// The current PT-BR source string is always the fallback default, so missing
+// dictionary keys degrade gracefully to today's behavior.
+const _OLIVIA_T_SENTINEL = '\u0000OLIVIA_T_NS\u0000';
+function _t(key, fallback) {
+  if (typeof window.t !== 'function') return fallback;
+  const v = window.t(key, _OLIVIA_T_SENTINEL);
+  return v === _OLIVIA_T_SENTINEL ? fallback : v;
+}
+// Template variant: dictionary values may use {var} placeholders; the fallback
+// is already interpolated (template literal) so it renders correctly without
+// the dictionary too.
+function _tpl(key, fallback, vars) {
+  let s = _t(key, fallback);
+  if (vars) {
+    for (const k in vars) {
+      if (Object.prototype.hasOwnProperty.call(vars, k)) {
+        s = s.split('{' + k + '}').join(String(vars[k]));
+      }
+    }
+  }
+  return s;
+}
+
 if (!window.Olivia_KNOWLEDGE || typeof window.Olivia_KNOWLEDGE !== 'object') {
   window.Olivia_KNOWLEDGE = {
     studio: {
-      title: 'Studio',
-      description: 'Crie, edite e refine interfaces no Studio com geração e ajustes orientados por IA.',
-      prompt: 'Abra o Studio e me ajude a construir uma página inicial moderna com foco em conversão.'
+      get title() { return _t('knowledge.studio.title', 'Studio'); },
+      get description() { return _t('knowledge.studio.description', 'Crie, edite e refine interfaces no Studio com geração e ajustes orientados por IA.'); },
+      get prompt() { return _t('knowledge.studio.prompt', 'Abra o Studio e me ajude a construir uma página inicial moderna com foco em conversão.'); }
     },
     descoberta: {
-      title: 'Descoberta',
-      description: 'Centralize documentos, organize por categorias e extraia insights de forma progressiva.',
-      prompt: 'Quero usar Descoberta para mapear os arquivos, entidades e cronologia do caso.'
+      get title() { return _t('knowledge.descoberta.title', 'Descoberta'); },
+      get description() { return _t('knowledge.descoberta.description', 'Centralize documentos, organize por categorias e extraia insights de forma progressiva.'); },
+      get prompt() { return _t('knowledge.descoberta.prompt', 'Quero usar Descoberta para mapear os arquivos, entidades e cronologia do caso.'); }
     },
     casos: {
-      title: 'Casos',
-      description: 'Envie materiais do caso e execute o pipeline para estruturar contexto e próximos passos.',
-      prompt: 'Inicie um novo caso e me guie no fluxo de ingestão, organização e análise.'
+      get title() { return _t('knowledge.casos.title', 'Casos'); },
+      get description() { return _t('knowledge.casos.description', 'Envie materiais do caso e execute o pipeline para estruturar contexto e próximos passos.'); },
+      get prompt() { return _t('knowledge.casos.prompt', 'Inicie um novo caso e me guie no fluxo de ingestão, organização e análise.'); }
     },
     conhecimento: {
-      title: 'Conhecimento',
-      description: 'Consulte memória vetorial e grafo para recuperar contexto relevante com rastreabilidade.',
-      prompt: 'Faça uma consulta de conhecimento e traga os pontos mais relevantes com síntese.'
+      get title() { return _t('knowledge.conhecimento.title', 'Conhecimento'); },
+      get description() { return _t('knowledge.conhecimento.description', 'Consulte memória vetorial e grafo para recuperar contexto relevante com rastreabilidade.'); },
+      get prompt() { return _t('knowledge.conhecimento.prompt', 'Faça uma consulta de conhecimento e traga os pontos mais relevantes com síntese.'); }
     },
     arquitetura: {
-      title: 'Arquitetura',
-      description: 'Analise componentes, fluxos e dependências para orientar decisões técnicas.',
-      prompt: 'Quero uma análise arquitetural do workspace com riscos e melhorias prioritárias.'
+      get title() { return _t('knowledge.arquitetura.title', 'Arquitetura'); },
+      get description() { return _t('knowledge.arquitetura.description', 'Analise componentes, fluxos e dependências para orientar decisões técnicas.'); },
+      get prompt() { return _t('knowledge.arquitetura.prompt', 'Quero uma análise arquitetural do workspace com riscos e melhorias prioritárias.'); }
     },
     governo: {
-      title: 'Governo',
-      description: 'Estruture avaliações com foco em transparência, conformidade e prestação de contas.',
-      prompt: 'Crie um roteiro de uso para setor público com foco em governança e conformidade.'
+      get title() { return _t('knowledge.governo.title', 'Governo'); },
+      get description() { return _t('knowledge.governo.description', 'Estruture avaliações com foco em transparência, conformidade e prestação de contas.'); },
+      get prompt() { return _t('knowledge.governo.prompt', 'Crie um roteiro de uso para setor público com foco em governança e conformidade.'); }
     },
     saude: {
-      title: 'Saúde',
-      description: 'Organize jornadas analíticas e documentação com atenção a contexto sensível.',
-      prompt: 'Quero adaptar o workspace para um caso de saúde com fluxo de análise segura.'
+      get title() { return _t('knowledge.saude.title', 'Saúde'); },
+      get description() { return _t('knowledge.saude.description', 'Organize jornadas analíticas e documentação com atenção a contexto sensível.'); },
+      get prompt() { return _t('knowledge.saude.prompt', 'Quero adaptar o workspace para um caso de saúde com fluxo de análise segura.'); }
     },
     corporativo: {
-      title: 'Corporativo',
-      description: 'Apoie operações de negócio com execução assistida e documentação estruturada.',
-      prompt: 'Monte um fluxo corporativo para análise documental e decisão operacional.'
+      get title() { return _t('knowledge.corporativo.title', 'Corporativo'); },
+      get description() { return _t('knowledge.corporativo.description', 'Apoie operações de negócio com execução assistida e documentação estruturada.'); },
+      get prompt() { return _t('knowledge.corporativo.prompt', 'Monte um fluxo corporativo para análise documental e decisão operacional.'); }
     },
     educacao: {
-      title: 'Educação',
-      description: 'Use o workspace para pesquisa, síntese e apoio pedagógico baseado em evidências.',
-      prompt: 'Quero um plano de uso do workspace para projetos de educação e pesquisa aplicada.'
+      get title() { return _t('knowledge.educacao.title', 'Educação'); },
+      get description() { return _t('knowledge.educacao.description', 'Use o workspace para pesquisa, síntese e apoio pedagógico baseado em evidências.'); },
+      get prompt() { return _t('knowledge.educacao.prompt', 'Quero um plano de uso do workspace para projetos de educação e pesquisa aplicada.'); }
     },
     financeiro: {
-      title: 'Financeiro',
-      description: 'Aplique análise estruturada para compliance, contratos e decisões financeiras.',
-      prompt: 'Me ajude a preparar uma análise financeira com foco em risco e conformidade.'
+      get title() { return _t('knowledge.financeiro.title', 'Financeiro'); },
+      get description() { return _t('knowledge.financeiro.description', 'Aplique análise estruturada para compliance, contratos e decisões financeiras.'); },
+      get prompt() { return _t('knowledge.financeiro.prompt', 'Me ajude a preparar uma análise financeira com foco em risco e conformidade.'); }
     }
   };
 }
@@ -94,53 +120,53 @@ const _RUN_AUTO_FINALIZE_MAX_ATTEMPTS = 1;
 const Olivia_LOADING_PERSONAS = {
   general: {
     coreIcon: 'fa-robot',
-    title: 'Organizando contexto do agente enquanto o modelo trabalha.',
-    desc: 'O backend pode levar algum tempo ao cruzar documentos, plano, memoria e ferramentas. Enquanto isso, a interface mostra o estado atual da execucao.',
+    get title() { return _t('loading.general.title', 'Organizando contexto do agente enquanto o modelo trabalha.'); },
+    get desc() { return _t('loading.general.desc', 'O backend pode levar algum tempo ao cruzar documentos, plano, memoria e ferramentas. Enquanto isso, a interface mostra o estado atual da execucao.'); },
     pills: [
-      { icon: 'fa-folder-tree', text: 'Workspace e arquivos' },
-      { icon: 'fa-brain', text: 'Memoria e contexto' },
-      { icon: 'fa-screwdriver-wrench', text: 'Ferramentas e execucao' },
+      { icon: 'fa-folder-tree', get text() { return _t('loading.general.pill.0', 'Workspace e arquivos'); } },
+      { icon: 'fa-brain', get text() { return _t('loading.general.pill.1', 'Memoria e contexto'); } },
+      { icon: 'fa-screwdriver-wrench', get text() { return _t('loading.general.pill.2', 'Ferramentas e execucao'); } },
     ],
     disciplines: [
-      { icon: 'fa-compass', title: 'Pesquisa', note: 'Leitura contextual dos arquivos e objetivos ativos.' },
-      { icon: 'fa-list-check', title: 'Planejamento', note: 'Definicao de passos com escopo claro.' },
-      { icon: 'fa-gears', title: 'Execucao', note: 'Aplicacao de ferramentas e acoes orientadas.' },
-      { icon: 'fa-shield-check', title: 'Validacao', note: 'Conferencia de resultados e consistencia.' },
-      { icon: 'fa-file-lines', title: 'Sintese', note: 'Resposta estruturada com proximos passos.' },
+      { icon: 'fa-compass', get title() { return _t('loading.general.discipline.Pesquisa', 'Pesquisa'); }, get note() { return _t('loading.general.discipline.Pesquisa.note', 'Leitura contextual dos arquivos e objetivos ativos.'); } },
+      { icon: 'fa-list-check', get title() { return _t('loading.general.discipline.Planejamento', 'Planejamento'); }, get note() { return _t('loading.general.discipline.Planejamento.note', 'Definicao de passos com escopo claro.'); } },
+      { icon: 'fa-gears', get title() { return _t('loading.general.discipline.Execucao', 'Execucao'); }, get note() { return _t('loading.general.discipline.Execucao.note', 'Aplicacao de ferramentas e acoes orientadas.'); } },
+      { icon: 'fa-shield-check', get title() { return _t('loading.general.discipline.Validacao', 'Validacao'); }, get note() { return _t('loading.general.discipline.Validacao.note', 'Conferencia de resultados e consistencia.'); } },
+      { icon: 'fa-file-lines', get title() { return _t('loading.general.discipline.Sintese', 'Sintese'); }, get note() { return _t('loading.general.discipline.Sintese.note', 'Resposta estruturada com proximos passos.'); } },
     ],
   },
   health: {
     coreIcon: 'fa-stethoscope',
-    title: 'Organizando contexto da residencia enquanto o modelo trabalha.',
-    desc: 'O backend pode levar algum tempo ao cruzar documentos, plano, memoria e ferramentas. Enquanto isso, a interface continua mostrando as areas do programa e o estado atual da execucao.',
+    get title() { return _t('loading.health.title', 'Organizando contexto da residencia enquanto o modelo trabalha.'); },
+    get desc() { return _t('loading.health.desc', 'O backend pode levar algum tempo ao cruzar documentos, plano, memoria e ferramentas. Enquanto isso, a interface continua mostrando as areas do programa e o estado atual da execucao.'); },
     pills: [
-      { icon: 'fa-notes-medical', text: 'SUS e territorio' },
-      { icon: 'fa-file-waveform', text: 'Protocolos e artigos' },
-      { icon: 'fa-users', text: 'Multiprofissional' },
+      { icon: 'fa-notes-medical', get text() { return _t('loading.health.pill.0', 'SUS e territorio'); } },
+      { icon: 'fa-file-waveform', get text() { return _t('loading.health.pill.1', 'Protocolos e artigos'); } },
+      { icon: 'fa-users', get text() { return _t('loading.health.pill.2', 'Multiprofissional'); } },
     ],
     disciplines: [
-      { icon: 'fa-user-nurse', title: 'Enfermagem', note: 'Cuidado longitudinal e coordenacao no territorio.' },
-      { icon: 'fa-pills', title: 'Farmacia', note: 'Uso racional de medicamentos e apoio clinico.' },
-      { icon: 'fa-person-walking', title: 'Fisioterapia', note: 'Funcionalidade, movimento e reabilitacao.' },
-      { icon: 'fa-tooth', title: 'Odontologia', note: 'Saude bucal coletiva e cuidado integrado.' },
-      { icon: 'fa-brain', title: 'Psicologia', note: 'Saude mental e escuta qualificada na atencao basica.' },
+      { icon: 'fa-user-nurse', get title() { return _t('loading.health.discipline.Enfermagem', 'Enfermagem'); }, get note() { return _t('loading.health.discipline.Enfermagem.note', 'Cuidado longitudinal e coordenacao no territorio.'); } },
+      { icon: 'fa-pills', get title() { return _t('loading.health.discipline.Farmacia', 'Farmacia'); }, get note() { return _t('loading.health.discipline.Farmacia.note', 'Uso racional de medicamentos e apoio clinico.'); } },
+      { icon: 'fa-person-walking', get title() { return _t('loading.health.discipline.Fisioterapia', 'Fisioterapia'); }, get note() { return _t('loading.health.discipline.Fisioterapia.note', 'Funcionalidade, movimento e reabilitacao.'); } },
+      { icon: 'fa-tooth', get title() { return _t('loading.health.discipline.Odontologia', 'Odontologia'); }, get note() { return _t('loading.health.discipline.Odontologia.note', 'Saude bucal coletiva e cuidado integrado.'); } },
+      { icon: 'fa-brain', get title() { return _t('loading.health.discipline.Psicologia', 'Psicologia'); }, get note() { return _t('loading.health.discipline.Psicologia.note', 'Saude mental e escuta qualificada na atencao basica.'); } },
     ],
   },
   legal: {
     coreIcon: 'fa-scale-balanced',
-    title: 'Organizando contexto juridico enquanto o modelo trabalha.',
-    desc: 'O backend cruza documentos, memoria e ferramentas para montar uma leitura confiavel do caso e do escopo ativo.',
+    get title() { return _t('loading.legal.title', 'Organizando contexto juridico enquanto o modelo trabalha.'); },
+    get desc() { return _t('loading.legal.desc', 'O backend cruza documentos, memoria e ferramentas para montar uma leitura confiavel do caso e do escopo ativo.'); },
     pills: [
-      { icon: 'fa-file-contract', text: 'Contratos e pecas' },
-      { icon: 'fa-landmark', text: 'Normas e jurisprudencia' },
-      { icon: 'fa-magnifying-glass', text: 'Risco e compliance' },
+      { icon: 'fa-file-contract', get text() { return _t('loading.legal.pill.0', 'Contratos e pecas'); } },
+      { icon: 'fa-landmark', get text() { return _t('loading.legal.pill.1', 'Normas e jurisprudencia'); } },
+      { icon: 'fa-magnifying-glass', get text() { return _t('loading.legal.pill.2', 'Risco e compliance'); } },
     ],
     disciplines: [
-      { icon: 'fa-gavel', title: 'Normativo', note: 'Mapeamento de base legal aplicavel.' },
-      { icon: 'fa-book-open', title: 'Precedentes', note: 'Leitura de decisoes e referencias relevantes.' },
-      { icon: 'fa-file-signature', title: 'Contratos', note: 'Analise de clausulas, obrigacoes e riscos.' },
-      { icon: 'fa-shield', title: 'Compliance', note: 'Checagem de aderencia e controles.' },
-      { icon: 'fa-clipboard-check', title: 'Conclusao', note: 'Sintese objetiva com encaminhamentos.' },
+      { icon: 'fa-gavel', get title() { return _t('loading.legal.discipline.Normativo', 'Normativo'); }, get note() { return _t('loading.legal.discipline.Normativo.note', 'Mapeamento de base legal aplicavel.'); } },
+      { icon: 'fa-book-open', get title() { return _t('loading.legal.discipline.Precedentes', 'Precedentes'); }, get note() { return _t('loading.legal.discipline.Precedentes.note', 'Leitura de decisoes e referencias relevantes.'); } },
+      { icon: 'fa-file-signature', get title() { return _t('loading.legal.discipline.Contratos', 'Contratos'); }, get note() { return _t('loading.legal.discipline.Contratos.note', 'Analise de clausulas, obrigacoes e riscos.'); } },
+      { icon: 'fa-shield', get title() { return _t('loading.legal.discipline.Compliance', 'Compliance'); }, get note() { return _t('loading.legal.discipline.Compliance.note', 'Checagem de aderencia e controles.'); } },
+      { icon: 'fa-clipboard-check', get title() { return _t('loading.legal.discipline.Conclusao', 'Conclusao'); }, get note() { return _t('loading.legal.discipline.Conclusao.note', 'Sintese objetiva com encaminhamentos.'); } },
     ],
   },
 };
@@ -156,7 +182,7 @@ function _loadingPersonaMatch(text, words) {
 }
 
 function _resolveLA8159LoadingPersona(modeLabel) {
-  const label = String(modeLabel || 'Assistente').trim() || 'Assistente';
+  const label = String(modeLabel || _t('misc.assistant', 'Assistente')).trim() || _t('misc.assistant', 'Assistente');
   const agent = (typeof selectedAgent !== 'undefined' && selectedAgent && typeof selectedAgent === 'object')
     ? selectedAgent
     : null;
@@ -224,8 +250,8 @@ function koutPinPath(abs, opts) {
   });
   _savePinnedPaths();
   try { window.dispatchEvent(new CustomEvent('LA8159:pinned-paths-updated', { detail: _pinnedPaths.slice() })); } catch (_) { }
-  if (typeof _toast === 'function') _toast('Path anexado ao contexto do agente', 'success');
-  else if (typeof addSystemBubble === 'function') addSystemBubble(`Path fixado no contexto: ${a}`);
+  if (typeof _toast === 'function') _toast(_t('chat.feedback.pathPinned', 'Path anexado ao contexto do agente'), 'success');
+  else if (typeof addSystemBubble === 'function') addSystemBubble(_tpl('chat.feedback.pathPinFail', `Path fixado no contexto: ${a}`, { path: a }));
   return true;
 }
 function koutUnpinPath(abs) {
@@ -463,7 +489,7 @@ function _createLA8159LoadingStageMarkup(modeLabel) {
         </div>
       </div>
       <div class="OliviaLegal-loading-copy">
-        <div class="OliviaLegal-loading-kicker">${escapeHtml(persona.label)} em andamento</div>
+        <div class="OliviaLegal-loading-kicker">${_tpl('loading.inProgress', '{label} em andamento', { label: escapeHtml(persona.label) })}</div>
         <div class="OliviaLegal-loading-title">${escapeHtml(persona.title)}</div>
         <div class="OliviaLegal-loading-desc">${escapeHtml(persona.desc)}</div>
         <div class="OliviaLegal-loading-pills">
@@ -503,13 +529,13 @@ function _renderAssistantContextPreviewDebugUi() {
   const label = document.getElementById('chatCtxPreviewToggleLabel');
   const enabled = !!_assistantDebugContextPreview;
   if (label) {
-    label.textContent = enabled ? 'CtxDbg on' : 'CtxDbg off';
+    label.textContent = enabled ? _t('chat.debug.ctxOn', 'CtxDbg on') : _t('chat.debug.ctxOff', 'CtxDbg off');
   }
   if (btn) {
     btn.classList.toggle('active', enabled);
     btn.title = enabled
-      ? 'Debug de contexto ativo para esta conversa.'
-      : 'Ativar debug de contexto para esta conversa.';
+      ? _t('chat.debug.active', 'Debug de contexto ativo para esta conversa.')
+      : _t('chat.debug.enable', 'Ativar debug de contexto para esta conversa.');
     btn.style.borderColor = enabled ? 'var(--amber)' : '';
     btn.style.color = enabled ? 'var(--amber)' : '';
   }
@@ -524,8 +550,8 @@ function setAssistantContextPreviewDebug(enabled, opts) {
   if (typeof updateComposeContextBar === 'function') updateComposeContextBar();
   if (changed && !options.silent && typeof addSystemBubble === 'function') {
     addSystemBubble(next
-      ? 'Debug de contexto ativado para esta conversa.'
-      : 'Debug de contexto desativado para esta conversa.');
+      ? _t('chat.feedback.debugOn', 'Debug de contexto ativado para esta conversa.')
+      : _t('chat.feedback.debugOff', 'Debug de contexto desativado para esta conversa.'));
   }
 }
 
@@ -539,38 +565,39 @@ function getAssistantContextPreviewDebugEnabled() {
 
 const CHAT_RUNTIME_ROUTE_META = {
   idle: {
-    label: 'rota: detectando',
+    get label() { return _t('runtime.idle.label', 'rota: detectando'); },
     className: 'route-idle',
-    title: 'Nenhuma rota ativa.',
+    get title() { return _t('runtime.idle.title', 'Nenhuma rota ativa.'); },
   },
   detecting: {
-    label: 'rota: detectando',
+    get label() { return _t('runtime.detecting.label', 'rota: detectando'); },
     className: 'route-detecting',
-    title: 'Aguardando sinais do runtime para identificar a rota.',
+    get title() { return _t('runtime.detecting.title', 'Aguardando sinais do runtime para identificar a rota.'); },
   },
   openclaude_tools: {
-    label: 'rota: openclaude+tools',
+    get label() { return _t('runtime.openclaude_tools.label', 'rota: openclaude+tools'); },
     className: 'route-openclaude',
-    title: 'Rota OpenClaude com suporte a ferramentas.',
+    get title() { return _t('runtime.openclaude_tools.title', 'Rota OpenClaude com suporte a ferramentas.'); },
   },
   remote_chat: {
-    label: 'rota: chat-only',
+    get label() { return _t('runtime.remote_chat.label', 'rota: chat-only'); },
     className: 'route-remote',
-    title: 'Rota de modelo remoto em modo chat-only.',
+    get title() { return _t('runtime.remote_chat.title', 'Rota de modelo remoto em modo chat-only.'); },
   },
   ollama_chat: {
-    label: 'rota: ollama chat',
+    get label() { return _t('runtime.ollama_chat.label', 'rota: ollama chat'); },
     className: 'route-ollama',
-    title: 'Rota local via Ollama (chat-only).',
+    get title() { return _t('runtime.ollama_chat.title', 'Rota local via Ollama (chat-only).'); },
   },
   error: {
-    label: 'rota: erro',
+    get label() { return _t('runtime.error.label', 'rota: erro'); },
     className: 'route-error',
-    title: 'Falha ao identificar ou concluir a rota de runtime.',
+    get title() { return _t('runtime.error.title', 'Falha ao identificar ou concluir a rota de runtime.'); },
   },
 };
 
 let _chatRuntimeRoute = 'idle';
+let _chatRuntimeRouteReason = '';
 
 function getChatRuntimeRoute() {
   return _chatRuntimeRoute;
@@ -579,6 +606,7 @@ function getChatRuntimeRoute() {
 function setChatRuntimeRoute(routeKey, reason) {
   const key = CHAT_RUNTIME_ROUTE_META[routeKey] ? routeKey : 'detecting';
   _chatRuntimeRoute = key;
+  _chatRuntimeRouteReason = typeof reason === 'string' ? reason.trim() : '';
 
   const meta = CHAT_RUNTIME_ROUTE_META[key] || CHAT_RUNTIME_ROUTE_META.detecting;
   const badge = document.getElementById('chatRuntimeRouteBadge');
@@ -587,8 +615,8 @@ function setChatRuntimeRoute(routeKey, reason) {
   badge.textContent = meta.label;
   badge.className = `chat-runtime-badge ${meta.className}`;
   badge.style.display = key === 'idle' ? 'none' : 'inline-flex';
-  badge.title = reason
-    ? `${meta.title}\n${String(reason).trim()}`
+  badge.title = _chatRuntimeRouteReason
+    ? `${meta.title}\n${_chatRuntimeRouteReason}`
     : meta.title;
 }
 
@@ -611,15 +639,15 @@ function updateRuntimeRouteFromTokenHint(text) {
   const lowered = String(text || '').toLowerCase();
   if (!lowered) return;
   if (lowered.includes('capability disclosure')) {
-    setChatRuntimeRoute('remote_chat', 'Capability disclosure detectada na resposta.');
+    setChatRuntimeRoute('remote_chat', _t('runtime.remote.capabilityDisclosure', 'Capability disclosure detectada na resposta.'));
     return;
   }
   if (lowered.includes('chat-only language model') || lowered.includes('chat only language model')) {
-    setChatRuntimeRoute('remote_chat', 'Resposta indica modo chat-only.');
+    setChatRuntimeRoute('remote_chat', _t('runtime.remote.chatOnly', 'Resposta indica modo chat-only.'));
     return;
   }
   if (lowered.includes('direct access to tools: no shell')) {
-    setChatRuntimeRoute('remote_chat', 'Resposta indica sem acesso a ferramentas.');
+    setChatRuntimeRoute('remote_chat', _t('runtime.remote.noTools', 'Resposta indica sem acesso a ferramentas.'));
   }
 }
 
@@ -880,10 +908,10 @@ function formatPanelContextLabel(panelKeyOrLabel) {
   const normalized = raw
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z]/g, '');
-  if (normalized === 'browser' || normalized === 'navegador') return 'Browser';
-  if (normalized === 'preview' || normalized === 'previa') return 'Preview';
-  if (normalized === 'output' || normalized === 'saida') return 'Saida';
-  return String(panelKeyOrLabel || '').trim() || 'Painel';
+  if (normalized === 'browser' || normalized === 'navegador') return _t('panel.label.browser', 'Browser');
+  if (normalized === 'preview' || normalized === 'previa') return _t('panel.label.preview', 'Preview');
+  if (normalized === 'output' || normalized === 'saida') return _t('panel.label.output', 'Saída');
+  return String(panelKeyOrLabel || '').trim() || _t('panel.label.fallback', 'Painel');
 }
 
 function _browserPanelSnapshot() {
@@ -1034,7 +1062,7 @@ function refreshPanelContextStatus() {
   });
 
   if (hint) {
-    hint.textContent = `${data.availableCount}/${data.selectedCount} painéis ativos selecionados`;
+    hint.textContent = _tpl('chat.panelCtxHint', '{available}/{selected} painéis ativos selecionados', { available: data.availableCount, selected: data.selectedCount });
   }
 
   if (typeof updateComposeContextBar === 'function') {
@@ -1088,18 +1116,18 @@ function _applyUnifiedLA8159ModeUi(showNotice) {
     desktopToggle.classList.add('agent');
     desktopToggle.setAttribute('aria-disabled', 'true');
   }
-  if (desktopLabel) desktopLabel.textContent = 'Agente';
+  if (desktopLabel) desktopLabel.textContent = _t('mode.agentLabel', 'Agente');
   if (chatAgentName) {
     if (selectedAgent && selectedAgent.name) {
       chatAgentName.textContent = selectedAgent.name;
     } else {
-      chatAgentName.textContent = 'LA8159 Agent';
+      chatAgentName.textContent = _t('mode.agentNameFallback', 'LA8159 Agent');
     }
   }
   if (chatAgentBadge) chatAgentBadge.style.display = '';
 
   if (showNotice) {
-    addSystemBubble('Modo unico ativo: Agente (OpenClaude).');
+    addSystemBubble(_t('mode.agentOnlyNotice', 'Modo unico ativo: Agente (OpenClaude).'));
   }
 }
 
@@ -1184,7 +1212,7 @@ function useHint(key) {
   if (window.oliviaMode === 'assistant' && knowledge) {
     // In assistant mode, show explanation about the feature
     showChatView();
-    addBubble('user', `<p>O que é o <strong>${knowledge.title}</strong>?</p>`);
+    addBubble('user', _tpl('chat.useHint.question', `<p>O que é o <strong>${knowledge.title}</strong>?</p>`, { title: knowledge.title }));
     setTimeout(() => {
       const md = marked.parse(knowledge.description);
       addBubble('agent', `<div class="answer-md">${md}</div>`);
@@ -1213,7 +1241,9 @@ function setSessionFilesToolPermissionMode(enabled) {
     }
   });
   if (typeof addSystemBubble === 'function') {
-    addSystemBubble(enabled ? 'Ferramentas permitidas para esta sessão a partir dos arquivos de sessão.' : 'Modo de permissão de ferramentas desativado para os arquivos de sessão.');
+    addSystemBubble(enabled
+      ? _t('chat.feedback.permOn', 'Ferramentas permitidas para esta sessão a partir dos arquivos de sessão.')
+      : _t('chat.feedback.permOff', 'Modo de permissão de ferramentas desativado para os arquivos de sessão.'));
   }
 }
 window.setSessionFilesToolPermissionMode = setSessionFilesToolPermissionMode;
@@ -1316,10 +1346,10 @@ function _showResumeDecision(runId) {
   bar.className = 'resume-decision-bar';
   bar.id = `resume-decision-${runId}`;
   bar.innerHTML =
-    `<div class="resume-decision-label"><i class="fas fa-pause-circle"></i> Agente interrompido. Deseja continuar?</div>` +
+    `<div class="resume-decision-label"><i class="fas fa-pause-circle"></i> ${_t('chat.resume.label', 'Agente interrompido. Deseja continuar?')}</div>` +
     `<div class="resume-decision-actions">` +
-    `<button class="resume-continue-btn" onclick="resumeStoppedAgent('continue')"><i class="fas fa-play"></i> Continuar</button>` +
-    `<button class="resume-stop-btn" onclick="resumeStoppedAgent('stop')"><i class="fas fa-ban"></i> Encerrar</button>` +
+    `<button class="resume-continue-btn" onclick="resumeStoppedAgent('continue')"><i class="fas fa-play"></i> ${_t('chat.resume.continue', 'Continuar')}</button>` +
+    `<button class="resume-stop-btn" onclick="resumeStoppedAgent('stop')"><i class="fas fa-ban"></i> ${_t('chat.resume.stop', 'Encerrar')}</button>` +
     `</div>`;
   host.appendChild(bar);
   const chatLog = document.getElementById('chatLog');
@@ -1337,7 +1367,7 @@ function resumeStoppedAgent(choice) {
   if (choice === 'continue') {
     const ctx = _lastRunContext;
     if (!ctx || !ctx.url || !ctx.body) {
-      addSystemBubble('Não foi possível continuar: contexto da execução não disponível.');
+      addSystemBubble(_t('chat.feedback.resumeUnavailable', 'Não foi possível continuar: contexto da execução não disponível.'));
       return;
     }
     // Re-launch the same task on the same session so the agent resumes with
@@ -1352,7 +1382,7 @@ function resumeStoppedAgent(choice) {
     const thinkingBubble = addThinkingBubble();
     runStream(ctx.url, ctx.body, ctx.isGuided, thinkingBubble);
   } else {
-    addSystemBubble('Execução interrompida.');
+    addSystemBubble(_t('chat.feedback.runInterrupted', 'Execução interrompida.'));
   }
 }
 
@@ -1382,7 +1412,7 @@ async function sendMessage(presetText) {
     const inactiveName = sectionCtx.agent
       ? (sectionCtx.agent.name || sectionCtx.agent.agent_id)
       : sectionCtx.agentId;
-    addSystemBubble(`Assigned main agent is inactive: ${inactiveName}. Activate it in Agents tab.`);
+    addSystemBubble(_tpl('runtime.mainAgentInactive', 'O agente principal designado esta inativo: {name}. Ative-o na aba Agentes.', { name: escapeHtml(inactiveName) }));
     return;
   }
   if (sectionCtx && sectionCtx.agent && (!selectedAgent || selectedAgent.agent_id !== sectionCtx.agent.agent_id)) {
@@ -1427,7 +1457,7 @@ async function sendMessage(presetText) {
   const cappedPrompt = _capPromptPayloadText(fullMessageSanitized, CHAT_MESSAGE_MAX_CHARS);
   const fullMessage = cappedPrompt.text;
   if (cappedPrompt.truncated) {
-    addSystemBubble(`Contexto anexado excedeu o limite de estabilidade e foi truncado (${cappedPrompt.omitted} chars omitidos).`);
+    addSystemBubble(_tpl('chat.feedback.contextTruncated', `Contexto anexado excedeu o limite de estabilidade e foi truncado (${cappedPrompt.omitted} chars omitidos).`, { omitted: cappedPrompt.omitted }));
   }
   console.log('📄 Full message length:', fullMessage.length, '(includes context)');
 
@@ -1566,17 +1596,17 @@ async function sendAssistantMessage(message, opts) {
     : (safeMessage + panelContext.text);
   const messageWithPanelContext = _capPromptPayloadText(messageWithPanelContextRaw, ASSISTANT_CHAT_MESSAGE_MAX_CHARS);
   if (messageWithPanelContext.truncated) {
-    addSystemBubble(`Mensagem para o assistente compactada por estabilidade (${messageWithPanelContext.omitted} chars omitidos no meio; inicio e fim preservados).`);
+    addSystemBubble(_tpl('chat.feedback.assistantTruncated', `Mensagem para o assistente compactada por estabilidade (${messageWithPanelContext.omitted} chars omitidos no meio; inicio e fim preservados).`, { omitted: messageWithPanelContext.omitted }));
   }
   const importedFilesPayload = _prepareAssistantImportedFilesPayload(assistantOpts.importedFiles);
   const imageAttachmentsPayload = _prepareAssistantImageAttachmentsPayload(assistantOpts.imageAttachments);
   if (importedFilesPayload.truncated || importedFilesPayload.omittedFiles > 0) {
     addSystemBubble(
-      `Contexto de arquivos importados otimizado: ${importedFilesPayload.keptFiles} enviado(s), ${importedFilesPayload.omittedFiles} omitido(s).`
+      _tpl('chat.feedback.filesOptimized', `Contexto de arquivos importados otimizado: ${importedFilesPayload.keptFiles} enviado(s), ${importedFilesPayload.omittedFiles} omitido(s).`, { kept: importedFilesPayload.keptFiles, omitted: importedFilesPayload.omittedFiles })
     );
   }
   if (imageAttachmentsPayload.omitted > 0) {
-    addSystemBubble(`Anexos de imagem otimizados: ${imageAttachmentsPayload.attachments.length} enviado(s), ${imageAttachmentsPayload.omitted} omitido(s).`);
+    addSystemBubble(_tpl('chat.feedback.imagesOptimized', `Anexos de imagem otimizados: ${imageAttachmentsPayload.attachments.length} enviado(s), ${imageAttachmentsPayload.omitted} omitido(s).`, { sent: imageAttachmentsPayload.attachments.length, omitted: imageAttachmentsPayload.omitted }));
   }
   setChatRuntimeRoute('detecting', 'Mensagem enviada para /api/assistant/chat.');
   setThinking(true);
@@ -1597,7 +1627,7 @@ async function sendAssistantMessage(message, opts) {
     log.appendChild(progressUi.root);
     bubble = document.createElement('div');
     bubble.className = 'chat-bubble agent';
-    bubble.innerHTML = '<div class="answer-md"><div class="LA8159-inline-loading">Aguardando os primeiros tokens da resposta...</div></div>';
+    bubble.innerHTML = `<div class="answer-md"><div class="LA8159-inline-loading">${_t('assistantProgress.awaitingTokens', 'Aguardando os primeiros tokens da resposta...')}</div></div>`;
     log.appendChild(bubble);
     contentEl = bubble.querySelector('.answer-md');
     log.scrollTop = log.scrollHeight;
@@ -1648,15 +1678,15 @@ async function sendAssistantMessage(message, opts) {
       if (!sawAssistantToken && contentEl) {
         contentEl.innerHTML = marked.parse(normalizedFullContent);
       }
-      finalizeAssistantProgressUi(progressUi, 'Resposta concluida.', false);
+      finalizeAssistantProgressUi(progressUi, _t('assistantProgress.done', 'Resposta concluida.'), false);
     } else {
-      const fallbackMessage = 'A execucao terminou sem resposta textual. Tente novamente ou reformule a solicitacao.';
+      const fallbackMessage = _t('chat.feedback.noResponse', 'A execucao terminou sem resposta textual. Tente novamente ou reformule a solicitacao.');
       renderedAssistantHtml = `<div class="answer-md"><p>${escapeHtml(fallbackMessage)}</p></div>`;
       if (contentEl) {
         contentEl.innerHTML = `<p>${escapeHtml(fallbackMessage)}</p>`;
       }
       setChatRuntimeRoute('error', fallbackMessage);
-      finalizeAssistantProgressUi(progressUi, 'Concluido sem resposta textual.', false);
+      finalizeAssistantProgressUi(progressUi, _t('assistantProgress.noText', 'Concluido sem resposta textual.'), false);
     }
 
     // Enrich file references with interactive pills after streaming completes
@@ -1714,8 +1744,8 @@ async function sendAssistantMessage(message, opts) {
         thinkingBubble.parentNode.removeChild(thinkingBubble);
       }
       var _displayMsg = _isAuth
-        ? 'Chave de API inv\xe1lida ou n\xe3o configurada no servidor (401). Verifique as configura\xe7\xf5es de API Key.'
-        : 'Erro ao conectar: ' + escapeHtml(_aMsg);
+        ? _t('chat.feedback.authError', 'Chave de API inv\xe1lida ou n\xe3o configurada no servidor (401). Verifique as configura\xe7\xf5es de API Key.')
+        : _tpl('chat.feedback.connectError', 'Erro ao conectar: {message}', { message: escapeHtml(_aMsg) });
       if (contentEl) {
         contentEl.innerHTML = `<p style="color:var(--red)">${_displayMsg}</p>`;
       } else {
@@ -1723,7 +1753,7 @@ async function sendAssistantMessage(message, opts) {
       }
       setChatRuntimeRoute('error', _displayMsg);
     }
-    finalizeAssistantProgressUi(progressUi, 'Falha ao gerar resposta.', true);
+    finalizeAssistantProgressUi(progressUi, _t('assistantProgress.error', 'Falha ao gerar resposta.'), true);
   } finally {
     setThinking(false);
   }
@@ -1734,12 +1764,12 @@ function createAssistantProgressUi() {
   const root = document.createElement('div');
   root.className = 'assistant-progress active';
   root.innerHTML = `
-    ${_createLA8159LoadingStageMarkup('Assistente')}
+    ${_createLA8159LoadingStageMarkup(_t('misc.assistant', 'Assistente'))}
     <div class="assistant-progress-header">
-      <span class="assistant-progress-title"><i class="fas fa-circle stream-pulse"></i> Processando resposta</span>
+      <span class="assistant-progress-title"><i class="fas fa-circle stream-pulse"></i> ${_t('assistantProgress.title', 'Processando resposta')}</span>
       <span class="assistant-progress-timer" id="${runId}-timer">0s</span>
     </div>
-    <div class="assistant-progress-status" id="${runId}-status">Conectando ao modelo...</div>
+    <div class="assistant-progress-status" id="${runId}-status">${_t('assistantProgress.connecting', 'Conectando ao modelo...')}</div>
     <div class="assistant-progress-steps" id="${runId}-steps"></div>
   `;
 
@@ -1777,12 +1807,12 @@ function upsertAssistantStep(ui, key, payload) {
     wrap.className = 'assistant-progress-step';
     wrap.innerHTML = `
       <div class="assistant-progress-step-head">
-        <span class="assistant-progress-step-num">Etapa ${idx}</span>
+        <span class="assistant-progress-step-num">${_tpl('streamLog.step', 'Etapa {n}', { n: idx })}</span>
         <span class="assistant-progress-step-title"></span>
       </div>
       <div class="assistant-progress-step-desc"></div>
       <details class="assistant-progress-step-details" style="display:none">
-        <summary>Ver detalhes</summary>
+        <summary>${_t('assistantProgress.viewDetails', 'Ver detalhes')}</summary>
         <pre></pre>
       </details>
     `;
@@ -1851,12 +1881,12 @@ function updateAssistantProgressUi(ui, evt) {
   const eventType = evt.event || evt.type;
 
   if (eventType === 'permission_request') {
-    const toolName = String(evt.tool_name || evt.tool || '').trim() || 'ferramenta';
+    const toolName = String(evt.tool_name || evt.tool || '').trim() || _t('permission.toolGeneric', 'ferramenta');
     setChatRuntimeRoute('openclaude_tools', `permission_request: ${toolName}`);
     upsertAssistantStep(ui, 'permission-request', {
-      title: 'Permissão de ferramenta',
-      description: `Aguardando decisão para ${toolName}.`,
-      detail: evt.description || 'O agente está pedindo autorização para executar uma ferramenta.',
+      title: _t('permission.title', 'Permissão de ferramenta'),
+      description: _tpl('permission.awaiting', 'Aguardando decisão para {tool}.', { tool: toolName }),
+      detail: evt.description || _t('permission.asking', 'O agente está pedindo autorização para executar uma ferramenta.'),
     });
     onPermissionRequest(evt, ui.stepsEl || ui.root);
     return;
@@ -1899,7 +1929,7 @@ function updateAssistantProgressUi(ui, evt) {
   }
 
   if (eventType === 'tool_call') {
-    const toolName = String(evt.tool_name || evt.tool || '').trim() || 'ferramenta';
+    const toolName = String(evt.tool_name || evt.tool || '').trim() || _t('permission.toolGeneric', 'ferramenta');
     setChatRuntimeRoute('openclaude_tools', `tool_call: ${toolName}`);
     return;
   }
@@ -1918,14 +1948,14 @@ function updateAssistantProgressUi(ui, evt) {
     const rootsInfo = _filesContextRootsInfo(roots);
     const activeAgentName = (typeof selectedAgent === 'object' && selectedAgent && selectedAgent.name)
       ? String(selectedAgent.name)
-      : 'agente ativo';
+      : _t('streamLog.activeAgent', 'agente ativo');
     const topFiles = files.slice(0, 10).map(function mapFile(f) {
-      return f && f.path ? f.path : String(f || 'arquivo');
+      return f && f.path ? f.path : String(f || _t('streamLog.fileGeneric', 'arquivo'));
     });
 
     const desc = files.length
-      ? `${files.length} arquivo(s) de contexto carregado(s) para ${activeAgentName}${rootsInfo.summary ? ` (${rootsInfo.summary})` : ''}.`
-      : `Nenhum arquivo de contexto encontrado para ${activeAgentName}${rootsInfo.summary ? ` (${rootsInfo.summary})` : ''}.`;
+      ? _tpl('streamLog.filesLoaded', '{n} arquivo(s) de contexto carregado(s) para {agent}{extra}.', { n: files.length, agent: activeAgentName, extra: rootsInfo.summary ? ` (${rootsInfo.summary})` : '' })
+      : _tpl('streamLog.noFiles', 'Nenhum arquivo de contexto encontrado para {agent}{extra}.', { agent: activeAgentName, extra: rootsInfo.summary ? ` (${rootsInfo.summary})` : '' });
 
     const detailChunks = [];
     if (rootsInfo.detail) detailChunks.push(`Escopo ativo:\n${rootsInfo.detail}`);
@@ -1956,38 +1986,40 @@ function updateAssistantProgressUi(ui, evt) {
 
     const previewLines = [];
     if (contextBlocks.length) {
-      previewLines.push('Context blocks:');
+      previewLines.push(_t('chat.ctxPreview.blocksHeader', 'Context blocks:'));
       contextBlocks.forEach(function mapBlock(block) {
         const name = String(block && block.name ? block.name : 'block').trim() || 'block';
         const chars = Number(block && block.chars || 0);
         const preview = String(block && block.preview ? block.preview : '').trim();
-        previewLines.push(`- ${name} (${chars} chars): ${preview}`);
+        previewLines.push(`- ${name} (${chars} ${_t('chat.ctxPreview.charsSuffix', 'chars')}): ${preview}`);
       });
     }
     if (messageList.length) {
-      previewLines.push('Final prompt messages:');
+      previewLines.push(_t('chat.ctxPreview.messagesHeader', 'Final prompt messages:'));
       messageList.forEach(function mapMessage(item) {
         const role = String(item && item.role ? item.role : 'user').trim() || 'user';
         const chars = Number(item && item.chars || 0);
         const preview = String(item && item.preview ? item.preview : '').trim();
-        previewLines.push(`- ${role} (${chars} chars): ${preview}`);
+        previewLines.push(`- ${role} (${chars} ${_t('chat.ctxPreview.charsSuffix', 'chars')}): ${preview}`);
       });
     }
 
     const detailText = previewLines.join('\n\n');
     upsertAssistantStep(ui, 'context-preview', {
-      title: 'Debug de contexto',
+      title: _t('chat.ctxPreview.title', 'Debug de contexto'),
       description: runId
         ? (openedUrl
-          ? `Preview de contexto aberto no Browser Panel (${runId}).`
-          : `Preview de contexto registrado (${runId}).`)
-        : (openedUrl ? 'Preview de contexto aberto no Browser Panel.' : 'Preview de contexto registrado.'),
-      detail: detailText || (openTarget ? `Open Preview: ${openTarget}` : ''),
+          ? _tpl('chat.ctxPreview.openedRun', 'Preview de contexto aberto no Browser Panel ({runId}).', { runId })
+          : _tpl('chat.ctxPreview.registeredRun', 'Preview de contexto registrado ({runId}).', { runId }))
+        : (openedUrl
+          ? _t('chat.ctxPreview.opened', 'Preview de contexto aberto no Browser Panel.')
+          : _t('chat.ctxPreview.registeredShort', 'Preview de contexto registrado.')),
+      detail: detailText || (openTarget ? _tpl('chat.ctxPreview.openPreview', 'Open Preview: {target}', { target: openTarget }) : ''),
     });
     if (ui.statusEl) {
       ui.statusEl.textContent = openedUrl
-        ? 'Preview de contexto aberto no Browser Panel.'
-        : 'Debug de contexto registrado para inspeção.';
+        ? _t('chat.ctxPreview.opened', 'Preview de contexto aberto no Browser Panel.')
+        : _t('chat.ctxPreview.registered', 'Debug de contexto registrado para inspeção.');
     }
     return;
   }
@@ -2004,33 +2036,33 @@ function updateAssistantProgressUi(ui, evt) {
       ui.thinkingText = ui.thinkingText.slice(ui.thinkingText.length - 4000);
     }
     upsertAssistantStep(ui, 'thinking', {
-      title: 'Planejamento do modelo',
-      description: 'Analisando a solicitacao e preparando os proximos passos.',
+      title: _t('assistantProgress.planning', 'Planejamento do modelo'),
+      description: _t('assistantProgress.analyzingDesc', 'Analisando a solicitacao e preparando os proximos passos.'),
       detail: ui.thinkingText,
     });
-    if (ui.statusEl) ui.statusEl.textContent = 'Analisando contexto e planejamento...';
+    if (ui.statusEl) ui.statusEl.textContent = _t('assistantProgress.analyzing', 'Analisando contexto e planejamento...');
     return;
   }
 
   if (eventType === 'agent_status') {
     const stepNum = Number(evt.step);
     const key = Number.isFinite(stepNum) ? `agent-status-${stepNum}` : `agent-status-${ui.nextStep}`;
-    setChatRuntimeRoute('openclaude_tools', evt.message || 'agent_status emitido pelo backend.');
+    setChatRuntimeRoute('openclaude_tools', evt.message || _t('assistantProgress.agentStatusDefault', 'agent_status emitido pelo backend.'));
     upsertAssistantStep(ui, key, {
       step: stepNum,
-      title: `Execucao${Number.isFinite(stepNum) ? ` da etapa ${stepNum}` : ''}`,
-      description: evt.message || 'Executando acao no backend...',
+      title: _t('assistantProgress.stepTitle', 'Execucao') + (Number.isFinite(stepNum) ? ' ' + _tpl('assistantProgress.stepNumber', 'da etapa {n}', { n: stepNum }) : ''),
+      description: evt.message || _t('assistantProgress.executingAction', 'Executando acao no backend...'),
       detail: evt.detail || '',
     });
     if (ui.statusEl) {
-      ui.statusEl.textContent = evt.message || 'Executando etapa no backend...';
+      ui.statusEl.textContent = evt.message || _t('assistantProgress.executingStep', 'Executando etapa no backend...');
     }
     return;
   }
 
   if (eventType === 'session_id' && ui.statusEl) {
-    setChatRuntimeRoute('openclaude_tools', 'Sessao OpenClaude ativa para continuidade.');
-    ui.statusEl.textContent = 'Sessao atualizada para continuidade da conversa.';
+    setChatRuntimeRoute('openclaude_tools', _t('runtime.openclaude_tools.sessionActive', 'Sessao OpenClaude ativa para continuidade.'));
+    ui.statusEl.textContent = _t('runtime.openclaude_tools.sessionUpdated', 'Sessao atualizada para continuidade da conversa.');
   }
 }
 
@@ -2050,12 +2082,12 @@ function finalizeAssistantProgressUi(ui, statusText, hasError) {
     ui.root.classList.add(hasError ? 'error' : 'done');
   }
   if (hasError) {
-    setChatRuntimeRoute('error', statusText || 'Falha durante a execucao.');
+    setChatRuntimeRoute('error', statusText || _t('runtime.error.genericFail', 'Falha durante a execucao.'));
     return;
   }
   const currentRoute = getChatRuntimeRoute();
   if (currentRoute === 'idle' || currentRoute === 'detecting') {
-    setChatRuntimeRoute('remote_chat', 'Fluxo concluido sem eventos de ferramentas.');
+    setChatRuntimeRoute('remote_chat', _t('runtime.remote.noToolEvents', 'Fluxo concluido sem eventos de ferramentas.'));
   }
 }
 
@@ -2136,7 +2168,7 @@ async function runStream(url, body, isGuided, thinkingBubble) {
   streamWrap.className = 'chat-bubble agent olivia-working';
   streamWrap.style.maxWidth = '96%';
   streamWrap.innerHTML = `
-    ${_createLA8159LoadingStageMarkup('Agente')}
+    ${_createLA8159LoadingStageMarkup(_t('misc.agent', 'Agente'))}
     <div class="stream-header">
       <span class="stream-header-label">
         <i class="fas fa-circle stream-pulse"></i>
@@ -2244,7 +2276,7 @@ async function runStream(url, body, isGuided, thinkingBubble) {
       var _agentMode = (body && body.agent_mode) || 'general';
       if (_isNetErr && !logReady) {
         console.error('[Stream] Connection failed — server unreachable?  mode:', _agentMode, ' url:', url);
-        onError(runId, 'Servidor inacess\xedvel. Verifique se o backend est\xe1 ativo. (' + _agentMode + ')');
+        onError(runId, _tpl('chat.feedback.serverUnreachable', 'Servidor inacess\xedvel. Verifique se o backend est\xe1 ativo. ({mode})', { mode: _agentMode }));
       } else {
         console.error('[Stream] Error  mode:', _agentMode, ' url:', url, '\n', error);
         onError(runId, _errMsg);
@@ -2274,7 +2306,7 @@ function onStep(step) {
   const el = document.createElement('div');
   el.className = 'log-step';
   el.dataset.step = String(stepKey);
-  el.innerHTML = `<span class="log-step-num">Etapa ${escapeHtml(String(stepKey))}</span><span>Executando...</span>`;
+  el.innerHTML = `<span class="log-step-num">${_tpl('streamLog.step', 'Etapa {n}', { n: escapeHtml(String(stepKey)) })}</span><span>${_t('streamLog.executing', 'Executando...')}</span>`;
   log.appendChild(el);
 }
 
@@ -2289,7 +2321,7 @@ function onAgentStatus(data) {
   }
 
   const detail = data && data.detail ? String(data.detail) : '';
-  const message = data && data.message ? String(data.message) : 'Executando acao no backend';
+  const message = data && data.message ? String(data.message) : _t('assistantProgress.executingAction', 'Executando acao no backend');
   const el = document.createElement('div');
   el.className = 'log-agent-status';
   el.innerHTML = `<div class="log-step-line"><i class="fas fa-spinner fa-spin"></i><span>${escapeHtml(message)}</span></div>`;
@@ -2313,14 +2345,14 @@ function onCheckpoint(step) {
   const bar = document.createElement('div');
   bar.className = 'steer-bar';
   bar.innerHTML =
-    `<div class="steer-bar-label"><i class="fas fa-pause-circle"></i> Passo ${step} — direcione ou continue</div>` +
+    `<div class="steer-bar-label"><i class="fas fa-pause-circle"></i> ${_tpl('streamLog.steerPrompt', 'Passo {step} — direcione ou continue', { step })}</div>` +
     `<div class="steer-bar-actions">` +
-    `<button class="steer-open-btn" onclick="document.getElementById('${uid}-row').style.display='flex';document.getElementById('${uid}-inp').focus()"><i class="fas fa-pen"></i> Guiar</button>` +
-    `<button class="steer-auto-btn" onclick="sendGuidedResume('continue',${step})"><i class="fas fa-play"></i> Continuar</button>` +
-    `<button class="steer-cancel-btn" onclick="stopStream('${runId}',true)"><i class="fas fa-ban"></i> Cancelar</button>` +
+    `<button class="steer-open-btn" onclick="document.getElementById('${uid}-row').style.display='flex';document.getElementById('${uid}-inp').focus()"><i class="fas fa-pen"></i> ${_t('streamLog.steerGuide', 'Guiar')}</button>` +
+    `<button class="steer-auto-btn" onclick="sendGuidedResume('continue',${step})"><i class="fas fa-play"></i> ${_t('chat.resume.continue', 'Continuar')}</button>` +
+    `<button class="steer-cancel-btn" onclick="stopStream('${runId}',true)"><i class="fas fa-ban"></i> ${_t('streamLog.steerCancel', 'Cancelar')}</button>` +
     `</div>` +
     `<div class="steer-input-row" id="${uid}-row" style="display:none">` +
-    `<input type="text" class="steer-input" id="${uid}-inp" name="${uid}-inp" placeholder="Instrução de direção...">` +
+    `<input type="text" class="steer-input" id="${uid}-inp" name="${uid}-inp" placeholder="${_t('streamLog.steerPlaceholder', 'Instrução de direção...')}">` +
     `<button class="steer-send-btn" onclick="sendGuidedResume(document.getElementById('${uid}-inp').value,${step})"><i class="fas fa-paper-plane"></i></button>` +
     `</div>`;
 
@@ -2337,7 +2369,7 @@ function onAwaitingGuidance() {
   // Show guidance request
   const req = document.createElement('div');
   req.className = 'log-guidance-request';
-  req.innerHTML = '<i class="fas fa-hand-paper"></i> Aguardando orientação';
+  req.innerHTML = '<i class="fas fa-hand-paper"></i> ' + _t('streamLog.waitingGuidance', 'Aguardando orientação');
   log.appendChild(req);
 }
 
@@ -2351,7 +2383,7 @@ function onAwaitingInput(toolName) {
 
   const req = document.createElement('div');
   req.className = 'log-input-request';
-  req.innerHTML = `<i class="fas fa-keyboard"></i> Aguardando entrada para ${escapeHtml(toolName)}`;
+  req.innerHTML = `<i class="fas fa-keyboard"></i> ${_tpl('streamLog.waitingInput', 'Aguardando entrada para {tool}', { tool: escapeHtml(toolName) })}`;
   log.appendChild(req);
 }
 
@@ -2369,7 +2401,7 @@ function onPermissionRequest(evt, targetEl) {
     _resolvePermission(requestId, pid, 'allow_all', null);
     return;
   }
-  const toolName = evt.tool_name || 'ferramenta';
+  const toolName = evt.tool_name || _t('permission.toolGeneric', 'ferramenta');
   const description = evt.description || '';
   const inputObj = evt.input || {};
 
@@ -2386,15 +2418,15 @@ function onPermissionRequest(evt, targetEl) {
   card.innerHTML = `
     <div class="perm-header">
       <i class="fas fa-shield-alt"></i>
-      <span>Permissão necessária: <strong>${escapeHtml(toolName)}</strong></span>
+      <span>${_t('permission.requiredPrefix', 'Permissão necessária:')} <strong>${escapeHtml(toolName)}</strong></span>
     </div>
     ${description ? `<div class="perm-description">${escapeHtml(description)}</div>` : ''}
     ${inputSummary}
-    <div class="perm-suggestion" id="perm-suggestion-${requestId}">Carregando sugestão...</div>
+    <div class="perm-suggestion" id="perm-suggestion-${requestId}">${_t('permission.loadingSuggestion', 'Carregando sugestão...')}</div>
     <div class="perm-actions">
-      <button class="perm-btn perm-allow" onclick="_resolvePermission('${escapeHtml(requestId)}', ${pid}, 'allow', this)">Permitir</button>
-      <button class="perm-btn perm-allow-all" onclick="_resolvePermission('${escapeHtml(requestId)}', ${pid}, 'allow_all', this)">Permitir tudo nesta sessão</button>
-      <button class="perm-btn perm-deny"  onclick="_resolvePermission('${escapeHtml(requestId)}', ${pid}, 'deny',  this)">Negar</button>
+      <button class="perm-btn perm-allow" onclick="_resolvePermission('${escapeHtml(requestId)}', ${pid}, 'allow', this)">${_t('permission.allow', 'Permitir')}</button>
+      <button class="perm-btn perm-allow-all" onclick="_resolvePermission('${escapeHtml(requestId)}', ${pid}, 'allow_all', this)">${_t('permission.allowAll', 'Permitir tudo nesta sessão')}</button>
+      <button class="perm-btn perm-deny"  onclick="_resolvePermission('${escapeHtml(requestId)}', ${pid}, 'deny',  this)">${_t('permission.deny', 'Negar')}</button>
     </div>
   `;
   if (container && typeof container.appendChild === 'function') {
@@ -2411,16 +2443,16 @@ function onPermissionRequest(evt, targetEl) {
       if (!suggestionEl) return; // Element might have been removed
       const suggestion = data.suggestions.find(s => s.tool === toolName);
       if (suggestion) {
-        suggestionEl.textContent = `Sugestão: Com base no seu uso (${suggestion.allow_count} allows, ${suggestion.deny_count} negações), considere permitir esta ferramenta sempre.`;
+        suggestionEl.textContent = _tpl('permission.suggestion', 'Sugestão: Com base no seu uso ({allows} allows, {denies} negações), considere permitir esta ferramenta sempre.', { allows: suggestion.allow_count, denies: suggestion.deny_count });
         // Add a click-to-apply behavior? For now, just show the message.
       } else {
-        suggestionEl.textContent = 'Nenhuma sugestão disponível.';
+        suggestionEl.textContent = _t('permission.noSuggestion', 'Nenhuma sugestão disponível.');
       }
     })
     .catch(err => {
       console.error('Failed to fetch permission suggestions:', err);
       const suggestionEl = document.getElementById(`perm-suggestion-${requestId}`);
-      if (suggestionEl) suggestionEl.textContent = 'Não foi possível carregar sugestão.';
+      if (suggestionEl) suggestionEl.textContent = _t('permission.suggestionFail', 'Não foi possível carregar sugestão.');
     });
 }
 
@@ -2502,7 +2534,7 @@ function onStopped() {
 function onSessionId(data) {
   const sid = String(data && data.session_id || '').trim();
   if (!sid) return;
-  setChatRuntimeRoute('openclaude_tools', 'Sessao OpenClaude registrada no run.');
+  setChatRuntimeRoute('openclaude_tools', _t('runtime.openclaude_tools.sessionRegistered', 'Sessao OpenClaude registrada no run.'));
   const key = (activeStream && activeStream.sessionKey)
     ? String(activeStream.sessionKey)
     : _selectedAgentSessionKey();
@@ -2529,7 +2561,7 @@ function toolSummary(toolName, args) {
     return cmd;
   }
   if (toolName === 'bash') return str(args.cmd || args.command).substring(0, 70);
-  if (toolName === 'python_execute' || toolName === 'python_execute_context') return 'executar script';
+  if (toolName === 'python_execute' || toolName === 'python_execute_context') return _t('streamLog.runScript', 'executar script');
   if (toolName === 'qdrant_search') return str(args.query).substring(0, 60);
   if (toolName === 'context_assemble') return str(args.query).substring(0, 60);
   if (toolName === 'browser_use') return str(args.url || args.action).substring(0, 60);
@@ -3022,10 +3054,10 @@ function _cflSaveIntentPillHtml(fileRef) {
   return `<span class="chat-file-save-intent" data-ref="${safeRef}">`
     + `<i class="fas fa-floppy-disk cfsi-icon"></i>`
     + `<span class="cfsi-name">${safeRef}</span>`
-    + `<span class="cfsi-label">Salvar?</span>`
+    + `<span class="cfsi-label">${_t('saveIntent.ask', 'Salvar?')}</span>`
     + `<span class="cfsi-actions">`
-    + `<button class="cfsi-btn yes" title="Salvar agora" onclick="event.stopPropagation();cflRespondSaveIntent(${jsonRef},true,this)"><i class="fas fa-check"></i></button>`
-    + `<button class="cfsi-btn no" title="Nao salvar" onclick="event.stopPropagation();cflRespondSaveIntent(${jsonRef},false,this)"><i class="fas fa-xmark"></i></button>`
+    + `<button class="cfsi-btn yes" title="${_t('saveIntent.saveNow', 'Salvar agora')}" onclick="event.stopPropagation();cflRespondSaveIntent(${jsonRef},true,this)"><i class="fas fa-check"></i></button>`
+    + `<button class="cfsi-btn no" title="${_t('saveIntent.notNow', 'Nao salvar')}" onclick="event.stopPropagation();cflRespondSaveIntent(${jsonRef},false,this)"><i class="fas fa-xmark"></i></button>`
     + `</span>`
     + `</span>`;
 }
@@ -3042,14 +3074,14 @@ function cflRespondSaveIntent(fileRef, shouldSave, btnEl) {
     pill.classList.add('resolved');
     pill.classList.add(shouldSave ? 'accepted' : 'declined');
     const label = pill.querySelector('.cfsi-label');
-    if (label) label.textContent = shouldSave ? 'Solicitado' : 'Ignorado';
+    if (label) label.textContent = shouldSave ? _t('saveIntent.requested', 'Solicitado') : _t('saveIntent.ignored', 'Ignorado');
     const actions = pill.querySelector('.cfsi-actions');
     if (actions) actions.style.display = 'none';
   }
 
   const responseText = shouldSave
-    ? `Sim, pode salvar agora o arquivo "${ref}" e confirmar quando concluir.`
-    : `Nao salve o arquivo "${ref}" por enquanto.`;
+    ? _tpl('saveIntent.yesText', 'Sim, pode salvar agora o arquivo "{ref}" e confirmar quando concluir.', { ref })
+    : _tpl('saveIntent.noText', 'Nao salve o arquivo "{ref}" por enquanto.', { ref });
 
   if (typeof sendMessage === 'function') {
     void sendMessage(responseText);
@@ -3665,9 +3697,9 @@ function onToolResult(toolName, result) {
       const icon = artifactPillIcon(artifact.type);
       // Icon is clickable when a server URL exists — opens in the integrated browser
       const iconHtml = fullArtifact.url
-        ? `<span class="ap-icon ap-browser" title="Abrir no navegador integrado" onclick="openArtifactInBrowser(JSON.parse(this.closest('.artifact-pill').dataset.artifact))">${icon}</span>`
+        ? `<span class="ap-icon ap-browser" title="${_t('artifactPill.openBrowser', 'Abrir no navegador integrado')}" onclick="openArtifactInBrowser(JSON.parse(this.closest('.artifact-pill').dataset.artifact))">${icon}</span>`
         : `<span class="ap-icon">${icon}</span>`;
-      pill.innerHTML = `${iconHtml}<span class="ap-name">${escapeHtml(artifact.title)}</span><button class="ap-open" title="Abrir no painel" onclick="openStreamArtifact(JSON.parse(this.closest('.artifact-pill').dataset.artifact))"><i class="fas fa-arrow-up-right-from-square"></i></button>`;
+      pill.innerHTML = `${iconHtml}<span class="ap-name">${escapeHtml(artifact.title)}</span><button class="ap-open" title="${_t('artifactPill.openPanel', 'Abrir no painel')}" onclick="openStreamArtifact(JSON.parse(this.closest('.artifact-pill').dataset.artifact))"><i class="fas fa-arrow-up-right-from-square"></i></button>`;
       // Store the FULL artifact (with url + content) on the pill so handlers get it
       pill.dataset.artifact = JSON.stringify(fullArtifact);
       lastCall.insertAdjacentElement('afterend', pill);
@@ -3678,7 +3710,7 @@ function onToolResult(toolName, result) {
     // Fallback: standalone result block
     const el = document.createElement('div');
     el.className = 'log-tool-result';
-    el.innerHTML = `<div class="log-tool-header"><i class="fas fa-check-circle"></i> Resultado</div><pre>${escapeHtml(truncated)}</pre>`;
+    el.innerHTML = `<div class="log-tool-header"><i class="fas fa-check-circle"></i> ${_t('streamLog.toolResult', 'Resultado')}</div><pre>${escapeHtml(truncated)}</pre>`;
     log.appendChild(el);
   }
 
@@ -3699,12 +3731,12 @@ function onDone(runId, isGuided) {
 
   const currentRoute = getChatRuntimeRoute();
   if (currentRoute === 'idle' || currentRoute === 'detecting') {
-    setChatRuntimeRoute('remote_chat', 'Execucao concluida sem eventos de ferramentas.');
+    setChatRuntimeRoute('remote_chat', _t('runtime.remote.doneNoToolEvents', 'Execucao concluida sem eventos de ferramentas.'));
   }
 
   const doneEl = document.createElement('div');
   doneEl.className = 'log-done';
-  doneEl.innerHTML = '<i class="fas fa-check"></i> concluído';
+  doneEl.innerHTML = '<i class="fas fa-check"></i> ' + _t('streamLog.done', 'concluído');
   log.appendChild(doneEl);
 
   let renderedResponse = false;
@@ -3728,15 +3760,15 @@ function onDone(runId, isGuided) {
     if (canAutoFinalize) {
       _runAutoFinalizeState.lastAt = now;
       _runAutoFinalizeState.attemptsInWindow += 1;
-      const autoMsg = `A execucao encerrou apos ${toolCalls} etapas sem resposta final. Tentando uma continuacao automatica para concluir.`;
+      const autoMsg = _tpl('assistantProgress.autoContinue', 'A execucao encerrou apos {toolCalls} etapas sem resposta final. Tentando uma continuacao automatica para concluir.', { toolCalls });
       addSystemBubble(autoMsg);
       setChatRuntimeRoute('openclaude_tools', autoMsg);
       sendFollowup('Continue exatamente de onde parou e entregue somente a resposta final consolidada em formato objetivo. Nao reinicie a investigacao.');
       _runVisibleResponseState.set(runId, true);
     }
     const fallback = likelyBudgetStop
-      ? `A execucao foi encerrada apos ${toolCalls} chamadas de ferramenta sem resposta final. Provavel limite de tokens/etapas. Tente reduzir escopo ou pedir resposta curta em blocos.`
-      : 'A execucao foi concluida, mas o agente nao retornou uma resposta final. Tente novamente ou ajuste a solicitacao.';
+      ? _tpl('assistantProgress.budgetStop', 'A execucao foi encerrada apos {toolCalls} chamadas de ferramenta sem resposta final. Provavel limite de tokens/etapas. Tente reduzir escopo ou pedir resposta curta em blocos.', { toolCalls })
+      : _t('assistantProgress.noFinalResponse', 'A execucao foi concluida, mas o agente nao retornou uma resposta final. Tente novamente ou ajuste a solicitacao.');
     if (!canAutoFinalize) {
       addBubble('agent', `<div class="answer-md"><p>${escapeHtml(fallback)}</p></div>`);
       setChatRuntimeRoute('error', fallback);
@@ -3770,16 +3802,16 @@ function onDone(runId, isGuided) {
 function onError(runId, message) {
   const log = document.getElementById(`log-${runId}`);
   if (!log) return;
-  setChatRuntimeRoute('error', message || 'Falha na execucao do stream.');
+  setChatRuntimeRoute('error', message || _t('runtime.error.streamFail', 'Falha na execucao do stream.'));
 
   const errEl = document.createElement('div');
   errEl.className = 'log-error';
-  errEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Erro: ${escapeHtml(message)}`;
+  errEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${_tpl('streamLog.errorWithMsg', 'Erro: {message}', { message: escapeHtml(message) })}`;
   log.appendChild(errEl);
 
   const stopBtn = document.getElementById(`stop-${runId}`);
   if (stopBtn) {
-    stopBtn.innerHTML = '<i class="fas fa-times"></i> Erro';
+    stopBtn.innerHTML = '<i class="fas fa-times"></i> ' + _t('streamLog.error', 'Erro');
     stopBtn.disabled = true;
   }
   _runVisibleResponseState.delete(runId);
@@ -3825,7 +3857,7 @@ function onCostWarning(cost) {
 
   const el = document.createElement('div');
   el.className = 'log-cost-warning';
-  el.innerHTML = `<i class="fas fa-dollar-sign"></i> Custo estimado: $${cost.toFixed(2)}`;
+  el.innerHTML = `<i class="fas fa-dollar-sign"></i> ${_tpl('streamLog.estimatedCost', 'Custo estimado: ${cost}', { cost: cost.toFixed(2) })}`;
   log.appendChild(el);
 }
 
@@ -3836,12 +3868,12 @@ function onSessionSummary(runId) {
   const summary = document.createElement('div');
   summary.className = 'log-session-summary';
   summary.innerHTML = `
-    <div class="log-summary-header"><i class="fas fa-chart-bar"></i> Resumo da sessão</div>
+    <div class="log-summary-header"><i class="fas fa-chart-bar"></i> ${_t('streamLog.sessionSummary', 'Resumo da sessão')}</div>
     <div class="log-summary-grid">
-      <div><span>Tokens entrada:</span><span>${sessionTokensIn.toLocaleString()}</span></div>
-      <div><span>Tokens saída:</span><span>${sessionTokensOut.toLocaleString()}</span></div>
-      <div><span>Custo total:</span><span>$${sessionCostUsd.toFixed(2)}</span></div>
-      <div><span>Passos executados:</span><span>${stepCount}</span></div>
+      <div><span>${_t('streamLog.tokensIn', 'Tokens entrada:')}</span><span>${sessionTokensIn.toLocaleString()}</span></div>
+      <div><span>${_t('streamLog.tokensOut', 'Tokens saída:')}</span><span>${sessionTokensOut.toLocaleString()}</span></div>
+      <div><span>${_t('streamLog.totalCost', 'Custo total:')}</span><span>$${sessionCostUsd.toFixed(2)}</span></div>
+      <div><span>${_t('streamLog.stepsExecuted', 'Passos executados:')}</span><span>${stepCount}</span></div>
     </div>
   `;
   log.appendChild(summary);
@@ -3862,7 +3894,7 @@ function handleStreamEvent(data, runId, isGuided) {
     case 'status':
       onAgentStatus({
         step: data.step,
-        message: data.message || 'Atualizacao de status do backend',
+        message: data.message || _t('assistantProgress.statusUpdateDefault', 'Atualizacao de status do backend'),
         detail: data.detail || '',
       });
       break;
@@ -3876,7 +3908,7 @@ function handleStreamEvent(data, runId, isGuided) {
       onAwaitingGuidance();
       break;
     case 'awaiting_input':
-      onAwaitingInput(data.tool_name || data.tool || 'ferramenta');
+      onAwaitingInput(data.tool_name || data.tool || _t('permission.toolGeneric', 'ferramenta'));
       break;
     case 'thinking':
       onThinking(data.content);
@@ -4102,12 +4134,12 @@ function _lastAssistantMessage() {
 async function copyLastAssistantMessage() {
   const msg = _lastAssistantMessage();
   if (!msg) {
-    addSystemBubble('Nenhuma resposta do assistente para copiar');
+    addSystemBubble(_t('chat.feedback.noCopy', 'Nenhuma resposta do assistente para copiar'));
     return;
   }
   const text = _plainTextFromHtml(msg.html);
   if (!text) {
-    addSystemBubble('A última resposta está vazia');
+    addSystemBubble(_t('chat.feedback.exportEmpty', 'A última resposta está vazia'));
     return;
   }
 
@@ -4125,23 +4157,23 @@ async function copyLastAssistantMessage() {
       document.execCommand('copy');
       document.body.removeChild(ta);
     }
-    addSystemBubble('Última resposta copiada para a área de transferência');
+    addSystemBubble(_t('chat.feedback.copySuccess', 'Última resposta copiada para a área de transferência'));
   } catch (_e) {
-    addSystemBubble('Falha ao copiar a última resposta');
+    addSystemBubble(_t('chat.feedback.copyFail', 'Falha ao copiar a última resposta'));
   }
 }
 
 function exportLastMessageTxt() {
   const msg = _lastAssistantMessage();
   if (!msg) {
-    addSystemBubble('Nenhuma resposta do assistente para exportar');
+    addSystemBubble(_t('chat.feedback.noExport', 'Nenhuma resposta do assistente para exportar'));
     return;
   }
 
-  const role = msg.role === 'agent' ? 'Agente' : 'Assistente';
+  const role = msg.role === 'agent' ? _t('misc.agent', 'Agente') : _t('misc.assistant', 'Assistente');
   const text = _plainTextFromHtml(msg.html);
   if (!text) {
-    addSystemBubble('A última resposta está vazia');
+    addSystemBubble(_t('chat.feedback.exportEmpty', 'A última resposta está vazia'));
     return;
   }
   const payload = `${role}: ${text}\n`;
@@ -4152,7 +4184,7 @@ function exportLastMessageTxt() {
   a.download = `chat_last_message_${new Date().toISOString().slice(0, 10)}.txt`;
   a.click();
   URL.revokeObjectURL(url);
-  addSystemBubble('Última resposta exportada');
+  addSystemBubble(_t('chat.feedback.exportDone', 'Última resposta exportada'));
 }
 
 // ─── Shared brand kit — reuse this for any other export/print surface ───
@@ -4192,15 +4224,15 @@ var OLIVIA_PDF_BRAND = window.OLIVIA_PDF_BRAND || {
 async function downloadLastResponseAsPdf() {
   const msg = _lastAssistantMessage();
   if (!msg) {
-    addSystemBubble('Nenhuma resposta do assistente para exportar como PDF');
+    addSystemBubble(_t('chat.feedback.noPdfExport', 'Nenhuma resposta do assistente para exportar como PDF'));
     return;
   }
 
-  const role = msg.role === 'agent' ? 'Agente' : 'Assistente';
+  const role = msg.role === 'agent' ? _t('misc.agent', 'Agente') : _t('misc.assistant', 'Assistente');
   const html = msg.html || '';
 
   if (!html) {
-    addSystemBubble('A última resposta está vazia');
+    addSystemBubble(_t('chat.feedback.exportEmpty', 'A última resposta está vazia'));
     return;
   }
 
@@ -4437,16 +4469,16 @@ async function downloadLastResponseAsPdf() {
   };
 
   iframe.srcdoc = printDoc;
-  addSystemBubble('Preparando PDF com a identidade Olivia...');
+  addSystemBubble(_t('brandExport.preparing', 'Preparando PDF com a identidade Olivia...'));
 }
 
 // Clear chat
 async function clearChat() {
-  if (!await window.customConfirm('Limpar esta conversa? O histórico não será salvo.')) return;
+  if (!await window.customConfirm(_t('chat.clearConfirm', 'Limpar esta conversa? O histórico não será salvo.'))) return;
 
   showWelcomeView();
   _agentRunSessions.clear();
-  addSystemBubble('Conversa limpa');
+  addSystemBubble(_t('chat.clearDone', 'Conversa limpa'));
 }
 
 // Toggle chat-header-right options behind ••• menu
@@ -4487,6 +4519,13 @@ document.addEventListener('DOMContentLoaded', function () {
       setHeaderOptionsOpen(false);
     }
   });
+});
+
+// Re-render dynamic translated UI when the workspace language changes
+document.addEventListener('olivia:lang-changed', function () {
+  setChatRuntimeRoute(_chatRuntimeRoute);
+  _applyUnifiedLA8159ModeUi(false);
+  _renderAssistantContextPreviewDebugUi();
 });
 
 // Expose functions to window scope
