@@ -1,5 +1,13 @@
 /* ============================================================================
    Drive — Google Drive manager inside Olivia Workspace.
+
+   Frontend module for Google Drive integration. Implements the client-side
+   for the gdrive Express router (Node.js backend, NOT this file — the
+   backend router was previously misplaced as frontend/js/gdrive.js and has
+   been removed in Phase 1 cleanup).
+
+   Integrates with Google Drive via OAuth2 REST API. Not an MCP server —
+   uses conventional REST endpoints.
    ============================================================================ */
 (function () {
     'use strict';
