@@ -47,3 +47,6 @@ translations/mapping_report.json
 # Generated project index (config/index-project/)
 config/index-project/
 
+# Electron build artifacts
+desktop/dist/
+
