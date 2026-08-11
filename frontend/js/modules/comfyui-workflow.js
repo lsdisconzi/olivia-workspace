@@ -98,7 +98,9 @@
     ],
     'CLIPSeg': [
       { name: 'text', type: 'textarea' },
-      { name: 'threshold', type: 'range', min: 0, max: 1, step: 0.01 }
+      { name: 'blur', type: 'range', min: 0, max: 10, step: 0.01 },
+      { name: 'threshold', type: 'range', min: 0, max: 1, step: 0.01 },
+      { name: 'dilation_factor', type: 'int', min: 0, max: 10, step: 1 }
     ],
     'ThresholdMask': [{ name: 'threshold', type: 'range', min: 0, max: 1, step: 0.01 }],
     'ImpactGaussianBlurMask': [
@@ -123,6 +125,162 @@
   var panStart = { x: 0, y: 0 };
   var panOrigin = { x: 0, y: 0 };
   var rafId = null;
+
+  // ── ComfyUI dynamic options cache ────────────────────────────────────────
+  // Fetched from the running ComfyUI backend via /api/comfyui/files so widget
+  // dropdowns (checkpoints, LoRA, VAE, etc.) are populated with the actual
+  // available files on the ComfyUI machine.
+  var _comfyuiOptionsCache = {};       // { category: [file1, file2, ...] }
+  var _comfyuiOptionsLoading = {};     // { category: true|false }
+  var _comfyuiOptionsLoaded = false;
+
+  // Map widget names to the ComfyUI file category they represent.
+  var _WIDGET_TO_CATEGORY = {
+    'ckpt_name':             'checkpoints',
+    'checkpoint_name':       'checkpoints',
+    'control_net_name':      'controlnet',
+    'vae_name':              'vae',
+    'lora_name':             'loras',
+    'clip_name':             'clip',
+    'clip_name1':            'clip',
+    'clip_name2':            'clip',
+    'embedding:':            'embeddings',
+    'gligen_checkpoint':     'gligen',
+    'upscale_model':         'upscale_models',
+  };
+
+  // Widgets that map to `filename` (input images) have their own lookup.
+  var _IMAGE_WIDGETS = ['filename', 'image', 'input_image', 'overlay_image', 'mask_image'];
+
+  function _widgetCategory(nodeType, widgetName) {
+    // Direct match
+    var wn = widgetName.toLowerCase();
+    if (_WIDGET_TO_CATEGORY[wn]) return _WIDGET_TO_CATEGORY[wn];
+    // Check partial matches
+    for (var k in _WIDGET_TO_CATEGORY) {
+      if (wn.indexOf(k) !== -1) return _WIDGET_TO_CATEGORY[k];
+    }
+    // Image widgets → check for filename pattern in LoadImage-type nodes
+    if (_IMAGE_WIDGETS.indexOf(wn) !== -1) return 'input_images';
+    return '';
+  }
+
+  function _loadComfyUIOptions() {
+    if (_comfyuiOptionsLoaded || _comfyuiOptionsLoading._all) return;
+    _comfyuiOptionsLoading._all = true;
+    fetch('/api/comfyui/files')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        // Response: { checkpoints: { files: [...], count: N }, loras: {...}, ... }
+        // or: { type: "checkpoints", files: [...], count: N } if a specific type was requested
+        if (data.files) {
+          // Single type response
+          _comfyuiOptionsCache[data.type] = data.files;
+        } else {
+          // Multi-category response
+          for (var cat in data) {
+            if (cat === 'backend_url') continue;
+            var entry = data[cat];
+            if (entry && Array.isArray(entry.files)) {
+              _comfyuiOptionsCache[cat] = entry.files;
+            }
+          }
+        }
+        _comfyuiOptionsLoaded = true;
+      })
+      .catch(function (err) {
+        console.warn('[ComfyUI] Failed to fetch available files:', err);
+        _comfyuiOptionsLoading._all = false; // allow retry next time
+      });
+  }
+
+  function _getComfyUIOptions(nodeType, widgetName, callback) {
+    var cat = _widgetCategory(nodeType, widgetName);
+    if (!cat) { callback(null); return; }
+
+    // If already cached, return immediately
+    if (_comfyuiOptionsCache[cat]) {
+      callback(_comfyuiOptionsCache[cat]);
+      return;
+    }
+
+    // If already loading this category, poll
+    if (_comfyuiOptionsLoading[cat]) {
+      var attempts = 0;
+      var poller = setInterval(function () {
+        attempts++;
+        if (_comfyuiOptionsCache[cat]) {
+          clearInterval(poller);
+          callback(_comfyuiOptionsCache[cat]);
+        } else if (attempts > 30) {
+          clearInterval(poller);
+          callback(null);
+        }
+      }, 300);
+      return;
+    }
+
+    // Start loading everything (batched fetch)
+    _comfyuiOptionsLoading[cat] = true;
+    _loadComfyUIOptions();
+
+    // Poll until loaded
+    var pollAttempts = 0;
+    var poller = setInterval(function () {
+      pollAttempts++;
+      if (_comfyuiOptionsCache[cat]) {
+        clearInterval(poller);
+        callback(_comfyuiOptionsCache[cat]);
+      } else if (pollAttempts > 40) {
+        clearInterval(poller);
+        callback(null);
+      }
+    }, 250);
+  }
+
+  // Render a combobox: a text input with a <datalist> dropdown populated from
+  // the running ComfyUI backend.  For image-type widgets (category ===
+  // 'input_images'), an upload button is also rendered so the user can push a
+  // local image into the ComfyUI input/ directory right from the widget.
+  function _renderComboboxWidget(node, idx, val, label, category) {
+    var inputId = 'cf-cbo-' + node.id + '-' + idx;
+    var listId = inputId + '-list';
+    var isImage = category === 'input_images';
+    var html = '<div class="cf-widget-row"><label class="cf-widget-label">' + esc(label) + '</label>' +
+      '<input type="text" class="cf-widget-input" id="' + inputId + '" list="' + listId + '" value="' + esc(String(val)) + '" ' +
+      'onchange="comfyuiUpdateWidget(' + node.id + ',' + idx + ', this.value)" ' +
+      'autocomplete="off">' +
+      '<datalist id="' + listId + '"></datalist>' +
+      '<span class="cf-cbo-spinner" id="' + inputId + '-spinner" style="display:none;margin-left:4px;color:var(--gray)">' +
+      '<i class="fas fa-spinner fa-pulse"></i></span>';
+    if (isImage) {
+      html += '<button type="button" class="cf-widget-upload-btn" title="Upload image to ComfyUI" ' +
+        'onclick="comfyuiUploadImage(' + node.id + ',' + idx + ',\'' + inputId + '\')">' +
+        '<i class="fas fa-upload"></i></button>';
+    }
+    html += '</div>';
+    return { html: html, inputId: inputId, listId: listId };
+  }
+
+  function _populateComboboxList(listId, options, spinnerId) {
+    var list = document.getElementById(listId);
+    var spinner = document.getElementById(spinnerId);
+    if (spinner) spinner.style.display = 'none';
+    if (!list) return;
+    if (!options || !options.length) {
+      list.innerHTML = '<option value="">(no options from ComfyUI)</option>';
+      return;
+    }
+    var frag = '';
+    var seen = {};
+    for (var i = 0; i < options.length; i++) {
+      var opt = options[i];
+      if (seen[opt]) continue;
+      seen[opt] = true;
+      frag += '<option value="' + esc(opt) + '">';
+    }
+    list.innerHTML = frag;
+  }
 
   // ── SVG Icons ──────────────────────────────────────────────────────────
   var ICONS = {
@@ -157,6 +315,10 @@
       '</div>' +
       '<div class="cf-head-actions">' +
       '<span class="cf-head-stats" id="cfHeadStats"></span>' +
+      '<button class="btn btn-sm" onclick="comfyuiSyncFromServer()" title="Load the last workflow from ComfyUI server">' +
+      '<i class="fas fa-cloud-download-alt"></i> Sync</button>' +
+      '<button class="btn btn-sm" onclick="comfyuiQueueToServer()" title="Queue current workflow to ComfyUI server">' +
+      '<i class="fas fa-cloud-upload-alt"></i> Queue</button>' +
       '<button class="btn btn-sm" onclick="comfyuiImportWorkflow()" title="Import workflow JSON">' +
       ICONS.import + ' Import</button>' +
       '<button class="btn btn-sm" onclick="comfyuiExportWorkflow()" title="Download workflow JSON">' +
@@ -306,8 +468,16 @@
 
     document.addEventListener('mouseup', function (e) {
       if (dragNode) {
+        var nodeId = dragNode.id;
+        var dx = e.clientX - dragNode.startClientX;
+        var dy = e.clientY - dragNode.startClientY;
         dragNode = null;
-        renderGraph();
+        if (Math.abs(dx) + Math.abs(dy) < 4) {
+          // Click (no significant drag) — select the node and update detail panel.
+          selectNode(nodeId);
+        } else {
+          renderGraph();
+        }
       }
       if (isPanning) {
         isPanning = false;
@@ -422,7 +592,7 @@
       var tgtNode = nodeMap[l[3]];
       if (!srcNode || !tgtNode) return;
       var sw = srcNode.size ? srcNode.size[0] : 200, sh = srcNode.size ? srcNode.size[1] : 100;
-      var tw = tgtNode.size ? tgtNode.size[0] : 200, th = tgtNode.size ? tgtNode.size[1] : 100;
+      var th = tgtNode.size ? tgtNode.size[1] : 100;
       var sx = (srcNode.pos[0] + sw) * scale + offset.x;
       var sy = (srcNode.pos[1] + sh / 2) * scale + offset.y;
       var tx = tgtNode.pos[0] * scale + offset.x;
@@ -459,10 +629,6 @@
       var g = document.createElementNS(NS, 'g');
       g.setAttribute('class', 'cf-node-group' + (isSelected ? ' selected' : '') + modeClass + searchClass);
       g.setAttribute('data-node-id', n.id);
-      g.addEventListener('click', function (e) {
-        e.stopPropagation();
-        selectNode(n.id);
-      });
       g.addEventListener('mousedown', function (e) {
         if (e.button !== 0) return;
         e.stopPropagation();
@@ -563,8 +729,26 @@
         }
         html += '</div>';
       } else {
-        html += '<div class="cf-widget-row"><label class="cf-widget-label">' + esc(label) + '</label>' +
-          '<input type="text" class="cf-widget-input" value="' + esc(String(val)) + '" onchange="comfyuiUpdateWidget(' + node.id + ',' + idx + ', this.value)"></div>';
+        // Default text input — check if this widget maps to a ComfyUI file category
+        var cat = _widgetCategory(node.type, label);
+        if (cat) {
+          var cbo = _renderComboboxWidget(node, idx, val, label, cat);
+          html += cbo.html;
+          // Schedule async population of the dropdown datalist
+          (function (lId, sId) {
+            _getComfyUIOptions(node.type, label, function (options) {
+              _populateComboboxList(lId, options, sId);
+            });
+          })(cbo.listId, cbo.inputId + '-spinner');
+          // Show spinner while loading
+          setTimeout(function () {
+            var sp = document.getElementById(cbo.inputId + '-spinner');
+            if (sp) sp.style.display = 'inline-block';
+          }, 50);
+        } else {
+          html += '<div class="cf-widget-row"><label class="cf-widget-label">' + esc(label) + '</label>' +
+            '<input type="text" class="cf-widget-input" value="' + esc(String(val)) + '" onchange="comfyuiUpdateWidget(' + node.id + ',' + idx + ', this.value)"></div>';
+        }
       }
     });
     return html;
@@ -645,6 +829,58 @@
     var val = Math.floor(Math.random() * 1e15);
     node.widgets_values[idx] = val;
     if (btn && btn.previousElementSibling) btn.previousElementSibling.value = val;
+  };
+
+  // Upload a local image file to the ComfyUI input/ directory (via the
+  // Olivia backend proxy) so it becomes available for LoadImage-style nodes.
+  // The widget value is updated automatically, and the combobox datalist is
+  // refreshed so the new filename appears in the dropdown.
+  window.comfyuiUploadImage = function (nodeId, idx, inputId) {
+    var fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/png,image/jpeg,image/webp,image/bmp,image/gif';
+    fileInput.onchange = function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+
+      var inputEl = document.getElementById(inputId);
+      var spinnerEl = document.getElementById(inputId + '-spinner');
+      if (inputEl) inputEl.disabled = true;
+      if (spinnerEl) spinnerEl.style.display = 'inline-block';
+
+      var formData = new FormData();
+      formData.append('image', file);
+
+      var api = (typeof API_BASE === 'string' && API_BASE) ? API_BASE.replace(/\/$/, '') : window.location.origin;
+      fetch(api + '/api/comfyui/upload-image', {
+        method: 'POST',
+        body: formData,
+      }).then(function (res) {
+        if (!res.ok) throw new Error('Upload returned ' + res.status);
+        return res.json();
+      }).then(function (data) {
+        if (!workflow) return;
+        var node = workflow.nodes.find(function (n) { return n.id === nodeId; });
+        if (!node) return;
+        node.widgets_values[idx] = data.filename;
+
+        if (inputEl) { inputEl.value = data.filename; inputEl.disabled = false; }
+        if (spinnerEl) spinnerEl.style.display = 'none';
+
+        // Invalidate the input_images cache so the datalist picks up the
+        // freshly-uploaded file next time it loads.
+        _comfyuiOptionsCache.input_images = null;
+        var listId = inputId + '-list';
+        _getComfyUIOptions(node.type, node.widgets_values[0] || 'filename', function (opts) {
+          _populateComboboxList(listId, opts, inputId + '-spinner');
+        });
+      }).catch(function (err) {
+        if (inputEl) inputEl.disabled = false;
+        if (spinnerEl) spinnerEl.style.display = 'none';
+        alert('Image upload failed: ' + (err && err.message || err || 'Unknown error'));
+      });
+    };
+    fileInput.click();
   };
 
   window.comfyuiSetNodeMode = function (nodeId, mode) {
@@ -842,8 +1078,31 @@
     if (!workflow) return;
     var maskNodes = workflow.nodes.filter(isMaskNode);
     if (!maskNodes.length) return;
+
+    // Expand the subgraph to include upstream dependencies so ComfyUI can
+    // execute the mask chain end-to-end (e.g., LoadImage → CLIPSeg → ...).
+    var nodeMap = {};
+    workflow.nodes.forEach(function (n) { nodeMap[n.id] = n; });
+    var linkMap = {};
+    (workflow.links || []).forEach(function (l) { linkMap[l[0]] = l; });
+
     var ids = new Set(maskNodes.map(function (n) { return n.id; }));
-    var subLinks = (workflow.links || []).filter(function (l) { return ids.has(l[1]) && ids.has(l[3]); });
+    var queue = maskNodes.slice();
+    while (queue.length) {
+      var node = queue.shift();
+      (node.inputs || []).forEach(function (inp) {
+        if (inp.link != null && linkMap[inp.link]) {
+          var srcId = linkMap[inp.link][1];
+          if (!ids.has(srcId) && nodeMap[srcId]) {
+            ids.add(srcId);
+            queue.push(nodeMap[srcId]);
+          }
+        }
+      });
+    }
+
+    var testNodes = workflow.nodes.filter(function (n) { return ids.has(n.id); });
+    var testLinks = (workflow.links || []).filter(function (l) { return ids.has(l[1]) && ids.has(l[3]); });
 
     lastMaskTestResult = { status: 'loading' };
     renderMaskTestResult();
@@ -852,20 +1111,87 @@
     fetch(api + '/api/workflows/test-mask-chain', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nodes: maskNodes, links: subLinks })
+      body: JSON.stringify({ nodes: testNodes, links: testLinks })
     }).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      if (!res.ok) {
+        // Try to extract error details from the response body before throwing.
+        return res.text().then(function (body) {
+          var parsed = null;
+          try { parsed = JSON.parse(body); } catch (_) {}
+          var detail = (parsed && parsed.message) ? parsed.message : ('HTTP ' + res.status);
+          throw new Error(detail);
+        });
+      }
       return res.json();
     }).then(function (data) {
       lastMaskTestResult = { status: 'ok', message: data.message || 'Preview rendered.', previewUrl: data.previewUrl || null };
       renderMaskTestResult();
-    }).catch(function () {
+    }).catch(function (err) {
+      var msg = (err && err.message) ? err.message : 'Unknown error';
       lastMaskTestResult = {
         status: 'error',
-        message: 'No live preview backend is connected yet. Connect a ComfyUI API endpoint to enable in-app testing of this mask chain — for now, export the workflow and run it directly in ComfyUI.'
+        message: msg
       };
       renderMaskTestResult();
     });
+  };
+
+  // ── Sync from / Queue to ComfyUI server ───────────────────────────────
+  window.comfyuiSyncFromServer = async function () {
+    var api = (typeof API_BASE === 'string' && API_BASE) ? API_BASE.replace(/\/$/, '') : window.location.origin;
+    try {
+      var resp = await fetch(api + '/api/comfyui/sync');
+      if (!resp.ok) {
+        var err = await resp.json().catch(function () { return {}; });
+        alert((err && err.message) || 'Failed to sync from ComfyUI server.');
+        return;
+      }
+      var data = await resp.json();
+      var serverWorkflow = data.workflow;
+      if (!serverWorkflow || !serverWorkflow.nodes) {
+        alert('Invalid workflow structure from server.');
+        return;
+      }
+      // Load it into the editor
+      workflow = serverWorkflow;
+      selectedNodeId = null;
+      searchQuery = '';
+      expandedMaskCards = new Set();
+      lastMaskTestResult = null;
+      scale = 0;      // triggers auto-fit
+      offset = null;  // triggers auto-center
+      var searchInput = document.getElementById('cfSearchInput');
+      if (searchInput) searchInput.value = '';
+      renderGraph();
+      if (activePanel === 'masks') renderMaskPipeline();
+    } catch (err) {
+      alert('Failed to sync from ComfyUI server: ' + (err && err.message || err));
+    }
+  };
+
+  window.comfyuiQueueToServer = async function () {
+    if (!workflow) {
+      alert('No workflow loaded to queue.');
+      return;
+    }
+    // The backend accepts file format {nodes, links} and converts to API format.
+    var api = (typeof API_BASE === 'string' && API_BASE) ? API_BASE.replace(/\/$/, '') : window.location.origin;
+    try {
+      var resp = await fetch(api + '/api/comfyui/queue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ workflow: workflow })
+      });
+      if (resp.ok) {
+        var data = await resp.json();
+        alert('Workflow successfully queued to ComfyUI server! Prompt ID: ' + (data.prompt_id || 'unknown'));
+      } else {
+        var errText = await resp.text();
+        alert('Failed to queue workflow: ' + errText);
+      }
+    } catch (err) {
+      alert('Failed to queue workflow: ' + (err && err.message || err));
+    }
   };
 
   // ── Import / Export / Save ─────────────────────────────────────────────

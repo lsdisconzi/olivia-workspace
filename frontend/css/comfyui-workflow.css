@@ -211,6 +211,31 @@
   font-family: var(--mono); font-size: 12px;
 }
 .cf-widget-input:focus, .cf-widget-select:focus { border-color: var(--amber); outline: none; }
+
+/* ComfyUI dynamic combobox: text input + <datalist> dropdown populated from
+   the running ComfyUI backend.  The spinner appears while options load. */
+.cf-cbo-spinner { display: none; font-size: 10px; margin-left: 4px; }
+.cf-cbo-spinner.visible { display: inline-block; }
+
+/* Make <datalist> dropdowns match the ComfyUI theme */
+.cf-widget-input::-webkit-calendar-picker-indicator {
+  opacity: 0.5; filter: invert(1); cursor: pointer;
+}
+
+/* Upload button shown next to image combobox widgets (e.g. LoadImage
+   filename).  Matches the compact size of the row so the layout doesn't
+   shift unexpectedly. */
+.cf-widget-upload-btn {
+  flex: 0; padding: 4px 7px;
+  background: var(--bg); color: var(--gray);
+  border: 1px solid var(--border-hi); border-radius: 4px;
+  font-size: 11px; cursor: pointer; line-height: 1;
+  transition: color .15s, border-color .15s;
+}
+.cf-widget-upload-btn:hover {
+  color: var(--amber); border-color: var(--amber);
+}
+
 .cf-widget-textarea {
   width: 100%; min-height: 56px; resize: vertical;
   padding: 6px 8px; background: var(--bg); color: var(--white);

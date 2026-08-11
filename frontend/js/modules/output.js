@@ -340,6 +340,21 @@ function initOutputResize() {
   _initHorizResize('previewResizeHandle', 'previewPanel');
   _initHorizResize('browserResizeHandle', 'browserPanel');
   _syncWorkspacePanels();
+
+  // Wire the DOM bridge injection for agent-controlled browser interaction.
+  // When the browser iframe loads a same-origin page (e.g., ComfyUI at
+  // localhost:8188), inject the bridge script so the agent can click, type,
+  // and interact with the page UI as if it were the user.
+  var frame = document.getElementById('browserFrame');
+  if (frame) {
+    frame.addEventListener('load', function () {
+      _bridgeInjectTimer = null;
+      window.__browserBridgeReadySent = false;
+      setTimeout(function () { _injectBrowserBridge(); }, 300);
+    });
+    // If the frame already has content (e.g. restored from session), try now.
+    setTimeout(function () { _injectBrowserBridge(); }, 600);
+  }
 }
 
 function _panelIsVisiblyOpen(el) {
@@ -601,6 +616,175 @@ function shareBrowserPageWithAgent() {
   syncBrowserSharedState(browserUrl, browserTitle, true);
 }
 
+// ── DOM bridge: inject a control script into same-origin iframes ─────────
+// When the browser panel navigates to a same-origin page (e.g., ComfyUI at
+// localhost:8188), inject a lightweight script that listens for postMessage
+// commands from the parent (Olivia).  This lets the agent click, type, select,
+// scroll, and evaluate JS inside the iframe as if it were the user.
+var _browserBridgeScript = [
+  '(function(){',
+  '  if(window.__oliviaBridgeInstalled)return;',
+  '  window.__oliviaBridgeInstalled=true;',
+  '  var ACTIONS={',
+  '    click:function(p){var el=_q(p.selector);if(el){el.focus();el.click();return _ok(el,true)}return _miss(p.selector)};',
+  '    type:function(p){var el=_q(p.selector);if(!el)return _miss(p.selector);el.focus();',
+  '      var v=String(p.text||p.value||"");',
+  '      if(el.tagName==="INPUT"||el.tagName==="TEXTAREA"){',
+  '        el.value=v;el.dispatchEvent(new Event("input",{bubbles:true}));',
+  '        el.dispatchEvent(new Event("change",{bubbles:true}));',
+  '      }else{el.innerText=v}',
+  '      return _ok(el,true)};',
+  '    fill:function(p){var el=_q(p.selector);if(!el)return _miss(p.selector);',
+  '      el.focus();el.value=String(p.text||p.value||"");',
+  '      el.dispatchEvent(new Event("input",{bubbles:true}));',
+  '      el.dispatchEvent(new Event("change",{bubbles:true}));',
+  '      return _ok(el,true)};',
+  '    select:function(p){var el=_q(p.selector);if(!el)return _miss(p.selector);',
+  '      el.focus();el.value=String(p.value||"");',
+  '      el.dispatchEvent(new Event("change",{bubbles:true}));',
+  '      return _ok(el,true)};',
+  '    press:function(p){var el=_q(p.selector)||document.activeElement||document.body;',
+  '      el.dispatchEvent(new KeyboardEvent("keydown",{key:p.key||"Enter",bubbles:true}));',
+  '      el.dispatchEvent(new KeyboardEvent("keyup",{key:p.key||"Enter",bubbles:true}));',
+  '      return _ok(el,true)};',
+  '    focus:function(p){var el=_q(p.selector);if(!el)return _miss(p.selector);',
+  '      el.focus();return _ok(el,true)};',
+  '    scroll:function(p){var el=_q(p.selector)||window;var y=Number(p.y||p.top||0);',
+  '      var x=Number(p.x||p.left||0);if(el===window)window.scrollTo(x,y);else el.scrollTop=y;',
+  '      return _ok(el,true)};',
+  '    read:function(p){var el=_q(p.selector)||document.body;',
+  '      return{ok:true,tag:el.tagName,text:(el.innerText||el.textContent||"").slice(0,3000)};};',
+  '    snapshot:function(p){return{ok:true,title:document.title,',
+  '      url:window.location.href,body:(document.body?document.body.innerText:"").slice(0,4000)};};',
+  '    eval:function(p){try{var r=eval(p.js||p.code||"");return{ok:true,result:r}}catch(e){return{ok:false,error:String(e)}};};',
+  '    query:function(p){var els=document.querySelectorAll(p.selector||"*");',
+  '      var r=[];for(var i=0;i<Math.min(els.length,50);i++){var e=els[i];',
+  '      r.push({tag:e.tagName,id:e.id||"",cls:String(e.className||"").slice(0,60),',
+  '      text:(e.innerText||e.textContent||"").slice(0,120)})}',
+  '      return{ok:true,count:els.length,els:r};};',
+  '    wait:function(p){return{ok:true,waited:Number(p.ms||p.timeout||1000)};};',
+  '  };',
+  '  function _q(sel){if(!sel||sel==="body")return document.body;',
+  '    try{return document.querySelector(sel)}catch(e){return null}}',
+  '  function _ok(el,tag){return{ok:true,tag:el.tagName,id:el.id||"",',
+  '    text:(el.innerText||el.textContent||el.value||"").slice(0,500)}}',
+  '  function _miss(sel){return{ok:false,error:"Element not found: "+(sel||"<empty>")}}',
+  '  window.addEventListener("message",function(ev){',
+  '    var d=ev.data;if(!d||typeof d!=="object"||!d._oliviaBridge)return;',
+  '    var fn=ACTIONS[d.action];var result;',
+  '    try{if(fn)result=fn(d);else result={ok:false,error:"Unknown action: "+d.action}}',
+  '    catch(e){result={ok:false,error:String(e)}}',
+  '    ev.source.postMessage({_oliviaBridgeReply:true,id:d.id,result:result},"*");',
+  '  });',
+  '})();'
+].join('');
+
+var _bridgeInjectTimer = null;
+var _bridgePending = {};  // pending promise resolvers keyed by message id
+var _bridgeMsgId = 0;
+
+function _injectBrowserBridge() {
+  var frame = document.getElementById('browserFrame');
+  if (!frame) return;
+  try {
+    // Skip about:blank and other about: URIs — the frame hasn't navigated yet.
+    // The 'load' event listener will retry once the real page loads.
+    try {
+      if (frame.contentWindow && String(frame.contentWindow.location.href || '').startsWith('about:')) {
+        return;
+      }
+    } catch (_x) { /* cross-origin — can't read location, skip guard */ }
+    var doc = frame.contentDocument || frame.contentWindow.document;
+    if (!doc || !doc.body) { _retryBridgeInjection(); return; }
+    // Only inject into same-origin frames where we can access the DOM.
+    // Cross-origin frames get navigation-only support (server-side proxy).
+    var script = doc.createElement('script');
+    script.textContent = _browserBridgeScript;
+    doc.head.appendChild(script);
+    _setBridgeReady();
+  } catch (e) {
+    // Cross-origin — bridge injection is impossible. That's fine; the agent
+    // can still navigate/reload/share, just not click/type inside the page.
+    _setBridgeReady();  // mark as settled so we don't keep retrying
+  }
+}
+
+function _retryBridgeInjection() {
+  if (_bridgeInjectTimer) return;
+  _bridgeInjectTimer = setTimeout(function () {
+    _bridgeInjectTimer = null;
+    _injectBrowserBridge();
+  }, 500);
+}
+
+function _setBridgeReady() {
+  if (window.__browserBridgeReadySent) return;
+  window.__browserBridgeReadySent = true;
+  try {
+    window.dispatchEvent(new CustomEvent('olivia:browser-bridge-ready', { detail: {} }));
+  } catch (_) { }
+}
+
+function _sendBridgeCommand(action, payload, timeoutMs) {
+  var frame = document.getElementById('browserFrame');
+  if (!frame || !frame.contentWindow) {
+    return Promise.resolve({ ok: false, error: 'Browser frame not available' });
+  }
+
+  // If the bridge has never been installed (e.g., the agent sent a command
+  // before the page finished loading), try injecting it now and retry once.
+  if (!window.__browserBridgeReadySent) {
+    _injectBrowserBridge();
+    // Wait a short moment for injection to complete, then retry.
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        _sendBridgeCommand(action, payload, timeoutMs).then(resolve);
+      }, 400);
+    });
+  }
+
+  var id = ++_bridgeMsgId;
+  var msg = { _oliviaBridge: true, id: id, action: action };
+  if (payload && typeof payload === 'object') {
+    Object.keys(payload).forEach(function (k) { msg[k] = payload[k]; });
+  }
+  return new Promise(function (resolve) {
+    var timer = null;
+    var done = false;
+    var ttl = timeoutMs || 8000;
+
+    function finish(result) {
+      if (done) return;
+      done = true;
+      if (timer) clearTimeout(timer);
+      delete _bridgePending[id];
+      resolve(result || { ok: false, error: 'Bridge timeout' });
+    }
+
+    _bridgePending[id] = finish;
+
+    // Listen for reply
+    function onMsg(ev) {
+      var d = ev.data;
+      if (!d || !d._oliviaBridgeReply || d.id !== id) return;
+      window.removeEventListener('message', onMsg);
+      finish(d.result);
+    }
+    window.addEventListener('message', onMsg);
+
+    timer = setTimeout(function () {
+      window.removeEventListener('message', onMsg);
+      finish({ ok: false, error: 'Bridge command timed out after ' + ttl + 'ms' });
+    }, ttl);
+
+    try {
+      frame.contentWindow.postMessage(msg, '*');
+    } catch (e) {
+      finish({ ok: false, error: 'Failed to post message: ' + e.message });
+    }
+  });
+}
+
 function handleBrowserUseTool(args) {
   const payload = args && typeof args === 'object' ? args : {};
   const action = String(payload.action || payload.mode || payload.type || payload.command || '').trim().toLowerCase();
@@ -610,10 +794,90 @@ function handleBrowserUseTool(args) {
     openBrowserPanel();
   }
 
+  // ── Gate: DOM manipulation requires user consent ──────────────────────
+  // Actions that modify or interact with the page (click, type, select,
+  // press, focus, scroll, eval) require the "share with agent" button to
+  // be active.  Read-only actions (navigate, snapshot, read, query, back,
+  // forward, reload) work without sharing so the agent can still browse.
+  var DOM_INTERACTION_ACTIONS = ['click', 'type', 'fill', 'select', 'press', 'key', 'focus', 'scroll', 'eval', 'evaluate'];
+  var shared = window.__oliviaBrowserShareState && window.__oliviaBrowserShareState.shared;
+  if (DOM_INTERACTION_ACTIONS.indexOf(action) !== -1 && !shared) {
+    return Promise.resolve({
+      ok: false,
+      error: 'Browser interaction requires the "share with agent" button to be active. '
+        + 'Please click the share button in the browser panel toolbar first.'
+    });
+  }
+
+  // ── DOM interaction actions (postMessage bridge) ──────────────────────
+  if (action === 'click') {
+    if (!payload.selector) return Promise.resolve({ ok: false, error: 'click requires a selector' });
+    return _sendBridgeCommand('click', payload);
+  }
+
+  if (action === 'type' || action === 'fill') {
+    if (!payload.selector || !payload.text) {
+      return Promise.resolve({ ok: false, error: 'type requires selector + text' });
+    }
+    return _sendBridgeCommand(action === 'fill' ? 'fill' : 'type', payload);
+  }
+
+  if (action === 'select' && payload.selector) {
+    return _sendBridgeCommand('select', payload);
+  }
+
+  if (action === 'press' || action === 'key') {
+    return _sendBridgeCommand('press', payload);
+  }
+
+  if (action === 'focus') {
+    if (!payload.selector) return Promise.resolve({ ok: false, error: 'focus requires a selector' });
+    return _sendBridgeCommand('focus', payload);
+  }
+
+  if (action === 'scroll') {
+    return _sendBridgeCommand('scroll', payload);
+  }
+
+  if (action === 'eval' || action === 'evaluate') {
+    if (!payload.js && !payload.code) {
+      return Promise.resolve({ ok: false, error: 'eval requires js or code parameter' });
+    }
+    return _sendBridgeCommand('eval', payload);
+  }
+
+  if (action === 'query') {
+    return _sendBridgeCommand('query', payload);
+  }
+
+  if (action === 'read') {
+    return _sendBridgeCommand('read', payload);
+  }
+
+  if (action === 'snapshot') {
+    shareBrowserPageWithAgent();
+    return _sendBridgeCommand('snapshot', payload);
+  }
+
+  if (action === 'wait' || action === 'wait_ms') {
+    var ms = Number(payload.ms || payload.timeout || payload.duration || 1000);
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        // After waiting, inject bridge if needed and return
+        _injectBrowserBridge();
+        resolve({ ok: true, waited_ms: ms });
+      }, Math.max(100, Math.min(ms, 30000)));
+    });
+  }
+
+  // ── Legacy navigation actions ─────────────────────────────────────────
+
   if (!action || action === 'navigate' || action === 'visit' || action === 'open' || action === 'go') {
     if (rawUrl) {
       navigateBrowser(rawUrl);
       syncBrowserSharedState(rawUrl, '', true);
+      // After navigation, schedule bridge injection
+      _retryBridgeInjection();
     } else {
       shareBrowserPageWithAgent();
     }
@@ -639,11 +903,6 @@ function handleBrowserUseTool(args) {
     browserReload();
     return;
   }
-
-  if (action === 'read' || action === 'snapshot') {
-    shareBrowserPageWithAgent();
-    return;
-  }
 }
 
 window.openBrowserPanel = openBrowserPanel;
@@ -651,6 +910,8 @@ window.closeBrowserPanel = closeBrowserPanel;
 window.shareBrowserPageWithAgent = shareBrowserPageWithAgent;
 window.handleBrowserUseTool = handleBrowserUseTool;
 window.syncBrowserSharedState = syncBrowserSharedState;
+window._injectBrowserBridge = _injectBrowserBridge;
+window._sendBridgeCommand = _sendBridgeCommand;
 
 // Count how many side panels (output / preview / browser) are currently
 // open and toggle the .panels-busy class on .workspace so the main chat
@@ -833,6 +1094,9 @@ function navigateBrowser(url) {
   }
   if (typeof window.refreshPanelContextStatus === 'function') window.refreshPanelContextStatus();
   syncBrowserSharedState(url, '', true);
+
+  // Schedule bridge injection after navigation (for same-origin iframes like ComfyUI).
+  _retryBridgeInjection();
 }
 
 function _setActiveOutputTab(id) {

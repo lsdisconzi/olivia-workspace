@@ -54,7 +54,7 @@
       ],
       "flags": {},
       "order": 10,
-      "mode": 0,
+      "mode": 4,
       "inputs": [
         {
           "name": "image",
@@ -98,7 +98,7 @@
       ],
       "flags": {},
       "order": 11,
-      "mode": 0,
+      "mode": 4,
       "inputs": [
         {
           "name": "image",
@@ -142,7 +142,7 @@
       ],
       "flags": {},
       "order": 12,
-      "mode": 0,
+      "mode": 4,
       "inputs": [
         {
           "name": "image",
@@ -858,9 +858,9 @@
       "widgets_values": [
         1440,
         1080,
-        "lanczos",
-        "stretch",
-        "always",
+        5,
+        0,
+        0,
         0
       ]
     },
@@ -1100,7 +1100,7 @@
       "type": "LoadImage",
       "pos": [
         100,
-        358
+        355.729322521521
       ],
       "size": [
         282.798828125,
@@ -1129,7 +1129,7 @@
         "Node name for S&R": "LoadImage"
       },
       "widgets_values": [
-        "IMG_1501.jpg",
+        "IMG_1488.jpg",
         "image"
       ]
     },
@@ -1331,7 +1331,7 @@
       ],
       "flags": {},
       "order": 9,
-      "mode": 0,
+      "mode": 4,
       "inputs": [
         {
           "name": "image",

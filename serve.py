@@ -15469,6 +15469,98 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
     # ── Workflows (ComfyUI) persistence ────────────────────────────────────
     _WORKFLOWS_LOCAL_DIR = PROJECT_ROOT / "olivia" / "workflows"
+    _COMFYUI_BACKEND_URL = os.environ.get(
+        "OLIVIA_COMFYUI_BACKEND",
+        "http://127.0.0.1:8188",
+    ).rstrip("/")
+
+    # ── Widget-only input slot definitions for file→API conversion ─────
+    # Maps node class_type → ordered list of widget input names.  Link-type
+    # inputs are extracted from the workflow file's own ``inputs`` array,
+    # so only widget-controlled slots need to be listed here.
+    _WIDGET_INPUT_SLOTS = {
+        "CheckpointLoaderSimple": ["ckpt_name"],
+        "CLIPTextEncode":         ["text"],
+        "KSampler":               ["seed", "control_after_generate", "steps",
+                                   "cfg", "sampler_name", "scheduler", "denoise"],
+        "LoadImage":              ["image"],
+        "CLIPSeg":                ["text", "blur", "threshold", "dilation_factor"],
+        "ImageResize+":           ["method", "condition", "multiple_of",
+                                   "width", "height", "interpolation"],
+        "Cut By Mask":            ["force_resize_width", "force_resize_height"],
+        "ImpactGaussianBlurMask": ["kernel_size", "sigma"],
+        "ThresholdMask":          ["value"],
+        "InvertMask":             [],
+        "MaskToImage":            [],
+        "MaskPreview+":           [],
+        "CombineSegMasks":        [],
+        "VAEDecode":              [],
+        "VAEEncodeForInpaint":    ["grow_mask_by"],
+        "InpaintModelConditioning": [],
+        "PreviewImage":           [],
+        "SaveImage":              ["filename_prefix"],
+        "ControlNetLoaderAdvanced":       ["control_net_name"],
+        "ACN_AdvancedControlNetApply":    ["strength", "start_percent", "end_percent"],
+        "Zoe-DepthMapPreprocessor":       ["resolution"],
+        "VAELoader":              ["vae_name"],
+        "ControlNetLoader":       ["control_net_name"],
+        "CLIPLoader":             ["clip_name"],
+        "UpscaleModelLoader":     ["model_name"],
+        "FeatherMask":            ["left", "top", "right", "bottom"],
+        "GrowMask":               ["expand", "tapered_corners"],
+        "MaskComposite":          ["x", "y", "operation"],
+    }
+
+    @staticmethod
+    def _nodes_to_prompt(nodes, links):
+        """Convert workflow file format (nodes + links arrays) → ComfyUI API prompt.
+
+        The API prompt dict maps string node IDs to ``{class_type, inputs}``
+        objects.  Link-type inputs are resolved from the links array; widget
+        values are named using the :attr:`_WIDGET_INPUT_SLOTS` mapping.
+        """
+        prompt = {}
+        for n in nodes:
+            nid = str(n.get("id", ""))
+            if not nid:
+                continue
+            ntype = n.get("type", "")
+            api_inputs = {}
+            wv = list(n.get("widgets_values") or [])
+            inp_defs = n.get("inputs") or []
+            widget_names = KoutHandler._WIDGET_INPUT_SLOTS.get(ntype)
+
+            # ── Link-type inputs (from the workflow file's inputs array) ──
+            for inp in inp_defs:
+                name = inp.get("name", "")
+                lid = inp.get("link")
+                if not name:
+                    continue
+                if lid is not None:
+                    src = None
+                    for l in links:
+                        if l[0] == lid:
+                            src = [str(l[1]), l[2]]
+                            break
+                    if src is not None:
+                        api_inputs[name] = src
+                # link is null → unwired optional input; skip it
+
+            # ── Widget inputs ───────────────────────────────────────────
+            if widget_names is not None:
+                for wname in widget_names:
+                    if wv:
+                        api_inputs[wname] = wv.pop(0)
+            elif wv:
+                # Unknown type — use generic placeholder names.
+                for i, val in enumerate(wv):
+                    api_inputs["value_" + str(i)] = val
+
+            prompt[nid] = {
+                "class_type": n.get("type", ""),
+                "inputs": api_inputs,
+            }
+        return prompt
 
     def _workflows_api_save(self):
         """POST /api/workflows/save — persist a ComfyUI workflow to olivia/workflows/.
@@ -15508,6 +15600,748 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             })
         except Exception as exc:
             self._json_response({"error": "save_failed", "message": str(exc)}, 500)
+
+    def _workflows_test_mask_chain(self):
+        """POST /api/workflows/test-mask-chain — forward mask subgraph to ComfyUI.
+
+        Body: { nodes: [...], links: [...] }
+        Converts the workflow-format mask subgraph into a ComfyUI API prompt,
+        POSTs it to the configured ComfyUI backend, and returns the prompt_id
+        so the frontend can show the live preview. Falls back gracefully with
+        an honest message when no ComfyUI backend is reachable.
+        """
+        body = self._read_body() or {}
+        nodes = body.get("nodes")
+        links = body.get("links")
+        if not isinstance(nodes, list) or not nodes:
+            self._json_response({"error": "nodes array required"}, 400)
+            return
+        if not isinstance(links, list):
+            links = []
+
+        # ── Convert workflow-format nodes+links → ComfyUI API prompt ──────
+        prompt = KoutHandler._nodes_to_prompt(nodes, links)
+
+        if not prompt:
+            self._json_response({"error": "no valid nodes in subgraph"}, 400)
+            return
+
+        # ── Auto-append output nodes so ComfyUI can render the chain ──────
+        # Find terminal nodes: a node whose outputs don't feed any other
+        # node in the prompt.  We check link by link rather than using set
+        # subtraction, which would wrongly classify sources (e.g. LoadImage)
+        # as terminal when they feed other nodes in the subgraph.
+        prompt_ids = set(prompt.keys())
+        terminal_ids = set()
+        for nid in prompt_ids:
+            has_downstream = False
+            for l in links:
+                if str(l[1]) == nid and str(l[3]) in prompt_ids:
+                    has_downstream = True
+                    break
+            if not has_downstream:
+                terminal_ids.add(nid)
+
+        next_virtual_id = 900000
+        for tnid in sorted(terminal_ids, key=int):
+            t_node = prompt.get(tnid)
+            if not t_node:
+                continue
+            # Determine the output slot(s) this terminal node produces.
+            orig_node = next((n for n in nodes if str(n.get("id")) == tnid), None)
+            outputs = (orig_node or {}).get("outputs") or []
+            for slot_idx, out in enumerate(outputs):
+                out_type = (out.get("type") or "").upper()
+                if out_type == "MASK":
+                    # Insert MaskToImage → PreviewImage
+                    m2i_id = str(next_virtual_id)
+                    next_virtual_id += 1
+                    prev_id = str(next_virtual_id)
+                    next_virtual_id += 1
+                    prompt[m2i_id] = {
+                        "class_type": "MaskToImage",
+                        "inputs": {"mask": [tnid, slot_idx]},
+                    }
+                    prompt[prev_id] = {
+                        "class_type": "PreviewImage",
+                        "inputs": {"images": [m2i_id, 0]},
+                    }
+                elif out_type == "IMAGE":
+                    prev_id = str(next_virtual_id)
+                    next_virtual_id += 1
+                    prompt[prev_id] = {
+                        "class_type": "PreviewImage",
+                        "inputs": {"images": [tnid, slot_idx]},
+                    }
+                # LATENT and other types are skipped — they'd need VAE decode.
+
+        # ── Dispatch to ComfyUI backend ───────────────────────────────────
+        payload = json.dumps({
+            "prompt": prompt,
+            "client_id": "olivia-mask-test",
+        }).encode("utf-8")
+
+        target_url = self._COMFYUI_BACKEND_URL + "/prompt"
+        try:
+            req = urllib.request.Request(
+                target_url,
+                data=payload,
+                headers={"Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                raw = resp.read()
+            result = json.loads(raw.decode("utf-8"))
+            prompt_id = result.get("prompt_id", "")
+            if not prompt_id:
+                # Some ComfyUI instances may return errors differently.
+                self._json_response({
+                    "status": "ok",
+                    "message": "ComfyUI backend responded but did not return a prompt_id. Check the server logs.",
+                    "previewUrl": None,
+                })
+                return
+            preview_url = self._COMFYUI_BACKEND_URL + "/view?filename=" + prompt_id + "_00001_.png&type=output"
+            self._json_response({
+                "status": "ok",
+                "message": "Mask chain submitted to ComfyUI backend. Prompt ID: " + prompt_id + ". Outputs will appear in the ComfyUI queue.",
+                "promptId": prompt_id,
+                "previewUrl": preview_url,
+            })
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read().decode("utf-8", errors="replace")
+            except Exception:
+                detail = str(exc)
+            self._json_response({
+                "status": "error",
+                "message": "ComfyUI backend returned HTTP " + str(exc.code) + ": " + detail[:500],
+                "previewUrl": None,
+            }, 502)
+        except urllib.error.URLError as exc:
+            self._json_response({
+                "status": "ok",
+                "message": "No live preview backend is connected yet. Connect a ComfyUI API endpoint (set OLIVIA_COMFYUI_BACKEND) to enable in-app testing of this mask chain — for now, export the workflow and run it directly in ComfyUI.",
+                "previewUrl": None,
+            })
+        except Exception as exc:
+            self._json_response({
+                "status": "error",
+                "message": "Unexpected error contacting ComfyUI backend: " + str(exc),
+                "previewUrl": None,
+            }, 502)
+
+    def _workflows_comfyui_terminal(self):
+        """GET /api/workflows/comfyui-terminal — fetch recent ComfyUI terminal/log output.
+
+        Polls the ComfyUI backend's /history and /queue endpoints and returns
+        a terminal-style log summary that the agent can read to diagnose
+        prompt validation errors, execution failures, and queue status without
+        needing the user to copy/paste the server terminal.
+        """
+        lines = []
+        lines.append("==== ComfyUI Terminal Log ====")
+
+        # ── Queue status ─────────────────────────────────────────────────
+        try:
+            qreq = urllib.request.Request(
+                self._COMFYUI_BACKEND_URL + "/queue",
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(qreq, timeout=5) as resp:
+                queue_data = json.loads(resp.read().decode("utf-8"))
+            running = queue_data.get("queue_running", []) or []
+            pending = queue_data.get("queue_pending", []) or []
+            if running:
+                lines.append(f"[QUEUE] Running: {len(running)} item(s)")
+                for item in running:
+                    pid = item[-1].get("prompt_id", "?") if isinstance(item, (list, tuple)) and len(item) > 1 else "?"
+                    lines.append(f"  - prompt_id={pid}")
+            else:
+                lines.append("[QUEUE] No items currently running")
+            if pending:
+                lines.append(f"[QUEUE] Pending: {len(pending)} item(s)")
+            else:
+                lines.append("[QUEUE] No pending items")
+        except Exception as e:
+            lines.append(f"[QUEUE] Could not fetch queue: {e}")
+
+        # ── Recent history / errors ──────────────────────────────────────
+        try:
+            hreq = urllib.request.Request(
+                self._COMFYUI_BACKEND_URL + "/history",
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(hreq, timeout=5) as resp:
+                history = json.loads(resp.read().decode("utf-8"))
+            if not history:
+                lines.append("[HISTORY] No recent executions found")
+            else:
+                # Show the most recent entries (newest first by prompt_id sort)
+                pids = sorted(history.keys(), reverse=True)[:5]
+                lines.append(f"[HISTORY] Last {len(pids)} execution(s):")
+                for pid in pids:
+                    entry = history[pid]
+                    status = entry.get("status", {})
+                    status_str = status.get("status_str", "unknown")
+                    completed = status.get("completed", False)
+                    # Check for errors in status messages
+                    messages = status.get("messages", []) or []
+                    errors = [m for m in messages if isinstance(m, (list, tuple)) and len(m) > 1 and m[0] == "execution_error"]
+                    if errors:
+                        lines.append(f"  [{pid}] {status_str} — {len(errors)} error(s):")
+                        for _, _, _, err_data in errors:
+                            err_msg = str(err_data.get("exception_message", "") or "")
+                            err_type = str(err_data.get("exception_type", "Error"))
+                            trace = str(err_data.get("traceback", "") or "")
+                            lines.append(f"    ERROR [{err_type}]: {err_msg}")
+                            if trace:
+                                for trace_line in trace.split("\n")[:10]:
+                                    lines.append(f"      {trace_line}")
+                    elif completed:
+                        lines.append(f"  [{pid}] {status_str} (completed)")
+                    else:
+                        lines.append(f"  [{pid}] {status_str}")
+        except Exception as e:
+            lines.append(f"[HISTORY] Could not fetch history: {e}")
+
+        lines.append("==== End Terminal Log ====")
+        self._json_response({
+            "status": "ok",
+            "log": "\n".join(lines),
+            "backend_url": self._COMFYUI_BACKEND_URL,
+        })
+
+    def _comfyui_proxy(self):
+        """GET /api/comfyui/proxy/<path> — proxy to the ComfyUI backend.
+
+        Forwards the request path to the configured OLIVIA_COMFYUI_BACKEND and
+        returns the raw response.  Used to fetch /object_info, /extensions, etc.
+        """
+        # Extract the path after "/api/comfyui/proxy/"
+        sub_path = ""
+        if self.path.startswith("/api/comfyui/proxy/"):
+            sub_path = self.path[len("/api/comfyui/proxy"):]
+        if not sub_path or sub_path == "/":
+            self._json_response({"error": "missing comfyui api path"}, 400)
+            return
+
+        target_url = self._COMFYUI_BACKEND_URL.rstrip("/") + "/" + sub_path.lstrip("/")
+        try:
+            req = urllib.request.Request(
+                target_url,
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                raw = resp.read()
+                content_type = resp.headers.get("Content-Type", "application/json")
+            # Parse and re-emit as our own JSON response so CORS is applied.
+            try:
+                data = json.loads(raw.decode("utf-8"))
+                self._json_response(data)
+            except Exception:
+                self._send_raw(raw, content_type)
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read().decode("utf-8", errors="replace")[:500]
+            except Exception:
+                detail = str(exc)
+            self._json_response({
+                "error": "proxy_error",
+                "status": exc.code,
+                "detail": detail,
+            }, exc.code)
+        except Exception as exc:
+            self._json_response({
+                "error": "proxy_error",
+                "message": "ComfyUI backend unreachable: " + str(exc),
+            }, 502)
+
+    def _comfyui_history(self):
+        """GET /api/comfyui/history — proxy to ComfyUI /history."""
+        target_url = self._COMFYUI_BACKEND_URL + "/history"
+        try:
+            req = urllib.request.Request(
+                target_url,
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                raw = resp.read()
+            self._json_response(json.loads(raw.decode("utf-8")))
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read().decode("utf-8", errors="replace")[:500]
+            except Exception:
+                detail = str(exc)
+            self._json_response({"error": "proxy_error", "status": exc.code, "detail": detail}, exc.code)
+        except Exception as exc:
+            self._json_response({"error": "proxy_error", "message": "ComfyUI backend unreachable: " + str(exc)}, 502)
+
+    def _comfyui_history_item(self, prompt_id):
+        """GET /api/comfyui/history/<prompt_id> — proxy to ComfyUI /history/<prompt_id>."""
+        target_url = self._COMFYUI_BACKEND_URL + "/history/" + prompt_id
+        try:
+            req = urllib.request.Request(
+                target_url,
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                raw = resp.read()
+            self._json_response(json.loads(raw.decode("utf-8")))
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read().decode("utf-8", errors="replace")[:500]
+            except Exception:
+                detail = str(exc)
+            self._json_response({"error": "proxy_error", "status": exc.code, "detail": detail}, exc.code)
+        except Exception as exc:
+            self._json_response({"error": "proxy_error", "message": "ComfyUI backend unreachable: " + str(exc)}, 502)
+
+    def _comfyui_queue_prompt(self):
+        """POST /api/comfyui/queue — forward a workflow to ComfyUI /prompt.
+
+        Accepts both file format (nodes + links arrays) and raw API prompt
+        format (dict keyed by string node IDs).  File format is automatically
+        converted to the API representation before submission.
+        """
+        body = self._read_body() or {}
+        workflow = body.get("workflow") or body.get("prompt")
+        if isinstance(workflow, dict) and "nodes" in workflow and isinstance(workflow.get("nodes"), list):
+            # File format — convert to API prompt
+            nodes = workflow["nodes"]
+            links = workflow.get("links") or []
+            prompt = KoutHandler._nodes_to_prompt(nodes, links)
+        elif isinstance(workflow, dict) and workflow and not any(
+            isinstance(v, dict) and "class_type" in v for v in workflow.values()
+        ):
+            # Best-guess: raw file-format object nested as prompt
+            self._json_response({"error": "prompt must be either file format {nodes, links} or API format {id: {class_type, inputs}}"}, 400)
+            return
+        elif isinstance(workflow, dict):
+            prompt = workflow
+        else:
+            self._json_response({"error": "workflow or prompt object required"}, 400)
+            return
+        payload = json.dumps({
+            "prompt": prompt,
+            "client_id": "olivia-ui",
+        }).encode("utf-8")
+        target_url = self._COMFYUI_BACKEND_URL + "/prompt"
+        try:
+            req = urllib.request.Request(
+                target_url,
+                data=payload,
+                headers={"Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                raw = resp.read()
+            self._json_response(json.loads(raw.decode("utf-8")))
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read().decode("utf-8", errors="replace")[:500]
+            except Exception:
+                detail = str(exc)
+            self._json_response({"error": "proxy_error", "status": exc.code, "detail": detail}, exc.code)
+        except Exception as exc:
+            self._json_response({"error": "proxy_error", "message": "ComfyUI backend unreachable: " + str(exc)}, 502)
+
+    def _comfyui_files_list(self):
+        """GET /api/comfyui/files?type=<type> — list available files from ComfyUI.
+
+        Fetches /object_info from the ComfyUI backend, then for each node type,
+        extracts the list of available options for relevant widgets (checkpoints,
+        VAE, LoRA, control nets, etc.) and returns them as a flat list.
+        Also supports type-specific file directory lookups.
+        """
+        parsed = urllib.parse.urlparse(self.path)
+        qs = urllib.parse.parse_qs(parsed.query)
+        file_type = str((qs.get("type") or [""])[0] or "").strip()
+
+        # Fetch /object_info from ComfyUI
+        target_url = self._COMFYUI_BACKEND_URL.rstrip("/") + "/object_info"
+        try:
+            req = urllib.request.Request(
+                target_url,
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                raw = resp.read()
+            object_info = json.loads(raw.decode("utf-8"))
+        except Exception as exc:
+            self._json_response({
+                "error": "comfyui_unreachable",
+                "message": "Cannot reach ComfyUI backend: " + str(exc),
+            }, 502)
+            return
+
+        # Extract known file-name widgets from object_info.
+        # ComfyUI object_info format: { "NodeType": { "input": { ... }, "output": {...} } }
+        # Widget options are in: input.required[widget_name][0] which is the options list.
+        file_categories = {
+            "checkpoints":  [],
+            "loras":        [],
+            "vae":          [],
+            "controlnet":   [],
+            "embeddings":   [],
+            "clip":         [],
+            "upscale_models": [],
+            "gligen":       [],
+            "input_images": [],
+        }
+
+        for node_type, node_data in object_info.items():
+            node_input = node_data.get("input", {})
+            required = node_input.get("required", {}) if isinstance(node_input, dict) else {}
+
+            for widget_name, widget_def in required.items():
+                if not isinstance(widget_def, list) or len(widget_def) < 2:
+                    continue
+                # ComfyUI widget format: [options_list_or_type, default_value, ...]
+                options = widget_def[0]
+                if not isinstance(options, list):
+                    continue
+
+                # Map widget names to categories
+                wn = widget_name.lower()
+                if "ckpt" in wn or "checkpoint" in wn:
+                    cat = "checkpoints"
+                elif "lora" in wn:
+                    cat = "loras"
+                elif "vae" in wn:
+                    cat = "vae"
+                elif "control" in wn and ("net" in wn or "cn" in wn):
+                    cat = "controlnet"
+                elif "embed" in wn:
+                    cat = "embeddings"
+                elif "clip" in wn:
+                    cat = "clip"
+                elif "upscale" in wn or "up_model" in wn:
+                    cat = "upscale_models"
+                elif "gligen" in wn:
+                    cat = "gligen"
+                else:
+                    continue
+
+                for opt in options:
+                    if isinstance(opt, str) and opt not in file_categories[cat]:
+                        file_categories[cat].append(opt)
+
+        # Sort each category
+        for cat in file_categories:
+            file_categories[cat].sort()
+
+        # ── Try to scan ComfyUI's input/ directory for images ───────────
+        # ComfyUI's object_info doesn't list user-uploaded input images.
+        # Try filesystem access via OLIVIA_COMFYUI_INPUT_DIR or auto-detect
+        # from the backend URL (assuming standard ComfyUI layout).
+        comfyui_input_dir = os.environ.get("OLIVIA_COMFYUI_INPUT_DIR", "")
+        if not comfyui_input_dir:
+            # Try to derive from backend URL (e.g., http://127.0.0.1:8188)
+            # Common layouts: .../ComfyUI/input/
+            try:
+                from pathlib import Path as _P
+            except ImportError:
+                _P = None
+            if _P:
+                guesses = [
+                    _P(__file__).resolve().parent.parent / "ComfyUI" / "input",
+                    _P.home() / "ComfyUI" / "input",
+                    _P("/workspace/ComfyUI/input"),
+                    _P("/ComfyUI/input"),
+                ]
+                for g in guesses:
+                    if g.is_dir():
+                        comfyui_input_dir = str(g)
+                        break
+        if comfyui_input_dir:
+            try:
+                for f in sorted(os.listdir(comfyui_input_dir)):
+                    fpath = os.path.join(comfyui_input_dir, f)
+                    if os.path.isfile(fpath):
+                        ext = os.path.splitext(f)[1].lower()
+                        if ext in (".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif"):
+                            file_categories["input_images"].append(f)
+            except OSError:
+                pass
+
+        if file_type and file_type in file_categories:
+            self._json_response({
+                "type": file_type,
+                "files": file_categories[file_type],
+                "count": len(file_categories[file_type]),
+            })
+        else:
+            # Return all categories
+            result = {cat: {"files": files, "count": len(files)} for cat, files in file_categories.items()}
+            result["backend_url"] = self._COMFYUI_BACKEND_URL
+            self._json_response(result)
+
+    def _comfyui_upload_image(self):
+        """POST /api/comfyui/upload-image — upload an image to ComfyUI's input/ dir.
+
+        Receives multipart/form-data with a single ``image`` field, saves it
+        into the ComfyUI input directory so the LoadImage node (and its
+        filename combobox widgets) can pick it up immediately.
+        """
+        content_type = self.headers.get("Content-Type", "")
+        if "multipart/form-data" not in content_type:
+            self._json_response({"error": "expected multipart/form-data"}, 400)
+            return
+
+        boundary = None
+        for chunk in content_type.split(";"):
+            chunk = chunk.strip()
+            if chunk.startswith("boundary="):
+                boundary = chunk[len("boundary="):].strip('"')
+                break
+        if not boundary:
+            self._json_response({"error": "no multipart boundary found"}, 400)
+            return
+
+        length = int(self.headers.get("Content-Length", 0) or 0)
+        if length <= 0 or length > 64 * 1024 * 1024:  # 64 MB hard limit
+            self._json_response({"error": "payload too large or missing"}, 413 if length > 0 else 400)
+            return
+
+        raw = self.rfile.read(length)
+        boundary_marker = ("--" + boundary).encode("utf-8")
+
+        # Simple multipart parser — find the file part between markers.
+        filename = None
+        file_data = None
+        for segment in raw.split(boundary_marker):
+            if b"Content-Disposition" not in segment or b"filename=" not in segment:
+                continue
+            header_section, _, body = segment.partition(b"\r\n\r\n")
+            # Strip trailing \r\n (and any leftover boundary fragment)
+            end_boundary = ("\r\n--" + boundary).encode("utf-8")
+            idx = body.rfind(end_boundary)
+            if idx != -1:
+                body = body[:idx]
+            elif body.endswith(b"\r\n"):
+                body = body[:-2]
+
+            for hdr_line in header_section.split(b"\r\n"):
+                hdr_str = hdr_line.decode("utf-8", errors="replace")
+                m = __import__("re").search(r'filename="([^"]*)"', hdr_str)
+                if m:
+                    filename = m.group(1)
+                    break
+            file_data = body
+            break
+
+        if not filename or file_data is None:
+            self._json_response({"error": "no file attached in the upload"}, 400)
+            return
+
+        safe_name = os.path.basename(filename)
+
+        # ── resolve ComfyUI input directory ──────────────────────────
+        comfyui_input_dir = os.environ.get("OLIVIA_COMFYUI_INPUT_DIR", "")
+        if not comfyui_input_dir:
+            try:
+                from pathlib import Path as _P  # noqa: N813
+            except ImportError:
+                _P = None
+            if _P:
+                for candidate in (
+                    _P(__file__).resolve().parent.parent / "ComfyUI" / "input",
+                    _P.home() / "ComfyUI" / "input",
+                    _P("/workspace/ComfyUI/input"),
+                    _P("/ComfyUI/input"),
+                ):
+                    if candidate.is_dir():
+                        comfyui_input_dir = str(candidate)
+                        break
+
+        if not comfyui_input_dir:
+            self._json_response(
+                {"error": "ComfyUI input directory not found – set OLIVIA_COMFYUI_INPUT_DIR"},
+                500,
+            )
+            return
+
+        dest = os.path.join(comfyui_input_dir, safe_name)
+        try:
+            with open(dest, "wb") as f:
+                f.write(file_data)
+        except Exception as exc:
+            self._json_response({"error": f"failed to save uploaded image: {exc}"}, 500)
+            return
+
+        self._json_response({"success": True, "filename": safe_name})
+
+    def _comfyui_sync_workflow(self):
+        """GET /api/comfyui/sync — fetch latest workflow from ComfyUI history.
+
+        Returns the most recent workflow in the service format (nodes + links
+        arrays), suitable for loading directly into the editor.
+        """
+        target_url = self._COMFYUI_BACKEND_URL + "/history"
+        try:
+            req = urllib.request.Request(
+                target_url,
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                raw = resp.read()
+            history = json.loads(raw.decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read().decode("utf-8", errors="replace")[:500]
+            except Exception:
+                detail = str(exc)
+            self._json_response({"error": "proxy_error", "status": exc.code, "detail": detail}, exc.code)
+            return
+        except Exception as exc:
+            self._json_response({"error": "proxy_error", "message": "ComfyUI backend unreachable: " + str(exc)}, 502)
+            return
+
+        if not history:
+            self._json_response({"error": "not_found", "message": "No history on ComfyUI server"}, 404)
+            return
+
+        # Find the most recent prompt_id (sorted as strings, newer IDs are larger).
+        prompt_ids = sorted(history.keys(), key=lambda k: int(k) if k.isdigit() else 0)
+        if not prompt_ids:
+            self._json_response({"error": "not_found", "message": "No history entries"}, 404)
+            return
+
+        # ── Walk backwards from newest to find a usable workflow ──────────
+        workflow_data = None
+        for pid in reversed(prompt_ids):
+            entry = history[pid]
+            raw_prompt = entry.get("prompt")
+            if isinstance(raw_prompt, list) and len(raw_prompt) >= 2:
+                # ComfyUI stores prompts as [prompt_id, prompt_dict, extra_data]
+                prompt_dict = raw_prompt[1]
+            elif isinstance(raw_prompt, dict):
+                prompt_dict = raw_prompt
+            else:
+                continue
+            if isinstance(prompt_dict, dict) and prompt_dict:
+                workflow_data = prompt_dict
+                break
+
+        if not workflow_data:
+            self._json_response({"error": "not_found", "message": "No usable workflow in history"}, 404)
+            return
+
+        # ── Convert API format → file format (nodes + links) ──────────────
+        # Known output slot types for each class_type, in order.
+        _OUTPUT_SLOT_TYPES = {
+            "CheckpointLoaderSimple":      ["MODEL", "CLIP", "VAE"],
+            "CLIPTextEncode":              ["CONDITIONING"],
+            "KSampler":                    ["LATENT"],
+            "VAEDecode":                   ["IMAGE"],
+            "LoadImage":                   ["IMAGE", "MASK"],
+            "CLIPSeg":                     ["IMAGE", "MASK", "MASK"],
+            "Cut By Mask":                 ["IMAGE", "IMAGE", "MASK_MAPPING", "IMAGE"],
+            "MaskToImage":                 ["IMAGE"],
+            "ImpactGaussianBlurMask":      ["MASK"],
+            "InvertMask":                  ["MASK"],
+            "ThresholdMask":               ["MASK"],
+            "VAEEncodeForInpaint":         ["LATENT"],
+            "ImageResize+":                ["IMAGE"],
+            "PreviewImage":                ["IMAGE"],
+            "MaskPreview+":                ["IMAGE"],
+            "SaveImage":                   ["IMAGE"],
+            "ControlNetLoaderAdvanced":    ["TIMESTEP_KEYFRAME", "CONTROL_NET"],
+            "ACN_AdvancedControlNetApply": ["CONDITIONING", "CONDITIONING", "MODEL"],
+            "CombineSegMasks":             ["MASK"],
+            "Zoe-DepthMapPreprocessor":    ["IMAGE"],
+            "InpaintModelConditioning":    ["CONDITIONING", "CONDITIONING", "LATENT"],
+        }
+
+        nodes = []
+        links = []
+        node_map = {}       # str nid → node entry
+        source_out_type = {}  # (nid, slot_idx) → type string
+
+        # First pass: create node entries with empty inputs/outputs
+        for nid, node_data in workflow_data.items():
+            if not isinstance(node_data, dict):
+                continue
+            nid_int = int(nid) if nid.isdigit() else 0
+            ctype = node_data.get("class_type", "")
+            node_entry = {
+                "id": nid_int,
+                "type": ctype,
+                "pos": [0, 0],
+                "size": [200, 100],
+                "inputs": [],
+                "outputs": [],
+                "widgets_values": [],
+            }
+            nodes.append(node_entry)
+            node_map[str(nid_int)] = node_entry
+
+            # Pre-register output slot types
+            out_types = _OUTPUT_SLOT_TYPES.get(ctype, ["*"])
+            for si, ot in enumerate(out_types):
+                source_out_type[(str(nid_int), si)] = ot
+
+        # Second pass: resolve links and populate inputs/outputs arrays
+        link_id_counter = 1
+        for nid, node_data in workflow_data.items():
+            if not isinstance(node_data, dict):
+                continue
+            nid_int = int(nid) if nid.isdigit() else 0
+            dst_entry = node_map.get(str(nid_int))
+            if not dst_entry:
+                continue
+
+            api_inputs = node_data.get("inputs") or {}
+            input_slot_idx = 0
+            for slot_name, val in api_inputs.items():
+                if isinstance(val, list) and len(val) >= 2:
+                    src_nid = str(val[0])
+                    src_slot = int(val[1])
+                    if src_nid in node_map:
+                        link_id = link_id_counter
+                        link_id_counter += 1
+                        link_type = source_out_type.get((src_nid, src_slot), "*")
+                        links.append([link_id, int(src_nid), src_slot, nid_int, input_slot_idx, link_type])
+
+                        # Populate input on destination
+                        dst_entry["inputs"].append({
+                            "name": slot_name,
+                            "type": link_type,
+                            "link": link_id,
+                        })
+
+                        # Populate output link on source
+                        src_entry = node_map[src_nid]
+                        # Ensure outputs array is large enough
+                        while len(src_entry["outputs"]) <= src_slot:
+                            src_entry["outputs"].append({
+                                "name": "slot_" + str(len(src_entry["outputs"])),
+                                "type": "*",
+                                "links": [],
+                            })
+                        src_entry["outputs"][src_slot]["name"] = (
+                            "slot_" + str(src_slot)
+                        )
+                        src_entry["outputs"][src_slot]["type"] = link_type
+                        src_entry["outputs"][src_slot].setdefault("links", []).append(link_id)
+
+                input_slot_idx += 1
+
+        # Third pass: fill in widget values
+        widget_slots = KoutHandler._WIDGET_INPUT_SLOTS
+        for nid, node_data in workflow_data.items():
+            if not isinstance(node_data, dict):
+                continue
+            node_entry = node_map.get(nid)
+            if not node_entry:
+                continue
+            api_inputs = node_data.get("inputs") or {}
+            widget_names = widget_slots.get(node_data.get("class_type", "")) or []
+            for wname in widget_names:
+                val = api_inputs.get(wname)
+                if val is not None and not isinstance(val, list):
+                    node_entry["widgets_values"].append(val)
+
+        self._json_response({"workflow": {"nodes": nodes, "links": links}})
 
     def _send_raw(self, raw: bytes, content_type: str, status: int = 200) -> None:
         try:
@@ -16130,6 +16964,32 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._json_response({"suggestions": suggestions})
             return
 
+        # ── ComfyUI routes (GET) ──────────────────────────────────────────
+        if path == "/api/workflows/comfyui-terminal":
+            self._workflows_comfyui_terminal()
+            return
+
+        if path.startswith("/api/comfyui/proxy/"):
+            self._comfyui_proxy()
+            return
+
+        if path == "/api/comfyui/files":
+            self._comfyui_files_list()
+            return
+
+        if path == "/api/comfyui/sync":
+            self._comfyui_sync_workflow()
+            return
+
+        if path.startswith("/api/comfyui/history/"):
+            prompt_id = path[len("/api/comfyui/history/"):].strip("/")
+            self._comfyui_history_item(prompt_id)
+            return
+
+        if path == "/api/comfyui/history":
+            self._comfyui_history()
+            return
+
         self._json_response({})
 
     def _api_post(self, path):
@@ -16237,6 +17097,22 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # ComfyUI workflow persistence.
         if path == "/api/workflows/save":
             self._workflows_api_save()
+            return
+
+        if path == "/api/workflows/test-mask-chain":
+            self._workflows_test_mask_chain()
+            return
+
+        # ComfyUI image upload: proxy a local image file into the running
+        # ComfyUI instance's input/ directory so it appears as a selectable
+        # option for LoadImage-style nodes.
+        if path == "/api/comfyui/upload-image" and self.command == "POST":
+            self._comfyui_upload_image()
+            return
+
+        # ComfyUI queue: push a workflow prompt to the ComfyUI backend.
+        if path == "/api/comfyui/queue" and self.command == "POST":
+            self._comfyui_queue_prompt()
             return
 
         if path == "/api/mcp/tools/execute":

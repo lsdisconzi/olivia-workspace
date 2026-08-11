@@ -110,6 +110,7 @@ const ASSISTANT_IMPORTED_TOTAL_MAX_CHARS = 120000;
 const ASSISTANT_IMAGE_ATTACHMENTS_MAX_COUNT = 4;
 const _runVisibleResponseState = new Map();
 const _runToolCallCount = new Map();
+const _toolResults = new Map(); // tool result storage for async tool calls (e.g., browser_use DOM bridge)
 const _runResponseAccumulator = new Map();
 const _runAutoFinalizeState = {
   lastAt: 0,
@@ -955,9 +956,17 @@ function _browserPanelSnapshot() {
       }
       const network = _browserPanelNetworkSummary(frame.contentWindow);
       if (network) details += `\n${network}`;
+      // Tell the agent whether DOM interaction (click/type/select) is available
+      if (window.__browserBridgeReadySent) {
+        details += '\nAgent DOM bridge: ativo. O agente pode usar ações click/type/select/eval/scroll/query para interagir com a página.';
+      }
+      // When the page looks like ComfyUI, let the agent know how to get terminal logs.
+      if (/\bcomfyui\b|:8188|ComfyUI/i.test(String(url || '')) || /\bcomfyui\b|ComfyUI/i.test(String(title || ''))) {
+        details += '\nComfyUI detected: o agente pode chamar GET /api/workflows/comfyui-terminal para ler o log do terminal e erros de validação do ComfyUI (prompt errors, queue status, execution failures).';
+      }
     }
   } catch (_) {
-    details += '\nConteudo da pagina nao legivel (origem externa), usando apenas URL.';
+    details += '\nConteudo da pagina nao legivel (origem externa), usando apenas URL. DOM bridge indisponivel (cross-origin).';
   }
   return { key: 'browser', label: formatPanelContextLabel('browser'), available: true, content: details };
 }
@@ -3008,6 +3017,9 @@ function _cflResolveUrl(ref) {
     if (rel && !rel.includes('/')) {
       const matched = _cflFindCachedProjectPathByName(activeProject, rel);
       if (matched) rel = matched;
+      // If the project file cache knows nothing about this bare filename,
+      // don't blindly build a raw URL — it would 404.
+      if (!matched) rel = '';
     }
     if (rel) {
       if (_cflIsWorkspaceProject(activeProject)) {
@@ -3515,7 +3527,25 @@ function onToolCall(toolName, args) {
   if (!log) return;
 
   if (String(toolName || '').trim().toLowerCase() === 'browser_use' && typeof window.handleBrowserUseTool === 'function') {
-    window.handleBrowserUseTool(args);
+    var result = window.handleBrowserUseTool(args);
+    // DOM bridge actions (click, type, select, eval, query, etc.) return
+    // Promises.  Capture the result and feed it back as a tool output so
+    // the agent can react to success/failure (e.g., retry a selector).
+    if (result && typeof result.then === 'function') {
+      result.then(function (r) {
+        if (r && r.ok === false && r.error) {
+          addSystemBubble('Browser tool: ' + r.error);
+        }
+        // Store the result for the next stream chunk to pick up
+        if (runId) {
+          try {
+            _toolResults.set(runId, r);
+          } catch (_) {}
+        }
+      }).catch(function (e) {
+        addSystemBubble('Browser tool error: ' + String(e));
+      });
+    }
   }
   if (runId) {
     const count = Number(_runToolCallCount.get(runId) || 0);
