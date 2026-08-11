@@ -55,50 +55,28 @@
 
 ---
 
-## Phase 2: Map the Existing Architecture ⏳ NEXT
+## Phase 2: Map the Existing Architecture ✅ COMPLETE
 
 **Goal:** Make the implicit architecture fully explicit via documentation and inventories.
 **Risk:** Very Low (no runtime changes)
 
 ### Deliverables
 
-| # | Action | Output File |
-|---|--------|-------------|
-| 2.1 | **Module manifest** — every JS module: file path, load order, exports (window.*), consumed globals, backend endpoints, required capabilities | `frontend/js/modules/module-manifest.json` |
-| 2.2 | **Global symbol inventory** — all window.* vars, global functions, DOM IDs, localStorage/sessionStorage keys, shared state variables | `docs/GLOBAL_SYMBOLS.md` |
-| 2.3 | **Event contract inventory** — all custom events: name, producer, payload schema, consumers, lifecycle | `docs/EVENT_CONTRACTS.md` |
-| 2.4 | **Execution model** — 5 canonical paths with diagrams, including where authorization happens | `docs/EXECUTION_MODEL.md` |
-| 2.5 | **API route taxonomy** — extracted from serve.py route handling | `docs/API_ROUTES.md` |
-| 2.6 | **Glossary** — canonical terminology | `docs/GLOSSARY.md` |
-| 2.7 | **Source of Truth map** — canonical source for each domain and how it propagates | `docs/SOURCE_OF_TRUTH.md` |
-| 2.8 | **ADR 0001** — architecture principles and constraints | `docs/ADR/0001-architecture-principles.md` |
-| 2.9 | **drive.js header comment** — note backend router location | `frontend/js/modules/drive.js` |
+| # | Action | Output File | Done |
+|---|--------|-------------|------|
+| 2.1 | **Module manifest** — every JS module: path, load order, exports, imports, endpoints, apiClient usage | `frontend/js/modules/module-manifest.json` | ✓ |
+| 2.2 | **Global symbol inventory** — ~400+ window.* symbols across 56 modules | `docs/GLOBAL_SYMBOLS.md` | ✓ |
+| 2.3 | **Event contract inventory** — 11 custom events (4 namespaces), 2 postMessage protocols | `docs/EVENT_CONTRACTS.md` | ✓ |
+| 2.4 | **Execution model** — 3-layer taxonomy: interaction paths, pipelines, transports | `docs/EXECUTION_MODEL.md` | ✓ |
+| 2.5 | **API route taxonomy** — ~150 endpoints across 15 categories from serve.py | `docs/API_ROUTES.md` | ✓ |
+| 2.6 | **Glossary** — canonical terminology | `docs/GLOSSARY.md` | ✓ |
+| 2.7 | **Source of Truth map** — three-truth model, conflict resolution | `docs/SOURCE_OF_TRUTH.md` | ✓ |
+| 2.8 | **ADR 0001** — 12 architecture principles with three-truth model | `docs/ADR/0001-architecture-principles.md` | ✓ |
+| 2.9 | **drive.js header comment** — note backend router location and Phase 1 cleanup | `frontend/js/modules/drive.js` | ✓ |
 
-### Source of Truth Map (for 2.7)
+### Execution Architecture (actual, from 2.4)
 
-| Domain | Canonical Source | Propagation |
-|--------|-----------------|-------------|
-| Agent definitions | garge (assistants API) | → agent-orchestration.js |
-| User preferences / sections | garge (/api/user/me) | → trunk.js, tabs.js |
-| Chat history | garge file system / localStorage | → history.js |
-| Project files | filesystem (serve.py) | → files.js |
-| Context selection | Context Manager (Python) | → shared.js, context-client.js |
-| Qdrant vectors | Qdrant (garge-qdrant) | → memory.js |
-| Neo4j relationships | Neo4j (violation-refiner) | → violations.js |
-| Violation bundles | violation-refiner (filesystem) | → violations.js |
-| Section registry | garge (/api/user/me) | → trunk.js |
-| Service health | each MCP server (/health) | → health.js, service-registry.js |
-| MCP tool catalog | each MCP server (list_tools) | → agent-functions-registry.js |
-| Legal statutes | juris-search | → law_library.js, master_index.js |
-| Transcriptions | transcription MCP | → listening.js |
-
-### 5 Execution Paths (for 2.4)
-
-1. **Chat/Assistant** — user message → assistant → tool calls → response
-2. **Direct capability call** — module → API → MCP → service
-3. **SSE streaming** — long-lived connection with tool events carrying run_id + tool_call_id
-4. **Remote bus** — mobile ↔ desktop command relay
-5. **Context resolution** — module → context client → context manager → files/memory/legal/project → resolved context → agent
+3 interaction paths + 3 supporting pipelines + 4 transport mechanisms. See `docs/EXECUTION_MODEL.md`.
 
 ### Verification
 - All docs reviewed against actual code for accuracy
@@ -106,7 +84,29 @@
 
 ---
 
-## Phase 3: Establish Platform Primitives and Contracts ⬜ PENDING
+## Phase 2.5: Architecture Consistency Pass ✅ COMPLETE
+
+**Trigger:** `_01_olivia-review-branch/updated-review-2.md` (20 observations)
+
+**Goal:** Resolve 10+ contradictions among the 4 core architecture docs before building Phase 3 primitives.
+
+| # | Action | Done |
+|---|--------|------|
+| 2.5.1 | Expand ADR from 10 to 12 principles (three-truth model, behavioral compatibility, no speculative abstractions) | ✓ |
+| 2.5.2 | Restructure Execution Model from "5 paths" to 3-layer taxonomy with confidence markers | ✓ |
+| 2.5.3 | Clarify capability ≠ tool identity in Glossary and Source-of-Truth map | ✓ |
+| 2.5.4 | Canonicalize Garage naming (human-facing) vs garage_* runtime identifiers | ✓ |
+| 2.5.5 | Soften "two authorization checks" claim to "may occur at multiple layers" | ✓ |
+| 2.5.6 | Reclassify SSE as transport mechanism, not execution path | ✓ |
+| 2.5.7 | Add three-truth model with drift rule to Source-of-Truth map | ✓ |
+| 2.5.8 | Add confidence markers (verified/observed/inferred/planned) to Execution Model | ✓ |
+| 2.5.9 | Update planning documents with new decisions (D-011 through D-016) | ✓ |
+
+**Files revised:** ADR/0001, EXECUTION_MODEL.md, GLOSSARY.md, SOURCE_OF_TRUTH.md, TRACKING.md, progress.md, task_plan.md
+
+---
+
+## Phase 3: Establish Platform Primitives and Contracts ⬜ NEXT
 
 **Goal:** Create lightweight, non-invasive runtime abstractions. No behavioral changes to existing modules.
 **Risk:** Low/Medium

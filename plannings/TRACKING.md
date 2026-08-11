@@ -14,8 +14,9 @@
 | Phase | Name | Status | Started | Completed | Commit |
 |-------|------|--------|---------|-----------|--------|
 | 1 | Sanitize and Clarify | Done | 2026-08-11 | 2026-08-11 | `aa93b1a` |
-| 2 | Map the Architecture | Next | — | — | — |
-| 3 | Platform Primitives | Pending | — | — | — |
+| 2 | Map the Architecture | Done | 2026-08-11 | 2026-08-11 | pending |
+| 2.5 | Architecture Consistency Pass | Done | 2026-08-11 | 2026-08-11 | pending |
+| 3 | Platform Primitives | Next | — | — | — |
 | 4 | Reduce Coupling | Pending | — | — | — |
 | 5 | Observability | Pending | — | — | — |
 
@@ -77,9 +78,45 @@
 
 ### D-010: Context resolution is a first-class execution path
 **Date:** 2026-08-11
-**Decision:** Added Context resolution as the 5th canonical execution path (alongside Chat/Assistant, Direct capability, SSE streaming, Remote bus).
+**Decision:** Added Context resolution as a supporting pipeline (alongside History Persistence and Auth/Session) rather than a separate execution path. Execution paths are now: interaction paths (3), supporting pipelines (3), transport mechanisms (4).
 **Rationale:** If context remains an implicit side channel, the architecture won't become fully explicit.
-**Source:** updated-review.md 27
+**Source:** updated-review.md 27; refined by updated-review-2.md
+
+### D-011: Three-truth model — runtime, contract, decision
+**Date:** 2026-08-11
+**Decision:** Every architectural question must distinguish: runtime truth (what the code does), contract truth (what manifests declare), and decision truth (what ADRs record). Discrepancies between these are drift conditions to detect and resolve — not evidence that contracts or ADRs are wrong.
+**Rationale:** Without this distinction, documentation and code drift apart silently.
+**Source:** updated-review-2.md 2
+
+### D-012: Phase 2.5 consistency pass before Phase 3
+**Date:** 2026-08-11
+**Decision:** A consistency pass (Phase 2.5) must resolve contradictions among the 4 core architecture docs before building Phase 3 runtime abstractions. Phase 3 primitives built on inconsistent docs would encode contradictions.
+**Rationale:** 10+ internal contradictions found across ADR, Glossary, Execution Model, and Source-of-Truth map.
+**Source:** updated-review-2.md (core recommendation)
+
+### D-013: Execution Model taxonomy — 3 layers, not 5 paths
+**Date:** 2026-08-11
+**Decision:** Execution model uses 3-layer taxonomy: 3 interaction paths, 3 supporting pipelines, 4 transport mechanisms. SSE is a transport, not an execution path. Context resolution is a pipeline, not an interaction path.
+**Rationale:** The original "5 execution paths" conflated user intent (what), processing (how), and transport (medium).
+**Source:** updated-review-2.md 5
+
+### D-014: Garage naming canonicalized
+**Date:** 2026-08-11
+**Decision:** Human-facing term: "Garage". Runtime identifiers: `garage_*` prefix (garage_assistant_chat, garage_qdrant_search, etc.). "garge" was a historical typo corrected in Phase 1.
+**Rationale:** Inconsistent naming between docs and runtime caused confusion.
+**Source:** updated-review-2.md 1
+
+### D-015: Confidence markers required in architecture docs
+**Date:** 2026-08-11
+**Decision:** All execution model claims carry confidence markers: [verified] = confirmed in code, [observed] = seen during development, [inferred] = deduced from structure, [planned] = target for future phase.
+**Rationale:** Without confidence markers, readers can't distinguish facts from assumptions.
+**Source:** updated-review-2.md 9
+
+### D-016: Capability != MCP tool identity
+**Date:** 2026-08-11
+**Decision:** A capability (user-facing intent, e.g., memory.search) is not synonymous with its MCP tool implementation (e.g., garage_qdrant_search). Capabilities may be implemented by REST endpoints, MCP tools, or multiple backend operations. The capability-manifest.json is an authored contract, not generated from module scanning.
+**Rationale:** Conflating capability identity with tool identity creates tight coupling between frontend concepts and backend implementations.
+**Source:** updated-review-2.md 6, 8
 
 ---
 
@@ -118,29 +155,46 @@
 
 ---
 
-## Phase 2 - Map the Architecture (NEXT)
+## Phase 2 — Map the Architecture ✅
 
-**Status:** No artifacts created yet.
+**Status:** All 9 deliverables produced from code inspection.
 
 ### Deliverables
-- [ ] 2.1 — `frontend/js/modules/module-manifest.json`
-- [ ] 2.2 — `docs/GLOBAL_SYMBOLS.md`
-- [ ] 2.3 — `docs/EVENT_CONTRACTS.md`
-- [ ] 2.4 — `docs/EXECUTION_MODEL.md`
-- [ ] 2.5 — `docs/API_ROUTES.md`
-- [ ] 2.6 — `docs/GLOSSARY.md`
-- [ ] 2.7 — `docs/SOURCE_OF_TRUTH.md`
-- [ ] 2.8 — `docs/ADR/0001-architecture-principles.md`
-- [ ] 2.9 — Header comment in `frontend/js/modules/drive.js`
+- [x] 2.1 — `frontend/js/modules/module-manifest.json` (56 modules, loads, exports, imports, endpoints)
+- [x] 2.2 — `docs/GLOBAL_SYMBOLS.md` (~400+ window.* symbols across 56 modules)
+- [x] 2.3 — `docs/EVENT_CONTRACTS.md` (11 custom events, 4 namespaces, 2 postMessage protocols)
+- [x] 2.4 — `docs/EXECUTION_MODEL.md` (3-layer taxonomy with confidence markers)
+- [x] 2.5 — `docs/API_ROUTES.md` (~150 endpoints from serve.py inspection)
+- [x] 2.6 — `docs/GLOSSARY.md` (canonical terminology)
+- [x] 2.7 — `docs/SOURCE_OF_TRUTH.md` (three-truth model, conflict resolution)
+- [x] 2.8 — `docs/ADR/0001-architecture-principles.md` (12 principles)
+- [x] 2.9 — Header comment in `frontend/js/modules/drive.js`
 
 ### Notes
 - No runtime changes in this phase
-- Phase 3/4 quality directly depends on Phase 2 accuracy
-- Global symbol inventory (2.2) is the single most useful missing artifact per review
+- All docs revised during Phase 2.5 consistency pass
 
 ---
 
-## Phase 3 - Platform Primitives (PENDING)
+## Phase 2.5 — Architecture Consistency Pass ✅
+
+**Trigger:** `_01_olivia-review-branch/updated-review-2.md` (20 observations, 10 must-resolve items)
+
+### Actions completed
+- [x] Expanded ADR from 10 to 12 principles (three-truth model, behavioral compatibility, no speculative abstractions)
+- [x] Restructured Execution Model from "5 paths" to 3-layer taxonomy with confidence markers
+- [x] Clarified capability ≠ tool identity in Glossary and Source-of-Truth map
+- [x] Canonicalized Garage naming (human-facing) vs garage_* runtime identifiers
+- [x] Softened "two authorization checks" claim to "may occur at multiple layers"
+- [x] Reclassified SSE as transport mechanism, not execution path
+- [x] Added three-truth model with drift rule to Source-of-Truth map
+- [x] Resolved 10+ internal contradictions across 4 core docs
+- [x] Added confidence markers ([verified]/[observed]/[inferred]/[planned]) to Execution Model
+- [x] Updated planning documents (TRACKING.md, progress.md)
+
+---
+
+## Phase 3 — Platform Primitives (NEXT)
 
 **Status:** Pending Phase 2 completion.
 **Artifacts:** 0 / 6 created.

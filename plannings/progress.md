@@ -26,8 +26,51 @@
 
 ### Current State
 - **Branch:** `olivia-review`
-- **Commits ahead of main:** 2 (`aa93b1a`, `a13c0ce`)
-- **Next:** Phase 2 — Map the Architecture (9 deliverables)
+- **Commits ahead of main:** 3+ (pending commit of Phase 2 artifacts)
+- **Next:** Phase 3 — Platform Primitives
+
+---
+
+## 2026-08-11 — Phase 2 & Phase 2.5 Complete
+
+### Phase 2 — Map the Architecture
+All 9 deliverables produced from code inspection:
+
+**Documentation artifacts created:**
+- `docs/ADR/0001-architecture-principles.md` — 12 principles with three-truth model
+- `docs/GLOSSARY.md` — canonical terminology (Garage resolution, capability vs tool)
+- `docs/EXECUTION_MODEL.md` — 3-layer taxonomy (interaction paths, pipelines, transports)
+- `docs/SOURCE_OF_TRUTH.md` — three-truth model, multi-dimensional conflict resolution
+- `docs/GLOBAL_SYMBOLS.md` — ~400+ window.* symbols across 56 modules
+- `docs/EVENT_CONTRACTS.md` — 11 custom events (4 namespaces), 2 postMessage protocols
+- `docs/API_ROUTES.md` — ~150 endpoints across 15 categories from serve.py inspection
+
+**Machine-readable artifacts created:**
+- `frontend/js/modules/module-manifest.json` — 56 modules with exports, imports, endpoints
+
+**Code artifact:**
+- `frontend/js/modules/drive.js` — updated header comment documenting backend router location
+
+### Phase 2.5 — Architecture Consistency Pass
+Triggered by `_01_olivia-review-branch/updated-review-2.md` (20 observations).
+
+**4 core docs revised for consistency:**
+- `docs/ADR/0001-architecture-principles.md` — expanded 10→12 principles; three-truth model; qualified Principle 9
+- `docs/EXECUTION_MODEL.md` — restructured from 5 paths to 3-layer taxonomy; confidence markers; corrected authorization claims
+- `docs/GLOSSARY.md` — capability≠tool identity; Garage naming resolution; truth dimensions added
+- `docs/SOURCE_OF_TRUTH.md` — three-truth model at top; multi-dimensional conflict resolution; drift rule
+
+**10+ contradictions resolved:**
+- Garage vs garge naming (canonicalized to "Garage" human / `garage_*` runtime)
+- "Two authorization checks" claim softened to "may occur at multiple layers"
+- SSE reclassified as transport, not execution path
+- Tool resolution ≠ authorization distinction formalized
+- Capability ≠ MCP tool identity enshrined
+- Service health ≠ capability availability formalized
+- "5 execution paths" → 3 interaction paths + 3 pipelines + 4 transports
+- Principle 9 qualified (additive not absolute)
+- Principle 10 rewritten as observability target, not current-state claim
+- "gdrive.js" references updated to note it was an Express backend router
 
 ---
 
