@@ -16,7 +16,7 @@
 | 1 | Sanitize and Clarify | Done | 2026-08-11 | 2026-08-11 | `aa93b1a` |
 | 2 | Map the Architecture | Done | 2026-08-11 | 2026-08-11 | `fcc3460` |
 | 2.5 | Architecture Consistency Pass | Done | 2026-08-11 | 2026-08-11 | `fcc3460` |
-| 3 | Platform Primitives | Next | — | — | — |
+| 3 | Platform Primitives | Done | 2026-08-11 | 2026-08-11 | *pending* |
 | 4 | Reduce Coupling | Pending | — | — | — |
 | 5 | Observability | Pending | — | — | — |
 
@@ -118,6 +118,24 @@
 **Rationale:** Conflating capability identity with tool identity creates tight coupling between frontend concepts and backend implementations.
 **Source:** updated-review-2.md 6, 8
 
+### D-017: Runtime primitive namespaces are additive and aliased
+**Date:** 2026-08-11
+**Decision:** Phase 3 primitives expose `window.OliviaServices`, `window.OliviaPermissions`, `window.OliviaContext`, `window.OliviaCapabilities`, each aliased to a `LA8159*` equivalent (matching the `window.OliviaAPI = window.LA8159API` pattern in api-client.js). Primitives are additive: feature modules are NOT rewired in Phase 3.
+**Rationale:** No behavioral changes to existing modules (Phase 3 guardrail). Aliases preserve the legacy namespace duality until Phase 4 migrations.
+**Source:** api-client.js:418 pattern; task_plan.md 3.1-3.4
+
+### D-018: Availability derivation order — service → permission → schema → dependency
+**Date:** 2026-08-11
+**Decision:** capability-registry.availability() evaluates availability_factors in this order: service_health, permission, schema_compatibility, downstream_dependencies. First failing factor short-circuits with a machine-readable reason (`service-down`, `permission-denied`, `schema-incompatible`, `dependency-down`). Audit trail records each check.
+**Rationale:** Deterministic, testable availability with explainable reasons — the UI (Phase 5.6) can surface *why* a capability is unavailable, not just that it is.
+**Source:** task_plan.md 3.1; D-005
+
+### D-019: Capability manifest declares factors, registry interprets
+**Date:** 2026-08-11
+**Decision:** capability-manifest.json declares each capability's `availability_factors`, `depends_on`, `required_permissions`, `transport`, and `endpoints`. The registry interprets them; schema checks are runtime-registered per capability (default compatible).
+**Rationale:** Keeps the manifest a declarative authored contract and the registry the single interpreter (three-truth model: contract truth vs runtime truth, drift detectable).
+**Source:** task_plan.md 3.0a, 3.1
+
 ---
 
 ## Phase 1 - Sanitize and Clarify (COMPLETED)
@@ -194,10 +212,24 @@
 
 ---
 
-## Phase 3 — Platform Primitives (NEXT)
+## Phase 3 — Platform Primitives ✅
 
-**Status:** Pending Phase 2 completion.
-**Artifacts:** 0 / 6 created.
+**Commit:** `*pending*`
+**Status:** Complete — 6 artifacts created, additive, no feature-module rewiring.
+
+### Artifacts
+- [x] 3.0a — `frontend/js/lib/capability-manifest.json` (25 capabilities, 7 services, authored contract)
+- [x] 3.0b — `docs/CONTEXT_MANAGER_CONTRACT.md` (context sources, methods, ContextState shape, events)
+- [x] 3.1 — `frontend/js/lib/capability-registry.js` (availability derivation, audit trail, schema checks)
+- [x] 3.2 — `frontend/js/lib/context-client.js` (getActive/add/remove/clear/preview/resolve)
+- [x] 3.3 — `frontend/js/lib/service-registry.js` (health probes, UP/DOWN/unknown)
+- [x] 3.4 — `frontend/js/lib/permission-interface.js` (advisory UI gating, D-004)
+- [x] 3.5 — 4 script tags wired into `frontend/index.html` after api-client.js
+
+### Verification
+- `node --check` on all 4 lib files — OK
+- 18/18 smoke-test assertions pass (services status, permission gating, context read/add, availability derivation, events, audit trail)
+- Capability manifest validates as JSON (25 capabilities, 7 services)
 
 ---
 

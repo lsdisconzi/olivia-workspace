@@ -1,0 +1,364 @@
+{
+  "manifest_version": 1,
+  "$schema": "capability-manifest@1",
+  "meta": {
+    "title": "Olivia Capability Manifest",
+    "description": "Authored contract describing what Olivia can do. This is a contract artifact (three-truth model) — code/registries remain authoritative. NOT generated from module scanning (see D-003, D-016).",
+    "maintainer": "plannings/task_plan.md Phase 3.0a",
+    "last_revised": "2026-08-11"
+  },
+  "distinctions": {
+    "capability_vs_tool": "A capability (user-facing intent, e.g. memory.search) is not synonymous with its MCP tool implementation (e.g. garage_qdrant_search). Capabilities may be implemented by REST endpoints, MCP tools, or multiple backend operations.",
+    "service_health_vs_availability": "A service being UP does not make a capability AVAILABLE. Availability = service health + permissions + schema compatibility + downstream dependencies (D-005).",
+    "manifest_vs_module_manifest": "This manifest answers 'what can Olivia do?'. module-manifest.json answers 'what is this frontend module?' (D-003)."
+  },
+  "services": {
+    "gateway": {
+      "kind": "http",
+      "description": "serve.py — same origin serving the page and /api/* routes",
+      "health": "GET /health"
+    },
+    "qdrant": {
+      "kind": "http",
+      "description": "Vector store backing /api/memory/* capabilities",
+      "health": "derived from /api/memory/collections responses"
+    },
+    "bridge": {
+      "kind": "http",
+      "description": "TheBridge discovery gateway (/api/bridge/*)",
+      "health": "derived from /api/bridge probes"
+    },
+    "visualizer": {
+      "kind": "http",
+      "description": "Kout architecture visualizer (:8120, /api/architecture/*)",
+      "health": "probe /api/architecture/generated/"
+    },
+    "skill-svc": {
+      "kind": "http",
+      "description": "Skill service (:4173, /api/architecture/{agents,bundles,skills})",
+      "health": "derived from /api/architecture probes"
+    },
+    "transcription": {
+      "kind": "http",
+      "description": "Pinocchio transcription service (:8039, /api/diarization/*)",
+      "health": "derived from /api/diarization/models/whisper"
+    },
+    "garage-mcp": {
+      "kind": "mcp",
+      "description": "Garage MCP servers (garage_* runtime tool prefix). MCP execution stays server-side (guardrail 3).",
+      "health": "derived from agent-functions-registry / function probes"
+    }
+  },
+  "capabilities": [
+    {
+      "id": "assistant.chat",
+      "name": "Assistant streaming chat",
+      "description": "Stream a chat response from the assistant endpoint (SSE transport).",
+      "transport": "sse",
+      "endpoints": [{ "method": "POST", "path": "/api/assistant/chat" }],
+      "depends_on": ["gateway"],
+      "required_permissions": ["chat.use"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "LA8159API.assistant.chat"
+    },
+    {
+      "id": "assistant.models",
+      "name": "List available models",
+      "description": "Fetch the model catalog from the assistant endpoint.",
+      "transport": "rest",
+      "endpoints": [{ "method": "GET", "path": "/api/assistant/models" }],
+      "depends_on": ["gateway"],
+      "required_permissions": ["chat.use"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "LA8159API.assistant.models"
+    },
+    {
+      "id": "agents.list",
+      "name": "List agents",
+      "description": "Enumerate the user's agent definitions.",
+      "transport": "rest",
+      "endpoints": [{ "method": "GET", "path": "/api/agents" }],
+      "depends_on": ["gateway"],
+      "required_permissions": ["agents.view"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "LA8159API.agents.list"
+    },
+    {
+      "id": "agents.manage",
+      "name": "Create/update/delete agents",
+      "description": "CRUD over agent definitions including import/export bundles.",
+      "transport": "rest",
+      "endpoints": [
+        { "method": "POST", "path": "/api/agents" },
+        { "method": "DELETE", "path": "/api/agents/{id}" },
+        { "method": "POST", "path": "/api/agents/import/bundle" }
+      ],
+      "depends_on": ["gateway"],
+      "required_permissions": ["agents.manage"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "LA8159API.agents.create/delete/import"
+    },
+    {
+      "id": "agents.run",
+      "name": "Run an agent",
+      "description": "Execute an agent with SSE event streaming (agent_status events).",
+      "transport": "sse",
+      "endpoints": [{ "method": "POST", "path": "/api/agents/run" }],
+      "depends_on": ["gateway", "garage-mcp"],
+      "required_permissions": ["agents.run"],
+      "availability_factors": ["service_health", "permission", "downstream_dependencies"],
+      "api_client": "LA8159API.agents.run"
+    },
+    {
+      "id": "memory.search",
+      "name": "Vector memory search",
+      "description": "Semantic search over the Qdrant-backed memory collection.",
+      "transport": "rest",
+      "endpoints": [{ "method": "POST", "path": "/api/memory/search" }],
+      "depends_on": ["gateway", "qdrant"],
+      "required_permissions": ["memory.search"],
+      "availability_factors": ["service_health", "permission", "schema_compatibility"],
+      "api_client": "LA8159API.memory.search"
+    },
+    {
+      "id": "memory.ingest",
+      "name": "Ingest content into memory",
+      "description": "Write text content into the vector store (also articles/violations/graph variants).",
+      "transport": "rest",
+      "endpoints": [
+        { "method": "POST", "path": "/api/memory/ingest" },
+        { "method": "POST", "path": "/api/memory/ingest/articles" },
+        { "method": "POST", "path": "/api/memory/ingest/violation" },
+        { "method": "POST", "path": "/api/memory/graph/ingest" }
+      ],
+      "depends_on": ["gateway", "qdrant"],
+      "required_permissions": ["memory.ingest"],
+      "availability_factors": ["service_health", "permission", "schema_compatibility"],
+      "api_client": "LA8159API.memory.ingest"
+    },
+    {
+      "id": "memory.collections",
+      "name": "Manage memory collections",
+      "description": "List, create, and delete vector collections.",
+      "transport": "rest",
+      "endpoints": [
+        { "method": "GET", "path": "/api/memory/collections" },
+        { "method": "POST", "path": "/api/memory/collections" },
+        { "method": "DELETE", "path": "/api/memory/collections/{name}" }
+      ],
+      "depends_on": ["gateway", "qdrant"],
+      "required_permissions": ["memory.manage"],
+      "availability_factors": ["service_health", "permission", "schema_compatibility"],
+      "api_client": "LA8159API.memory.collections"
+    },
+    {
+      "id": "memory.graph",
+      "name": "Knowledge graph stats",
+      "description": "Fetch graph statistics for the memory visualization.",
+      "transport": "rest",
+      "endpoints": [{ "method": "GET", "path": "/api/memory/graph/stats" }],
+      "depends_on": ["gateway", "qdrant"],
+      "required_permissions": ["memory.search"],
+      "availability_factors": ["service_health", "permission", "schema_compatibility"],
+      "api_client": "LA8159API.memory.graphStats"
+    },
+    {
+      "id": "memory.routing",
+      "name": "Memory routing config",
+      "description": "Read/update routing configuration for memory capabilities.",
+      "transport": "rest",
+      "endpoints": [{ "method": "GET|POST", "path": "/api/memory/routing" }],
+      "depends_on": ["gateway"],
+      "required_permissions": ["memory.manage"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "raw fetch in modules/memory.js"
+    },
+    {
+      "id": "docs.read",
+      "name": "Read/open documents",
+      "description": "Open and render supported document formats (docs view).",
+      "transport": "rest",
+      "endpoints": [{ "method": "GET", "path": "/api/docs/*" }],
+      "depends_on": ["gateway"],
+      "required_permissions": ["docs.read"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "raw fetch in modules/docs.js"
+    },
+    {
+      "id": "shared.access",
+      "name": "Access shared resources",
+      "description": "Read shared scopes and files.",
+      "transport": "rest",
+      "endpoints": [
+        { "method": "GET", "path": "/api/shared/scopes" },
+        { "method": "GET", "path": "/api/shared/file?path={path}" }
+      ],
+      "depends_on": ["gateway"],
+      "required_permissions": ["shared.read"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "LA8159API.shared.scopes/file"
+    },
+    {
+      "id": "transcription.run",
+      "name": "Transcribe audio",
+      "description": "Run diarization/transcription over uploaded audio.",
+      "transport": "rest",
+      "endpoints": [{ "method": "POST", "path": "/api/diarization/transcribe" }],
+      "depends_on": ["gateway", "transcription"],
+      "required_permissions": ["transcription.run"],
+      "availability_factors": ["service_health", "permission", "downstream_dependencies"],
+      "api_client": "LA8159API.transcribe.run"
+    },
+    {
+      "id": "transcription.search",
+      "name": "Search transcripts",
+      "description": "Full-text search over stored transcripts.",
+      "transport": "rest",
+      "endpoints": [{ "method": "POST", "path": "/api/transcripts/search" }],
+      "depends_on": ["gateway", "transcription"],
+      "required_permissions": ["transcription.read"],
+      "availability_factors": ["service_health", "permission", "downstream_dependencies"],
+      "api_client": "LA8159API.transcribe.search"
+    },
+    {
+      "id": "chat.history",
+      "name": "Chat history",
+      "description": "List, load, and save chat sessions.",
+      "transport": "rest",
+      "endpoints": [
+        { "method": "GET", "path": "/api/chat/list" },
+        { "method": "GET", "path": "/api/chat/load" },
+        { "method": "POST", "path": "/api/chat/save" }
+      ],
+      "depends_on": ["gateway"],
+      "required_permissions": ["chat.use"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "LA8159API.chat.list/load/save"
+    },
+    {
+      "id": "projects.files",
+      "name": "Project file access",
+      "description": "List and read files inside an active project.",
+      "transport": "rest",
+      "endpoints": [
+        { "method": "GET", "path": "/api/projects/{id}/files" },
+        { "method": "GET", "path": "/api/projects/{id}/raw?path={path}" }
+      ],
+      "depends_on": ["gateway"],
+      "required_permissions": ["projects.read"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "raw fetch in modules/discovery.js"
+    },
+    {
+      "id": "bridge.discovery",
+      "name": "TheBridge discovery",
+      "description": "Query the bridge for indexed sections, categories, and pipeline insights.",
+      "transport": "rest",
+      "endpoints": [
+        { "method": "GET", "path": "/api/bridge/index-section" },
+        { "method": "GET", "path": "/api/bridge/categories" },
+        { "method": "GET", "path": "/api/bridge/pipeline/stats" }
+      ],
+      "depends_on": ["gateway", "bridge"],
+      "required_permissions": ["bridge.read"],
+      "availability_factors": ["service_health", "permission", "downstream_dependencies"],
+      "api_client": "raw fetch in modules/discovery.js"
+    },
+    {
+      "id": "architecture.view",
+      "name": "Architecture visualization",
+      "description": "Render the agent architecture graph from the kout visualizer.",
+      "transport": "rest",
+      "endpoints": [
+        { "method": "GET", "path": "/api/architecture/generated/" },
+        { "method": "GET", "path": "/api/architecture/{agents,bundles,skills}" }
+      ],
+      "depends_on": ["gateway", "visualizer", "skill-svc"],
+      "required_permissions": ["architecture.view"],
+      "availability_factors": ["service_health", "permission", "downstream_dependencies"],
+      "api_client": "raw fetch in modules/architecture.js"
+    },
+    {
+      "id": "health.manage",
+      "name": "Personal health pipeline",
+      "description": "Upload, run, and query the personal health memory pipeline.",
+      "transport": "rest",
+      "endpoints": [
+        { "method": "GET", "path": "/api/health/status" },
+        { "method": "POST", "path": "/api/health/upload" },
+        { "method": "POST", "path": "/api/health/run" },
+        { "method": "GET", "path": "/api/health/results" }
+      ],
+      "depends_on": ["gateway"],
+      "required_permissions": ["health.use"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "raw fetch in modules/health.js"
+    },
+    {
+      "id": "user.preferences",
+      "name": "User preferences",
+      "description": "Read/update persisted user preferences.",
+      "transport": "rest",
+      "endpoints": [{ "method": "GET|POST", "path": "/api/user/preferences" }],
+      "depends_on": ["gateway"],
+      "required_permissions": ["user.preferences"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "raw fetch in modules/user-prefs.js"
+    },
+    {
+      "id": "case_dossier.view",
+      "name": "Case dossier",
+      "description": "View case dossier data and scan results.",
+      "transport": "rest",
+      "endpoints": [{ "method": "GET", "path": "/api/case-dossier/*" }],
+      "depends_on": ["gateway"],
+      "required_permissions": ["case_dossier.view"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "raw fetch in modules/case-dossier.js"
+    },
+    {
+      "id": "runpod.workspace",
+      "name": "Runpod workspace",
+      "description": "Interact with the Runpod workspace UI endpoints.",
+      "transport": "rest",
+      "endpoints": [{ "method": "GET|POST", "path": "/api/runpod/*" }],
+      "depends_on": ["gateway", "runpod"],
+      "required_permissions": ["runpod.use"],
+      "availability_factors": ["service_health", "permission", "downstream_dependencies"],
+      "api_client": "raw fetch in modules/runpod-workspace-ui.js"
+    },
+    {
+      "id": "drive.access",
+      "name": "Drive file access",
+      "description": "Read files from the drive module (frontend wrapper over backend drive router).",
+      "transport": "rest",
+      "endpoints": [{ "method": "GET|POST", "path": "/api/drive/*" }],
+      "depends_on": ["gateway"],
+      "required_permissions": ["drive.read"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "raw fetch in modules/drive.js"
+    },
+    {
+      "id": "remote_bus.desktop",
+      "name": "Remote bus desktop",
+      "description": "Desktop companion bridge via remote bus polling.",
+      "transport": "polling",
+      "endpoints": [{ "method": "GET|POST", "path": "/api/remote-bus/*" }],
+      "depends_on": ["gateway"],
+      "required_permissions": ["remote_bus.use"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "raw fetch in modules/remote-bus-desktop.js"
+    },
+    {
+      "id": "comfyui.workflow",
+      "name": "ComfyUI workflow",
+      "description": "Generate or run ComfyUI workflows.",
+      "transport": "rest",
+      "endpoints": [{ "method": "GET|POST", "path": "/api/comfyui/*" }],
+      "depends_on": ["gateway", "comfyui"],
+      "required_permissions": ["comfyui.use"],
+      "availability_factors": ["service_health", "permission", "downstream_dependencies"],
+      "api_client": "raw fetch in modules/comfyui-workflow.js"
+    }
+  ]
+}

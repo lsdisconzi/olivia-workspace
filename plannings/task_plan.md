@@ -106,27 +106,29 @@
 
 ---
 
-## Phase 3: Establish Platform Primitives and Contracts ⬜ NEXT
+## Phase 3: Establish Platform Primitives and Contracts ✅ COMPLETE
 
 **Goal:** Create lightweight, non-invasive runtime abstractions. No behavioral changes to existing modules.
 **Risk:** Low/Medium
+**Commit:** `*pending*`
 
 ### Contracts
 
-| # | Action | Output |
-|---|--------|--------|
-| 3.0a | Create capability manifest (what Olivia can do) | `frontend/js/lib/capability-manifest.json` |
-| 3.0b | Document Context Manager contract | `docs/CONTEXT_MANAGER_CONTRACT.md` |
+| # | Action | Output | Done |
+|---|--------|--------|------|
+| 3.0a | Create capability manifest (what Olivia can do) | `frontend/js/lib/capability-manifest.json` | ✓ |
+| 3.0b | Document Context Manager contract | `docs/CONTEXT_MANAGER_CONTRACT.md` | ✓ |
 
 ### Primitives
 
-| # | Action | Output |
-|---|--------|--------|
-| 3.1 | Capability Registry — capability identity, schema, transport, permissions, availability, timeout, retry, audit | `frontend/js/lib/capability-registry.js` |
-| 3.2 | Context Client — getActive(), add(), remove(), clear(), preview(), resolve() | `frontend/js/lib/context-client.js` |
-| 3.3 | Service Registry — health cache, distinct from capability availability | `frontend/js/lib/service-registry.js` |
-| 3.4 | Permission Interface — advisory UI gating: canViewSection(), canUseCapability(), canAccessResource(), canExecuteTool() | `frontend/js/lib/permission-interface.js` |
-| 3.5 | Wire new lib files into index.html (after config.js, before feature modules) | `frontend/index.html` |
+| # | Action | Output | Done |
+|---|--------|--------|------|
+| 3.1 | Capability Registry — capability identity, schema, transport, permissions, availability, timeout, retry, audit | `frontend/js/lib/capability-registry.js` | ✓ |
+| 3.2 | Context Client — getActive(), add(), remove(), clear(), preview(), resolve() | `frontend/js/lib/context-client.js` | ✓ |
+| 3.3 | Service Registry — health cache, distinct from capability availability | `frontend/js/lib/service-registry.js` | ✓ |
+| 3.4 | Permission Interface — advisory UI gating: canViewSection(), canUseCapability(), canAccessResource(), canExecuteTool() | `frontend/js/lib/permission-interface.js` | ✓ |
+| 3.5 | Wire new lib files into index.html (after config.js, before feature modules) | `frontend/index.html` | ✓ |
+| 3.6 | Update tracking docs and commit | `plannings/TRACKING.md`, `plannings/progress.md`, `plannings/task_plan.md` | ✓ |
 
 ### Key Distinctions
 - Module manifest ≠ Capability manifest
@@ -139,7 +141,7 @@ Remove new script tags from index.html (additive, easy revert)
 
 ---
 
-## Phase 4: Reduce Coupling ⬜ PENDING
+## Phase 4: Reduce Coupling ⬜ NEXT
 
 **Goal:** Migrate coupling hotspots one module at a time. Order matters.
 **Risk:** Medium/High (4.2 is the riskiest single action)

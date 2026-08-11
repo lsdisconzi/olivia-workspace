@@ -74,6 +74,33 @@ Triggered by `_01_olivia-review-branch/updated-review-2.md` (20 observations).
 
 ---
 
+## 2026-08-11 — Phase 3 Complete: Platform Primitives
+
+### Completed
+- **Phase 3 (Platform Primitives)** — additive runtime abstractions, no feature-module rewiring
+  - `frontend/js/lib/capability-manifest.json` — authored contract: 25 capabilities, 7 services, availability_factors per capability
+  - `frontend/js/lib/service-registry.js` — health probes for 7 services, UP/DOWN/unknown, `window.OliviaServices` (+ `LA8159Services` alias)
+  - `frontend/js/lib/permission-interface.js` — advisory UI gating from `/api/user/me` allow-list, `window.OliviaPermissions` (+ alias)
+  - `frontend/js/lib/context-client.js` — reads live module state (no forking), `window.OliviaContext` (+ alias)
+  - `frontend/js/lib/capability-registry.js` — availability derivation (service → permission → schema → downstream), audit trail, `window.OliviaCapabilities` (+ alias)
+  - `docs/CONTEXT_MANAGER_CONTRACT.md` — browser-side context contract (sources, methods, ContextState, events)
+  - `frontend/index.html` — 4 script tags wired after api-client.js, before feature modules
+
+### Decisions Made
+- D-017: Primitive namespaces are additive and aliased (`window.OliviaServices` etc. + `LA8159*` aliases)
+- D-018: Availability derivation order — service_health → permission → schema_compatibility → downstream_dependencies, first failing short-circuits with machine-readable reason
+- D-019: Capability manifest declares factors, registry interprets (declarative contract + single runtime interpreter)
+
+### Verification
+- `node --check` all 4 lib files — OK
+- 18/18 smoke-test assertions pass (harness in `/tmp/olivia_p3_test.js`)
+- Capability manifest validates as JSON
+
+### Current State
+- **Next:** Phase 4 — Reduce Coupling (4.1 initMobile consolidation first, then 4.2 config.js split)
+
+---
+
 ## Template for Future Entries
 
 ```
