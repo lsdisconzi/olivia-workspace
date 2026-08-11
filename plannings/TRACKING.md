@@ -16,7 +16,7 @@
 | 1 | Sanitize and Clarify | Done | 2026-08-11 | 2026-08-11 | `aa93b1a` |
 | 2 | Map the Architecture | Done | 2026-08-11 | 2026-08-11 | `fcc3460` |
 | 2.5 | Architecture Consistency Pass | Done | 2026-08-11 | 2026-08-11 | `fcc3460` |
-| 3 | Platform Primitives | Done | 2026-08-11 | 2026-08-11 | *pending* |
+| 3 | Platform Primitives | Done | 2026-08-11 | 2026-08-11 | `0829a29` |
 | 4 | Reduce Coupling | Pending | — | — | — |
 | 5 | Observability | Pending | — | — | — |
 
@@ -214,7 +214,7 @@
 
 ## Phase 3 — Platform Primitives ✅
 
-**Commit:** `*pending*`
+**Commit:** `0829a29`
 **Status:** Complete — 6 artifacts created, additive, no feature-module rewiring.
 
 ### Artifacts
