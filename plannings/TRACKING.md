@@ -14,8 +14,8 @@
 | Phase | Name | Status | Started | Completed | Commit |
 |-------|------|--------|---------|-----------|--------|
 | 1 | Sanitize and Clarify | Done | 2026-08-11 | 2026-08-11 | `aa93b1a` |
-| 2 | Map the Architecture | Done | 2026-08-11 | 2026-08-11 | pending |
-| 2.5 | Architecture Consistency Pass | Done | 2026-08-11 | 2026-08-11 | pending |
+| 2 | Map the Architecture | Done | 2026-08-11 | 2026-08-11 | `fcc3460` |
+| 2.5 | Architecture Consistency Pass | Done | 2026-08-11 | 2026-08-11 | `fcc3460` |
 | 3 | Platform Primitives | Next | — | — | — |
 | 4 | Reduce Coupling | Pending | — | — | — |
 | 5 | Observability | Pending | — | — | — |
