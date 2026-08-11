@@ -36,10 +36,10 @@ uploads/
 outputs/
 data/
 _shared/
-.env
 .openclaude/
 content/archived_projects/
 config/client_secret_*.json
+generated/
 
 # Generated i18n report
 translations/mapping_report.json

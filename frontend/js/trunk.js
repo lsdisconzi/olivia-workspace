@@ -80,8 +80,8 @@
     // expanded dock tab
     var tab = el("button", "sidebar-tab");
     tab.setAttribute("data-label", getLabel(reg));
-    var handler = "switchSidebarView('" + reg.id + "')";
-    if (reg.onclick) handler = handler.replace(/^switchSidebarView/, "switchSidebarTab") ;
+    var handler = "switchSidebarTab('" + reg.id + "')";
+    if (reg.onclick) handler = handler.replace(/^switchSidebarTab/, "switchSidebarTab") ;
     // preserve any extra init fn declared server-side (e.g. aexInit())
     if (reg.onclick) {
       tab.setAttribute("onclick", "switchSidebarTab('" + reg.id + "');" + reg.onclick);
@@ -122,8 +122,8 @@
         var m = /switchSidebarTab\('([^']+)'\)/.exec(first.getAttribute("onclick") || "");
         return m ? m[1] : null;
       })();
-      if (fid && typeof window.switchSidebarView === "function") {
-        try { window.switchSidebarView(fid); } catch (e) {}
+      if (fid && typeof window.switchSidebarTab === "function") {
+        try { window.switchSidebarTab(fid); } catch (e) {}
       }
     }
   }
