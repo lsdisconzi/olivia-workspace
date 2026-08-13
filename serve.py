@@ -10452,7 +10452,7 @@ def _ocr_store_load(project_id=None):
             data = json.load(fh)
     except (OSError, ValueError):
         data = {}
-    store = {"documents": [], "last_results": None, "last_workspace": None}
+    store = {"documents": [], "last_results": None, "last_workspace": None, "profiles": []}
     store.update({k: v for k, v in data.items() if k in store})
     return store
 
@@ -10472,6 +10472,77 @@ def _ocr_normalize_filename(filename):
     stem = Path(filename).stem
     stem = re.sub(r"-[0-9a-f]{6,}$", "", stem)
     return stem.lower()
+
+
+def _ocr_person_base(filename):
+    """Derive a person/base name from a page filename.
+
+    The upload flow appends a 6-hex upload-id tail to colliding filenames
+    ("Juliana-Rios-7b355d-1.png" -> "Juliana-Rios"); page markers are stripped
+    too ("Juliana-Rios-1.png" -> "Juliana-Rios"), otherwise the stem is used.
+    Mirrors the frontend grouping logic in ocr-pipeline.js.
+    """
+    name = Path(filename).name
+    # Upload-id tail + page marker: "Juliana-Rios-7b355d-1.png" -> "Juliana-Rios.png"
+    m = re.match(r"^(.*?)[-_](?=[0-9a-f]{6})[0-9a-f]*[a-f][0-9a-f]*[-_]\d+(\.\w+)$", name, re.I)
+    if m and m.group(1):
+        return m.group(1)
+    # Upload-id tail only: "Juliana-Rios-7b355d.png" -> "Juliana-Rios.png"
+    m = re.match(r"^(.*?)[-_](?=[0-9a-f]{6})[0-9a-f]*[a-f][0-9a-f]*(\.\w+)$", name, re.I)
+    if m and m.group(1):
+        return m.group(1)
+    # Page marker only: "Juliana-Rios-1.png" -> "Juliana-Rios.png"
+    m = re.match(r"^(.*?)[-_]?\d+(\.\w+)$", name)
+    if m and m.group(1):
+        return m.group(1)
+    return Path(name).stem
+
+
+def _ocr_clean_person_name(name):
+    """Normalize a person name for profile dedup.
+
+    Collapses whitespace and strips a trailing upload-id tail the upload flow
+    may have appended ("Juliana Rios 7b355d" -> "Juliana Rios").
+    """
+    cleaned = re.sub(
+        r"[-_ ]+(?=[0-9a-f]{6})[0-9a-f]*[a-f][0-9a-f]*$",
+        "",
+        str(name or "").strip(),
+        flags=re.I,
+    )
+    return re.sub(r"\s+", " ", cleaned).strip() or "Unknown"
+
+
+def _ocr_dedupe_profiles(profiles):
+    """Keep one profile per cleaned person name.
+
+    Among duplicates, prefer the entry whose name was already clean (no
+    upload-id tail); otherwise the most recently appended entry wins.
+    """
+    by_key = {}
+    for p in profiles or []:
+        raw = str(p.get("person_name") or "").strip()
+        clean = _ocr_clean_person_name(raw)
+        entry = dict(p)
+        entry["person_name"] = clean
+        key = clean.lower()
+        cur = by_key.get(key)
+        if cur is None:
+            by_key[key] = {"exact": raw == clean, "entry": entry}
+            continue
+        cur_exact = cur["exact"]
+        new_exact = raw == clean
+        if new_exact and not cur_exact:
+            by_key[key] = {"exact": True, "entry": entry}
+        elif new_exact == cur_exact:
+            by_key[key] = {"exact": new_exact, "entry": entry}
+    return [v["entry"] for v in by_key.values()]
+
+
+def _ocr_page_number(filename):
+    """Best-effort page number from a page filename (default 1)."""
+    m = re.search(r"(\d+)\.\w+$", Path(filename).name)
+    return int(m.group(1)) if m else 1
 
 
 def _ocr_file_mime(path):
@@ -19137,6 +19208,37 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._json_response({"documents": docs})
             return
 
+        # --- Merged per-person profiles + people ready to merge ---
+        if path == "/api/ocr/profiles":
+            # Prune stale duplicate profiles (e.g. names that still carry an
+            # upload-id tail like "Juliana Rios 7b355d"). Idempotent: a second
+            # load finds nothing left to prune.
+            store["profiles"] = _ocr_dedupe_profiles(store.get("profiles", []))
+            _ocr_store_save(store, project_id)
+            profiles = [dict(p) for p in store.get("profiles", [])]
+            pending = {}
+            for doc in store.get("documents", []):
+                if not doc.get("ocr_success"):
+                    continue
+                doc_text = re.sub(r"Page\s+\d+\s+of\s+\d+", "", str(doc.get("text") or ""), flags=re.I).strip()
+                if not doc_text:
+                    continue
+                fname = str(doc.get("filename") or "")
+                if not fname:
+                    continue
+                base = _ocr_person_base(fname)
+                if base not in pending:
+                    pending[base] = {"person_name": base, "page_count": 0, "pages": []}
+                pending[base]["page_count"] += 1
+                pending[base]["pages"].append({
+                    "filename": fname,
+                    "page_number": _ocr_page_number(fname),
+                    "id": doc.get("id"),
+                })
+            pending_list = sorted(pending.values(), key=lambda p: p["person_name"].lower())
+            self._json_response({"profiles": profiles, "pending": pending_list, "project_id": project_id})
+            return
+
         # --- Serve a single document image/PDF ---
         if path == "/api/ocr/image":
             fname = (qs.get("file") or [""])[0].strip()
@@ -19169,6 +19271,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             return
         if path == "/api/ocr/run":
             self._ocr_run_post()
+            return
+        if path == "/api/ocr/finalize":
+            self._ocr_finalize_post()
             return
         self._json_response({"error": "Not found"}, 404)
 
@@ -19317,7 +19422,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 except (OSError, ValueError):
                     continue
                 total_files += 1
-                text = " ".join(p.get("text") or "" for p in extr.get("pages", [])) or extr.get("text_summary") or ""
+                text = "\n\n".join(p.get("text") or "" for p in extr.get("pages", [])) or extr.get("text_summary") or ""
                 text_md = extr.get("text_md") or extr.get("markdown") or ""
                 ok = not extr.get("error") and bool(text.strip())
                 if ok:
@@ -19356,6 +19461,47 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 "successful_ocr": successful_ocr,
             },
         })
+
+    def _ocr_finalize_post(self):
+        """Persist a merged per-person Markdown profile (client-computed).
+
+        The frontend merges the pages of a person into a structured Markdown
+        document (see mergePagesIntoMarkdown in ocr-pipeline.js) and saves it
+        here so the merged profile survives restarts and can be listed again.
+        """
+        body = self._read_body()
+        project_id = str(body.get("project_id") or "").strip()
+        person_name = _ocr_clean_person_name(body.get("person_name"))
+        markdown = str(body.get("markdown") or "")
+        pages = body.get("pages") or []
+        if not project_id:
+            self._json_response({"error": "project_id required"}, 400)
+            return
+        if not person_name or not markdown.strip():
+            self._json_response({"error": "person_name and markdown are required"}, 400)
+            return
+        if not re.sub(r"^# [^\n]*\n?\s*$", "", markdown).strip():
+            self._json_response({"error": "markdown has no content beyond the title"}, 400)
+            return
+
+        store = _ocr_store_load(project_id)
+        key = person_name.lower()
+        # Replacing by normalized name also drops stale duplicate profiles that
+        # carried an upload-id tail (e.g. "Juliana Rios 7b355d").
+        profiles = [p for p in store.get("profiles", [])
+                    if _ocr_clean_person_name(p.get("person_name")).lower() != key]
+        profile = {
+            "person_name": person_name,
+            "markdown": markdown[:200000],
+            "pages": [str(p) for p in pages][:200],
+            "updated_at": datetime.now().isoformat(timespec="seconds"),
+            "project_id": project_id,
+        }
+        profiles.append(profile)
+        store["profiles"] = profiles
+        _ocr_store_save(store, project_id)
+        print(f"[OCR] finalize {project_id}: saved profile for {person_name}", flush=True)
+        self._json_response({"status": "ok", "profile": profile, "profile_count": len(profiles)})
 
     def _agents_api_get(self, path: str):
         """GET /api/agents/<id>[/...] — agent detail or sub-resources."""
