@@ -47,6 +47,16 @@
       "kind": "mcp",
       "description": "Garage MCP servers (garage_* runtime tool prefix). MCP execution stays server-side (guardrail 3).",
       "health": "derived from agent-functions-registry / function probes"
+    },
+    "runpod": {
+      "kind": "http",
+      "description": "RunPod GPU workspace service (/api/runpod/*, proxied via gateway)",
+      "health": "derived from /api/runpod probes"
+    },
+    "comfyui": {
+      "kind": "http",
+      "description": "ComfyUI workflow service (/api/comfyui/*, proxied via gateway)",
+      "health": "derived from /api/comfyui probes"
     }
   },
   "capabilities": [
@@ -171,7 +181,7 @@
       "depends_on": ["gateway"],
       "required_permissions": ["memory.manage"],
       "availability_factors": ["service_health", "permission"],
-      "api_client": "raw fetch in modules/memory.js"
+      "api_client": "LA8159API.memory.routing"
     },
     {
       "id": "docs.read",
@@ -293,6 +303,22 @@
       "required_permissions": ["health.use"],
       "availability_factors": ["service_health", "permission"],
       "api_client": "raw fetch in modules/health.js"
+    },
+    {
+      "id": "procurement.manage",
+      "name": "Procurement invoice pipeline",
+      "description": "Upload, run, and query the procurement invoice OCR pipeline.",
+      "transport": "rest",
+      "endpoints": [
+        { "method": "GET", "path": "/api/procurement/status" },
+        { "method": "POST", "path": "/api/procurement/upload" },
+        { "method": "POST", "path": "/api/procurement/run" },
+        { "method": "GET", "path": "/api/procurement/results" }
+      ],
+      "depends_on": ["gateway"],
+      "required_permissions": ["procurement.use"],
+      "availability_factors": ["service_health", "permission"],
+      "api_client": "raw fetch in modules/procurement.js"
     },
     {
       "id": "user.preferences",

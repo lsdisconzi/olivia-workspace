@@ -1,0 +1,753 @@
+/* ============================================================================
+   General OCR Pipeline — module styles.
+   Uses workspace CSS variables, accent colour: generic blue (#4A90D9).
+   ============================================================================ */
+
+.ocr-view {
+    display: none;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg);
+}
+
+.ocr-view.active {
+    display: flex;
+}
+
+.workspace.ocr-open > .main-content {
+    display: none !important;
+}
+
+/* ── Cabeçalho ─────────────────────────────────────────────────────────── */
+.ocr-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-card);
+}
+
+.ocr-head-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+}
+
+.ocr-logo {
+    width: 20px;
+    height: 20px;
+    color: #4A90D9;
+    display: flex;
+}
+
+.ocr-logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.ocr-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.01em;
+}
+
+.ocr-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+}
+
+/* ── Header actions ─────────────────────────────────────────────────── */
+.ocr-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* ── Sub-navegação ─────────────────────────────────────────────────────── */
+.ocr-subnav {
+    display: flex;
+    gap: 2px;
+    padding: 6px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-card);
+    overflow-x: auto;
+}
+
+.ocr-tab {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .15s, border-color .15s;
+}
+
+.ocr-tab:hover {
+    color: var(--white);
+}
+
+.ocr-tab.active {
+    color: #4A90D9;
+    border-bottom-color: #4A90D9;
+}
+
+/* ── Painéis ───────────────────────────────────────────────────────────── */
+.ocr-panels {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+}
+
+.ocr-panel {
+    display: none;
+    flex: 1;
+    min-height: 0;
+}
+
+.ocr-panel.active {
+    display: flex;
+    flex-direction: column;
+}
+
+#ocrPanel-overview {
+    overflow-y: auto;
+    padding: 28px 24px 48px;
+}
+
+#ocrPanel-overview > * {
+    width: 100%;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ── Hero ──────────────────────────────────────────────────────────────── */
+.ocr-hero {
+    text-align: center;
+    padding: 12px 0 26px;
+}
+
+.ocr-hero-logo {
+    display: inline-flex;
+    width: 64px;
+    height: 64px;
+    color: #4A90D9;
+    margin-bottom: 14px;
+}
+
+.ocr-hero-logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.ocr-hero-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+}
+
+.ocr-hero-tag {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--gray-hi);
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+/* ── Stats ──────────────────────────────────────────────────────────────── */
+.ocr-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 24px 0;
+}
+
+.ocr-stat {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px 12px;
+    text-align: center;
+}
+
+.ocr-stat-num {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 26px;
+    color: #4A90D9;
+    line-height: 1;
+}
+
+.ocr-stat-label {
+    font-size: 10px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 6px;
+}
+
+.ocr-cta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+/* ── Pipeline panel ────────────────────────────────────────────────────── */
+#ocrPanel-pipeline {
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.ocr-pipeline {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.ocr-upload-area {
+    border: 2px dashed var(--border-hi);
+    border-radius: var(--r);
+    padding: 36px;
+    text-align: center;
+    color: var(--gray);
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+}
+
+.ocr-upload-area:hover {
+    border-color: #4A90D9;
+    background: rgba(74, 144, 217, 0.05);
+}
+
+.ocr-upload-area.ocr-dragover {
+    border-color: #4A90D9;
+    background: rgba(74, 144, 217, 0.10);
+}
+
+.ocr-upload-area i {
+    font-size: 32px;
+    margin-bottom: 8px;
+    opacity: 0.6;
+}
+
+.ocr-pipeline-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ocr-status {
+    font-size: 13px;
+    color: var(--gray-hi);
+}
+
+.ocr-results {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px;
+    min-height: 120px;
+}
+
+/* ── Documents panel ────────────────────────────────────────────────────── */
+#ocrPanel-documents {
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.ocr-documents-panel {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.ocr-documents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.ocr-doc-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+    transition: border-color .15s;
+}
+
+.ocr-doc-card:hover {
+    border-color: #4A90D9;
+}
+
+.ocr-doc-card-header {
+    display: flex;
+    gap: 12px;
+}
+
+.ocr-doc-thumb {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    background: var(--bg);
+    cursor: pointer;
+}
+
+.ocr-doc-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ocr-doc-thumb-pdf {
+    width: 100px;
+    height: 100px;
+    display: block;
+}
+
+.ocr-doc-pdf-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: var(--bg);
+    pointer-events: none;
+}
+
+.ocr-doc-meta {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 10px 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ocr-doc-filename {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ocr-doc-status {
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ocr-doc-ok .ocr-doc-status {
+    color: #4A90D9;
+}
+
+.ocr-doc-pending .ocr-doc-status {
+    color: var(--gray);
+}
+
+.ocr-doc-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gray);
+}
+
+/* ── Document zoom button ─────────────────────────────────────────────── */
+.ocr-doc-thumb-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.ocr-doc-zoom {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-hi);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .55);
+    color: #fff;
+    cursor: pointer;
+    font-size: 11px;
+    opacity: 0;
+    transition: opacity .15s, background .15s;
+    padding: 0;
+    line-height: 1;
+}
+
+.ocr-doc-thumb-wrap:hover .ocr-doc-zoom {
+    opacity: 1;
+}
+
+.ocr-doc-zoom:hover {
+    background: #4A90D9;
+    border-color: #4A90D9;
+}
+
+/* ── Image modal / lightbox ───────────────────────────────────────────── */
+.ocr-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .78);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.ocr-modal-overlay.show {
+    display: flex;
+}
+
+.ocr-modal {
+    display: flex;
+    flex-direction: column;
+    width: min(1200px, 96vw);
+    height: min(92vh, 92vh);
+    background: var(--bg-card);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
+    overflow: hidden;
+    transition: width .2s;
+}
+
+.ocr-modal.ocr-modal-large {
+    width: min(1600px, 98vw);
+}
+
+.ocr-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.ocr-modal-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ocr-modal-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.ocr-modal-openlink,
+.ocr-modal-close {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--gray-hi);
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color .15s, border-color .15s;
+}
+
+.ocr-modal-openlink:hover,
+.ocr-modal-close:hover {
+    color: #4A90D9;
+    border-color: #4A90D9;
+}
+
+.ocr-modal-body {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    padding: 0;
+}
+
+.ocr-modal-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    display: block;
+    margin: auto;
+}
+
+.ocr-modal-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: var(--bg);
+}
+
+body.ocr-modal-lock {
+    overflow: hidden;
+}
+
+/* ── Document Viewer Tabs ───────────────────────────────────────────── */
+.ocr-doc-viewer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.ocr-doc-viewer-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+}
+
+.ocr-doc-tab {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-hi);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all .15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ocr-doc-tab:hover {
+    background: var(--bg);
+    color: var(--white);
+}
+
+.ocr-doc-tab.active {
+    background: var(--bg);
+    border-color: var(--border);
+    color: #4A90D9;
+}
+
+.ocr-doc-viewer-content {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    background: var(--bg);
+    display: flex;
+}
+
+.ocr-doc-pane {
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: 16px;
+}
+
+.ocr-doc-pane.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.ocr-doc-pane[data-pane="image"] {
+    align-items: center;
+    justify-content: center;
+}
+
+.ocr-doc-raw {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--white);
+    white-space: pre-wrap;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.ocr-doc-md {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.ocr-doc-pane-split {
+    display: none;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    gap: 16px;
+    --ocr-split-ratio: 0.7071; /* fallback ~A4 portrait, overridden per-image via JS */
+}
+
+.ocr-doc-pane-split.active {
+    display: flex;
+    flex-direction: row;
+}
+
+.ocr-split-left {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+    padding-right: 16px;
+}
+
+.ocr-split-right {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-left: 16px;
+}
+
+.ocr-split-page {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    aspect-ratio: var(--ocr-split-ratio, 0.7071);
+    overflow-y: auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 18px 20px;
+    box-sizing: border-box;
+}
+
+.ocr-split-right .ocr-doc-md {
+    max-width: none;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--gray-hi);
+}
+
+.ocr-split-right .ocr-doc-md h1,
+.ocr-split-right .ocr-doc-md h2,
+.ocr-split-right .ocr-doc-md h3 {
+    font-size: 13.5px;
+}
+
+/* ── Document Markdown Table Styles ─────────────────────────────────── */
+.ocr-doc-md table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 11px;
+}
+
+.ocr-doc-md th,
+.ocr-doc-md td {
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.ocr-doc-md th {
+    background: var(--bg-card);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gray);
+}
+
+.ocr-doc-md td {
+    color: var(--white);
+    word-break: break-word;
+}
+
+/* ── Misc empty states ─────────────────────────────────────────────────── */
+.ocr-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--gray);
+    gap: 10px;
+    font-size: 14px;
+}
+
+.ocr-empty i {
+    font-size: 36px;
+    opacity: 0.4;
+}
+
+.ocr-empty.ocr-error {
+    color: var(--red);
+}
+
+/* ── Responsivo ────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+    .ocr-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    #ocrPanel-overview {
+        padding: 20px 14px 40px;
+    }
+    .ocr-hero-title {
+        font-size: 27px;
+    }
+    .ocr-doc-pane-split.active {
+        flex-direction: column;
+    }
+    .ocr-split-left {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding-right: 0;
+        padding-bottom: 12px;
+        height: 45%;
+    }
+    .ocr-split-right {
+        padding-left: 0;
+        padding-top: 12px;
+        height: 55%;
+    }
+}

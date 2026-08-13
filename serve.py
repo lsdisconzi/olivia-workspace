@@ -1625,6 +1625,8 @@ SHARED_ROOT = _resolve_shared_root()
 SHARED_CASES_ROOT = SHARED_ROOT / "cases"
 Olivia_GROUP_SOURCE_ROOT = Olivia_ROOT.parent / "agents" / "agents-groups" / "la8159" / "source"
 
+MASTER_INDEX_ROOT = PROJECT_ROOT / "data" / "master_index"
+
 LEGAL_ROUTER_ROOT_CANDIDATES = (
     Path(os.environ.get("Olivia_LEGAL_ROUTER_ROOT", "")).expanduser() if os.environ.get("Olivia_LEGAL_ROUTER_ROOT") else None,
     Path(os.environ.get("AWARENESS_LEGAL_ROUTER_ROOT", "")).expanduser() if os.environ.get("AWARENESS_LEGAL_ROUTER_ROOT") else None,
@@ -1657,6 +1659,16 @@ VIOLATIONS_ROOT_CANDIDATES = (
     Olivia_ROOT / "olivia" / "data" / "violations",
     Olivia_ROOT.parent / "olivia-incident" / "10_violations_json" / "validated",
 )
+
+
+def _resolve_violations_root() -> Path:
+    for candidate in VIOLATIONS_ROOT_CANDIDATES:
+        if candidate and candidate.is_dir():
+            return candidate.resolve()
+    return (SHARED_CASES_ROOT / "10_violations_json" / "validated").resolve()
+
+
+VIOLATIONS_ROOT = _resolve_violations_root()
 
 LAW_LIBRARY_ROOT_CANDIDATES = (
     Path(os.environ.get("Olivia_LAW_LIBRARY_ROOT", "")).expanduser() if os.environ.get("Olivia_LAW_LIBRARY_ROOT") else None,
@@ -1716,7 +1728,9 @@ SECTION_REGISTRY = [
     {"id": "sheets", "label": "Sheets", "icon": "fa-table", "onclick": "" },
     {"id": "mermaid", "label": "Diagramas", "icon": "fa-diagram-project"},
     {"id": "socialmedia", "label": "Social Media", "icon": "fa-share-nodes"},
-    {"id": "health", "label": "Health", "icon": "fa-heart-pulse", "onclick": "healthShowView()"}
+    {"id": "health", "label": "Health", "icon": "fa-heart-pulse", "onclick": "healthShowView()"},
+    {"id": "procurement", "label": "Procurement", "icon": "fa-receipt", "onclick": "procurementShowView()"},
+    {"id": "ocr", "label": "OCR", "icon": "fa-file-alt", "onclick": "ocrShowView()"}
 ]
 SECTION_IDS = [s["id"] for s in SECTION_REGISTRY]
 SECTION_BY_ID = {s["id"]: s for s in SECTION_REGISTRY}
@@ -10265,6 +10279,270 @@ def _health_file_kind(path):
     return "none"
 
 
+# ── Procurement module helpers ────────────────────────────────────────────────
+# Mirrors the health pipeline helpers but stores everything under a project's
+# `procurement/` folder (procurement_store.json), so supplier invoices stay
+# separate from patient health records. Reuses scripts/health_images_to_report.py,
+# which is generic enough to extract text from invoice images.
+def _procurement_store_path(project_id=None):
+    if project_id:
+        pdir = PROJECTS_DIR / str(project_id).strip("/")
+        if pdir.is_dir():
+            return pdir / "procurement" / "procurement_store.json"
+    return PROJECT_ROOT / "data" / "procurement_store.json"
+
+
+def _procurement_store_load(project_id=None):
+    data = {}
+    path = _procurement_store_path(project_id)
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (OSError, ValueError):
+        data = {}
+    store = {"documents": [], "timeline": [], "last_results": None, "last_workspace": None}
+    store.update({k: v for k, v in data.items() if k in store})
+    return store
+
+
+def _procurement_store_save(store, project_id=None):
+    path = _procurement_store_path(project_id)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(store, fh, ensure_ascii=False, indent=2)
+    except OSError as exc:
+        print(f"[Procurement] failed to persist store: {exc}", flush=True)
+
+
+def _procurement_normalize_filename(filename):
+    """Strip UUID-like suffixes and extensions so dedup works."""
+    stem = Path(filename).stem
+    stem = re.sub(r"-[0-9a-f]{6,}$", "", stem)
+    return stem.lower()
+
+
+def _procurement_file_mime(path):
+    """Quick MIME mapping by extension (uploads are stored as-is)."""
+    ext = Path(path).suffix.lower()
+    mime_map = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".gif": "image/gif",
+        ".webp": "image/webp",
+        ".bmp": "image/bmp",
+        ".pdf": "application/pdf",
+    }
+    return mime_map.get(ext, "application/octet-stream")
+
+
+def _procurement_file_kind(path):
+    ext = Path(path).suffix.lower()
+    if ext == ".pdf":
+        return "pdf"
+    if ext in (".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".tif"):
+        return "image"
+    return "none"
+
+
+def _procurement_resolve_image_file(project_id, filename):
+    """Look for a file named `filename` inside the project's procurement images/
+    directory. Handles deduped suffixes added at upload time (e.g., -abc123)."""
+    dirs = [
+        PROJECTS_DIR / project_id / "procurement" / "images",
+        PROJECTS_DIR / project_id / "procurement" / "workspace" / "image_processing_workspace" / "extractions",
+        PROJECTS_DIR / project_id / "images",
+    ]
+    filename = Path(filename).name
+    for d in dirs:
+        if not d.is_dir():
+            continue
+        exact = d / filename
+        if exact.is_file():
+            return exact
+        stem = Path(filename).stem
+        ext = Path(filename).suffix
+        for f in d.iterdir():
+            if f.is_file() and f.stem.startswith(stem) and f.suffix == ext:
+                return f
+    return None
+
+
+def _procurement_pipeline_python():
+    """Return the python executable to use (respecting venv)."""
+    possible = [
+        PROJECT_ROOT / ".venv" / "bin" / "python3",
+        PROJECT_ROOT / ".venv" / "bin" / "python",
+        Path("/usr/bin/python3"),
+    ]
+    for p in possible:
+        if p.is_file():
+            return str(p)
+    return "python3"
+
+
+def _procurement_pdf_to_images(pdf_path, output_dir):
+    """Convert PDF pages to JPEGs using pdftoppm."""
+    base = Path(pdf_path).stem
+    subprocess.run(
+        ["pdftoppm", "-jpeg", "-r", "200", str(pdf_path), str(output_dir / base)],
+        capture_output=True, check=False,
+    )
+
+
+def _procurement_generate_report(project_id):
+    """Generate the procurement report/visualization for a project.
+
+    Runs scripts/procurement_build_report.py as a subprocess (same venv used by
+    the OCR pipeline, since python-docx lives there). Writes
+    outputs/procurement-report.md, outputs/procurement-report.docx and
+    outputs/procurement-visualization.json under the project directory.
+    Returns True on success, False if generation failed or was skipped.
+    """
+    if not project_id:
+        return False
+    pdir = PROJECTS_DIR / project_id
+    # Only meaningful once the project has a procurement workspace to read from.
+    if not (pdir / "procurement").is_dir():
+        return False
+    script = PROJECT_ROOT / "scripts" / "procurement_build_report.py"
+    if not script.is_file():
+        print("[Procurement] report script not found; skipping generation", flush=True)
+        return False
+    out_dir = pdir / "outputs"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    cmd = [
+        _procurement_pipeline_python(),
+        str(script),
+        "--project", project_id,
+        "--output-dir", str(out_dir),
+    ]
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300, cwd=str(PROJECT_ROOT))
+    except subprocess.TimeoutExpired:
+        print(f"[Procurement] report generation timed out for {project_id}", flush=True)
+        return False
+    if proc.returncode != 0:
+        tail = (proc.stderr or proc.stdout or "").strip().splitlines()
+        print(f"[Procurement] report generation failed for {project_id}: {tail[-1] if tail else 'rc!=0'}", flush=True)
+        return False
+    print(f"[Procurement] report generated for {project_id}", flush=True)
+    return True
+
+
+# ── OCR module helpers ────────────────────────────────────────────────────────
+# Generic OCR pipeline (frontend/js/modules/ocr-pipeline.js). Stores documents
+# under a project's `ocr/` folder (ocr_store.json), images under `ocr/images/`,
+# and the pipeline workspace under `ocr/workspace/`. Reuses the shared OCR
+# primitives via scripts/generic_ocr_pipeline.py.
+def _ocr_store_path(project_id=None):
+    if project_id:
+        pdir = PROJECTS_DIR / str(project_id).strip("/")
+        if pdir.is_dir():
+            return pdir / "ocr" / "ocr_store.json"
+    return PROJECT_ROOT / "data" / "ocr_store.json"
+
+
+def _ocr_store_load(project_id=None):
+    data = {}
+    path = _ocr_store_path(project_id)
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (OSError, ValueError):
+        data = {}
+    store = {"documents": [], "last_results": None, "last_workspace": None}
+    store.update({k: v for k, v in data.items() if k in store})
+    return store
+
+
+def _ocr_store_save(store, project_id=None):
+    path = _ocr_store_path(project_id)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(store, fh, ensure_ascii=False, indent=2)
+    except OSError as exc:
+        print(f"[OCR] failed to persist store: {exc}", flush=True)
+
+
+def _ocr_normalize_filename(filename):
+    """Strip UUID-like suffixes and extensions so dedup works."""
+    stem = Path(filename).stem
+    stem = re.sub(r"-[0-9a-f]{6,}$", "", stem)
+    return stem.lower()
+
+
+def _ocr_file_mime(path):
+    """Quick MIME mapping by extension (uploads are stored as-is)."""
+    ext = Path(path).suffix.lower()
+    mime_map = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".gif": "image/gif",
+        ".webp": "image/webp",
+        ".bmp": "image/bmp",
+        ".pdf": "application/pdf",
+    }
+    return mime_map.get(ext, "application/octet-stream")
+
+
+def _ocr_file_kind(path):
+    ext = Path(path).suffix.lower()
+    if ext == ".pdf":
+        return "pdf"
+    if ext in (".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".tif"):
+        return "image"
+    return "none"
+
+
+def _ocr_resolve_image_file(project_id, filename):
+    """Look for a file named `filename` inside the project's OCR directories.
+    Handles deduped suffixes added at upload time (e.g., -abc123)."""
+    dirs = [
+        PROJECTS_DIR / project_id / "ocr" / "images",
+        PROJECTS_DIR / project_id / "ocr" / "workspace" / "image_processing_workspace" / "extractions",
+        PROJECTS_DIR / project_id / "images",
+    ]
+    filename = Path(filename).name
+    for d in dirs:
+        if not d.is_dir():
+            continue
+        exact = d / filename
+        if exact.is_file():
+            return exact
+        stem = Path(filename).stem
+        ext = Path(filename).suffix
+        for f in d.iterdir():
+            if f.is_file() and f.stem.startswith(stem) and f.suffix == ext:
+                return f
+    return None
+
+
+def _ocr_pipeline_python():
+    """Return the python executable to use (respecting venv)."""
+    possible = [
+        PROJECT_ROOT / ".venv" / "bin" / "python3",
+        PROJECT_ROOT / ".venv" / "bin" / "python",
+        Path("/usr/bin/python3"),
+    ]
+    for p in possible:
+        if p.is_file():
+            return str(p)
+    return "python3"
+
+
+def _ocr_pdf_to_images(pdf_path, output_dir):
+    """Convert PDF pages to JPEGs using pdftoppm."""
+    base = Path(pdf_path).stem
+    subprocess.run(
+        ["pdftoppm", "-jpeg", "-r", "200", str(pdf_path), str(output_dir / base)],
+        capture_output=True, check=False,
+    )
+
+
 # ── Request handler ───────────────────────────────────────────────────────────
 class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
@@ -12079,6 +12357,12 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         reset_match = re.match(r"^/(?:olivia|olivia)/admin/users/([^/]+)/reset-password/?$", raw_path)
         if reset_match:
             self._admin_users_reset_password(urllib.parse.unquote(reset_match.group(1)))
+            return
+        if raw_path in {"/olivia/admin/models", "/olivia/admin/models/"}:
+            self._admin_models_create()
+            return
+        if raw_path in {"/olivia/admin/ollama-servers", "/olivia/admin/ollama-servers/"}:
+            self._admin_ollama_servers_post()
             return
         restore_match = re.match(r"^/(?:olivia|olivia)/admin/models/([^/]+)/restore/?$", raw_path)
         if restore_match:
@@ -15485,8 +15769,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                                    "cfg", "sampler_name", "scheduler", "denoise"],
         "LoadImage":              ["image"],
         "CLIPSeg":                ["text", "blur", "threshold", "dilation_factor"],
-        "ImageResize+":           ["method", "condition", "multiple_of",
-                                   "width", "height", "interpolation"],
+        "ImageResize+":           ["width", "height", "interpolation", "method",
+                                   "condition", "multiple_of"],
         "Cut By Mask":            ["force_resize_width", "force_resize_height"],
         "ImpactGaussianBlurMask": ["kernel_size", "sigma"],
         "ThresholdMask":          ["value"],
@@ -15496,7 +15780,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         "CombineSegMasks":        [],
         "VAEDecode":              [],
         "VAEEncodeForInpaint":    ["grow_mask_by"],
-        "InpaintModelConditioning": [],
+        "InpaintModelConditioning": ["noise_mask"],
         "PreviewImage":           [],
         "SaveImage":              ["filename_prefix"],
         "ControlNetLoaderAdvanced":       ["control_net_name"],
@@ -15509,6 +15793,26 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         "FeatherMask":            ["left", "top", "right", "bottom"],
         "GrowMask":               ["expand", "tapered_corners"],
         "MaskComposite":          ["x", "y", "operation"],
+    }
+
+    # ── Combo widget options for file→API conversion ─────────────────────
+    # ComfyUI's own UI file format stores combo values as list indices (e.g.
+    # ``5`` for ``'lanczos'``), while the API prompt requires the string value.
+    # These tables mirror the node definitions from the backend so imported
+    # workflows keep valid combo values.  String values pass through untouched.
+    _COMBO_WIDGET_OPTIONS = {
+        "ImageResize+": {
+            "interpolation": ["nearest", "bilinear", "bicubic", "area", "nearest-exact", "lanczos"],
+            "method": ["stretch", "keep proportion", "fill / crop", "pad"],
+            "condition": ["always", "downscale if bigger", "upscale if smaller",
+                          "if bigger area", "if smaller area"],
+        },
+        "KSampler": {
+            "control_after_generate": ["fixed", "increment", "decrement", "randomize"],
+        },
+        "MaskComposite": {
+            "operation": ["multiply", "add", "subtract", "and", "or", "xor"],
+        },
     }
 
     @staticmethod
@@ -15548,9 +15852,17 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
             # ── Widget inputs ───────────────────────────────────────────
             if widget_names is not None:
+                combo_opts = KoutHandler._COMBO_WIDGET_OPTIONS.get(ntype, {})
                 for wname in widget_names:
                     if wv:
-                        api_inputs[wname] = wv.pop(0)
+                        val = wv.pop(0)
+                        # ComfyUI UI files store combo values as indices;
+                        # resolve them to the string the API prompt expects.
+                        opts = combo_opts.get(wname)
+                        if opts is not None and isinstance(val, int) and not isinstance(val, bool) \
+                                and 0 <= val < len(opts):
+                            val = opts[val]
+                        api_inputs[wname] = val
             elif wv:
                 # Unknown type — use generic placeholder names.
                 for i, val in enumerate(wv):
@@ -16170,63 +16482,17 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         self._json_response({"success": True, "filename": safe_name})
 
-    def _comfyui_sync_workflow(self):
-        """GET /api/comfyui/sync — fetch latest workflow from ComfyUI history.
+    # ── ComfyUI history → editor helpers ──────────────────────────────────
+    def _comfyui_prompt_to_file_format(self, workflow_data):
+        """Convert a ComfyUI API-format prompt dict to the editor file format.
 
-        Returns the most recent workflow in the service format (nodes + links
-        arrays), suitable for loading directly into the editor.
+        Returns ``{"nodes": [...], "links": [...]}`` or None if the prompt has
+        no usable nodes.  Used by both the sync endpoint (latest run) and the
+        workflow endpoint (any run picked from the Sync catalogue).
         """
-        target_url = self._COMFYUI_BACKEND_URL + "/history"
-        try:
-            req = urllib.request.Request(
-                target_url,
-                headers={"Accept": "application/json"},
-            )
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                raw = resp.read()
-            history = json.loads(raw.decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            try:
-                detail = exc.read().decode("utf-8", errors="replace")[:500]
-            except Exception:
-                detail = str(exc)
-            self._json_response({"error": "proxy_error", "status": exc.code, "detail": detail}, exc.code)
-            return
-        except Exception as exc:
-            self._json_response({"error": "proxy_error", "message": "ComfyUI backend unreachable: " + str(exc)}, 502)
-            return
+        if not isinstance(workflow_data, dict) or not workflow_data:
+            return None
 
-        if not history:
-            self._json_response({"error": "not_found", "message": "No history on ComfyUI server"}, 404)
-            return
-
-        # Find the most recent prompt_id (sorted as strings, newer IDs are larger).
-        prompt_ids = sorted(history.keys(), key=lambda k: int(k) if k.isdigit() else 0)
-        if not prompt_ids:
-            self._json_response({"error": "not_found", "message": "No history entries"}, 404)
-            return
-
-        # ── Walk backwards from newest to find a usable workflow ──────────
-        workflow_data = None
-        for pid in reversed(prompt_ids):
-            entry = history[pid]
-            raw_prompt = entry.get("prompt")
-            if isinstance(raw_prompt, list) and len(raw_prompt) >= 2:
-                # ComfyUI stores prompts as [prompt_id, prompt_dict, extra_data]
-                prompt_dict = raw_prompt[1]
-            elif isinstance(raw_prompt, dict):
-                prompt_dict = raw_prompt
-            else:
-                continue
-            if isinstance(prompt_dict, dict) and prompt_dict:
-                workflow_data = prompt_dict
-                break
-
-        if not workflow_data:
-            self._json_response({"error": "not_found", "message": "No usable workflow in history"}, 404)
-            return
-
-        # ── Convert API format → file format (nodes + links) ──────────────
         # Known output slot types for each class_type, in order.
         _OUTPUT_SLOT_TYPES = {
             "CheckpointLoaderSimple":      ["MODEL", "CLIP", "VAE"],
@@ -16234,14 +16500,14 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             "KSampler":                    ["LATENT"],
             "VAEDecode":                   ["IMAGE"],
             "LoadImage":                   ["IMAGE", "MASK"],
-            "CLIPSeg":                     ["IMAGE", "MASK", "MASK"],
+            "CLIPSeg":                     ["MASK", "MASK"],
             "Cut By Mask":                 ["IMAGE", "IMAGE", "MASK_MAPPING", "IMAGE"],
             "MaskToImage":                 ["IMAGE"],
             "ImpactGaussianBlurMask":      ["MASK"],
             "InvertMask":                  ["MASK"],
             "ThresholdMask":               ["MASK"],
             "VAEEncodeForInpaint":         ["LATENT"],
-            "ImageResize+":                ["IMAGE"],
+            "ImageResize+":                ["IMAGE", "INT", "INT"],
             "PreviewImage":                ["IMAGE"],
             "MaskPreview+":                ["IMAGE"],
             "SaveImage":                   ["IMAGE"],
@@ -16341,7 +16607,367 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 if val is not None and not isinstance(val, list):
                     node_entry["widgets_values"].append(val)
 
-        self._json_response({"workflow": {"nodes": nodes, "links": links}})
+        return {"nodes": nodes, "links": links}
+
+    def _comfyui_history_metadata(self, history):
+        """Build editor-ready catalogue entries from raw ComfyUI history.
+
+        Returns a list of ``{id, source, title, timestamp, node_count,
+        node_types}`` dicts, newest first.
+        """
+        items = []
+        if not isinstance(history, dict):
+            return items
+        prompt_ids = sorted(history.keys(), key=lambda k: int(k) if k.isdigit() else 0)
+        for pid in reversed(prompt_ids):
+            entry = history.get(pid) or {}
+            if not isinstance(entry, dict):
+                continue
+            raw_prompt = entry.get("prompt")
+            if isinstance(raw_prompt, list) and len(raw_prompt) >= 2:
+                # ComfyUI stores prompts as [prompt_id, prompt_dict, extra_data]
+                prompt_dict = raw_prompt[1]
+            elif isinstance(raw_prompt, dict):
+                prompt_dict = raw_prompt
+            else:
+                continue
+            if not isinstance(prompt_dict, dict) or not prompt_dict:
+                continue
+            node_types = sorted({
+                str(n.get("class_type") or "") for n in prompt_dict.values()
+                if isinstance(n, dict) and n.get("class_type")
+            })
+            timestamp = None
+            status = entry.get("status") or {}
+            messages = status.get("messages") or []
+            if isinstance(messages, list):
+                for msg in messages:
+                    if isinstance(msg, (list, tuple)) and len(msg) >= 2:
+                        try:
+                            timestamp = float(msg[1])
+                            break
+                        except (TypeError, ValueError):
+                            continue
+            items.append({
+                "id": pid,
+                "source": "comfyui-history",
+                "title": "ComfyUI run " + pid,
+                "timestamp": timestamp,
+                "node_count": len(prompt_dict),
+                "link_count": None,
+                "node_types": node_types,
+            })
+        return items
+
+    def _comfyui_sync_workflow(self):
+        """GET /api/comfyui/sync — fetch workflows from ComfyUI history.
+
+        Returns the most recent usable workflow in the editor file format
+        (``workflow`` + ``prompt_id``), plus a ``workflows`` catalogue of every
+        workflow available on the server — history runs and locally saved
+        workflow files (which were exported from ComfyUI via Save) — so the
+        Sync button can offer a picker and open any of them.
+        """
+        backend_unreachable = False
+        try:
+            req = urllib.request.Request(
+                self._COMFYUI_BACKEND_URL + "/history",
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                raw = resp.read()
+            history = json.loads(raw.decode("utf-8")) or {}
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read().decode("utf-8", errors="replace")[:500]
+            except Exception:
+                detail = str(exc)
+            self._json_response({"error": "proxy_error", "status": exc.code, "detail": detail}, exc.code)
+            return
+        except Exception as exc:
+            # Backend unreachable — still surface locally saved workflows so
+            # the user can open them; note the failure for the frontend.
+            history = {}
+            backend_unreachable = True
+            _backend_error = str(exc)
+
+        # ── Locally saved workflows (olivia/workflows/*.json) ─────────────
+        local_items = []
+        local_workflows = {}   # filename → workflow dict
+        try:
+            self._WORKFLOWS_LOCAL_DIR.mkdir(parents=True, exist_ok=True)
+            for f in sorted(self._WORKFLOWS_LOCAL_DIR.glob("*.json")):
+                try:
+                    wf = json.loads(f.read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                if not isinstance(wf, dict) or not isinstance(wf.get("nodes"), list):
+                    continue
+                local_workflows[f.name] = wf
+                node_types = sorted({str(n.get("type") or "") for n in wf["nodes"] if isinstance(n, dict)})
+                local_items.append({
+                    "id": f.name,
+                    "source": "workspace",
+                    "title": f.name,
+                    "timestamp": f.stat().st_mtime,
+                    "node_count": len(wf["nodes"]),
+                    "link_count": len(wf.get("links") or []),
+                    "node_types": node_types,
+                })
+        except Exception:
+            pass
+        local_items.sort(key=lambda it: it["timestamp"] or 0, reverse=True)
+
+        # ── History runs (newest first) ───────────────────────────────────
+        history_items = self._comfyui_history_metadata(history)
+
+        # ── Pick the default: newest usable history run, else newest local ─
+        latest_file = None
+        latest_id = None
+        latest_source = None
+        for item in history_items:
+            entry = history.get(item["id"]) or {}
+            raw_prompt = entry.get("prompt")
+            if isinstance(raw_prompt, list) and len(raw_prompt) >= 2:
+                prompt_dict = raw_prompt[1]
+            elif isinstance(raw_prompt, dict):
+                prompt_dict = raw_prompt
+            else:
+                continue
+            conv = self._comfyui_prompt_to_file_format(prompt_dict)
+            if conv:
+                latest_file = conv
+                latest_id = item["id"]
+                latest_source = "comfyui-history"
+                break
+
+        if not latest_file and local_items:
+            first_name = local_items[0]["id"]
+            latest_file = local_workflows[first_name]
+            latest_id = first_name
+            latest_source = "workspace"
+
+        workflows = history_items + local_items
+        if not workflows:
+            if backend_unreachable:
+                self._json_response(
+                    {"error": "proxy_error", "message": "ComfyUI backend unreachable: " + _backend_error}, 502)
+                return
+            self._json_response(
+                {"error": "not_found", "message": "No workflows on ComfyUI server or workspace"}, 404)
+            return
+
+        payload = {
+            "workflow": latest_file,
+            "prompt_id": latest_id,
+            "source": latest_source,
+            "workflows": workflows,
+        }
+        if backend_unreachable:
+            payload["backend_unreachable"] = True
+            payload["backend_message"] = "ComfyUI backend unreachable: " + _backend_error
+        self._json_response(payload)
+
+    def _comfyui_workflow_get(self):
+        """GET /api/comfyui/workflow?prompt_id=<id>&source=<history|workspace>.
+
+        Returns a specific workflow in the editor file format so the Sync
+        picker can open any entry from the catalogue.
+        """
+        parsed = urllib.parse.urlparse(self.path)
+        qs = urllib.parse.parse_qs(parsed.query)
+        pid = str((qs.get("prompt_id") or [""])[0] or "").strip()
+        source = str((qs.get("source") or ["history"])[0] or "history").strip().lower()
+        if not pid:
+            self._json_response({"error": "prompt_id query parameter is required"}, 400)
+            return
+
+        if source == "workspace":
+            # Locally saved workflow file — already in editor file format.
+            safe = re.sub(r"[^\w.\-]", "_", os.path.basename(pid))
+            target = self._WORKFLOWS_LOCAL_DIR / safe
+            if not target.exists():
+                self._json_response({"error": "not_found", "message": "Workflow file not found in workspace"}, 404)
+                return
+            try:
+                wf = json.loads(target.read_text(encoding="utf-8"))
+            except Exception as exc:
+                self._json_response({"error": "invalid_workflow", "message": str(exc)}, 500)
+                return
+            if not isinstance(wf, dict) or not isinstance(wf.get("nodes"), list):
+                self._json_response({"error": "invalid_workflow", "message": "Workflow file has no nodes array"}, 400)
+                return
+            self._json_response({"workflow": wf, "prompt_id": safe, "source": "workspace"})
+            return
+
+        # ComfyUI history run
+        target_url = self._COMFYUI_BACKEND_URL + "/history/" + pid
+        try:
+            req = urllib.request.Request(
+                target_url,
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                raw = resp.read()
+            entry = json.loads(raw.decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read().decode("utf-8", errors="replace")[:500]
+            except Exception:
+                detail = str(exc)
+            self._json_response({"error": "proxy_error", "status": exc.code, "detail": detail}, exc.code)
+            return
+        except Exception as exc:
+            self._json_response({"error": "proxy_error", "message": "ComfyUI backend unreachable: " + str(exc)}, 502)
+            return
+
+        # /history/<pid> may return {pid: {...}} or the entry directly.
+        if isinstance(entry, dict):
+            if pid in entry and isinstance(entry[pid], dict):
+                entry = entry[pid]
+            raw_prompt = entry.get("prompt")
+            if isinstance(raw_prompt, list) and len(raw_prompt) >= 2:
+                prompt_dict = raw_prompt[1]
+            elif isinstance(raw_prompt, dict):
+                prompt_dict = raw_prompt
+            else:
+                prompt_dict = None
+        else:
+            prompt_dict = None
+
+        conv = self._comfyui_prompt_to_file_format(prompt_dict) if prompt_dict else None
+        if not conv:
+            self._json_response({"error": "not_found", "message": "No usable workflow for prompt " + pid}, 404)
+            return
+        self._json_response({"workflow": conv, "prompt_id": pid, "source": "comfyui-history"})
+
+    def _comfyui_job_status(self):
+        """GET /api/comfyui/job?prompt_id=<id> — normalized run status for one job.
+
+        Polls the ComfyUI /queue and /history/<id> endpoints and returns a
+        single flat object the frontend Run panel can render:
+
+            { prompt_id, status, completed, running, pending, error, images }
+
+        ``status`` is one of ``queued`` | ``running`` | ``completed`` |
+        ``error`` | ``not_found``.  ``images`` is the list of output image
+        references from the history entry (``{filename, subfolder, type}``),
+        which the frontend renders through ``/api/comfyui/proxy/view``.
+        """
+        parsed = urllib.parse.urlparse(self.path)
+        qs = urllib.parse.parse_qs(parsed.query)
+        pid = str((qs.get("prompt_id") or [""])[0] or "").strip()
+        if not pid:
+            self._json_response({"error": "prompt_id query parameter is required"}, 400)
+            return
+
+        running = False
+        pending = False
+        try:
+            qreq = urllib.request.Request(
+                self._COMFYUI_BACKEND_URL + "/queue",
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(qreq, timeout=8) as resp:
+                queue_data = json.loads(resp.read().decode("utf-8")) or {}
+
+            def _queue_has(item):
+                # Queue item shape: [number, prompt_id, prompt_dict, extra_data]
+                if not isinstance(item, (list, tuple)) or len(item) < 2:
+                    return False
+                if str(item[1]) == pid:
+                    return True
+                last = item[-1] if isinstance(item[-1], dict) else {}
+                return str(last.get("prompt_id", "")) == pid
+
+            for item in queue_data.get("queue_running", []) or []:
+                if _queue_has(item):
+                    running = True
+            for item in queue_data.get("queue_pending", []) or []:
+                if _queue_has(item):
+                    pending = True
+        except Exception:
+            # Queue unreachable — fall through to history; the frontend will
+            # keep polling and surface an error if history is also unavailable.
+            pass
+
+        history_entry = None
+        try:
+            hreq = urllib.request.Request(
+                self._COMFYUI_BACKEND_URL + "/history/" + pid,
+                headers={"Accept": "application/json"},
+            )
+            with urllib.request.urlopen(hreq, timeout=8) as resp:
+                raw = json.loads(resp.read().decode("utf-8"))
+            if isinstance(raw, dict):
+                if pid in raw and isinstance(raw[pid], dict):
+                    raw = raw[pid]
+                history_entry = raw
+        except urllib.error.HTTPError as exc:
+            if exc.code != 404:
+                self._json_response({"error": "proxy_error", "status": exc.code, "detail": exc.read().decode("utf-8", errors="replace")[:500]}, exc.code)
+                return
+        except Exception as exc:
+            self._json_response({"error": "proxy_error", "message": "ComfyUI backend unreachable: " + str(exc)}, 502)
+            return
+
+        if history_entry:
+            status = history_entry.get("status") or {}
+            completed = bool(status.get("completed"))
+            status_str = str(status.get("status_str", "") or "").lower()
+            error = None
+            for msg in status.get("messages", []) or []:
+                if isinstance(msg, (list, tuple)) and len(msg) > 1 and msg[0] == "execution_error":
+                    err_data = msg[-1] if isinstance(msg[-1], dict) else {}
+                    error = {
+                        "type": str(err_data.get("exception_type", "Error")),
+                        "message": str(err_data.get("exception_message", "") or "Unknown execution error"),
+                        "traceback": str(err_data.get("traceback", "") or ""),
+                    }
+                    break
+            if error or status_str == "error":
+                run_status = "error"
+            elif completed:
+                run_status = "completed"
+            else:
+                run_status = "running" if running else ("queued" if pending else "running")
+            images = []
+            for node_out in (history_entry.get("outputs") or {}).values():
+                if not isinstance(node_out, dict):
+                    continue
+                for img in node_out.get("images", []) or []:
+                    if isinstance(img, dict):
+                        images.append({
+                            "filename": img.get("filename", ""),
+                            "subfolder": img.get("subfolder", ""),
+                            "type": img.get("type", "output"),
+                        })
+            self._json_response({
+                "prompt_id": pid,
+                "status": run_status,
+                "completed": completed,
+                "running": running,
+                "pending": pending,
+                "error": error,
+                "images": images,
+            })
+            return
+
+        if running:
+            run_status = "running"
+        elif pending:
+            run_status = "queued"
+        else:
+            run_status = "not_found"
+        self._json_response({
+            "prompt_id": pid,
+            "status": run_status,
+            "completed": False,
+            "running": running,
+            "pending": pending,
+            "error": None,
+            "images": [],
+        })
 
     def _send_raw(self, raw: bytes, content_type: str, status: int = 200) -> None:
         try:
@@ -16951,6 +17577,16 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._health_api_get(path)
             return
 
+        # ── Procurement module (GET) ──────────────────────────────────────
+        if path.startswith("/api/procurement/"):
+            self._procurement_api_get(path)
+            return
+
+        # ── OCR module (GET) ──────────────────────────────────────────────
+        if path.startswith("/api/ocr/"):
+            self._ocr_api_get(path)
+            return
+
         # Permission suggestions: get suggestions for broader permissions based
         # on usage patterns and user decisions (GET, used by the chat UI).
         if path == "/api/permission-suggestions":
@@ -16979,6 +17615,14 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         if path == "/api/comfyui/sync":
             self._comfyui_sync_workflow()
+            return
+
+        if path == "/api/comfyui/workflow":
+            self._comfyui_workflow_get()
+            return
+
+        if path == "/api/comfyui/job":
+            self._comfyui_job_status()
             return
 
         if path.startswith("/api/comfyui/history/"):
@@ -17171,6 +17815,16 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # ── Health module (POST) ─────────────────────────────────────
         if path.startswith("/api/health/"):
             self._health_api_post(path)
+            return
+
+        # ── Procurement module (POST) ────────────────────────────────
+        if path.startswith("/api/procurement/"):
+            self._procurement_api_post(path)
+            return
+
+        # ── OCR module (POST) ────────────────────────────────────────
+        if path.startswith("/api/ocr/"):
+            self._ocr_api_post(path)
             return
 
         # ── Section Generator API ────────────────────────────────────
@@ -18009,6 +18663,689 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         store["last_workspace"] = str(output_root)
         _health_store_save(store, project_id)
         print(f"[Health] run for project {project_id}: {total_files} file(s), {successful_ocr} OCR ok", flush=True)
+        self._json_response({
+            "status": "completed",
+            "summary": summary,
+            "workspace": str(output_root),
+            "file_statistics": {
+                "total_files": total_files,
+                "total_images": total_files,
+                "successful_ocr": successful_ocr,
+            },
+        })
+
+    # ── Procurement module (GET) ─────────────────────────────────────────
+    def _procurement_api_get(self, path: str):
+        qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+        project_id = (qs.get("project_id") or [""])[0].strip() or None
+        store = _procurement_store_load(project_id) if project_id else {"documents": [], "timeline": [], "last_results": None}
+
+        # --- Status / overview stats ---
+        if path == "/api/procurement/status":
+            total_invoices = len(store.get("documents", []))
+            # Supplier count / total value come from the generated visualization
+            # (lazily built on first request if the project has a workspace).
+            supplier_count = 0
+            total_value = "0"
+            viz = {}
+            viz_file = PROJECTS_DIR / project_id / "outputs" / "procurement-visualization.json" if project_id else None
+            if project_id and (PROJECTS_DIR / project_id / "procurement").is_dir() and not (viz_file and viz_file.is_file()):
+                _procurement_generate_report(project_id)
+            if viz_file and viz_file.is_file():
+                try:
+                    viz = json.loads(viz_file.read_text(encoding="utf-8"))
+                except (OSError, ValueError):
+                    viz = {}
+            if viz:
+                viz_summary = viz.get("summary") or {}
+                supplier_count = int(viz_summary.get("supplier_count") or len(viz.get("suppliers") or []) or 0)
+                total_value = str(viz_summary.get("total_value_known") or viz_summary.get("total_value") or "0")
+            self._json_response({
+                "invoice_count": total_invoices,
+                "supplier_count": supplier_count,
+                "total_value": total_value,
+                "project_id": project_id,
+            })
+            return
+
+        # --- Timeline ---
+        if path == "/api/procurement/timeline":
+            self._json_response({"events": store.get("timeline", [])})
+            return
+
+        # --- Last pipeline results (summary) ---
+        if path == "/api/procurement/results":
+            summary = store.get("last_results") or {"file_statistics": {"total_images": 0, "successful_ocr": 0}}
+            workspace = None
+            if project_id:
+                pdir = PROJECTS_DIR / project_id / "procurement"
+                if pdir.is_dir():
+                    workspace = str(pdir / "workspace" / "image_processing_workspace")
+            self._json_response({
+                "status": "completed" if store.get("last_results") else "none",
+                "summary": summary,
+                "workspace": workspace,
+            })
+            return
+
+        # --- Knowledge base / document list ---
+        if path == "/api/procurement/knowledge-base":
+            docs = []
+            for doc in store.get("documents", []):
+                text = str(doc.get("text") or "")
+                docs.append({
+                    "id": doc.get("id"),
+                    "filename": doc.get("filename"),
+                    "uploaded_at": doc.get("uploaded_at"),
+                    "status": doc.get("status", "unknown"),
+                    "ocr_success": bool(doc.get("ocr_success")),
+                    "text_length": len(text),
+                    "preview": text[:500],
+                })
+            self._json_response({"documents": docs})
+            return
+
+        # --- Outputs (visualization data) ---
+        if path == "/api/procurement/outputs":
+            data = {}
+            if project_id:
+                out_file = PROJECTS_DIR / project_id / "outputs" / "procurement-visualization.json"
+                if (PROJECTS_DIR / project_id / "procurement").is_dir() and not out_file.is_file():
+                    _procurement_generate_report(project_id)
+                if out_file.is_file():
+                    try:
+                        data = json.loads(out_file.read_text(encoding="utf-8"))
+                    except (OSError, ValueError):
+                        data = {"error": "Could not parse visualization data"}
+            self._json_response(data)
+            return
+
+        # --- Report (Markdown) ---
+        if path == "/api/procurement/report":
+            report = ""
+            if project_id:
+                report_file = PROJECTS_DIR / project_id / "outputs" / "procurement-report.md"
+                if (PROJECTS_DIR / project_id / "procurement").is_dir() and not report_file.is_file():
+                    _procurement_generate_report(project_id)
+                if report_file.is_file():
+                    try:
+                        report = report_file.read_text(encoding="utf-8")
+                    except OSError:
+                        report = ""
+            self._json_response({"report": report})
+            return
+
+        # --- Documents with image URLs (for the Invoices grid) ---
+        if path == "/api/procurement/documents-detail":
+            docs = []
+            for doc in store.get("documents", []):
+                text = str(doc.get("text") or "")
+                fname = doc.get("filename", "")
+                kind = "none"
+                if project_id and fname:
+                    resolved = _procurement_resolve_image_file(project_id, fname)
+                    if resolved is not None:
+                        kind = _procurement_file_kind(resolved)
+                entry = {
+                    "id": doc.get("id"),
+                    "filename": fname,
+                    "uploaded_at": doc.get("uploaded_at"),
+                    "status": doc.get("status", "unknown"),
+                    "ocr_success": bool(doc.get("ocr_success")),
+                    "text": text,
+                    "kind": kind,
+                    "image_url": None,
+                    "text_md": "",
+                    "text_json": "",
+                }
+                
+                if project_id and fname:
+                    entry["image_url"] = (
+                        "/api/procurement/image?project_id="
+                        + urllib.parse.quote(project_id)
+                        + "&file="
+                        + urllib.parse.quote(fname)
+                    )
+                    
+                    # Try to fetch md and json files
+                    analysis_dir = PROJECTS_DIR / project_id / "procurement" / "workspace" / "image_processing_workspace" / "analysis_refined"
+                    if analysis_dir.is_dir():
+                        md_path = analysis_dir / f"{fname}_analysis_refined.md"
+                        if md_path.is_file():
+                            try:
+                                entry["text_md"] = md_path.read_text(encoding="utf-8")
+                            except OSError:
+                                pass
+                        
+                        json_path = analysis_dir / f"{fname}_analysis_refined.json"
+                        if json_path.is_file():
+                            try:
+                                entry["text_json"] = json_path.read_text(encoding="utf-8")
+                            except OSError:
+                                pass
+
+                docs.append(entry)
+            self._json_response({"documents": docs})
+            return
+
+        # --- Serve a single invoice image/PDF ---
+        if path == "/api/procurement/image":
+            fname = (qs.get("file") or [""])[0].strip()
+            if not fname or not project_id:
+                self._json_response({"error": "Missing file or project_id"}, 400)
+                return
+            image_path = _procurement_resolve_image_file(project_id, fname)
+            if image_path is None:
+                self._json_response({"error": "Image not found"}, 404)
+                return
+            content_type = _procurement_file_mime(image_path)
+            try:
+                data = image_path.read_bytes()
+                self.send_response(200)
+                self.send_header("Content-Type", content_type)
+                self.send_header("Content-Length", str(len(data)))
+                self.send_header("Cache-Control", "public, max-age=3600")
+                self.end_headers()
+                self.wfile.write(data)
+            except OSError:
+                self._json_response({"error": "Could not read image"}, 500)
+            return
+
+        self._json_response({"error": "Not found"}, 404)
+
+    # ── Procurement module (POST) ────────────────────────────────────────
+    def _procurement_api_post(self, path: str):
+        if path == "/api/procurement/upload":
+            self._procurement_upload_post()
+            return
+        if path == "/api/procurement/run":
+            self._procurement_run_post()
+            return
+        if path == "/api/procurement/assistant/chat":
+            # Reuse the generic assistant handler; procurement.js sends its
+            # own primer so the section_key = "procurement" context holds.
+            self._assistant_chat()
+            return
+        self._json_response({"error": "Not found"}, 404)
+
+    def _procurement_upload_post(self):
+        """Handle multipart upload of invoice images/PDFs."""
+        ctype = self.headers.get("Content-Type", "")
+        if "multipart/form-data" not in ctype:
+            self._json_response({"error": "Expected multipart/form-data"}, 400)
+            return
+        clen = int(self.headers.get("Content-Length", 0))
+        raw = self.rfile.read(clen)
+        try:
+            boundary = ctype.split("boundary=", 1)[1].strip()
+        except IndexError:
+            self._json_response({"error": "Missing multipart boundary"}, 400)
+            return
+        if boundary.startswith('"') and boundary.endswith('"'):
+            boundary = boundary[1:-1]
+
+        b_boundary = ("--" + boundary).encode("utf-8")
+        b_end = ("--" + boundary + "--").encode("utf-8")
+        parts = raw.split(b_boundary)[1:]
+        if parts and b_end in parts[-1]:
+            parts[-1] = parts[-1].split(b_end)[0]
+
+        files = []  # (filename, mime, bytes)
+        project_id = ""
+        for part in parts:
+            part = part.lstrip(b"\r\n")
+            header_end = part.find(b"\r\n\r\n")
+            if header_end < 0:
+                continue
+            header_block = part[:header_end].decode("utf-8", errors="replace")
+            body = part[header_end + 4:]
+            if body.endswith(b"\r\n"):
+                body = body[:-2]
+            if 'name="project_id"' in header_block:
+                project_id = body.decode("utf-8", errors="replace").strip()
+            elif 'name="files"' in header_block:
+                fn_match = re.search(r'filename="([^"]*)"', header_block)
+                fname = fn_match.group(1) if fn_match else "upload"
+                ct_match = re.search(r"Content-Type:\s*(\S+)", header_block)
+                fmime = ct_match.group(1) if ct_match else "application/octet-stream"
+                files.append((fname, fmime, body))
+
+        if not files:
+            self._json_response({"error": "No files part found in upload"}, 400)
+            return
+
+        upload_id = f"pr-{int(time.time() * 1000)}-{uuid.uuid4().hex[:8]}"
+        pdir = (PROJECTS_DIR / str(project_id).strip("/")) if project_id else None
+        if pdir and pdir.is_dir():
+            upload_dir = pdir / "procurement" / "images"
+        else:
+            upload_dir = PROJECT_ROOT / "uploads" / "procurement" / upload_id
+        try:
+            upload_dir.mkdir(parents=True, exist_ok=True)
+            for fname, _fmime, fbytes in files:
+                safe = Path(fname).name or "upload"
+                target = upload_dir / safe
+                if target.exists():  # avoid clobbering files from earlier batches
+                    target = upload_dir / f"{target.stem}-{upload_id[-6:]}{target.suffix}"
+                target.write_bytes(fbytes)
+        except OSError as exc:
+            self._json_response({"error": f"Failed to store upload: {exc}"}, 500)
+            return
+        print(f"[Procurement] upload {upload_id}: {len(files)} file(s) -> {upload_dir}", flush=True)
+        self._json_response({"upload_id": upload_id, "files": [f[0] for f in files], "project_id": project_id or None})
+
+    def _procurement_run_post(self):
+        """Launch the OCR pipeline on uploaded invoice files."""
+        body = self._read_body()
+        upload_id = str(body.get("upload_id") or "").strip()
+        project_id = str(body.get("project_id") or "").strip()
+        pdir = (PROJECTS_DIR / project_id) if project_id else None
+        if not (pdir and pdir.is_dir()):
+            self._json_response({"error": "An active project is required to run the procurement pipeline"}, 400)
+            return
+        proc_dir = pdir / "procurement"
+        images_dir = proc_dir / "images"
+        images_dir.mkdir(parents=True, exist_ok=True)
+
+        # Reuse the generic OCR pipeline script (same one the health module uses).
+        script_src = PROJECT_ROOT / "scripts" / "health_images_to_report.py"
+        if not script_src.is_file():
+            self._json_response({"error": "health_images_to_report.py not found in scripts/"}, 500)
+            return
+        # The project owns a copy of the pipeline script (project scripts/ folder).
+        script_dst = pdir / "scripts" / "health_images_to_report.py"
+        try:
+            shutil.copyfile(script_src, script_dst)
+        except OSError as exc:
+            self._json_response({"error": f"Failed to stage pipeline script: {exc}"}, 500)
+            return
+
+        # Rasterise any PDFs so the script (which scans images) sees them too.
+        if shutil.which("pdftoppm"):
+            for f in sorted(images_dir.iterdir()):
+                if f.suffix.lower() != ".pdf" or not f.is_file():
+                    continue
+                _procurement_pdf_to_images(f, images_dir)
+
+        output_root = proc_dir / "workspace"
+        cmd = [
+            _procurement_pipeline_python(), str(script_dst),
+            "--input", str(images_dir),
+            "--output", str(output_root),
+        ]
+        if body.get("llm_provider"):
+            cmd += ["--llm-provider", str(body["llm_provider"])]
+        print(f"[Procurement] running pipeline: {' '.join(cmd)}", flush=True)
+        try:
+            proc = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=3600,
+                cwd=str(PROJECT_ROOT),
+            )
+        except (OSError, subprocess.SubprocessError) as exc:
+            self._json_response({"error": f"Pipeline failed to start: {exc}"}, 500)
+            return
+        if proc.returncode != 0:
+            tail = (proc.stderr or proc.stdout or "")[-1200:]
+            print(f"[Procurement] pipeline failed (rc={proc.returncode}): {tail}", flush=True)
+            self._json_response({
+                "status": "failed",
+                "error": f"Pipeline exited with code {proc.returncode}",
+                "log_tail": tail,
+            }, 500)
+            return
+
+        # The pipeline writes its summary inside <output>/image_processing_workspace/.
+        summary = {}
+        summary_path = output_root / "image_processing_workspace" / "pipeline_summary.json"
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            summary = {}
+
+        # Harvest per-file OCR results into the project procurement store so the
+        # timeline / knowledge-base / overview endpoints stay populated.
+        # Files that share the same deduped stem (e.g. IMG_1622-0551d2.jpg
+        # and IMG_1622.jpg) update the same document — only truly new names
+        # create additional documents or timeline events.
+        store = _procurement_store_load(project_id)
+        now_iso = datetime.now().isoformat(timespec="seconds")
+        today = datetime.now().strftime("%Y-%m-%d")
+        documents = list(store.get("documents", []))
+        total_files = 0
+        successful_ocr = 0
+        docs_by_stem = {}  # normalized stem → index in documents
+        new_docs_seen = set()  # stems seen for the first time this run
+        extractions_dir = output_root / "image_processing_workspace" / "extractions"
+        for xf in sorted(extractions_dir.glob("*_extraction.json")) if extractions_dir.is_dir() else []:
+            try:
+                extr = json.loads(xf.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            total_files += 1
+            text = " ".join(p.get("text") or "" for p in extr.get("pages", [])) or extr.get("text_summary") or ""
+            ok = not extr.get("error") and bool(text.strip())
+            if ok:
+                successful_ocr += 1
+            filename = extr.get("filename") or xf.name[: -len("_extraction.json")]
+            stem = _procurement_normalize_filename(filename)
+            doc = {
+                "id": f"{project_id}-{stem}-{int(time.time() * 1000)}",
+                "filename": filename,
+                "uploaded_at": now_iso,
+                "upload_id": upload_id or None,
+                "project_id": project_id,
+                "status": "processed" if ok else "failed",
+                "ocr_success": ok,
+                "text": text[:20000],
+            }
+            if stem in docs_by_stem:
+                documents[docs_by_stem[stem]] = doc
+            else:
+                docs_by_stem[stem] = len(documents)
+                documents.append(doc)
+            preview = " ".join(text.split())[:120]
+            description = f"Invoice processed: {filename}"
+            if preview:
+                description += f" — {preview}"
+            if stem not in new_docs_seen:
+                new_docs_seen.add(stem)
+                store.setdefault("timeline", []).append({"date": today, "description": description})
+        store["documents"] = documents
+        store["last_results"] = summary
+        store["last_workspace"] = str(output_root)
+        _procurement_store_save(store, project_id)
+        # Fresh run → regenerate the report / visualization immediately so the
+        # Reports and overview tabs reflect the new data without a manual step.
+        _procurement_generate_report(project_id)
+        print(f"[Procurement] run for project {project_id}: {total_files} file(s), {successful_ocr} OCR ok", flush=True)
+        self._json_response({
+            "status": "completed",
+            "summary": summary,
+            "workspace": str(output_root),
+            "file_statistics": {
+                "total_files": total_files,
+                "total_images": total_files,
+                "successful_ocr": successful_ocr,
+            },
+        })
+
+    # ── OCR module (GET) ────────────────────────────────────────────────────
+    def _ocr_api_get(self, path: str):
+        qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+        project_id = (qs.get("project_id") or [""])[0].strip() or None
+        store = _ocr_store_load(project_id)
+
+        # --- Status / overview stats ---
+        if path == "/api/ocr/status":
+            total_docs = len(store.get("documents", []))
+            successful_ocr = sum(1 for d in store.get("documents", []) if d.get("ocr_success"))
+            markdown_count = sum(1 for d in store.get("documents", []) if d.get("text_md") and str(d["text_md"]).strip())
+            self._json_response({
+                "document_count": total_docs,
+                "successful_ocr": successful_ocr,
+                "markdown_count": markdown_count,
+                "project_id": project_id,
+            })
+            return
+
+        # --- Last pipeline results (summary) ---
+        if path == "/api/ocr/results":
+            summary = store.get("last_results") or {"file_statistics": {"total_files": 0, "successful_ocr": 0}}
+            workspace = None
+            if project_id:
+                pdir = PROJECTS_DIR / project_id / "ocr"
+                if pdir.is_dir():
+                    workspace = str(pdir / "workspace" / "image_processing_workspace")
+            self._json_response({
+                "status": "completed" if store.get("last_results") else "none",
+                "summary": summary,
+                "workspace": workspace,
+            })
+            return
+
+        # --- Documents with image URLs (for the Documents grid) ---
+        if path == "/api/ocr/documents":
+            docs = []
+            for doc in store.get("documents", []):
+                text = str(doc.get("text") or "")
+                text_md = str(doc.get("text_md") or "")
+                fname = doc.get("filename", "")
+                kind = "none"
+                if project_id and fname:
+                    resolved = _ocr_resolve_image_file(project_id, fname)
+                    if resolved is not None:
+                        kind = _ocr_file_kind(resolved)
+                entry = {
+                    "id": doc.get("id"),
+                    "filename": fname,
+                    "uploaded_at": doc.get("uploaded_at"),
+                    "status": doc.get("status", "unknown"),
+                    "ocr_success": bool(doc.get("ocr_success")),
+                    "text": text,
+                    "text_md": text_md,
+                    "kind": kind,
+                    "image_url": None,
+                }
+                if project_id and fname:
+                    entry["image_url"] = (
+                        "/api/ocr/image?project_id="
+                        + urllib.parse.quote(project_id)
+                        + "&file="
+                        + urllib.parse.quote(fname)
+                    )
+                docs.append(entry)
+            self._json_response({"documents": docs})
+            return
+
+        # --- Serve a single document image/PDF ---
+        if path == "/api/ocr/image":
+            fname = (qs.get("file") or [""])[0].strip()
+            if not fname or not project_id:
+                self._json_response({"error": "Missing file or project_id"}, 400)
+                return
+            image_path = _ocr_resolve_image_file(project_id, fname)
+            if image_path is None:
+                self._json_response({"error": "Image not found"}, 404)
+                return
+            content_type = _ocr_file_mime(image_path)
+            try:
+                data = image_path.read_bytes()
+                self.send_response(200)
+                self.send_header("Content-Type", content_type)
+                self.send_header("Content-Length", str(len(data)))
+                self.send_header("Cache-Control", "public, max-age=3600")
+                self.end_headers()
+                self.wfile.write(data)
+            except OSError:
+                self._json_response({"error": "Could not read image"}, 500)
+            return
+
+        self._json_response({"error": "Not found"}, 404)
+
+    # ── OCR module (POST) ───────────────────────────────────────────────────
+    def _ocr_api_post(self, path: str):
+        if path == "/api/ocr/upload":
+            self._ocr_upload_post()
+            return
+        if path == "/api/ocr/run":
+            self._ocr_run_post()
+            return
+        self._json_response({"error": "Not found"}, 404)
+
+    def _ocr_upload_post(self):
+        """Handle multipart upload of PDF/image files."""
+        ctype = self.headers.get("Content-Type", "")
+        if "multipart/form-data" not in ctype:
+            self._json_response({"error": "Expected multipart/form-data"}, 400)
+            return
+        clen = int(self.headers.get("Content-Length", 0))
+        raw = self.rfile.read(clen)
+        try:
+            boundary = ctype.split("boundary=", 1)[1].strip()
+        except IndexError:
+            self._json_response({"error": "Missing multipart boundary"}, 400)
+            return
+        if boundary.startswith('"') and boundary.endswith('"'):
+            boundary = boundary[1:-1]
+
+        b_boundary = ("--" + boundary).encode("utf-8")
+        b_end = ("--" + boundary + "--").encode("utf-8")
+        parts = raw.split(b_boundary)[1:]
+        if parts and b_end in parts[-1]:
+            parts[-1] = parts[-1].split(b_end)[0]
+
+        files = []  # (filename, mime, bytes)
+        project_id = ""
+        for part in parts:
+            part = part.lstrip(b"\r\n")
+            header_end = part.find(b"\r\n\r\n")
+            if header_end < 0:
+                continue
+            header_block = part[:header_end].decode("utf-8", errors="replace")
+            body = part[header_end + 4:]
+            if body.endswith(b"\r\n"):
+                body = body[:-2]
+            if 'name="project_id"' in header_block:
+                project_id = body.decode("utf-8", errors="replace").strip()
+            elif 'name="files"' in header_block:
+                fn_match = re.search(r'filename="([^"]*)"', header_block)
+                fname = fn_match.group(1) if fn_match else "upload"
+                ct_match = re.search(r"Content-Type:\s*(\S+)", header_block)
+                fmime = ct_match.group(1) if ct_match else "application/octet-stream"
+                files.append((fname, fmime, body))
+
+        if not files:
+            self._json_response({"error": "No files part found in upload"}, 400)
+            return
+
+        upload_id = f"ocr-{int(time.time() * 1000)}-{uuid.uuid4().hex[:8]}"
+        pdir = (PROJECTS_DIR / str(project_id).strip("/")) if project_id else None
+        if pdir and pdir.is_dir():
+            upload_dir = pdir / "ocr" / "images"
+        else:
+            upload_dir = PROJECT_ROOT / "uploads" / "ocr" / upload_id
+        try:
+            upload_dir.mkdir(parents=True, exist_ok=True)
+            for fname, _fmime, fbytes in files:
+                safe = Path(fname).name or "upload"
+                target = upload_dir / safe
+                if target.exists():  # avoid clobbering files from earlier batches
+                    target = upload_dir / f"{target.stem}-{upload_id[-6:]}{target.suffix}"
+                target.write_bytes(fbytes)
+        except OSError as exc:
+            self._json_response({"error": f"Failed to store upload: {exc}"}, 500)
+            return
+        print(f"[OCR] upload {upload_id}: {len(files)} file(s) -> {upload_dir}", flush=True)
+        self._json_response({"upload_id": upload_id, "files": [f[0] for f in files], "project_id": project_id or None})
+
+    def _ocr_run_post(self):
+        """Launch the generic OCR pipeline on uploaded files."""
+        body = self._read_body()
+        upload_id = str(body.get("upload_id") or "").strip()
+        project_id = str(body.get("project_id") or "").strip()
+        if not (project_id and (PROJECTS_DIR / project_id).is_dir()):
+            self._json_response({"error": "A valid project is required to run the pipeline"}, 400)
+            return
+
+        pdir = PROJECTS_DIR / project_id
+        ocr_dir = pdir / "ocr"
+        images_dir = ocr_dir / "images"
+        images_dir.mkdir(parents=True, exist_ok=True)
+
+        # Generic OCR pipeline script (must exist in scripts/).
+        pipeline_script = PROJECT_ROOT / "scripts" / "generic_ocr_pipeline.py"
+        if not pipeline_script.is_file():
+            self._json_response({"error": "generic_ocr_pipeline.py not found in scripts/"}, 500)
+            return
+
+        # Rasterise any PDFs so the script (which scans images) sees them too.
+        if shutil.which("pdftoppm"):
+            for f in sorted(images_dir.iterdir()):
+                if f.suffix.lower() != ".pdf" or not f.is_file():
+                    continue
+                _ocr_pdf_to_images(f, images_dir)
+
+        output_root = ocr_dir / "workspace"
+        cmd = [
+            _ocr_pipeline_python(), str(pipeline_script),
+            "--input", str(images_dir),
+            "--output", str(output_root),
+        ]
+        if body.get("llm_provider"):
+            cmd += ["--llm-provider", str(body["llm_provider"])]
+        print(f"[OCR] running pipeline: {' '.join(cmd)}", flush=True)
+        try:
+            proc = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=3600,
+                cwd=str(PROJECT_ROOT),
+            )
+        except (OSError, subprocess.SubprocessError) as exc:
+            self._json_response({"error": f"Pipeline failed to start: {exc}"}, 500)
+            return
+        if proc.returncode != 0:
+            tail = (proc.stderr or proc.stdout or "")[-1200:]
+            print(f"[OCR] pipeline failed (rc={proc.returncode}): {tail}", flush=True)
+            self._json_response({
+                "status": "failed",
+                "error": f"Pipeline exited with code {proc.returncode}",
+                "log_tail": tail,
+            }, 500)
+            return
+
+        # The pipeline writes its summary inside <output>/image_processing_workspace/.
+        summary = {}
+        summary_path = output_root / "image_processing_workspace" / "pipeline_summary.json"
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            summary = {}
+
+        # Harvest per-file OCR results into the project OCR store so the
+        # overview / documents endpoints stay populated. Files sharing the same
+        # deduped stem update the same document — only truly new names add.
+        store = _ocr_store_load(project_id)
+        now_iso = datetime.now().isoformat(timespec="seconds")
+        documents = list(store.get("documents", []))
+        total_files = 0
+        successful_ocr = 0
+        docs_by_stem = {}
+        extractions_dir = output_root / "image_processing_workspace" / "extractions"
+        if extractions_dir.is_dir():
+            for xf in sorted(extractions_dir.glob("*_extraction.json")):
+                try:
+                    extr = json.loads(xf.read_text(encoding="utf-8"))
+                except (OSError, ValueError):
+                    continue
+                total_files += 1
+                text = " ".join(p.get("text") or "" for p in extr.get("pages", [])) or extr.get("text_summary") or ""
+                text_md = extr.get("text_md") or extr.get("markdown") or ""
+                ok = not extr.get("error") and bool(text.strip())
+                if ok:
+                    successful_ocr += 1
+                filename = extr.get("filename") or xf.name[: -len("_extraction.json")]
+                stem = _ocr_normalize_filename(filename)
+                doc = {
+                    "id": f"{project_id}-{stem}-{int(time.time() * 1000)}",
+                    "filename": filename,
+                    "uploaded_at": now_iso,
+                    "upload_id": upload_id or None,
+                    "project_id": project_id,
+                    "status": "processed" if ok else "failed",
+                    "ocr_success": ok,
+                    "text": text[:20000],
+                    "text_md": text_md[:50000],
+                }
+                if stem in docs_by_stem:
+                    documents[docs_by_stem[stem]] = doc
+                else:
+                    docs_by_stem[stem] = len(documents)
+                    documents.append(doc)
+
+        store["documents"] = documents
+        store["last_results"] = summary
+        store["last_workspace"] = str(output_root)
+        _ocr_store_save(store, project_id)
+        print(f"[OCR] run for project {project_id}: {total_files} file(s), {successful_ocr} OCR ok", flush=True)
         self._json_response({
             "status": "completed",
             "summary": summary,

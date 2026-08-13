@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════
   AURA API CLIENT  —  olivia/js/lib/api-client.js
    Single source of truth for all HTTP/SSE calls to the backend.
-   All 28 functions are grouped under window.LA8159API.
+   All 40 functions are grouped under window.LA8159API.
    Load order: after config.js (needs API_BASE), before all modules.
    ═══════════════════════════════════════════════════════════════════ */
 
@@ -299,9 +299,13 @@
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
-  async function memorySearch(query, collection) {
+  // memorySearch(query, collection, opts) — opts may carry { limit, minScore }.
+  async function memorySearch(query, collection, opts) {
     const body = { query };
     if (collection) body.collection = collection;
+    const o = opts || {};
+    if (o.limit) body.limit = o.limit;
+    if (o.minScore !== undefined) body.min_score = o.minScore;
     const r = await fetch(`${API_BASE}/api/memory/search`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -322,10 +326,72 @@
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
+  async function memoryIngestArticles(articles, collection) {
+    const r = await fetch(`${API_BASE}/api/memory/ingest/articles`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ articles, collection }),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function memoryIngestViolation(violation, collection) {
+    const r = await fetch(`${API_BASE}/api/memory/ingest/violation`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ violation, collection }),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function memoryGraphIngest(nodes, relationships) {
+    const r = await fetch(`${API_BASE}/api/memory/graph/ingest`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nodes, relationships }),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function memoryRouting() {
+    const r = await fetch(`${API_BASE}/api/memory/routing`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function memoryRoutingSave(payload) {
+    const r = await fetch(`${API_BASE}/api/memory/routing`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function memorySources() {
+    const r = await fetch(`${API_BASE}/api/memory/sources`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function memoryConfig() {
+    const r = await fetch(`${API_BASE}/api/memory/config`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function memoryConfigSave(config) {
+    const r = await fetch(`${API_BASE}/api/memory/config`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function memoryCollectionDetails(name) {
+    const r = await fetch(`${API_BASE}/api/memory/collections/${encodeURIComponent(name)}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
 
   // ── Shared files & scopes ─────────────────────────────────────────
-  async function sharedScopes() {
-    const r = await fetch(`${API_BASE}/api/shared/scopes`);
+  // sharedScopes(agentId) — optional agent_id filter (docs shared tree).
+  async function sharedScopes(agentId) {
+    const q = agentId ? `?agent_id=${encodeURIComponent(agentId)}` : '';
+    const r = await fetch(`${API_BASE}/api/shared/scopes${q}`);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
@@ -337,6 +403,60 @@
   }
   async function sharedTranscripts() {
     const r = await fetch(`${API_BASE}/api/transcripts/list`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function sharedCompanion(path) {
+    const r = await fetch(`${API_BASE}/api/shared/companion?path=${encodeURIComponent(path)}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function sharedList(path) {
+    const r = await fetch(`${API_BASE}/api/shared/list?path=${encodeURIComponent(path || '')}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  // sharedLawSync(query) — query: { path, framework_code, prune_framework }.
+  async function sharedLawSync(query) {
+    const q = query || {};
+    const params = new URLSearchParams();
+    if (q.path) params.set('path', q.path);
+    if (q.framework_code) params.set('framework_code', q.framework_code);
+    if (q.prune_framework) params.set('prune_framework', 'true');
+    const r = await fetch(`${API_BASE}/api/shared/law/sync?${params.toString()}`, { method: 'POST' });
+    if (!r.ok) {
+      let detail = null;
+      try { const d = await r.json(); detail = d && d.detail; } catch (_e) { }
+      throw new Error(detail || `HTTP ${r.status}`);
+    }
+    return r.json();
+  }
+  async function sharedLawArticles(path) {
+    const r = await fetch(`${API_BASE}/api/shared/law/articles?path=${encodeURIComponent(path)}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+
+  // ── Project files & content ───────────────────────────────────────
+  async function projectFiles(projectId, agentId) {
+    const q = agentId ? `?agent_id=${encodeURIComponent(agentId)}` : '';
+    const r = await fetch(`${API_BASE}/api/projects/${encodeURIComponent(projectId)}/files${q}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+  async function projectFileDelete(projectId, path) {
+    const r = await fetch(`${API_BASE}/api/projects/${encodeURIComponent(projectId)}/file?path=${encodeURIComponent(path)}`, {
+      method: 'DELETE',
+    });
+    if (!r.ok) {
+      let detail = null;
+      try { const d = await r.json(); detail = d && d.detail; } catch (_e) { }
+      throw new Error(detail || `HTTP ${r.status}`);
+    }
+    return r.json();
+  }
+  async function projectContent(projectId, path) {
+    const r = await fetch(`${API_BASE}/api/projects/${encodeURIComponent(projectId)}/content?path=${encodeURIComponent(path)}`);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
@@ -401,11 +521,29 @@
       search: memorySearch,
       ingest: memoryIngest,
       graphStats: memoryGraphStats,
+      ingestArticles: memoryIngestArticles,
+      ingestViolation: memoryIngestViolation,
+      graphIngest: memoryGraphIngest,
+      routing: memoryRouting,
+      routingSave: memoryRoutingSave,
+      sources: memorySources,
+      config: memoryConfig,
+      configSave: memoryConfigSave,
+      collectionDetails: memoryCollectionDetails,
+    },
+    projects: {
+      files: projectFiles,      // projectFiles(projectId, agentId?)
+      fileDelete: projectFileDelete, // projectFileDelete(projectId, path)
+      content: projectContent,  // projectContent(projectId, path)
     },
     shared: {
-      scopes: sharedScopes,
+      scopes: sharedScopes,     // sharedScopes(agentId?)
       file: sharedFile,        // sharedFile(path) — always ?path= pattern
       transcripts: sharedTranscripts,
+      companion: sharedCompanion, // sharedCompanion(path)
+      list: sharedList,         // sharedList(path)
+      lawSync: sharedLawSync,   // sharedLawSync(query)
+      lawArticles: sharedLawArticles, // sharedLawArticles(path)
     },
     transcribe: {
       run: transcribeRun,
@@ -417,5 +555,5 @@
   // Compatibility alias for legacy modules/global references.
   window.OliviaAPI = window.LA8159API;
 
-  console.log('[LA8159API] v1.1 loaded — 33 functions across 9 groups');
+  console.log('[LA8159API] v1.3 loaded — 47 functions across 10 groups');
 })();

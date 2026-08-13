@@ -59,6 +59,26 @@
     "discovery-intelligence": {
       "type": "http",
       "url": "http://127.0.0.1:8115/mcp"
+    },
+    "audio-main": {
+      "type": "http",
+      "url": "http://127.0.0.1:8765/mcp"
+    },
+    "comfyui-workflow": {
+      "type": "http",
+      "url": "http://127.0.0.1:8130/mcp"
+    },
+    "comfyui-model": {
+      "type": "http",
+      "url": "http://127.0.0.1:8131/mcp"
+    },
+    "comfyui-node": {
+      "type": "http",
+      "url": "http://127.0.0.1:8132/mcp"
+    },
+    "comfyui-system": {
+      "type": "http",
+      "url": "http://127.0.0.1:8133/mcp"
     }
   }
 }

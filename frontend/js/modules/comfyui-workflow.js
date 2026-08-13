@@ -79,11 +79,12 @@
     'ImageResize+': [
       { name: 'width', type: 'int', min: 1, max: 8192, step: 1 },
       { name: 'height', type: 'int', min: 1, max: 8192, step: 1 },
-      { name: 'interpolation', type: 'text' },
-      { name: 'method', type: 'text' },
-      { name: 'condition', type: 'text' },
+      { name: 'interpolation', type: 'combo', options: ['nearest', 'bilinear', 'bicubic', 'area', 'nearest-exact', 'lanczos'] },
+      { name: 'method', type: 'combo', options: ['stretch', 'keep proportion', 'fill / crop', 'pad'] },
+      { name: 'condition', type: 'combo', options: ['always', 'downscale if bigger', 'upscale if smaller', 'if bigger area', 'if smaller area'] },
       { name: 'multiple_of', type: 'int', min: 0, max: 512, step: 1 }
     ],
+    'InpaintModelConditioning': [{ name: 'noise_mask', type: 'boolean' }],
     'Zoe-DepthMapPreprocessor': [{ name: 'resolution', type: 'int', min: 64, max: 2048, step: 8 }],
     'ACN_AdvancedControlNetApply': [
       { name: 'strength', type: 'range', min: 0, max: 2, step: 0.01 },
@@ -119,6 +120,24 @@
   var searchQuery = '';
   var expandedMaskCards = new Set();
   var lastMaskTestResult = null;       // { status: 'loading'|'ok'|'error', message, previewUrl }
+
+  // ── Run workflow state ─────────────────────────────────────────────────
+  // Tracks a live ComfyUI run initiated from this module.  The Run panel
+  // polls /api/comfyui/job until the job finishes, then renders the output
+  // previews.  The run itself executes on the shared ComfyUI backend, so it
+  // also appears live in the ComfyUI UI (localhost:8188).
+  var runState = {                      // { active, promptId, status, startedAt, timerId, pollCount }
+    active: false,
+    promptId: null,
+    status: 'idle',                     // idle | queued | running | completed | error
+    startedAt: 0,
+    timerId: null,
+    pollCount: 0,
+    error: null,
+    images: []
+  };
+  var RUN_POLL_MS = 1500;
+  var RUN_POLL_MAX = 600;               // ~15 min safety cap
 
   var dragNode = null;                 // { id, startClientX, startClientY, origX, origY }
   var isPanning = false;
@@ -315,10 +334,12 @@
       '</div>' +
       '<div class="cf-head-actions">' +
       '<span class="cf-head-stats" id="cfHeadStats"></span>' +
-      '<button class="btn btn-sm" onclick="comfyuiSyncFromServer()" title="Load the last workflow from ComfyUI server">' +
+      '<button class="btn btn-sm" onclick="comfyuiSyncFromServer()" title="Load a workflow from the ComfyUI server (choose from history)">' +
       '<i class="fas fa-cloud-download-alt"></i> Sync</button>' +
-      '<button class="btn btn-sm" onclick="comfyuiQueueToServer()" title="Queue current workflow to ComfyUI server">' +
-      '<i class="fas fa-cloud-upload-alt"></i> Queue</button>' +
+      '<button class="btn btn-sm" onclick="comfyuiRunWorkflow()" title="Queue the current workflow to the ComfyUI server, then show run progress and results here">' +
+      ICONS.play + ' Run</button>' +
+      '<button class="btn btn-sm" onclick="comfyuiOpenComfyUI()" title="Open the ComfyUI UI in a new tab to watch the run">' +
+      '<i class="fas fa-external-link-alt"></i> ComfyUI</button>' +
       '<button class="btn btn-sm" onclick="comfyuiImportWorkflow()" title="Import workflow JSON">' +
       ICONS.import + ' Import</button>' +
       '<button class="btn btn-sm" onclick="comfyuiExportWorkflow()" title="Download workflow JSON">' +
@@ -358,6 +379,7 @@
       '<div class="cf-detail-placeholder">Click a node to inspect and edit parameters. Drag a node to move it, drag empty canvas to pan, scroll to zoom.</div>' +
       '</div>' +
       '</div>' +
+      '<div class="cf-run-panel" id="cfRunPanel" style="display:none"></div>' +
       '</div>' +
       '<div id="cfPanel-masks" class="cf-panel">' +
       '<div class="cf-mask-toolbar">' +
@@ -1136,62 +1158,350 @@
     });
   };
 
+  // ── Load a workflow object into the editor (shared reset) ─────────────
+  function loadWorkflowIntoEditor(wf) {
+    workflow = wf;
+    selectedNodeId = null;
+    searchQuery = '';
+    expandedMaskCards = new Set();
+    lastMaskTestResult = null;
+    // Stop watching any in-flight run — a freshly loaded workflow is a
+    // different prompt, so the previous run panel is no longer relevant.
+    stopRunPolling();
+    runState.active = false;
+    runState.promptId = null;
+    runState.status = 'idle';
+    runState.error = null;
+    runState.images = [];
+    var rp = document.getElementById('cfRunPanel');
+    if (rp) rp.style.display = 'none';
+    scale = 0;      // triggers auto-fit
+    offset = null;  // triggers auto-center
+    var searchInput = document.getElementById('cfSearchInput');
+    if (searchInput) searchInput.value = '';
+    renderGraph();
+    if (activePanel === 'masks') renderMaskPipeline();
+  }
+
   // ── Sync from / Queue to ComfyUI server ───────────────────────────────
   window.comfyuiSyncFromServer = async function () {
     var api = (typeof API_BASE === 'string' && API_BASE) ? API_BASE.replace(/\/$/, '') : window.location.origin;
+    var btn = document.querySelector('#comfyuiWorkflowView button[onclick="comfyuiSyncFromServer()"]');
+    var original = btn ? btn.innerHTML : null;
     try {
+      if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sync…';
       var resp = await fetch(api + '/api/comfyui/sync');
+      var data = {};
+      try { data = await resp.json(); } catch (_) { /* non-JSON error body */ }
       if (!resp.ok) {
-        var err = await resp.json().catch(function () { return {}; });
-        alert((err && err.message) || 'Failed to sync from ComfyUI server.');
+        alert((data && data.message) || ('Failed to sync from ComfyUI server (HTTP ' + resp.status + ').'));
         return;
       }
-      var data = await resp.json();
+      var list = data.workflows || [];
+      if (list.length > 1) {
+        // Multiple workflows available (server runs + saved files) — let the
+        // user pick which one to open in the editor.
+        showWorkflowPicker(list, data.backend_message || null);
+        return;
+      }
+      // Single workflow (or legacy payload) → load the default one directly.
+      var serverWorkflow = data.workflow;
+      if (!serverWorkflow || !serverWorkflow.nodes) {
+        alert(list.length === 1
+          ? 'That workflow has no nodes to display.'
+          : 'Invalid workflow structure from server.');
+        return;
+      }
+      loadWorkflowIntoEditor(serverWorkflow);
+      if (data.source === 'workspace' && data.backend_message) {
+        alert('Opened saved workflow "' + data.prompt_id + '" — the ComfyUI backend was unreachable: ' + data.backend_message);
+      }
+    } catch (err) {
+      alert('Failed to sync from ComfyUI server: ' + (err && err.message || err));
+    } finally {
+      if (btn && original) btn.innerHTML = original;
+    }
+  };
+
+  // ── Sync picker (choose which fetched workflow to open) ──────────────
+  function fmtTimestamp(ts) {
+    if (!ts) return '—';
+    try {
+      return new Date(ts * 1000).toLocaleString();
+    } catch (_) {
+      return String(ts);
+    }
+  }
+
+  function showWorkflowPicker(list, backendMessage) {
+    closeWorkflowPicker();
+    var overlay = document.createElement('div');
+    overlay.id = 'cfWorkflowPickerOverlay';
+    overlay.className = 'modal-overlay';
+
+    var hasSaved = list.some(function (w) { return w.source === 'workspace'; });
+    var rows = list.map(function (w) {
+      var badge = w.source === 'workspace'
+        ? '<span class="cf-picker-badge cf-picker-badge-ws">Saved</span>'
+        : '<span class="cf-picker-badge cf-picker-badge-server">Server</span>';
+      var types = (w.node_types || []);
+      var typesTxt = types.slice(0, 6).join(', ') + (types.length > 6 ? ', …' : '');
+      var metaBits = [];
+      if (w.node_count != null) metaBits.push(w.node_count + ' nodes');
+      if (w.link_count != null) metaBits.push(w.link_count + ' links');
+      metaBits.push(fmtTimestamp(w.timestamp));
+      return '<button type="button" class="cf-picker-row" ' +
+        'onclick="comfyuiSyncPick(\'' + esc(String(w.id)).replace(/'/g, '\\\'') + '\', \'' + esc(String(w.source)).replace(/'/g, '\\\'') + '\')">' +
+        '<span class="cf-picker-main">' + badge + '<span class="cf-picker-title">' + esc(w.title || w.id) + '</span></span>' +
+        '<span class="cf-picker-meta">' + esc(metaBits.join(' · ')) + '</span>' +
+        (typesTxt ? '<span class="cf-picker-types">' + esc(typesTxt) + '</span>' : '') +
+        '</button>';
+    }).join('');
+
+    var hint = '';
+    if (backendMessage) {
+      hint = '<div class="cf-picker-hint cf-picker-hint-warn">' + esc(backendMessage) + '</div>';
+    } else if (hasSaved) {
+      hint = '<div class="cf-picker-hint">Showing workflows saved to the Olivia workspace plus recent ComfyUI server runs.</div>';
+    }
+
+    overlay.innerHTML =
+      '<div class="modal">' +
+      '<div class="modal-header">' +
+      '<h3 class="modal-title">Sync Workflow from ComfyUI</h3>' +
+      '<button class="modal-close" onclick="comfyuiSyncPickerClose()" title="Close"><i class="fas fa-times"></i></button>' +
+      '</div>' +
+      hint +
+      '<div class="cf-picker-list">' + rows + '</div>' +
+      '<div class="modal-actions">' +
+      '<button class="btn btn-sm" onclick="comfyuiSyncPickerClose()">Cancel</button>' +
+      '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function () { overlay.classList.add('show'); });
+  }
+
+  function closeWorkflowPicker() {
+    var overlay = document.getElementById('cfWorkflowPickerOverlay');
+    if (overlay) overlay.remove();
+  }
+
+  window.comfyuiSyncPickerClose = function () {
+    closeWorkflowPicker();
+  };
+
+  window.comfyuiSyncPick = async function (promptId, source) {
+    var api = (typeof API_BASE === 'string' && API_BASE) ? API_BASE.replace(/\/$/, '') : window.location.origin;
+    closeWorkflowPicker();
+    try {
+      var resp = await fetch(api + '/api/comfyui/workflow?prompt_id=' + encodeURIComponent(promptId) +
+        '&source=' + encodeURIComponent(source || 'history'));
+      var data = {};
+      try { data = await resp.json(); } catch (_) { /* non-JSON error body */ }
+      if (!resp.ok) {
+        alert((data && data.message) || ('Failed to load workflow (HTTP ' + resp.status + ').'));
+        return;
+      }
       var serverWorkflow = data.workflow;
       if (!serverWorkflow || !serverWorkflow.nodes) {
         alert('Invalid workflow structure from server.');
         return;
       }
-      // Load it into the editor
-      workflow = serverWorkflow;
-      selectedNodeId = null;
-      searchQuery = '';
-      expandedMaskCards = new Set();
-      lastMaskTestResult = null;
-      scale = 0;      // triggers auto-fit
-      offset = null;  // triggers auto-center
-      var searchInput = document.getElementById('cfSearchInput');
-      if (searchInput) searchInput.value = '';
-      renderGraph();
-      if (activePanel === 'masks') renderMaskPipeline();
+      loadWorkflowIntoEditor(serverWorkflow);
+      var stats = document.getElementById('cfHeadStats');
+      if (stats) stats.textContent = (source === 'workspace' ? 'Saved' : 'Server') + ' · ' + promptId;
     } catch (err) {
-      alert('Failed to sync from ComfyUI server: ' + (err && err.message || err));
+      alert('Failed to load workflow: ' + (err && err.message || err));
     }
   };
 
-  window.comfyuiQueueToServer = async function () {
+  // ── Run workflow (queue + live status + result previews) ───────────────
+  // Queues the current workflow to the shared ComfyUI backend, then polls
+  // /api/comfyui/job so the module shows the run progressing.  Because the
+  // job runs on the same ComfyUI instance, it is simultaneously visible in
+  // the ComfyUI UI (localhost:8188) — the Open ComfyUI button jumps there.
+  function cfApiBase() {
+    return (typeof API_BASE === 'string' && API_BASE) ? API_BASE.replace(/\/$/, '') : window.location.origin;
+  }
+
+  function comfyuiBackendUrl() {
+    // Best-effort: the backend reports its configured ComfyUI URL in the
+    // sync/terminal payloads.  Fall back to the standard local default.
+    return 'http://localhost:8188';
+  }
+
+  function fmtRunElapsed(ms) {
+    var s = Math.max(0, Math.floor(ms / 1000));
+    if (s < 60) return s + 's';
+    var m = Math.floor(s / 60), r = s % 60;
+    return m + 'm ' + r + 's';
+  }
+
+  function renderRunPanel() {
+    var panel = document.getElementById('cfRunPanel');
+    if (!panel) return;
+    if (!runState.active) { panel.style.display = 'none'; return; }
+    panel.style.display = 'block';
+
+    var elapsed = runState.startedAt ? fmtRunElapsed(Date.now() - runState.startedAt) : '';
+    var statusLabel = runState.status === 'queued' ? 'Queued'
+      : runState.status === 'running' ? 'Running'
+      : runState.status === 'completed' ? 'Completed'
+      : runState.status === 'error' ? 'Error' : 'Idle';
+    var icon = runState.status === 'completed' ? '<i class="fas fa-check-circle"></i>'
+      : runState.status === 'error' ? '<i class="fas fa-exclamation-triangle"></i>'
+      : '<span class="cf-run-spinner"></span>';
+    var cls = runState.status === 'completed' ? ' done'
+      : runState.status === 'error' ? ' error' : '';
+
+    var html = '<div class="cf-run-panel-inner">';
+    html += '<span class="cf-run-icon">' + icon + '</span>';
+    html += '<span class="cf-run-status">' + statusLabel + '</span>';
+    if (runState.promptId) html += '<code class="cf-run-prompt">' + esc(runState.promptId) + '</code>';
+    if (elapsed) html += '<span class="cf-run-elapsed">' + elapsed + '</span>';
+    if (runState.status === 'error' && runState.error) {
+      html += '<span class="cf-run-error-msg" title="' + esc(runState.error) + '">' + esc(runState.error) + '</span>';
+    }
+    html += '<span class="cf-run-spacer"></span>';
+
+    if (runState.status === 'queued' || runState.status === 'running') {
+      html += '<button class="btn btn-sm" onclick="comfyuiOpenComfyUI()" title="Watch this run in the ComfyUI UI">' +
+        '<i class="fas fa-external-link-alt"></i> Open ComfyUI</button>';
+      html += '<button class="btn btn-sm" onclick="comfyuiDismissRun()" title="Stop watching and close this panel (the job keeps running on ComfyUI)">Dismiss</button>';
+    } else {
+      html += '<button class="btn btn-sm" onclick="comfyuiOpenComfyUI()" title="Open the ComfyUI UI">' +
+        '<i class="fas fa-external-link-alt"></i> Open ComfyUI</button>';
+      html += '<button class="btn btn-sm" onclick="comfyuiDismissRun()" title="Close this panel">Close</button>';
+    }
+    html += '</div>';
+
+    if (runState.status === 'completed' && runState.images && runState.images.length) {
+      html += '<div class="cf-run-images">';
+      runState.images.forEach(function (img) {
+        var url = cfApiBase() + '/api/comfyui/proxy/view?filename=' + encodeURIComponent(img.filename) +
+          (img.subfolder ? '&subfolder=' + encodeURIComponent(img.subfolder) : '') +
+          (img.type ? '&type=' + encodeURIComponent(img.type) : '&type=output');
+        html += '<a href="' + url + '" target="_blank" rel="noopener" title="Open full size">' +
+          '<img src="' + url + '" alt="' + esc(img.filename) + '" loading="lazy"></a>';
+      });
+      html += '</div>';
+    }
+
+    panel.innerHTML = html;
+  }
+
+  function stopRunPolling() {
+    if (runState.timerId) { clearInterval(runState.timerId); runState.timerId = null; }
+  }
+
+  function startRunPolling(promptId) {
+    stopRunPolling();
+    runState.promptId = promptId;
+    runState.pollCount = 0;
+    runState.timerId = setInterval(async function () {
+      runState.pollCount++;
+      try {
+        var resp = await fetch(cfApiBase() + '/api/comfyui/job?prompt_id=' + encodeURIComponent(promptId));
+        var data = {};
+        try { data = await resp.json(); } catch (_) { /* non-JSON body */ }
+        if (!resp.ok) {
+          if (runState.pollCount >= 8) { // transient backend blips — give up after a few
+            runState.status = 'error';
+            runState.error = (data && data.message) || ('Job check failed (HTTP ' + resp.status + ').');
+            stopRunPolling();
+          }
+          renderRunPanel();
+          return;
+        }
+        if (data.status === 'completed' || data.status === 'error' || data.status === 'not_found') {
+          stopRunPolling();
+          runState.status = data.status === 'error' ? 'error'
+            : data.status === 'not_found' ? 'error'
+            : 'completed';
+          runState.error = (data.error && (data.error.message || data.error.type)) || null;
+          runState.images = data.images || [];
+          renderRunPanel();
+          return;
+        }
+        runState.status = data.status === 'running' ? 'running' : 'queued';
+        runState.images = data.images || [];
+        renderRunPanel();
+      } catch (err) {
+        // Backend unreachable mid-poll — keep trying for a while.
+        if (runState.pollCount >= RUN_POLL_MAX) {
+          stopRunPolling();
+          runState.status = 'error';
+          runState.error = (err && err.message) || 'Lost contact with the workspace backend.';
+          renderRunPanel();
+        }
+      }
+    }, RUN_POLL_MS);
+    renderRunPanel();
+  }
+
+  window.comfyuiRunWorkflow = async function () {
     if (!workflow) {
-      alert('No workflow loaded to queue.');
+      alert('No workflow loaded to run.');
       return;
     }
     // The backend accepts file format {nodes, links} and converts to API format.
-    var api = (typeof API_BASE === 'string' && API_BASE) ? API_BASE.replace(/\/$/, '') : window.location.origin;
+    var api = cfApiBase();
+    var btn = document.querySelector('#comfyuiWorkflowView button[onclick="comfyuiRunWorkflow()"]');
+    var original = btn ? btn.innerHTML : null;
     try {
+      if (btn) btn.innerHTML = '<span class="cf-run-spinner"></span> Queue…';
       var resp = await fetch(api + '/api/comfyui/queue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ workflow: workflow })
       });
-      if (resp.ok) {
-        var data = await resp.json();
-        alert('Workflow successfully queued to ComfyUI server! Prompt ID: ' + (data.prompt_id || 'unknown'));
-      } else {
-        var errText = await resp.text();
-        alert('Failed to queue workflow: ' + errText);
+      var data = {};
+      try { data = await resp.json(); } catch (_) { /* non-JSON body */ }
+      if (!resp.ok) {
+        alert('Failed to run workflow: ' + ((data && data.detail) || (data && data.message) || ('HTTP ' + resp.status)));
+        return;
       }
+      var promptId = data.prompt_id || data.number || 'unknown';
+      // Reset run state and start polling.
+      stopRunPolling();
+      runState.active = true;
+      runState.promptId = promptId;
+      runState.status = 'queued';
+      runState.startedAt = Date.now();
+      runState.error = null;
+      runState.images = [];
+      startRunPolling(promptId);
     } catch (err) {
-      alert('Failed to queue workflow: ' + (err && err.message || err));
+      alert('Failed to run workflow: ' + (err && err.message || err));
+    } finally {
+      if (btn && original) btn.innerHTML = original;
     }
+  };
+
+  window.comfyuiDismissRun = function () {
+    stopRunPolling();
+    runState.active = false;
+    runState.promptId = null;
+    runState.status = 'idle';
+    runState.error = null;
+    runState.images = [];
+    renderRunPanel();
+  };
+
+  window.comfyuiOpenComfyUI = function () {
+    var url = comfyuiBackendUrl();
+    // Prefer the backend-reported URL if we can fetch it cheaply; fall back
+    // to the default.  The module config may also expose COMfyUI backend.
+    if (typeof window.CONFIG !== 'undefined' && window.CONFIG.comfyuiBackendUrl) {
+      url = window.CONFIG.comfyuiBackendUrl;
+    }
+    window.open(url, '_blank', 'noopener');
+  };
+
+  // Backward-compatible alias — the old Queue button behaviour (fire + alert)
+  // is replaced by the Run flow above, but keep the symbol exported.
+  window.comfyuiQueueToServer = function () {
+    window.comfyuiRunWorkflow();
   };
 
   // ── Import / Export / Save ─────────────────────────────────────────────
@@ -1206,18 +1516,9 @@
       reader.onload = function (ev) {
         try {
           var json = JSON.parse(ev.target.result);
-          workflow = json;
-          selectedNodeId = null;
-          searchQuery = '';
-          expandedMaskCards = new Set();
-          lastMaskTestResult = null;
-          scale = 0;      // triggers auto-fit on next render
-          offset = null;  // triggers auto-center on next render
-          var searchInput = document.getElementById('cfSearchInput');
-          if (searchInput) searchInput.value = '';
+          loadWorkflowIntoEditor(json);
           build();
           comfyuiSwitchPanel('editor');
-          renderGraph();
         } catch (err) {
           alert('Invalid ComfyUI workflow JSON.');
         }
@@ -1285,6 +1586,7 @@
       renderGraph();
       if (activePanel === 'masks') renderMaskPipeline();
     }
+    renderRunPanel();  // re-render an in-flight run panel if one is active
   };
 
   window.comfyuiHideView = function () {

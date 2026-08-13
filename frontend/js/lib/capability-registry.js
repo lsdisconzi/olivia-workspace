@@ -118,21 +118,24 @@
       let available = true;
       let reason = 'ok';
 
+      // D-018: factors are evaluated in the fixed order service → permission
+      // → schema → downstream. The FIRST failing factor determines `reason`
+      // (subsequent failures only fill in their checks entry, never overwrite).
       if (factors.indexOf('service_health') !== -1) {
         checks.service = (cap.depends_on || []).every(function (svc) { return _serviceUp(svc); });
-        if (!checks.service) { available = false; reason = 'service-down'; }
+        if (!checks.service && available) { available = false; reason = 'service-down'; }
       }
       if (factors.indexOf('permission') !== -1) {
         checks.permission = _permissionGranted(cap.required_permissions);
-        if (!checks.permission) { available = false; reason = 'permission-denied'; }
+        if (!checks.permission && available) { available = false; reason = 'permission-denied'; }
       }
       if (factors.indexOf('schema_compatibility') !== -1) {
         checks.schema = _schemaCompatible(cap);
-        if (!checks.schema) { available = false; reason = 'schema-incompatible'; }
+        if (!checks.schema && available) { available = false; reason = 'schema-incompatible'; }
       }
       if (factors.indexOf('downstream_dependencies') !== -1) {
         checks.downstream = (cap.depends_on || []).every(function (svc) { return _serviceUp(svc); });
-        if (!checks.downstream) { available = false; reason = 'dependency-down'; }
+        if (!checks.downstream && available) { available = false; reason = 'dependency-down'; }
       }
 
       _auditEntry(capabilityId, available ? 'available' : reason, reason);

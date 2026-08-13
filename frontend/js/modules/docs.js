@@ -368,11 +368,7 @@ async function docsDeleteProjectFile(relPath, name, projectId) {
   if (!confirmed) return;
 
   try {
-    const res = await fetch(`${API_BASE}/api/projects/${encodeURIComponent(pid)}/file?path=${encodeURIComponent(path)}`, {
-      method: 'DELETE',
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+    await LA8159API.projects.fileDelete(pid, path);
 
     _checkedDocs.delete(_docContextKey(pid, path));
     if (typeof updateDocsContextBar === 'function') updateDocsContextBar();
@@ -425,13 +421,15 @@ async function resolveSharedDocCompanion(pathOrUrl) {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/api/shared/companion?path=${encodeURIComponent(sharedPath)}`);
-    if (!res.ok) {
+    let data = {};
+    try {
+      data = await LA8159API.shared.companion(sharedPath);
+    } catch (_e) {
+      // 404 is the normal "no companion" case — cache and return null.
       _sharedDocCompanionCache.set(cacheKey, null);
       return null;
     }
 
-    const data = await res.json().catch(() => ({}));
     const companion = data && data.companion_pdf && data.companion_pdf.url
       ? {
           path: String(data.companion_pdf.path || ''),
@@ -856,11 +854,7 @@ async function loadDocsTree() {
     const activeAgentId = (typeof selectedAgent !== 'undefined' && selectedAgent && selectedAgent.agent_id)
       ? String(selectedAgent.agent_id).trim()
       : '';
-    const listUrl = activeAgentId
-      ? `${API_BASE}/api/projects/${encodeURIComponent(projectId)}/files?agent_id=${encodeURIComponent(activeAgentId)}`
-      : `${API_BASE}/api/projects/${encodeURIComponent(projectId)}/files`;
-    const res = await fetch(listUrl);
-    const data = await res.json();
+    const data = await LA8159API.projects.files(projectId, activeAgentId);
     if (data && data.project_abs_path) {
       _docProjectAbsPathById.set(String(projectId), String(data.project_abs_path));
     }
@@ -1025,10 +1019,8 @@ async function toggleLawFileArticles(fullPath, category, filename, safeId) {
   container.innerHTML = '<div style="text-align:center;padding:12px;color:var(--gray);font-size:11px"><div class="loading" style="width:14px;height:14px;border-width:2px;display:inline-block"></div></div>';
 
   try {
-    const basePath = API.replace(/\/$/, '');
-    const res = await fetch(`${basePath}/shared/file?category=${encodeURIComponent(category)}&file=${encodeURIComponent(filename)}`);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
+    // Backend /api/shared/file reads only ?path= — compose "category/file".
+    const text = await LA8159API.shared.file(category && filename ? `${category}/${filename}` : fullPath);
     let articles;
     try { articles = JSON.parse(text); } catch(e) { throw new Error('JSON inválido'); }
 
@@ -1081,12 +1073,9 @@ async function previewLawArticle(fullPath, articleNumber) {
   modal.classList.add('show');
 
   try {
-    const basePath = API.replace(/\/$/, '');
     // /api/shared/article does not exist — fetch the full file and filter the article
-    const res = await fetch(`${basePath}/shared/file?path=${encodeURIComponent(fullPath)}`);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
-    
+    const text = await LA8159API.shared.file(fullPath);
+
     let article;
     try {
       const arr = JSON.parse(text);
@@ -3334,13 +3323,10 @@ async function getCheckedDocsContext() {
     const projectId = parts.projectId;
     if (!projectId || !path) continue;
     try {
-      const res = await fetch(`${API_BASE}/api/projects/${encodeURIComponent(projectId)}/content?path=${encodeURIComponent(path)}`);
-      if (res.ok) {
-        const data = await res.json();
-        const text = data.content || '';
-        const name = path.split('/').pop();
-        context += `\n[${name} | projeto:${projectId}]:\n${text}\n`;
-      }
+      const data = await LA8159API.projects.content(projectId, path);
+      const text = data.content || '';
+      const name = path.split('/').pop();
+      context += `\n[${name} | projeto:${projectId}]:\n${text}\n`;
     } catch(e) {
       console.warn('Failed to fetch project doc:', key, e);
     }
@@ -3350,19 +3336,15 @@ async function getCheckedDocsContext() {
   for (const key of _checkedArticles) {
     const [path, article] = key.split('#');
     try {
-      const basePath = API.replace(/\/$/, '');
       // /api/shared/article does not exist — fetch full file and filter
-      const res = await fetch(`${basePath}/shared/file?path=${encodeURIComponent(path)}`);
-      if (res.ok) {
-        const text = await res.text();
-        try {
-          const arr = JSON.parse(text);
-          const articles = Array.isArray(arr) ? arr : (arr.articles || []);
-          const articleData = articles.find(a => String(a.article_number) === String(article));
-          if (articleData) context += `\n[${path.split('/').pop()} - Artigo ${article}]:\n${articleData.text || ''}\n`;
-        } catch(e) {
-          console.warn('Invalid article JSON:', key);
-        }
+      const text = await LA8159API.shared.file(path);
+      try {
+        const arr = JSON.parse(text);
+        const articles = Array.isArray(arr) ? arr : (arr.articles || []);
+        const articleData = articles.find(a => String(a.article_number) === String(article));
+        if (articleData) context += `\n[${path.split('/').pop()} - Artigo ${article}]:\n${articleData.text || ''}\n`;
+      } catch(e) {
+        console.warn('Invalid article JSON:', key);
       }
     } catch(e) {
       console.warn('Failed to fetch article:', key, e);
@@ -3412,11 +3394,12 @@ async function loadSharedDataTree() {
 
   try {
     const hasAgent = typeof selectedAgent !== 'undefined' && selectedAgent && selectedAgent.agent_id;
-    const scopeUrl = hasAgent
-      ? `${API_BASE}/api/shared/scopes?agent_id=${encodeURIComponent(selectedAgent.agent_id)}`
-      : `${API_BASE}/api/shared/scopes`;
-    const res = await fetch(scopeUrl);
-    const data = await res.json().catch(() => ({}));
+    let data = {};
+    try {
+      data = await LA8159API.shared.scopes(hasAgent ? selectedAgent.agent_id : '');
+    } catch (_e) {
+      // Tolerant: no scopes → show the empty-scope message below.
+    }
     const scopes = Array.isArray(data) ? data : (data.scopes || []);
 
     if (!scopes.length) {
@@ -3684,17 +3667,11 @@ async function syncSharedLawSelection() {
   _setSharedLawActionStatus('Sincronizando no Qdrant...', 'info');
 
   try {
-    const params = new URLSearchParams();
-    params.set('path', selectedPath);
-    if (frameworkCode) params.set('framework_code', frameworkCode);
-    params.set('prune_framework', 'true');
-
-    const res = await fetch(`${API_BASE}/api/shared/law/sync?${params.toString()}`, { method: 'POST' });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      const detail = String(data.detail || `HTTP ${res.status}`);
-      throw new Error(detail);
-    }
+    const data = await LA8159API.shared.lawSync({
+      path: selectedPath,
+      framework_code: frameworkCode,
+      prune_framework: true,
+    });
 
     const summary = data.summary || {};
     const synced = Number(summary.frameworks_synced || 0);
@@ -3900,8 +3877,7 @@ async function toggleSharedDir(path, safeId, el) {
   children.innerHTML = '<div style="padding:8px 12px;color:var(--gray);font-size:11px">Carregando...</div>';
 
   try {
-    const res = await fetch(`${API_BASE}/api/shared/list?path=${encodeURIComponent(path || '')}`);
-    const data = await res.json().catch(() => ({}));
+    const data = await LA8159API.shared.list(path || '');
     children.innerHTML = _renderSharedEntries(path, data);
     children.dataset.loaded = 'true';
     _bindDocsPinnedPathUiSync();
@@ -3988,9 +3964,7 @@ async function toggleSharedLawArticles(filePath, safeId) {
   container.innerHTML = '<div style="padding:8px 12px;color:var(--gray);font-size:11px">Lendo artigos...</div>';
 
   try {
-    const res = await fetch(`${API_BASE}/api/shared/law/articles?path=${encodeURIComponent(filePath)}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const payload = await res.json().catch(() => ({}));
+    const payload = await LA8159API.shared.lawArticles(filePath);
     const articles = _normalizeSharedLawArticles(payload.items || payload.articles || payload);
     const first = articles[0] || {};
     _sharedLawFileMetaCache[filePath] = {

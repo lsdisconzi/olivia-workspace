@@ -60,6 +60,14 @@ document.addEventListener('DOMContentLoaded', function () {
   const embedMode = !!window.Olivia_EMBED_MODE;
   console.log(`🟢 LA8159 Workspace initialized${embedMode ? ' (embed mode)' : ''}`);
 
+  // Phase 4.5 pilot: warm the capability manifest and start service health
+  // polling (fire-and-forget; availability is advisory and never blocking).
+  if (typeof window.OliviaCapabilities !== 'undefined' && typeof window.OliviaCapabilities.init === 'function') {
+    window.OliviaCapabilities.init().catch(function (err) {
+      console.warn('[core] OliviaCapabilities init failed:', err);
+    });
+  }
+
   // Initialize mobile layout
   initMobile();
   applyMobileLayout();
@@ -85,80 +93,15 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.classList.add('workspace-embed-mode');
   }
 
-  // Set up event listeners for nav
-  const hamburger = document.querySelector('.hamburger');
-  if (hamburger) {
-    hamburger.addEventListener('click', toggleMobileMenu);
-  }
-
   // Initial UI state
   if (!embedMode) showWelcomeView();
 });
-
-// Mobile layout functions
-function initMobile() {
-  const hamburger = document.querySelector('.hamburger');
-  if (!hamburger) return;
-
-  hamburger.addEventListener('click', toggleMobileMenu);
-
-  // Close mobile drawer when clicking a link
-  document.querySelectorAll('.mobile-drawer a').forEach(link => {
-    link.addEventListener('click', () => {
-      document.querySelector('.mobile-drawer').classList.remove('open');
-      document.querySelector('.hamburger').classList.remove('open');
-    });
-  });
-}
-
-function applyMobileLayout() {
-  const sidebar = document.getElementById('sidebarEl') || document.querySelector('.sidebar');
-  const overlay = document.getElementById('mobileSidebarOverlay');
-  const strip = sidebar ? sidebar.querySelector('.sidebar-collapsed-strip') : null;
-  const isMobile = window.innerWidth <= 768;
-
-  if (isMobile) {
-    // Preserve the wider-layout sidebar state before forcing the mobile sheet behavior.
-    if (sidebar) {
-      if (!sidebar.dataset.preMobileCollapsed) {
-        sidebar.dataset.preMobileCollapsed = sidebar.classList.contains('collapsed') ? 'true' : 'false';
-      }
-      sidebar.classList.remove('mobile-open');
-      sidebar.classList.add('collapsed');
-    }
-    if (strip) {
-      strip.classList.remove('show-mobile');
-    }
-    if (overlay) {
-      overlay.classList.remove('visible');
-    }
-  } else {
-    if (sidebar) {
-      sidebar.classList.remove('mobile-open');
-      if (sidebar.dataset.preMobileCollapsed) {
-        sidebar.classList.toggle('collapsed', sidebar.dataset.preMobileCollapsed === 'true');
-        delete sidebar.dataset.preMobileCollapsed;
-      }
-    }
-    if (strip) {
-      strip.classList.remove('show-mobile');
-    }
-    if (overlay) {
-      overlay.classList.remove('visible');
-    }
-  }
-}
-
-// Window resize handler
-window.addEventListener('resize', applyMobileLayout);
 
 // Expose functions to window scope
 window.escapeHtml = escapeHtml;
 window.linkifyPaths = linkifyPaths;
 window.autoGrow = autoGrow;
 window.makeEl = makeEl;
-window.initMobile = initMobile;
-window.applyMobileLayout = applyMobileLayout;
 
 // window.customPrompt - a beautiful custom async prompt modal dialog
 window.customPrompt = function (message, defaultValue, options) {

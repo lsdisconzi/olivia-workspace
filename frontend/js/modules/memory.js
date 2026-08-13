@@ -14,6 +14,33 @@ let _mvRoutingConfig = { default_qdrant_url: '', rules: {} };
 let _mvCollectionDetailsOpen = '';
 let _mvPanelCtxListenerBound = false;
 
+// ── Phase 4.5 pilot: capability availability gate ─────────────────
+// Consumes window.OliviaCapabilities (Phase 3 primitive; D-005 says
+// availability ≠ raw service health). ADVISORY and DEFENSIVE: when the
+// registry is absent or its manifest has not finished loading, the gate
+// passes — the pilot never blocks a healthy action and adds no latency
+// (rollback criterion 4.5).
+var _MV_CAPABILITY_LABELS = {
+  'service-down': 'serviço indisponível',
+  'permission-denied': 'sem permissão para esta ação',
+  'schema-incompatible': 'esquema incompatível',
+  'dependency-down': 'dependência indisponível'
+};
+
+function _mvCapabilityGate(capabilityId) {
+  var caps = window.OliviaCapabilities;
+  if (!caps || typeof caps.availability !== 'function') return { ok: true };
+  var manifest = caps.manifest();
+  if (!manifest || !manifest.capabilities) return { ok: true }; // not warmed yet
+  if (!caps.get(capabilityId)) return { ok: true };             // not in manifest
+  var a = caps.availability(capabilityId);
+  return a && a.available ? { ok: true } : { ok: false, reason: (a && a.reason) || 'unavailable' };
+}
+
+function _mvCapabilityReason(reason) {
+  return _MV_CAPABILITY_LABELS[reason] || reason || 'indisponível';
+}
+
 function _mvCollectionPoints(c) {
   var points = Number((c && (c.points || c.points_count)) || 0);
   if (Number.isFinite(points) && points > 0) return Math.round(points);
@@ -139,9 +166,20 @@ function mvToast(msg, duration) {
 function _mvSet(id, val, prop) { var e = document.getElementById(id); if (e) e[prop || 'textContent'] = val; }
 
 async function mvLoadOverview() {
+  // Phase 4.5 pilot — observability: log capability availability. Background
+  // refresh is never blocked (existing error handling renders the offline
+  // state); this surfaces when a memory capability becomes unavailable.
+  var caps = window.OliviaCapabilities;
+  if (caps && typeof caps.availability === 'function') {
+    ['memory.collections', 'memory.search', 'memory.ingest', 'memory.graph', 'memory.routing'].forEach(function (id) {
+      var a = caps.availability(id);
+      if (a && !a.available) {
+        console.info('[OliviaMemory] capability ' + id + ' unavailable: ' + (a.reason || 'unknown'));
+      }
+    });
+  }
   try {
-    var res = await fetch(API_BASE + '/api/memory/collections');
-    var data = await res.json();
+    var data = await LA8159API.memory.collections();
     if (data.error) {
       mvSetHealth('mvHealthQdrant', 'off', 'Qdrant: offline');
       _mvSet('mvStatVectors', '—');
@@ -174,8 +212,7 @@ async function mvLoadOverview() {
   } catch (e) { mvSetHealth('mvHealthQdrant', 'off', 'Qdrant: erro'); }
 
   try {
-    var res2 = await fetch(API_BASE + '/api/memory/graph/stats');
-    var gdata = await res2.json();
+    var gdata = await LA8159API.memory.graphStats();
     _mvGraphData = gdata;
     if (gdata.status === 'connected') {
       var labels = gdata.labels || {};
@@ -280,17 +317,17 @@ window.mvSearch = async function () {
   if (!query) return;
 
   var results = document.getElementById('mvSearchResults');
+
+  var gate = _mvCapabilityGate('memory.search');
+  if (!gate.ok) {
+    results.innerHTML = '<div class="mv-error"><i class="fas fa-exclamation-circle"></i> Busca indisponível: ' + escapeHtml(_mvCapabilityReason(gate.reason)) + '</div>';
+    return;
+  }
+
   results.innerHTML = '<div class="mv-loading"><span class="loading"></span> Searching...</div>';
 
   try {
-    var body = { query: query };
-    if (_mvSelectedCollection) body.collection = _mvSelectedCollection;
-    var res = await fetch(API_BASE + '/api/memory/search', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    var data = await res.json();
+    var data = await LA8159API.memory.search(query, _mvSelectedCollection);
     var items = data.results || [];
 
     if (!items.length) {
@@ -389,6 +426,12 @@ window.mvDoIngest = async function () {
   var text = textEl ? textEl.value.trim() : '';
   var collection = collEl ? collEl.value : 'awa_documents';
 
+  var gate = _mvCapabilityGate('memory.ingest');
+  if (!gate.ok) {
+    mvToast('⚠ Ingestão indisponível: ' + _mvCapabilityReason(gate.reason), 3500);
+    return;
+  }
+
   if (!_mvCanWriteCollection(collection)) {
     mvToast('Escrita bloqueada para ' + collection + ' pelas regras de roteamento', 3000);
     return;
@@ -411,15 +454,10 @@ window.mvDoIngest = async function () {
   metadata.doc_type = 'note';
 
   try {
-    var res = await fetch(API_BASE + '/api/memory/ingest', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: text, collection: collection, metadata: metadata })
-    });
-    var data = await res.json();
+    var data = await LA8159API.memory.ingest({ content: text, collection: collection, metadata: metadata });
 
-    if (!res.ok || data.status === 'error') {
-      throw new Error(data.message || data.detail || ('HTTP ' + res.status));
+    if (data.status === 'error') {
+      throw new Error(data.message || data.detail || 'HTTP error');
     }
 
     // Success
@@ -518,17 +556,17 @@ window.mvDoIngestArticles = async function () {
   if (!Array.isArray(articles) || !articles.length) {
     mvToast('O JSON deve ser um array de artigos não-vazio', 2500); return;
   }
+  var gate = _mvCapabilityGate('memory.ingest');
+  if (!gate.ok) {
+    mvToast('⚠ Ingestão de artigos indisponível: ' + _mvCapabilityReason(gate.reason), 3500);
+    return;
+  }
   var origHtml = btn ? btn.innerHTML : '';
   if (btn) { btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Ingerindo ' + articles.length + ' artigos…'; }
   if (statusEl) statusEl.style.display = 'none';
   try {
-    var res = await fetch(API_BASE + '/api/memory/ingest/articles', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ articles: articles, collection: '' })
-    });
-    var data = await res.json();
-    if (!res.ok || data.status === 'error') throw new Error(data.message || 'HTTP ' + res.status);
+    var data = await LA8159API.memory.ingestArticles(articles, '');
+    if (data.status === 'error') throw new Error(data.message || 'HTTP error');
     mvToast('✓ ' + data.count + ' artigos ingeridos em ' + data.collection, 4000);
     if (statusEl) {
       statusEl.style.display = 'block'; statusEl.style.color = 'var(--green)';
@@ -558,6 +596,11 @@ window.mvDoIngestViolation = async function () {
   var violation;
   try { violation = JSON.parse(val); } catch (e) { mvToast('JSON inválido: ' + e.message, 3000); return; }
   var collection = (collEl ? collEl.value : '') || 'awa_violations';
+  var gate = _mvCapabilityGate('memory.ingest');
+  if (!gate.ok) {
+    mvToast('⚠ Ingestão de violação indisponível: ' + _mvCapabilityReason(gate.reason), 3500);
+    return;
+  }
   if (!_mvCanWriteCollection(collection)) {
     mvToast('Escrita bloqueada para ' + collection + ' pelas regras de roteamento', 3000);
     return;
@@ -566,13 +609,8 @@ window.mvDoIngestViolation = async function () {
   if (btn) { btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Ingerindo…'; }
   if (statusEl) statusEl.style.display = 'none';
   try {
-    var res = await fetch(API_BASE + '/api/memory/ingest/violation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ violation: violation, collection: collection })
-    });
-    var data = await res.json();
-    if (!res.ok || data.status === 'error') throw new Error(data.message || 'HTTP ' + res.status);
+    var data = await LA8159API.memory.ingestViolation(violation, collection);
+    if (data.status === 'error') throw new Error(data.message || 'HTTP error');
     var vid = data.violation_id || '';
     mvToast('✓ Violação ' + (vid || data.point_id.substring(0, 8)) + ' ingerida em ' + data.collection, 3500);
     if (statusEl) {
@@ -628,22 +666,23 @@ window.mvDoIngestGraph = async function () {
   var payload;
   try { payload = JSON.parse(val); } catch (e) { mvToast('JSON inválido: ' + e.message, 3000); return; }
 
+  var gate = _mvCapabilityGate('memory.ingest');
+  if (!gate.ok) {
+    mvToast('⚠ Ingestão de grafo indisponível: ' + _mvCapabilityReason(gate.reason), 3500);
+    return;
+  }
+
   var origHtml = btn ? btn.innerHTML : '';
   if (btn) { btn.disabled = true; btn.innerHTML = '<span class="loading"></span> Ingerindo...'; }
   if (statusEl) statusEl.style.display = 'none';
 
   try {
-    var res = await fetch(API_BASE + '/api/memory/graph/ingest', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nodes: Array.isArray(payload.nodes) ? payload.nodes : [],
-        relationships: Array.isArray(payload.relationships) ? payload.relationships : []
-      })
-    });
-    var data = await res.json();
-    if (!res.ok || data.status === 'error' || data.status === 'degraded') {
-      throw new Error(data.error || data.message || ('HTTP ' + res.status));
+    var data = await LA8159API.memory.graphIngest(
+      Array.isArray(payload.nodes) ? payload.nodes : [],
+      Array.isArray(payload.relationships) ? payload.relationships : []
+    );
+    if (data.status === 'error' || data.status === 'degraded') {
+      throw new Error(data.error || data.message || 'HTTP error');
     }
     mvToast('✓ Grafo ingerido: ' + (data.nodes_upserted || 0) + ' nós · ' + (data.relationships_upserted || 0) + ' relações', 4000);
     if (statusEl) {
@@ -677,8 +716,7 @@ async function mvLoadQuadrants() {
   var shortCritical = [], shortContext = [], longReference = [], longArchive = [];
   _mvShortMemory.forEach(function (item) { if (item.importance >= 8) shortCritical.push(item); else shortContext.push(item); });
   try {
-    var res = await fetch(API_BASE + '/api/memory/search', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: 'important reference knowledge', collection: '', limit: 20, min_score: 0.1 }) });
-    var data = await res.json();
+    var data = await LA8159API.memory.search('important reference knowledge', '', { limit: 20, minScore: 0.1 });
     (data.results || []).forEach(function (r, i) { if (i < 10) longReference.push({ text: r.text, source: r.file_path || r.doc_type }); else longArchive.push({ text: r.text, source: r.file_path || r.doc_type }); });
   } catch (e) { /* silent */ }
   mvRenderQuadrant('mvQ1Body', 'mvQ1Count', shortCritical);
@@ -740,6 +778,14 @@ function mvLoadRedistribute() {
 async function mvAnalyzeWithAI() {
   var analysisEl = document.getElementById('mvRedistAnalysis');
   if (!analysisEl) return;
+
+  var gate = _mvCapabilityGate('assistant.chat');
+  if (!gate.ok) {
+    analysisEl.style.display = 'block';
+    analysisEl.innerHTML = '<div style="color:var(--red);font-size:11px">Análise indisponível: ' + escapeHtml(_mvCapabilityReason(gate.reason)) + '</div>';
+    return;
+  }
+
   analysisEl.style.display = 'block';
   analysisEl.innerHTML = '<div class="mv-loading"><span class="loading"></span> A LA8159 está analisando sua memória...</div>';
 
@@ -839,9 +885,7 @@ window.mvAddRoutingRule = function () {
 
 async function mvLoadRoutingConfig() {
   try {
-    var res = await fetch(API_BASE + '/api/memory/routing');
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    var data = await res.json();
+    var data = await LA8159API.memory.routing();
     var rules = {};
     (data.rules || []).forEach(function (r) {
       rules[r.collection] = {
@@ -868,6 +912,12 @@ window.mvLoadRoutingConfig = mvLoadRoutingConfig;
 window.mvSaveRoutingConfig = async function () {
   var list = document.getElementById('mvRoutingRulesList');
   if (!list) return;
+
+  var gate = _mvCapabilityGate('memory.routing');
+  if (!gate.ok) {
+    mvToast('⚠ Roteamento indisponível: ' + _mvCapabilityReason(gate.reason), 3500);
+    return;
+  }
   var rows = list.querySelectorAll('.mv-routing-row');
   var rules = [];
   rows.forEach(function (row) {
@@ -896,13 +946,8 @@ window.mvSaveRoutingConfig = async function () {
   };
 
   try {
-    var res = await fetch(API_BASE + '/api/memory/routing', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    var data = await res.json();
-    if (!res.ok || data.status !== 'ok') throw new Error(data.error || data.detail || ('HTTP ' + res.status));
+    var data = await LA8159API.memory.routingSave(payload);
+    if (data.status !== 'ok') throw new Error(data.error || data.detail || 'HTTP error');
     mvToast('✓ Roteamento salvo', 2200);
     await mvLoadRoutingConfig();
     await mvRefreshCollections();
@@ -927,9 +972,7 @@ var MV_NEO4J_CONSOLE_URL = 'https://console-preview.neo4j.io/projects';
 // Fetch available sources from server and populate presets
 async function mvLoadSourcePresets() {
   try {
-    var resp = await fetch(API_BASE + '/api/memory/sources');
-    if (!resp.ok) return;
-    var data = await resp.json();
+    var data = await LA8159API.memory.sources();
     if (data.qdrant) {
       if (data.qdrant.local && data.qdrant.local.url) MV_QDRANT_PRESETS.local.url = data.qdrant.local.url;
       if (data.qdrant.cloud && data.qdrant.cloud.url) MV_QDRANT_PRESETS.cloud.url = data.qdrant.cloud.url;
@@ -1023,19 +1066,16 @@ window.mvSelectNeo4jSource = function (mode) {
 async function mvLoadConfig() {
   // Pull the server's currently active connection so the UI reflects truth
   try {
-    var resp = await fetch(API_BASE + '/api/memory/config');
-    if (resp.ok) {
-      var srv = await resp.json();
-      var local = {};
-      try { local = JSON.parse(localStorage.getItem('OliviaLegal.memory.config') || '{}'); } catch (e) { }
-      // Server values win (they reflect what's actually being used)
-      if (srv.qdrant_url) local.qdrant_url = srv.qdrant_url;
-      if (srv.neo4j_uri) local.neo4j_uri = srv.neo4j_uri;
-      if (srv.neo4j_user) local.neo4j_user = srv.neo4j_user;
-      if (srv.embed_model) local.embed_model = srv.embed_model;
-      if (srv.extract_model) local.extract_model = srv.extract_model;
-      localStorage.setItem('OliviaLegal.memory.config', JSON.stringify(local));
-    }
+    var srv = await LA8159API.memory.config();
+    var local = {};
+    try { local = JSON.parse(localStorage.getItem('OliviaLegal.memory.config') || '{}'); } catch (e) { }
+    // Server values win (they reflect what's actually being used)
+    if (srv.qdrant_url) local.qdrant_url = srv.qdrant_url;
+    if (srv.neo4j_uri) local.neo4j_uri = srv.neo4j_uri;
+    if (srv.neo4j_user) local.neo4j_user = srv.neo4j_user;
+    if (srv.embed_model) local.embed_model = srv.embed_model;
+    if (srv.extract_model) local.extract_model = srv.extract_model;
+    localStorage.setItem('OliviaLegal.memory.config', JSON.stringify(local));
   } catch (e) { /* server unreachable — use localStorage only */ }
 
   try {
@@ -1096,21 +1136,15 @@ async function mvSaveConfig() {
     // 1. Persist locally
     localStorage.setItem('OliviaLegal.memory.config', JSON.stringify(config));
     // 2. Push to server so backend reconnects immediately
-    var resp = await fetch(API_BASE + '/api/memory/config', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        qdrant_url: config.qdrant_url,
-        qdrant_api_key: config.qdrant_api_key,
-        neo4j_uri: config.neo4j_uri,
-        neo4j_user: config.neo4j_user,
-        neo4j_pass: config.neo4j_pass,
-        embed_model: config.embed_model,
-        extract_model: config.extract_model,
-      })
+    await LA8159API.memory.configSave({
+      qdrant_url: config.qdrant_url,
+      qdrant_api_key: config.qdrant_api_key,
+      neo4j_uri: config.neo4j_uri,
+      neo4j_user: config.neo4j_user,
+      neo4j_pass: config.neo4j_pass,
+      embed_model: config.embed_model,
+      extract_model: config.extract_model,
     });
-    var result = await resp.json();
-    if (!resp.ok) throw new Error(result.detail || result.error || 'Server error');
     // Visual feedback: green
     if (btn) {
       btn.innerHTML = '<i class="fas fa-check-circle"></i> Salvo ✓';
@@ -1134,8 +1168,7 @@ async function mvSaveConfig() {
 // Load sidebar summary
 async function mvLoadSidebarSummary() {
   try {
-    var res = await fetch(API_BASE + '/api/memory/collections');
-    var data = await res.json();
+    var data = await LA8159API.memory.collections();
     var cols = Array.isArray(data) ? data : (data.collections || []);
     if (cols.length) {
       var total = cols.reduce(function (s, c) { return s + (c.points || 0); }, 0);
@@ -1145,8 +1178,7 @@ async function mvLoadSidebarSummary() {
   } catch (e) { var qs3 = document.getElementById('mvSidebarQdrantStatus'); if (qs3) { qs3.textContent = 'erro'; qs3.style.color = 'var(--red)'; } }
 
   try {
-    var res2 = await fetch(API_BASE + '/api/memory/graph/stats');
-    var gdata = await res2.json();
+    var gdata = await LA8159API.memory.graphStats();
     if (gdata.status === 'connected') {
       var nodes = Object.values(gdata.labels || {}).reduce(function (s, v) { return s + v; }, 0);
       var el2 = document.getElementById('mvSidebarGraphCount'); if (el2) el2.textContent = nodes.toLocaleString();
@@ -1212,13 +1244,21 @@ window.mvOpenCollectionDetails = async function (collectionName, silent) {
   _mvCollectionDetailsOpen = name;
   var box = document.getElementById('mvCollectionDetail');
   if (!box) return;
+
+  var gate = _mvCapabilityGate('memory.collections');
+  if (!gate.ok) {
+    if (!silent) {
+      box.innerHTML = '<div style="font-size:11px;color:var(--red)">Detalhes indisponíveis: ' + escapeHtml(_mvCapabilityReason(gate.reason)) + '</div>';
+    }
+    return;
+  }
+
   if (!silent) {
     box.innerHTML = '<div class="mv-loading"><span class="loading"></span> Carregando detalhes de ' + escapeHtml(name) + '...</div>';
   }
 
   try {
-    var res = await fetch(API_BASE + '/api/memory/collections/' + encodeURIComponent(name));
-    var data = await res.json();
+    var data = await LA8159API.memory.collectionDetails(name);
     var c = data.collection || {};
     var samples = Array.isArray(data.samples) ? data.samples : [];
     var status = c.status || 'unknown';
@@ -1268,8 +1308,14 @@ window.mvCreateCollection = async function () {
   var name = prompt('Collection name (letters, numbers, underscores):');
   if (!name || !/^[a-zA-Z0-9_]+$/.test(name)) return;
 
+  var gate = _mvCapabilityGate('memory.collections');
+  if (!gate.ok) {
+    mvToast('⚠ Criar coleção indisponível: ' + _mvCapabilityReason(gate.reason), 3000);
+    return;
+  }
+
   try {
-    await fetch(API_BASE + '/api/memory/collections', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: name }) });
+    await LA8159API.memory.createCollection(name);
     mvToast('Collection created: ' + name, 2000);
     await mvRefreshCollections();
   } catch (e) { mvToast('Failed: ' + e.message, 3000); }
@@ -1300,12 +1346,7 @@ window.mvQuickSearch = async function (query) {
   if (resultsEl) resultsEl.innerHTML = '<div class="mv-loading"><span class="loading"></span> Buscando...</div>';
 
   try {
-    var res = await fetch(API_BASE + '/api/memory/search', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: query, limit: 5 })
-    });
-    var data = await res.json();
+    var data = await LA8159API.memory.search(query, '', { limit: 5 });
     var items = data.results || [];
     if (resultsEl) {
       if (!items.length) {

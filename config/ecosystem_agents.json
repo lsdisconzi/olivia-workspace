@@ -1131,6 +1131,79 @@
       ],
       "tool_count": 39,
       "description": "Legal violation analysis & refinement pipeline (MCP only, 15 tools)"
+    },
+    {
+      "name": "filesystem",
+      "project": "core",
+      "description": "MCP filesystem server — read/write files in allowed roots",
+      "tool_count": 11,
+      "tools": [
+        "read_file",
+        "read_multiple_files",
+        "write_file",
+        "edit_file",
+        "create_directory",
+        "list_directory",
+        "directory_tree",
+        "move_file",
+        "search_files",
+        "get_file_info",
+        "list_allowed_directories"
+      ]
+    },
+    {
+      "name": "comfyui-workflow",
+      "project": "comfyui",
+      "description": "ComfyUI workflow management (queue, history, jobs)",
+      "tool_count": 12,
+      "tools": [
+        "comfyui_list_jobs",
+        "comfyui_get_job",
+        "comfyui_cancel_job",
+        "comfyui_list_history",
+        "comfyui_get_history",
+        "comfyui_get_queue",
+        "comfyui_clear_queue",
+        "comfyui_delete_queue_item",
+        "comfyui_interrupt",
+        "comfyui_free_memory",
+        "comfyui_clear_history",
+        "comfyui_delete_history_item"
+      ]
+    },
+    {
+      "name": "comfyui-model",
+      "project": "comfyui",
+      "description": "ComfyUI model & embedding management",
+      "tool_count": 4,
+      "tools": [
+        "comfyui_list_model_folders",
+        "comfyui_list_models",
+        "comfyui_list_embeddings",
+        "comfyui_view_metadata"
+      ]
+    },
+    {
+      "name": "comfyui-node",
+      "project": "comfyui",
+      "description": "ComfyUI node inspection",
+      "tool_count": 2,
+      "tools": [
+        "comfyui_list_nodes",
+        "comfyui_get_node_info"
+      ]
+    },
+    {
+      "name": "comfyui-system",
+      "project": "comfyui",
+      "description": "ComfyUI system stats, features & extensions",
+      "tool_count": 4,
+      "tools": [
+        "comfyui_system_stats",
+        "comfyui_list_features",
+        "comfyui_get_extensions",
+        "comfyui_ecosystem_report"
+      ]
     }
   ],
   "name_map": {
@@ -1146,7 +1219,13 @@
     "violation-refiner": "violation-mcp",
     "ocr-main-ocr": "ocr-core",
     "ocr-main-pdf": "pdf-server",
-    "discovery-intelligence": "discovery-mcp"
+    "discovery-intelligence": "discovery-mcp",
+    "mcp-server-files": "filesystem",
+    "comfyui-workflow": "comfyui-workflow",
+    "comfyui-model": "comfyui-model",
+    "comfyui-node": "comfyui-node",
+    "comfyui-system": "comfyui-system",
+    "audio-main": "audio-mcp"
   },
   "summary_text": "[Available MCP Ecosystem Services]\n\n## audio\n  Torchaudio-based audio processing (FastAPI + MCP, 8 tools)\n  MCP servers: audio-mcp (8 tools)\n  Agents: audio_processor: Processes, resamples, slices, and extracts features from audio files, asr_manager: Manages ASR models and performs greedy transcription\n\n## discovery\n  Discovery intelligence platform (FastAPI + stdio MCP, 11 tools)\n  MCP servers: discovery-mcp (30 tools)\n  Agents: discovery_agent: Discovers files, endpoints, and law frameworks; runs pipelines, intelligence_analyst: Runs intelligence analysis including case graphs and gap reports\n\n## garge\n  Main AI tools & services hub (FastAPI + 5 MCP servers, 107 tools)\n  MCP servers: garage-core (40 tools), garage-files (10 tools), garage-ingestion (12 tools), garage-prompt (7 tools), garage-qdrant (18 tools)\n  Agents: garage_assistant: Orchestrates AI assistants, knowledge management, and LLM interactions, qdrant_manager: Manages Qdrant vector collections, ingestion, and semantic search, file_manager: Reads, writes, uploads, and manages files and transcripts, prompt_engineer: Generates, optimizes, and evaluates LLM prompts\n\n## juris-search\n  Legal document search & analysis engine (FastAPI + MCP, 44 tools)\n  MCP servers: juris-mcp (33 tools)\n  Agents: legal_searcher: Searches legal documents and jurisprudence across Brazilian courts, legal_indexer: Manages document indexing and corpus rebuilds, legal_analyst: Analyzes legal documents and citations\n\n## ocr\n  OCR & PDF processing service (FastAPI + 2 MCP servers, 10 tools)\n  MCP servers: ocr-core (5 tools), pdf-server (7 tools)\n  Agents: ocr_reader: Extracts text from images and scanned PDFs, pdf_processor: Processes PDF files for text extraction and analysis\n\n## transcription\n  Audio transcription & diarization service (FastAPI + 3 MCP servers, 61 tools)\n  MCP servers: transcription-core (5 tools), diarization (3 tools), translate (3 tools)\n  Agents: transcriber: Transcribes audio to text with speaker diarization, diarizer: Identifies speakers in audio transcriptions, translator: Translates and analyzes transcribed content\n\n## violation-refiner\n  Legal violation analysis & refinement pipeline (MCP only, 15 tools)\n  MCP servers: violation-mcp (39 tools)\n  Agents: violation_checker: Analyses transcripts and builds structured violation reports, authority_verifier: Verifies legal authorities and statute citations, qdrant_indexer: Indexes and searches violation data in Qdrant\n"
 }

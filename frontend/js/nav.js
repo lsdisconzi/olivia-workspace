@@ -101,6 +101,9 @@ function applyMobileLayout() {
   }
 }
 
+// Window resize handler — applies mobile layout at every breakpoint crossing
+window.addEventListener('resize', applyMobileLayout);
+
 // Update active navigation link
 function updateActiveNavLink(activeLinkId) {
   document.querySelectorAll('.nav-link').forEach(link => {

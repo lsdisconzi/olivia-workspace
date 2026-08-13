@@ -75,6 +75,8 @@
   <link href="css/responsive-mobile.css" rel="stylesheet" />
   <link href="css/drive.css" rel="stylesheet" />
   <link href="css/health.css" rel="stylesheet" />
+  <link href="css/procurement.css" rel="stylesheet" />
+  <link href="css/ocr-pipeline.css" rel="stylesheet" />
   <link href="css/outreach.css" rel="stylesheet" />
   <link href="css/comfyui-workflow.css" rel="stylesheet" />
   <!-- Mobile-specific meta & PWA hints (frontend-mobile) -->
@@ -1788,6 +1790,34 @@
                   class="fas fa-heart-pulse"></i> Open Health</button>
             </div>
           </div>
+          <!-- TAB: Procurement -->
+          <div class="sidebar-section" id="tab-procurement">
+            <div style="padding:14px 12px">
+              <div
+                style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
+                <i class="fas fa-receipt" style="color:#C4622D"></i> Procurement
+              </div>
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Upload de notas fiscais e
+                faturas de fornecedores. A Olivia extrai os dados com OCR, monta uma linha do tempo do pipeline e
+                conversa com você sobre as faturas processadas.</p>
+              <button class="btn" onclick="procurementShowView()" style="width:100%;justify-content:center"><i
+                  class="fas fa-receipt"></i> Open Procurement</button>
+            </div>
+          </div>
+          <!-- TAB: OCR Pipeline -->
+          <div class="sidebar-section" id="tab-ocr">
+            <div style="padding:14px 12px">
+              <div
+                style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
+                <i class="fas fa-file-alt" style="color:#4A90D9"></i> OCR
+              </div>
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Upload PDFs e imagens de
+                documentos. A Olivia extrai o texto com OCR, gera Markdown e permite visualizar, baixar e comparar os
+                documentos processados.</p>
+              <button class="btn" onclick="ocrShowView()" style="width:100%;justify-content:center"><i
+                  class="fas fa-file-alt"></i> Open OCR</button>
+            </div>
+          </div>
           <!-- TAB: Mermaid -->
           <div class="sidebar-section" id="tab-mermaid">
             <div style="padding:14px 12px">
@@ -2326,6 +2356,10 @@
       <div class="drive-view" id="driveView"></div>
       <!-- ═══════ HEALTH VIEW ═══════ -->
       <div class="health-view" id="healthView"></div>
+      <!-- ═══════ PROCUREMENT VIEW ═══════ -->
+      <div class="procurement-view" id="procurementView"></div>
+      <!-- ═══════ OCR PIPELINE VIEW ═══════ -->
+      <div class="ocr-view" id="ocrView"></div>
       <!-- ═══════ OUTREACH CONCIERGE VIEW ═══════ -->
       <div class="outreach-view" id="outreachView"></div>
       <!-- ═══════ COMFYUI WORKFLOW VIEW ═══════ -->
@@ -6375,7 +6409,7 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
         <div style="font-size:10px;color:var(--gray);margin-bottom:8px"><span
             data-i18n="select_which_mcp_servers_this_agent_can_use_eg_mes">Select which MCP servers this agent can use
             (e.g., meshy-ai).</span></div>
-        <div class="tool-grid" id="modalMcpServersGrid" style="margin-top:6px">
+        <div class="tool-grid" id="modalMcpServersGrid" style="margin-top:6px;grid-template-columns:1fr">
           <div style="text-align:center;padding:8px;color:var(--gray);font-size:11px">
             <div class="loading"></div> Loading...
           </div>
@@ -6738,6 +6772,9 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <!-- ═══ JS Modules ═══ -->
   <script src="js/lib/logger.js"></script>
   <script src="js/config.js"></script>
+  <!-- Phase 4.2 (D-007): state split — application state + transient session state load before consumers -->
+  <script src="js/app-state.js"></script>
+  <script src="js/session-state.js"></script>
   <script src="js/lib/api-client.js"></script>
   <!-- Phase 3 platform primitives (additive; loaded before feature modules) -->
   <script src="js/lib/service-registry.js"></script>
@@ -6791,6 +6828,8 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <script src="js/modules/social-media.js"></script>
   <script src="js/modules/drive.js"></script>
   <script src="js/modules/health.js"></script>
+  <script src="js/modules/procurement.js"></script>
+  <script src="js/modules/ocr-pipeline.js"></script>
   <script src="js/modules/outreach.js"></script>
   <script src="js/modules/comfyui-workflow.js"></script>
   <script src="js/modules/writer.js"></script>

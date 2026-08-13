@@ -6402,9 +6402,15 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <!-- ═══ JS Modules ═══ -->
   <script src="js/lib/logger.js"></script>
   <script src="js/config.js"></script>
+  <!-- Phase 4.2 (D-007): state split — application state + transient session state load before consumers -->
+  <script src="js/app-state.js"></script>
+  <script src="js/session-state.js"></script>
   <script src="js/lib/api-client.js"></script>
-  <script src="js/state.js"></script>
-  <script src="js/utils.js"></script>
+  <!-- Phase 3 platform primitives (additive; loaded before feature modules) -->
+  <script src="js/lib/service-registry.js"></script>
+  <script src="js/lib/permission-interface.js"></script>
+  <script src="js/lib/context-client.js"></script>
+  <script src="js/lib/capability-registry.js"></script>
   <script src="js/core.js"></script>
   <script src="js/nav.js"></script>
   <script src="js/trunk.js"></script>

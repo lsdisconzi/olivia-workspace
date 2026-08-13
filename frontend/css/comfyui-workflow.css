@@ -349,3 +349,79 @@
 /* ── Misc ───────────────────────────────────────────────────────────────── */
 .btn i, .btn svg { width: 14px; height: 14px; }
 .btn.cf-btn-active { color: var(--amber); border-color: var(--amber); }
+/* ── Sync workflow picker (modal) ───────────────────────────────────────── */
+.cf-picker-hint {
+  margin: 0 0 12px; padding: 8px 12px; border-radius: var(--r);
+  background: rgba(78, 156, 255, 0.08); border: 1px solid rgba(78, 156, 255, 0.25);
+  color: var(--gray-hi); font-size: 12px; line-height: 1.5;
+}
+.cf-picker-hint-warn { background: rgba(231, 111, 81, 0.08); border-color: rgba(231, 111, 81, 0.35); color: #e76f51; }
+.cf-picker-list { display: flex; flex-direction: column; gap: 8px; max-height: 55vh; overflow-y: auto; }
+.cf-picker-row {
+  display: flex; flex-direction: column; gap: 3px; text-align: left;
+  padding: 10px 12px; border-radius: var(--r);
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--gray-hi); cursor: pointer; font-family: var(--sans);
+  transition: border-color .15s, background .15s;
+}
+.cf-picker-row:hover { border-color: var(--amber); background: var(--bg-card); }
+.cf-picker-main { display: flex; align-items: center; gap: 8px; }
+.cf-picker-title { font-size: 13px; font-weight: 600; color: var(--white); }
+.cf-picker-badge {
+  font-family: var(--mono); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.08em; padding: 2px 6px; border-radius: 999px; flex-shrink: 0;
+}
+.cf-picker-badge-server { background: rgba(78, 156, 255, 0.15); color: #4a9eff; border: 1px solid rgba(78, 156, 255, 0.4); }
+.cf-picker-badge-ws { background: rgba(78, 205, 196, 0.15); color: #4ecdc4; border: 1px solid rgba(78, 205, 196, 0.4); }
+.cf-picker-meta { font-family: var(--mono); font-size: 10px; color: var(--gray); }
+.cf-picker-types { font-family: var(--mono); font-size: 10px; color: var(--gray-hi); opacity: 0.85; }
+
+/* ── Run workflow panel ────────────────────────────────────────────────── */
+.cf-run-panel {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  padding: 10px 16px;
+}
+.cf-run-panel-inner {
+  display: flex; align-items: center; gap: 10px;
+  flex-wrap: wrap;
+}
+.cf-run-icon { color: var(--amber); display: flex; align-items: center; font-size: 14px; }
+.cf-run-panel.done .cf-run-icon { color: #4ecdc4; }
+.cf-run-panel.error .cf-run-icon { color: #e76f51; }
+.cf-run-status {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--white);
+}
+.cf-run-prompt {
+  font-family: var(--mono); font-size: 10px; color: var(--amber);
+  background: var(--bg-code); border-radius: 4px; padding: 2px 6px;
+}
+.cf-run-elapsed {
+  font-family: var(--mono); font-size: 10px; color: var(--gray);
+  white-space: nowrap;
+}
+.cf-run-error-msg {
+  font-family: var(--mono); font-size: 11px; color: #e76f51;
+  max-width: 420px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cf-run-spacer { flex: 1; }
+.cf-run-spinner {
+  display: inline-block; width: 11px; height: 11px; border-radius: 50%;
+  border: 2px solid var(--border-hi); border-top-color: var(--amber);
+  animation: cf-spin 0.7s linear infinite; vertical-align: -1px;
+}
+.cf-run-images {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;
+}
+.cf-run-images a {
+  display: block; border: 1px solid var(--border); border-radius: 6px;
+  overflow: hidden; background: var(--bg-code); line-height: 0;
+  transition: border-color .15s;
+}
+.cf-run-images a:hover { border-color: var(--amber); }
+.cf-run-images img {
+  max-height: 180px; max-width: 100%; display: block;
+  object-fit: contain;
+}

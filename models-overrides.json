@@ -118,19 +118,6 @@
       "supports_thinking": false
     },
     {
-      "id": "inclusionai/ling-3.0-flash:free",
-      "name": "Ling-3.0-flash (free)",
-      "provider": "openrouter",
-      "base_url": "https://openrouter.ai/api/v1",
-      "tier": "free",
-      "best_for": "*Ling-3.0-flash* is a *124B-parameter Mixture-of-Experts (MoE) model*, with approximately *5.1B parameters activated per",
-      "context_window": 262144,
-      "input_cost_per_1m": 0.0,
-      "output_cost_per_1m": 0.0,
-      "supports_vision": false,
-      "supports_thinking": true
-    },
-    {
       "id": "nvidia/nemotron-3-super-120b-a12b:free",
       "name": "NVIDIA: Nemotron 3 Super (free)",
       "provider": "openrouter",
@@ -151,18 +138,6 @@
       "tier": "free",
       "best_for": "NVIDIA Nemotron 3 Ultra is an open frontier-reasoning and orchestration model from NVIDIA, with 55B active parameters ou",
       "context_window": 1000000,
-      "input_cost_per_1m": 0.0,
-      "output_cost_per_1m": 0.0,
-      "supports_vision": false,
-      "supports_thinking": true
-    },
-    {
-      "id": "poolside/laguna-m.1:free",
-      "name": "Poolside: Laguna M.1 (free)",
-      "provider": "openrouter",
-      "tier": "free",
-      "best_for": "Laguna M.1 is the flagship coding agent model from [Poolside](https://poolside.ai/), optimized for complex software engi",
-      "context_window": 262144,
       "input_cost_per_1m": 0.0,
       "output_cost_per_1m": 0.0,
       "supports_vision": false,
@@ -204,6 +179,30 @@
       "output_cost_per_1m": 0.0,
       "supports_vision": true,
       "supports_thinking": true
+    },
+    {
+      "id": "nvidia/nemotron-3.5-lightning:free",
+      "name": "NVIDIA: Nemotron 3.5 Lightning (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "NVIDIA Nemotron 3.5 Lightning is an open mixture-of-experts model from NVIDIA, with 3B active parameters out of 30B tota",
+      "context_window": 1000000,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": false
+    },
+    {
+      "id": "poolside/laguna-s-2.1:free",
+      "name": "Poolside: Laguna S 2.1 (free)",
+      "provider": "openrouter",
+      "tier": "free",
+      "best_for": "Laguna S 2.1 is the latest coding agent model from [Poolside](<https://poolside.ai/>). Laguna S 2.1 is a 118B total para",
+      "context_window": 262144,
+      "input_cost_per_1m": 0.0,
+      "output_cost_per_1m": 0.0,
+      "supports_vision": false,
+      "supports_thinking": true
     }
   ],
   "overrides": {
@@ -215,5 +214,10 @@
       "hidden": false,
       "name": "DeepSeek V4 Pro"
     }
-  }
+  },
+  "removed": [
+    "tencent/hy3:free",
+    "poolside/laguna-xs-2.1:free",
+    "qwen/qwen3-next-80b-a3b-instruct:free"
+  ]
 }

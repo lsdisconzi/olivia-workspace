@@ -53,36 +53,11 @@ let _resolvedApiBase = _isPublicLA8159Host()
   : _sanitizeApiBase(_GATEWAY_ORIGIN, _GATEWAY_ORIGIN);
 const API_BASE = _resolvedApiBase;
 const API = API_BASE + '/api';
-let agents = [];
-let selectedAgent = null;
-let chatHistory = [];
-let activeStream = null;
-let activeGuidanceBar = null;
-let currentRunId = null;
-let stepCount = 0;
-let outputArtifacts = [];
-let sessionTokensIn = 0, sessionTokensOut = 0, sessionCostUsd = 0;
-let runTokensIn = 0, runTokensOut = 0;
-let _pendingThinkingContent = '';
-let _lastToolCalls = {};   // runId → last .log-tool-call element (for result pairing)
 
-// Keep legacy window.* access synchronized with top-level state variables.
-if (!Object.getOwnPropertyDescriptor(window, 'agents')) {
-  Object.defineProperty(window, 'agents', {
-    get: function () { return agents; },
-    set: function (value) {
-      agents = Array.isArray(value) ? value : [];
-    },
-    configurable: true,
-  });
-}
-
-if (!Object.getOwnPropertyDescriptor(window, 'selectedAgent')) {
-  Object.defineProperty(window, 'selectedAgent', {
-    get: function () { return selectedAgent; },
-    set: function (value) {
-      selectedAgent = value || null;
-    },
-    configurable: true,
-  });
-}
+// ── State split (Phase 4.2, D-007) ────────────────────────────────
+// Static configuration ends here. Application state lives in
+// app-state.js (agents, selectedAgent); transient session state lives
+// in session-state.js (chatHistory, activeStream, currentRunId, ...).
+// Both load immediately after this file — global lexical bindings are
+// shared across classic scripts, so feature modules keep resolving the
+// bare identifiers exactly as before.

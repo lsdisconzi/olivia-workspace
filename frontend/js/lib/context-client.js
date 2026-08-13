@@ -100,8 +100,11 @@
       const target = key ? window[key] : null;
       let removed = false;
       if (target && typeof target.delete === 'function') {
-        target.delete(typeof item === 'string' ? item : (item && (item.name || item.path) || item));
-        removed = !target.has(item);
+        // Normalize exactly like add() so object-shaped items match stored keys.
+        const normalized = typeof item === 'string'
+          ? item
+          : (item && (item.name || item.path || JSON.stringify(item)));
+        removed = target.delete(normalized); // true only if the item was present
       }
       _dispatchUpdated(_nextState(kind));
       return removed;

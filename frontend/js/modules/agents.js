@@ -11,7 +11,7 @@ let _availableMcpServers = [];
 let _ecosystemMcpInfo = {};
 /** Map of MCP bridge config names → ecosystem canonical names for enrichment lookup */
 let _ecosystemNameMap = {};
-/** Pre-selected tool names to restore when _syncMcpToolPermissions next runs */
+/** Pre-selected tool names to restore into inline tool checkboxes after render */
 let _pendingToolPermissions = null;
 let _lastAgentSelectionNotice = { key: '', at: 0 };
 let _modalAgentType = 'openclaude';
@@ -1448,9 +1448,81 @@ function _renderMcpServerOptions(selectedNames) {
     const badge = toolCount ? ` <span class="mcp-tool-badge" style="font-size:9px;opacity:0.6">${toolCount}</span>` : '';
     const tag = projectName ? ` <span class="mcp-project-tag" style="font-size:9px;opacity:0.5">${escapeHtml(projectName)}</span>` : '';
     const checked = selected.has(srv.name) ? 'checked' : '';
-    return `<div class="tool-check">
-  <input type="checkbox" class="modal-mcp-server" id="${id}" value="${escapeHtml(srv.name)}" ${checked}><label for="${id}" title="${escapeHtml(title)}">${escapeHtml(srv.name)}${badge}${tag}</label></div>`;
+
+    const tools = Array.isArray(eco.tools) ? eco.tools : [];
+    const expandId = `mcp_expand_${String(srv.name || '').replace(/[^A-Za-z0-9_-]/g, '_')}`;
+    const expandBtn = tools.length
+      ? `<button type="button" class="mcp-tools-expand-btn" onclick="mcpToggleToolPanel('${expandId}', this)" title="Show/hide individual tools" aria-expanded="false">
+           <i class="fas fa-chevron-right" style="font-size:8px;pointer-events:none"></i>
+         </button>`
+      : '';
+
+    let toolRows = '';
+    if (tools.length) {
+      const toolChecks = tools.map((tool) => {
+        const toolName = typeof tool === 'string' ? tool : (tool.name || tool);
+        const cbId = `mcp_tool_${String(toolName).replace(/[^A-Za-z0-9_-]/g, '_')}`;
+        return `<div class="tool-check mcp-indiv-tool" style="font-size:10px">
+          <input type="checkbox" class="mcp-tool-checkbox" id="${cbId}" value="${escapeHtml(toolName)}" checked>
+          <label for="${cbId}" style="font-family:var(--mono,monospace)">${escapeHtml(toolName)}</label>
+        </div>`;
+      }).join('');
+      toolRows = `<div class="mcp-tool-panel" id="${expandId}" role="region" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:9px;color:var(--gray);text-transform:uppercase;letter-spacing:.04em">Individual tools</span>
+          <span style="display:flex;gap:6px">
+            <button type="button" onclick="mcpSelectAllTools('${expandId}', true)" style="font-size:9px;background:none;border:none;color:var(--amber);cursor:pointer;padding:0">All</button>
+            <button type="button" onclick="mcpSelectAllTools('${expandId}', false)" style="font-size:9px;background:none;border:none;color:var(--gray);cursor:pointer;padding:0">None</button>
+          </span>
+        </div>
+        <div class="mcp-tool-panel-grid">${toolChecks}</div>
+      </div>`;
+    }
+
+    return `<div class="mcp-server-row">
+  <div class="mcp-server-row-header tool-check">
+    <input type="checkbox" class="modal-mcp-server" id="${id}" value="${escapeHtml(srv.name)}" ${checked} onchange="mcpServerToggle(this, '${expandId}')">
+    <label for="${id}" title="${escapeHtml(title)}">${escapeHtml(srv.name)}${badge}${tag}</label>
+    ${expandBtn}
+  </div>${toolRows}</div>`;
   }).join('');
+  _restorePendingToolPermissions();
+}
+
+/** Toggle an individual server's tool panel open/closed. */
+window.mcpToggleToolPanel = function(panelId, btn) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const open = panel.style.display !== 'none';
+  panel.style.display = open ? 'none' : 'block';
+  const icon = btn && btn.querySelector('i');
+  if (icon) icon.style.transform = open ? '' : 'rotate(90deg)';
+  btn && btn.setAttribute('aria-expanded', String(!open));
+};
+
+/** Select or deselect all tools in a panel. */
+window.mcpSelectAllTools = function(panelId, checked) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  panel.querySelectorAll('.mcp-tool-checkbox').forEach((cb) => { cb.checked = checked; });
+};
+
+/** When a server checkbox is toggled, disable/enable its tools. */
+window.mcpServerToggle = function(serverCb, panelId) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  panel.querySelectorAll('.mcp-tool-checkbox').forEach((cb) => { cb.disabled = !serverCb.checked; });
+};
+
+/** Restore _pendingToolPermissions into inline tool checkboxes after render. */
+function _restorePendingToolPermissions() {
+  if (!_pendingToolPermissions) return;
+  const pending = new Set(_pendingToolPermissions);
+  _pendingToolPermissions = null;
+  // Uncheck all first, then re-check only those that were explicitly saved
+  document.querySelectorAll('.mcp-tool-checkbox').forEach((cb) => {
+    cb.checked = pending.has(cb.value);
+  });
 }
 
 function _selectedMcpServerNamesFromModal() {
@@ -1467,54 +1539,7 @@ function _ecoForServer(configName) {
   return eco;
 }
 
-/**
- * Rebuild per-server tool permission checkboxes based on selected MCP servers.
- * Tools that were previously checked are preserved across re-renders.
- */
-function _syncMcpToolPermissions() {
-  const container = document.getElementById('modalMcpToolPermissions');
-  const grid = document.getElementById('modalMcpToolPermissionsGrid');
-  if (!container || !grid) return;
-
-  const selectedServers = _selectedMcpServerNamesFromModal();
-  const hasTools = selectedServers.some((name) => _ecoForServer(name).tools?.length);
-
-  if (!hasTools) {
-    container.style.display = 'none';
-    return;
-  }
-  container.style.display = 'block';
-
-  // Collect previously checked tool names so we can preserve them.
-  // Also consider _pendingToolPermissions for initial restore on edit modal load.
-  const previouslyChecked = new Set(
-    Array.from(grid.querySelectorAll('.mcp-tool-checkbox:checked')).map((cb) => cb.value)
-  );
-  if (_pendingToolPermissions) {
-    _pendingToolPermissions.forEach((t) => previouslyChecked.add(t));
-    _pendingToolPermissions = null;
-  }
-
-  let html = '';
-  for (const srvName of selectedServers) {
-    const eco = _ecoForServer(srvName);
-    const tools = Array.isArray(eco.tools) ? eco.tools : [];
-    if (!tools.length) continue;
-
-    html += `<div style="margin-top:4px;font-size:10px;font-weight:600;color:var(--text2)">${escapeHtml(srvName)} (${tools.length})</div>`;
-    html += `<div style="display:flex;flex-wrap:wrap;gap:2px 6px;margin-left:8px">`;
-    for (const tool of tools) {
-      const toolName = typeof tool === 'string' ? tool : (tool.name || tool);
-      const checked = previouslyChecked.has(toolName) ? 'checked' : '';
-      const cbId = `mcp_tool_${String(toolName).replace(/[^A-Za-z0-9_-]/g, '_')}`;
-      html += `<div class="tool-check" style="font-size:10px"><input type="checkbox" class="mcp-tool-checkbox" id="${cbId}" value="${escapeHtml(toolName)}" ${checked}><label for="${cbId}">${escapeHtml(toolName)}</label></div>`;
-    }
-    html += `</div>`;
-  }
-  grid.innerHTML = html;
-}
-
-/** Return the list of individually permitted tool names from checkboxes. */
+/** Return the list of individually permitted tool names from inline checkboxes. */
 function _selectedMcpToolNames() {
   return Array.from(document.querySelectorAll('.mcp-tool-checkbox:checked')).map((cb) => cb.value);
 }
@@ -1577,14 +1602,7 @@ async function loadMcpServerOptions(selectedNames = null) {
     selected = filteredSelected;
   }
   _renderMcpServerOptions(selected);
-  _syncMcpToolPermissions();
-
-  // Event delegation: re-render tool permissions when MCP servers are toggled
-  grid.onchange = (e) => {
-    if (e.target.classList.contains('modal-mcp-server')) {
-      _syncMcpToolPermissions();
-    }
-  };
+  // Tools are now rendered inline per-server; no separate sync needed.
 }
 
 // Load agents from API and update UI
@@ -2569,10 +2587,12 @@ async function showEditModal(agentId) {
     document.getElementById('modalTemperature').value = (cfg.temperature === 0 || cfg.temperature) ? String(cfg.temperature) : '';
     document.getElementById('modalUnrestrictedTools').checked = !!cfg.unrestricted_tools;
     toggleModalUnrestrictedToolsDisplay();
-    // Restore permitted_tools after MCP server options are rendered
+    // Set _pendingToolPermissions so _restorePendingToolPermissions (called inside
+    // _renderMcpServerOptions → loadMcpServerOptions above) can apply them inline.
+    // If loadMcpServerOptions already ran, call _restorePendingToolPermissions directly.
     if (Array.isArray(cfg.permitted_tools)) {
       _pendingToolPermissions = cfg.permitted_tools;
-      _syncMcpToolPermissions();
+      _restorePendingToolPermissions();
     }
     document.getElementById('modalNeo4jGraphData').value = cfg.neo4j_graph_data || '';
     document.getElementById('modalSkillSelect').value = '';

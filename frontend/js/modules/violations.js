@@ -383,10 +383,20 @@
     _vSetStatus('Carregando violações…', 'muted');
     try {
       var base = (typeof API_BASE !== 'undefined' && API_BASE) ? API_BASE : '';
-      var res = await fetch(base + '/api/violations/index');
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      var data = await res.json();
-      if (data.error) throw new Error(data.error);
+      var data = null;
+      // Canonical index lives in the shared case store; fall back to the
+      // backend-computed payload for older runtimes.
+      var idxUrl = base + '/api/shared/raw?path=' + encodeURIComponent('_shared/cases/la8159/01-violations/index.json');
+      var res = await fetch(idxUrl);
+      if (res.ok) {
+        try { data = await res.json(); } catch (_pe) { data = null; }
+      }
+      if (!data) {
+        res = await fetch(base + '/api/violations/index');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        data = await res.json();
+        if (data.error) throw new Error(data.error);
+      }
 
       if (data.entries && Array.isArray(data.entries)) {
         data.jurisdictions = data.jurisdictions || {};
@@ -434,10 +444,28 @@
   /* ── RENDER ── */
   function _vRender() {
     _vRenderLangFlags();
+    _vRenderJurChips();
+    _vRenderSevChips();
     _vRenderPhaseChips();
     _vRenderTree();
     _vRenderViewer();
     _vUpdateContextBar();
+  }
+
+  function _vRenderJurChips() {
+    var host = _vById('violationsJurChips');
+    if (!host || !host.children) return;
+    Array.prototype.forEach.call(host.children, function (c) {
+      c.classList.toggle('active', c.getAttribute('data-jur') === _vio.filterJur);
+    });
+  }
+
+  function _vRenderSevChips() {
+    var host = _vById('violationsSevChips');
+    if (!host || !host.children) return;
+    Array.prototype.forEach.call(host.children, function (c) {
+      c.classList.toggle('active', c.getAttribute('data-sev') === _vio.filterSeverity);
+    });
   }
 
   function _vRenderLangFlags() {
@@ -1266,6 +1294,7 @@
   };
   window.violationsFilterSeverity = function (sev) {
     _vio.filterSeverity = sev || 'all';
+    _vRenderSevChips();
     _vRenderTree();
   };
   window.violationsFilterPhase = function (phase) {

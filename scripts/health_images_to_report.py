@@ -670,6 +670,9 @@ class LLMAnalyzer:
         }}
 
         If a field is not found, use empty string or empty list. Do not invent data.
+        IMPORTANT for "table_structures": "sample_rows" must contain EVERY data row of the
+        table, in order and untruncated. Extract all line items — never return only a sample,
+        a subset, or a summary of the rows.
         {"Use the exact spelling of any known name/report-type/metric below when this document clearly matches one of them; otherwise extract what is actually written." if kb_hints else ""}
         {kb_hints}
 
@@ -980,7 +983,7 @@ def convert_to_csv(analysis_results: Dict[str, Dict[str, Any]], output_dir: str)
             for ti, tbl in enumerate(analysis.get("table_structures", [])):
                 headers = tbl.get("headers", [])
                 samples = tbl.get("sample_rows", [])
-                for si, row in enumerate(samples[:5]):
+                for si, row in enumerate(samples):
                     d = {"filename": fname, "filepath": filepath, "table_index": ti}
                     for ci, col in enumerate(headers):
                         val = row[ci] if ci < len(row) else ""

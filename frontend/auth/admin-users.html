@@ -51,10 +51,11 @@
     }
 
     .container {
-      max-width: 980px;
+      max-width: 1000px;
       margin: 0 auto;
     }
 
+    /* Header */
     .header {
       display: flex;
       justify-content: space-between;
@@ -134,23 +135,59 @@
       margin-right: 6px;
     }
 
+    /* Panel */
     .panel {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--r);
-      padding: 24px;
       margin-bottom: 16px;
+      overflow: hidden;
     }
 
-    .panel h2 {
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .panel-header h2 {
       font-family: var(--serif);
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 400;
       color: var(--white);
-      margin-bottom: 16px;
       letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
+    .panel-header .toggle-btn {
+      background: none;
+      border: none;
+      color: var(--gray-hi);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+      transition: transform 0.2s;
+    }
+
+    .panel.collapsed .toggle-btn {
+      transform: rotate(-90deg);
+    }
+
+    .panel-body {
+      padding: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .panel.collapsed .panel-body {
+      display: none;
+    }
+
+    /* Forms */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -225,10 +262,7 @@
       color: #9e4a4a;
     }
 
-    .table-wrap {
-      overflow: auto;
-    }
-
+    /* Tables */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -299,7 +333,7 @@
     }
 
     .policy-cell {
-      min-width: 340px;
+      min-width: 200px;
     }
 
     .section-check-grid {
@@ -326,7 +360,7 @@
     }
 
     .sections-cell {
-      min-width: 240px;
+      min-width: 200px;
       font-size: 12px;
       color: var(--gray-hi);
       line-height: 1.5;
@@ -339,6 +373,7 @@
       align-items: center;
     }
 
+    /* Responsive table cards */
     @media(max-width:760px) {
       body {
         padding: 14px;
@@ -347,12 +382,75 @@
       .grid {
         grid-template-columns: 1fr;
       }
+
+      /* Convert tables to card layout */
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+      }
+
+      thead tr {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px;
+      }
+
+      td {
+        border: none;
+        border-bottom: 1px solid var(--border);
+        padding: 8px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+      }
+
+      td:last-child {
+        border-bottom: none;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: 500;
+        color: var(--gray);
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.04em;
+        margin-right: 12px;
+        text-align: left;
+        flex-shrink: 0;
+      }
+
+      /* Ensure inline elements don't break layout */
+      .policy-cell,
+      .sections-cell {
+        display: block;
+      }
+
+      .policy-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tag,
+      .icon-btn {
+        margin-left: auto;
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="container">
+    <!-- Header -->
     <div class="header">
       <div>
         <div class="brand-line">Olivia <em>×</em> <span style="color:var(--amber);">Governança</span></div>
@@ -365,6 +463,7 @@
       </div>
     </div>
 
+    <!-- Actions -->
     <div class="actions">
       <a class="btn" href="/olivia/mode-select"><i class="fa-solid fa-arrow-left"></i> Mode Select</a>
       <a class="btn" href="/olivia/admin/activity"><i class="fa-solid fa-chart-line"></i> Activity</a>
@@ -372,292 +471,312 @@
       <button class="btn" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Atualizar lista</button>
     </div>
 
+    <!-- Add User Panel -->
     <div class="panel">
-      <h2><i class="fa-solid fa-user-plus"></i> Adicionar usuário</h2>
-      <form id="addUserForm">
-        <div class="grid">
-          <div class="field">
-            <label for="userId">Email (Google)</label>
-            <input id="userId" name="user_id" type="email" placeholder="usuario@gmail.com" required
-              autocomplete="email">
-          </div>
-          <div class="field">
-            <label for="displayName">Nome de exibição</label>
-            <input id="displayName" name="display_name" placeholder="Nome completo" required autocomplete="name">
-          </div>
-          <div class="field" style="grid-column:1/-1;">
-            <label for="initialPassword">Senha inicial</label>
-            <input id="initialPassword" name="initial_password" type="password" placeholder="mínimo 8 caracteres"
-              required autocomplete="new-password">
-          </div>
-          <div class="field">
-            <label for="assistantAccessMode">Acesso do assistente</label>
-            <select id="assistantAccessMode" name="assistant_access_mode" autocomplete="off">
-              <option value="read_write" selected>Ler + editar + criar</option>
-              <option value="read_only">Somente leitura</option>
-              <option value="write_new_only">Somente criar novos</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="assistantWriteScope">Escopo de escrita</label>
-            <input id="assistantWriteScope" name="assistant_write_scope" placeholder="uploads/user" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="addUserContextScope">Context Injection Scope</label>
-            <select id="addUserContextScope" name="context_injection_scope" autocomplete="off">
-              <option value="project_only" selected>Project Only</option>
-              <option value="workspace_and_project">Workspace + Project</option>
-              <option value="custom">Custom Selection</option>
-            </select>
-          </div>
-          <div class="field" style="grid-column:1/-1;">
-            <label>Seções visíveis no tronco (deixe em branco = todas)</label>
-            <div id="addSectionsBox" class="section-check-grid"><span style="color:var(--gray)">Carregando
-                seções…</span></div>
-          </div>
-        </div>
-        <div style="margin-top:8px;color:var(--gray-hi);font-size:12px;">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-            <input id="forceChangeOnCreate" name="force_change_on_create" type="checkbox" checked style="width:auto;">
-            Forçar troca de senha no
-            primeiro login
-          </label>
-        </div>
-        <button class="primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Salvar usuário</button>
-      </form>
-      <div id="addNotice" class="notice"></div>
-    </div>
-
-    <div class="panel">
-      <h2><i class="fa-solid fa-bullhorn"></i> Notificação administrativa</h2>
-      <form id="notificationForm">
-        <div class="grid">
-          <div class="field">
-            <label for="notifTitle">Título</label>
-            <input id="notifTitle" name="title" placeholder="Ex: Janela de manutenção" required autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="notifCategory">Categoria</label>
-            <select id="notifCategory" name="category" autocomplete="off">
-              <option value="info" selected>Info</option>
-              <option value="warning">Warning</option>
-              <option value="success">Success</option>
-            </select>
-          </div>
-          <div class="field" style="grid-column:1/-1;">
-            <label for="notifMessage">Mensagem</label>
-            <input id="notifMessage" name="message" placeholder="Mensagem para os usuários" required autocomplete="off">
-          </div>
-        </div>
-        <button class="primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Publicar notificação</button>
-      </form>
-      <div id="notifNotice" class="notice"></div>
-    </div>
-
-    <!-- Seção de modelos (OpenRouter) mantida igual à original, só com estilo adaptado -->
-    <div class="panel">
-      <h2><i class="fa-solid fa-microchip"></i> Provedores / Modelos</h2>
-      <p style="color:var(--gray);font-size:12px;margin-bottom:12px;">
-        Adicione modelos do <strong>OpenRouter</strong> ou <strong>Fireworks</strong>. Modelos existentes podem ser
-        ocultados, editados ou
-        removidos (remoção de modelos nativos é restável).
-      </p>
-
-      <div class="panel" style="background:var(--code-bg);border-color:var(--border-hi);">
-        <h2 style="font-size:16px;"><i class="fa-solid fa-magnifying-glass"></i> Buscar modelo no OpenRouter</h2>
-        <div class="actions" style="margin-bottom:8px;">
-          <button class="btn" id="orSearchBtn" type="button"><i class="fa-solid fa-cloud-arrow-down"></i> Carregar
-            modelos</button>
-          <button class="btn" id="orFreeBtn" type="button" data-free="all"><i class="fa-solid fa-tag"></i>
-            Todos</button>
-          <button class="btn" id="orFreeBtnFree" type="button" data-free="free"><i class="fa-solid fa-gift"></i>
-            Grátis</button>
-          <button class="btn" id="orFreeBtnPaid" type="button" data-free="paid"><i class="fa-solid fa-coins"></i>
-            Pagos</button>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
-          <input id="orSearchInput" name="or_search" class="mini-input" style="flex:1;min-width:200px;"
-            placeholder="Filtrar por nome ou id (ex: claude, sonar, hy3)" aria-label="Filtrar modelos do OpenRouter"
-            autocomplete="off">
-          <span id="orCount" style="color:var(--gray-hi);font-size:12px;white-space:nowrap;"></span>
-        </div>
-        <select id="orModelSelect" name="or_model" class="mini-select" size="8"
-          style="width:100%;height:auto;max-height:240px;background:var(--bg-card);"
-          aria-label="Selecionar modelo do OpenRouter" autocomplete="off">
-          <option disabled>Carregue os modelos primeiro…</option>
-        </select>
-        <div id="orDetail" style="margin-top:10px;font-size:13px;color:var(--gray-hi);"></div>
+      <div class="panel-header" onclick="togglePanel(this)">
+        <h2><i class="fa-solid fa-user-plus"></i> Adicionar usuário</h2>
+        <button class="toggle-btn" aria-label="Toggle section"><i class="fa-solid fa-chevron-down"></i></button>
       </div>
-
-      <div class="panel" style="background:var(--code-bg);border-color:var(--border-hi);">
-        <h2 style="font-size:16px;"><i class="fa-solid fa-fire"></i> Buscar modelo no Fireworks</h2>
-        <div class="actions" style="margin-bottom:8px;">
-          <button class="btn" id="fwSearchBtn" type="button"><i class="fa-solid fa-cloud-arrow-down"></i> Carregar
-            modelos</button>
-          <button class="btn" id="fwFreeBtn" type="button" data-free="all"><i class="fa-solid fa-tag"></i>
-            Todos</button>
-          <button class="btn" id="fwFreeBtnFree" type="button" data-free="free"><i class="fa-solid fa-gift"></i>
-            Grátis</button>
-          <button class="btn" id="fwFreeBtnPaid" type="button" data-free="paid"><i class="fa-solid fa-coins"></i>
-            Pagos</button>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
-          <label for="fwSearchInput"
-            style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Filtrar modelos do
-            Fireworks</label>
-          <input id="fwSearchInput" name="fw_search" class="mini-input" style="flex:1;min-width:200px;"
-            placeholder="Filtrar por nome ou id (ex: deepseek, nemotron)" autocomplete="off">
-          <span id="fwCount" style="color:var(--gray-hi);font-size:12px;white-space:nowrap;"></span>
-        </div>
-        <label for="fwModelSelect"
-          style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Selecionar modelo do
-          Fireworks</label>
-        <select id="fwModelSelect" name="fw_model" class="mini-select" size="8"
-          style="width:100%;height:auto;max-height:240px;background:var(--bg-card);" autocomplete="off">
-          <option disabled>Carregue os modelos primeiro…</option>
-        </select>
-        <div id="fwDetail" style="margin-top:10px;font-size:13px;color:var(--gray-hi);"></div>
-      </div>
-
-      <form id="addModelForm">
-        <input id="modelProvider" name="provider" type="hidden" value="openrouter">
-        <div class="grid">
-          <div class="field">
-            <label for="modelId">ID do modelo (OpenRouter)</label>
-            <input id="modelId" name="id" type="text" placeholder="openrouter/free" required autocomplete="off">
+      <div class="panel-body">
+        <form id="addUserForm">
+          <div class="grid">
+            <div class="field">
+              <label for="userId">Email (Google)</label>
+              <input id="userId" name="user_id" type="email" placeholder="usuario@gmail.com" required autocomplete="email">
+            </div>
+            <div class="field">
+              <label for="displayName">Nome de exibição</label>
+              <input id="displayName" name="display_name" placeholder="Nome completo" required autocomplete="name">
+            </div>
+            <div class="field" style="grid-column:1/-1;">
+              <label for="initialPassword">Senha inicial</label>
+              <input id="initialPassword" name="initial_password" type="password" placeholder="mínimo 8 caracteres" required autocomplete="new-password">
+            </div>
+            <div class="field">
+              <label for="assistantAccessMode">Acesso do assistente</label>
+              <select id="assistantAccessMode" name="assistant_access_mode" autocomplete="off">
+                <option value="read_write" selected>Ler + editar + criar</option>
+                <option value="read_only">Somente leitura</option>
+                <option value="write_new_only">Somente criar novos</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="assistantWriteScope">Escopo de escrita</label>
+              <input id="assistantWriteScope" name="assistant_write_scope" placeholder="uploads/user" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="addUserContextScope">Context Injection Scope</label>
+              <select id="addUserContextScope" name="context_injection_scope" autocomplete="off">
+                <option value="project_only" selected>Project Only</option>
+                <option value="workspace_and_project">Workspace + Project</option>
+                <option value="custom">Custom Selection</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column:1/-1;">
+              <label>Seções visíveis no tronco (deixe em branco = todas)</label>
+              <div id="addSectionsBox" class="section-check-grid"><span style="color:var(--gray)">Carregando seções…</span></div>
+            </div>
           </div>
-          <div class="field">
-            <label for="modelName">Nome de exibição</label>
-            <input id="modelName" name="name" placeholder="OpenRouter Free" required autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="modelTier">Tier</label>
-            <input id="modelTier" name="tier" placeholder="free" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="modelContext">Context window (tokens)</label>
-            <input id="modelContext" name="context_window" type="number" placeholder="200000" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="modelInCost">Custo entrada / 1M</label>
-            <input id="modelInCost" name="input_cost_per_1m" type="number" step="any" placeholder="3.0"
-              autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="modelOutCost">Custo saída / 1M</label>
-            <input id="modelOutCost" name="output_cost_per_1m" type="number" step="any" placeholder="15.0"
-              autocomplete="off">
-          </div>
-          <div class="field" style="grid-column:1/-1;">
-            <label for="modelBestFor">Melhor para</label>
-            <input id="modelBestFor" name="best_for" placeholder="Raciocínio complexo, código" autocomplete="off">
-          </div>
-          <div class="field" style="grid-column:1/-1;display:flex;gap:18px;flex-wrap:wrap;">
-            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--gray-hi);font-size:13px;">
-              <input id="modelVision" name="supports_vision" type="checkbox" style="width:auto;"> Suporta visão
-            </label>
-            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--gray-hi);font-size:13px;">
-              <input id="modelThinking" name="supports_thinking" type="checkbox" style="width:auto;"> Suporta pensamento
+          <div style="margin-top:8px;color:var(--gray-hi);font-size:12px;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <input id="forceChangeOnCreate" name="force_change_on_create" type="checkbox" checked style="width:auto;">
+              Forçar troca de senha no primeiro login
             </label>
           </div>
-        </div>
-        <button class="primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Adicionar modelo</button>
-      </form>
-      <div id="addModelNotice" class="notice"></div>
-
-      <div class="table-wrap" style="margin-top:16px;">
-        <table>
-          <thead>
-            <tr>
-              <th>Model ID</th>
-              <th>Provedor</th>
-              <th>Nome</th>
-              <th>Fonte</th>
-              <th>Visível</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="modelsTableBody">
-            <tr>
-              <td colspan="6" style="color:var(--gray)">Carregando...</td>
-            </tr>
-          </tbody>
-        </table>
+          <button class="primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Salvar usuário</button>
+        </form>
+        <div id="addNotice" class="notice"></div>
       </div>
-      <div id="modelsTableNotice" class="notice"></div>
     </div>
 
-    <!-- Ollama Servers panel -->
+    <!-- Notification Panel -->
+    <div class="panel">
+      <div class="panel-header" onclick="togglePanel(this)">
+        <h2><i class="fa-solid fa-bullhorn"></i> Notificação administrativa</h2>
+        <button class="toggle-btn" aria-label="Toggle section"><i class="fa-solid fa-chevron-down"></i></button>
+      </div>
+      <div class="panel-body">
+        <form id="notificationForm">
+          <div class="grid">
+            <div class="field">
+              <label for="notifTitle">Título</label>
+              <input id="notifTitle" name="title" placeholder="Ex: Janela de manutenção" required autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="notifCategory">Categoria</label>
+              <select id="notifCategory" name="category" autocomplete="off">
+                <option value="info" selected>Info</option>
+                <option value="warning">Warning</option>
+                <option value="success">Success</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column:1/-1;">
+              <label for="notifMessage">Mensagem</label>
+              <input id="notifMessage" name="message" placeholder="Mensagem para os usuários" required autocomplete="off">
+            </div>
+          </div>
+          <button class="primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Publicar notificação</button>
+        </form>
+        <div id="notifNotice" class="notice"></div>
+      </div>
+    </div>
+
+    <!-- Provedores / Modelos Panel -->
+    <div class="panel">
+      <div class="panel-header" onclick="togglePanel(this)">
+        <h2><i class="fa-solid fa-microchip"></i> Provedores / Modelos</h2>
+        <button class="toggle-btn" aria-label="Toggle section"><i class="fa-solid fa-chevron-down"></i></button>
+      </div>
+      <div class="panel-body">
+        <p style="color:var(--gray);font-size:12px;margin-bottom:12px;">
+          Adicione modelos do <strong>OpenRouter</strong> ou <strong>Fireworks</strong>. Modelos existentes podem ser
+          ocultados, editados ou removidos (remoção de modelos nativos é restável).
+        </p>
+
+        <!-- OpenRouter sub-panel -->
+        <div class="panel" style="background:var(--code-bg);border-color:var(--border-hi);">
+          <div class="panel-header" onclick="togglePanel(this)">
+            <h2 style="font-size:16px;"><i class="fa-solid fa-magnifying-glass"></i> Buscar modelo no OpenRouter</h2>
+            <button class="toggle-btn" aria-label="Toggle section"><i class="fa-solid fa-chevron-down"></i></button>
+          </div>
+          <div class="panel-body">
+            <div class="actions" style="margin-bottom:8px;">
+              <button class="btn" id="orSearchBtn" type="button"><i class="fa-solid fa-cloud-arrow-down"></i> Carregar modelos</button>
+              <button class="btn" id="orFreeBtn" type="button" data-free="all"><i class="fa-solid fa-tag"></i> Todos</button>
+              <button class="btn" id="orFreeBtnFree" type="button" data-free="free"><i class="fa-solid fa-gift"></i> Grátis</button>
+              <button class="btn" id="orFreeBtnPaid" type="button" data-free="paid"><i class="fa-solid fa-coins"></i> Pagos</button>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+              <input id="orSearchInput" name="or_search" class="mini-input" style="flex:1;min-width:200px;" placeholder="Filtrar por nome ou id (ex: claude, sonar, hy3)" autocomplete="off">
+              <span id="orCount" style="color:var(--gray-hi);font-size:12px;white-space:nowrap;"></span>
+            </div>
+            <select id="orModelSelect" name="or_model" class="mini-select" size="8" style="width:100%;height:auto;max-height:240px;background:var(--bg-card);" autocomplete="off">
+              <option disabled>Carregue os modelos primeiro…</option>
+            </select>
+            <div id="orDetail" style="margin-top:10px;font-size:13px;color:var(--gray-hi);"></div>
+          </div>
+        </div>
+
+        <!-- Fireworks sub-panel -->
+        <div class="panel" style="background:var(--code-bg);border-color:var(--border-hi);">
+          <div class="panel-header" onclick="togglePanel(this)">
+            <h2 style="font-size:16px;"><i class="fa-solid fa-fire"></i> Buscar modelo no Fireworks</h2>
+            <button class="toggle-btn" aria-label="Toggle section"><i class="fa-solid fa-chevron-down"></i></button>
+          </div>
+          <div class="panel-body">
+            <div class="actions" style="margin-bottom:8px;">
+              <button class="btn" id="fwSearchBtn" type="button"><i class="fa-solid fa-cloud-arrow-down"></i> Carregar modelos</button>
+              <button class="btn" id="fwFreeBtn" type="button" data-free="all"><i class="fa-solid fa-tag"></i> Todos</button>
+              <button class="btn" id="fwFreeBtnFree" type="button" data-free="free"><i class="fa-solid fa-gift"></i> Grátis</button>
+              <button class="btn" id="fwFreeBtnPaid" type="button" data-free="paid"><i class="fa-solid fa-coins"></i> Pagos</button>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+              <input id="fwSearchInput" name="fw_search" class="mini-input" style="flex:1;min-width:200px;" placeholder="Filtrar por nome ou id (ex: deepseek, nemotron)" autocomplete="off">
+              <span id="fwCount" style="color:var(--gray-hi);font-size:12px;white-space:nowrap;"></span>
+            </div>
+            <select id="fwModelSelect" name="fw_model" class="mini-select" size="8" style="width:100%;height:auto;max-height:240px;background:var(--bg-card);" autocomplete="off">
+              <option disabled>Carregue os modelos primeiro…</option>
+            </select>
+            <div id="fwDetail" style="margin-top:10px;font-size:13px;color:var(--gray-hi);"></div>
+          </div>
+        </div>
+
+        <!-- Model add form -->
+        <form id="addModelForm">
+          <input id="modelProvider" name="provider" type="hidden" value="openrouter">
+          <div class="grid">
+            <div class="field">
+              <label for="modelId">ID do modelo (OpenRouter)</label>
+              <input id="modelId" name="id" type="text" placeholder="openrouter/free" required autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="modelName">Nome de exibição</label>
+              <input id="modelName" name="name" placeholder="OpenRouter Free" required autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="modelTier">Tier</label>
+              <input id="modelTier" name="tier" placeholder="free" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="modelContext">Context window (tokens)</label>
+              <input id="modelContext" name="context_window" type="number" placeholder="200000" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="modelInCost">Custo entrada / 1M</label>
+              <input id="modelInCost" name="input_cost_per_1m" type="number" step="any" placeholder="3.0" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="modelOutCost">Custo saída / 1M</label>
+              <input id="modelOutCost" name="output_cost_per_1m" type="number" step="any" placeholder="15.0" autocomplete="off">
+            </div>
+            <div class="field" style="grid-column:1/-1;">
+              <label for="modelBestFor">Melhor para</label>
+              <input id="modelBestFor" name="best_for" placeholder="Raciocínio complexo, código" autocomplete="off">
+            </div>
+            <div class="field" style="grid-column:1/-1;display:flex;gap:18px;flex-wrap:wrap;">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--gray-hi);font-size:13px;">
+                <input id="modelVision" name="supports_vision" type="checkbox" style="width:auto;"> Suporta visão
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--gray-hi);font-size:13px;">
+                <input id="modelThinking" name="supports_thinking" type="checkbox" style="width:auto;"> Suporta pensamento
+              </label>
+            </div>
+          </div>
+          <button class="primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Adicionar modelo</button>
+        </form>
+        <div id="addModelNotice" class="notice"></div>
+
+        <!-- Models table -->
+        <div style="margin-top:16px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Model ID</th>
+                <th>Provedor</th>
+                <th>Nome</th>
+                <th>Fonte</th>
+                <th>Visível</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="modelsTableBody">
+              <tr>
+                <td colspan="6" style="color:var(--gray)">Carregando...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="modelsTableNotice" class="notice"></div>
+      </div>
+    </div>
+
+    <!-- Ollama Servers Panel -->
     <div class="panel" id="ollamaServerPanel">
-      <h2><i class="fa-solid fa-server"></i> Servidores Ollama</h2>
-      <p style="color:var(--gray);font-size:12px;margin-bottom:12px;">
-        Cadastre servidores Ollama acessíveis pela VM (ex: <code>http://192.168.10.101:11434</code>).
-        Ao adicionar, o servidor é salvo em <code>ollama-servers.json</code> e seus modelos ficam
-        disponíveis no catálogo imediatamente sem reiniciar.
-      </p>
-
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
-        <input id="ollamaServerUrl" name="ollama_server_url" class="mini-input" style="flex:1;"
-          placeholder="http://192.168.10.101:11434" type="url" aria-label="URL do servidor Ollama" autocomplete="url">
-        <button class="btn" id="ollamaAddBtn" type="button">
-          <i class="fa-solid fa-plus"></i> Adicionar servidor
-        </button>
-        <button class="btn" id="ollamaRefreshBtn" type="button" title="Atualizar lista">
-          <i class="fa-solid fa-arrows-rotate"></i>
-        </button>
+      <div class="panel-header" onclick="togglePanel(this)">
+        <h2><i class="fa-solid fa-server"></i> Servidores Ollama</h2>
+        <button class="toggle-btn" aria-label="Toggle section"><i class="fa-solid fa-chevron-down"></i></button>
       </div>
-      <div id="ollamaAddNotice" class="notice"></div>
+      <div class="panel-body">
+        <p style="color:var(--gray);font-size:12px;margin-bottom:12px;">
+          Cadastre servidores Ollama acessíveis pela VM (ex: <code>http://192.168.10.101:11434</code>).
+          Ao adicionar, o servidor é salvo em <code>ollama-servers.json</code> e seus modelos ficam
+          disponíveis no catálogo imediatamente sem reiniciar.
+        </p>
 
-      <div class="table-wrap" style="margin-top:8px;">
-        <table>
-          <thead>
-            <tr>
-              <th>URL do servidor</th>
-              <th>Status</th>
-              <th>Modelos</th>
-              <th>Persistido</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="ollamaServersBody">
-            <tr>
-              <td colspan="5" style="color:var(--gray)">Carregando...</td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+          <input id="ollamaServerUrl" name="ollama_server_url" class="mini-input" style="flex:1;" placeholder="http://192.168.10.101:11434" type="url" autocomplete="url">
+          <button class="btn" id="ollamaAddBtn" type="button">
+            <i class="fa-solid fa-plus"></i> Adicionar servidor
+          </button>
+          <button class="btn" id="ollamaRefreshBtn" type="button" title="Atualizar lista">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
+        <div id="ollamaAddNotice" class="notice"></div>
+
+        <div style="margin-top:8px;">
+          <table>
+            <thead>
+              <tr>
+                <th>URL do servidor</th>
+                <th>Status</th>
+                <th>Modelos</th>
+                <th>Persistido</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="ollamaServersBody">
+              <tr>
+                <td colspan="5" style="color:var(--gray)">Carregando...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="ollamaServersNotice" class="notice"></div>
       </div>
-      <div id="ollamaServersNotice" class="notice"></div>
     </div>
 
+    <!-- Users Panel -->
     <div class="panel">
-      <h2><i class="fa-solid fa-users"></i> Usuários cadastrados</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Nome</th>
-              <th>Senha</th>
-              <th>Admin</th>
-              <th>Assistente</th>
-              <th>Contexto</th>
-              <th>Seções</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="usersTableBody">
-            <tr>
-              <td colspan="8" style="color:var(--gray)">Carregando...</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="panel-header" onclick="togglePanel(this)">
+        <h2><i class="fa-solid fa-users"></i> Usuários cadastrados</h2>
+        <button class="toggle-btn" aria-label="Toggle section"><i class="fa-solid fa-chevron-down"></i></button>
       </div>
-      <div id="tableNotice" class="notice"></div>
+      <div class="panel-body">
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Nome</th>
+                <th>Senha</th>
+                <th>Admin</th>
+                <th>Assistente</th>
+                <th>Contexto</th>
+                <th>Seções</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <tr>
+                <td colspan="8" style="color:var(--gray)">Carregando...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="tableNotice" class="notice"></div>
+      </div>
     </div>
   </div>
 
   <script>
-    /* mesmo script original, sem alterações */
+    // Collapsible panels
+    function togglePanel(header) {
+      const panel = header.parentElement;
+      panel.classList.toggle('collapsed');
+    }
+
+    /* Original script below (unchanged except minor adjustments for data-label attributes) */
     const currentUserId = '__ACTOR_ID__';
     const ASSISTANT_MODE_OPTIONS = [
       { value: 'read_only', label: 'Somente leitura' },
@@ -736,31 +855,32 @@
           const ctxScope = String(user.context_injection_scope || '');
           const tr = document.createElement('tr');
           tr.innerHTML = `
-        <td><code>${user.id}</code></td>
-        <td>${user.display_name || user.id}</td>
-        <td>${user.force_change ? '<span class="tag" style="border-color:rgba(196,98,45,.45);background:rgba(196,98,45,.1);color:#e9b08d">troca obrigatória</span>' : 'definida'}</td>
-        <td>${isAdmin ? '<span class="tag">admin</span>' : '-'}</td>
-        <td class="policy-cell">
-          <div class="policy-grid">
-            ${buildAssistantModeSelect(mode, user.id)}
-            <input class="mini-input" id="write_scope_${user.id}" data-field="assistant_write_scope" data-user-id="${user.id}" name="write_scope_${user.id}" value="${writeScope}" placeholder="uploads/${user.id}" aria-label="Escopo de escrita para ${user.id}" autocomplete="off">
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:5px;">Atual: ${assistantModeLabel(mode)}</div>
-        </td>
-        <td>
-          <div class="policy-grid" style="grid-template-columns:1fr">
-            ${buildContextScopeSelect(ctxScope, user.id)}
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:5px;">Atual: ${contextScopeLabel(ctxScope)}</div>
-        </td>
-        <td class="sections-cell" data-field="sections" data-user-id="${user.id}">
-          ${buildSectionsLabel(user.sections)}
-        </td>
-        <td>
-          <button class="icon-btn save-btn" data-action="save-policy" data-user-id="${user.id}"><i class="fa-solid fa-floppy-disk"></i></button>
-          <button class="icon-btn reset-btn" data-action="reset" data-user-id="${user.id}"><i class="fa-solid fa-key"></i></button>
-          <button class="icon-btn" data-action="remove" data-user-id="${user.id}" ${isSelf ? 'disabled title="Você não pode remover seu próprio usuário"' : ''}><i class="fa-solid fa-trash"></i></button><button class="icon-btn edit-sections-btn" data-action="edit-sections" data-user-id="${user.id}" title="Editar seções"><i class="fa-solid fa-list"></i></button>
-        </td>`;
+            <td data-label="User ID"><code>${user.id}</code></td>
+            <td data-label="Nome">${user.display_name || user.id}</td>
+            <td data-label="Senha">${user.force_change ? '<span class="tag" style="border-color:rgba(196,98,45,.45);background:rgba(196,98,45,.1);color:#e9b08d">troca obrigatória</span>' : 'definida'}</td>
+            <td data-label="Admin">${isAdmin ? '<span class="tag">admin</span>' : '-'}</td>
+            <td data-label="Assistente" class="policy-cell">
+              <div class="policy-grid">
+                ${buildAssistantModeSelect(mode, user.id)}
+                <input class="mini-input" id="write_scope_${user.id}" data-field="assistant_write_scope" data-user-id="${user.id}" name="write_scope_${user.id}" value="${writeScope}" placeholder="uploads/${user.id}" aria-label="Escopo de escrita para ${user.id}" autocomplete="off">
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:5px;">Atual: ${assistantModeLabel(mode)}</div>
+            </td>
+            <td data-label="Contexto">
+              <div class="policy-grid" style="grid-template-columns:1fr">
+                ${buildContextScopeSelect(ctxScope, user.id)}
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:5px;">Atual: ${contextScopeLabel(ctxScope)}</div>
+            </td>
+            <td data-label="Seções" class="sections-cell" data-field="sections" data-user-id="${user.id}">
+              ${buildSectionsLabel(user.sections)}
+            </td>
+            <td data-label="Ações">
+              <button class="icon-btn save-btn" data-action="save-policy" data-user-id="${user.id}"><i class="fa-solid fa-floppy-disk"></i></button>
+              <button class="icon-btn reset-btn" data-action="reset" data-user-id="${user.id}"><i class="fa-solid fa-key"></i></button>
+              <button class="icon-btn" data-action="remove" data-user-id="${user.id}" ${isSelf ? 'disabled title="Você não pode remover seu próprio usuário"' : ''}><i class="fa-solid fa-trash"></i></button>
+              <button class="icon-btn edit-sections-btn" data-action="edit-sections" data-user-id="${user.id}" title="Editar seções"><i class="fa-solid fa-list"></i></button>
+            </td>`;
           body.appendChild(tr);
         });
 
@@ -879,7 +999,7 @@
       const body = document.getElementById('modelsTableBody');
       const notice = document.getElementById('modelsTableNotice');
       clearNotice(notice);
-      body.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">Carregando...</td></tr>';
+      body.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">Carregando...</td></tr>';
       try {
         const res = await fetch('/olivia/admin/models');
         const data = await res.json();
@@ -896,12 +1016,12 @@
           const prov = String(m.provider || '');
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td><code>${id}</code></td>
-            <td><span class="tag" style="border-color:rgba(120,140,180,.45);color:#a9c0e0;background:rgba(120,140,180,.1)">${prov}</span></td>
-            <td><input class="mini-input" id="model_name_${encodeURIComponent(id)}" name="model_name_${encodeURIComponent(id)}" data-field="name" data-id="${encodeURIComponent(id)}" value="${String(m.name || '').replace(/"/g, '&quot;')}" aria-label="Nome de exibição do modelo ${id}"></td>
-            <td>${source === 'added' ? '<span class="tag">adicionado</span>' : '<span style="color:var(--muted);font-size:11px">nativo</span>'}</td>
-            <td>${isRemoved ? '<span class="tag" style="border-color:rgba(196,96,96,.45);color:#e09090;background:rgba(196,96,96,.12)">removido</span>' : (isHidden ? '<span style="color:#e9b08d;font-size:11px">oculto</span>' : '<span style="color:#8ed3ac;font-size:11px">visível</span>')}</td>
-            <td>
+            <td data-label="Model ID"><code>${id}</code></td>
+            <td data-label="Provedor"><span class="tag" style="border-color:rgba(120,140,180,.45);color:#a9c0e0;background:rgba(120,140,180,.1)">${prov}</span></td>
+            <td data-label="Nome"><input class="mini-input" id="model_name_${encodeURIComponent(id)}" name="model_name_${encodeURIComponent(id)}" data-field="name" data-id="${encodeURIComponent(id)}" value="${String(m.name || '').replace(/"/g, '&quot;')}" aria-label="Nome de exibição do modelo ${id}"></td>
+            <td data-label="Fonte">${source === 'added' ? '<span class="tag">adicionado</span>' : '<span style="color:var(--muted);font-size:11px">nativo</span>'}</td>
+            <td data-label="Visível">${isRemoved ? '<span class="tag" style="border-color:rgba(196,96,96,.45);color:#e09090;background:rgba(196,96,96,.12)">removido</span>' : (isHidden ? '<span style="color:#e9b08d;font-size:11px">oculto</span>' : '<span style="color:#8ed3ac;font-size:11px">visível</span>')}</td>
+            <td data-label="Ações">
               <button class="icon-btn save-btn" data-action="save-model" data-id="${encodeURIComponent(id)}" ${isRemoved ? 'disabled' : ''}><i class="fa-solid fa-floppy-disk"></i></button>
               <button class="icon-btn reset-btn" data-action="toggle-visibility" data-id="${encodeURIComponent(id)}" ${isRemoved ? 'disabled' : ''} title="${isHidden ? 'Mostrar' : 'Ocultar'}"><i class="fa-solid fa-${isHidden ? 'eye' : 'eye-slash'}"></i></button>
               ${isRemoved
@@ -966,7 +1086,7 @@
           });
         });
       } catch (err) {
-        body.innerHTML = '<tr><td colspan="7" style="color:#e09090">Erro ao carregar lista.</td></tr>';
+        body.innerHTML = '<tr><td colspan="6" style="color:#e09090">Erro ao carregar lista.</td></tr>';
         setNotice(notice, err.message || 'Erro ao carregar modelos', false);
       }
     }
@@ -980,6 +1100,7 @@
       const payload = {
         id: String(fd.get('id') || '').trim(),
         name: String(fd.get('name') || '').trim(),
+        provider: String(fd.get('provider') || 'openrouter').trim(),
         tier: String(fd.get('tier') || '').trim(),
         best_for: String(fd.get('best_for') || '').trim(),
         context_window: String(fd.get('context_window') || '').trim(),
@@ -1001,7 +1122,7 @@
 
     document.getElementById('addModelForm').addEventListener('submit', addModel);
 
-    // ── OpenRouter picker: search / filter / select / detail ───────────────
+    // ── OpenRouter picker ───────────────────────────────────────────────
     let OR_MODELS = [];
     let OR_FREE_FILTER = 'all';
 
@@ -1101,7 +1222,7 @@
       if (m) orPopulateForm(m);
     });
 
-    // ── Fireworks picker: search / filter / select / detail ─────────────
+    // ── Fireworks picker ───────────────────────────────────────────────
     let FW_MODELS = [];
     let FW_FREE_FILTER = 'all';
 
@@ -1219,11 +1340,11 @@
             ? '<span style="color:var(--green);font-size:11px">salvo</span>'
             : '<span style="color:var(--gray);font-size:11px">apenas .env</span>';
           tr.innerHTML = `
-            <td><code style="font-size:12px;">${s.url}</code></td>
-            <td>${statusHtml}</td>
-            <td>${isOk ? s.model_count + ' modelo(s)' : '—'}</td>
-            <td>${persistedHtml}</td>
-            <td>${s.persisted ? `<button class="icon-btn" data-url="${encodeURIComponent(s.url)}" data-action="remove-ollama" title="Remover"><i class="fa-solid fa-trash"></i></button>` : ''}</td>`;
+            <td data-label="URL do servidor"><code style="font-size:12px;">${s.url}</code></td>
+            <td data-label="Status">${statusHtml}</td>
+            <td data-label="Modelos">${isOk ? s.model_count + ' modelo(s)' : '—'}</td>
+            <td data-label="Persistido">${persistedHtml}</td>
+            <td data-label="Ações">${s.persisted ? `<button class="icon-btn" data-url="${encodeURIComponent(s.url)}" data-action="remove-ollama" title="Remover"><i class="fa-solid fa-trash"></i></button>` : ''}</td>`;
           body.appendChild(tr);
         });
         body.querySelectorAll('button[data-action="remove-ollama"]').forEach(btn => {
