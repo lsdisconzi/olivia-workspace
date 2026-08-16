@@ -978,11 +978,19 @@
       ? 'Mapa de capacidades VPS MCP (agrupado por rotas).'
       : 'Mapa combinado entre funções locais e VPS MCP.');
 
-    return Promise.all([
-      _aexTryFetchJson(['/api/mcp/servers']),
-      _aexTryFetchJson(['/api/mcp/tools?limit=1000'])
-    ]).then(function (parts) {
-      var servers = _aexList(parts[0], 'servers').map(function (s) {
+    // Fetch MCP servers and tools from ecosystem agents endpoint
+    var ecoBase = (typeof API_BASE !== 'undefined' && API_BASE)
+      ? String(API_BASE).replace(/\/$/, '')
+      : window.location.origin.replace(/\/$/, '');
+
+    var ecoUrl = ecoBase + '/api/ecosystem/agents';
+
+    return fetch(ecoUrl).then(function (r) {
+      if (!r.ok) throw new Error('ecosystem agents -> HTTP ' + r.status);
+      return r.json();
+    }).then(function (ecoData) {
+      var flatServers = Array.isArray(ecoData.mcp_servers_flat) ? ecoData.mcp_servers_flat : [];
+      var servers = flatServers.map(function (s) {
         if (!s || typeof s !== 'object') return {};
         if (s.id || s.service) return s;
         return {
@@ -991,7 +999,14 @@
           name: s.name || 'unknown'
         };
       });
-      var tools = _aexList(parts[1], 'tools');
+      var tools = [];
+      if (flatServers && flatServers.length) {
+        flatServers.forEach(function (srv) {
+          if (Array.isArray(srv.tools)) {
+            tools = tools.concat(srv.tools);
+          }
+        });
+      }
       if (currentMode === 'mcp-vps') {
         return _aexBuildMcpMapMermaid(tools, servers);
       }

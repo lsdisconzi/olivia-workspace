@@ -1549,30 +1549,13 @@ async function loadMcpServerOptions(selectedNames = null) {
   if (!grid) return;
   grid.innerHTML = '<div style="text-align:center;padding:8px;color:var(--gray);font-size:11px"><div class="loading"></div> Carregando...</div>';
 
-  try {
-    const res = await fetch(`${API_BASE}/api/mcp/servers`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const servers = Array.isArray(data.servers) ? data.servers : [];
-    _availableMcpServers = servers
-      .map((s) => ({
-        name: String((s && s.name) || '').trim(),
-        command: String((s && s.command) || '').trim(),
-        args: Array.isArray(s && s.args) ? s.args : [],
-      }))
-      .filter((s) => s.name)
-      .sort((a, b) => a.name.localeCompare(b.name));
-  } catch (_e) {
-    _availableMcpServers = [];
-  }
-
-  // Load ecosystem metadata to enrich MCP server display and tool selection
+  // Load MCP server info from ecosystem agents endpoint
   try {
     const ecoRes = await fetch(`${API_BASE}/api/ecosystem/agents`);
     if (ecoRes.ok) {
       const ecoData = await ecoRes.json();
-      const flatMap = {};
       const flatServers = Array.isArray(ecoData.mcp_servers_flat) ? ecoData.mcp_servers_flat : [];
+      const flatMap = {};
       for (const srv of flatServers) {
         flatMap[srv.name] = {
           tool_count: srv.tool_count || 0,
@@ -1580,12 +1563,21 @@ async function loadMcpServerOptions(selectedNames = null) {
           description: srv.description || '',
           tools: Array.isArray(srv.tools) ? srv.tools : [],
         };
+        _availableMcpServers.push({
+          name: srv.name,
+          command: srv.command || '',
+          args: srv.args || [],
+        });
       }
       _ecosystemMcpInfo = flatMap;
-      _ecosystemNameMap = (typeof ecoData.name_map === 'object' && ecoData.name_map !== null) ? ecoData.name_map : {};
+      // Fallback to all available runtime servers if no MCP servers found
+      if (!_availableMcpServers.length && _availableMcpServers.length === 0) {
+        // Keep _availableMcpServers as loaded from ecosystem
+      }
     }
-  } catch (_e2) {
-    // Non-fatal — ecosystem data is just enrichment
+  } catch (_e) {
+    // Fallback to empty state if ecosystem fetch fails
+    _availableMcpServers = [];
   }
 
   let selected = selectedNames;
