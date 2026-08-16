@@ -1,0 +1,74 @@
+{
+  "id": "97d849ed1658",
+  "name": "get_tool_v1_tools__tool_name__get",
+  "method": "GET",
+  "url_pattern": "/v1/tools/{tool_name}",
+  "description": "Get Tool",
+  "category": "crud_read",
+  "path_params": [
+    {
+      "name": "tool_name",
+      "type": "string",
+      "required": true,
+      "description": "path parameter"
+    }
+  ],
+  "query_params": [],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [
+    "b60c12facab7",
+    "1b8968a4d1f9",
+    "a404d1eba722",
+    "20cfef7671a8",
+    "76d1da8972f9"
+  ],
+  "related_functions": [
+    "b60c12facab7",
+    "1b8968a4d1f9",
+    "5ea53b25c42c",
+    "a404d1eba722",
+    "20cfef7671a8",
+    "76d1da8972f9"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Retrieve resource details",
+    "Get Tool"
+  ],
+  "capabilities": [
+    "Provides read operations"
+  ],
+  "limitations": [],
+  "source_file": "service:garage:openapi",
+  "source_function": "get_tool_v1_tools__tool_name__get",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

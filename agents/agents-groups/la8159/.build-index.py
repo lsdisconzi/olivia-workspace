@@ -421,7 +421,7 @@ def main():
         {
             "id": "la8159.sources.br",
             "title": "Brazil statutory source caches",
-            "path": "agents-groups/la8159/source/sources/BR",
+            "path": "agents-groups/la8159/source/la8159/04-law/BR",
             "kind": "corpus",
             "language": "pt-BR",
             "owner_agents": br_owners or [coordinator_slug],
@@ -431,7 +431,7 @@ def main():
         {
             "id": "la8159.sources.cl",
             "title": "Chile statutory source caches",
-            "path": "agents-groups/la8159/source/sources/CL",
+            "path": "agents-groups/la8159/source/la8159/04-law/CL",
             "kind": "corpus",
             "language": "es-CL",
             "owner_agents": cl_owners or [coordinator_slug],
@@ -441,7 +441,7 @@ def main():
         {
             "id": "la8159.sources.int",
             "title": "International instrument source caches",
-            "path": "agents-groups/la8159/source/sources/INT",
+            "path": "agents-groups/la8159/source/la8159/04-law/INT",
             "kind": "corpus",
             "language": "en",
             "owner_agents": int_owners or [coordinator_slug],

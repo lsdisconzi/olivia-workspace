@@ -1,0 +1,62 @@
+{
+  "id": "fd856c41c0a6",
+  "name": "ingest_file_v1_knowledge_ingest_file_post",
+  "method": "POST",
+  "url_pattern": "/v1/knowledge/ingest/file",
+  "description": "Ingest File",
+  "category": "data_ingestion",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": {
+    "type": "unknown",
+    "description": "multipart/form-data body (Body_ingest_file_v1_knowledge_ingest_file_post)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "a21ad6606728",
+    "4b6283cbedd3",
+    "9a073ce0395d",
+    "cb4a8c7005c0"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Import or upload data",
+    "Ingest File"
+  ],
+  "capabilities": [
+    "Bulk data import capability"
+  ],
+  "limitations": [],
+  "source_file": "service:garage:openapi",
+  "source_function": "ingest_file_v1_knowledge_ingest_file_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

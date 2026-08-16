@@ -1,0 +1,65 @@
+{
+  "id": "9e9e606c857b",
+  "name": "search_status_api_search_status__job_id__get",
+  "method": "GET",
+  "url_pattern": "/api/search/status/{job_id}",
+  "description": "Search Status",
+  "category": "search",
+  "path_params": [
+    {
+      "name": "job_id",
+      "type": "string",
+      "required": true,
+      "description": "path parameter"
+    }
+  ],
+  "query_params": [],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "8d168a88f2d9",
+    "4e1611494669",
+    "9f937ef686d2"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Find resources matching criteria",
+    "Search Status"
+  ],
+  "capabilities": [
+    "Enables semantic/vector search"
+  ],
+  "limitations": [],
+  "source_file": "service:juris-search:openapi",
+  "source_function": "search_status_api_search_status__job_id__get",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

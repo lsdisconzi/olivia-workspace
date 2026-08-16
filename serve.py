@@ -10539,6 +10539,78 @@ def _ocr_dedupe_profiles(profiles):
     return [v["entry"] for v in by_key.values()]
 
 
+def _ocr_harvest_profiles(store, project_id, output_root, now_iso=None):
+    """Merge LLM profiles from <output_root>/image_processing_workspace/profiles.json
+    into the store.
+
+    Client-finalized ("manual") profiles always win on name conflicts. This is the
+    single harvest implementation shared by POST /api/ocr/run (right after a
+    pipeline run) and the lazy re-seed used by the GET handlers, so both follow
+    the exact same logic. Returns (store, seeded_count).
+    """
+    profiles_path = Path(output_root) / "image_processing_workspace" / "profiles.json"
+    if not profiles_path.is_file():
+        return store, 0
+    try:
+        llm_profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return store, 0
+    if not isinstance(llm_profiles, list):
+        return store, 0
+    if now_iso is None:
+        now_iso = datetime.now().isoformat(timespec="seconds")
+    existing_profiles = list(store.get("profiles", []))
+    manual_keys = {
+        _ocr_clean_person_name(p.get("person_name")).lower()
+        for p in existing_profiles if p.get("source") != "llm"
+    }
+    seeded = 0
+    for lp in llm_profiles:
+        if not isinstance(lp, dict):
+            continue
+        pname = _ocr_clean_person_name(lp.get("person_name"))
+        if not pname or pname.lower() in manual_keys:
+            continue
+        markdown = str(lp.get("markdown") or "")
+        if not markdown.strip():
+            continue
+        key = pname.lower()
+        existing_profiles = [
+            p for p in existing_profiles
+            if _ocr_clean_person_name(p.get("person_name")).lower() != key
+        ]
+        existing_profiles.append({
+            "person_name": pname,
+            "markdown": markdown[:200000],
+            "pages": [str(p) for p in lp.get("pages", [])][:200],
+            "updated_at": now_iso,
+            "project_id": project_id,
+            "source": "llm",
+        })
+        seeded += 1
+    if seeded:
+        store["profiles"] = existing_profiles
+    return store, seeded
+
+
+def _ocr_lazy_seed_profiles(store, project_id):
+    """Recover LLM profiles from the workspace without re-running OCR.
+
+    The persisted ocr_store.json is only written by POST /api/ocr/run, so runs
+    executed via CLI/agent leave the store empty even though the pipeline wrote
+    profiles.json under the workspace. When the store has no profiles yet and
+    the workspace does, harvest them (same code path as a real run). The caller
+    decides whether to persist. Returns (store, seeded_count).
+    """
+    if store.get("profiles") or not project_id:
+        return store, 0
+    pdir = PROJECTS_DIR / str(project_id).strip("/")
+    if not pdir.is_dir():
+        return store, 0
+    output_root = pdir / "ocr" / "workspace"
+    return _ocr_harvest_profiles(store, project_id, output_root)
+
+
 def _ocr_page_number(filename):
     """Best-effort page number from a page filename (default 1)."""
     m = re.search(r"(\d+)\.\w+$", Path(filename).name)
@@ -19148,13 +19220,26 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         # --- Status / overview stats ---
         if path == "/api/ocr/status":
+            # Lazy re-seed: CLI/agent runs never hit POST /api/ocr/run, so the
+            # store may be empty while profiles.json exists in the workspace.
+            # Persist only when profiles were actually recovered.
+            store, _seeded = _ocr_lazy_seed_profiles(store, project_id)
+            if _seeded:
+                _ocr_store_save(store, project_id)
             total_docs = len(store.get("documents", []))
             successful_ocr = sum(1 for d in store.get("documents", []) if d.get("ocr_success"))
             markdown_count = sum(1 for d in store.get("documents", []) if d.get("text_md") and str(d["text_md"]).strip())
+            analysis_count = sum(1 for d in store.get("documents", []) if d.get("analysis") and not d["analysis"].get("error"))
+            refined_count = sum(1 for d in store.get("documents", []) if d.get("analysis_refined") and not d["analysis_refined"].get("error"))
+            llm_profiles = sum(1 for p in store.get("profiles", []) if p.get("source") == "llm")
             self._json_response({
                 "document_count": total_docs,
                 "successful_ocr": successful_ocr,
                 "markdown_count": markdown_count,
+                "analysis_count": analysis_count,
+                "refined_count": refined_count,
+                "profile_count": len(store.get("profiles", [])),
+                "llm_profile_count": llm_profiles,
                 "project_id": project_id,
             })
             return
@@ -19194,6 +19279,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                     "ocr_success": bool(doc.get("ocr_success")),
                     "text": text,
                     "text_md": text_md,
+                    "analysis": doc.get("analysis"),
+                    "analysis_refined": doc.get("analysis_refined"),
                     "kind": kind,
                     "image_url": None,
                 }
@@ -19210,12 +19297,24 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         # --- Merged per-person profiles + people ready to merge ---
         if path == "/api/ocr/profiles":
+            # Lazy re-seed: CLI/agent runs never hit POST /api/ocr/run, so the
+            # store may be empty while profiles.json exists in the workspace.
+            # Recover the LLM profiles (no OCR re-run) before answering.
+            store, _seeded = _ocr_lazy_seed_profiles(store, project_id)
             # Prune stale duplicate profiles (e.g. names that still carry an
             # upload-id tail like "Juliana Rios 7b355d"). Idempotent: a second
             # load finds nothing left to prune.
-            store["profiles"] = _ocr_dedupe_profiles(store.get("profiles", []))
-            _ocr_store_save(store, project_id)
+            deduped = _ocr_dedupe_profiles(store.get("profiles", []))
+            changed = _seeded or deduped != store.get("profiles", [])
+            store["profiles"] = deduped
+            # Only persist when something actually changed. Writing on every
+            # read could clobber real data with an empty template (e.g. when
+            # the store was empty but the workspace held profiles.json).
+            if changed:
+                _ocr_store_save(store, project_id)
             profiles = [dict(p) for p in store.get("profiles", [])]
+            for _p in profiles:
+                _p["source"] = _p.get("source", "manual")
             pending = {}
             for doc in store.get("documents", []):
                 if not doc.get("ocr_success"):
@@ -19378,6 +19477,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         ]
         if body.get("llm_provider"):
             cmd += ["--llm-provider", str(body["llm_provider"])]
+        if body.get("llm_model"):
+            cmd += ["--llm-model", str(body["llm_model"])]
         print(f"[OCR] running pipeline: {' '.join(cmd)}", flush=True)
         try:
             proc = subprocess.run(
@@ -19415,6 +19516,26 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         successful_ocr = 0
         docs_by_stem = {}
         extractions_dir = output_root / "image_processing_workspace" / "extractions"
+
+        # Index per-page LLM analyses (raw + refined) by file stem so they can
+        # be attached to the matching document below.
+        analysis_index = {}
+        refined_index = {}
+        analyses_dir = output_root / "image_processing_workspace" / "analysis"
+        refined_dir = output_root / "image_processing_workspace" / "analysis_refined"
+        if analyses_dir.is_dir():
+            for af in sorted(analyses_dir.glob("*_analysis.json")):
+                try:
+                    analysis_index[af.name[: -len("_analysis.json")]] = json.loads(af.read_text(encoding="utf-8"))
+                except (OSError, ValueError):
+                    continue
+        if refined_dir.is_dir():
+            for af in sorted(refined_dir.glob("*_analysis_refined.json")):
+                try:
+                    refined_index[af.name[: -len("_analysis_refined.json")]] = json.loads(af.read_text(encoding="utf-8"))
+                except (OSError, ValueError):
+                    continue
+
         if extractions_dir.is_dir():
             for xf in sorted(extractions_dir.glob("*_extraction.json")):
                 try:
@@ -19440,17 +19561,28 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                     "text": text[:20000],
                     "text_md": text_md[:50000],
                 }
+                file_stem = Path(filename).stem
+                if file_stem in analysis_index:
+                    doc["analysis"] = analysis_index[file_stem]
+                if file_stem in refined_index:
+                    doc["analysis_refined"] = refined_index[file_stem]
                 if stem in docs_by_stem:
                     documents[docs_by_stem[stem]] = doc
                 else:
                     docs_by_stem[stem] = len(documents)
                     documents.append(doc)
 
+        # Seed profiles produced by the LLM refinement step (profiles.json).
+        # Client-finalized ("manual") profiles always win on name conflicts.
+        # Shared harvest: the GET handlers use the same helper for lazy re-seed.
+        store, llm_profile_count = _ocr_harvest_profiles(store, project_id, output_root, now_iso)
+
         store["documents"] = documents
         store["last_results"] = summary
         store["last_workspace"] = str(output_root)
         _ocr_store_save(store, project_id)
-        print(f"[OCR] run for project {project_id}: {total_files} file(s), {successful_ocr} OCR ok", flush=True)
+        print(f"[OCR] run for project {project_id}: {total_files} file(s), {successful_ocr} OCR ok, "
+              f"{len(analysis_index)} analyses, {llm_profile_count} LLM profile(s)", flush=True)
         self._json_response({
             "status": "completed",
             "summary": summary,
@@ -19460,6 +19592,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 "total_images": total_files,
                 "successful_ocr": successful_ocr,
             },
+            "analysis_count": len(analysis_index),
+            "profiles_merged": llm_profile_count,
         })
 
     def _ocr_finalize_post(self):
@@ -19496,6 +19630,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             "pages": [str(p) for p in pages][:200],
             "updated_at": datetime.now().isoformat(timespec="seconds"),
             "project_id": project_id,
+            "source": "manual",
         }
         profiles.append(profile)
         store["profiles"] = profiles

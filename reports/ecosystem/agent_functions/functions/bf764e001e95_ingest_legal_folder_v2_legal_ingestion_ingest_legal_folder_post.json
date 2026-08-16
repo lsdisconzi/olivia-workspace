@@ -1,0 +1,68 @@
+{
+  "id": "bf764e001e95",
+  "name": "ingest_legal_folder_v2_legal_ingestion_ingest_legal_folder_post",
+  "method": "POST",
+  "url_pattern": "/v2/legal-ingestion/ingest-legal-folder",
+  "description": "Ingest Legal Folder",
+  "category": "data_ingestion",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": {
+    "type": "JSON",
+    "description": "application/json body (FolderIngestionRequest)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "additionalProperties": true,
+    "type": "object",
+    "title": "Response Ingest Legal Folder V2 Legal Ingestion Ingest Legal Folder Post"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "f3e22fe8329e",
+    "8ea927efa539",
+    "639edd859a44",
+    "96b1d749381b",
+    "c0341953e1b2",
+    "4d255cb00351",
+    "12ae339cfa68",
+    "173e288ae6fe"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Import or upload data",
+    "Ingest Legal Folder"
+  ],
+  "capabilities": [
+    "Bulk data import capability"
+  ],
+  "limitations": [],
+  "source_file": "service:garage:openapi",
+  "source_function": "ingest_legal_folder_v2_legal_ingestion_ingest_legal_folder_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

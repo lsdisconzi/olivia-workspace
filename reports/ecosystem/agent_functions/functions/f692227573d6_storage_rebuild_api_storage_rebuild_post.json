@@ -1,0 +1,57 @@
+{
+  "id": "f692227573d6",
+  "name": "storage_rebuild_api_storage_rebuild_post",
+  "method": "POST",
+  "url_pattern": "/api/storage/rebuild",
+  "description": "Storage Rebuild",
+  "category": "crud_create",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "e87069845126"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Create a new resource",
+    "Storage Rebuild"
+  ],
+  "capabilities": [
+    "Provides create operations"
+  ],
+  "limitations": [],
+  "source_file": "service:juris-search:openapi",
+  "source_function": "storage_rebuild_api_storage_rebuild_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 55,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": false,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Write endpoint missing request body schema",
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

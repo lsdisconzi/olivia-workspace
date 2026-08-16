@@ -1,0 +1,82 @@
+{
+  "id": "fc6b20f941c2",
+  "name": "get_prompt_examples_v1_prompt_engineer_examples_get",
+  "method": "GET",
+  "url_pattern": "/v1/prompt-engineer/examples?category={category}",
+  "description": "Get Prompt Examples",
+  "category": "crud_read",
+  "path_params": [
+    {
+      "name": "category",
+      "type": "string",
+      "required": true,
+      "description": "Path parameter: category"
+    }
+  ],
+  "query_params": [
+    {
+      "name": "category",
+      "type": "string",
+      "required": false,
+      "description": "query parameter"
+    }
+  ],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [
+    "7c3d844784d0",
+    "80c9579d0fdf",
+    "949988306c3e",
+    "bc62410ac5d0",
+    "9734a5869228",
+    "e481ee3dc390"
+  ],
+  "related_functions": [
+    "7c3d844784d0",
+    "80c9579d0fdf",
+    "949988306c3e",
+    "bc62410ac5d0",
+    "9734a5869228",
+    "e481ee3dc390"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Retrieve resource details",
+    "Get Prompt Examples"
+  ],
+  "capabilities": [
+    "Provides read operations"
+  ],
+  "limitations": [],
+  "source_file": "service:garage:openapi",
+  "source_function": "get_prompt_examples_v1_prompt_engineer_examples_get",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

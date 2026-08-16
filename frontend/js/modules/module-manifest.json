@@ -1767,7 +1767,12 @@
         "window.ocrCloseImage",
         "window.ocrLoadStats",
         "window.ocrShowView",
-        "window.ocrHideView"
+        "window.ocrHideView",
+        "window.ocrToggleLlmModel",
+        "window.ocrLoadProfiles",
+        "window.ocrFinalizeProfiles",
+        "window.ocrViewProfile",
+        "window.mergePagesIntoMarkdown"
       ],
       "imports": [
         "window.OliviaProjectId"
@@ -1778,7 +1783,9 @@
         "/api/ocr/documents",
         "/api/ocr/image",
         "/api/ocr/upload",
-        "/api/ocr/run"
+        "/api/ocr/run",
+        "/api/ocr/profiles",
+        "/api/ocr/finalize"
       ],
       "usesApiClient": false
     }

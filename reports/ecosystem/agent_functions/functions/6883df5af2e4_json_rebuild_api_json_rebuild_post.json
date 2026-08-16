@@ -1,0 +1,57 @@
+{
+  "id": "6883df5af2e4",
+  "name": "json_rebuild_api_json_rebuild_post",
+  "method": "POST",
+  "url_pattern": "/api/json/rebuild",
+  "description": "Json Rebuild",
+  "category": "crud_create",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "24a63a10b3ce"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Create a new resource",
+    "Json Rebuild"
+  ],
+  "capabilities": [
+    "Provides create operations"
+  ],
+  "limitations": [],
+  "source_file": "service:juris-search:openapi",
+  "source_function": "json_rebuild_api_json_rebuild_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 55,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": false,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Write endpoint missing request body schema",
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

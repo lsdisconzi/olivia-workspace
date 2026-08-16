@@ -1,0 +1,103 @@
+{
+  "id": "f83f867877fe",
+  "name": "ingest_directory_v1_ingestion_ingest_directory_post",
+  "method": "POST",
+  "url_pattern": "/v1/ingestion/ingest-directory?directory_path={directory_path}&collection_name={collection_name}&force_recreate={force_recreate}",
+  "description": "Ingest Directory",
+  "category": "memory",
+  "path_params": [
+    {
+      "name": "directory_path",
+      "type": "string",
+      "required": true,
+      "description": "Path parameter: directory_path"
+    },
+    {
+      "name": "collection_name",
+      "type": "string",
+      "required": true,
+      "description": "Path parameter: collection_name"
+    },
+    {
+      "name": "force_recreate",
+      "type": "string",
+      "required": true,
+      "description": "Path parameter: force_recreate"
+    }
+  ],
+  "query_params": [
+    {
+      "name": "directory_path",
+      "type": "string",
+      "required": true,
+      "description": "query parameter"
+    },
+    {
+      "name": "collection_name",
+      "type": "string",
+      "required": true,
+      "description": "query parameter"
+    },
+    {
+      "name": "force_recreate",
+      "type": "boolean",
+      "required": false,
+      "description": "query parameter"
+    }
+  ],
+  "body_schema": {
+    "type": "JSON",
+    "description": "application/json body (anyOf)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "type": "object",
+    "additionalProperties": true,
+    "title": "Response Ingest Directory V1 Ingestion Ingest Directory Post"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "194c677ef9da",
+    "7da51230154c",
+    "af252a580f3b",
+    "fbb4c42634a8",
+    "4a8f51b8daf7"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Ingest Directory"
+  ],
+  "capabilities": [
+    "Manages vector collections",
+    "Bulk data import capability"
+  ],
+  "limitations": [],
+  "source_file": "service:garage:openapi",
+  "source_function": "ingest_directory_v1_ingestion_ingest_directory_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

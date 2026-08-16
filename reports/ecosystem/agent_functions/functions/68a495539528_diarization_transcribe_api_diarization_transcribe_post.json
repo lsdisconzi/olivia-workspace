@@ -1,0 +1,65 @@
+{
+  "id": "68a495539528",
+  "name": "diarization_transcribe_api_diarization_transcribe_post",
+  "method": "POST",
+  "url_pattern": "/api/diarization/transcribe",
+  "description": "Diarization Transcribe",
+  "category": "crud_create",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": {
+    "type": "unknown",
+    "description": "multipart/form-data body (Body_diarization_transcribe_api_diarization_transcribe_post)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "04ce4083717a",
+    "663f054485af",
+    "b7c5c12f69a6",
+    "c4b6c568d370",
+    "baee8df918ea",
+    "428a8afaa594",
+    "7719164df50f"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Create a new resource",
+    "Diarization Transcribe"
+  ],
+  "capabilities": [
+    "Provides create operations"
+  ],
+  "limitations": [],
+  "source_file": "service:transcription:openapi",
+  "source_function": "diarization_transcribe_api_diarization_transcribe_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

@@ -1,0 +1,92 @@
+{
+  "id": "130d0f2ec430",
+  "name": "docx_rebuild_juris_api_docx_rebuild_post",
+  "method": "POST",
+  "url_pattern": "/juris/api/docx/rebuild",
+  "description": "Docx Rebuild",
+  "category": "crud_create",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "62954f16770c",
+    "eba43969df1a",
+    "dcdb94fbe7b8",
+    "9e34afdf0ef4",
+    "7eb6886417f9",
+    "fb42238801cb",
+    "1ef5ac789ffe",
+    "889c165de6af",
+    "9bb3b5c7ada7",
+    "f19fa5012e3e",
+    "ac4da1a6d614",
+    "ab9fe4a2ddca",
+    "343e6948fe9e",
+    "690fb9dab186",
+    "1af629930f4d",
+    "a04b64e4ab93",
+    "fc47ef24480b",
+    "7839fe21528c",
+    "883542395ba6",
+    "0cf35f203cc6",
+    "63e46e580b19",
+    "35ba50d1ad74",
+    "8aea748a8d64",
+    "7ff6e0c69c29",
+    "0f952f4917d7",
+    "5e249233862f",
+    "22ce3e8a3ce9",
+    "76e400eba36b",
+    "dd891d5b05e8",
+    "3dfdaf44683d",
+    "bb03de7fd6a1",
+    "a068dd7ee8f3",
+    "892dd781d820",
+    "5670da2392ca",
+    "d66eaa334406",
+    "624f72b69716"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Create a new resource",
+    "Docx Rebuild"
+  ],
+  "capabilities": [
+    "Provides create operations"
+  ],
+  "limitations": [],
+  "source_file": "service:juris-search:openapi",
+  "source_function": "docx_rebuild_juris_api_docx_rebuild_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 55,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": false,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Write endpoint missing request body schema",
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

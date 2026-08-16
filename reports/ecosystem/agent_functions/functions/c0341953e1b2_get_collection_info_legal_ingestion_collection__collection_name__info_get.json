@@ -1,0 +1,70 @@
+{
+  "id": "c0341953e1b2",
+  "name": "get_collection_info_legal_ingestion_collection__collection_name__info_get",
+  "method": "GET",
+  "url_pattern": "/legal-ingestion/collection/{collection_name}/info",
+  "description": "Get Collection Info",
+  "category": "memory",
+  "path_params": [
+    {
+      "name": "collection_name",
+      "type": "string",
+      "required": true,
+      "description": "path parameter"
+    }
+  ],
+  "query_params": [],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "f3e22fe8329e",
+    "8ea927efa539",
+    "639edd859a44",
+    "96b1d749381b",
+    "4d255cb00351",
+    "12ae339cfa68",
+    "bf764e001e95",
+    "173e288ae6fe"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Get Collection Info"
+  ],
+  "capabilities": [
+    "Manages vector collections",
+    "Bulk data import capability"
+  ],
+  "limitations": [],
+  "source_file": "service:garage:openapi",
+  "source_function": "get_collection_info_legal_ingestion_collection__collection_name__info_get",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

@@ -1,0 +1,119 @@
+{
+  "id": "c3441f4ab9d8",
+  "name": "search_qdrant_v1_qdrant_qdrant_search_post",
+  "method": "POST",
+  "url_pattern": "/v1/qdrant/qdrant/search?collection_name={collection_name}&query_text={query_text}&limit={limit}&score_threshold={score_threshold}",
+  "description": "Search Qdrant",
+  "category": "memory",
+  "path_params": [
+    {
+      "name": "collection_name",
+      "type": "string",
+      "required": true,
+      "description": "Path parameter: collection_name"
+    },
+    {
+      "name": "query_text",
+      "type": "string",
+      "required": true,
+      "description": "Path parameter: query_text"
+    },
+    {
+      "name": "limit",
+      "type": "string",
+      "required": true,
+      "description": "Path parameter: limit"
+    },
+    {
+      "name": "score_threshold",
+      "type": "string",
+      "required": true,
+      "description": "Path parameter: score_threshold"
+    }
+  ],
+  "query_params": [
+    {
+      "name": "collection_name",
+      "type": "string",
+      "required": true,
+      "description": "query parameter"
+    },
+    {
+      "name": "query_text",
+      "type": "string",
+      "required": true,
+      "description": "query parameter"
+    },
+    {
+      "name": "limit",
+      "type": "integer",
+      "required": false,
+      "description": "query parameter"
+    },
+    {
+      "name": "score_threshold",
+      "type": "number",
+      "required": false,
+      "description": "query parameter"
+    }
+  ],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "0be17f0c1268",
+    "df0b217a2038",
+    "75598da55717",
+    "5283a347238f",
+    "d48302eaed67",
+    "1c9479d3189f",
+    "cdfdf4471e69",
+    "21e72b246984",
+    "d70301d96118",
+    "23930313e238",
+    "7c83de417e16",
+    "b4d522f4542e",
+    "3f745af1d5a8"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Search Qdrant"
+  ],
+  "capabilities": [
+    "Manages vector collections",
+    "Enables semantic/vector search"
+  ],
+  "limitations": [],
+  "source_file": "service:garage:openapi",
+  "source_function": "search_qdrant_v1_qdrant_qdrant_search_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 55,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": false,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Write endpoint missing request body schema",
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

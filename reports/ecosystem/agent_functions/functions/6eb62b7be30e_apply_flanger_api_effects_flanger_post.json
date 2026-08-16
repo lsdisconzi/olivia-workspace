@@ -1,0 +1,66 @@
+{
+  "id": "6eb62b7be30e",
+  "name": "apply_flanger_api_effects_flanger_post",
+  "method": "POST",
+  "url_pattern": "/api/effects/flanger",
+  "description": "Apply Flanger",
+  "category": "crud_create",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": {
+    "type": "unknown",
+    "description": "multipart/form-data body (Body_apply_flanger_api_effects_flanger_post)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "e7e56390c1a7",
+    "104418f4417b",
+    "d607672a80c7",
+    "afa3b49140d5",
+    "0ddbbb129593",
+    "49ff582ad970",
+    "3501c3d487f5",
+    "129a91aae1e5"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Create a new resource",
+    "Apply Flanger"
+  ],
+  "capabilities": [
+    "Provides create operations"
+  ],
+  "limitations": [],
+  "source_file": "service:audio:openapi",
+  "source_function": "apply_flanger_api_effects_flanger_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

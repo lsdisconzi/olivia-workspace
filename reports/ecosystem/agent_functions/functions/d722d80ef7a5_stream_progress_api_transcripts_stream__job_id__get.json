@@ -1,0 +1,101 @@
+{
+  "id": "d722d80ef7a5",
+  "name": "stream_progress_api_transcripts_stream__job_id__get",
+  "method": "GET",
+  "url_pattern": "/api/transcripts/stream/{job_id}",
+  "description": "Stream Progress",
+  "category": "crud_read",
+  "path_params": [
+    {
+      "name": "job_id",
+      "type": "string",
+      "required": true,
+      "description": "path parameter"
+    }
+  ],
+  "query_params": [],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [
+    "1497062d8ee5",
+    "8917dcd5d50d",
+    "0109fa9ac96d",
+    "a331d7916f09",
+    "a1bdd647b41a",
+    "9ea814653475",
+    "fd92fd0b2243",
+    "e6f76b6fcea5",
+    "23cc9a63d7c7",
+    "67f6f610fcfc",
+    "db49f81d4505",
+    "0ab26191a0a7",
+    "5527a71f4644"
+  ],
+  "related_functions": [
+    "1497062d8ee5",
+    "710322bfe2bb",
+    "87ad5c963eff",
+    "6201922b915c",
+    "a331d7916f09",
+    "bbe6af63e6cc",
+    "aa3dad36a613",
+    "a1bdd647b41a",
+    "ba6ab7642c11",
+    "9ea814653475",
+    "fd92fd0b2243",
+    "e6f76b6fcea5",
+    "8917dcd5d50d",
+    "302075c06570",
+    "2ed701e6be20",
+    "23cc9a63d7c7",
+    "67f6f610fcfc",
+    "db49f81d4505",
+    "0109fa9ac96d",
+    "fe362ed68eda",
+    "0ab26191a0a7",
+    "5527a71f4644",
+    "3c5e9a3e47c9",
+    "1f8b9eb0b0e4"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Retrieve resource details",
+    "Stream Progress"
+  ],
+  "capabilities": [
+    "Provides read operations",
+    "Real-time streaming output"
+  ],
+  "limitations": [],
+  "source_file": "service:transcription:openapi",
+  "source_function": "stream_progress_api_transcripts_stream__job_id__get",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

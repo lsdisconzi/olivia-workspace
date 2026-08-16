@@ -1,0 +1,65 @@
+{
+  "id": "3079a6bfbeaa",
+  "name": "apply_fade_api_enhance_fade_post",
+  "method": "POST",
+  "url_pattern": "/api/enhance/fade",
+  "description": "Apply Fade",
+  "category": "crud_create",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": {
+    "type": "unknown",
+    "description": "multipart/form-data body (Body_apply_fade_api_enhance_fade_post)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "2ec98fbb1e94",
+    "7bb66119a054",
+    "4cafaa3ed31a",
+    "a00e39912075",
+    "b424ec1929a0",
+    "352d16479f93",
+    "bed7fcfa1c55"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Create a new resource",
+    "Apply Fade"
+  ],
+  "capabilities": [
+    "Provides create operations"
+  ],
+  "limitations": [],
+  "source_file": "service:audio:openapi",
+  "source_function": "apply_fade_api_enhance_fade_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

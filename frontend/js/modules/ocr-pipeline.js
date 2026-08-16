@@ -9,6 +9,8 @@
         run: '/api/ocr/run',
         status: '/api/ocr/status',
         documents: '/api/ocr/documents',
+        profiles: '/api/ocr/profiles',
+        finalize: '/api/ocr/finalize',
     };
 
     // Cube SVG with generic blue accent
@@ -19,6 +21,7 @@
     var activePanel = 'overview';
     var currentFiles = null;
     var currentDocs = {};
+    var currentProfiles = {};
 
     // ── Helpers ───────────────────────────────────────────────────────────────
     function projectId() {
@@ -51,7 +54,11 @@
     // ── Build the main view ──────────────────────────────────────────────────
     function build() {
         var view = document.getElementById('ocrView');
-        if (!view || built) return;
+        if (!view) return;
+        // Rebuild if a host re-render wiped the view's content since the last
+        // build (guards against handlers referencing elements that no longer
+        // exist, e.g. #ocrFileInput in setupUploadDrag).
+        if (built && view.innerHTML.trim().length > 0) return;
 
         view.innerHTML =
             '<div class="ocr-head">' +
@@ -70,14 +77,17 @@
                 '<button class="ocr-tab active" data-panel="overview" onclick="ocrSwitchPanel(\'overview\')">Overview</button>' +
                 '<button class="ocr-tab" data-panel="pipeline" onclick="ocrSwitchPanel(\'pipeline\')">Pipeline</button>' +
                 '<button class="ocr-tab" data-panel="documents" onclick="ocrSwitchPanel(\'documents\')">Documents</button>' +
+                '<button class="ocr-tab" data-panel="profiles" onclick="ocrSwitchPanel(\'profiles\')">Profiles</button>' +
             '</div>' +
             '<div class="ocr-panels">' +
                 '<div id="ocrPanel-overview" class="ocr-panel active">' + overviewHtml() + '</div>' +
                 '<div id="ocrPanel-pipeline" class="ocr-panel">' + pipelineHtml() + '</div>' +
                 '<div id="ocrPanel-documents" class="ocr-panel">' + documentsHtml() + '</div>' +
+                '<div id="ocrPanel-profiles" class="ocr-panel">' + profilesHtml() + '</div>' +
             '</div>';
 
         built = true;
+        ocrLoadModelCatalog();
     }
 
     // ── Overview panel ───────────────────────────────────────────────────────
@@ -91,6 +101,7 @@
                 '<div class="ocr-stat"><div class="ocr-stat-num">–</div><div class="ocr-stat-label">Documents</div></div>' +
                 '<div class="ocr-stat"><div class="ocr-stat-num">–</div><div class="ocr-stat-label">Successful OCR</div></div>' +
                 '<div class="ocr-stat"><div class="ocr-stat-num">–</div><div class="ocr-stat-label">Markdown Outputs</div></div>' +
+                '<div class="ocr-stat"><div class="ocr-stat-num">–</div><div class="ocr-stat-label">LLM Analyses</div></div>' +
             '</div>' +
             '<div class="ocr-cta">' +
                 '<button class="btn btn-primary" onclick="ocrSwitchPanel(\'pipeline\')">' +
@@ -111,6 +122,15 @@
                 '<div class="ocr-pipeline-controls">' +
                     '<button class="btn btn-primary" id="ocrRunBtn" onclick="ocrRunPipeline()" disabled>' +
                         '<i class="fas fa-play"></i> Run Pipeline</button>' +
+                    '<label class="ocr-llm-toggle" title="Extract structured LinkedIn profile data with an LLM, then merge pages into clean per-person profiles (needs DEEPSEEK_API_KEY on the server)">' +
+                        '<input type="checkbox" id="ocrEnableLlm" onchange="ocrToggleLlmModel(this.checked)" checked> LLM analysis + refinement' +
+                    '</label>' +
+                    '<label class="ocr-model-wrap" title="AI model used for the LLM analysis + refinement step. Same catalog as the main Settings > Models section.">' +
+                        '<span class="ocr-model-label">AI Model</span>' +
+                        '<select class="ocr-model-select" id="ocrLlmModel">' +
+                            '<option value="">Loading models…</option>' +
+                        '</select>' +
+                    '</label>' +
                     '<span class="ocr-status" id="ocrPipelineStatus">Ready</span>' +
                 '</div>' +
                 '<div class="ocr-results" id="ocrResults">' +
@@ -128,10 +148,25 @@
             '</div>';
     }
 
+    // ── Profiles panel ───────────────────────────────────────────────────────
+    function profilesHtml() {
+        return '<div class="ocr-profiles-panel">' +
+                '<div class="ocr-profiles-head">' +
+                    '<h3 class="ocr-profiles-title"><i class="fas fa-users"></i> Merged Profiles</h3>' +
+                    '<button class="btn btn-primary btn-sm" id="ocrFinalizeBtn" onclick="ocrFinalizeProfiles()">' +
+                        '<i class="fas fa-object-group"></i> Merge Pages &rarr; Profiles</button>' +
+                '</div>' +
+                '<div class="ocr-status" id="ocrProfilesStatus"></div>' +
+                '<div class="ocr-profiles-grid" id="ocrProfiles">' +
+                    '<div class="ocr-empty"><i class="fas fa-users"></i> No profiles yet. Run the pipeline, then merge pages into per-person profiles.</div>' +
+                '</div>' +
+            '</div>';
+    }
+
     // ── Tab switching ────────────────────────────────────────────────────────
     window.ocrSwitchPanel = function (name) {
         activePanel = name;
-        ['overview', 'pipeline', 'documents'].forEach(function (p) {
+        ['overview', 'pipeline', 'documents', 'profiles'].forEach(function (p) {
             var panel = document.getElementById('ocrPanel-' + p);
             if (panel) panel.classList.toggle('active', p === name);
         });
@@ -142,6 +177,7 @@
         if (name === 'overview') ocrLoadStats();
         else if (name === 'pipeline') ocrRefreshPipeline();
         else if (name === 'documents') ocrLoadDocuments();
+        else if (name === 'profiles') ocrLoadProfiles();
     };
 
     // ── Pipeline handling ────────────────────────────────────────────────────
@@ -151,13 +187,15 @@
         var names = Array.from(files).map(function (f) { return f.name; }).join(', ');
         area.innerHTML = '<p>' + esc(names) + ' (' + files.length + ' files)</p>';
         area.dataset.hasFiles = 'true';
-        document.getElementById('ocrRunBtn').disabled = false;
+        var runBtn = document.getElementById('ocrRunBtn');
+        if (runBtn) runBtn.disabled = false;
         currentFiles = files;
     };
 
     function setupUploadDrag() {
         var area = document.getElementById('ocrUploadArea');
-        if (!area) return;
+        if (!area || area.dataset.ocrBound) return;
+        area.dataset.ocrBound = '1';
         area.addEventListener('dragover', function (e) {
             e.preventDefault();
             area.classList.add('ocr-dragover');
@@ -171,7 +209,8 @@
             ocrHandleFiles(e.dataTransfer.files);
         });
         area.addEventListener('click', function () {
-            document.getElementById('ocrFileInput').click();
+            var input = document.getElementById('ocrFileInput');
+            if (input) input.click();
         });
     }
 
@@ -179,7 +218,9 @@
         if (!currentFiles || currentFiles.length === 0) return;
         var statusEl = document.getElementById('ocrPipelineStatus');
         var runBtn = document.getElementById('ocrRunBtn');
-        if (statusEl) statusEl.textContent = 'Uploading & running...';
+        var llmToggle = document.getElementById('ocrEnableLlm');
+        var useLlm = !!(llmToggle && llmToggle.checked);
+        if (statusEl) statusEl.textContent = useLlm ? 'Uploading & running (LLM analysis on)...' : 'Uploading & running...';
         if (runBtn) runBtn.disabled = true;
 
         var formData = new FormData();
@@ -194,11 +235,22 @@
                 return res.json();
             })
             .then(function (uploadData) {
-                if (statusEl) statusEl.textContent = 'Running OCR pipeline...';
+                if (statusEl) statusEl.textContent = useLlm ? 'Running OCR + LLM analysis...' : 'Running OCR pipeline...';
+                var runBody = { upload_id: uploadData.upload_id, project_id: projectId() };
+                if (useLlm) {
+                    var sel = document.getElementById('ocrLlmModel');
+                    var modelId = sel && sel.value ? sel.value : '';
+                    var modelInfo = ocrCatalogModel(modelId);
+                    // Provider follows the selected model's catalog provider so
+                    // any catalog model is usable; defaults to deepseek (the
+                    // pipeline's LLM path uses DEEPSEEK_API_KEY by default).
+                    runBody.llm_provider = (modelInfo && modelInfo.provider) || 'deepseek';
+                    if (modelId) runBody.llm_model = modelId;
+                }
                 return fetch(apiBase() + OCR_API.run, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ upload_id: uploadData.upload_id, project_id: projectId() })
+                    body: JSON.stringify(runBody)
                 });
             })
             .then(function (res) {
@@ -230,6 +282,16 @@
         html += '<h3>Pipeline Summary</h3>';
         html += '<p>Processed: ' + (fs.total_files != null ? fs.total_files : (fs.total_images != null ? fs.total_images : '?')) + ' files</p>';
         html += '<p>Successful OCR: ' + (fs.successful_ocr != null ? fs.successful_ocr : '?') + '</p>';
+        var analysisCount = fs.successful_analyses != null ? fs.successful_analyses
+            : (data.analysis_count != null ? data.analysis_count : null);
+        if (analysisCount != null) {
+            html += '<p><i class="fas fa-magic"></i> LLM analyses: ' + analysisCount + '</p>';
+        }
+        var profilesMerged = fs.profiles_merged != null ? fs.profiles_merged
+            : (data.profiles_merged != null ? data.profiles_merged : 0);
+        if (profilesMerged > 0) {
+            html += '<p><i class="fas fa-users"></i> LLM profiles merged: ' + profilesMerged + '</p>';
+        }
         if (data.workspace) {
             html += '<p class="ocr-result-workspace"><i class="fas fa-folder-open"></i> Workspace: <code>' + esc(data.workspace) + '</code></p>';
         }
@@ -243,6 +305,113 @@
         if (area && !area.dataset.hasFiles) {
             area.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><p>Drop PDF or images here, or click to upload</p>';
         }
+        // Repopulate the model select if it is still in its loading state.
+        var sel = document.getElementById('ocrLlmModel');
+        if (sel && (!sel.options.length || sel.options[0].value === '' && sel.options[0].textContent === 'Loading models…')) {
+            ocrLoadModelCatalog();
+        }
+    };
+
+    // ── AI model selector (same catalog as Settings > Models) ──────────────
+    window._ocrModelCatalog = null;
+
+    // Providers the OCR pipeline's LLMAnalyzer can actually call.
+    var OCR_LLM_PROVIDERS = ['deepseek', 'ollama', 'openai'];
+
+    // Look up a catalog entry by model id (flat search across all providers).
+    function ocrCatalogModel(modelId) {
+        if (!modelId || !window._ocrModelCatalog) return null;
+        for (var provider in window._ocrModelCatalog) {
+            var models = window._ocrModelCatalog[provider];
+            if (!Array.isArray(models)) continue;
+            for (var i = 0; i < models.length; i++) {
+                if (String(models[i].id || models[i].name || '') === String(modelId)) {
+                    return models[i];
+                }
+            }
+        }
+        return null;
+    }
+
+    // Load the shared model catalog (/api/models/catalog — the same endpoint
+    // the sidebar Settings > Models section uses) and fill #ocrLlmModel.
+    function ocrLoadModelCatalog() {
+        var sel = document.getElementById('ocrLlmModel');
+        if (!sel) return;
+        fetch(apiBase() + '/api/models/catalog')
+            .then(function (res) {
+                if (!res.ok) throw new Error('Catalog unavailable');
+                return res.json();
+            })
+            .then(function (data) {
+                var rawModels = data.models || data.catalog ||
+                    (Array.isArray(data) ? data : null);
+                if (!rawModels) throw new Error('Catalog empty');
+                var catalog = {};
+                if (Array.isArray(rawModels)) {
+                    rawModels.forEach(function (m) {
+                        var prov = m.provider || 'other';
+                        if (!catalog[prov]) catalog[prov] = [];
+                        catalog[prov].push(m);
+                    });
+                } else {
+                    catalog = rawModels;
+                }
+                // Keep the full catalog for lookups, but only offer models the
+                // OCR pipeline's LLMAnalyzer supports (deepseek/ollama/openai).
+                window._ocrModelCatalog = catalog;
+
+                var currentValue = sel.value;
+                sel.innerHTML = '';
+                var defaultOpt = document.createElement('option');
+                defaultOpt.value = '';
+                defaultOpt.textContent = 'Default (env LLM_MODEL)';
+                sel.appendChild(defaultOpt);
+
+                var supported = Object.keys(catalog).filter(function (provider) {
+                    return OCR_LLM_PROVIDERS.indexOf(provider) !== -1;
+                });
+                supported.forEach(function (provider) {
+                    var models = catalog[provider];
+                    if (!Array.isArray(models) || !models.length) return;
+                    var group = document.createElement('optgroup');
+                    group.label = provider;
+                    models.forEach(function (m) {
+                        var option = document.createElement('option');
+                        option.value = m.id || m.name || '';
+                        option.textContent = m.name || m.id;
+                        group.appendChild(option);
+                    });
+                    sel.appendChild(group);
+                });
+                if (sel.options.length <= 1) {
+                    sel.innerHTML = '<option value="">No supported models in catalog</option>';
+                    sel.disabled = true;
+                    return;
+                }
+
+                // Prefer the sidebar's current model when it exists in the
+                // catalog; otherwise keep any previously chosen value.
+                var fallback = currentValue || data.current_model || '';
+                if (fallback && ocrCatalogModel(fallback)) {
+                    sel.value = fallback;
+                } else if (fallback) {
+                    // Keep an explicit user choice even if it is not catalogued.
+                    sel.value = fallback;
+                }
+                var llmToggle = document.getElementById('ocrEnableLlm');
+                sel.disabled = !(llmToggle && llmToggle.checked);
+            })
+            .catch(function (err) {
+                sel.innerHTML = '<option value="">Models unavailable</option>';
+                console.log('OCR: failed to load model catalog:', err.message);
+            });
+    }
+
+    // Keep the model selector enabled only while LLM analysis is on.
+    window.ocrToggleLlmModel = function (checked) {
+        var sel = document.getElementById('ocrLlmModel');
+        if (sel) sel.disabled = !checked;
     };
 
     // ── Documents panel ──────────────────────────────────────────────────────
@@ -360,15 +529,69 @@
         document.body.classList.add('ocr-modal-lock');
     };
 
+    // ── LLM analysis rendering ─────────────────────────────────────────────
+    // Renders the structured profile fields produced by the LLM analysis step
+    // (see ocr_profile_analytics.py) as Markdown.
+    function renderAnalysis(a) {
+        if (!a || a.error) return '<p class="ocr-empty">No structured analysis for this document.</p>';
+        var meta = a.profile_metadata || {};
+        var md = '';
+        if (meta.person_name) md += '**' + meta.person_name + '**\n\n';
+        if (meta.headline) md += meta.headline + '\n\n';
+        var contact = [];
+        if (meta.location) contact.push(meta.location);
+        if (meta.linkedin_url) contact.push(meta.linkedin_url);
+        if (Array.isArray(a.contact_info)) contact = contact.concat(a.contact_info.filter(Boolean));
+        if (contact.length) md += '**Contact:** ' + contact.join(' · ') + '\n\n';
+        if (Array.isArray(a.top_skills) && a.top_skills.length) md += '**Top Skills:** ' + a.top_skills.join(', ') + '\n\n';
+        if (Array.isArray(a.languages) && a.languages.length) md += '**Languages:** ' + a.languages.join(', ') + '\n\n';
+        if (a.summary) md += '**Summary**\n\n' + a.summary + '\n\n';
+        if (Array.isArray(a.experience) && a.experience.length) {
+            md += '**Experience**\n\n';
+            a.experience.forEach(function (e) {
+                var line = '**' + (e.title || '—') + '**';
+                if (e.company) line += ' · ' + e.company;
+                if (e.period) line += ' (' + e.period + ')';
+                md += '- ' + line + '\n';
+                if (e.description) md += '  ' + String(e.description).split('\n').join('\n  ') + '\n';
+            });
+            md += '\n';
+        }
+        if (Array.isArray(a.education) && a.education.length) {
+            md += '**Education**\n\n';
+            a.education.forEach(function (e) {
+                var parts = [];
+                if (e.degree) parts.push('**' + e.degree + '**');
+                if (e.institution) parts.push(e.institution);
+                if (e.period) parts.push('(' + e.period + ')');
+                if (parts.length) md += '- ' + parts.join(' · ') + '\n';
+            });
+            md += '\n';
+        }
+        if (Array.isArray(a.certifications) && a.certifications.length) {
+            md += '**Certifications**\n\n' + a.certifications.map(function (c) { return '- ' + c; }).join('\n') + '\n\n';
+        }
+        if (a.llm_analysis_metadata) {
+            var lam = a.llm_analysis_metadata;
+            var conf = (meta.name_confidence != null) ? ' · conf ' + meta.name_confidence : '';
+            md += '---\n\n<small>LLM: ' + (lam.model || '') + ' · ' + (lam.provider || '') + conf + '</small>\n';
+        }
+        return md;
+    }
+
     window.ocrViewDocument = function (doc) {
         var modal = ensureModal();
         var body = modal.querySelector('.ocr-modal-body');
+
+        var analysisForView = (doc.analysis && !doc.analysis.error) ? doc.analysis : (doc.analysis_refined && !doc.analysis_refined.error ? doc.analysis_refined : null);
+        var hasAnalysis = !!(analysisForView && analysisForView.profile_metadata);
 
         var html = '<div class="ocr-doc-viewer">';
         html += '<div class="ocr-doc-viewer-tabs">';
         html += '<button class="ocr-doc-tab active" onclick="ocrSwitchTab(this, \'image\')"><i class="fas fa-image"></i> Image</button>';
         if (doc.text) html += '<button class="ocr-doc-tab" onclick="ocrSwitchTab(this, \'raw\')"><i class="fas fa-align-left"></i> Raw Text</button>';
         if (doc.text_md) html += '<button class="ocr-doc-tab" onclick="ocrSwitchTab(this, \'md\')"><i class="fab fa-markdown"></i> Markdown</button>';
+        if (hasAnalysis) html += '<button class="ocr-doc-tab" onclick="ocrSwitchTab(this, \'analysis\')"><i class="fas fa-address-card"></i> Analysis</button>';
         if (doc.text_md && (doc.image_url || doc.kind === 'pdf')) html += '<button class="ocr-doc-tab" onclick="ocrSwitchTab(this, \'split\')"><i class="fas fa-columns"></i> Side-by-Side</button>';
         html += '</div>';
 
@@ -391,6 +614,11 @@
         // Markdown pane
         if (doc.text_md) {
             html += '<div class="ocr-doc-pane" data-pane="md"><div class="ocr-md ocr-doc-md">' + renderMd(doc.text_md) + '</div></div>';
+        }
+
+        // LLM analysis pane (structured profile fields extracted by the model)
+        if (hasAnalysis) {
+            html += '<div class="ocr-doc-pane" data-pane="analysis"><div class="ocr-md ocr-doc-md">' + renderMd(renderAnalysis(analysisForView)) + '</div></div>';
         }
 
         // Side-by-side pane
@@ -460,10 +688,11 @@
                 var stats = document.getElementById('ocrStats');
                 if (!stats) return;
                 var nums = stats.querySelectorAll('.ocr-stat-num');
-                if (nums.length >= 3) {
+                if (nums.length >= 4) {
                     nums[0].textContent = data.document_count || data.total_documents || '0';
                     nums[1].textContent = data.successful_ocr || data.ocr_success_count || '0';
                     nums[2].textContent = data.markdown_count || data.md_count || '0';
+                    nums[3].textContent = data.analysis_count != null ? data.analysis_count : (data.llm_analysis_count != null ? data.llm_analysis_count : '0');
                 }
             })
             .catch(function () {
@@ -518,6 +747,246 @@
             var el = document.getElementById(id);
             if (el) el.style.display = '';
         });
+    };
+
+    // ── Merged per-person profiles (final pipeline step) ─────────────────────
+    // Ported from _01_olivia-review-branch/ocr-pipeline/improvement-step.md.
+    // Review fixes applied:
+    //  * newlines are preserved — the original global /\s+/ collapse destroyed
+    //    the line structure the Experience parser relies on;
+    //  * page number comes from the filename, since single-image extractions
+    //    carry no page_number field in their JSON.
+
+    function ocrPersonBase(filename) {
+        var name = String(filename || '');
+        // The upload flow appends a 6-hex upload-id tail to colliding
+        // filenames (e.g. "Juliana-Rios-7b355d-1.png"). Strip it together with
+        // the trailing page marker, then each on its own.
+        name = name.replace(/[-_](?=[0-9a-f]{6})[0-9a-f]*[a-f][0-9a-f]*[-_]\d+(\.\w+)$/i, '$1');
+        name = name.replace(/[-_](?=[0-9a-f]{6})[0-9a-f]*[a-f][0-9a-f]*(\.\w+)$/i, '$1');
+        // Strip a trailing page marker like "-1.jpg" / "_2.png".
+        name = name.replace(/[-_]\d+(\.\w+)$/, '$1');
+        // Remove the remaining extension for a clean base name.
+        return name.replace(/\.[a-zA-Z0-9]+$/, '');
+    }
+
+    function ocrPersonDisplay(base) {
+        return String(base || '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim() || 'Unknown';
+    }
+
+    function ocrPageNumber(filename) {
+        var m = String(filename || '').match(/(?:^|[_-])(\d+)\.\w+$/);
+        return m ? parseInt(m[1], 10) : 1;
+    }
+
+    window.mergePagesIntoMarkdown = function (pageDataArray, personName) {
+        var sortedPages = pageDataArray.slice().sort(function (a, b) {
+            var pa = (a.pages && a.pages[0] && a.pages[0].page_number) || a.page_number || 0;
+            var pb = (b.pages && b.pages[0] && b.pages[0].page_number) || b.page_number || 0;
+            return pa - pb;
+        });
+
+        // Combine the page text, preserving line structure for the parsers.
+        // Pages whose text is blank (or only page markers) are skipped so they
+        // cannot produce a title-only profile.
+        var fullText = sortedPages.map(function (p) {
+            var text = (p.pages && p.pages[0] && p.pages[0].text) || p.text || '';
+            return String(text)
+                .replace(/Page\s+\d+\s+of\s+\d+/gi, '')
+                .replace(/[ \t]+/g, ' ')
+                .replace(/[ \t]+\n/g, '\n')
+                .trim();
+        }).filter(function (t) { return t.length > 0; }).join('\n\n');
+
+        // Identify the standard resume sections (heuristic, English headers).
+        // Every lookahead stops at ALL other headers so one section cannot
+        // swallow the next (e.g. Contact running through "Top Skills").
+        var sections = { contact: '', summary: '', experience: '', education: '', skills: [], languages: [] };
+
+        var contactMatch = fullText.match(/Contact\s+([\s\S]*?)(?=Top\s+Skills|Languages|Summary|Experience|Education|$)/);
+        if (contactMatch) sections.contact = contactMatch[1].trim();
+
+        var summaryMatch = fullText.match(/Summary\s+([\s\S]*?)(?=Top\s+Skills|Languages|Experience|Education|$)/);
+        if (summaryMatch) sections.summary = summaryMatch[1].trim();
+
+        var experienceMatch = fullText.match(/Experience\s+([\s\S]*?)(?=Languages|Summary|Education|$)/);
+        if (experienceMatch) sections.experience = experienceMatch[1].trim();
+
+        var educationMatch = fullText.match(/Education\s+([\s\S]*?)$/);
+        if (educationMatch) sections.education = educationMatch[1].trim();
+
+        var skillsMatch = fullText.match(/Top\s+Skills\s+([\s\S]*?)(?=Languages|Summary|Experience|Education|$)/);
+        if (skillsMatch) sections.skills = skillsMatch[1].split(/\n+/).map(function (s) { return s.trim(); }).filter(Boolean);
+
+        var languagesMatch = fullText.match(/Languages\s+([\s\S]*?)(?=Top\s+Skills|Summary|Experience|Education|$)/);
+        if (languagesMatch) sections.languages = languagesMatch[1].split(/\n+/).map(function (s) { return s.trim(); }).filter(Boolean);
+
+        // Format experience into bullet entries (best-effort).
+        var periodRe = /(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4}\s*[-–—]\s*(?:Present|[A-Z][a-z]+\.?\s+\d{4})/i;
+        var experienceLines = [];
+        var currentJob = null;
+        (sections.experience ? sections.experience.split(/\n+/) : []).forEach(function (line) {
+            var l = line.trim();
+            if (!l) return;
+            if (periodRe.test(l) || /^[-*]\s*(?:Project|Senior|Lead|Principal|Head|Founder|Director|Manager|Analyst|Engineer|Developer)/i.test(l)) {
+                if (currentJob) experienceLines.push(currentJob);
+                currentJob = '- ' + l;
+            } else if (currentJob) {
+                currentJob += '\n  ' + l;
+            } else {
+                experienceLines.push('- ' + l);
+            }
+        });
+        if (currentJob) experienceLines.push(currentJob);
+        if (!experienceLines.length && sections.experience) experienceLines.push('- ' + sections.experience);
+        var experienceMd = experienceLines.join('\n');
+
+        // Build the Markdown document.
+        var md = '# ' + (personName || 'Perfil') + '\n\n';
+        if (sections.contact) md += '## Contact\n\n' + sections.contact + '\n\n';
+        if (sections.skills.length) md += '## Top Skills\n\n' + sections.skills.map(function (s) { return '- ' + s; }).join('\n') + '\n\n';
+        if (sections.languages.length) md += '## Languages\n\n' + sections.languages.map(function (s) { return '- ' + s; }).join('\n') + '\n\n';
+        if (sections.summary) md += '## Summary\n\n' + sections.summary + '\n\n';
+        if (experienceMd) md += '## Experience\n\n' + experienceMd + '\n\n';
+        if (sections.education) md += '## Education\n\n' + sections.education + '\n\n';
+        return md.trim() + '\n';
+    };
+
+    window.ocrLoadProfiles = function () {
+        var container = document.getElementById('ocrProfiles');
+        if (!container) return;
+        var status = document.getElementById('ocrProfilesStatus');
+        container.innerHTML = '<div class="ocr-empty"><i class="fas fa-spinner fa-pulse"></i> Loading profiles…</div>';
+        if (status) status.textContent = '';
+        var q = projectId() ? ('?project_id=' + encodeURIComponent(projectId())) : '';
+        fetch(apiBase() + OCR_API.profiles + q)
+            .then(function (res) { if (!res.ok) throw new Error('Failed to load profiles'); return res.json(); })
+            .then(function (data) {
+                currentProfiles = {};
+                var profiles = data.profiles || [];
+                var pending = data.pending || [];
+                profiles.forEach(function (p) { currentProfiles[p.person_name] = p; });
+                if (status) status.textContent = profiles.length + ' profile(s) saved · ' + pending.length + ' person(s) ready to merge';
+                if (!profiles.length) {
+                    var hasMulti = pending.some(function (p) { return p.page_count > 1; });
+                    container.innerHTML = '<div class="ocr-empty"><i class="fas fa-users"></i> No merged profiles yet.' +
+                        (hasMulti ? ' Use "Merge Pages \u2192 Profiles" to combine multi-page documents.' : '') + '</div>';
+                    return;
+                }
+                var html = '';
+                profiles.forEach(function (profile) {
+                    var pagesLabel = (profile.pages && profile.pages.length) ? profile.pages.length + ' page(s)' : '';
+                    var srcBadge = (profile.source === 'llm')
+                        ? '<span class="ocr-source-badge ocr-source-llm"><i class="fas fa-magic"></i> LLM</span>'
+                        : '<span class="ocr-source-badge ocr-source-manual"><i class="fas fa-user-edit"></i> Manual</span>';
+                    html += '<div class="ocr-doc-card">' +
+                        '<div class="ocr-doc-card-header">' +
+                            '<div class="ocr-doc-meta">' +
+                                '<div class="ocr-doc-filename" title="' + esc(profile.person_name) + '">' + esc(profile.person_name) + '</div>' +
+                                '<div class="ocr-doc-status ocr-doc-ok"><i class="fas fa-check-circle"></i> Merged profile ' + srcBadge + '</div>' +
+                                '<div class="ocr-doc-date">' + esc(pagesLabel) + (profile.updated_at ? ' · ' + esc(profile.updated_at) : '') + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="ocr-doc-card-footer">' +
+                            '<button class="btn btn-sm" data-person="' + esc(profile.person_name) + '" onclick="ocrViewProfile(this)"><i class="fas fa-eye"></i> View</button>' +
+                        '</div>' +
+                    '</div>';
+                });
+                container.innerHTML = html;
+            })
+            .catch(function (err) {
+                container.innerHTML = '<div class="ocr-empty ocr-error">' + esc(err.message) + '</div>';
+            });
+    };
+
+    window.ocrFinalizeProfiles = function () {
+        var btn = document.getElementById('ocrFinalizeBtn');
+        var status = document.getElementById('ocrProfilesStatus');
+        if (btn) { btn.disabled = true; btn.textContent = 'Merging\u2026'; }
+        if (status) status.textContent = 'Grouping documents and merging pages\u2026';
+        var q = projectId() ? ('?project_id=' + encodeURIComponent(projectId())) : '';
+        return fetch(apiBase() + OCR_API.documents + q)
+            .then(function (res) { if (!res.ok) throw new Error('Failed to load documents'); return res.json(); })
+            .then(function (data) {
+                var docs = (data.documents || []).filter(function (d) {
+                    return d.ocr_success && String(d.text || '').trim();
+                });
+                if (!docs.length) throw new Error('No successful OCR documents to merge');
+
+                // Group by person (base filename without page marker or
+                // upload-id tail). All page markers for one upload now land in
+                // the same group.
+                var groups = {};
+                docs.forEach(function (doc) {
+                    var base = ocrPersonBase(doc.filename);
+                    (groups[base] = groups[base] || []).push(doc);
+                });
+
+                var jobs = Object.keys(groups).map(function (base) {
+                    var group = groups[base];
+                    var pageDataArray = group.map(function (doc) {
+                        return { pages: [{ page_number: ocrPageNumber(doc.filename), text: doc.text }], filename: doc.filename };
+                    }).filter(function (entry) {
+                        // Skip pages whose text cleans to nothing (blank or
+                        // just "Page N of M" markers) so we don't create a
+                        // bare-title profile.
+                        return String(entry.pages[0].text || '')
+                            .replace(/Page\s+\d+\s+of\s+\d+/gi, '')
+                            .trim().length > 0;
+                    });
+                    if (!pageDataArray.length) return null;
+                    var markdown = window.mergePagesIntoMarkdown(pageDataArray, ocrPersonDisplay(base));
+                    // A profile is only worth saving if it has at least one
+                    // real section beyond the H1 title.
+                    if (!markdown.replace(/^# [^\n]*\n?\s*$/, '').trim()) return null;
+                    return fetch(apiBase() + OCR_API.finalize, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            project_id: projectId(),
+                            person_name: ocrPersonDisplay(base),
+                            markdown: markdown,
+                            pages: group.map(function (d) { return d.filename; })
+                        })
+                    });
+                }).filter(Boolean);
+                if (!jobs.length) throw new Error('No documents with extractable text to merge');
+                return Promise.all(jobs);
+            })
+            .then(function (responses) {
+                for (var i = 0; i < responses.length; i++) {
+                    if (!responses[i].ok) throw new Error('Finalize save failed for one profile');
+                }
+                return ocrLoadProfiles();
+            })
+            .then(function () {
+                if (status) status.textContent = 'Profiles merged and saved.';
+                if (btn) { btn.disabled = false; btn.textContent = 'Merge Pages \u2192 Profiles'; }
+            })
+            .catch(function (err) {
+                if (status) status.textContent = 'Error: ' + err.message;
+                if (btn) { btn.disabled = false; btn.textContent = 'Merge Pages \u2192 Profiles'; }
+            });
+    };
+
+    window.ocrViewProfile = function (el) {
+        var personName = el.getAttribute('data-person');
+        var profile = currentProfiles[personName];
+        if (!profile) return;
+        var modal = ensureModal();
+        var body = modal.querySelector('.ocr-modal-body');
+        body.innerHTML = '<div class="ocr-doc-viewer">' +
+            '<div class="ocr-doc-viewer-tabs">' +
+                '<button class="ocr-doc-tab active" onclick="ocrSwitchTab(this, \'md\')"><i class="fab fa-markdown"></i> Markdown</button>' +
+            '</div>' +
+            '<div class="ocr-doc-viewer-content">' +
+                '<div class="ocr-doc-pane active" data-pane="md"><div class="ocr-md ocr-doc-md">' + renderMd(profile.markdown) + '</div></div>' +
+            '</div>' +
+        '</div>';
+        modal.querySelector('.ocr-modal-title').textContent = profile.person_name || 'Merged Profile';
+        modal.querySelector('#ocrModalOpenLink').setAttribute('href', '#');
+        modal.classList.add('show', 'ocr-modal-large');
+        document.body.classList.add('ocr-modal-lock');
     };
 
     // Auto-close when other plugins open

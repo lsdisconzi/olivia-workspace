@@ -1,0 +1,58 @@
+{
+  "id": "24a63a10b3ce",
+  "name": "json_index_api_json_index_get",
+  "method": "GET",
+  "url_pattern": "/api/json/index",
+  "description": "Json Index",
+  "category": "crud_read",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [
+    "6883df5af2e4"
+  ],
+  "related_functions": [
+    "6883df5af2e4"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Retrieve resource details",
+    "Json Index"
+  ],
+  "capabilities": [
+    "Provides read operations"
+  ],
+  "limitations": [],
+  "source_file": "service:juris-search:openapi",
+  "source_function": "json_index_api_json_index_get",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

@@ -1,0 +1,58 @@
+{
+  "id": "6984b4e51d97",
+  "name": "deepseek_engineer_chat_v1_deepseek_engineer_chat_post",
+  "method": "POST",
+  "url_pattern": "/v1/deepseek-engineer/chat",
+  "description": "Deepseek Engineer Chat",
+  "category": "ai",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": {
+    "type": "JSON",
+    "description": "application/json body (DeepSeekRequest)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "$ref": "#/components/schemas/DeepSeekResponse"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [],
+  "supersedes": [],
+  "use_cases": [
+    "Get AI-powered responses",
+    "Deepseek Engineer Chat"
+  ],
+  "capabilities": [
+    "Conversational AI interaction",
+    "Real-time streaming output"
+  ],
+  "limitations": [],
+  "source_file": "service:garage:openapi",
+  "source_function": "deepseek_engineer_chat_v1_deepseek_engineer_chat_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

@@ -1,0 +1,59 @@
+{
+  "id": "4d93663958b6",
+  "name": "download_inteiro_teor_api_download_post",
+  "method": "POST",
+  "url_pattern": "/api/download",
+  "description": "Download Inteiro Teor",
+  "category": "crud_create",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": {
+    "type": "JSON",
+    "description": "application/json body (DownloadRequest)"
+  },
+  "headers": [],
+  "response_type": "binary",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "c3c8f075fcfe"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Create a new resource",
+    "Download Inteiro Teor"
+  ],
+  "capabilities": [
+    "Provides create operations"
+  ],
+  "limitations": [],
+  "source_file": "service:juris-search:openapi",
+  "source_function": "download_inteiro_teor_api_download_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

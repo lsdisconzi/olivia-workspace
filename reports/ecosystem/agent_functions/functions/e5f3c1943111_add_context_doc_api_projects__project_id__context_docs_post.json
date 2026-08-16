@@ -1,0 +1,75 @@
+{
+  "id": "e5f3c1943111",
+  "name": "add_context_doc_api_projects__project_id__context_docs_post",
+  "method": "POST",
+  "url_pattern": "/api/projects/{project_id}/context_docs",
+  "description": "Add Context Doc",
+  "category": "crud_create",
+  "path_params": [
+    {
+      "name": "project_id",
+      "type": "string",
+      "required": true,
+      "description": "path parameter"
+    }
+  ],
+  "query_params": [],
+  "body_schema": {
+    "type": "JSON",
+    "description": "application/json body (ContextDocumentIn)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "911175b4a75c",
+    "efecb3908b51",
+    "f6da185c3469",
+    "d3f4d8d840f4",
+    "77976b522390",
+    "d66b9227ac46",
+    "7bdef90e90f9",
+    "68d9c4c36067",
+    "2368e39052c4"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Create a new resource",
+    "Add Context Doc"
+  ],
+  "capabilities": [
+    "Provides create operations",
+    "Document access and retrieval"
+  ],
+  "limitations": [],
+  "source_file": "service:transcription:openapi",
+  "source_function": "add_context_doc_api_projects__project_id__context_docs_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

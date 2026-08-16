@@ -1,0 +1,69 @@
+{
+  "id": "1e9fe7289bf8",
+  "name": "list_assistants_v1_assistants__get",
+  "method": "GET",
+  "url_pattern": "/v1/assistants/",
+  "description": "List Assistants",
+  "category": "ai",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "$ref": "#/components/schemas/AssistantListResponse"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "69e73f5a23e7",
+    "15ec86e66a28",
+    "d9b0f6044786",
+    "6dda0e904e95",
+    "741023d4173d",
+    "22f15af86e59",
+    "c7cf49632a23",
+    "3db94c06c683",
+    "4aa82f8a3ccd",
+    "e70f9f86b827",
+    "0a864d5aca24",
+    "b9c952bdb3ab",
+    "6f0ea6dc152e"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Get AI-powered responses",
+    "List Assistants"
+  ],
+  "capabilities": [
+    "Conversational AI interaction",
+    "Real-time streaming output"
+  ],
+  "limitations": [],
+  "source_file": "service:garage:openapi",
+  "source_function": "list_assistants_v1_assistants__get",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

@@ -1,0 +1,80 @@
+{
+  "id": "8ea927efa539",
+  "name": "ingest_from_file_path_legal_ingestion_ingest_file_post",
+  "method": "POST",
+  "url_pattern": "/legal-ingestion/ingest-file?file_path={file_path}",
+  "description": "Ingest From File Path",
+  "category": "data_ingestion",
+  "path_params": [
+    {
+      "name": "file_path",
+      "type": "string",
+      "required": true,
+      "description": "Path parameter: file_path"
+    }
+  ],
+  "query_params": [
+    {
+      "name": "file_path",
+      "type": "string",
+      "required": true,
+      "description": "Path to CSV file on server"
+    }
+  ],
+  "body_schema": {
+    "type": "JSON",
+    "description": "application/json body (IngestionRequest)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "$ref": "#/components/schemas/IngestionResponse"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "f3e22fe8329e",
+    "639edd859a44",
+    "96b1d749381b",
+    "c0341953e1b2",
+    "4d255cb00351",
+    "12ae339cfa68",
+    "bf764e001e95",
+    "173e288ae6fe"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Import or upload data",
+    "Ingest From File Path"
+  ],
+  "capabilities": [
+    "Bulk data import capability"
+  ],
+  "limitations": [],
+  "source_file": "service:garage:openapi",
+  "source_function": "ingest_from_file_path_legal_ingestion_ingest_file_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

@@ -1,0 +1,60 @@
+{
+  "id": "afad622d4ef7",
+  "name": "chat_endpoint_api_chat_post",
+  "method": "POST",
+  "url_pattern": "/api/chat",
+  "description": "Chat Endpoint",
+  "category": "ai",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": {
+    "type": "JSON",
+    "description": "application/json body (ChatRequest)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "ec3e4a240c5f"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Get AI-powered responses",
+    "Chat Endpoint"
+  ],
+  "capabilities": [
+    "Conversational AI interaction",
+    "Real-time streaming output"
+  ],
+  "limitations": [],
+  "source_file": "service:juris-search:openapi",
+  "source_function": "chat_endpoint_api_chat_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

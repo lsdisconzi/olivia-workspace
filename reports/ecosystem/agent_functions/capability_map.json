@@ -1,0 +1,1746 @@
+{
+  "by_capability": {
+    "Provides read operations": [
+      "602917ac128b",
+      "710322bfe2bb",
+      "d722d80ef7a5",
+      "fe362ed68eda",
+      "f6da185c3469",
+      "f36e2943f5b8",
+      "ac8d4873be7b",
+      "e13bf961c4f6",
+      "7eb6886417f9",
+      "f9b3df18de70",
+      "24a63a10b3ce",
+      "ab9fe4a2ddca",
+      "343e6948fe9e",
+      "a44febd36ef4",
+      "edbf6e3ad59e",
+      "65587be79121",
+      "9b2aecc94f08",
+      "0f720b0c7415",
+      "5dfb32d17968",
+      "7ff6e0c69c29",
+      "0f952f4917d7",
+      "3dfdaf44683d",
+      "bb03de7fd6a1",
+      "a068dd7ee8f3",
+      "892dd781d820",
+      "a0f7e07e8767",
+      "e83e9f0a057c",
+      "97d849ed1658",
+      "fc6b20f941c2",
+      "86c10dbb85d6",
+      "f00e887a5855",
+      "3c6a19689371",
+      "a9f2f13db8ad",
+      "5c1075871b7a",
+      "b2d346601f2b",
+      "3db8b1f41295",
+      "669bc582c423"
+    ],
+    "Data retrieval": [
+      "ce27093e6856",
+      "ba6ab7642c11",
+      "c3c8f075fcfe",
+      "9bb3b5c7ada7",
+      "e32c5e62f79d",
+      "a04b64e4ab93",
+      "fc47ef24480b",
+      "7d4af9b255ae"
+    ],
+    "Provides list operations": [
+      "04ce4083717a",
+      "663f054485af",
+      "1497062d8ee5",
+      "8917dcd5d50d",
+      "0109fa9ac96d",
+      "911175b4a75c",
+      "1396ea2de0b5",
+      "90beeda120a1",
+      "e87069845126",
+      "ac4da1a6d614",
+      "c10d0b259f7f",
+      "d8ade07a01b8",
+      "9a12dc424196",
+      "96ed1a3ee2c4",
+      "7839fe21528c",
+      "883542395ba6",
+      "0cf35f203cc6",
+      "63e46e580b19",
+      "6f9fab50eab2",
+      "54c1843beb79",
+      "8aea748a8d64",
+      "5e249233862f",
+      "0e143a9b1d5f",
+      "3ca0d87e8d0c",
+      "6b39a8143ae3",
+      "30e252220620",
+      "e178fddcbef5",
+      "b60c12facab7",
+      "6f2f01d42bf3",
+      "b880a0d03632",
+      "19fbaa4dd73b",
+      "f980dc728bfb",
+      "bbe3dd37ea30",
+      "5c5e3b58ccce"
+    ],
+    "Provides create operations": [
+      "b7c5c12f69a6",
+      "c4b6c568d370",
+      "68a495539528",
+      "baee8df918ea",
+      "428a8afaa594",
+      "7719164df50f",
+      "a331d7916f09",
+      "a1bdd647b41a",
+      "9ea814653475",
+      "fd92fd0b2243",
+      "e6f76b6fcea5",
+      "23cc9a63d7c7",
+      "67f6f610fcfc",
+      "db49f81d4505",
+      "0ab26191a0a7",
+      "efecb3908b51",
+      "d66b9227ac46",
+      "e5f3c1943111",
+      "2368e39052c4",
+      "0cac6b0833b4",
+      "4d93663958b6",
+      "f155bd9eae4a",
+      "889c165de6af",
+      "f19fa5012e3e",
+      "089fad7d0c6f",
+      "6883df5af2e4",
+      "f692227573d6",
+      "130d0f2ec430",
+      "690fb9dab186",
+      "1af629930f4d",
+      "8e0d008768d5",
+      "8220d85110ab",
+      "1b8968a4d1f9",
+      "a404d1eba722",
+      "20cfef7671a8",
+      "76d1da8972f9",
+      "7c3d844784d0",
+      "80c9579d0fdf",
+      "949988306c3e",
+      "bc62410ac5d0",
+      "9734a5869228",
+      "e481ee3dc390",
+      "5527a71f4644",
+      "e9ec6e1dc354",
+      "0560724c5250",
+      "76db862cb5a6",
+      "fb9063be306e",
+      "2ab2443b0b80",
+      "5583b8f5ae51",
+      "556421a82a6a",
+      "878c8e16ce79",
+      "81fa2e976b8e",
+      "cc3ac0029f63",
+      "aea9fe1be5a8",
+      "edf51b3885fa",
+      "e7e56390c1a7",
+      "104418f4417b",
+      "d607672a80c7",
+      "afa3b49140d5",
+      "0ddbbb129593",
+      "6eb62b7be30e",
+      "49ff582ad970",
+      "2ec98fbb1e94",
+      "7bb66119a054",
+      "4cafaa3ed31a",
+      "a00e39912075",
+      "b424ec1929a0",
+      "3079a6bfbeaa",
+      "352d16479f93",
+      "076787e62a86",
+      "492bc619c19a",
+      "522335d93ac9",
+      "220c01cdf00c",
+      "4994ac011a8b",
+      "d2f3cdf7f396",
+      "bcb1f2f695d7",
+      "4f1e9b8bab01",
+      "c65231f41653",
+      "3501c3d487f5",
+      "129a91aae1e5",
+      "bed7fcfa1c55"
+    ],
+    "Provides update operations": [
+      "87ad5c963eff",
+      "d3f4d8d840f4",
+      "7a84470f4273"
+    ],
+    "Resource creation or action execution": [
+      "6201922b915c",
+      "302075c06570",
+      "0be17f0c1268",
+      "d70301d96118",
+      "23930313e238"
+    ],
+    "Enables semantic/vector search": [
+      "bbe6af63e6cc",
+      "8d168a88f2d9",
+      "9e9e606c857b",
+      "4e1611494669",
+      "9f937ef686d2",
+      "dcdb94fbe7b8",
+      "9e34afdf0ef4",
+      "fb42238801cb",
+      "1ef5ac789ffe",
+      "00195e5a76ca",
+      "5670da2392ca",
+      "e70f9f86b827",
+      "7c83de417e16",
+      "c3441f4ab9d8",
+      "b4d522f4542e",
+      "3f745af1d5a8",
+      "a21ad6606728",
+      "4b6283cbedd3",
+      "fbb4c42634a8",
+      "639edd859a44"
+    ],
+    "Manages vector collections": [
+      "aa3dad36a613",
+      "2ed701e6be20",
+      "705b05938d60",
+      "35ba50d1ad74",
+      "307e6864aba0",
+      "c8e5aa5fc007",
+      "76e400eba36b",
+      "dd891d5b05e8",
+      "df0b217a2038",
+      "75598da55717",
+      "5283a347238f",
+      "d48302eaed67",
+      "1c9479d3189f",
+      "cdfdf4471e69",
+      "21e72b246984",
+      "c3441f4ab9d8",
+      "3f745af1d5a8",
+      "9a073ce0395d",
+      "cb4a8c7005c0",
+      "f83f867877fe",
+      "194c677ef9da",
+      "7da51230154c",
+      "fbb4c42634a8",
+      "4a8f51b8daf7",
+      "f3e22fe8329e",
+      "639edd859a44",
+      "96b1d749381b",
+      "c0341953e1b2",
+      "4d255cb00351"
+    ],
+    "Real-time streaming output": [
+      "d722d80ef7a5",
+      "afad622d4ef7",
+      "62954f16770c",
+      "ec3e4a240c5f",
+      "1e9fe7289bf8",
+      "69e73f5a23e7",
+      "15ec86e66a28",
+      "d9b0f6044786",
+      "6dda0e904e95",
+      "741023d4173d",
+      "22f15af86e59",
+      "c7cf49632a23",
+      "3db94c06c683",
+      "4aa82f8a3ccd",
+      "e70f9f86b827",
+      "4b6283cbedd3",
+      "0a864d5aca24",
+      "b9c952bdb3ab",
+      "6984b4e51d97",
+      "6f0ea6dc152e"
+    ],
+    "Provides delete operations": [
+      "77976b522390",
+      "7bdef90e90f9",
+      "68d9c4c36067",
+      "5ea53b25c42c",
+      "a97ffa45f2c8",
+      "7f9c34e6c21e",
+      "90177123df3f"
+    ],
+    "Document access and retrieval": [
+      "e5f3c1943111",
+      "68d9c4c36067",
+      "a44febd36ef4",
+      "edbf6e3ad59e",
+      "54c1843beb79",
+      "7ff6e0c69c29",
+      "0f952f4917d7",
+      "5e249233862f",
+      "af252a580f3b",
+      "173e288ae6fe"
+    ],
+    "Bulk data import capability": [
+      "c2eab235b455",
+      "07e6e26797fb",
+      "eba43969df1a",
+      "3499a8769a82",
+      "22ce3e8a3ce9",
+      "3c62cd50953f",
+      "d0efbbddaeab",
+      "d66eaa334406",
+      "624f72b69716",
+      "594b0af09d66",
+      "5fa0f8aea3ba",
+      "d48302eaed67",
+      "21e72b246984",
+      "fd856c41c0a6",
+      "f83f867877fe",
+      "194c677ef9da",
+      "7da51230154c",
+      "af252a580f3b",
+      "fbb4c42634a8",
+      "4a8f51b8daf7",
+      "f3e22fe8329e",
+      "8ea927efa539",
+      "639edd859a44",
+      "96b1d749381b",
+      "c0341953e1b2",
+      "4d255cb00351",
+      "12ae339cfa68",
+      "bf764e001e95",
+      "173e288ae6fe",
+      "3c5e9a3e47c9",
+      "1f8b9eb0b0e4",
+      "c55c7f551320"
+    ],
+    "Conversational AI interaction": [
+      "afad622d4ef7",
+      "62954f16770c",
+      "ec3e4a240c5f",
+      "1e9fe7289bf8",
+      "69e73f5a23e7",
+      "15ec86e66a28",
+      "d9b0f6044786",
+      "6dda0e904e95",
+      "741023d4173d",
+      "22f15af86e59",
+      "c7cf49632a23",
+      "3db94c06c683",
+      "4aa82f8a3ccd",
+      "e70f9f86b827",
+      "4b6283cbedd3",
+      "40917cb61f1a",
+      "3971a4c5d594",
+      "0a864d5aca24",
+      "b9c952bdb3ab",
+      "6984b4e51d97",
+      "6f0ea6dc152e"
+    ],
+    "Agent lifecycle management": [
+      "b880a0d03632",
+      "76db862cb5a6",
+      "4c561cba7694",
+      "0df612525938",
+      "34400fed5297",
+      "28c563537472",
+      "07cc08142fcb",
+      "40917cb61f1a",
+      "3971a4c5d594",
+      "83839ad9e4aa",
+      "19fbaa4dd73b",
+      "5d2a882e6d81",
+      "50c660994739"
+    ]
+  },
+  "by_use_case": {
+    "Retrieve resource details": [
+      "602917ac128b",
+      "710322bfe2bb",
+      "d722d80ef7a5",
+      "fe362ed68eda",
+      "f6da185c3469",
+      "f36e2943f5b8",
+      "ac8d4873be7b",
+      "e13bf961c4f6",
+      "7eb6886417f9",
+      "f9b3df18de70",
+      "24a63a10b3ce",
+      "ab9fe4a2ddca",
+      "343e6948fe9e",
+      "a44febd36ef4",
+      "edbf6e3ad59e",
+      "65587be79121",
+      "9b2aecc94f08",
+      "0f720b0c7415",
+      "5dfb32d17968",
+      "7ff6e0c69c29",
+      "0f952f4917d7",
+      "3dfdaf44683d",
+      "bb03de7fd6a1",
+      "a068dd7ee8f3",
+      "892dd781d820",
+      "a0f7e07e8767",
+      "e83e9f0a057c",
+      "97d849ed1658",
+      "fc6b20f941c2",
+      "86c10dbb85d6",
+      "f00e887a5855",
+      "3c6a19689371",
+      "a9f2f13db8ad",
+      "5c1075871b7a",
+      "b2d346601f2b",
+      "3db8b1f41295",
+      "669bc582c423"
+    ],
+    "Health Check": [
+      "602917ac128b"
+    ],
+    "Check system health or status": [
+      "ce27093e6856",
+      "ba6ab7642c11",
+      "c3c8f075fcfe",
+      "9bb3b5c7ada7",
+      "e32c5e62f79d",
+      "a04b64e4ab93",
+      "fc47ef24480b",
+      "7d4af9b255ae"
+    ],
+    "Health": [
+      "ce27093e6856",
+      "e32c5e62f79d",
+      "a04b64e4ab93",
+      "7d4af9b255ae"
+    ],
+    "List all resources of this type": [
+      "04ce4083717a",
+      "663f054485af",
+      "1497062d8ee5",
+      "8917dcd5d50d",
+      "0109fa9ac96d",
+      "911175b4a75c",
+      "1396ea2de0b5",
+      "90beeda120a1",
+      "e87069845126",
+      "ac4da1a6d614",
+      "c10d0b259f7f",
+      "d8ade07a01b8",
+      "9a12dc424196",
+      "96ed1a3ee2c4",
+      "7839fe21528c",
+      "883542395ba6",
+      "0cf35f203cc6",
+      "63e46e580b19",
+      "6f9fab50eab2",
+      "54c1843beb79",
+      "8aea748a8d64",
+      "5e249233862f",
+      "0e143a9b1d5f",
+      "3ca0d87e8d0c",
+      "6b39a8143ae3",
+      "30e252220620",
+      "e178fddcbef5",
+      "b60c12facab7",
+      "6f2f01d42bf3",
+      "b880a0d03632",
+      "19fbaa4dd73b",
+      "f980dc728bfb",
+      "bbe3dd37ea30",
+      "5c5e3b58ccce"
+    ],
+    "List Parameter Definitions": [
+      "04ce4083717a"
+    ],
+    "List Whisper Models": [
+      "663f054485af"
+    ],
+    "Create a new resource": [
+      "b7c5c12f69a6",
+      "c4b6c568d370",
+      "68a495539528",
+      "baee8df918ea",
+      "428a8afaa594",
+      "7719164df50f",
+      "a331d7916f09",
+      "a1bdd647b41a",
+      "9ea814653475",
+      "fd92fd0b2243",
+      "e6f76b6fcea5",
+      "23cc9a63d7c7",
+      "67f6f610fcfc",
+      "db49f81d4505",
+      "0ab26191a0a7",
+      "efecb3908b51",
+      "d66b9227ac46",
+      "e5f3c1943111",
+      "2368e39052c4",
+      "0cac6b0833b4",
+      "4d93663958b6",
+      "f155bd9eae4a",
+      "889c165de6af",
+      "f19fa5012e3e",
+      "089fad7d0c6f",
+      "6883df5af2e4",
+      "f692227573d6",
+      "130d0f2ec430",
+      "690fb9dab186",
+      "1af629930f4d",
+      "8e0d008768d5",
+      "8220d85110ab",
+      "1b8968a4d1f9",
+      "a404d1eba722",
+      "20cfef7671a8",
+      "76d1da8972f9",
+      "7c3d844784d0",
+      "80c9579d0fdf",
+      "949988306c3e",
+      "bc62410ac5d0",
+      "9734a5869228",
+      "e481ee3dc390",
+      "5527a71f4644",
+      "e9ec6e1dc354",
+      "0560724c5250",
+      "76db862cb5a6",
+      "fb9063be306e",
+      "2ab2443b0b80",
+      "5583b8f5ae51",
+      "556421a82a6a",
+      "878c8e16ce79",
+      "81fa2e976b8e",
+      "cc3ac0029f63",
+      "aea9fe1be5a8",
+      "edf51b3885fa",
+      "e7e56390c1a7",
+      "104418f4417b",
+      "d607672a80c7",
+      "afa3b49140d5",
+      "0ddbbb129593",
+      "6eb62b7be30e",
+      "49ff582ad970",
+      "2ec98fbb1e94",
+      "7bb66119a054",
+      "4cafaa3ed31a",
+      "a00e39912075",
+      "b424ec1929a0",
+      "3079a6bfbeaa",
+      "352d16479f93",
+      "076787e62a86",
+      "492bc619c19a",
+      "522335d93ac9",
+      "220c01cdf00c",
+      "4994ac011a8b",
+      "d2f3cdf7f396",
+      "bcb1f2f695d7",
+      "4f1e9b8bab01",
+      "c65231f41653",
+      "3501c3d487f5",
+      "129a91aae1e5",
+      "bed7fcfa1c55"
+    ],
+    "Diarization Excerpt": [
+      "b7c5c12f69a6"
+    ],
+    "Diarization Excerpt By Path": [
+      "c4b6c568d370"
+    ],
+    "Diarization Transcribe": [
+      "68a495539528"
+    ],
+    "Diarization Transcribe Async": [
+      "baee8df918ea"
+    ],
+    "Diarization Transcribe Guided": [
+      "428a8afaa594"
+    ],
+    "Diarization Transcribe Guided Async": [
+      "7719164df50f"
+    ],
+    "List Transcripts": [
+      "1497062d8ee5"
+    ],
+    "Get Transcript": [
+      "710322bfe2bb"
+    ],
+    "Modify existing resource": [
+      "87ad5c963eff",
+      "d3f4d8d840f4",
+      "7a84470f4273"
+    ],
+    "Update Transcript Metadata": [
+      "87ad5c963eff"
+    ],
+    "Import or upload data": [
+      "6201922b915c",
+      "302075c06570",
+      "c2eab235b455",
+      "07e6e26797fb",
+      "eba43969df1a",
+      "3499a8769a82",
+      "22ce3e8a3ce9",
+      "3c62cd50953f",
+      "d0efbbddaeab",
+      "d66eaa334406",
+      "624f72b69716",
+      "594b0af09d66",
+      "5fa0f8aea3ba",
+      "fd856c41c0a6",
+      "af252a580f3b",
+      "8ea927efa539",
+      "12ae339cfa68",
+      "bf764e001e95",
+      "173e288ae6fe",
+      "3c5e9a3e47c9",
+      "1f8b9eb0b0e4",
+      "c55c7f551320"
+    ],
+    "Import Transcripts": [
+      "6201922b915c"
+    ],
+    "Analyze Transcript": [
+      "a331d7916f09"
+    ],
+    "Find resources matching criteria": [
+      "bbe6af63e6cc",
+      "8d168a88f2d9",
+      "9e9e606c857b",
+      "4e1611494669",
+      "9f937ef686d2",
+      "dcdb94fbe7b8",
+      "9e34afdf0ef4",
+      "fb42238801cb",
+      "1ef5ac789ffe",
+      "00195e5a76ca",
+      "5670da2392ca",
+      "a21ad6606728"
+    ],
+    "Search Transcripts": [
+      "bbe6af63e6cc"
+    ],
+    "Index Transcript": [
+      "aa3dad36a613"
+    ],
+    "Index All Transcripts": [
+      "a1bdd647b41a"
+    ],
+    "Get Progress Status": [
+      "ba6ab7642c11"
+    ],
+    "Stream Progress": [
+      "d722d80ef7a5"
+    ],
+    "Audit Transcript Route": [
+      "9ea814653475"
+    ],
+    "Refine Transcript Route": [
+      "fd92fd0b2243"
+    ],
+    "Patch Transcript Route": [
+      "e6f76b6fcea5"
+    ],
+    "List Csvs": [
+      "8917dcd5d50d"
+    ],
+    "Import Csv": [
+      "302075c06570"
+    ],
+    "List Transcripts Review": [
+      "2ed701e6be20"
+    ],
+    "Save Review": [
+      "23cc9a63d7c7"
+    ],
+    "Index Reviewed Segments": [
+      "67f6f610fcfc"
+    ],
+    "Retranscribe Segments": [
+      "db49f81d4505"
+    ],
+    "List Audio Files": [
+      "0109fa9ac96d"
+    ],
+    "Get Review Transcript": [
+      "fe362ed68eda"
+    ],
+    "Save Review Legacy": [
+      "0ab26191a0a7"
+    ],
+    "List Projects": [
+      "911175b4a75c"
+    ],
+    "Create Project": [
+      "efecb3908b51"
+    ],
+    "Get Project": [
+      "f6da185c3469"
+    ],
+    "Update Project": [
+      "d3f4d8d840f4"
+    ],
+    "Remove a resource permanently": [
+      "77976b522390",
+      "7bdef90e90f9",
+      "68d9c4c36067",
+      "5ea53b25c42c",
+      "a97ffa45f2c8",
+      "7f9c34e6c21e",
+      "90177123df3f"
+    ],
+    "Delete Project": [
+      "77976b522390"
+    ],
+    "Add Audio": [
+      "d66b9227ac46"
+    ],
+    "Remove Audio": [
+      "7bdef90e90f9"
+    ],
+    "Add Context Doc": [
+      "e5f3c1943111"
+    ],
+    "Remove Context Doc": [
+      "68d9c4c36067"
+    ],
+    "Add Narrative": [
+      "2368e39052c4"
+    ],
+    "List Audio Names": [
+      "1396ea2de0b5"
+    ],
+    "Get Manifest": [
+      "f36e2943f5b8"
+    ],
+    "Get References": [
+      "ac8d4873be7b"
+    ],
+    "Upload Reference": [
+      "c2eab235b455"
+    ],
+    "Link Reference": [
+      "0cac6b0833b4"
+    ],
+    "Get Narratives": [
+      "90beeda120a1"
+    ],
+    "Get AI-powered responses": [
+      "afad622d4ef7",
+      "62954f16770c",
+      "ec3e4a240c5f",
+      "1e9fe7289bf8",
+      "69e73f5a23e7",
+      "15ec86e66a28",
+      "d9b0f6044786",
+      "6dda0e904e95",
+      "741023d4173d",
+      "22f15af86e59",
+      "c7cf49632a23",
+      "3db94c06c683",
+      "4aa82f8a3ccd",
+      "e70f9f86b827",
+      "4b6283cbedd3",
+      "0a864d5aca24",
+      "b9c952bdb3ab",
+      "6984b4e51d97",
+      "6f0ea6dc152e"
+    ],
+    "Chat Endpoint": [
+      "afad622d4ef7",
+      "62954f16770c"
+    ],
+    "Upload File": [
+      "07e6e26797fb",
+      "eba43969df1a",
+      "8220d85110ab"
+    ],
+    "Start Search": [
+      "8d168a88f2d9",
+      "dcdb94fbe7b8"
+    ],
+    "Search Status": [
+      "9e9e606c857b",
+      "9e34afdf0ef4"
+    ],
+    "Get Results": [
+      "e13bf961c4f6",
+      "7eb6886417f9"
+    ],
+    "List Search History": [
+      "4e1611494669",
+      "fb42238801cb"
+    ],
+    "Get Search History File": [
+      "9f937ef686d2",
+      "1ef5ac789ffe"
+    ],
+    "Download Inteiro Teor": [
+      "4d93663958b6",
+      "889c165de6af"
+    ],
+    "Download Status": [
+      "c3c8f075fcfe",
+      "9bb3b5c7ada7"
+    ],
+    "Download Batch Compat": [
+      "f155bd9eae4a",
+      "f19fa5012e3e"
+    ],
+    "Get Storage Paths": [
+      "e87069845126",
+      "ac4da1a6d614"
+    ],
+    "Docx Index": [
+      "f9b3df18de70",
+      "ab9fe4a2ddca"
+    ],
+    "Json Index": [
+      "24a63a10b3ce",
+      "343e6948fe9e"
+    ],
+    "Docx Rebuild": [
+      "089fad7d0c6f",
+      "130d0f2ec430"
+    ],
+    "Json Rebuild": [
+      "6883df5af2e4",
+      "690fb9dab186"
+    ],
+    "Storage Rebuild": [
+      "f692227573d6",
+      "1af629930f4d"
+    ],
+    "Stats Compat": [
+      "c10d0b259f7f",
+      "d8ade07a01b8",
+      "7839fe21528c",
+      "883542395ba6"
+    ],
+    "List Courts": [
+      "9a12dc424196",
+      "96ed1a3ee2c4",
+      "0cf35f203cc6",
+      "63e46e580b19"
+    ],
+    "Qdrant Collections": [
+      "705b05938d60",
+      "35ba50d1ad74"
+    ],
+    "Health Legacy": [
+      "fc47ef24480b"
+    ],
+    "Master Index Stats": [
+      "6f9fab50eab2",
+      "8aea748a8d64"
+    ],
+    "Master Index Documents": [
+      "a44febd36ef4",
+      "7ff6e0c69c29"
+    ],
+    "Master Index Document": [
+      "edbf6e3ad59e",
+      "0f952f4917d7"
+    ],
+    "Master Index Document Correlations": [
+      "54c1843beb79",
+      "5e249233862f"
+    ],
+    "Master Index Rebuild": [
+      "3499a8769a82",
+      "22ce3e8a3ce9"
+    ],
+    "Master Index Pause": [
+      "307e6864aba0",
+      "76e400eba36b"
+    ],
+    "Master Index Resume": [
+      "c8e5aa5fc007",
+      "dd891d5b05e8"
+    ],
+    "Master Index Markdown": [
+      "65587be79121",
+      "3dfdaf44683d"
+    ],
+    "Master Index Jurisprudence": [
+      "9b2aecc94f08",
+      "bb03de7fd6a1"
+    ],
+    "Master Index Jurisprudence Markdown": [
+      "0f720b0c7415",
+      "a068dd7ee8f3"
+    ],
+    "Master Index Download File": [
+      "5dfb32d17968",
+      "892dd781d820"
+    ],
+    "Master Index Semantic Search": [
+      "00195e5a76ca",
+      "5670da2392ca"
+    ],
+    "Upload Pdf": [
+      "3c62cd50953f",
+      "d66eaa334406"
+    ],
+    "Process Pdf": [
+      "d0efbbddaeab",
+      "624f72b69716"
+    ],
+    "List Models": [
+      "0e143a9b1d5f"
+    ],
+    "Chat Completions": [
+      "ec3e4a240c5f"
+    ],
+    "Summarize Files": [
+      "8e0d008768d5"
+    ],
+    "List Files": [
+      "3ca0d87e8d0c"
+    ],
+    "List Files In Directory": [
+      "6b39a8143ae3"
+    ],
+    "Read File": [
+      "a0f7e07e8767"
+    ],
+    "List Transcript Files": [
+      "30e252220620"
+    ],
+    "List Law Files": [
+      "e178fddcbef5"
+    ],
+    "Upload Transcript File": [
+      "594b0af09d66"
+    ],
+    "Upload Law File": [
+      "5fa0f8aea3ba"
+    ],
+    "Get Audio File": [
+      "e83e9f0a057c"
+    ],
+    "List Assistants": [
+      "1e9fe7289bf8"
+    ],
+    "Create Assistant": [
+      "69e73f5a23e7"
+    ],
+    "Get Assistant": [
+      "15ec86e66a28"
+    ],
+    "Update Assistant": [
+      "d9b0f6044786"
+    ],
+    "Replace Assistant": [
+      "6dda0e904e95"
+    ],
+    "Delete Assistant": [
+      "741023d4173d"
+    ],
+    "Chat With Assistant": [
+      "22f15af86e59"
+    ],
+    "Attach File To Assistant": [
+      "c7cf49632a23"
+    ],
+    "List Assistant Files": [
+      "3db94c06c683"
+    ],
+    "Detach File From Assistant": [
+      "4aa82f8a3ccd"
+    ],
+    "Query Assistant Knowledge": [
+      "e70f9f86b827"
+    ],
+    "Check Qdrant Connection": [
+      "0be17f0c1268"
+    ],
+    "List All Collections": [
+      "df0b217a2038"
+    ],
+    "Create a New Collection": [
+      "75598da55717"
+    ],
+    "Get Collection Statistics": [
+      "5283a347238f"
+    ],
+    "Ingest structured data": [
+      "d48302eaed67"
+    ],
+    "Ensure Legal Indexes": [
+      "1c9479d3189f"
+    ],
+    "Delete a Collection": [
+      "cdfdf4471e69"
+    ],
+    "Ingest Files into a Collection": [
+      "21e72b246984"
+    ],
+    "Scan, create, and embed a full case directory": [
+      "d70301d96118"
+    ],
+    "Generate code summaries and index into dev-code collection": [
+      "23930313e238"
+    ],
+    "Query a Collection with Vector": [
+      "7c83de417e16"
+    ],
+    "Search Qdrant": [
+      "c3441f4ab9d8"
+    ],
+    "Search a Collection with Text": [
+      "b4d522f4542e"
+    ],
+    "Query with Vector": [
+      "3f745af1d5a8"
+    ],
+    "Knowledge Query": [
+      "a21ad6606728"
+    ],
+    "Assistant Query Knowledge": [
+      "4b6283cbedd3"
+    ],
+    "Ingest File": [
+      "fd856c41c0a6",
+      "194c677ef9da"
+    ],
+    "Clear Collection": [
+      "9a073ce0395d"
+    ],
+    "Get Collection Stats": [
+      "cb4a8c7005c0"
+    ],
+    "List Tools": [
+      "b60c12facab7"
+    ],
+    "Create Tool": [
+      "1b8968a4d1f9"
+    ],
+    "Get Tool": [
+      "97d849ed1658"
+    ],
+    "Delete Tool": [
+      "5ea53b25c42c"
+    ],
+    "Execute Tool": [
+      "a404d1eba722"
+    ],
+    "Execute Tool By Name": [
+      "20cfef7671a8"
+    ],
+    "Deep Reasoning": [
+      "76d1da8972f9"
+    ],
+    "Generate Prompt": [
+      "7c3d844784d0"
+    ],
+    "Analyze Needs": [
+      "80c9579d0fdf"
+    ],
+    "Generate Variations": [
+      "949988306c3e"
+    ],
+    "Optimize Prompt": [
+      "bc62410ac5d0"
+    ],
+    "Evaluate Prompt": [
+      "9734a5869228"
+    ],
+    "Suggest Improvements": [
+      "e481ee3dc390"
+    ],
+    "Get Prompt Examples": [
+      "fc6b20f941c2"
+    ],
+    "Ingest Directory": [
+      "f83f867877fe"
+    ],
+    "Ingest Legal File": [
+      "7da51230154c"
+    ],
+    "Analyze Document Structure": [
+      "af252a580f3b",
+      "173e288ae6fe"
+    ],
+    "Search Documents": [
+      "fbb4c42634a8"
+    ],
+    "Get Collection Info": [
+      "4a8f51b8daf7",
+      "c0341953e1b2"
+    ],
+    "Upload And Ingest Csv": [
+      "f3e22fe8329e"
+    ],
+    "Ingest From File Path": [
+      "8ea927efa539"
+    ],
+    "Search Legal Documents": [
+      "639edd859a44"
+    ],
+    "List Collections": [
+      "96b1d749381b"
+    ],
+    "Delete Collection": [
+      "4d255cb00351"
+    ],
+    "Ingest Legal File Enhanced": [
+      "12ae339cfa68"
+    ],
+    "Ingest Legal Folder": [
+      "bf764e001e95"
+    ],
+    "Analyze Transcript Structure": [
+      "5527a71f4644"
+    ],
+    "Ingest Transcript Enhanced": [
+      "3c5e9a3e47c9"
+    ],
+    "Ingest Transcript Json": [
+      "1f8b9eb0b0e4"
+    ],
+    "Stats": [
+      "6f2f01d42bf3"
+    ],
+    "Cypher": [
+      "e9ec6e1dc354"
+    ],
+    "Rag Context": [
+      "0560724c5250"
+    ],
+    "List Agents": [
+      "b880a0d03632"
+    ],
+    "Create Agent": [
+      "76db862cb5a6"
+    ],
+    "Get Agent": [
+      "4c561cba7694"
+    ],
+    "Update Agent": [
+      "0df612525938"
+    ],
+    "Delete Agent": [
+      "34400fed5297"
+    ],
+    "Run Agent": [
+      "28c563537472"
+    ],
+    "Validate Agent": [
+      "07cc08142fcb"
+    ],
+    "Import From Assistant": [
+      "40917cb61f1a"
+    ],
+    "Export To Assistant": [
+      "3971a4c5d594"
+    ],
+    "Import From Markdown": [
+      "83839ad9e4aa"
+    ],
+    "Catalog List Agents": [
+      "19fbaa4dd73b"
+    ],
+    "Catalog Get Agent": [
+      "5d2a882e6d81"
+    ],
+    "Import From Catalog": [
+      "50c660994739"
+    ],
+    "Get latest ecosystem MCP report": [
+      "86c10dbb85d6"
+    ],
+    "Get ecosystem metadata JSON": [
+      "f00e887a5855"
+    ],
+    "List Threads": [
+      "f980dc728bfb"
+    ],
+    "Create Thread": [
+      "fb9063be306e"
+    ],
+    "Get Thread": [
+      "3c6a19689371"
+    ],
+    "Delete Thread": [
+      "a97ffa45f2c8"
+    ],
+    "Add Message": [
+      "2ab2443b0b80"
+    ],
+    "List Messages": [
+      "bbe3dd37ea30"
+    ],
+    "Create Run": [
+      "5583b8f5ae51"
+    ],
+    "Attach File To Thread": [
+      "556421a82a6a"
+    ],
+    "Debug Schema": [
+      "a9f2f13db8ad"
+    ],
+    "Debug Routes": [
+      "5c5e3b58ccce"
+    ],
+    "Regenerate Framework List": [
+      "878c8e16ce79"
+    ],
+    "Get File Content": [
+      "5c1075871b7a"
+    ],
+    "Delete File": [
+      "7f9c34e6c21e"
+    ],
+    "Assign Tool To Assistant": [
+      "0a864d5aca24"
+    ],
+    "Deepseek Proxy": [
+      "b9c952bdb3ab"
+    ],
+    "Deepseek Engineer Chat": [
+      "6984b4e51d97"
+    ],
+    "Deepseek Streaming Proxy": [
+      "6f0ea6dc152e"
+    ],
+    "Deepseek Gateway": [
+      "90177123df3f",
+      "7a84470f4273",
+      "81fa2e976b8e",
+      "b2d346601f2b"
+    ],
+    "Run Demo": [
+      "cc3ac0029f63"
+    ],
+    "Upload To Session": [
+      "c55c7f551320"
+    ],
+    "Get Audio": [
+      "3db8b1f41295"
+    ],
+    "Apply Filter": [
+      "aea9fe1be5a8"
+    ],
+    "Apply Filter Chain": [
+      "edf51b3885fa"
+    ],
+    "Apply Gain": [
+      "e7e56390c1a7"
+    ],
+    "Apply Dither": [
+      "104418f4417b"
+    ],
+    "Apply Dcshift": [
+      "d607672a80c7"
+    ],
+    "Apply Overdrive": [
+      "afa3b49140d5"
+    ],
+    "Apply Contrast": [
+      "0ddbbb129593"
+    ],
+    "Apply Flanger": [
+      "6eb62b7be30e"
+    ],
+    "Apply Phaser": [
+      "49ff582ad970"
+    ],
+    "Pitch Shift": [
+      "2ec98fbb1e94"
+    ],
+    "Change Speed": [
+      "7bb66119a054"
+    ],
+    "Preemphasis": [
+      "4cafaa3ed31a"
+    ],
+    "Deemphasis": [
+      "a00e39912075"
+    ],
+    "Change Volume": [
+      "b424ec1929a0"
+    ],
+    "Apply Fade": [
+      "3079a6bfbeaa"
+    ],
+    "Add Noise": [
+      "352d16479f93"
+    ],
+    "Compute Spectrogram": [
+      "076787e62a86"
+    ],
+    "Compute Mel Spectrogram": [
+      "492bc619c19a"
+    ],
+    "Compute Mfcc": [
+      "522335d93ac9"
+    ],
+    "Compute Loudness": [
+      "220c01cdf00c"
+    ],
+    "Compute Spectral Centroid": [
+      "4994ac011a8b"
+    ],
+    "Detect Pitch": [
+      "d2f3cdf7f396"
+    ],
+    "Separate Sources": [
+      "bcb1f2f695d7"
+    ],
+    "Voice Activity Detection": [
+      "4f1e9b8bab01"
+    ],
+    "Resample Audio": [
+      "c65231f41653"
+    ],
+    "Apply Convolve": [
+      "3501c3d487f5"
+    ],
+    "Apply Ir Convolve": [
+      "129a91aae1e5"
+    ],
+    "Time Stretch": [
+      "bed7fcfa1c55"
+    ],
+    "Get Info": [
+      "669bc582c423"
+    ]
+  },
+  "workflows": [
+    {
+      "name": "diarization_crud_workflow",
+      "description": "Full CRUD operations for diarization",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "04ce4083717a",
+            "663f054485af"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "b7c5c12f69a6",
+            "c4b6c568d370",
+            "68a495539528",
+            "baee8df918ea",
+            "428a8afaa594",
+            "7719164df50f"
+          ],
+          "description": "Create new item"
+        }
+      ]
+    },
+    {
+      "name": "transcripts_crud_workflow",
+      "description": "Full CRUD operations for transcripts",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "1497062d8ee5",
+            "8917dcd5d50d",
+            "0109fa9ac96d"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "a331d7916f09",
+            "a1bdd647b41a",
+            "9ea814653475",
+            "fd92fd0b2243",
+            "e6f76b6fcea5",
+            "23cc9a63d7c7",
+            "67f6f610fcfc",
+            "db49f81d4505",
+            "0ab26191a0a7",
+            "5527a71f4644"
+          ],
+          "description": "Create new item"
+        },
+        {
+          "action": "read",
+          "function_ids": [
+            "710322bfe2bb",
+            "d722d80ef7a5",
+            "fe362ed68eda"
+          ],
+          "description": "Read item details"
+        },
+        {
+          "action": "update",
+          "function_ids": [
+            "87ad5c963eff"
+          ],
+          "description": "Modify item"
+        }
+      ]
+    },
+    {
+      "name": "transcripts_search_workflow",
+      "description": "Search and retrieve transcripts",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "1497062d8ee5",
+            "8917dcd5d50d",
+            "0109fa9ac96d"
+          ],
+          "description": "Get available items"
+        },
+        {
+          "action": "search",
+          "function_ids": [
+            "bbe6af63e6cc"
+          ],
+          "description": "Search with criteria"
+        }
+      ]
+    },
+    {
+      "name": "projects_crud_workflow",
+      "description": "Full CRUD operations for projects",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "911175b4a75c"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "efecb3908b51",
+            "d66b9227ac46",
+            "e5f3c1943111",
+            "2368e39052c4"
+          ],
+          "description": "Create new item"
+        },
+        {
+          "action": "read",
+          "function_ids": [
+            "f6da185c3469"
+          ],
+          "description": "Read item details"
+        },
+        {
+          "action": "update",
+          "function_ids": [
+            "d3f4d8d840f4"
+          ],
+          "description": "Modify item"
+        },
+        {
+          "action": "delete",
+          "function_ids": [
+            "77976b522390",
+            "7bdef90e90f9",
+            "68d9c4c36067"
+          ],
+          "description": "Remove item"
+        }
+      ]
+    },
+    {
+      "name": "references_crud_workflow",
+      "description": "Full CRUD operations for references",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "1396ea2de0b5",
+            "90beeda120a1"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "0cac6b0833b4"
+          ],
+          "description": "Create new item"
+        },
+        {
+          "action": "read",
+          "function_ids": [
+            "f36e2943f5b8",
+            "ac8d4873be7b"
+          ],
+          "description": "Read item details"
+        }
+      ]
+    },
+    {
+      "name": "juris_crud_workflow",
+      "description": "Full CRUD operations for juris",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "ac4da1a6d614",
+            "7839fe21528c",
+            "883542395ba6",
+            "0cf35f203cc6",
+            "63e46e580b19",
+            "8aea748a8d64",
+            "5e249233862f"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "889c165de6af",
+            "f19fa5012e3e",
+            "130d0f2ec430",
+            "690fb9dab186",
+            "1af629930f4d"
+          ],
+          "description": "Create new item"
+        },
+        {
+          "action": "read",
+          "function_ids": [
+            "7eb6886417f9",
+            "ab9fe4a2ddca",
+            "343e6948fe9e",
+            "7ff6e0c69c29",
+            "0f952f4917d7",
+            "3dfdaf44683d",
+            "bb03de7fd6a1",
+            "a068dd7ee8f3",
+            "892dd781d820"
+          ],
+          "description": "Read item details"
+        }
+      ]
+    },
+    {
+      "name": "juris_search_workflow",
+      "description": "Search and retrieve juris",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "ac4da1a6d614",
+            "7839fe21528c",
+            "883542395ba6",
+            "0cf35f203cc6",
+            "63e46e580b19",
+            "8aea748a8d64",
+            "5e249233862f"
+          ],
+          "description": "Get available items"
+        },
+        {
+          "action": "search",
+          "function_ids": [
+            "dcdb94fbe7b8",
+            "9e34afdf0ef4",
+            "fb42238801cb",
+            "1ef5ac789ffe",
+            "5670da2392ca"
+          ],
+          "description": "Search with criteria"
+        }
+      ]
+    },
+    {
+      "name": "storage_crud_workflow",
+      "description": "Full CRUD operations for storage",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "e87069845126"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "f692227573d6"
+          ],
+          "description": "Create new item"
+        }
+      ]
+    },
+    {
+      "name": "master-index_search_workflow",
+      "description": "Search and retrieve master-index",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "6f9fab50eab2",
+            "54c1843beb79"
+          ],
+          "description": "Get available items"
+        },
+        {
+          "action": "search",
+          "function_ids": [
+            "00195e5a76ca"
+          ],
+          "description": "Search with criteria"
+        }
+      ]
+    },
+    {
+      "name": "files_crud_workflow",
+      "description": "Full CRUD operations for files",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "3ca0d87e8d0c",
+            "6b39a8143ae3",
+            "30e252220620",
+            "e178fddcbef5"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "8e0d008768d5",
+            "8220d85110ab"
+          ],
+          "description": "Create new item"
+        },
+        {
+          "action": "read",
+          "function_ids": [
+            "a0f7e07e8767",
+            "5c1075871b7a"
+          ],
+          "description": "Read item details"
+        },
+        {
+          "action": "delete",
+          "function_ids": [
+            "7f9c34e6c21e"
+          ],
+          "description": "Remove item"
+        }
+      ]
+    },
+    {
+      "name": "tools_crud_workflow",
+      "description": "Full CRUD operations for tools",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "b60c12facab7"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "1b8968a4d1f9",
+            "a404d1eba722",
+            "20cfef7671a8",
+            "76d1da8972f9"
+          ],
+          "description": "Create new item"
+        },
+        {
+          "action": "read",
+          "function_ids": [
+            "97d849ed1658"
+          ],
+          "description": "Read item details"
+        },
+        {
+          "action": "delete",
+          "function_ids": [
+            "5ea53b25c42c"
+          ],
+          "description": "Remove item"
+        }
+      ]
+    },
+    {
+      "name": "neo4j_crud_workflow",
+      "description": "Full CRUD operations for neo4j",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "6f2f01d42bf3"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "e9ec6e1dc354",
+            "0560724c5250"
+          ],
+          "description": "Create new item"
+        }
+      ]
+    },
+    {
+      "name": "openclaude_crud_workflow",
+      "description": "Full CRUD operations for openclaude",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "b880a0d03632",
+            "19fbaa4dd73b"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "76db862cb5a6"
+          ],
+          "description": "Create new item"
+        }
+      ]
+    },
+    {
+      "name": "threads_crud_workflow",
+      "description": "Full CRUD operations for threads",
+      "steps": [
+        {
+          "action": "list",
+          "function_ids": [
+            "f980dc728bfb",
+            "bbe3dd37ea30"
+          ],
+          "description": "List existing items"
+        },
+        {
+          "action": "create",
+          "function_ids": [
+            "fb9063be306e",
+            "2ab2443b0b80",
+            "5583b8f5ae51",
+            "556421a82a6a"
+          ],
+          "description": "Create new item"
+        },
+        {
+          "action": "read",
+          "function_ids": [
+            "3c6a19689371"
+          ],
+          "description": "Read item details"
+        },
+        {
+          "action": "delete",
+          "function_ids": [
+            "a97ffa45f2c8"
+          ],
+          "description": "Remove item"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "id": "c2eab235b455",
+  "name": "upload_reference_api_references__canonical_name__upload_post",
+  "method": "POST",
+  "url_pattern": "/api/references/{canonical_name}/upload",
+  "description": "Upload Reference",
+  "category": "data_ingestion",
+  "path_params": [
+    {
+      "name": "canonical_name",
+      "type": "string",
+      "required": true,
+      "description": "path parameter"
+    }
+  ],
+  "query_params": [],
+  "body_schema": {
+    "type": "unknown",
+    "description": "multipart/form-data body (Body_upload_reference_api_references__canonical_name__upload_post)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "1396ea2de0b5",
+    "f36e2943f5b8",
+    "ac8d4873be7b",
+    "0cac6b0833b4",
+    "90beeda120a1"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Import or upload data",
+    "Upload Reference"
+  ],
+  "capabilities": [
+    "Bulk data import capability"
+  ],
+  "limitations": [],
+  "source_file": "service:transcription:openapi",
+  "source_function": "upload_reference_api_references__canonical_name__upload_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

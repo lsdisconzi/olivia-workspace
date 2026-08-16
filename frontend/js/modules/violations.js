@@ -65,7 +65,6 @@
     evidence: { EN: 'Evidence', ES: 'Evidencia', BR: 'Evidência', IT: 'Prova' },
     element_grid: { EN: 'Element Grid', ES: 'Cuadrícula de Elementos', BR: 'Grade de Elementos', IT: 'Griglia di Elementi' },
     nexus_matrix: { EN: 'Nexus Matrix', ES: 'Matriz de Nexo', BR: 'Matriz de Nexo', IT: 'Matrice del Nexo' },
-    confidence: { EN: 'Confidence', ES: 'Confianza', BR: 'Confiança', IT: 'Confidenza' },
     authorities: { EN: 'Authorities', ES: 'Autoridades', BR: 'Autoridades', IT: 'Autorità' },
     open_questions: { EN: 'Open Questions', ES: 'Preguntas Abiertas', BR: 'Perguntas Abertas', IT: 'Domande Aperte' },
     validation: { EN: 'Validation', ES: 'Validación', BR: 'Validação', IT: 'Validazione' },
@@ -540,7 +539,6 @@
           severity: indexed.severity || '',
           jurisdiction: j.id,
           phase: phaseMatch ? phaseMatch[1] : '',
-          confidence: indexed.confidence,
           completeness_score: indexed.completeness_score,
           record_key: indexed.record_key || '',
           violation_id: indexed.violation_id || f.id,
@@ -702,26 +700,6 @@
   function _vViolationHtml(v) {
     v = v || {};
 
-    // ── Normalise confidence (4.0 object vs legacy number) ──
-    var confValue = null;
-    if (v.confidence) {
-      if (typeof v.confidence === 'number') {
-        confValue = v.confidence;
-      } else if (v.confidence.value != null) {
-        confValue = Number(v.confidence.value);
-      }
-    }
-    v.confidence_value = confValue;   // numeric value for header etc.
-
-    if (!v.confidence_details) {
-      var cd = v.confidence || {};
-      v.confidence_details = {
-        formula: cd.derivation_formula || '',
-        components: cd.components || {},
-        note: cd.note || ''
-      };
-    }
-
     /* ========== NORMALISE FIELDS TO LEGACY SHAPES ========== */
 
     // Segments — use the curated key_admissions, but fall back to the full
@@ -760,15 +738,6 @@
     // they are empty unless filled from other sources.
     v.primary_agents = v.primary_agents || [];
     v.supporting_agents = v.supporting_agents || [];
-
-    // Confidence details — build from the new fields if missing.
-    if (!v.confidence_details) {
-      v.confidence_details = {
-        formula: v.confidence_formula || '',
-        components: v.confidence_components || {},
-        note: v.confidence_note || ''
-      };
-    }
 
     // Nexus matrix — use the summary object if the old matrix is absent.
     if (!v.nexus_matrix || !Object.keys(v.nexus_matrix).length) {
@@ -819,8 +788,7 @@
       '<div class="vw-v-eyebrow">' + _vProcessText(v.violation_id || '') + ' · ' + _vProcessText(v.jurisdiction || '') + '</div>',
       '<h2 style="margin:2px 0 0;color:var(--white);line-height:1.25">' + _vProcessText(v.title || 'Violação') + '</h2>',
       '<div style="margin-top:6px;font-size:12px;color:var(--gray)">',
-      '<span style="color:' + sevColor + ';font-weight:600">' + escapeHtml(v.severity || '') + '</span> · ' + escapeHtml(v.status || '') +
-      ' · confiança <strong style="color:var(--amber)">' + (v.confidence_value != null ? Math.round(v.confidence_value * 100) + '%' : '—') + '</strong>',
+      '<span style="color:' + sevColor + ';font-weight:600">' + escapeHtml(v.severity || '') + '</span> · ' + escapeHtml(v.status || ''),
       '</div>',
       (v.incident_timestamp_display || v.incident_timestamp ? '<div style="margin-top:3px;font-size:11px;color:var(--gray);font-family:var(--mono)">' + _vProcessText(v.incident_timestamp_display || v.incident_timestamp) + '</div>' : ''),
       '</div>',
@@ -928,11 +896,10 @@
       ? _vSection('probative_chain', 'fa-route', _renderProbativeChain(v.probative_chain))
       : '';
 
-    // Evidence, element grids, nexus, confidence, authorities, open questions, validation, rec log, cross refs
+    // Evidence, element grids, nexus, authorities, open questions, validation, rec log, cross refs
     var evHtml = _vRenderEvidence(v);
     var gridHtml = _vRenderElementGrid(v);
     var nexusHtml = _vRenderNexusMatrix(v);
-    var confHtml = _vRenderConfidenceDetails(v);
     var authHtml = _vRenderAuthorities(v);
     var oqHtml = _vRenderOpenQuestions(v);
     var valHtml = _vRenderValidation(v);
@@ -951,7 +918,6 @@
       evHtml,
       gridHtml,
       nexusHtml,
-      confHtml,
       authHtml,
       oqHtml,
       valHtml,
@@ -1064,29 +1030,6 @@
       (barRows ? '<div class="vw-nexus">' + barRows + '</div>' : '') +
       (topRows ? '<div style="margin-top:10px"><div style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--gray);margin-bottom:4px">' + lblStrongest + '</div><ul class="vw-nexus-list">' + topRows + '</ul></div>' : '');
     return _vSection('nexus_matrix', 'fa-project-diagram', inner);
-  }
-
-  function _vRenderConfidenceDetails(v) {
-    var cd = v.confidence_details;
-    if (!cd) return '';
-    var pct = v.confidence_value != null ? Math.round(v.confidence_value * 100) : null;
-    var inner = '<div class="vw-confidence">';
-    if (cd.formula) {
-      inner += '<div class="vw-conf-formula"><span class="vw-oq-tag">FÓRMULA</span> <code>' + escapeHtml(cd.formula) + '</code></div>';
-    }
-    if (cd.components) {
-      var compRows = Object.keys(cd.components).map(function (k) {
-        var c = cd.components[k];
-        var score = (typeof c === 'object') ? c.score : c;
-        var weight = (typeof c === 'object' && typeof c.weight !== 'undefined') ? c.weight : null;
-        return '<tr><td><code>' + escapeHtml(k) + '</code></td><td>' + (score != null ? Number(score).toFixed(2) : '—') + '</td><td>' + (weight != null ? Number(weight).toFixed(2) : '—') + '</td></tr>';
-      }).join('');
-      inner += '<div class="vw-table-wrap" style="margin:8px 0"><table class="vw-table vw-table-mini"><thead><tr><th>Component</th><th>Score</th><th>Weight</th></tr></thead><tbody>' + compRows + '</tbody></table></div>';
-    }
-    if (cd.note) inner += '<div class="vw-conf-note">' + _vProcessText(cd.note) + '</div>';
-    inner += '</div>';
-    var suffix = pct !== null ? ' · ' + pct + '%' : '';
-    return _vSection('confidence', 'fa-bullseye', inner, suffix);
   }
 
   function _vRenderAuthorities(v) {
@@ -1391,14 +1334,6 @@
   window.vwBuildViolationBrandedHtml = function (v) {
     v = v || {};
 
-    // ── Normalise confidence ──
-    var confValue = null;
-    if (v.confidence) {
-      if (typeof v.confidence === 'number') confValue = v.confidence;
-      else if (v.confidence.value != null) confValue = Number(v.confidence.value);
-    }
-    var confidencePct = confValue != null ? Math.round(confValue * 100) + '%' : '—';
-
     // ── Normalise cross‑references ──
     var xrefs = v.cross_references || v.cross_refs || [];
     var xrefChips = xrefs.map(function (item) {
@@ -1461,7 +1396,6 @@
     <h1>${escapeHtml(v.title || 'Violation')}</h1>
     <div class="meta">
       <span class="pill sev-critical">${escapeHtml(v.severity || '')}</span>
-      <span class="pill">confiança ${confidencePct}</span>
       <span class="pill">${escapeHtml(v.jurisdiction || '')}</span>
     </div>
   </div>

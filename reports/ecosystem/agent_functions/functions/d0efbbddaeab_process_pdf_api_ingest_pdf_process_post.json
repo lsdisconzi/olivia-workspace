@@ -1,0 +1,59 @@
+{
+  "id": "d0efbbddaeab",
+  "name": "process_pdf_api_ingest_pdf_process_post",
+  "method": "POST",
+  "url_pattern": "/api/ingest-pdf/process",
+  "description": "Process Pdf",
+  "category": "data_ingestion",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": {
+    "type": "JSON",
+    "description": "application/json body (ProcessPdfRequest)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "$ref": "#/components/schemas/IngestPdfResponse"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "3c62cd50953f"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Import or upload data",
+    "Process Pdf"
+  ],
+  "capabilities": [
+    "Bulk data import capability"
+  ],
+  "limitations": [],
+  "source_file": "service:juris-search:openapi",
+  "source_function": "process_pdf_api_ingest_pdf_process_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

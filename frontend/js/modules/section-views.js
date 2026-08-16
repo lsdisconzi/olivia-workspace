@@ -572,7 +572,6 @@
     var meta = [];
     if (v.severity) meta.push('<span class="pill ' + sevCls + '">' + _vwHtmlEsc(v.severity) + '</span>');
     if (v.status) meta.push('<span class="pill">' + _vwHtmlEsc(v.status) + '</span>');
-    if (v.confidence != null) meta.push('<span class="pill">confiança ' + Math.round(Number(v.confidence) * 100) + '%</span>');
     if (v.jurisdiction) meta.push('<span class="pill">' + _vwHtmlEsc(v.jurisdiction) + '</span>');
 
     var allActors = primaryAgents.concat(supportingAgents);

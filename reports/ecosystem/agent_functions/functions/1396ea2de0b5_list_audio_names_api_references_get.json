@@ -1,0 +1,60 @@
+{
+  "id": "1396ea2de0b5",
+  "name": "list_audio_names_api_references_get",
+  "method": "GET",
+  "url_pattern": "/api/references",
+  "description": "List Audio Names",
+  "category": "crud_list",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": null,
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "f36e2943f5b8",
+    "ac8d4873be7b",
+    "c2eab235b455",
+    "0cac6b0833b4",
+    "90beeda120a1"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "List all resources of this type",
+    "List Audio Names"
+  ],
+  "capabilities": [
+    "Provides list operations"
+  ],
+  "limitations": [],
+  "source_file": "service:transcription:openapi",
+  "source_function": "list_audio_names_api_references_get",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

@@ -1,0 +1,63 @@
+{
+  "id": "492bc619c19a",
+  "name": "compute_mel_spectrogram_api_analysis_mel_spectrogram_post",
+  "method": "POST",
+  "url_pattern": "/api/analysis/mel-spectrogram",
+  "description": "Compute Mel Spectrogram",
+  "category": "crud_create",
+  "path_params": [],
+  "query_params": [],
+  "body_schema": {
+    "type": "unknown",
+    "description": "multipart/form-data body (Body_compute_mel_spectrogram_api_analysis_mel_spectrogram_post)"
+  },
+  "headers": [],
+  "response_type": "json",
+  "response_schema": {
+    "description": "application/json response: Successful Response"
+  },
+  "success_indicators": [
+    "response.ok",
+    "status 200-299"
+  ],
+  "error_handling": "",
+  "prerequisites": [],
+  "related_functions": [
+    "076787e62a86",
+    "522335d93ac9",
+    "220c01cdf00c",
+    "4994ac011a8b",
+    "d2f3cdf7f396"
+  ],
+  "supersedes": [],
+  "use_cases": [
+    "Create a new resource",
+    "Compute Mel Spectrogram"
+  ],
+  "capabilities": [
+    "Provides create operations"
+  ],
+  "limitations": [],
+  "source_file": "service:audio:openapi",
+  "source_function": "compute_mel_spectrogram_api_analysis_mel_spectrogram_post",
+  "confidence": 0.9,
+  "test_status": null,
+  "test_http_code": null,
+  "test_notes": "",
+  "test_source_ref": "",
+  "fix_suggestion": "",
+  "validation_score": 70,
+  "validation_checks": {
+    "method_defined": true,
+    "url_defined": true,
+    "parameters_defined": true,
+    "body_defined_for_write": true,
+    "response_defined": true,
+    "tested": false,
+    "working": false
+  },
+  "validation_notes": [
+    "Endpoint not runtime-tested"
+  ],
+  "agent_ready": false
+}

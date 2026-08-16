@@ -1,0 +1,4837 @@
+{
+  "generated_at": "2026-08-16T04:53:40Z",
+  "source_project": "ecosystem_endpoints",
+  "total_functions": 267,
+  "categories": {
+    "crud_read": [
+      {
+        "id": "602917ac128b",
+        "name": "health_check__get",
+        "method": "GET",
+        "url": "/"
+      },
+      {
+        "id": "710322bfe2bb",
+        "name": "get_transcript_api_transcripts__transcript_id__get",
+        "method": "GET",
+        "url": "/api/transcripts/{transcript_id}"
+      },
+      {
+        "id": "d722d80ef7a5",
+        "name": "stream_progress_api_transcripts_stream__job_id__get",
+        "method": "GET",
+        "url": "/api/transcripts/stream/{job_id}"
+      },
+      {
+        "id": "fe362ed68eda",
+        "name": "get_review_transcript_api_transcripts_pinocchio_review__transcript_id__get",
+        "method": "GET",
+        "url": "/api/transcripts/pinocchio/review/{transcript_id}"
+      },
+      {
+        "id": "f6da185c3469",
+        "name": "get_project_api_projects__project_id__get",
+        "method": "GET",
+        "url": "/api/projects/{project_id}"
+      },
+      {
+        "id": "f36e2943f5b8",
+        "name": "get_manifest_api_references__canonical_name__manifest_get",
+        "method": "GET",
+        "url": "/api/references/{canonical_name}/manifest"
+      },
+      {
+        "id": "ac8d4873be7b",
+        "name": "get_references_api_references__canonical_name__get",
+        "method": "GET",
+        "url": "/api/references/{canonical_name}"
+      },
+      {
+        "id": "e13bf961c4f6",
+        "name": "get_results_api_results__job_id__get",
+        "method": "GET",
+        "url": "/api/results/{job_id}"
+      },
+      {
+        "id": "7eb6886417f9",
+        "name": "get_results_juris_api_results__job_id__get",
+        "method": "GET",
+        "url": "/juris/api/results/{job_id}"
+      },
+      {
+        "id": "f9b3df18de70",
+        "name": "docx_index_api_docx_index_get",
+        "method": "GET",
+        "url": "/api/docx/index"
+      },
+      {
+        "id": "24a63a10b3ce",
+        "name": "json_index_api_json_index_get",
+        "method": "GET",
+        "url": "/api/json/index"
+      },
+      {
+        "id": "ab9fe4a2ddca",
+        "name": "docx_index_juris_api_docx_index_get",
+        "method": "GET",
+        "url": "/juris/api/docx/index"
+      },
+      {
+        "id": "343e6948fe9e",
+        "name": "json_index_juris_api_json_index_get",
+        "method": "GET",
+        "url": "/juris/api/json/index"
+      },
+      {
+        "id": "a44febd36ef4",
+        "name": "master_index_documents_api_master_index_documents_get",
+        "method": "GET",
+        "url": "/api/master-index/documents?tribunal={tribunal}&year={year}&relator={relator}&outcome={outcome}&assunto={assunto}&comarca={comarca}&text={text}&limit={limit}&offset={offset}"
+      },
+      {
+        "id": "edbf6e3ad59e",
+        "name": "master_index_document_api_master_index_document__doc_id__get",
+        "method": "GET",
+        "url": "/api/master-index/document/{doc_id}"
+      },
+      {
+        "id": "65587be79121",
+        "name": "master_index_markdown_api_master_index_markdown_get",
+        "method": "GET",
+        "url": "/api/master-index/markdown?rebuild={rebuild}"
+      },
+      {
+        "id": "9b2aecc94f08",
+        "name": "master_index_jurisprudence_api_master_index_jurisprudence_get",
+        "method": "GET",
+        "url": "/api/master-index/jurisprudence?rebuild={rebuild}"
+      },
+      {
+        "id": "0f720b0c7415",
+        "name": "master_index_jurisprudence_markdown_api_master_index_jurisprudence_markdown_get",
+        "method": "GET",
+        "url": "/api/master-index/jurisprudence/markdown?rebuild={rebuild}"
+      },
+      {
+        "id": "5dfb32d17968",
+        "name": "master_index_download_file_api_master_index_download_file_get",
+        "method": "GET",
+        "url": "/api/master-index/download-file?path={path}"
+      },
+      {
+        "id": "7ff6e0c69c29",
+        "name": "master_index_documents_juris_api_master_index_documents_get",
+        "method": "GET",
+        "url": "/juris/api/master-index/documents?tribunal={tribunal}&year={year}&relator={relator}&outcome={outcome}&assunto={assunto}&comarca={comarca}&text={text}&limit={limit}&offset={offset}"
+      },
+      {
+        "id": "0f952f4917d7",
+        "name": "master_index_document_juris_api_master_index_document__doc_id__get",
+        "method": "GET",
+        "url": "/juris/api/master-index/document/{doc_id}"
+      },
+      {
+        "id": "3dfdaf44683d",
+        "name": "master_index_markdown_juris_api_master_index_markdown_get",
+        "method": "GET",
+        "url": "/juris/api/master-index/markdown?rebuild={rebuild}"
+      },
+      {
+        "id": "bb03de7fd6a1",
+        "name": "master_index_jurisprudence_juris_api_master_index_jurisprudence_get",
+        "method": "GET",
+        "url": "/juris/api/master-index/jurisprudence?rebuild={rebuild}"
+      },
+      {
+        "id": "a068dd7ee8f3",
+        "name": "master_index_jurisprudence_markdown_juris_api_master_index_jurisprudence_markdown_get",
+        "method": "GET",
+        "url": "/juris/api/master-index/jurisprudence/markdown?rebuild={rebuild}"
+      },
+      {
+        "id": "892dd781d820",
+        "name": "master_index_download_file_juris_api_master_index_download_file_get",
+        "method": "GET",
+        "url": "/juris/api/master-index/download-file?path={path}"
+      },
+      {
+        "id": "a0f7e07e8767",
+        "name": "read_file_v1_files_read_get",
+        "method": "GET",
+        "url": "/v1/files/read?path={path}"
+      },
+      {
+        "id": "e83e9f0a057c",
+        "name": "get_audio_file_api_audio__filename__get",
+        "method": "GET",
+        "url": "/api/audio/{filename}"
+      },
+      {
+        "id": "97d849ed1658",
+        "name": "get_tool_v1_tools__tool_name__get",
+        "method": "GET",
+        "url": "/v1/tools/{tool_name}"
+      },
+      {
+        "id": "fc6b20f941c2",
+        "name": "get_prompt_examples_v1_prompt_engineer_examples_get",
+        "method": "GET",
+        "url": "/v1/prompt-engineer/examples?category={category}"
+      },
+      {
+        "id": "86c10dbb85d6",
+        "name": "get_ecosystem_report_v1_ecosystem_report_get",
+        "method": "GET",
+        "url": "/v1/ecosystem/report"
+      },
+      {
+        "id": "f00e887a5855",
+        "name": "get_ecosystem_metadata_v1_ecosystem_metadata_get",
+        "method": "GET",
+        "url": "/v1/ecosystem/metadata"
+      },
+      {
+        "id": "3c6a19689371",
+        "name": "get_thread_v1_threads__thread_id__get",
+        "method": "GET",
+        "url": "/v1/threads/{thread_id}"
+      },
+      {
+        "id": "a9f2f13db8ad",
+        "name": "debug_schema_debug_schema_get",
+        "method": "GET",
+        "url": "/debug-schema"
+      },
+      {
+        "id": "5c1075871b7a",
+        "name": "get_file_content_v1_files__file_id__content_get",
+        "method": "GET",
+        "url": "/v1/files/{file_id}/content"
+      },
+      {
+        "id": "b2d346601f2b",
+        "name": "deepseek_gateway_get",
+        "method": "GET",
+        "url": "/api/deepseek/{path}"
+      },
+      {
+        "id": "3db8b1f41295",
+        "name": "get_audio_api_audio__session_id__get",
+        "method": "GET",
+        "url": "/api/audio/{session_id}"
+      },
+      {
+        "id": "669bc582c423",
+        "name": "get_info_api_info_get",
+        "method": "GET",
+        "url": "/api/info"
+      }
+    ],
+    "system": [
+      {
+        "id": "ce27093e6856",
+        "name": "health_health_get",
+        "method": "GET",
+        "url": "/health"
+      },
+      {
+        "id": "ba6ab7642c11",
+        "name": "get_progress_status_api_transcripts_status__job_id__get",
+        "method": "GET",
+        "url": "/api/transcripts/status/{job_id}"
+      },
+      {
+        "id": "c3c8f075fcfe",
+        "name": "download_status_api_download_status__job_id__get",
+        "method": "GET",
+        "url": "/api/download/status/{job_id}"
+      },
+      {
+        "id": "9bb3b5c7ada7",
+        "name": "download_status_juris_api_download_status__job_id__get",
+        "method": "GET",
+        "url": "/juris/api/download/status/{job_id}"
+      },
+      {
+        "id": "e32c5e62f79d",
+        "name": "health_api_health_get",
+        "method": "GET",
+        "url": "/api/health"
+      },
+      {
+        "id": "a04b64e4ab93",
+        "name": "health_juris_api_health_get",
+        "method": "GET",
+        "url": "/juris/api/health"
+      },
+      {
+        "id": "fc47ef24480b",
+        "name": "health_legacy_juris_health_get",
+        "method": "GET",
+        "url": "/juris/health"
+      },
+      {
+        "id": "7d4af9b255ae",
+        "name": "health_v1_neo4j_health_get",
+        "method": "GET",
+        "url": "/v1/neo4j/health"
+      }
+    ],
+    "crud_list": [
+      {
+        "id": "04ce4083717a",
+        "name": "list_parameter_definitions_api_diarization_parameters_get",
+        "method": "GET",
+        "url": "/api/diarization/parameters"
+      },
+      {
+        "id": "663f054485af",
+        "name": "list_whisper_models_api_diarization_models_whisper_get",
+        "method": "GET",
+        "url": "/api/diarization/models/whisper"
+      },
+      {
+        "id": "1497062d8ee5",
+        "name": "list_transcripts_api_transcripts_get",
+        "method": "GET",
+        "url": "/api/transcripts"
+      },
+      {
+        "id": "8917dcd5d50d",
+        "name": "list_csvs_api_transcripts_csv_list_get",
+        "method": "GET",
+        "url": "/api/transcripts/csv/list"
+      },
+      {
+        "id": "0109fa9ac96d",
+        "name": "list_audio_files_api_transcripts_audio_list_get",
+        "method": "GET",
+        "url": "/api/transcripts/audio/list"
+      },
+      {
+        "id": "911175b4a75c",
+        "name": "list_projects_api_projects_get",
+        "method": "GET",
+        "url": "/api/projects"
+      },
+      {
+        "id": "1396ea2de0b5",
+        "name": "list_audio_names_api_references_get",
+        "method": "GET",
+        "url": "/api/references"
+      },
+      {
+        "id": "90beeda120a1",
+        "name": "get_narratives_api_references__canonical_name__narratives_get",
+        "method": "GET",
+        "url": "/api/references/{canonical_name}/narratives"
+      },
+      {
+        "id": "e87069845126",
+        "name": "get_storage_paths_api_storage_paths_get",
+        "method": "GET",
+        "url": "/api/storage/paths"
+      },
+      {
+        "id": "ac4da1a6d614",
+        "name": "get_storage_paths_juris_api_storage_paths_get",
+        "method": "GET",
+        "url": "/juris/api/storage/paths"
+      },
+      {
+        "id": "c10d0b259f7f",
+        "name": "stats_compat_stats_get",
+        "method": "GET",
+        "url": "/stats"
+      },
+      {
+        "id": "d8ade07a01b8",
+        "name": "stats_compat_api_stats_get",
+        "method": "GET",
+        "url": "/api/stats"
+      },
+      {
+        "id": "9a12dc424196",
+        "name": "list_courts_courts_get",
+        "method": "GET",
+        "url": "/courts"
+      },
+      {
+        "id": "96ed1a3ee2c4",
+        "name": "list_courts_api_courts_get",
+        "method": "GET",
+        "url": "/api/courts"
+      },
+      {
+        "id": "7839fe21528c",
+        "name": "stats_compat_juris_stats_get",
+        "method": "GET",
+        "url": "/juris/stats"
+      },
+      {
+        "id": "883542395ba6",
+        "name": "stats_compat_juris_api_stats_get",
+        "method": "GET",
+        "url": "/juris/api/stats"
+      },
+      {
+        "id": "0cf35f203cc6",
+        "name": "list_courts_juris_courts_get",
+        "method": "GET",
+        "url": "/juris/courts"
+      },
+      {
+        "id": "63e46e580b19",
+        "name": "list_courts_juris_api_courts_get",
+        "method": "GET",
+        "url": "/juris/api/courts"
+      },
+      {
+        "id": "6f9fab50eab2",
+        "name": "master_index_stats_api_master_index_stats_get",
+        "method": "GET",
+        "url": "/api/master-index/stats"
+      },
+      {
+        "id": "54c1843beb79",
+        "name": "master_index_document_correlations_api_master_index_document__doc_id__correlations_get",
+        "method": "GET",
+        "url": "/api/master-index/document/{doc_id}/correlations"
+      },
+      {
+        "id": "8aea748a8d64",
+        "name": "master_index_stats_juris_api_master_index_stats_get",
+        "method": "GET",
+        "url": "/juris/api/master-index/stats"
+      },
+      {
+        "id": "5e249233862f",
+        "name": "master_index_document_correlations_juris_api_master_index_document__doc_id__correlations_get",
+        "method": "GET",
+        "url": "/juris/api/master-index/document/{doc_id}/correlations"
+      },
+      {
+        "id": "0e143a9b1d5f",
+        "name": "list_models_v1_models_get",
+        "method": "GET",
+        "url": "/v1/models"
+      },
+      {
+        "id": "3ca0d87e8d0c",
+        "name": "list_files_v1_files_get",
+        "method": "GET",
+        "url": "/v1/files"
+      },
+      {
+        "id": "6b39a8143ae3",
+        "name": "list_files_in_directory_v1_files_list_get",
+        "method": "GET",
+        "url": "/v1/files/list?path={path}"
+      },
+      {
+        "id": "30e252220620",
+        "name": "list_transcript_files_v1_files_transcripts_get",
+        "method": "GET",
+        "url": "/v1/files/transcripts"
+      },
+      {
+        "id": "e178fddcbef5",
+        "name": "list_law_files_v1_files_laws_get",
+        "method": "GET",
+        "url": "/v1/files/laws"
+      },
+      {
+        "id": "b60c12facab7",
+        "name": "list_tools_v1_tools_get",
+        "method": "GET",
+        "url": "/v1/tools"
+      },
+      {
+        "id": "6f2f01d42bf3",
+        "name": "stats_v1_neo4j_stats_get",
+        "method": "GET",
+        "url": "/v1/neo4j/stats"
+      },
+      {
+        "id": "b880a0d03632",
+        "name": "list_agents_v1_openclaude_agents_get",
+        "method": "GET",
+        "url": "/v1/openclaude/agents"
+      },
+      {
+        "id": "19fbaa4dd73b",
+        "name": "catalog_list_agents_v1_openclaude_catalog_agents_get",
+        "method": "GET",
+        "url": "/v1/openclaude/catalog/agents"
+      },
+      {
+        "id": "f980dc728bfb",
+        "name": "list_threads_v1_threads__get",
+        "method": "GET",
+        "url": "/v1/threads/"
+      },
+      {
+        "id": "bbe3dd37ea30",
+        "name": "list_messages_v1_threads__thread_id__messages_get",
+        "method": "GET",
+        "url": "/v1/threads/{thread_id}/messages?limit={limit}"
+      },
+      {
+        "id": "5c5e3b58ccce",
+        "name": "debug_routes_debug_routes_get",
+        "method": "GET",
+        "url": "/debug-routes"
+      }
+    ],
+    "crud_create": [
+      {
+        "id": "b7c5c12f69a6",
+        "name": "diarization_excerpt_api_diarization_excerpt_post",
+        "method": "POST",
+        "url": "/api/diarization/excerpt"
+      },
+      {
+        "id": "c4b6c568d370",
+        "name": "diarization_excerpt_by_path_api_diarization_excerpt_by_path_post",
+        "method": "POST",
+        "url": "/api/diarization/excerpt_by_path"
+      },
+      {
+        "id": "68a495539528",
+        "name": "diarization_transcribe_api_diarization_transcribe_post",
+        "method": "POST",
+        "url": "/api/diarization/transcribe"
+      },
+      {
+        "id": "baee8df918ea",
+        "name": "diarization_transcribe_async_api_diarization_transcribe_async_post",
+        "method": "POST",
+        "url": "/api/diarization/transcribe/async"
+      },
+      {
+        "id": "428a8afaa594",
+        "name": "diarization_transcribe_guided_api_diarization_transcribe_guided_post",
+        "method": "POST",
+        "url": "/api/diarization/transcribe/guided"
+      },
+      {
+        "id": "7719164df50f",
+        "name": "diarization_transcribe_guided_async_api_diarization_transcribe_guided_async_post",
+        "method": "POST",
+        "url": "/api/diarization/transcribe/guided/async"
+      },
+      {
+        "id": "a331d7916f09",
+        "name": "analyze_transcript_api_transcripts_analyze_post",
+        "method": "POST",
+        "url": "/api/transcripts/analyze"
+      },
+      {
+        "id": "a1bdd647b41a",
+        "name": "index_all_transcripts_api_transcripts_index_all_post",
+        "method": "POST",
+        "url": "/api/transcripts/index-all"
+      },
+      {
+        "id": "9ea814653475",
+        "name": "audit_transcript_route_api_transcripts__transcript_id__audit_post",
+        "method": "POST",
+        "url": "/api/transcripts/{transcript_id}/audit"
+      },
+      {
+        "id": "fd92fd0b2243",
+        "name": "refine_transcript_route_api_transcripts__transcript_id__refine_post",
+        "method": "POST",
+        "url": "/api/transcripts/{transcript_id}/refine"
+      },
+      {
+        "id": "e6f76b6fcea5",
+        "name": "patch_transcript_route_api_transcripts__transcript_id__patch_post",
+        "method": "POST",
+        "url": "/api/transcripts/{transcript_id}/patch"
+      },
+      {
+        "id": "23cc9a63d7c7",
+        "name": "save_review_api_transcripts__transcript_id__review_save_post",
+        "method": "POST",
+        "url": "/api/transcripts/{transcript_id}/review/save"
+      },
+      {
+        "id": "67f6f610fcfc",
+        "name": "index_reviewed_segments_api_transcripts__transcript_id__review_index_post",
+        "method": "POST",
+        "url": "/api/transcripts/{transcript_id}/review/index"
+      },
+      {
+        "id": "db49f81d4505",
+        "name": "retranscribe_segments_api_transcripts__transcript_id__retranscribe_segments_post",
+        "method": "POST",
+        "url": "/api/transcripts/{transcript_id}/retranscribe_segments"
+      },
+      {
+        "id": "0ab26191a0a7",
+        "name": "save_review_legacy_api_transcripts_pinocchio_review__transcript_id__post",
+        "method": "POST",
+        "url": "/api/transcripts/pinocchio/review/{transcript_id}"
+      },
+      {
+        "id": "efecb3908b51",
+        "name": "create_project_api_projects_post",
+        "method": "POST",
+        "url": "/api/projects"
+      },
+      {
+        "id": "d66b9227ac46",
+        "name": "add_audio_api_projects__project_id__audios_post",
+        "method": "POST",
+        "url": "/api/projects/{project_id}/audios"
+      },
+      {
+        "id": "e5f3c1943111",
+        "name": "add_context_doc_api_projects__project_id__context_docs_post",
+        "method": "POST",
+        "url": "/api/projects/{project_id}/context_docs"
+      },
+      {
+        "id": "2368e39052c4",
+        "name": "add_narrative_api_projects__project_id__narratives_post",
+        "method": "POST",
+        "url": "/api/projects/{project_id}/narratives"
+      },
+      {
+        "id": "0cac6b0833b4",
+        "name": "link_reference_api_references__canonical_name__link_post",
+        "method": "POST",
+        "url": "/api/references/{canonical_name}/link"
+      },
+      {
+        "id": "4d93663958b6",
+        "name": "download_inteiro_teor_api_download_post",
+        "method": "POST",
+        "url": "/api/download"
+      },
+      {
+        "id": "f155bd9eae4a",
+        "name": "download_batch_compat_api_download_batch_post",
+        "method": "POST",
+        "url": "/api/download-batch"
+      },
+      {
+        "id": "889c165de6af",
+        "name": "download_inteiro_teor_juris_api_download_post",
+        "method": "POST",
+        "url": "/juris/api/download"
+      },
+      {
+        "id": "f19fa5012e3e",
+        "name": "download_batch_compat_juris_api_download_batch_post",
+        "method": "POST",
+        "url": "/juris/api/download-batch"
+      },
+      {
+        "id": "089fad7d0c6f",
+        "name": "docx_rebuild_api_docx_rebuild_post",
+        "method": "POST",
+        "url": "/api/docx/rebuild"
+      },
+      {
+        "id": "6883df5af2e4",
+        "name": "json_rebuild_api_json_rebuild_post",
+        "method": "POST",
+        "url": "/api/json/rebuild"
+      },
+      {
+        "id": "f692227573d6",
+        "name": "storage_rebuild_api_storage_rebuild_post",
+        "method": "POST",
+        "url": "/api/storage/rebuild"
+      },
+      {
+        "id": "130d0f2ec430",
+        "name": "docx_rebuild_juris_api_docx_rebuild_post",
+        "method": "POST",
+        "url": "/juris/api/docx/rebuild"
+      },
+      {
+        "id": "690fb9dab186",
+        "name": "json_rebuild_juris_api_json_rebuild_post",
+        "method": "POST",
+        "url": "/juris/api/json/rebuild"
+      },
+      {
+        "id": "1af629930f4d",
+        "name": "storage_rebuild_juris_api_storage_rebuild_post",
+        "method": "POST",
+        "url": "/juris/api/storage/rebuild"
+      },
+      {
+        "id": "8e0d008768d5",
+        "name": "summarize_files_v1_files_summarize_post",
+        "method": "POST",
+        "url": "/v1/files/summarize"
+      },
+      {
+        "id": "8220d85110ab",
+        "name": "upload_file_v1_files_post",
+        "method": "POST",
+        "url": "/v1/files"
+      },
+      {
+        "id": "1b8968a4d1f9",
+        "name": "create_tool_v1_tools_post",
+        "method": "POST",
+        "url": "/v1/tools"
+      },
+      {
+        "id": "a404d1eba722",
+        "name": "execute_tool_v1_tools__tool_name__execute_post",
+        "method": "POST",
+        "url": "/v1/tools/{tool_name}/execute"
+      },
+      {
+        "id": "20cfef7671a8",
+        "name": "execute_tool_by_name_v1_tools_execute_post",
+        "method": "POST",
+        "url": "/v1/tools/execute"
+      },
+      {
+        "id": "76d1da8972f9",
+        "name": "deep_reasoning_v1_tools_deep_reasoning_post",
+        "method": "POST",
+        "url": "/v1/tools/deep_reasoning"
+      },
+      {
+        "id": "7c3d844784d0",
+        "name": "generate_prompt_v1_prompt_engineer_generate_post",
+        "method": "POST",
+        "url": "/v1/prompt-engineer/generate"
+      },
+      {
+        "id": "80c9579d0fdf",
+        "name": "analyze_needs_v1_prompt_engineer_analyze_post",
+        "method": "POST",
+        "url": "/v1/prompt-engineer/analyze"
+      },
+      {
+        "id": "949988306c3e",
+        "name": "generate_variations_v1_prompt_engineer_variations_post",
+        "method": "POST",
+        "url": "/v1/prompt-engineer/variations"
+      },
+      {
+        "id": "bc62410ac5d0",
+        "name": "optimize_prompt_v1_prompt_engineer_optimize_post",
+        "method": "POST",
+        "url": "/v1/prompt-engineer/optimize"
+      },
+      {
+        "id": "9734a5869228",
+        "name": "evaluate_prompt_v1_prompt_engineer_evaluate_post",
+        "method": "POST",
+        "url": "/v1/prompt-engineer/evaluate"
+      },
+      {
+        "id": "e481ee3dc390",
+        "name": "suggest_improvements_v1_prompt_engineer_improve_post",
+        "method": "POST",
+        "url": "/v1/prompt-engineer/improve"
+      },
+      {
+        "id": "5527a71f4644",
+        "name": "analyze_transcript_structure_v2_transcripts_analyze_post",
+        "method": "POST",
+        "url": "/v2/transcripts/analyze"
+      },
+      {
+        "id": "e9ec6e1dc354",
+        "name": "cypher_v1_neo4j_cypher_post",
+        "method": "POST",
+        "url": "/v1/neo4j/cypher"
+      },
+      {
+        "id": "0560724c5250",
+        "name": "rag_context_v1_neo4j_rag_context_post",
+        "method": "POST",
+        "url": "/v1/neo4j/rag-context"
+      },
+      {
+        "id": "76db862cb5a6",
+        "name": "create_agent_v1_openclaude_agents_post",
+        "method": "POST",
+        "url": "/v1/openclaude/agents"
+      },
+      {
+        "id": "fb9063be306e",
+        "name": "create_thread_v1_threads__post",
+        "method": "POST",
+        "url": "/v1/threads/"
+      },
+      {
+        "id": "2ab2443b0b80",
+        "name": "add_message_v1_threads__thread_id__messages_post",
+        "method": "POST",
+        "url": "/v1/threads/{thread_id}/messages"
+      },
+      {
+        "id": "5583b8f5ae51",
+        "name": "create_run_v1_threads__thread_id__runs_post",
+        "method": "POST",
+        "url": "/v1/threads/{thread_id}/runs"
+      },
+      {
+        "id": "556421a82a6a",
+        "name": "attach_file_to_thread_v1_threads__thread_id__files_post",
+        "method": "POST",
+        "url": "/v1/threads/{thread_id}/files"
+      },
+      {
+        "id": "878c8e16ce79",
+        "name": "regenerate_framework_list_api_frameworks_regenerate_list_post",
+        "method": "POST",
+        "url": "/api/frameworks/regenerate-list"
+      },
+      {
+        "id": "81fa2e976b8e",
+        "name": "deepseek_gateway_post",
+        "method": "POST",
+        "url": "/api/deepseek/{path}"
+      },
+      {
+        "id": "cc3ac0029f63",
+        "name": "run_demo_api_run_demo_post",
+        "method": "POST",
+        "url": "/api/run-demo"
+      },
+      {
+        "id": "aea9fe1be5a8",
+        "name": "apply_filter_api_filter_post",
+        "method": "POST",
+        "url": "/api/filter"
+      },
+      {
+        "id": "edf51b3885fa",
+        "name": "apply_filter_chain_api_filter_chain_post",
+        "method": "POST",
+        "url": "/api/filter-chain"
+      },
+      {
+        "id": "e7e56390c1a7",
+        "name": "apply_gain_api_effects_gain_post",
+        "method": "POST",
+        "url": "/api/effects/gain"
+      },
+      {
+        "id": "104418f4417b",
+        "name": "apply_dither_api_effects_dither_post",
+        "method": "POST",
+        "url": "/api/effects/dither"
+      },
+      {
+        "id": "d607672a80c7",
+        "name": "apply_dcshift_api_effects_dcshift_post",
+        "method": "POST",
+        "url": "/api/effects/dcshift"
+      },
+      {
+        "id": "afa3b49140d5",
+        "name": "apply_overdrive_api_effects_overdrive_post",
+        "method": "POST",
+        "url": "/api/effects/overdrive"
+      },
+      {
+        "id": "0ddbbb129593",
+        "name": "apply_contrast_api_effects_contrast_post",
+        "method": "POST",
+        "url": "/api/effects/contrast"
+      },
+      {
+        "id": "6eb62b7be30e",
+        "name": "apply_flanger_api_effects_flanger_post",
+        "method": "POST",
+        "url": "/api/effects/flanger"
+      },
+      {
+        "id": "49ff582ad970",
+        "name": "apply_phaser_api_effects_phaser_post",
+        "method": "POST",
+        "url": "/api/effects/phaser"
+      },
+      {
+        "id": "2ec98fbb1e94",
+        "name": "pitch_shift_api_enhance_pitch_shift_post",
+        "method": "POST",
+        "url": "/api/enhance/pitch-shift"
+      },
+      {
+        "id": "7bb66119a054",
+        "name": "change_speed_api_enhance_speed_post",
+        "method": "POST",
+        "url": "/api/enhance/speed"
+      },
+      {
+        "id": "4cafaa3ed31a",
+        "name": "preemphasis_api_enhance_preemphasis_post",
+        "method": "POST",
+        "url": "/api/enhance/preemphasis"
+      },
+      {
+        "id": "a00e39912075",
+        "name": "deemphasis_api_enhance_deemphasis_post",
+        "method": "POST",
+        "url": "/api/enhance/deemphasis"
+      },
+      {
+        "id": "b424ec1929a0",
+        "name": "change_volume_api_enhance_volume_post",
+        "method": "POST",
+        "url": "/api/enhance/volume"
+      },
+      {
+        "id": "3079a6bfbeaa",
+        "name": "apply_fade_api_enhance_fade_post",
+        "method": "POST",
+        "url": "/api/enhance/fade"
+      },
+      {
+        "id": "352d16479f93",
+        "name": "add_noise_api_enhance_add_noise_post",
+        "method": "POST",
+        "url": "/api/enhance/add-noise"
+      },
+      {
+        "id": "076787e62a86",
+        "name": "compute_spectrogram_api_analysis_spectrogram_post",
+        "method": "POST",
+        "url": "/api/analysis/spectrogram"
+      },
+      {
+        "id": "492bc619c19a",
+        "name": "compute_mel_spectrogram_api_analysis_mel_spectrogram_post",
+        "method": "POST",
+        "url": "/api/analysis/mel-spectrogram"
+      },
+      {
+        "id": "522335d93ac9",
+        "name": "compute_mfcc_api_analysis_mfcc_post",
+        "method": "POST",
+        "url": "/api/analysis/mfcc"
+      },
+      {
+        "id": "220c01cdf00c",
+        "name": "compute_loudness_api_analysis_loudness_post",
+        "method": "POST",
+        "url": "/api/analysis/loudness"
+      },
+      {
+        "id": "4994ac011a8b",
+        "name": "compute_spectral_centroid_api_analysis_spectral_centroid_post",
+        "method": "POST",
+        "url": "/api/analysis/spectral-centroid"
+      },
+      {
+        "id": "d2f3cdf7f396",
+        "name": "detect_pitch_api_analysis_pitch_post",
+        "method": "POST",
+        "url": "/api/analysis/pitch"
+      },
+      {
+        "id": "bcb1f2f695d7",
+        "name": "separate_sources_api_separate_post",
+        "method": "POST",
+        "url": "/api/separate"
+      },
+      {
+        "id": "4f1e9b8bab01",
+        "name": "voice_activity_detection_api_vad_post",
+        "method": "POST",
+        "url": "/api/vad"
+      },
+      {
+        "id": "c65231f41653",
+        "name": "resample_audio_api_resample_post",
+        "method": "POST",
+        "url": "/api/resample"
+      },
+      {
+        "id": "3501c3d487f5",
+        "name": "apply_convolve_api_effects_convolve_post",
+        "method": "POST",
+        "url": "/api/effects/convolve"
+      },
+      {
+        "id": "129a91aae1e5",
+        "name": "apply_ir_convolve_api_effects_ir_convolve_post",
+        "method": "POST",
+        "url": "/api/effects/ir-convolve"
+      },
+      {
+        "id": "bed7fcfa1c55",
+        "name": "time_stretch_api_enhance_time_stretch_post",
+        "method": "POST",
+        "url": "/api/enhance/time-stretch"
+      }
+    ],
+    "crud_update": [
+      {
+        "id": "87ad5c963eff",
+        "name": "update_transcript_metadata_api_transcripts__transcript_id__put",
+        "method": "PUT",
+        "url": "/api/transcripts/{transcript_id}"
+      },
+      {
+        "id": "d3f4d8d840f4",
+        "name": "update_project_api_projects__project_id__patch",
+        "method": "PATCH",
+        "url": "/api/projects/{project_id}"
+      },
+      {
+        "id": "7a84470f4273",
+        "name": "deepseek_gateway_put",
+        "method": "PUT",
+        "url": "/api/deepseek/{path}"
+      }
+    ],
+    "data_ingestion": [
+      {
+        "id": "6201922b915c",
+        "name": "import_transcripts_api_transcripts_import_post",
+        "method": "POST",
+        "url": "/api/transcripts/import"
+      },
+      {
+        "id": "302075c06570",
+        "name": "import_csv_api_transcripts_csv_import_post",
+        "method": "POST",
+        "url": "/api/transcripts/csv/import"
+      },
+      {
+        "id": "c2eab235b455",
+        "name": "upload_reference_api_references__canonical_name__upload_post",
+        "method": "POST",
+        "url": "/api/references/{canonical_name}/upload"
+      },
+      {
+        "id": "07e6e26797fb",
+        "name": "upload_file_api_upload_post",
+        "method": "POST",
+        "url": "/api/upload"
+      },
+      {
+        "id": "eba43969df1a",
+        "name": "upload_file_juris_api_upload_post",
+        "method": "POST",
+        "url": "/juris/api/upload"
+      },
+      {
+        "id": "3499a8769a82",
+        "name": "master_index_rebuild_api_master_index_rebuild_post",
+        "method": "POST",
+        "url": "/api/master-index/rebuild?force_ingest={force_ingest}"
+      },
+      {
+        "id": "22ce3e8a3ce9",
+        "name": "master_index_rebuild_juris_api_master_index_rebuild_post",
+        "method": "POST",
+        "url": "/juris/api/master-index/rebuild?force_ingest={force_ingest}"
+      },
+      {
+        "id": "3c62cd50953f",
+        "name": "upload_pdf_api_ingest_pdf_upload_post",
+        "method": "POST",
+        "url": "/api/ingest-pdf/upload"
+      },
+      {
+        "id": "d0efbbddaeab",
+        "name": "process_pdf_api_ingest_pdf_process_post",
+        "method": "POST",
+        "url": "/api/ingest-pdf/process"
+      },
+      {
+        "id": "d66eaa334406",
+        "name": "upload_pdf_juris_api_ingest_pdf_upload_post",
+        "method": "POST",
+        "url": "/juris/api/ingest-pdf/upload"
+      },
+      {
+        "id": "624f72b69716",
+        "name": "process_pdf_juris_api_ingest_pdf_process_post",
+        "method": "POST",
+        "url": "/juris/api/ingest-pdf/process"
+      },
+      {
+        "id": "594b0af09d66",
+        "name": "upload_transcript_file_v1_files_upload_transcript_post",
+        "method": "POST",
+        "url": "/v1/files/upload/transcript"
+      },
+      {
+        "id": "5fa0f8aea3ba",
+        "name": "upload_law_file_v1_files_upload_law_post",
+        "method": "POST",
+        "url": "/v1/files/upload/law"
+      },
+      {
+        "id": "fd856c41c0a6",
+        "name": "ingest_file_v1_knowledge_ingest_file_post",
+        "method": "POST",
+        "url": "/v1/knowledge/ingest/file"
+      },
+      {
+        "id": "af252a580f3b",
+        "name": "analyze_document_structure_v1_ingestion_analyze_document_structure_post",
+        "method": "POST",
+        "url": "/v1/ingestion/analyze-document-structure"
+      },
+      {
+        "id": "8ea927efa539",
+        "name": "ingest_from_file_path_legal_ingestion_ingest_file_post",
+        "method": "POST",
+        "url": "/legal-ingestion/ingest-file?file_path={file_path}"
+      },
+      {
+        "id": "12ae339cfa68",
+        "name": "ingest_legal_file_enhanced_v2_legal_ingestion_ingest_legal_file_enhanced_post",
+        "method": "POST",
+        "url": "/v2/legal-ingestion/ingest-legal-file-enhanced"
+      },
+      {
+        "id": "bf764e001e95",
+        "name": "ingest_legal_folder_v2_legal_ingestion_ingest_legal_folder_post",
+        "method": "POST",
+        "url": "/v2/legal-ingestion/ingest-legal-folder"
+      },
+      {
+        "id": "173e288ae6fe",
+        "name": "analyze_document_structure_v2_legal_ingestion_analyze_document_structure_post",
+        "method": "POST",
+        "url": "/v2/legal-ingestion/analyze-document-structure"
+      },
+      {
+        "id": "3c5e9a3e47c9",
+        "name": "ingest_transcript_enhanced_v2_transcripts_ingest_enhanced_post",
+        "method": "POST",
+        "url": "/v2/transcripts/ingest-enhanced"
+      },
+      {
+        "id": "1f8b9eb0b0e4",
+        "name": "ingest_transcript_json_v2_transcripts_ingest_json_post",
+        "method": "POST",
+        "url": "/v2/transcripts/ingest-json"
+      },
+      {
+        "id": "c55c7f551320",
+        "name": "upload_to_session_api_upload_session_post",
+        "method": "POST",
+        "url": "/api/upload-session"
+      }
+    ],
+    "search": [
+      {
+        "id": "bbe6af63e6cc",
+        "name": "search_transcripts_api_transcripts_search_post",
+        "method": "POST",
+        "url": "/api/transcripts/search"
+      },
+      {
+        "id": "8d168a88f2d9",
+        "name": "start_search_api_search_post",
+        "method": "POST",
+        "url": "/api/search"
+      },
+      {
+        "id": "9e9e606c857b",
+        "name": "search_status_api_search_status__job_id__get",
+        "method": "GET",
+        "url": "/api/search/status/{job_id}"
+      },
+      {
+        "id": "4e1611494669",
+        "name": "list_search_history_api_search_history_get",
+        "method": "GET",
+        "url": "/api/search/history?limit={limit}"
+      },
+      {
+        "id": "9f937ef686d2",
+        "name": "get_search_history_file_api_search_history__filename__get",
+        "method": "GET",
+        "url": "/api/search/history/{filename}"
+      },
+      {
+        "id": "dcdb94fbe7b8",
+        "name": "start_search_juris_api_search_post",
+        "method": "POST",
+        "url": "/juris/api/search"
+      },
+      {
+        "id": "9e34afdf0ef4",
+        "name": "search_status_juris_api_search_status__job_id__get",
+        "method": "GET",
+        "url": "/juris/api/search/status/{job_id}"
+      },
+      {
+        "id": "fb42238801cb",
+        "name": "list_search_history_juris_api_search_history_get",
+        "method": "GET",
+        "url": "/juris/api/search/history?limit={limit}"
+      },
+      {
+        "id": "1ef5ac789ffe",
+        "name": "get_search_history_file_juris_api_search_history__filename__get",
+        "method": "GET",
+        "url": "/juris/api/search/history/{filename}"
+      },
+      {
+        "id": "00195e5a76ca",
+        "name": "master_index_semantic_search_api_master_index_search_post",
+        "method": "POST",
+        "url": "/api/master-index/search"
+      },
+      {
+        "id": "5670da2392ca",
+        "name": "master_index_semantic_search_juris_api_master_index_search_post",
+        "method": "POST",
+        "url": "/juris/api/master-index/search"
+      },
+      {
+        "id": "a21ad6606728",
+        "name": "knowledge_query_v1_knowledge_query_post",
+        "method": "POST",
+        "url": "/v1/knowledge/query"
+      }
+    ],
+    "memory": [
+      {
+        "id": "aa3dad36a613",
+        "name": "index_transcript_api_transcripts__transcript_id__index_post",
+        "method": "POST",
+        "url": "/api/transcripts/{transcript_id}/index?collection={collection}"
+      },
+      {
+        "id": "2ed701e6be20",
+        "name": "list_transcripts_review_api_transcripts_review_list_get",
+        "method": "GET",
+        "url": "/api/transcripts/review/list?collection={collection}"
+      },
+      {
+        "id": "705b05938d60",
+        "name": "qdrant_collections_api_admin_qdrant_collections_get",
+        "method": "GET",
+        "url": "/api/admin/qdrant-collections"
+      },
+      {
+        "id": "35ba50d1ad74",
+        "name": "qdrant_collections_juris_api_admin_qdrant_collections_get",
+        "method": "GET",
+        "url": "/juris/api/admin/qdrant-collections"
+      },
+      {
+        "id": "307e6864aba0",
+        "name": "master_index_pause_api_master_index_pause_post",
+        "method": "POST",
+        "url": "/api/master-index/pause?collection={collection}"
+      },
+      {
+        "id": "c8e5aa5fc007",
+        "name": "master_index_resume_api_master_index_resume_post",
+        "method": "POST",
+        "url": "/api/master-index/resume?collection={collection}"
+      },
+      {
+        "id": "76e400eba36b",
+        "name": "master_index_pause_juris_api_master_index_pause_post",
+        "method": "POST",
+        "url": "/juris/api/master-index/pause?collection={collection}"
+      },
+      {
+        "id": "dd891d5b05e8",
+        "name": "master_index_resume_juris_api_master_index_resume_post",
+        "method": "POST",
+        "url": "/juris/api/master-index/resume?collection={collection}"
+      },
+      {
+        "id": "0be17f0c1268",
+        "name": "connect_to_qdrant_v1_qdrant_connect_post",
+        "method": "POST",
+        "url": "/v1/qdrant/connect"
+      },
+      {
+        "id": "df0b217a2038",
+        "name": "list_collections_v1_qdrant_collections_get",
+        "method": "GET",
+        "url": "/v1/qdrant/collections"
+      },
+      {
+        "id": "75598da55717",
+        "name": "create_collection_v1_qdrant_collections_post",
+        "method": "POST",
+        "url": "/v1/qdrant/collections"
+      },
+      {
+        "id": "5283a347238f",
+        "name": "get_collection_summary_v1_qdrant_collections__collection_name__summary_get",
+        "method": "GET",
+        "url": "/v1/qdrant/collections/{collection_name}/summary"
+      },
+      {
+        "id": "d48302eaed67",
+        "name": "structured_ingest_v1_qdrant_collections_structured_ingest_post",
+        "method": "POST",
+        "url": "/v1/qdrant/collections/structured_ingest"
+      },
+      {
+        "id": "1c9479d3189f",
+        "name": "ensure_legal_indexes_v1_qdrant_collections__collection_name__ensure_indexes_post",
+        "method": "POST",
+        "url": "/v1/qdrant/collections/{collection_name}/ensure-indexes"
+      },
+      {
+        "id": "cdfdf4471e69",
+        "name": "delete_collection_v1_qdrant_collections__collection_name__delete",
+        "method": "DELETE",
+        "url": "/v1/qdrant/collections/{collection_name}"
+      },
+      {
+        "id": "21e72b246984",
+        "name": "ingest_files_v1_qdrant_collections__collection_name__ingest_post",
+        "method": "POST",
+        "url": "/v1/qdrant/collections/{collection_name}/ingest"
+      },
+      {
+        "id": "d70301d96118",
+        "name": "embed_case_directory_v1_qdrant_embed_case_directory_post",
+        "method": "POST",
+        "url": "/v1/qdrant/embed-case-directory"
+      },
+      {
+        "id": "23930313e238",
+        "name": "embed_project_code_v1_qdrant_embed_project_code_post",
+        "method": "POST",
+        "url": "/v1/qdrant/embed-project-code"
+      },
+      {
+        "id": "7c83de417e16",
+        "name": "query_points_v1_qdrant_query_post",
+        "method": "POST",
+        "url": "/v1/qdrant/query"
+      },
+      {
+        "id": "c3441f4ab9d8",
+        "name": "search_qdrant_v1_qdrant_qdrant_search_post",
+        "method": "POST",
+        "url": "/v1/qdrant/qdrant/search?collection_name={collection_name}&query_text={query_text}&limit={limit}&score_threshold={score_threshold}"
+      },
+      {
+        "id": "b4d522f4542e",
+        "name": "search_with_text_v1_qdrant_search_post",
+        "method": "POST",
+        "url": "/v1/qdrant/search"
+      },
+      {
+        "id": "3f745af1d5a8",
+        "name": "query_with_vector_v1_qdrant_collections__collection_name__query_vector_post",
+        "method": "POST",
+        "url": "/v1/qdrant/collections/{collection_name}/query/vector"
+      },
+      {
+        "id": "9a073ce0395d",
+        "name": "clear_collection_v1_knowledge_collection__collection_name__clear_delete",
+        "method": "DELETE",
+        "url": "/v1/knowledge/collection/{collection_name}/clear"
+      },
+      {
+        "id": "cb4a8c7005c0",
+        "name": "get_collection_stats_v1_knowledge_collection__collection_name__stats_get",
+        "method": "GET",
+        "url": "/v1/knowledge/collection/{collection_name}/stats"
+      },
+      {
+        "id": "f83f867877fe",
+        "name": "ingest_directory_v1_ingestion_ingest_directory_post",
+        "method": "POST",
+        "url": "/v1/ingestion/ingest-directory?directory_path={directory_path}&collection_name={collection_name}&force_recreate={force_recreate}"
+      },
+      {
+        "id": "194c677ef9da",
+        "name": "ingest_file_v1_ingestion_ingest_file_post",
+        "method": "POST",
+        "url": "/v1/ingestion/ingest-file?collection_name={collection_name}&force_recreate={force_recreate}"
+      },
+      {
+        "id": "7da51230154c",
+        "name": "ingest_legal_file_v1_ingestion_ingest_legal_file_post",
+        "method": "POST",
+        "url": "/v1/ingestion/ingest-legal-file?collection_name={collection_name}&force_recreate={force_recreate}&model_name={model_name}&metadata_json={metadata_json}&enhanced={enhanced}&chunk_size={chunk_size}&chunk_overlap={chunk_overlap}"
+      },
+      {
+        "id": "fbb4c42634a8",
+        "name": "search_documents_v1_ingestion_search_post",
+        "method": "POST",
+        "url": "/v1/ingestion/search?collection_name={collection_name}&query={query}&limit={limit}"
+      },
+      {
+        "id": "4a8f51b8daf7",
+        "name": "get_collection_info_v1_ingestion_collections__collection_name__info_get",
+        "method": "GET",
+        "url": "/v1/ingestion/collections/{collection_name}/info"
+      },
+      {
+        "id": "f3e22fe8329e",
+        "name": "upload_and_ingest_csv_legal_ingestion_upload_csv_post",
+        "method": "POST",
+        "url": "/legal-ingestion/upload-csv?collection_name={collection_name}&text_column={text_column}&recreate_collection={recreate_collection}&chunk_size={chunk_size}&chunk_overlap={chunk_overlap}&async_mode={async_mode}"
+      },
+      {
+        "id": "639edd859a44",
+        "name": "search_legal_documents_legal_ingestion_search__collection_name__post",
+        "method": "POST",
+        "url": "/legal-ingestion/search/{collection_name}"
+      },
+      {
+        "id": "96b1d749381b",
+        "name": "list_collections_legal_ingestion_collections_get",
+        "method": "GET",
+        "url": "/legal-ingestion/collections"
+      },
+      {
+        "id": "c0341953e1b2",
+        "name": "get_collection_info_legal_ingestion_collection__collection_name__info_get",
+        "method": "GET",
+        "url": "/legal-ingestion/collection/{collection_name}/info"
+      },
+      {
+        "id": "4d255cb00351",
+        "name": "delete_collection_legal_ingestion_collection__collection_name__delete",
+        "method": "DELETE",
+        "url": "/legal-ingestion/collection/{collection_name}"
+      }
+    ],
+    "crud_delete": [
+      {
+        "id": "77976b522390",
+        "name": "delete_project_api_projects__project_id__delete",
+        "method": "DELETE",
+        "url": "/api/projects/{project_id}"
+      },
+      {
+        "id": "7bdef90e90f9",
+        "name": "remove_audio_api_projects__project_id__audios__canonical_name__delete",
+        "method": "DELETE",
+        "url": "/api/projects/{project_id}/audios/{canonical_name}"
+      },
+      {
+        "id": "68d9c4c36067",
+        "name": "remove_context_doc_api_projects__project_id__context_docs_delete",
+        "method": "DELETE",
+        "url": "/api/projects/{project_id}/context_docs?path={path}"
+      },
+      {
+        "id": "5ea53b25c42c",
+        "name": "delete_tool_v1_tools__tool_name__delete",
+        "method": "DELETE",
+        "url": "/v1/tools/{tool_name}"
+      },
+      {
+        "id": "a97ffa45f2c8",
+        "name": "delete_thread_v1_threads__thread_id__delete",
+        "method": "DELETE",
+        "url": "/v1/threads/{thread_id}"
+      },
+      {
+        "id": "7f9c34e6c21e",
+        "name": "delete_file_v1_files__file_id__delete",
+        "method": "DELETE",
+        "url": "/v1/files/{file_id}"
+      },
+      {
+        "id": "90177123df3f",
+        "name": "deepseek_gateway_delete",
+        "method": "DELETE",
+        "url": "/api/deepseek/{path}"
+      }
+    ],
+    "ai": [
+      {
+        "id": "afad622d4ef7",
+        "name": "chat_endpoint_api_chat_post",
+        "method": "POST",
+        "url": "/api/chat"
+      },
+      {
+        "id": "62954f16770c",
+        "name": "chat_endpoint_juris_api_chat_post",
+        "method": "POST",
+        "url": "/juris/api/chat"
+      },
+      {
+        "id": "ec3e4a240c5f",
+        "name": "chat_completions_v1_chat_completions_post",
+        "method": "POST",
+        "url": "/v1/chat/completions"
+      },
+      {
+        "id": "1e9fe7289bf8",
+        "name": "list_assistants_v1_assistants__get",
+        "method": "GET",
+        "url": "/v1/assistants/"
+      },
+      {
+        "id": "69e73f5a23e7",
+        "name": "create_assistant_v1_assistants__post",
+        "method": "POST",
+        "url": "/v1/assistants/"
+      },
+      {
+        "id": "15ec86e66a28",
+        "name": "get_assistant_v1_assistants__assistant_id__get",
+        "method": "GET",
+        "url": "/v1/assistants/{assistant_id}"
+      },
+      {
+        "id": "d9b0f6044786",
+        "name": "update_assistant_v1_assistants__assistant_id__patch",
+        "method": "PATCH",
+        "url": "/v1/assistants/{assistant_id}"
+      },
+      {
+        "id": "6dda0e904e95",
+        "name": "replace_assistant_v1_assistants__assistant_id__put",
+        "method": "PUT",
+        "url": "/v1/assistants/{assistant_id}"
+      },
+      {
+        "id": "741023d4173d",
+        "name": "delete_assistant_v1_assistants__assistant_id__delete",
+        "method": "DELETE",
+        "url": "/v1/assistants/{assistant_id}"
+      },
+      {
+        "id": "22f15af86e59",
+        "name": "chat_with_assistant_v1_assistants__assistant_id__chat_post",
+        "method": "POST",
+        "url": "/v1/assistants/{assistant_id}/chat"
+      },
+      {
+        "id": "c7cf49632a23",
+        "name": "attach_file_to_assistant_v1_assistants__assistant_id__files_post",
+        "method": "POST",
+        "url": "/v1/assistants/{assistant_id}/files"
+      },
+      {
+        "id": "3db94c06c683",
+        "name": "list_assistant_files_v1_assistants__assistant_id__files_get",
+        "method": "GET",
+        "url": "/v1/assistants/{assistant_id}/files"
+      },
+      {
+        "id": "4aa82f8a3ccd",
+        "name": "detach_file_from_assistant_v1_assistants__assistant_id__files__file_id__delete",
+        "method": "DELETE",
+        "url": "/v1/assistants/{assistant_id}/files/{file_id}"
+      },
+      {
+        "id": "e70f9f86b827",
+        "name": "query_assistant_knowledge_v1_assistants__assistant_id__query_knowledge_post",
+        "method": "POST",
+        "url": "/v1/assistants/{assistant_id}/query-knowledge"
+      },
+      {
+        "id": "4b6283cbedd3",
+        "name": "assistant_query_knowledge_v1_knowledge_assistant__assistant_id__query_post",
+        "method": "POST",
+        "url": "/v1/knowledge/assistant/{assistant_id}/query"
+      },
+      {
+        "id": "0a864d5aca24",
+        "name": "assign_tool_to_assistant_v1_assistants__assistant_id__tools_post",
+        "method": "POST",
+        "url": "/v1/assistants/{assistant_id}/tools"
+      },
+      {
+        "id": "b9c952bdb3ab",
+        "name": "deepseek_proxy_v1_assistants__assistant_id__deepseek_post",
+        "method": "POST",
+        "url": "/v1/assistants/{assistant_id}/deepseek"
+      },
+      {
+        "id": "6984b4e51d97",
+        "name": "deepseek_engineer_chat_v1_deepseek_engineer_chat_post",
+        "method": "POST",
+        "url": "/v1/deepseek-engineer/chat"
+      },
+      {
+        "id": "6f0ea6dc152e",
+        "name": "deepseek_streaming_proxy_v1_assistants_deepseek_stream_proxy_post",
+        "method": "POST",
+        "url": "/v1/assistants/deepseek-stream-proxy"
+      }
+    ],
+    "agent_control": [
+      {
+        "id": "4c561cba7694",
+        "name": "get_agent_v1_openclaude_agents__name__get",
+        "method": "GET",
+        "url": "/v1/openclaude/agents/{name}"
+      },
+      {
+        "id": "0df612525938",
+        "name": "update_agent_v1_openclaude_agents__name__put",
+        "method": "PUT",
+        "url": "/v1/openclaude/agents/{name}"
+      },
+      {
+        "id": "34400fed5297",
+        "name": "delete_agent_v1_openclaude_agents__name__delete",
+        "method": "DELETE",
+        "url": "/v1/openclaude/agents/{name}"
+      },
+      {
+        "id": "28c563537472",
+        "name": "run_agent_v1_openclaude_agents__name__run_post",
+        "method": "POST",
+        "url": "/v1/openclaude/agents/{name}/run"
+      },
+      {
+        "id": "07cc08142fcb",
+        "name": "validate_agent_v1_openclaude_agents_validate_post",
+        "method": "POST",
+        "url": "/v1/openclaude/agents/validate"
+      },
+      {
+        "id": "40917cb61f1a",
+        "name": "import_from_assistant_v1_openclaude_agents_import_from_assistant__assistant_id__post",
+        "method": "POST",
+        "url": "/v1/openclaude/agents/import-from-assistant/{assistant_id}"
+      },
+      {
+        "id": "3971a4c5d594",
+        "name": "export_to_assistant_v1_openclaude_agents_export_to_assistant__name__post",
+        "method": "POST",
+        "url": "/v1/openclaude/agents/export-to-assistant/{name}"
+      },
+      {
+        "id": "83839ad9e4aa",
+        "name": "import_from_markdown_v1_openclaude_agents_import_markdown_post",
+        "method": "POST",
+        "url": "/v1/openclaude/agents/import-markdown"
+      },
+      {
+        "id": "5d2a882e6d81",
+        "name": "catalog_get_agent_v1_openclaude_catalog_agents__name__get",
+        "method": "GET",
+        "url": "/v1/openclaude/catalog/agents/{name}"
+      },
+      {
+        "id": "50c660994739",
+        "name": "import_from_catalog_v1_openclaude_agents_import_from_catalog__name__post",
+        "method": "POST",
+        "url": "/v1/openclaude/agents/import-from-catalog/{name}"
+      }
+    ]
+  },
+  "functions": [
+    {
+      "id": "602917ac128b",
+      "name": "health_check__get",
+      "method": "GET",
+      "url": "/",
+      "category": "crud_read",
+      "description": "Health Check",
+      "file": "functions/602917ac128b_health_check__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "ce27093e6856",
+      "name": "health_health_get",
+      "method": "GET",
+      "url": "/health",
+      "category": "system",
+      "description": "Health",
+      "file": "functions/ce27093e6856_health_health_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "04ce4083717a",
+      "name": "list_parameter_definitions_api_diarization_parameters_get",
+      "method": "GET",
+      "url": "/api/diarization/parameters",
+      "category": "crud_list",
+      "description": "List Parameter Definitions",
+      "file": "functions/04ce4083717a_list_parameter_definitions_api_diarization_parameters_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "663f054485af",
+      "name": "list_whisper_models_api_diarization_models_whisper_get",
+      "method": "GET",
+      "url": "/api/diarization/models/whisper",
+      "category": "crud_list",
+      "description": "List Whisper Models",
+      "file": "functions/663f054485af_list_whisper_models_api_diarization_models_whisper_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "b7c5c12f69a6",
+      "name": "diarization_excerpt_api_diarization_excerpt_post",
+      "method": "POST",
+      "url": "/api/diarization/excerpt",
+      "category": "crud_create",
+      "description": "Diarization Excerpt",
+      "file": "functions/b7c5c12f69a6_diarization_excerpt_api_diarization_excerpt_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "c4b6c568d370",
+      "name": "diarization_excerpt_by_path_api_diarization_excerpt_by_path_post",
+      "method": "POST",
+      "url": "/api/diarization/excerpt_by_path",
+      "category": "crud_create",
+      "description": "Diarization Excerpt By Path",
+      "file": "functions/c4b6c568d370_diarization_excerpt_by_path_api_diarization_excerpt_by_path_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "68a495539528",
+      "name": "diarization_transcribe_api_diarization_transcribe_post",
+      "method": "POST",
+      "url": "/api/diarization/transcribe",
+      "category": "crud_create",
+      "description": "Diarization Transcribe",
+      "file": "functions/68a495539528_diarization_transcribe_api_diarization_transcribe_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "baee8df918ea",
+      "name": "diarization_transcribe_async_api_diarization_transcribe_async_post",
+      "method": "POST",
+      "url": "/api/diarization/transcribe/async",
+      "category": "crud_create",
+      "description": "Diarization Transcribe Async",
+      "file": "functions/baee8df918ea_diarization_transcribe_async_api_diarization_transcribe_async_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "428a8afaa594",
+      "name": "diarization_transcribe_guided_api_diarization_transcribe_guided_post",
+      "method": "POST",
+      "url": "/api/diarization/transcribe/guided",
+      "category": "crud_create",
+      "description": "Diarization Transcribe Guided",
+      "file": "functions/428a8afaa594_diarization_transcribe_guided_api_diarization_transcribe_guided_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7719164df50f",
+      "name": "diarization_transcribe_guided_async_api_diarization_transcribe_guided_async_post",
+      "method": "POST",
+      "url": "/api/diarization/transcribe/guided/async",
+      "category": "crud_create",
+      "description": "Diarization Transcribe Guided Async",
+      "file": "functions/7719164df50f_diarization_transcribe_guided_async_api_diarization_transcribe_guided_async_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "1497062d8ee5",
+      "name": "list_transcripts_api_transcripts_get",
+      "method": "GET",
+      "url": "/api/transcripts",
+      "category": "crud_list",
+      "description": "List Transcripts",
+      "file": "functions/1497062d8ee5_list_transcripts_api_transcripts_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "710322bfe2bb",
+      "name": "get_transcript_api_transcripts__transcript_id__get",
+      "method": "GET",
+      "url": "/api/transcripts/{transcript_id}",
+      "category": "crud_read",
+      "description": "Get Transcript",
+      "file": "functions/710322bfe2bb_get_transcript_api_transcripts__transcript_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "87ad5c963eff",
+      "name": "update_transcript_metadata_api_transcripts__transcript_id__put",
+      "method": "PUT",
+      "url": "/api/transcripts/{transcript_id}",
+      "category": "crud_update",
+      "description": "Update Transcript Metadata",
+      "file": "functions/87ad5c963eff_update_transcript_metadata_api_transcripts__transcript_id__put.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "6201922b915c",
+      "name": "import_transcripts_api_transcripts_import_post",
+      "method": "POST",
+      "url": "/api/transcripts/import",
+      "category": "data_ingestion",
+      "description": "Import Transcripts",
+      "file": "functions/6201922b915c_import_transcripts_api_transcripts_import_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "a331d7916f09",
+      "name": "analyze_transcript_api_transcripts_analyze_post",
+      "method": "POST",
+      "url": "/api/transcripts/analyze",
+      "category": "crud_create",
+      "description": "Analyze Transcript",
+      "file": "functions/a331d7916f09_analyze_transcript_api_transcripts_analyze_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "bbe6af63e6cc",
+      "name": "search_transcripts_api_transcripts_search_post",
+      "method": "POST",
+      "url": "/api/transcripts/search",
+      "category": "search",
+      "description": "Search Transcripts",
+      "file": "functions/bbe6af63e6cc_search_transcripts_api_transcripts_search_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "aa3dad36a613",
+      "name": "index_transcript_api_transcripts__transcript_id__index_post",
+      "method": "POST",
+      "url": "/api/transcripts/{transcript_id}/index?collection={collection}",
+      "category": "memory",
+      "description": "Index Transcript",
+      "file": "functions/aa3dad36a613_index_transcript_api_transcripts__transcript_id__index_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "a1bdd647b41a",
+      "name": "index_all_transcripts_api_transcripts_index_all_post",
+      "method": "POST",
+      "url": "/api/transcripts/index-all",
+      "category": "crud_create",
+      "description": "Index All Transcripts",
+      "file": "functions/a1bdd647b41a_index_all_transcripts_api_transcripts_index_all_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "ba6ab7642c11",
+      "name": "get_progress_status_api_transcripts_status__job_id__get",
+      "method": "GET",
+      "url": "/api/transcripts/status/{job_id}",
+      "category": "system",
+      "description": "Get Progress Status",
+      "file": "functions/ba6ab7642c11_get_progress_status_api_transcripts_status__job_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d722d80ef7a5",
+      "name": "stream_progress_api_transcripts_stream__job_id__get",
+      "method": "GET",
+      "url": "/api/transcripts/stream/{job_id}",
+      "category": "crud_read",
+      "description": "Stream Progress",
+      "file": "functions/d722d80ef7a5_stream_progress_api_transcripts_stream__job_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "9ea814653475",
+      "name": "audit_transcript_route_api_transcripts__transcript_id__audit_post",
+      "method": "POST",
+      "url": "/api/transcripts/{transcript_id}/audit",
+      "category": "crud_create",
+      "description": "Audit Transcript Route",
+      "file": "functions/9ea814653475_audit_transcript_route_api_transcripts__transcript_id__audit_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "fd92fd0b2243",
+      "name": "refine_transcript_route_api_transcripts__transcript_id__refine_post",
+      "method": "POST",
+      "url": "/api/transcripts/{transcript_id}/refine",
+      "category": "crud_create",
+      "description": "Refine Transcript Route",
+      "file": "functions/fd92fd0b2243_refine_transcript_route_api_transcripts__transcript_id__refine_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "e6f76b6fcea5",
+      "name": "patch_transcript_route_api_transcripts__transcript_id__patch_post",
+      "method": "POST",
+      "url": "/api/transcripts/{transcript_id}/patch",
+      "category": "crud_create",
+      "description": "Patch Transcript Route",
+      "file": "functions/e6f76b6fcea5_patch_transcript_route_api_transcripts__transcript_id__patch_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "8917dcd5d50d",
+      "name": "list_csvs_api_transcripts_csv_list_get",
+      "method": "GET",
+      "url": "/api/transcripts/csv/list",
+      "category": "crud_list",
+      "description": "List Csvs",
+      "file": "functions/8917dcd5d50d_list_csvs_api_transcripts_csv_list_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "302075c06570",
+      "name": "import_csv_api_transcripts_csv_import_post",
+      "method": "POST",
+      "url": "/api/transcripts/csv/import",
+      "category": "data_ingestion",
+      "description": "Import Csv",
+      "file": "functions/302075c06570_import_csv_api_transcripts_csv_import_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "2ed701e6be20",
+      "name": "list_transcripts_review_api_transcripts_review_list_get",
+      "method": "GET",
+      "url": "/api/transcripts/review/list?collection={collection}",
+      "category": "memory",
+      "description": "List Transcripts Review",
+      "file": "functions/2ed701e6be20_list_transcripts_review_api_transcripts_review_list_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "23cc9a63d7c7",
+      "name": "save_review_api_transcripts__transcript_id__review_save_post",
+      "method": "POST",
+      "url": "/api/transcripts/{transcript_id}/review/save",
+      "category": "crud_create",
+      "description": "Save Review",
+      "file": "functions/23cc9a63d7c7_save_review_api_transcripts__transcript_id__review_save_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "67f6f610fcfc",
+      "name": "index_reviewed_segments_api_transcripts__transcript_id__review_index_post",
+      "method": "POST",
+      "url": "/api/transcripts/{transcript_id}/review/index",
+      "category": "crud_create",
+      "description": "Index Reviewed Segments",
+      "file": "functions/67f6f610fcfc_index_reviewed_segments_api_transcripts__transcript_id__review_index_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "db49f81d4505",
+      "name": "retranscribe_segments_api_transcripts__transcript_id__retranscribe_segments_post",
+      "method": "POST",
+      "url": "/api/transcripts/{transcript_id}/retranscribe_segments",
+      "category": "crud_create",
+      "description": "Retranscribe Segments",
+      "file": "functions/db49f81d4505_retranscribe_segments_api_transcripts__transcript_id__retranscribe_segments_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0109fa9ac96d",
+      "name": "list_audio_files_api_transcripts_audio_list_get",
+      "method": "GET",
+      "url": "/api/transcripts/audio/list",
+      "category": "crud_list",
+      "description": "List Audio Files",
+      "file": "functions/0109fa9ac96d_list_audio_files_api_transcripts_audio_list_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "fe362ed68eda",
+      "name": "get_review_transcript_api_transcripts_pinocchio_review__transcript_id__get",
+      "method": "GET",
+      "url": "/api/transcripts/pinocchio/review/{transcript_id}",
+      "category": "crud_read",
+      "description": "Get Review Transcript",
+      "file": "functions/fe362ed68eda_get_review_transcript_api_transcripts_pinocchio_review__transcript_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0ab26191a0a7",
+      "name": "save_review_legacy_api_transcripts_pinocchio_review__transcript_id__post",
+      "method": "POST",
+      "url": "/api/transcripts/pinocchio/review/{transcript_id}",
+      "category": "crud_create",
+      "description": "Save Review Legacy",
+      "file": "functions/0ab26191a0a7_save_review_legacy_api_transcripts_pinocchio_review__transcript_id__post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "911175b4a75c",
+      "name": "list_projects_api_projects_get",
+      "method": "GET",
+      "url": "/api/projects",
+      "category": "crud_list",
+      "description": "List Projects",
+      "file": "functions/911175b4a75c_list_projects_api_projects_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "efecb3908b51",
+      "name": "create_project_api_projects_post",
+      "method": "POST",
+      "url": "/api/projects",
+      "category": "crud_create",
+      "description": "Create Project",
+      "file": "functions/efecb3908b51_create_project_api_projects_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "f6da185c3469",
+      "name": "get_project_api_projects__project_id__get",
+      "method": "GET",
+      "url": "/api/projects/{project_id}",
+      "category": "crud_read",
+      "description": "Get Project",
+      "file": "functions/f6da185c3469_get_project_api_projects__project_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d3f4d8d840f4",
+      "name": "update_project_api_projects__project_id__patch",
+      "method": "PATCH",
+      "url": "/api/projects/{project_id}",
+      "category": "crud_update",
+      "description": "Update Project",
+      "file": "functions/d3f4d8d840f4_update_project_api_projects__project_id__patch.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "77976b522390",
+      "name": "delete_project_api_projects__project_id__delete",
+      "method": "DELETE",
+      "url": "/api/projects/{project_id}",
+      "category": "crud_delete",
+      "description": "Delete Project",
+      "file": "functions/77976b522390_delete_project_api_projects__project_id__delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d66b9227ac46",
+      "name": "add_audio_api_projects__project_id__audios_post",
+      "method": "POST",
+      "url": "/api/projects/{project_id}/audios",
+      "category": "crud_create",
+      "description": "Add Audio",
+      "file": "functions/d66b9227ac46_add_audio_api_projects__project_id__audios_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7bdef90e90f9",
+      "name": "remove_audio_api_projects__project_id__audios__canonical_name__delete",
+      "method": "DELETE",
+      "url": "/api/projects/{project_id}/audios/{canonical_name}",
+      "category": "crud_delete",
+      "description": "Remove Audio",
+      "file": "functions/7bdef90e90f9_remove_audio_api_projects__project_id__audios__canonical_name__delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "e5f3c1943111",
+      "name": "add_context_doc_api_projects__project_id__context_docs_post",
+      "method": "POST",
+      "url": "/api/projects/{project_id}/context_docs",
+      "category": "crud_create",
+      "description": "Add Context Doc",
+      "file": "functions/e5f3c1943111_add_context_doc_api_projects__project_id__context_docs_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "68d9c4c36067",
+      "name": "remove_context_doc_api_projects__project_id__context_docs_delete",
+      "method": "DELETE",
+      "url": "/api/projects/{project_id}/context_docs?path={path}",
+      "category": "crud_delete",
+      "description": "Remove Context Doc",
+      "file": "functions/68d9c4c36067_remove_context_doc_api_projects__project_id__context_docs_delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "2368e39052c4",
+      "name": "add_narrative_api_projects__project_id__narratives_post",
+      "method": "POST",
+      "url": "/api/projects/{project_id}/narratives",
+      "category": "crud_create",
+      "description": "Add Narrative",
+      "file": "functions/2368e39052c4_add_narrative_api_projects__project_id__narratives_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "1396ea2de0b5",
+      "name": "list_audio_names_api_references_get",
+      "method": "GET",
+      "url": "/api/references",
+      "category": "crud_list",
+      "description": "List Audio Names",
+      "file": "functions/1396ea2de0b5_list_audio_names_api_references_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "f36e2943f5b8",
+      "name": "get_manifest_api_references__canonical_name__manifest_get",
+      "method": "GET",
+      "url": "/api/references/{canonical_name}/manifest",
+      "category": "crud_read",
+      "description": "Get Manifest",
+      "file": "functions/f36e2943f5b8_get_manifest_api_references__canonical_name__manifest_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "ac8d4873be7b",
+      "name": "get_references_api_references__canonical_name__get",
+      "method": "GET",
+      "url": "/api/references/{canonical_name}",
+      "category": "crud_read",
+      "description": "Get References",
+      "file": "functions/ac8d4873be7b_get_references_api_references__canonical_name__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "c2eab235b455",
+      "name": "upload_reference_api_references__canonical_name__upload_post",
+      "method": "POST",
+      "url": "/api/references/{canonical_name}/upload",
+      "category": "data_ingestion",
+      "description": "Upload Reference",
+      "file": "functions/c2eab235b455_upload_reference_api_references__canonical_name__upload_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0cac6b0833b4",
+      "name": "link_reference_api_references__canonical_name__link_post",
+      "method": "POST",
+      "url": "/api/references/{canonical_name}/link",
+      "category": "crud_create",
+      "description": "Link Reference",
+      "file": "functions/0cac6b0833b4_link_reference_api_references__canonical_name__link_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "90beeda120a1",
+      "name": "get_narratives_api_references__canonical_name__narratives_get",
+      "method": "GET",
+      "url": "/api/references/{canonical_name}/narratives",
+      "category": "crud_list",
+      "description": "Get Narratives",
+      "file": "functions/90beeda120a1_get_narratives_api_references__canonical_name__narratives_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "afad622d4ef7",
+      "name": "chat_endpoint_api_chat_post",
+      "method": "POST",
+      "url": "/api/chat",
+      "category": "ai",
+      "description": "Chat Endpoint",
+      "file": "functions/afad622d4ef7_chat_endpoint_api_chat_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "07e6e26797fb",
+      "name": "upload_file_api_upload_post",
+      "method": "POST",
+      "url": "/api/upload",
+      "category": "data_ingestion",
+      "description": "Upload File",
+      "file": "functions/07e6e26797fb_upload_file_api_upload_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "62954f16770c",
+      "name": "chat_endpoint_juris_api_chat_post",
+      "method": "POST",
+      "url": "/juris/api/chat",
+      "category": "ai",
+      "description": "Chat Endpoint",
+      "file": "functions/62954f16770c_chat_endpoint_juris_api_chat_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "eba43969df1a",
+      "name": "upload_file_juris_api_upload_post",
+      "method": "POST",
+      "url": "/juris/api/upload",
+      "category": "data_ingestion",
+      "description": "Upload File",
+      "file": "functions/eba43969df1a_upload_file_juris_api_upload_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "8d168a88f2d9",
+      "name": "start_search_api_search_post",
+      "method": "POST",
+      "url": "/api/search",
+      "category": "search",
+      "description": "Start Search",
+      "file": "functions/8d168a88f2d9_start_search_api_search_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "9e9e606c857b",
+      "name": "search_status_api_search_status__job_id__get",
+      "method": "GET",
+      "url": "/api/search/status/{job_id}",
+      "category": "search",
+      "description": "Search Status",
+      "file": "functions/9e9e606c857b_search_status_api_search_status__job_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "e13bf961c4f6",
+      "name": "get_results_api_results__job_id__get",
+      "method": "GET",
+      "url": "/api/results/{job_id}",
+      "category": "crud_read",
+      "description": "Get Results",
+      "file": "functions/e13bf961c4f6_get_results_api_results__job_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "4e1611494669",
+      "name": "list_search_history_api_search_history_get",
+      "method": "GET",
+      "url": "/api/search/history?limit={limit}",
+      "category": "search",
+      "description": "List Search History",
+      "file": "functions/4e1611494669_list_search_history_api_search_history_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "9f937ef686d2",
+      "name": "get_search_history_file_api_search_history__filename__get",
+      "method": "GET",
+      "url": "/api/search/history/{filename}",
+      "category": "search",
+      "description": "Get Search History File",
+      "file": "functions/9f937ef686d2_get_search_history_file_api_search_history__filename__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "dcdb94fbe7b8",
+      "name": "start_search_juris_api_search_post",
+      "method": "POST",
+      "url": "/juris/api/search",
+      "category": "search",
+      "description": "Start Search",
+      "file": "functions/dcdb94fbe7b8_start_search_juris_api_search_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "9e34afdf0ef4",
+      "name": "search_status_juris_api_search_status__job_id__get",
+      "method": "GET",
+      "url": "/juris/api/search/status/{job_id}",
+      "category": "search",
+      "description": "Search Status",
+      "file": "functions/9e34afdf0ef4_search_status_juris_api_search_status__job_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7eb6886417f9",
+      "name": "get_results_juris_api_results__job_id__get",
+      "method": "GET",
+      "url": "/juris/api/results/{job_id}",
+      "category": "crud_read",
+      "description": "Get Results",
+      "file": "functions/7eb6886417f9_get_results_juris_api_results__job_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "fb42238801cb",
+      "name": "list_search_history_juris_api_search_history_get",
+      "method": "GET",
+      "url": "/juris/api/search/history?limit={limit}",
+      "category": "search",
+      "description": "List Search History",
+      "file": "functions/fb42238801cb_list_search_history_juris_api_search_history_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "1ef5ac789ffe",
+      "name": "get_search_history_file_juris_api_search_history__filename__get",
+      "method": "GET",
+      "url": "/juris/api/search/history/{filename}",
+      "category": "search",
+      "description": "Get Search History File",
+      "file": "functions/1ef5ac789ffe_get_search_history_file_juris_api_search_history__filename__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "4d93663958b6",
+      "name": "download_inteiro_teor_api_download_post",
+      "method": "POST",
+      "url": "/api/download",
+      "category": "crud_create",
+      "description": "Download Inteiro Teor",
+      "file": "functions/4d93663958b6_download_inteiro_teor_api_download_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "c3c8f075fcfe",
+      "name": "download_status_api_download_status__job_id__get",
+      "method": "GET",
+      "url": "/api/download/status/{job_id}",
+      "category": "system",
+      "description": "Download Status",
+      "file": "functions/c3c8f075fcfe_download_status_api_download_status__job_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "f155bd9eae4a",
+      "name": "download_batch_compat_api_download_batch_post",
+      "method": "POST",
+      "url": "/api/download-batch",
+      "category": "crud_create",
+      "description": "Download Batch Compat",
+      "file": "functions/f155bd9eae4a_download_batch_compat_api_download_batch_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "889c165de6af",
+      "name": "download_inteiro_teor_juris_api_download_post",
+      "method": "POST",
+      "url": "/juris/api/download",
+      "category": "crud_create",
+      "description": "Download Inteiro Teor",
+      "file": "functions/889c165de6af_download_inteiro_teor_juris_api_download_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "9bb3b5c7ada7",
+      "name": "download_status_juris_api_download_status__job_id__get",
+      "method": "GET",
+      "url": "/juris/api/download/status/{job_id}",
+      "category": "system",
+      "description": "Download Status",
+      "file": "functions/9bb3b5c7ada7_download_status_juris_api_download_status__job_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "f19fa5012e3e",
+      "name": "download_batch_compat_juris_api_download_batch_post",
+      "method": "POST",
+      "url": "/juris/api/download-batch",
+      "category": "crud_create",
+      "description": "Download Batch Compat",
+      "file": "functions/f19fa5012e3e_download_batch_compat_juris_api_download_batch_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "e87069845126",
+      "name": "get_storage_paths_api_storage_paths_get",
+      "method": "GET",
+      "url": "/api/storage/paths",
+      "category": "crud_list",
+      "description": "Get Storage Paths",
+      "file": "functions/e87069845126_get_storage_paths_api_storage_paths_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "f9b3df18de70",
+      "name": "docx_index_api_docx_index_get",
+      "method": "GET",
+      "url": "/api/docx/index",
+      "category": "crud_read",
+      "description": "Docx Index",
+      "file": "functions/f9b3df18de70_docx_index_api_docx_index_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "24a63a10b3ce",
+      "name": "json_index_api_json_index_get",
+      "method": "GET",
+      "url": "/api/json/index",
+      "category": "crud_read",
+      "description": "Json Index",
+      "file": "functions/24a63a10b3ce_json_index_api_json_index_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "089fad7d0c6f",
+      "name": "docx_rebuild_api_docx_rebuild_post",
+      "method": "POST",
+      "url": "/api/docx/rebuild",
+      "category": "crud_create",
+      "description": "Docx Rebuild",
+      "file": "functions/089fad7d0c6f_docx_rebuild_api_docx_rebuild_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "6883df5af2e4",
+      "name": "json_rebuild_api_json_rebuild_post",
+      "method": "POST",
+      "url": "/api/json/rebuild",
+      "category": "crud_create",
+      "description": "Json Rebuild",
+      "file": "functions/6883df5af2e4_json_rebuild_api_json_rebuild_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "f692227573d6",
+      "name": "storage_rebuild_api_storage_rebuild_post",
+      "method": "POST",
+      "url": "/api/storage/rebuild",
+      "category": "crud_create",
+      "description": "Storage Rebuild",
+      "file": "functions/f692227573d6_storage_rebuild_api_storage_rebuild_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "ac4da1a6d614",
+      "name": "get_storage_paths_juris_api_storage_paths_get",
+      "method": "GET",
+      "url": "/juris/api/storage/paths",
+      "category": "crud_list",
+      "description": "Get Storage Paths",
+      "file": "functions/ac4da1a6d614_get_storage_paths_juris_api_storage_paths_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "ab9fe4a2ddca",
+      "name": "docx_index_juris_api_docx_index_get",
+      "method": "GET",
+      "url": "/juris/api/docx/index",
+      "category": "crud_read",
+      "description": "Docx Index",
+      "file": "functions/ab9fe4a2ddca_docx_index_juris_api_docx_index_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "343e6948fe9e",
+      "name": "json_index_juris_api_json_index_get",
+      "method": "GET",
+      "url": "/juris/api/json/index",
+      "category": "crud_read",
+      "description": "Json Index",
+      "file": "functions/343e6948fe9e_json_index_juris_api_json_index_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "130d0f2ec430",
+      "name": "docx_rebuild_juris_api_docx_rebuild_post",
+      "method": "POST",
+      "url": "/juris/api/docx/rebuild",
+      "category": "crud_create",
+      "description": "Docx Rebuild",
+      "file": "functions/130d0f2ec430_docx_rebuild_juris_api_docx_rebuild_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "690fb9dab186",
+      "name": "json_rebuild_juris_api_json_rebuild_post",
+      "method": "POST",
+      "url": "/juris/api/json/rebuild",
+      "category": "crud_create",
+      "description": "Json Rebuild",
+      "file": "functions/690fb9dab186_json_rebuild_juris_api_json_rebuild_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "1af629930f4d",
+      "name": "storage_rebuild_juris_api_storage_rebuild_post",
+      "method": "POST",
+      "url": "/juris/api/storage/rebuild",
+      "category": "crud_create",
+      "description": "Storage Rebuild",
+      "file": "functions/1af629930f4d_storage_rebuild_juris_api_storage_rebuild_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "e32c5e62f79d",
+      "name": "health_api_health_get",
+      "method": "GET",
+      "url": "/api/health",
+      "category": "system",
+      "description": "Health",
+      "file": "functions/e32c5e62f79d_health_api_health_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "c10d0b259f7f",
+      "name": "stats_compat_stats_get",
+      "method": "GET",
+      "url": "/stats",
+      "category": "crud_list",
+      "description": "Stats Compat",
+      "file": "functions/c10d0b259f7f_stats_compat_stats_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d8ade07a01b8",
+      "name": "stats_compat_api_stats_get",
+      "method": "GET",
+      "url": "/api/stats",
+      "category": "crud_list",
+      "description": "Stats Compat",
+      "file": "functions/d8ade07a01b8_stats_compat_api_stats_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "9a12dc424196",
+      "name": "list_courts_courts_get",
+      "method": "GET",
+      "url": "/courts",
+      "category": "crud_list",
+      "description": "List Courts",
+      "file": "functions/9a12dc424196_list_courts_courts_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "96ed1a3ee2c4",
+      "name": "list_courts_api_courts_get",
+      "method": "GET",
+      "url": "/api/courts",
+      "category": "crud_list",
+      "description": "List Courts",
+      "file": "functions/96ed1a3ee2c4_list_courts_api_courts_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "705b05938d60",
+      "name": "qdrant_collections_api_admin_qdrant_collections_get",
+      "method": "GET",
+      "url": "/api/admin/qdrant-collections",
+      "category": "memory",
+      "description": "Qdrant Collections",
+      "file": "functions/705b05938d60_qdrant_collections_api_admin_qdrant_collections_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "a04b64e4ab93",
+      "name": "health_juris_api_health_get",
+      "method": "GET",
+      "url": "/juris/api/health",
+      "category": "system",
+      "description": "Health",
+      "file": "functions/a04b64e4ab93_health_juris_api_health_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "fc47ef24480b",
+      "name": "health_legacy_juris_health_get",
+      "method": "GET",
+      "url": "/juris/health",
+      "category": "system",
+      "description": "Health Legacy",
+      "file": "functions/fc47ef24480b_health_legacy_juris_health_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7839fe21528c",
+      "name": "stats_compat_juris_stats_get",
+      "method": "GET",
+      "url": "/juris/stats",
+      "category": "crud_list",
+      "description": "Stats Compat",
+      "file": "functions/7839fe21528c_stats_compat_juris_stats_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "883542395ba6",
+      "name": "stats_compat_juris_api_stats_get",
+      "method": "GET",
+      "url": "/juris/api/stats",
+      "category": "crud_list",
+      "description": "Stats Compat",
+      "file": "functions/883542395ba6_stats_compat_juris_api_stats_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0cf35f203cc6",
+      "name": "list_courts_juris_courts_get",
+      "method": "GET",
+      "url": "/juris/courts",
+      "category": "crud_list",
+      "description": "List Courts",
+      "file": "functions/0cf35f203cc6_list_courts_juris_courts_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "63e46e580b19",
+      "name": "list_courts_juris_api_courts_get",
+      "method": "GET",
+      "url": "/juris/api/courts",
+      "category": "crud_list",
+      "description": "List Courts",
+      "file": "functions/63e46e580b19_list_courts_juris_api_courts_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "35ba50d1ad74",
+      "name": "qdrant_collections_juris_api_admin_qdrant_collections_get",
+      "method": "GET",
+      "url": "/juris/api/admin/qdrant-collections",
+      "category": "memory",
+      "description": "Qdrant Collections",
+      "file": "functions/35ba50d1ad74_qdrant_collections_juris_api_admin_qdrant_collections_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "6f9fab50eab2",
+      "name": "master_index_stats_api_master_index_stats_get",
+      "method": "GET",
+      "url": "/api/master-index/stats",
+      "category": "crud_list",
+      "description": "Master Index Stats",
+      "file": "functions/6f9fab50eab2_master_index_stats_api_master_index_stats_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "a44febd36ef4",
+      "name": "master_index_documents_api_master_index_documents_get",
+      "method": "GET",
+      "url": "/api/master-index/documents?tribunal={tribunal}&year={year}&relator={relator}&outcome={outcome}&assunto={assunto}&comarca={comarca}&text={text}&limit={limit}&offset={offset}",
+      "category": "crud_read",
+      "description": "Master Index Documents",
+      "file": "functions/a44febd36ef4_master_index_documents_api_master_index_documents_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "edbf6e3ad59e",
+      "name": "master_index_document_api_master_index_document__doc_id__get",
+      "method": "GET",
+      "url": "/api/master-index/document/{doc_id}",
+      "category": "crud_read",
+      "description": "Master Index Document",
+      "file": "functions/edbf6e3ad59e_master_index_document_api_master_index_document__doc_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "54c1843beb79",
+      "name": "master_index_document_correlations_api_master_index_document__doc_id__correlations_get",
+      "method": "GET",
+      "url": "/api/master-index/document/{doc_id}/correlations",
+      "category": "crud_list",
+      "description": "Master Index Document Correlations",
+      "file": "functions/54c1843beb79_master_index_document_correlations_api_master_index_document__doc_id__correlations_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "3499a8769a82",
+      "name": "master_index_rebuild_api_master_index_rebuild_post",
+      "method": "POST",
+      "url": "/api/master-index/rebuild?force_ingest={force_ingest}",
+      "category": "data_ingestion",
+      "description": "Master Index Rebuild",
+      "file": "functions/3499a8769a82_master_index_rebuild_api_master_index_rebuild_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "307e6864aba0",
+      "name": "master_index_pause_api_master_index_pause_post",
+      "method": "POST",
+      "url": "/api/master-index/pause?collection={collection}",
+      "category": "memory",
+      "description": "Master Index Pause",
+      "file": "functions/307e6864aba0_master_index_pause_api_master_index_pause_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "c8e5aa5fc007",
+      "name": "master_index_resume_api_master_index_resume_post",
+      "method": "POST",
+      "url": "/api/master-index/resume?collection={collection}",
+      "category": "memory",
+      "description": "Master Index Resume",
+      "file": "functions/c8e5aa5fc007_master_index_resume_api_master_index_resume_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "65587be79121",
+      "name": "master_index_markdown_api_master_index_markdown_get",
+      "method": "GET",
+      "url": "/api/master-index/markdown?rebuild={rebuild}",
+      "category": "crud_read",
+      "description": "Master Index Markdown",
+      "file": "functions/65587be79121_master_index_markdown_api_master_index_markdown_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "9b2aecc94f08",
+      "name": "master_index_jurisprudence_api_master_index_jurisprudence_get",
+      "method": "GET",
+      "url": "/api/master-index/jurisprudence?rebuild={rebuild}",
+      "category": "crud_read",
+      "description": "Master Index Jurisprudence",
+      "file": "functions/9b2aecc94f08_master_index_jurisprudence_api_master_index_jurisprudence_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0f720b0c7415",
+      "name": "master_index_jurisprudence_markdown_api_master_index_jurisprudence_markdown_get",
+      "method": "GET",
+      "url": "/api/master-index/jurisprudence/markdown?rebuild={rebuild}",
+      "category": "crud_read",
+      "description": "Master Index Jurisprudence Markdown",
+      "file": "functions/0f720b0c7415_master_index_jurisprudence_markdown_api_master_index_jurisprudence_markdown_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "5dfb32d17968",
+      "name": "master_index_download_file_api_master_index_download_file_get",
+      "method": "GET",
+      "url": "/api/master-index/download-file?path={path}",
+      "category": "crud_read",
+      "description": "Master Index Download File",
+      "file": "functions/5dfb32d17968_master_index_download_file_api_master_index_download_file_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "00195e5a76ca",
+      "name": "master_index_semantic_search_api_master_index_search_post",
+      "method": "POST",
+      "url": "/api/master-index/search",
+      "category": "search",
+      "description": "Master Index Semantic Search",
+      "file": "functions/00195e5a76ca_master_index_semantic_search_api_master_index_search_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "8aea748a8d64",
+      "name": "master_index_stats_juris_api_master_index_stats_get",
+      "method": "GET",
+      "url": "/juris/api/master-index/stats",
+      "category": "crud_list",
+      "description": "Master Index Stats",
+      "file": "functions/8aea748a8d64_master_index_stats_juris_api_master_index_stats_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7ff6e0c69c29",
+      "name": "master_index_documents_juris_api_master_index_documents_get",
+      "method": "GET",
+      "url": "/juris/api/master-index/documents?tribunal={tribunal}&year={year}&relator={relator}&outcome={outcome}&assunto={assunto}&comarca={comarca}&text={text}&limit={limit}&offset={offset}",
+      "category": "crud_read",
+      "description": "Master Index Documents",
+      "file": "functions/7ff6e0c69c29_master_index_documents_juris_api_master_index_documents_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0f952f4917d7",
+      "name": "master_index_document_juris_api_master_index_document__doc_id__get",
+      "method": "GET",
+      "url": "/juris/api/master-index/document/{doc_id}",
+      "category": "crud_read",
+      "description": "Master Index Document",
+      "file": "functions/0f952f4917d7_master_index_document_juris_api_master_index_document__doc_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "5e249233862f",
+      "name": "master_index_document_correlations_juris_api_master_index_document__doc_id__correlations_get",
+      "method": "GET",
+      "url": "/juris/api/master-index/document/{doc_id}/correlations",
+      "category": "crud_list",
+      "description": "Master Index Document Correlations",
+      "file": "functions/5e249233862f_master_index_document_correlations_juris_api_master_index_document__doc_id__correlations_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "22ce3e8a3ce9",
+      "name": "master_index_rebuild_juris_api_master_index_rebuild_post",
+      "method": "POST",
+      "url": "/juris/api/master-index/rebuild?force_ingest={force_ingest}",
+      "category": "data_ingestion",
+      "description": "Master Index Rebuild",
+      "file": "functions/22ce3e8a3ce9_master_index_rebuild_juris_api_master_index_rebuild_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "76e400eba36b",
+      "name": "master_index_pause_juris_api_master_index_pause_post",
+      "method": "POST",
+      "url": "/juris/api/master-index/pause?collection={collection}",
+      "category": "memory",
+      "description": "Master Index Pause",
+      "file": "functions/76e400eba36b_master_index_pause_juris_api_master_index_pause_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "dd891d5b05e8",
+      "name": "master_index_resume_juris_api_master_index_resume_post",
+      "method": "POST",
+      "url": "/juris/api/master-index/resume?collection={collection}",
+      "category": "memory",
+      "description": "Master Index Resume",
+      "file": "functions/dd891d5b05e8_master_index_resume_juris_api_master_index_resume_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "3dfdaf44683d",
+      "name": "master_index_markdown_juris_api_master_index_markdown_get",
+      "method": "GET",
+      "url": "/juris/api/master-index/markdown?rebuild={rebuild}",
+      "category": "crud_read",
+      "description": "Master Index Markdown",
+      "file": "functions/3dfdaf44683d_master_index_markdown_juris_api_master_index_markdown_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "bb03de7fd6a1",
+      "name": "master_index_jurisprudence_juris_api_master_index_jurisprudence_get",
+      "method": "GET",
+      "url": "/juris/api/master-index/jurisprudence?rebuild={rebuild}",
+      "category": "crud_read",
+      "description": "Master Index Jurisprudence",
+      "file": "functions/bb03de7fd6a1_master_index_jurisprudence_juris_api_master_index_jurisprudence_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "a068dd7ee8f3",
+      "name": "master_index_jurisprudence_markdown_juris_api_master_index_jurisprudence_markdown_get",
+      "method": "GET",
+      "url": "/juris/api/master-index/jurisprudence/markdown?rebuild={rebuild}",
+      "category": "crud_read",
+      "description": "Master Index Jurisprudence Markdown",
+      "file": "functions/a068dd7ee8f3_master_index_jurisprudence_markdown_juris_api_master_index_jurisprudence_markdown_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "892dd781d820",
+      "name": "master_index_download_file_juris_api_master_index_download_file_get",
+      "method": "GET",
+      "url": "/juris/api/master-index/download-file?path={path}",
+      "category": "crud_read",
+      "description": "Master Index Download File",
+      "file": "functions/892dd781d820_master_index_download_file_juris_api_master_index_download_file_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "5670da2392ca",
+      "name": "master_index_semantic_search_juris_api_master_index_search_post",
+      "method": "POST",
+      "url": "/juris/api/master-index/search",
+      "category": "search",
+      "description": "Master Index Semantic Search",
+      "file": "functions/5670da2392ca_master_index_semantic_search_juris_api_master_index_search_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "3c62cd50953f",
+      "name": "upload_pdf_api_ingest_pdf_upload_post",
+      "method": "POST",
+      "url": "/api/ingest-pdf/upload",
+      "category": "data_ingestion",
+      "description": "Upload Pdf",
+      "file": "functions/3c62cd50953f_upload_pdf_api_ingest_pdf_upload_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d0efbbddaeab",
+      "name": "process_pdf_api_ingest_pdf_process_post",
+      "method": "POST",
+      "url": "/api/ingest-pdf/process",
+      "category": "data_ingestion",
+      "description": "Process Pdf",
+      "file": "functions/d0efbbddaeab_process_pdf_api_ingest_pdf_process_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d66eaa334406",
+      "name": "upload_pdf_juris_api_ingest_pdf_upload_post",
+      "method": "POST",
+      "url": "/juris/api/ingest-pdf/upload",
+      "category": "data_ingestion",
+      "description": "Upload Pdf",
+      "file": "functions/d66eaa334406_upload_pdf_juris_api_ingest_pdf_upload_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "624f72b69716",
+      "name": "process_pdf_juris_api_ingest_pdf_process_post",
+      "method": "POST",
+      "url": "/juris/api/ingest-pdf/process",
+      "category": "data_ingestion",
+      "description": "Process Pdf",
+      "file": "functions/624f72b69716_process_pdf_juris_api_ingest_pdf_process_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0e143a9b1d5f",
+      "name": "list_models_v1_models_get",
+      "method": "GET",
+      "url": "/v1/models",
+      "category": "crud_list",
+      "description": "List Models",
+      "file": "functions/0e143a9b1d5f_list_models_v1_models_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "ec3e4a240c5f",
+      "name": "chat_completions_v1_chat_completions_post",
+      "method": "POST",
+      "url": "/v1/chat/completions",
+      "category": "ai",
+      "description": "Chat Completions",
+      "file": "functions/ec3e4a240c5f_chat_completions_v1_chat_completions_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "8e0d008768d5",
+      "name": "summarize_files_v1_files_summarize_post",
+      "method": "POST",
+      "url": "/v1/files/summarize",
+      "category": "crud_create",
+      "description": "Summarize Files",
+      "file": "functions/8e0d008768d5_summarize_files_v1_files_summarize_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "3ca0d87e8d0c",
+      "name": "list_files_v1_files_get",
+      "method": "GET",
+      "url": "/v1/files",
+      "category": "crud_list",
+      "description": "List Files",
+      "file": "functions/3ca0d87e8d0c_list_files_v1_files_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "8220d85110ab",
+      "name": "upload_file_v1_files_post",
+      "method": "POST",
+      "url": "/v1/files",
+      "category": "crud_create",
+      "description": "Upload File",
+      "file": "functions/8220d85110ab_upload_file_v1_files_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "6b39a8143ae3",
+      "name": "list_files_in_directory_v1_files_list_get",
+      "method": "GET",
+      "url": "/v1/files/list?path={path}",
+      "category": "crud_list",
+      "description": "List Files In Directory",
+      "file": "functions/6b39a8143ae3_list_files_in_directory_v1_files_list_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "a0f7e07e8767",
+      "name": "read_file_v1_files_read_get",
+      "method": "GET",
+      "url": "/v1/files/read?path={path}",
+      "category": "crud_read",
+      "description": "Read File",
+      "file": "functions/a0f7e07e8767_read_file_v1_files_read_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "30e252220620",
+      "name": "list_transcript_files_v1_files_transcripts_get",
+      "method": "GET",
+      "url": "/v1/files/transcripts",
+      "category": "crud_list",
+      "description": "List Transcript Files",
+      "file": "functions/30e252220620_list_transcript_files_v1_files_transcripts_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "e178fddcbef5",
+      "name": "list_law_files_v1_files_laws_get",
+      "method": "GET",
+      "url": "/v1/files/laws",
+      "category": "crud_list",
+      "description": "List Law Files",
+      "file": "functions/e178fddcbef5_list_law_files_v1_files_laws_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "594b0af09d66",
+      "name": "upload_transcript_file_v1_files_upload_transcript_post",
+      "method": "POST",
+      "url": "/v1/files/upload/transcript",
+      "category": "data_ingestion",
+      "description": "Upload Transcript File",
+      "file": "functions/594b0af09d66_upload_transcript_file_v1_files_upload_transcript_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "5fa0f8aea3ba",
+      "name": "upload_law_file_v1_files_upload_law_post",
+      "method": "POST",
+      "url": "/v1/files/upload/law",
+      "category": "data_ingestion",
+      "description": "Upload Law File",
+      "file": "functions/5fa0f8aea3ba_upload_law_file_v1_files_upload_law_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "e83e9f0a057c",
+      "name": "get_audio_file_api_audio__filename__get",
+      "method": "GET",
+      "url": "/api/audio/{filename}",
+      "category": "crud_read",
+      "description": "Get Audio File",
+      "file": "functions/e83e9f0a057c_get_audio_file_api_audio__filename__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "1e9fe7289bf8",
+      "name": "list_assistants_v1_assistants__get",
+      "method": "GET",
+      "url": "/v1/assistants/",
+      "category": "ai",
+      "description": "List Assistants",
+      "file": "functions/1e9fe7289bf8_list_assistants_v1_assistants__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "69e73f5a23e7",
+      "name": "create_assistant_v1_assistants__post",
+      "method": "POST",
+      "url": "/v1/assistants/",
+      "category": "ai",
+      "description": "Create Assistant",
+      "file": "functions/69e73f5a23e7_create_assistant_v1_assistants__post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "15ec86e66a28",
+      "name": "get_assistant_v1_assistants__assistant_id__get",
+      "method": "GET",
+      "url": "/v1/assistants/{assistant_id}",
+      "category": "ai",
+      "description": "Get Assistant",
+      "file": "functions/15ec86e66a28_get_assistant_v1_assistants__assistant_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d9b0f6044786",
+      "name": "update_assistant_v1_assistants__assistant_id__patch",
+      "method": "PATCH",
+      "url": "/v1/assistants/{assistant_id}",
+      "category": "ai",
+      "description": "Update Assistant",
+      "file": "functions/d9b0f6044786_update_assistant_v1_assistants__assistant_id__patch.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "6dda0e904e95",
+      "name": "replace_assistant_v1_assistants__assistant_id__put",
+      "method": "PUT",
+      "url": "/v1/assistants/{assistant_id}",
+      "category": "ai",
+      "description": "Replace Assistant",
+      "file": "functions/6dda0e904e95_replace_assistant_v1_assistants__assistant_id__put.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "741023d4173d",
+      "name": "delete_assistant_v1_assistants__assistant_id__delete",
+      "method": "DELETE",
+      "url": "/v1/assistants/{assistant_id}",
+      "category": "ai",
+      "description": "Delete Assistant",
+      "file": "functions/741023d4173d_delete_assistant_v1_assistants__assistant_id__delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "22f15af86e59",
+      "name": "chat_with_assistant_v1_assistants__assistant_id__chat_post",
+      "method": "POST",
+      "url": "/v1/assistants/{assistant_id}/chat",
+      "category": "ai",
+      "description": "Chat With Assistant",
+      "file": "functions/22f15af86e59_chat_with_assistant_v1_assistants__assistant_id__chat_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "c7cf49632a23",
+      "name": "attach_file_to_assistant_v1_assistants__assistant_id__files_post",
+      "method": "POST",
+      "url": "/v1/assistants/{assistant_id}/files",
+      "category": "ai",
+      "description": "Attach File To Assistant",
+      "file": "functions/c7cf49632a23_attach_file_to_assistant_v1_assistants__assistant_id__files_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "3db94c06c683",
+      "name": "list_assistant_files_v1_assistants__assistant_id__files_get",
+      "method": "GET",
+      "url": "/v1/assistants/{assistant_id}/files",
+      "category": "ai",
+      "description": "List Assistant Files",
+      "file": "functions/3db94c06c683_list_assistant_files_v1_assistants__assistant_id__files_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "4aa82f8a3ccd",
+      "name": "detach_file_from_assistant_v1_assistants__assistant_id__files__file_id__delete",
+      "method": "DELETE",
+      "url": "/v1/assistants/{assistant_id}/files/{file_id}",
+      "category": "ai",
+      "description": "Detach File From Assistant",
+      "file": "functions/4aa82f8a3ccd_detach_file_from_assistant_v1_assistants__assistant_id__files__file_id__delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "e70f9f86b827",
+      "name": "query_assistant_knowledge_v1_assistants__assistant_id__query_knowledge_post",
+      "method": "POST",
+      "url": "/v1/assistants/{assistant_id}/query-knowledge",
+      "category": "ai",
+      "description": "Query Assistant Knowledge",
+      "file": "functions/e70f9f86b827_query_assistant_knowledge_v1_assistants__assistant_id__query_knowledge_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "0be17f0c1268",
+      "name": "connect_to_qdrant_v1_qdrant_connect_post",
+      "method": "POST",
+      "url": "/v1/qdrant/connect",
+      "category": "memory",
+      "description": "Check Qdrant Connection",
+      "file": "functions/0be17f0c1268_connect_to_qdrant_v1_qdrant_connect_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "df0b217a2038",
+      "name": "list_collections_v1_qdrant_collections_get",
+      "method": "GET",
+      "url": "/v1/qdrant/collections",
+      "category": "memory",
+      "description": "List All Collections",
+      "file": "functions/df0b217a2038_list_collections_v1_qdrant_collections_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "75598da55717",
+      "name": "create_collection_v1_qdrant_collections_post",
+      "method": "POST",
+      "url": "/v1/qdrant/collections",
+      "category": "memory",
+      "description": "Create a New Collection",
+      "file": "functions/75598da55717_create_collection_v1_qdrant_collections_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "5283a347238f",
+      "name": "get_collection_summary_v1_qdrant_collections__collection_name__summary_get",
+      "method": "GET",
+      "url": "/v1/qdrant/collections/{collection_name}/summary",
+      "category": "memory",
+      "description": "Get Collection Statistics",
+      "file": "functions/5283a347238f_get_collection_summary_v1_qdrant_collections__collection_name__summary_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d48302eaed67",
+      "name": "structured_ingest_v1_qdrant_collections_structured_ingest_post",
+      "method": "POST",
+      "url": "/v1/qdrant/collections/structured_ingest",
+      "category": "memory",
+      "description": "Ingest structured data",
+      "file": "functions/d48302eaed67_structured_ingest_v1_qdrant_collections_structured_ingest_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "1c9479d3189f",
+      "name": "ensure_legal_indexes_v1_qdrant_collections__collection_name__ensure_indexes_post",
+      "method": "POST",
+      "url": "/v1/qdrant/collections/{collection_name}/ensure-indexes",
+      "category": "memory",
+      "description": "Ensure Legal Indexes",
+      "file": "functions/1c9479d3189f_ensure_legal_indexes_v1_qdrant_collections__collection_name__ensure_indexes_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "cdfdf4471e69",
+      "name": "delete_collection_v1_qdrant_collections__collection_name__delete",
+      "method": "DELETE",
+      "url": "/v1/qdrant/collections/{collection_name}",
+      "category": "memory",
+      "description": "Delete a Collection",
+      "file": "functions/cdfdf4471e69_delete_collection_v1_qdrant_collections__collection_name__delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "21e72b246984",
+      "name": "ingest_files_v1_qdrant_collections__collection_name__ingest_post",
+      "method": "POST",
+      "url": "/v1/qdrant/collections/{collection_name}/ingest",
+      "category": "memory",
+      "description": "Ingest Files into a Collection",
+      "file": "functions/21e72b246984_ingest_files_v1_qdrant_collections__collection_name__ingest_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d70301d96118",
+      "name": "embed_case_directory_v1_qdrant_embed_case_directory_post",
+      "method": "POST",
+      "url": "/v1/qdrant/embed-case-directory",
+      "category": "memory",
+      "description": "Scan, create, and embed a full case directory",
+      "file": "functions/d70301d96118_embed_case_directory_v1_qdrant_embed_case_directory_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "23930313e238",
+      "name": "embed_project_code_v1_qdrant_embed_project_code_post",
+      "method": "POST",
+      "url": "/v1/qdrant/embed-project-code",
+      "category": "memory",
+      "description": "Generate code summaries and index into dev-code collection",
+      "file": "functions/23930313e238_embed_project_code_v1_qdrant_embed_project_code_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7c83de417e16",
+      "name": "query_points_v1_qdrant_query_post",
+      "method": "POST",
+      "url": "/v1/qdrant/query",
+      "category": "memory",
+      "description": "Query a Collection with Vector",
+      "file": "functions/7c83de417e16_query_points_v1_qdrant_query_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "c3441f4ab9d8",
+      "name": "search_qdrant_v1_qdrant_qdrant_search_post",
+      "method": "POST",
+      "url": "/v1/qdrant/qdrant/search?collection_name={collection_name}&query_text={query_text}&limit={limit}&score_threshold={score_threshold}",
+      "category": "memory",
+      "description": "Search Qdrant",
+      "file": "functions/c3441f4ab9d8_search_qdrant_v1_qdrant_qdrant_search_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "b4d522f4542e",
+      "name": "search_with_text_v1_qdrant_search_post",
+      "method": "POST",
+      "url": "/v1/qdrant/search",
+      "category": "memory",
+      "description": "Search a Collection with Text",
+      "file": "functions/b4d522f4542e_search_with_text_v1_qdrant_search_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "3f745af1d5a8",
+      "name": "query_with_vector_v1_qdrant_collections__collection_name__query_vector_post",
+      "method": "POST",
+      "url": "/v1/qdrant/collections/{collection_name}/query/vector",
+      "category": "memory",
+      "description": "Query with Vector",
+      "file": "functions/3f745af1d5a8_query_with_vector_v1_qdrant_collections__collection_name__query_vector_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "a21ad6606728",
+      "name": "knowledge_query_v1_knowledge_query_post",
+      "method": "POST",
+      "url": "/v1/knowledge/query",
+      "category": "search",
+      "description": "Knowledge Query",
+      "file": "functions/a21ad6606728_knowledge_query_v1_knowledge_query_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "4b6283cbedd3",
+      "name": "assistant_query_knowledge_v1_knowledge_assistant__assistant_id__query_post",
+      "method": "POST",
+      "url": "/v1/knowledge/assistant/{assistant_id}/query",
+      "category": "ai",
+      "description": "Assistant Query Knowledge",
+      "file": "functions/4b6283cbedd3_assistant_query_knowledge_v1_knowledge_assistant__assistant_id__query_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "fd856c41c0a6",
+      "name": "ingest_file_v1_knowledge_ingest_file_post",
+      "method": "POST",
+      "url": "/v1/knowledge/ingest/file",
+      "category": "data_ingestion",
+      "description": "Ingest File",
+      "file": "functions/fd856c41c0a6_ingest_file_v1_knowledge_ingest_file_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "9a073ce0395d",
+      "name": "clear_collection_v1_knowledge_collection__collection_name__clear_delete",
+      "method": "DELETE",
+      "url": "/v1/knowledge/collection/{collection_name}/clear",
+      "category": "memory",
+      "description": "Clear Collection",
+      "file": "functions/9a073ce0395d_clear_collection_v1_knowledge_collection__collection_name__clear_delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "cb4a8c7005c0",
+      "name": "get_collection_stats_v1_knowledge_collection__collection_name__stats_get",
+      "method": "GET",
+      "url": "/v1/knowledge/collection/{collection_name}/stats",
+      "category": "memory",
+      "description": "Get Collection Stats",
+      "file": "functions/cb4a8c7005c0_get_collection_stats_v1_knowledge_collection__collection_name__stats_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "b60c12facab7",
+      "name": "list_tools_v1_tools_get",
+      "method": "GET",
+      "url": "/v1/tools",
+      "category": "crud_list",
+      "description": "List Tools",
+      "file": "functions/b60c12facab7_list_tools_v1_tools_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "1b8968a4d1f9",
+      "name": "create_tool_v1_tools_post",
+      "method": "POST",
+      "url": "/v1/tools",
+      "category": "crud_create",
+      "description": "Create Tool",
+      "file": "functions/1b8968a4d1f9_create_tool_v1_tools_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "97d849ed1658",
+      "name": "get_tool_v1_tools__tool_name__get",
+      "method": "GET",
+      "url": "/v1/tools/{tool_name}",
+      "category": "crud_read",
+      "description": "Get Tool",
+      "file": "functions/97d849ed1658_get_tool_v1_tools__tool_name__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "5ea53b25c42c",
+      "name": "delete_tool_v1_tools__tool_name__delete",
+      "method": "DELETE",
+      "url": "/v1/tools/{tool_name}",
+      "category": "crud_delete",
+      "description": "Delete Tool",
+      "file": "functions/5ea53b25c42c_delete_tool_v1_tools__tool_name__delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "a404d1eba722",
+      "name": "execute_tool_v1_tools__tool_name__execute_post",
+      "method": "POST",
+      "url": "/v1/tools/{tool_name}/execute",
+      "category": "crud_create",
+      "description": "Execute Tool",
+      "file": "functions/a404d1eba722_execute_tool_v1_tools__tool_name__execute_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "20cfef7671a8",
+      "name": "execute_tool_by_name_v1_tools_execute_post",
+      "method": "POST",
+      "url": "/v1/tools/execute",
+      "category": "crud_create",
+      "description": "Execute Tool By Name",
+      "file": "functions/20cfef7671a8_execute_tool_by_name_v1_tools_execute_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "76d1da8972f9",
+      "name": "deep_reasoning_v1_tools_deep_reasoning_post",
+      "method": "POST",
+      "url": "/v1/tools/deep_reasoning",
+      "category": "crud_create",
+      "description": "Deep Reasoning",
+      "file": "functions/76d1da8972f9_deep_reasoning_v1_tools_deep_reasoning_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7c3d844784d0",
+      "name": "generate_prompt_v1_prompt_engineer_generate_post",
+      "method": "POST",
+      "url": "/v1/prompt-engineer/generate",
+      "category": "crud_create",
+      "description": "Generate Prompt",
+      "file": "functions/7c3d844784d0_generate_prompt_v1_prompt_engineer_generate_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "80c9579d0fdf",
+      "name": "analyze_needs_v1_prompt_engineer_analyze_post",
+      "method": "POST",
+      "url": "/v1/prompt-engineer/analyze",
+      "category": "crud_create",
+      "description": "Analyze Needs",
+      "file": "functions/80c9579d0fdf_analyze_needs_v1_prompt_engineer_analyze_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "949988306c3e",
+      "name": "generate_variations_v1_prompt_engineer_variations_post",
+      "method": "POST",
+      "url": "/v1/prompt-engineer/variations",
+      "category": "crud_create",
+      "description": "Generate Variations",
+      "file": "functions/949988306c3e_generate_variations_v1_prompt_engineer_variations_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "bc62410ac5d0",
+      "name": "optimize_prompt_v1_prompt_engineer_optimize_post",
+      "method": "POST",
+      "url": "/v1/prompt-engineer/optimize",
+      "category": "crud_create",
+      "description": "Optimize Prompt",
+      "file": "functions/bc62410ac5d0_optimize_prompt_v1_prompt_engineer_optimize_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "9734a5869228",
+      "name": "evaluate_prompt_v1_prompt_engineer_evaluate_post",
+      "method": "POST",
+      "url": "/v1/prompt-engineer/evaluate",
+      "category": "crud_create",
+      "description": "Evaluate Prompt",
+      "file": "functions/9734a5869228_evaluate_prompt_v1_prompt_engineer_evaluate_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "e481ee3dc390",
+      "name": "suggest_improvements_v1_prompt_engineer_improve_post",
+      "method": "POST",
+      "url": "/v1/prompt-engineer/improve",
+      "category": "crud_create",
+      "description": "Suggest Improvements",
+      "file": "functions/e481ee3dc390_suggest_improvements_v1_prompt_engineer_improve_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "fc6b20f941c2",
+      "name": "get_prompt_examples_v1_prompt_engineer_examples_get",
+      "method": "GET",
+      "url": "/v1/prompt-engineer/examples?category={category}",
+      "category": "crud_read",
+      "description": "Get Prompt Examples",
+      "file": "functions/fc6b20f941c2_get_prompt_examples_v1_prompt_engineer_examples_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "f83f867877fe",
+      "name": "ingest_directory_v1_ingestion_ingest_directory_post",
+      "method": "POST",
+      "url": "/v1/ingestion/ingest-directory?directory_path={directory_path}&collection_name={collection_name}&force_recreate={force_recreate}",
+      "category": "memory",
+      "description": "Ingest Directory",
+      "file": "functions/f83f867877fe_ingest_directory_v1_ingestion_ingest_directory_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "194c677ef9da",
+      "name": "ingest_file_v1_ingestion_ingest_file_post",
+      "method": "POST",
+      "url": "/v1/ingestion/ingest-file?collection_name={collection_name}&force_recreate={force_recreate}",
+      "category": "memory",
+      "description": "Ingest File",
+      "file": "functions/194c677ef9da_ingest_file_v1_ingestion_ingest_file_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7da51230154c",
+      "name": "ingest_legal_file_v1_ingestion_ingest_legal_file_post",
+      "method": "POST",
+      "url": "/v1/ingestion/ingest-legal-file?collection_name={collection_name}&force_recreate={force_recreate}&model_name={model_name}&metadata_json={metadata_json}&enhanced={enhanced}&chunk_size={chunk_size}&chunk_overlap={chunk_overlap}",
+      "category": "memory",
+      "description": "Ingest Legal File",
+      "file": "functions/7da51230154c_ingest_legal_file_v1_ingestion_ingest_legal_file_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "af252a580f3b",
+      "name": "analyze_document_structure_v1_ingestion_analyze_document_structure_post",
+      "method": "POST",
+      "url": "/v1/ingestion/analyze-document-structure",
+      "category": "data_ingestion",
+      "description": "Analyze Document Structure",
+      "file": "functions/af252a580f3b_analyze_document_structure_v1_ingestion_analyze_document_structure_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "fbb4c42634a8",
+      "name": "search_documents_v1_ingestion_search_post",
+      "method": "POST",
+      "url": "/v1/ingestion/search?collection_name={collection_name}&query={query}&limit={limit}",
+      "category": "memory",
+      "description": "Search Documents",
+      "file": "functions/fbb4c42634a8_search_documents_v1_ingestion_search_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "4a8f51b8daf7",
+      "name": "get_collection_info_v1_ingestion_collections__collection_name__info_get",
+      "method": "GET",
+      "url": "/v1/ingestion/collections/{collection_name}/info",
+      "category": "memory",
+      "description": "Get Collection Info",
+      "file": "functions/4a8f51b8daf7_get_collection_info_v1_ingestion_collections__collection_name__info_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "f3e22fe8329e",
+      "name": "upload_and_ingest_csv_legal_ingestion_upload_csv_post",
+      "method": "POST",
+      "url": "/legal-ingestion/upload-csv?collection_name={collection_name}&text_column={text_column}&recreate_collection={recreate_collection}&chunk_size={chunk_size}&chunk_overlap={chunk_overlap}&async_mode={async_mode}",
+      "category": "memory",
+      "description": "Upload And Ingest Csv",
+      "file": "functions/f3e22fe8329e_upload_and_ingest_csv_legal_ingestion_upload_csv_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "8ea927efa539",
+      "name": "ingest_from_file_path_legal_ingestion_ingest_file_post",
+      "method": "POST",
+      "url": "/legal-ingestion/ingest-file?file_path={file_path}",
+      "category": "data_ingestion",
+      "description": "Ingest From File Path",
+      "file": "functions/8ea927efa539_ingest_from_file_path_legal_ingestion_ingest_file_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "639edd859a44",
+      "name": "search_legal_documents_legal_ingestion_search__collection_name__post",
+      "method": "POST",
+      "url": "/legal-ingestion/search/{collection_name}",
+      "category": "memory",
+      "description": "Search Legal Documents",
+      "file": "functions/639edd859a44_search_legal_documents_legal_ingestion_search__collection_name__post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "96b1d749381b",
+      "name": "list_collections_legal_ingestion_collections_get",
+      "method": "GET",
+      "url": "/legal-ingestion/collections",
+      "category": "memory",
+      "description": "List Collections",
+      "file": "functions/96b1d749381b_list_collections_legal_ingestion_collections_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "c0341953e1b2",
+      "name": "get_collection_info_legal_ingestion_collection__collection_name__info_get",
+      "method": "GET",
+      "url": "/legal-ingestion/collection/{collection_name}/info",
+      "category": "memory",
+      "description": "Get Collection Info",
+      "file": "functions/c0341953e1b2_get_collection_info_legal_ingestion_collection__collection_name__info_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "4d255cb00351",
+      "name": "delete_collection_legal_ingestion_collection__collection_name__delete",
+      "method": "DELETE",
+      "url": "/legal-ingestion/collection/{collection_name}",
+      "category": "memory",
+      "description": "Delete Collection",
+      "file": "functions/4d255cb00351_delete_collection_legal_ingestion_collection__collection_name__delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "12ae339cfa68",
+      "name": "ingest_legal_file_enhanced_v2_legal_ingestion_ingest_legal_file_enhanced_post",
+      "method": "POST",
+      "url": "/v2/legal-ingestion/ingest-legal-file-enhanced",
+      "category": "data_ingestion",
+      "description": "Ingest Legal File Enhanced",
+      "file": "functions/12ae339cfa68_ingest_legal_file_enhanced_v2_legal_ingestion_ingest_legal_file_enhanced_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "bf764e001e95",
+      "name": "ingest_legal_folder_v2_legal_ingestion_ingest_legal_folder_post",
+      "method": "POST",
+      "url": "/v2/legal-ingestion/ingest-legal-folder",
+      "category": "data_ingestion",
+      "description": "Ingest Legal Folder",
+      "file": "functions/bf764e001e95_ingest_legal_folder_v2_legal_ingestion_ingest_legal_folder_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "173e288ae6fe",
+      "name": "analyze_document_structure_v2_legal_ingestion_analyze_document_structure_post",
+      "method": "POST",
+      "url": "/v2/legal-ingestion/analyze-document-structure",
+      "category": "data_ingestion",
+      "description": "Analyze Document Structure",
+      "file": "functions/173e288ae6fe_analyze_document_structure_v2_legal_ingestion_analyze_document_structure_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "5527a71f4644",
+      "name": "analyze_transcript_structure_v2_transcripts_analyze_post",
+      "method": "POST",
+      "url": "/v2/transcripts/analyze",
+      "category": "crud_create",
+      "description": "Analyze Transcript Structure",
+      "file": "functions/5527a71f4644_analyze_transcript_structure_v2_transcripts_analyze_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "3c5e9a3e47c9",
+      "name": "ingest_transcript_enhanced_v2_transcripts_ingest_enhanced_post",
+      "method": "POST",
+      "url": "/v2/transcripts/ingest-enhanced",
+      "category": "data_ingestion",
+      "description": "Ingest Transcript Enhanced",
+      "file": "functions/3c5e9a3e47c9_ingest_transcript_enhanced_v2_transcripts_ingest_enhanced_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "1f8b9eb0b0e4",
+      "name": "ingest_transcript_json_v2_transcripts_ingest_json_post",
+      "method": "POST",
+      "url": "/v2/transcripts/ingest-json",
+      "category": "data_ingestion",
+      "description": "Ingest Transcript Json",
+      "file": "functions/1f8b9eb0b0e4_ingest_transcript_json_v2_transcripts_ingest_json_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7d4af9b255ae",
+      "name": "health_v1_neo4j_health_get",
+      "method": "GET",
+      "url": "/v1/neo4j/health",
+      "category": "system",
+      "description": "Health",
+      "file": "functions/7d4af9b255ae_health_v1_neo4j_health_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "6f2f01d42bf3",
+      "name": "stats_v1_neo4j_stats_get",
+      "method": "GET",
+      "url": "/v1/neo4j/stats",
+      "category": "crud_list",
+      "description": "Stats",
+      "file": "functions/6f2f01d42bf3_stats_v1_neo4j_stats_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "e9ec6e1dc354",
+      "name": "cypher_v1_neo4j_cypher_post",
+      "method": "POST",
+      "url": "/v1/neo4j/cypher",
+      "category": "crud_create",
+      "description": "Cypher",
+      "file": "functions/e9ec6e1dc354_cypher_v1_neo4j_cypher_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0560724c5250",
+      "name": "rag_context_v1_neo4j_rag_context_post",
+      "method": "POST",
+      "url": "/v1/neo4j/rag-context",
+      "category": "crud_create",
+      "description": "Rag Context",
+      "file": "functions/0560724c5250_rag_context_v1_neo4j_rag_context_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "b880a0d03632",
+      "name": "list_agents_v1_openclaude_agents_get",
+      "method": "GET",
+      "url": "/v1/openclaude/agents",
+      "category": "crud_list",
+      "description": "List Agents",
+      "file": "functions/b880a0d03632_list_agents_v1_openclaude_agents_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "76db862cb5a6",
+      "name": "create_agent_v1_openclaude_agents_post",
+      "method": "POST",
+      "url": "/v1/openclaude/agents",
+      "category": "crud_create",
+      "description": "Create Agent",
+      "file": "functions/76db862cb5a6_create_agent_v1_openclaude_agents_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "4c561cba7694",
+      "name": "get_agent_v1_openclaude_agents__name__get",
+      "method": "GET",
+      "url": "/v1/openclaude/agents/{name}",
+      "category": "agent_control",
+      "description": "Get Agent",
+      "file": "functions/4c561cba7694_get_agent_v1_openclaude_agents__name__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0df612525938",
+      "name": "update_agent_v1_openclaude_agents__name__put",
+      "method": "PUT",
+      "url": "/v1/openclaude/agents/{name}",
+      "category": "agent_control",
+      "description": "Update Agent",
+      "file": "functions/0df612525938_update_agent_v1_openclaude_agents__name__put.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "34400fed5297",
+      "name": "delete_agent_v1_openclaude_agents__name__delete",
+      "method": "DELETE",
+      "url": "/v1/openclaude/agents/{name}",
+      "category": "agent_control",
+      "description": "Delete Agent",
+      "file": "functions/34400fed5297_delete_agent_v1_openclaude_agents__name__delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "28c563537472",
+      "name": "run_agent_v1_openclaude_agents__name__run_post",
+      "method": "POST",
+      "url": "/v1/openclaude/agents/{name}/run",
+      "category": "agent_control",
+      "description": "Run Agent",
+      "file": "functions/28c563537472_run_agent_v1_openclaude_agents__name__run_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "07cc08142fcb",
+      "name": "validate_agent_v1_openclaude_agents_validate_post",
+      "method": "POST",
+      "url": "/v1/openclaude/agents/validate",
+      "category": "agent_control",
+      "description": "Validate Agent",
+      "file": "functions/07cc08142fcb_validate_agent_v1_openclaude_agents_validate_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "40917cb61f1a",
+      "name": "import_from_assistant_v1_openclaude_agents_import_from_assistant__assistant_id__post",
+      "method": "POST",
+      "url": "/v1/openclaude/agents/import-from-assistant/{assistant_id}",
+      "category": "agent_control",
+      "description": "Import From Assistant",
+      "file": "functions/40917cb61f1a_import_from_assistant_v1_openclaude_agents_import_from_assistant__assistant_id__post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "3971a4c5d594",
+      "name": "export_to_assistant_v1_openclaude_agents_export_to_assistant__name__post",
+      "method": "POST",
+      "url": "/v1/openclaude/agents/export-to-assistant/{name}",
+      "category": "agent_control",
+      "description": "Export To Assistant",
+      "file": "functions/3971a4c5d594_export_to_assistant_v1_openclaude_agents_export_to_assistant__name__post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "83839ad9e4aa",
+      "name": "import_from_markdown_v1_openclaude_agents_import_markdown_post",
+      "method": "POST",
+      "url": "/v1/openclaude/agents/import-markdown",
+      "category": "agent_control",
+      "description": "Import From Markdown",
+      "file": "functions/83839ad9e4aa_import_from_markdown_v1_openclaude_agents_import_markdown_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "19fbaa4dd73b",
+      "name": "catalog_list_agents_v1_openclaude_catalog_agents_get",
+      "method": "GET",
+      "url": "/v1/openclaude/catalog/agents",
+      "category": "crud_list",
+      "description": "Catalog List Agents",
+      "file": "functions/19fbaa4dd73b_catalog_list_agents_v1_openclaude_catalog_agents_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "5d2a882e6d81",
+      "name": "catalog_get_agent_v1_openclaude_catalog_agents__name__get",
+      "method": "GET",
+      "url": "/v1/openclaude/catalog/agents/{name}",
+      "category": "agent_control",
+      "description": "Catalog Get Agent",
+      "file": "functions/5d2a882e6d81_catalog_get_agent_v1_openclaude_catalog_agents__name__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "50c660994739",
+      "name": "import_from_catalog_v1_openclaude_agents_import_from_catalog__name__post",
+      "method": "POST",
+      "url": "/v1/openclaude/agents/import-from-catalog/{name}",
+      "category": "agent_control",
+      "description": "Import From Catalog",
+      "file": "functions/50c660994739_import_from_catalog_v1_openclaude_agents_import_from_catalog__name__post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "86c10dbb85d6",
+      "name": "get_ecosystem_report_v1_ecosystem_report_get",
+      "method": "GET",
+      "url": "/v1/ecosystem/report",
+      "category": "crud_read",
+      "description": "Get latest ecosystem MCP report",
+      "file": "functions/86c10dbb85d6_get_ecosystem_report_v1_ecosystem_report_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "f00e887a5855",
+      "name": "get_ecosystem_metadata_v1_ecosystem_metadata_get",
+      "method": "GET",
+      "url": "/v1/ecosystem/metadata",
+      "category": "crud_read",
+      "description": "Get ecosystem metadata JSON",
+      "file": "functions/f00e887a5855_get_ecosystem_metadata_v1_ecosystem_metadata_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "f980dc728bfb",
+      "name": "list_threads_v1_threads__get",
+      "method": "GET",
+      "url": "/v1/threads/",
+      "category": "crud_list",
+      "description": "List Threads",
+      "file": "functions/f980dc728bfb_list_threads_v1_threads__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "fb9063be306e",
+      "name": "create_thread_v1_threads__post",
+      "method": "POST",
+      "url": "/v1/threads/",
+      "category": "crud_create",
+      "description": "Create Thread",
+      "file": "functions/fb9063be306e_create_thread_v1_threads__post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "3c6a19689371",
+      "name": "get_thread_v1_threads__thread_id__get",
+      "method": "GET",
+      "url": "/v1/threads/{thread_id}",
+      "category": "crud_read",
+      "description": "Get Thread",
+      "file": "functions/3c6a19689371_get_thread_v1_threads__thread_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "a97ffa45f2c8",
+      "name": "delete_thread_v1_threads__thread_id__delete",
+      "method": "DELETE",
+      "url": "/v1/threads/{thread_id}",
+      "category": "crud_delete",
+      "description": "Delete Thread",
+      "file": "functions/a97ffa45f2c8_delete_thread_v1_threads__thread_id__delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "2ab2443b0b80",
+      "name": "add_message_v1_threads__thread_id__messages_post",
+      "method": "POST",
+      "url": "/v1/threads/{thread_id}/messages",
+      "category": "crud_create",
+      "description": "Add Message",
+      "file": "functions/2ab2443b0b80_add_message_v1_threads__thread_id__messages_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "bbe3dd37ea30",
+      "name": "list_messages_v1_threads__thread_id__messages_get",
+      "method": "GET",
+      "url": "/v1/threads/{thread_id}/messages?limit={limit}",
+      "category": "crud_list",
+      "description": "List Messages",
+      "file": "functions/bbe3dd37ea30_list_messages_v1_threads__thread_id__messages_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "5583b8f5ae51",
+      "name": "create_run_v1_threads__thread_id__runs_post",
+      "method": "POST",
+      "url": "/v1/threads/{thread_id}/runs",
+      "category": "crud_create",
+      "description": "Create Run",
+      "file": "functions/5583b8f5ae51_create_run_v1_threads__thread_id__runs_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "556421a82a6a",
+      "name": "attach_file_to_thread_v1_threads__thread_id__files_post",
+      "method": "POST",
+      "url": "/v1/threads/{thread_id}/files",
+      "category": "crud_create",
+      "description": "Attach File To Thread",
+      "file": "functions/556421a82a6a_attach_file_to_thread_v1_threads__thread_id__files_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "a9f2f13db8ad",
+      "name": "debug_schema_debug_schema_get",
+      "method": "GET",
+      "url": "/debug-schema",
+      "category": "crud_read",
+      "description": "Debug Schema",
+      "file": "functions/a9f2f13db8ad_debug_schema_debug_schema_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "5c5e3b58ccce",
+      "name": "debug_routes_debug_routes_get",
+      "method": "GET",
+      "url": "/debug-routes",
+      "category": "crud_list",
+      "description": "Debug Routes",
+      "file": "functions/5c5e3b58ccce_debug_routes_debug_routes_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "878c8e16ce79",
+      "name": "regenerate_framework_list_api_frameworks_regenerate_list_post",
+      "method": "POST",
+      "url": "/api/frameworks/regenerate-list",
+      "category": "crud_create",
+      "description": "Regenerate Framework List",
+      "file": "functions/878c8e16ce79_regenerate_framework_list_api_frameworks_regenerate_list_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "5c1075871b7a",
+      "name": "get_file_content_v1_files__file_id__content_get",
+      "method": "GET",
+      "url": "/v1/files/{file_id}/content",
+      "category": "crud_read",
+      "description": "Get File Content",
+      "file": "functions/5c1075871b7a_get_file_content_v1_files__file_id__content_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7f9c34e6c21e",
+      "name": "delete_file_v1_files__file_id__delete",
+      "method": "DELETE",
+      "url": "/v1/files/{file_id}",
+      "category": "crud_delete",
+      "description": "Delete File",
+      "file": "functions/7f9c34e6c21e_delete_file_v1_files__file_id__delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0a864d5aca24",
+      "name": "assign_tool_to_assistant_v1_assistants__assistant_id__tools_post",
+      "method": "POST",
+      "url": "/v1/assistants/{assistant_id}/tools",
+      "category": "ai",
+      "description": "Assign Tool To Assistant",
+      "file": "functions/0a864d5aca24_assign_tool_to_assistant_v1_assistants__assistant_id__tools_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "b9c952bdb3ab",
+      "name": "deepseek_proxy_v1_assistants__assistant_id__deepseek_post",
+      "method": "POST",
+      "url": "/v1/assistants/{assistant_id}/deepseek",
+      "category": "ai",
+      "description": "Deepseek Proxy",
+      "file": "functions/b9c952bdb3ab_deepseek_proxy_v1_assistants__assistant_id__deepseek_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "6984b4e51d97",
+      "name": "deepseek_engineer_chat_v1_deepseek_engineer_chat_post",
+      "method": "POST",
+      "url": "/v1/deepseek-engineer/chat",
+      "category": "ai",
+      "description": "Deepseek Engineer Chat",
+      "file": "functions/6984b4e51d97_deepseek_engineer_chat_v1_deepseek_engineer_chat_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "6f0ea6dc152e",
+      "name": "deepseek_streaming_proxy_v1_assistants_deepseek_stream_proxy_post",
+      "method": "POST",
+      "url": "/v1/assistants/deepseek-stream-proxy",
+      "category": "ai",
+      "description": "Deepseek Streaming Proxy",
+      "file": "functions/6f0ea6dc152e_deepseek_streaming_proxy_v1_assistants_deepseek_stream_proxy_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "90177123df3f",
+      "name": "deepseek_gateway_delete",
+      "method": "DELETE",
+      "url": "/api/deepseek/{path}",
+      "category": "crud_delete",
+      "description": "Deepseek Gateway",
+      "file": "functions/90177123df3f_deepseek_gateway_delete.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7a84470f4273",
+      "name": "deepseek_gateway_put",
+      "method": "PUT",
+      "url": "/api/deepseek/{path}",
+      "category": "crud_update",
+      "description": "Deepseek Gateway",
+      "file": "functions/7a84470f4273_deepseek_gateway_put.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "81fa2e976b8e",
+      "name": "deepseek_gateway_post",
+      "method": "POST",
+      "url": "/api/deepseek/{path}",
+      "category": "crud_create",
+      "description": "Deepseek Gateway",
+      "file": "functions/81fa2e976b8e_deepseek_gateway_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "b2d346601f2b",
+      "name": "deepseek_gateway_get",
+      "method": "GET",
+      "url": "/api/deepseek/{path}",
+      "category": "crud_read",
+      "description": "Deepseek Gateway",
+      "file": "functions/b2d346601f2b_deepseek_gateway_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "cc3ac0029f63",
+      "name": "run_demo_api_run_demo_post",
+      "method": "POST",
+      "url": "/api/run-demo",
+      "category": "crud_create",
+      "description": "Run Demo",
+      "file": "functions/cc3ac0029f63_run_demo_api_run_demo_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 55
+    },
+    {
+      "id": "c55c7f551320",
+      "name": "upload_to_session_api_upload_session_post",
+      "method": "POST",
+      "url": "/api/upload-session",
+      "category": "data_ingestion",
+      "description": "Upload To Session",
+      "file": "functions/c55c7f551320_upload_to_session_api_upload_session_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "3db8b1f41295",
+      "name": "get_audio_api_audio__session_id__get",
+      "method": "GET",
+      "url": "/api/audio/{session_id}",
+      "category": "crud_read",
+      "description": "Get Audio",
+      "file": "functions/3db8b1f41295_get_audio_api_audio__session_id__get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "aea9fe1be5a8",
+      "name": "apply_filter_api_filter_post",
+      "method": "POST",
+      "url": "/api/filter",
+      "category": "crud_create",
+      "description": "Apply Filter",
+      "file": "functions/aea9fe1be5a8_apply_filter_api_filter_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "edf51b3885fa",
+      "name": "apply_filter_chain_api_filter_chain_post",
+      "method": "POST",
+      "url": "/api/filter-chain",
+      "category": "crud_create",
+      "description": "Apply Filter Chain",
+      "file": "functions/edf51b3885fa_apply_filter_chain_api_filter_chain_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "e7e56390c1a7",
+      "name": "apply_gain_api_effects_gain_post",
+      "method": "POST",
+      "url": "/api/effects/gain",
+      "category": "crud_create",
+      "description": "Apply Gain",
+      "file": "functions/e7e56390c1a7_apply_gain_api_effects_gain_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "104418f4417b",
+      "name": "apply_dither_api_effects_dither_post",
+      "method": "POST",
+      "url": "/api/effects/dither",
+      "category": "crud_create",
+      "description": "Apply Dither",
+      "file": "functions/104418f4417b_apply_dither_api_effects_dither_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d607672a80c7",
+      "name": "apply_dcshift_api_effects_dcshift_post",
+      "method": "POST",
+      "url": "/api/effects/dcshift",
+      "category": "crud_create",
+      "description": "Apply Dcshift",
+      "file": "functions/d607672a80c7_apply_dcshift_api_effects_dcshift_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "afa3b49140d5",
+      "name": "apply_overdrive_api_effects_overdrive_post",
+      "method": "POST",
+      "url": "/api/effects/overdrive",
+      "category": "crud_create",
+      "description": "Apply Overdrive",
+      "file": "functions/afa3b49140d5_apply_overdrive_api_effects_overdrive_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "0ddbbb129593",
+      "name": "apply_contrast_api_effects_contrast_post",
+      "method": "POST",
+      "url": "/api/effects/contrast",
+      "category": "crud_create",
+      "description": "Apply Contrast",
+      "file": "functions/0ddbbb129593_apply_contrast_api_effects_contrast_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "6eb62b7be30e",
+      "name": "apply_flanger_api_effects_flanger_post",
+      "method": "POST",
+      "url": "/api/effects/flanger",
+      "category": "crud_create",
+      "description": "Apply Flanger",
+      "file": "functions/6eb62b7be30e_apply_flanger_api_effects_flanger_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "49ff582ad970",
+      "name": "apply_phaser_api_effects_phaser_post",
+      "method": "POST",
+      "url": "/api/effects/phaser",
+      "category": "crud_create",
+      "description": "Apply Phaser",
+      "file": "functions/49ff582ad970_apply_phaser_api_effects_phaser_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "2ec98fbb1e94",
+      "name": "pitch_shift_api_enhance_pitch_shift_post",
+      "method": "POST",
+      "url": "/api/enhance/pitch-shift",
+      "category": "crud_create",
+      "description": "Pitch Shift",
+      "file": "functions/2ec98fbb1e94_pitch_shift_api_enhance_pitch_shift_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "7bb66119a054",
+      "name": "change_speed_api_enhance_speed_post",
+      "method": "POST",
+      "url": "/api/enhance/speed",
+      "category": "crud_create",
+      "description": "Change Speed",
+      "file": "functions/7bb66119a054_change_speed_api_enhance_speed_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "4cafaa3ed31a",
+      "name": "preemphasis_api_enhance_preemphasis_post",
+      "method": "POST",
+      "url": "/api/enhance/preemphasis",
+      "category": "crud_create",
+      "description": "Preemphasis",
+      "file": "functions/4cafaa3ed31a_preemphasis_api_enhance_preemphasis_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "a00e39912075",
+      "name": "deemphasis_api_enhance_deemphasis_post",
+      "method": "POST",
+      "url": "/api/enhance/deemphasis",
+      "category": "crud_create",
+      "description": "Deemphasis",
+      "file": "functions/a00e39912075_deemphasis_api_enhance_deemphasis_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "b424ec1929a0",
+      "name": "change_volume_api_enhance_volume_post",
+      "method": "POST",
+      "url": "/api/enhance/volume",
+      "category": "crud_create",
+      "description": "Change Volume",
+      "file": "functions/b424ec1929a0_change_volume_api_enhance_volume_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "3079a6bfbeaa",
+      "name": "apply_fade_api_enhance_fade_post",
+      "method": "POST",
+      "url": "/api/enhance/fade",
+      "category": "crud_create",
+      "description": "Apply Fade",
+      "file": "functions/3079a6bfbeaa_apply_fade_api_enhance_fade_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "352d16479f93",
+      "name": "add_noise_api_enhance_add_noise_post",
+      "method": "POST",
+      "url": "/api/enhance/add-noise",
+      "category": "crud_create",
+      "description": "Add Noise",
+      "file": "functions/352d16479f93_add_noise_api_enhance_add_noise_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "076787e62a86",
+      "name": "compute_spectrogram_api_analysis_spectrogram_post",
+      "method": "POST",
+      "url": "/api/analysis/spectrogram",
+      "category": "crud_create",
+      "description": "Compute Spectrogram",
+      "file": "functions/076787e62a86_compute_spectrogram_api_analysis_spectrogram_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "492bc619c19a",
+      "name": "compute_mel_spectrogram_api_analysis_mel_spectrogram_post",
+      "method": "POST",
+      "url": "/api/analysis/mel-spectrogram",
+      "category": "crud_create",
+      "description": "Compute Mel Spectrogram",
+      "file": "functions/492bc619c19a_compute_mel_spectrogram_api_analysis_mel_spectrogram_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "522335d93ac9",
+      "name": "compute_mfcc_api_analysis_mfcc_post",
+      "method": "POST",
+      "url": "/api/analysis/mfcc",
+      "category": "crud_create",
+      "description": "Compute Mfcc",
+      "file": "functions/522335d93ac9_compute_mfcc_api_analysis_mfcc_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "220c01cdf00c",
+      "name": "compute_loudness_api_analysis_loudness_post",
+      "method": "POST",
+      "url": "/api/analysis/loudness",
+      "category": "crud_create",
+      "description": "Compute Loudness",
+      "file": "functions/220c01cdf00c_compute_loudness_api_analysis_loudness_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "4994ac011a8b",
+      "name": "compute_spectral_centroid_api_analysis_spectral_centroid_post",
+      "method": "POST",
+      "url": "/api/analysis/spectral-centroid",
+      "category": "crud_create",
+      "description": "Compute Spectral Centroid",
+      "file": "functions/4994ac011a8b_compute_spectral_centroid_api_analysis_spectral_centroid_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "d2f3cdf7f396",
+      "name": "detect_pitch_api_analysis_pitch_post",
+      "method": "POST",
+      "url": "/api/analysis/pitch",
+      "category": "crud_create",
+      "description": "Detect Pitch",
+      "file": "functions/d2f3cdf7f396_detect_pitch_api_analysis_pitch_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "bcb1f2f695d7",
+      "name": "separate_sources_api_separate_post",
+      "method": "POST",
+      "url": "/api/separate",
+      "category": "crud_create",
+      "description": "Separate Sources",
+      "file": "functions/bcb1f2f695d7_separate_sources_api_separate_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "4f1e9b8bab01",
+      "name": "voice_activity_detection_api_vad_post",
+      "method": "POST",
+      "url": "/api/vad",
+      "category": "crud_create",
+      "description": "Voice Activity Detection",
+      "file": "functions/4f1e9b8bab01_voice_activity_detection_api_vad_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "c65231f41653",
+      "name": "resample_audio_api_resample_post",
+      "method": "POST",
+      "url": "/api/resample",
+      "category": "crud_create",
+      "description": "Resample Audio",
+      "file": "functions/c65231f41653_resample_audio_api_resample_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "3501c3d487f5",
+      "name": "apply_convolve_api_effects_convolve_post",
+      "method": "POST",
+      "url": "/api/effects/convolve",
+      "category": "crud_create",
+      "description": "Apply Convolve",
+      "file": "functions/3501c3d487f5_apply_convolve_api_effects_convolve_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "129a91aae1e5",
+      "name": "apply_ir_convolve_api_effects_ir_convolve_post",
+      "method": "POST",
+      "url": "/api/effects/ir-convolve",
+      "category": "crud_create",
+      "description": "Apply Ir Convolve",
+      "file": "functions/129a91aae1e5_apply_ir_convolve_api_effects_ir_convolve_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "bed7fcfa1c55",
+      "name": "time_stretch_api_enhance_time_stretch_post",
+      "method": "POST",
+      "url": "/api/enhance/time-stretch",
+      "category": "crud_create",
+      "description": "Time Stretch",
+      "file": "functions/bed7fcfa1c55_time_stretch_api_enhance_time_stretch_post.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    },
+    {
+      "id": "669bc582c423",
+      "name": "get_info_api_info_get",
+      "method": "GET",
+      "url": "/api/info",
+      "category": "crud_read",
+      "description": "Get Info",
+      "file": "functions/669bc582c423_get_info_api_info_get.json",
+      "test_status": null,
+      "agent_ready": false,
+      "validation_score": 70
+    }
+  ]
+}

@@ -1,0 +1,582 @@
+flowchart LR
+    subgraph Frontend["🖥️ Frontend Pages"]
+        F0["service:transcription:openapi"]
+        F1["service:juris-search:openapi"]
+        F2["service:garage:openapi"]
+        F3["service:ocr:openapi"]
+        F4["service:audio:openapi"]
+    end
+
+    subgraph APIs["🔌 API Endpoints"]
+        subgraph [""]
+            E0["GET: /"]
+            E1["GET: /"]
+            E2["GET: /"]
+        end
+        subgraph health["health"]
+            E3["GET: /health"]
+            E4["GET: /health"]
+            E5["GET: /health"]
+            E6["GET: /health"]
+        end
+        subgraph api["api"]
+            E7["GET: /api/diarization/parameters"]
+            E8["GET: /api/diarization/models/whisper"]
+            E9["POST: /api/diarization/excerpt"]
+            E10["POST: /api/diarization/excerpt_by_path"]
+            E11["POST: /api/diarization/transcribe"]
+            E12["POST: /api/diarization/transcribe/async"]
+            E13["POST: /api/diarization/transcribe/guided"]
+            E14["POST: /api/diarization/transcribe/guided/async"]
+            E15["GET: /api/transcripts"]
+            E16["GET: /api/transcripts/{transcript_id}"]
+            E17["PUT: /api/transcripts/{transcript_id}"]
+            E18["POST: /api/transcripts/import"]
+            E19["POST: /api/transcripts/analyze"]
+            E20["POST: /api/transcripts/search"]
+            E21["POST: /api/transcripts/{transcript_id}/index?c..."]
+            E22["POST: /api/transcripts/index-all"]
+            E23["GET: /api/transcripts/status/{job_id}"]
+            E24["GET: /api/transcripts/stream/{job_id}"]
+            E25["POST: /api/transcripts/{transcript_id}/audit"]
+            E26["POST: /api/transcripts/{transcript_id}/refine"]
+            E27["POST: /api/transcripts/{transcript_id}/patch"]
+            E28["GET: /api/transcripts/csv/list"]
+            E29["POST: /api/transcripts/csv/import"]
+            E30["GET: /api/transcripts/review/list?collection=..."]
+            E31["POST: /api/transcripts/{transcript_id}/review/..."]
+            E32["POST: /api/transcripts/{transcript_id}/review/..."]
+            E33["POST: /api/transcripts/{transcript_id}/retrans..."]
+            E34["GET: /api/transcripts/audio/list"]
+            E35["GET: /api/transcripts/pinocchio/review/{trans..."]
+            E36["POST: /api/transcripts/pinocchio/review/{trans..."]
+            E37["GET: /api/projects"]
+            E38["POST: /api/projects"]
+            E39["GET: /api/projects/{project_id}"]
+            E40["PATCH: /api/projects/{project_id}"]
+            E41["DELETE: /api/projects/{project_id}"]
+            E42["POST: /api/projects/{project_id}/audios"]
+            E43["DELETE: /api/projects/{project_id}/audios/{canon..."]
+            E44["POST: /api/projects/{project_id}/context_docs"]
+            E45["DELETE: /api/projects/{project_id}/context_docs?..."]
+            E46["POST: /api/projects/{project_id}/narratives"]
+            E47["GET: /api/references"]
+            E48["GET: /api/references/{canonical_name}/manifes..."]
+            E49["GET: /api/references/{canonical_name}"]
+            E50["POST: /api/references/{canonical_name}/upload"]
+            E51["POST: /api/references/{canonical_name}/link"]
+            E52["GET: /api/references/{canonical_name}/narrati..."]
+            E53["POST: /api/chat"]
+            E54["POST: /api/upload"]
+            E55["POST: /api/search"]
+            E56["GET: /api/search/status/{job_id}"]
+            E57["GET: /api/results/{job_id}"]
+            E58["GET: /api/search/history?limit={limit}"]
+            E59["GET: /api/search/history/{filename}"]
+            E60["POST: /api/download"]
+            E61["GET: /api/download/status/{job_id}"]
+            E62["POST: /api/download-batch"]
+            E63["GET: /api/storage/paths"]
+            E64["GET: /api/docx/index"]
+            E65["GET: /api/json/index"]
+            E66["POST: /api/docx/rebuild"]
+            E67["POST: /api/json/rebuild"]
+            E68["POST: /api/storage/rebuild"]
+            E69["GET: /api/health"]
+            E70["GET: /api/stats"]
+            E71["GET: /api/courts"]
+            E72["GET: /api/admin/qdrant-collections"]
+            E73["GET: /api/master-index/stats"]
+            E74["GET: /api/master-index/documents?tribunal={tr..."]
+            E75["GET: /api/master-index/document/{doc_id}"]
+            E76["GET: /api/master-index/document/{doc_id}/corr..."]
+            E77["POST: /api/master-index/rebuild?force_ingest={..."]
+            E78["POST: /api/master-index/pause?collection={coll..."]
+            E79["POST: /api/master-index/resume?collection={col..."]
+            E80["GET: /api/master-index/markdown?rebuild={rebu..."]
+            E81["GET: /api/master-index/jurisprudence?rebuild=..."]
+            E82["GET: /api/master-index/jurisprudence/markdown..."]
+            E83["GET: /api/master-index/download-file?path={pa..."]
+            E84["POST: /api/master-index/search"]
+            E85["POST: /api/ingest-pdf/upload"]
+            E86["POST: /api/ingest-pdf/process"]
+            E87["GET: /api/transcripts"]
+            E88["GET: /api/audio/{filename}"]
+            E89["POST: /api/frameworks/regenerate-list"]
+            E90["DELETE: /api/deepseek/{path}"]
+            E91["PUT: /api/deepseek/{path}"]
+            E92["POST: /api/deepseek/{path}"]
+            E93["GET: /api/deepseek/{path}"]
+            E94["POST: /api/run-demo"]
+            E95["POST: /api/upload"]
+            E96["POST: /api/upload-session"]
+            E97["GET: /api/audio/{session_id}"]
+            E98["POST: /api/filter"]
+            E99["POST: /api/filter-chain"]
+            E100["POST: /api/effects/gain"]
+            E101["POST: /api/effects/dither"]
+            E102["POST: /api/effects/dcshift"]
+            E103["POST: /api/effects/overdrive"]
+            E104["POST: /api/effects/contrast"]
+            E105["POST: /api/effects/flanger"]
+            E106["POST: /api/effects/phaser"]
+            E107["POST: /api/enhance/pitch-shift"]
+            E108["POST: /api/enhance/speed"]
+            E109["POST: /api/enhance/preemphasis"]
+            E110["POST: /api/enhance/deemphasis"]
+            E111["POST: /api/enhance/volume"]
+            E112["POST: /api/enhance/fade"]
+            E113["POST: /api/enhance/add-noise"]
+            E114["POST: /api/analysis/spectrogram"]
+            E115["POST: /api/analysis/mel-spectrogram"]
+            E116["POST: /api/analysis/mfcc"]
+            E117["POST: /api/analysis/loudness"]
+            E118["POST: /api/analysis/spectral-centroid"]
+            E119["POST: /api/analysis/pitch"]
+            E120["POST: /api/separate"]
+            E121["POST: /api/vad"]
+            E122["POST: /api/resample"]
+            E123["POST: /api/effects/convolve"]
+            E124["POST: /api/effects/ir-convolve"]
+            E125["POST: /api/enhance/time-stretch"]
+            E126["GET: /api/info"]
+        end
+        subgraph juris["juris"]
+            E127["POST: /juris/api/chat"]
+            E128["POST: /juris/api/upload"]
+            E129["POST: /juris/api/search"]
+            E130["GET: /juris/api/search/status/{job_id}"]
+            E131["GET: /juris/api/results/{job_id}"]
+            E132["GET: /juris/api/search/history?limit={limit}"]
+            E133["GET: /juris/api/search/history/{filename}"]
+            E134["POST: /juris/api/download"]
+            E135["GET: /juris/api/download/status/{job_id}"]
+            E136["POST: /juris/api/download-batch"]
+            E137["GET: /juris/api/storage/paths"]
+            E138["GET: /juris/api/docx/index"]
+            E139["GET: /juris/api/json/index"]
+            E140["POST: /juris/api/docx/rebuild"]
+            E141["POST: /juris/api/json/rebuild"]
+            E142["POST: /juris/api/storage/rebuild"]
+            E143["GET: /juris/api/health"]
+            E144["GET: /juris/health"]
+            E145["GET: /juris/stats"]
+            E146["GET: /juris/api/stats"]
+            E147["GET: /juris/courts"]
+            E148["GET: /juris/api/courts"]
+            E149["GET: /juris/api/admin/qdrant-collections"]
+            E150["GET: /juris/api/master-index/stats"]
+            E151["GET: /juris/api/master-index/documents?tribun..."]
+            E152["GET: /juris/api/master-index/document/{doc_id..."]
+            E153["GET: /juris/api/master-index/document/{doc_id..."]
+            E154["POST: /juris/api/master-index/rebuild?force_in..."]
+            E155["POST: /juris/api/master-index/pause?collection..."]
+            E156["POST: /juris/api/master-index/resume?collectio..."]
+            E157["GET: /juris/api/master-index/markdown?rebuild..."]
+            E158["GET: /juris/api/master-index/jurisprudence?re..."]
+            E159["GET: /juris/api/master-index/jurisprudence/ma..."]
+            E160["GET: /juris/api/master-index/download-file?pa..."]
+            E161["POST: /juris/api/master-index/search"]
+            E162["POST: /juris/api/ingest-pdf/upload"]
+            E163["POST: /juris/api/ingest-pdf/process"]
+        end
+        subgraph stats["stats"]
+            E164["GET: /stats"]
+        end
+        subgraph courts["courts"]
+            E165["GET: /courts"]
+        end
+        subgraph v1["v1"]
+            E166["GET: /v1/models"]
+            E167["POST: /v1/chat/completions"]
+            E168["POST: /v1/files/summarize"]
+            E169["GET: /v1/files"]
+            E170["POST: /v1/files"]
+            E171["GET: /v1/files/list?path={path}"]
+            E172["GET: /v1/files/read?path={path}"]
+            E173["GET: /v1/files/transcripts"]
+            E174["GET: /v1/files/laws"]
+            E175["POST: /v1/files/upload/transcript"]
+            E176["POST: /v1/files/upload/law"]
+            E177["GET: /v1/assistants/"]
+            E178["POST: /v1/assistants/"]
+            E179["GET: /v1/assistants/{assistant_id}"]
+            E180["PATCH: /v1/assistants/{assistant_id}"]
+            E181["PUT: /v1/assistants/{assistant_id}"]
+            E182["DELETE: /v1/assistants/{assistant_id}"]
+            E183["POST: /v1/assistants/{assistant_id}/chat"]
+            E184["POST: /v1/assistants/{assistant_id}/files"]
+            E185["GET: /v1/assistants/{assistant_id}/files"]
+            E186["DELETE: /v1/assistants/{assistant_id}/files/{fil..."]
+            E187["POST: /v1/assistants/{assistant_id}/query-know..."]
+            E188["POST: /v1/qdrant/connect"]
+            E189["GET: /v1/qdrant/collections"]
+            E190["POST: /v1/qdrant/collections"]
+            E191["GET: /v1/qdrant/collections/{collection_name}..."]
+            E192["POST: /v1/qdrant/collections/structured_ingest"]
+            E193["POST: /v1/qdrant/collections/{collection_name}..."]
+            E194["DELETE: /v1/qdrant/collections/{collection_name}"]
+            E195["POST: /v1/qdrant/collections/{collection_name}..."]
+            E196["POST: /v1/qdrant/embed-case-directory"]
+            E197["POST: /v1/qdrant/embed-project-code"]
+            E198["POST: /v1/qdrant/query"]
+            E199["POST: /v1/qdrant/qdrant/search?collection_name..."]
+            E200["POST: /v1/qdrant/search"]
+            E201["POST: /v1/qdrant/collections/{collection_name}..."]
+            E202["POST: /v1/knowledge/query"]
+            E203["POST: /v1/knowledge/assistant/{assistant_id}/q..."]
+            E204["POST: /v1/knowledge/ingest/file"]
+            E205["DELETE: /v1/knowledge/collection/{collection_nam..."]
+            E206["GET: /v1/knowledge/collection/{collection_nam..."]
+            E207["GET: /v1/tools"]
+            E208["POST: /v1/tools"]
+            E209["GET: /v1/tools/{tool_name}"]
+            E210["DELETE: /v1/tools/{tool_name}"]
+            E211["POST: /v1/tools/{tool_name}/execute"]
+            E212["POST: /v1/tools/execute"]
+            E213["POST: /v1/tools/deep_reasoning"]
+            E214["POST: /v1/prompt-engineer/generate"]
+            E215["POST: /v1/prompt-engineer/analyze"]
+            E216["POST: /v1/prompt-engineer/variations"]
+            E217["POST: /v1/prompt-engineer/optimize"]
+            E218["POST: /v1/prompt-engineer/evaluate"]
+            E219["POST: /v1/prompt-engineer/improve"]
+            E220["GET: /v1/prompt-engineer/examples?category={c..."]
+            E221["POST: /v1/ingestion/ingest-directory?directory..."]
+            E222["POST: /v1/ingestion/ingest-file?collection_nam..."]
+            E223["POST: /v1/ingestion/ingest-legal-file?collecti..."]
+            E224["POST: /v1/ingestion/analyze-document-structure"]
+            E225["POST: /v1/ingestion/search?collection_name={co..."]
+            E226["GET: /v1/ingestion/collections/{collection_na..."]
+            E227["GET: /v1/neo4j/health"]
+            E228["GET: /v1/neo4j/stats"]
+            E229["POST: /v1/neo4j/cypher"]
+            E230["POST: /v1/neo4j/rag-context"]
+            E231["GET: /v1/openclaude/agents"]
+            E232["POST: /v1/openclaude/agents"]
+            E233["GET: /v1/openclaude/agents/{name}"]
+            E234["PUT: /v1/openclaude/agents/{name}"]
+            E235["DELETE: /v1/openclaude/agents/{name}"]
+            E236["POST: /v1/openclaude/agents/{name}/run"]
+            E237["POST: /v1/openclaude/agents/validate"]
+            E238["POST: /v1/openclaude/agents/import-from-assist..."]
+            E239["POST: /v1/openclaude/agents/export-to-assistan..."]
+            E240["POST: /v1/openclaude/agents/import-markdown"]
+            E241["GET: /v1/openclaude/catalog/agents"]
+            E242["GET: /v1/openclaude/catalog/agents/{name}"]
+            E243["POST: /v1/openclaude/agents/import-from-catalo..."]
+            E244["GET: /v1/ecosystem/report"]
+            E245["GET: /v1/ecosystem/metadata"]
+            E246["GET: /v1/threads/"]
+            E247["POST: /v1/threads/"]
+            E248["GET: /v1/threads/{thread_id}"]
+            E249["DELETE: /v1/threads/{thread_id}"]
+            E250["POST: /v1/threads/{thread_id}/messages"]
+            E251["GET: /v1/threads/{thread_id}/messages?limit={..."]
+            E252["POST: /v1/threads/{thread_id}/runs"]
+            E253["POST: /v1/threads/{thread_id}/files"]
+            E254["GET: /v1/files/{file_id}/content"]
+            E255["DELETE: /v1/files/{file_id}"]
+            E256["POST: /v1/assistants/{assistant_id}/tools"]
+            E257["POST: /v1/assistants/{assistant_id}/deepseek"]
+            E258["POST: /v1/deepseek-engineer/chat"]
+            E259["POST: /v1/assistants/deepseek-stream-proxy"]
+        end
+        subgraph legal_ingestion["legal_ingestion"]
+            E260["POST: /legal-ingestion/upload-csv?collection_n..."]
+            E261["POST: /legal-ingestion/ingest-file?file_path={..."]
+            E262["POST: /legal-ingestion/search/{collection_name..."]
+            E263["GET: /legal-ingestion/collections"]
+            E264["GET: /legal-ingestion/collection/{collection_..."]
+            E265["DELETE: /legal-ingestion/collection/{collection_..."]
+        end
+        subgraph v2["v2"]
+            E266["POST: /v2/legal-ingestion/ingest-legal-file-en..."]
+            E267["POST: /v2/legal-ingestion/ingest-legal-folder"]
+            E268["POST: /v2/legal-ingestion/analyze-document-str..."]
+            E269["POST: /v2/transcripts/analyze"]
+            E270["POST: /v2/transcripts/ingest-enhanced"]
+            E271["POST: /v2/transcripts/ingest-json"]
+        end
+        subgraph debug_schema["debug_schema"]
+            E272["GET: /debug-schema"]
+        end
+        subgraph debug_routes["debug_routes"]
+            E273["GET: /debug-routes"]
+        end
+    end
+
+    F0 --> E0
+    F0 --> E3
+    F0 --> E7
+    F0 --> E8
+    F0 --> E9
+    F0 --> E10
+    F0 --> E11
+    F0 --> E12
+    F0 --> E13
+    F0 --> E14
+    F0 --> E15
+    F0 --> E16
+    F0 --> E17
+    F0 --> E18
+    F0 --> E19
+    F0 --> E20
+    F0 --> E21
+    F0 --> E22
+    F0 --> E23
+    F0 --> E24
+    F0 --> E25
+    F0 --> E26
+    F0 --> E27
+    F0 --> E28
+    F0 --> E29
+    F0 --> E30
+    F0 --> E31
+    F0 --> E32
+    F0 --> E33
+    F0 --> E34
+    F0 --> E35
+    F0 --> E36
+    F0 --> E37
+    F0 --> E38
+    F0 --> E39
+    F0 --> E40
+    F0 --> E41
+    F0 --> E42
+    F0 --> E43
+    F0 --> E44
+    F0 --> E45
+    F0 --> E46
+    F0 --> E47
+    F0 --> E48
+    F0 --> E49
+    F0 --> E50
+    F0 --> E51
+    F0 --> E52
+    F1 --> E53
+    F1 --> E54
+    F1 --> E127
+    F1 --> E128
+    F1 --> E55
+    F1 --> E56
+    F1 --> E57
+    F1 --> E58
+    F1 --> E59
+    F1 --> E129
+    F1 --> E130
+    F1 --> E131
+    F1 --> E132
+    F1 --> E133
+    F1 --> E60
+    F1 --> E61
+    F1 --> E62
+    F1 --> E134
+    F1 --> E135
+    F1 --> E136
+    F1 --> E63
+    F1 --> E64
+    F1 --> E65
+    F1 --> E66
+    F1 --> E67
+    F1 --> E68
+    F1 --> E137
+    F1 --> E138
+    F1 --> E139
+    F1 --> E140
+    F1 --> E141
+    F1 --> E142
+    F1 --> E69
+    F1 --> E4
+    F1 --> E164
+    F1 --> E70
+    F1 --> E165
+    F1 --> E71
+    F1 --> E72
+    F1 --> E143
+    F1 --> E144
+    F1 --> E145
+    F1 --> E146
+    F1 --> E147
+    F1 --> E148
+    F1 --> E149
+    F1 --> E73
+    F1 --> E74
+    F1 --> E75
+    F1 --> E76
+    F1 --> E77
+    F1 --> E78
+    F1 --> E79
+    F1 --> E80
+    F1 --> E81
+    F1 --> E82
+    F1 --> E83
+    F1 --> E84
+    F1 --> E150
+    F1 --> E151
+    F1 --> E152
+    F1 --> E153
+    F1 --> E154
+    F1 --> E155
+    F1 --> E156
+    F1 --> E157
+    F1 --> E158
+    F1 --> E159
+    F1 --> E160
+    F1 --> E161
+    F1 --> E85
+    F1 --> E86
+    F1 --> E162
+    F1 --> E163
+    F2 --> E166
+    F2 --> E167
+    F2 --> E168
+    F2 --> E169
+    F2 --> E170
+    F2 --> E171
+    F2 --> E172
+    F2 --> E173
+    F2 --> E174
+    F2 --> E175
+    F2 --> E176
+    F2 --> E87
+    F2 --> E88
+    F2 --> E177
+    F2 --> E178
+    F2 --> E179
+    F2 --> E180
+    F2 --> E181
+    F2 --> E182
+    F2 --> E183
+    F2 --> E184
+    F2 --> E185
+    F2 --> E186
+    F2 --> E187
+    F2 --> E188
+    F2 --> E189
+    F2 --> E190
+    F2 --> E191
+    F2 --> E192
+    F2 --> E193
+    F2 --> E194
+    F2 --> E195
+    F2 --> E196
+    F2 --> E197
+    F2 --> E198
+    F2 --> E199
+    F2 --> E200
+    F2 --> E201
+    F2 --> E202
+    F2 --> E203
+    F2 --> E204
+    F2 --> E205
+    F2 --> E206
+    F2 --> E207
+    F2 --> E208
+    F2 --> E209
+    F2 --> E210
+    F2 --> E211
+    F2 --> E212
+    F2 --> E213
+    F2 --> E214
+    F2 --> E215
+    F2 --> E216
+    F2 --> E217
+    F2 --> E218
+    F2 --> E219
+    F2 --> E220
+    F2 --> E221
+    F2 --> E222
+    F2 --> E223
+    F2 --> E224
+    F2 --> E225
+    F2 --> E226
+    F2 --> E260
+    F2 --> E261
+    F2 --> E262
+    F2 --> E263
+    F2 --> E264
+    F2 --> E265
+    F2 --> E266
+    F2 --> E267
+    F2 --> E268
+    F2 --> E269
+    F2 --> E270
+    F2 --> E271
+    F2 --> E227
+    F2 --> E228
+    F2 --> E229
+    F2 --> E230
+    F2 --> E231
+    F2 --> E232
+    F2 --> E233
+    F2 --> E234
+    F2 --> E235
+    F2 --> E236
+    F2 --> E237
+    F2 --> E238
+    F2 --> E239
+    F2 --> E240
+    F2 --> E241
+    F2 --> E242
+    F2 --> E243
+    F2 --> E244
+    F2 --> E245
+    F2 --> E246
+    F2 --> E247
+    F2 --> E248
+    F2 --> E249
+    F2 --> E250
+    F2 --> E251
+    F2 --> E252
+    F2 --> E253
+    F2 --> E272
+    F2 --> E273
+    F2 --> E5
+    F2 --> E89
+    F2 --> E254
+    F2 --> E255
+    F2 --> E256
+    F2 --> E257
+    F2 --> E258
+    F2 --> E259
+    F2 --> E90
+    F2 --> E91
+    F2 --> E92
+    F2 --> E93
+    F3 --> E6
+    F3 --> E1
+    F3 --> E94
+    F4 --> E95
+    F4 --> E96
+    F4 --> E97
+    F4 --> E98
+    F4 --> E99
+    F4 --> E100
+    F4 --> E101
+    F4 --> E102
+    F4 --> E103
+    F4 --> E104
+    F4 --> E105
+    F4 --> E106
+    F4 --> E107
+    F4 --> E108
+    F4 --> E109
+    F4 --> E110
+    F4 --> E111
+    F4 --> E112
+    F4 --> E113
+    F4 --> E114
+    F4 --> E115
+    F4 --> E116
+    F4 --> E117
+    F4 --> E118
+    F4 --> E119
+    F4 --> E120
+    F4 --> E121
+    F4 --> E122
+    F4 --> E123
+    F4 --> E124
+    F4 --> E125
+    F4 --> E126
+    F4 --> E2

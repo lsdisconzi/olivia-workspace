@@ -22,23 +22,24 @@ tags: ["la8159", "category:br", "jurisdiction:brazil"]
 
 ### 2.1 ABEAR self-regulatory instruments (full inventory — non-statutory)
 
-> All 12 instruments below are factual/contextual reference only.
+> All 15 instruments below are factual/contextual reference only.
 > Source PDFs available at `crawler_output/abear-docs/documents/www.abear.com.br/wp-content/uploads/` (acquired 2026-04-27 via WP REST API + sitemap crawl).
+> Cached instrument texts (2026-08-13) live under `source/la8159/04-law/BR/`: `ABEAR_Code.md` (POL/PMD §§1,5,7), `ABEAR_CodigoConduta.md`, `ABEAR_PoliticaAnticorrupcao.md`, `ABEAR_PoliticaInteracaoAgentesPublicos.md`, `ABEAR_RegimentoComiteCompliance.md`. Corporate compliance caches (LATAM 2024 CoC, Sixth Street CoE) live under `source/la8159/04-law/CORP/`.
 
 | # | Instrument | First date | Latest version | Status | LA8159 relevance |
 |---|---|---|---|---|---|
 | 1 | **Estatuto Social ABEAR** | 2019 (Apr) | **2024-06-28** (`ESTATUTO-ABEAR-...28.junho_.2024-1.pdf`) | ⏳ pending extraction | Governance / Conselho Deliberativo binding effect on members |
 | 2 | **Código de Ética ABEAR** | 2019-02 (`ABEAR_Codigo_de_Etica.pdf`) | — | ⏳ pending extraction | Industry ethical baseline |
 | 3 | **Política de Compliance ABEAR v7** | 2017-09 (`Política-Compliance-ABEAR-v7-FINAL-11.set_.17.pdf`) | 2020 (v7 referenced in newsletter) | ⏳ pending extraction | Compliance program structure |
-| 4 | **Código de Conduta ABEAR** | **2021-12** (`Codigo-de-Conduta-ABEAR.pdf`) | — | ✅ extractable | **BR-020 anchor** — duty to civil aviation users |
-| 5 | **Política Anticorrupção ABEAR** | 2021-12 (`Politica-Anticorrupcao-ABEAR.pdf`) | — | ⏳ pending extraction | Internal anti-bribery — not equivalent to Lei 12.846 |
+| 4 | **Código de Conduta ABEAR** | **2021-12** (`Codigo-de-Conduta-ABEAR.pdf`) | — | ✅ extracted/cached (`source/la8159/04-law/BR/ABEAR_CodigoConduta.md` · 2026-08-13) | **BR-020 anchor** — duty to civil aviation users |
+| 5 | **Política Anticorrupção ABEAR** | 2021-12 (`Politica-Anticorrupcao-ABEAR.pdf`) | — | ✅ extracted/cached (`source/la8159/04-law/BR/ABEAR_PoliticaAnticorrupcao.md` · 2026-08-13) | Internal anti-bribery — not equivalent to Lei 12.846 |
 | 6 | **Política de Compras e Due Diligence de Fornecedores** | 2021-12 (`Politica-de-Compras-e-Contratos-e-Due-Diligence-de-Fornecedores-ABEAR.pdf`) | — | ⏳ pending extraction | Third-party risk |
-| 7 | **Política de Interação com Agentes Públicos** | 2021-12 (`Politica-de-Interacao-com-Agentes-Publicos-ABEAR.pdf`) | — | ⏳ pending extraction | Cross-ref `BR_CONFLITO_INTERESSES` (Noman path) |
+| 7 | **Política de Interação com Agentes Públicos** | 2021-12 (`Politica-de-Interacao-com-Agentes-Publicos-ABEAR.pdf`) | — | ✅ extracted/cached (`source/la8159/04-law/BR/ABEAR_PoliticaInteracaoAgentesPublicos.md` · 2026-08-13) | Cross-ref `BR_CONFLITO_INTERESSES` (Noman path) |
 | 8 | **Política de Presentes e Entretenimento** | 2021-12 (`Politica-de-Presentes-e-Entretenimento-ABEAR.pdf`) | — | ⏳ pending extraction | Gifts/hospitality limits |
 | 9 | **Política de Viagem e Reembolso** | 2021-12 (`Politica-de-Viagem-e-Reembolso-ABEAR.pdf`) | — | ⏳ pending extraction | Travel expense governance |
-| 10 | **Regimento Interno do Comitê de Compliance** | 2021-12 (`Regimento-Interno-Comite-de-Compliance-ABEAR.pdf`) | — | ⏳ pending extraction | Defines Coordenador + Secretário Executivo + CCO; anchors complaint to Comitê |
+| 10 | **Regimento Interno do Comitê de Compliance** | 2021-12 (`Regimento-Interno-Comite-de-Compliance-ABEAR.pdf`) | — | ✅ extracted/cached (`source/la8159/04-law/BR/ABEAR_RegimentoComiteCompliance.md` · 2026-08-13) | Defines Coordenador + Secretário Executivo + CCO; anchors complaint to Comitê |
 | 11 | **Mandala Compliance ABEAR** | 2021-12 (`Mandala-Compliance-ABEAR.pdf`) | — | ⏳ pending extraction | Compliance framework overview |
-| 12 | **Política de Tratamento de Relatos** (POL/PMD) | 2022-11-25 (`Politica-de-Tratamento-de-Relatos-Respostas-a-Incidentes-e-Medidas-Disciplinares-ABEAR.pdf`) | Rev. 01 | ✅ already extracted (`sources/BR/ABEAR_Code.md` §§1, 5, 7) | **Disciplinary ladder** — verbal/written/dismissal |
+| 12 | **Política de Tratamento de Relatos** (POL/PMD) | 2022-11-25 (`Politica-de-Tratamento-de-Relatos-Respostas-a-Incidentes-e-Medidas-Disciplinares-ABEAR.pdf`) | Rev. 01 | ✅ already extracted (`source/la8159/04-law/BR/ABEAR_Code.md` §§1, 5, 7) | **Disciplinary ladder** — verbal/written/dismissal |
 | 13 | **Política de Cartões Corporativos e Fundo Fixo** | 2023-01 (`Politica-Utilizacao-de-Cartoes-Corporativos-e-Fundo-Fixo-ABEAR.pdf`) | — | ⏳ pending extraction | Financial controls |
 | 14 | **Guia LGPD ABEAR** | 2025-01 (`Guia-LGPD-web.pdf`) | — | ⏳ pending extraction | Data-protection compliance |
 | 15 | **Código de Conduta PATA** (pet transport) | 2025-04 (`Codigo_De_Conduta_Pata.pdf`) | — | ⏳ pending extraction | Sector-specific code; secondary to LA8159 |
