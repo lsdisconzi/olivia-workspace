@@ -1,7 +1,0 @@
-{
-  "generated_at": "2026-08-16T04:53:40Z",
-  "total_tools": 0,
-  "categories": {},
-  "selection_criteria": "agent_ready=true and test_status=ok and complete contract",
-  "tools": []
-}

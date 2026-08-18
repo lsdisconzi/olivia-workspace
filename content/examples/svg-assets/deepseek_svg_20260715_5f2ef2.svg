@@ -1,9 +1,0 @@
-<svg width="260" height="280" viewBox="0 0 260 280">
-  <g style="transform-origin:130px 150px;animation:sway 7s ease-in-out infinite">
-    <path d="M130 270 Q128 240,127 210 Q126 180,128 155 Q130 135,132 118 Q134 105,133 94" fill="none" stroke="var(--green-dark)" stroke-width="3.5" stroke-linecap="round" opacity=".6" />
-    <path d="M90 268 Q130 274,170 268" fill="none" stroke="var(--green-dark)" stroke-width="1" stroke-linecap="round" opacity=".12" />
-    <g style="transform-origin:130px 140px;animation:sway 7s ease-in-out infinite">
-      <!-- Branches omitted for brevity, see full code above -->
-    </g>
-  </g>
-</svg>
