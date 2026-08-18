@@ -68,6 +68,22 @@ function lsLooksLikeCorsError(err){
   return false;
 }
 
+// Pass the configured backend origin to the gateway proxy as ?target= so the
+// proxy forwards to the backend the user actually configured (e.g. 8049),
+// not the gateway's env default. Server validates the hint against
+// local/private hosts (SSRF guard), then falls back to its default.
+function lsProxyTargetQuery(endpoint, existingSearch){
+  var raw = String(endpoint || '').trim();
+  if(!/^https?:\/\//i.test(raw)) return '';
+  try {
+    var origin = new URL(raw).origin;
+    if(!origin) return '';
+    return (existingSearch ? '&' : '?') + 'target=' + encodeURIComponent(origin);
+  } catch(_err) {
+    return '';
+  }
+}
+
 function lsBuildProxyEndpoint(endpoint){
   var raw = String(endpoint || '').trim();
   if(!raw) return '/api/diarization/transcribe';
@@ -80,13 +96,17 @@ function lsBuildProxyEndpoint(endpoint){
       return '/api/diarization/transcribe';
     }
   }
+  var proxyPath;
   var lowerPath = String(path).toLowerCase();
-  if(lowerPath.endsWith('/transcribe/async')) return '/api/diarization/transcribe/async';
-  if(lowerPath.endsWith('/transcribe')) return '/api/diarization/transcribe';
-  var match = path.match(/\/api\/diarization\/transcribe(?:\/async)?/i);
-  if(match && match[0]) return match[0];
-  if(path.startsWith('/')) return path;
-  return '/' + path.replace(/^\/+/, '');
+  if(lowerPath.endsWith('/transcribe/async')) proxyPath = '/api/diarization/transcribe/async';
+  else if(lowerPath.endsWith('/transcribe')) proxyPath = '/api/diarization/transcribe';
+  else {
+    var match = path.match(/\/api\/diarization\/transcribe(?:\/async)?/i);
+    if(match && match[0]) proxyPath = match[0];
+    else if(path.startsWith('/')) proxyPath = path;
+    else proxyPath = '/' + path.replace(/^\/+/, '');
+  }
+  return proxyPath + lsProxyTargetQuery(raw, false);
 }
 
 function lsBuildProxyStatusEndpoint(statusEndpoint){
@@ -95,7 +115,8 @@ function lsBuildProxyStatusEndpoint(statusEndpoint){
   if(/^https?:\/\//i.test(raw)){
     try {
       var parsed = new URL(raw, window.location.origin);
-      return (parsed.pathname || '/api/transcripts/status') + (parsed.search || '');
+      var basePath = parsed.pathname || '/api/transcripts/status';
+      return basePath + (parsed.search || '') + lsProxyTargetQuery(raw, !!parsed.search);
     } catch(_err) {
       return '/api/transcripts/status';
     }

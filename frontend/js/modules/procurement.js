@@ -44,13 +44,16 @@
             .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
     function renderMd(text) {
-        try {
-            if (window.marked && typeof window.marked.parse === 'function') {
-                return window.marked.parse(String(text || ''));
-            }
-        } catch (_e) { /* fall through */ }
-        return '<p>' + esc(text).replace(/\n/g, '<br>') + '</p>';
-    }
+    try {
+        if (window.renderRichMarkdownHtml) {
+            return window.renderRichMarkdownHtml(String(text || ''));
+        }
+        if (window.marked && typeof window.marked.parse === 'function') {
+            return window.marked.parse(String(text || ''));
+        }
+    } catch (_e) { /* fall through */ }
+    return '<p>' + esc(text).replace(/\n/g, '<br>') + '</p>';
+}
     function apiBase() {
         return (typeof API_BASE === 'string' && API_BASE)
             ? String(API_BASE).replace(/\/$/, '')
@@ -560,13 +563,16 @@
     window.procurementViewDocument = function(doc) {
         var modal = procurementEnsureModal();
         var body = modal.querySelector('.pr-modal-body');
-        
+        // Fall back to raw OCR text so the comparison tabs work even when the
+        // backend has no _analysis_refined.md file for this document.
+        var markdownText = doc.text_md || doc.text;
+
         var html = '<div class="pr-doc-viewer">';
         html += '<div class="pr-doc-viewer-tabs">';
         html += '<button class="pr-doc-tab active" onclick="procurementSwitchTab(this, \'image\')"><i class="fas fa-image"></i> Image</button>';
         if (doc.text) html += '<button class="pr-doc-tab" onclick="procurementSwitchTab(this, \'raw\')"><i class="fas fa-align-left"></i> Raw Text</button>';
-        if (doc.text_md) html += '<button class="pr-doc-tab" onclick="procurementSwitchTab(this, \'md\')"><i class="fab fa-markdown"></i> Markdown</button>';
-        if (doc.text_md && (doc.image_url || doc.kind === 'pdf')) html += '<button class="pr-doc-tab" onclick="procurementSwitchTab(this, \'split\')"><i class="fas fa-columns"></i> Side-by-Side</button>';
+        if (markdownText) html += '<button class="pr-doc-tab" onclick="procurementSwitchTab(this, \'md\')"><i class="fab fa-markdown"></i> Markdown</button>';
+        if (markdownText && (doc.image_url || doc.kind === 'pdf')) html += '<button class="pr-doc-tab" onclick="procurementSwitchTab(this, \'split\')"><i class="fas fa-columns"></i> Side-by-Side</button>';
         html += '</div>';
         
         html += '<div class="pr-doc-viewer-content">';
@@ -583,11 +589,11 @@
             html += '<div class="pr-doc-pane" data-pane="raw"><pre class="pr-doc-raw">' + esc(doc.text) + '</pre></div>';
         }
         
-        if (doc.text_md) {
-            html += '<div class="pr-doc-pane" data-pane="md"><div class="pr-md pr-doc-md">' + renderMd(doc.text_md) + '</div></div>';
+        if (markdownText) {
+            html += '<div class="pr-doc-pane" data-pane="md"><div class="pr-md pr-doc-md">' + renderMd(markdownText) + '</div></div>';
         }
-        
-        if (doc.text_md && (doc.image_url || doc.kind === 'pdf')) {
+
+        if (markdownText && (doc.image_url || doc.kind === 'pdf')) {
             html += '<div class="pr-doc-pane pr-doc-pane-split" data-pane="split">';
             html += '<div class="pr-split-left">';
             if (doc.kind === 'pdf') {
@@ -596,7 +602,7 @@
                 html += '<img src="' + esc(doc.image_url) + '" alt="' + esc(doc.filename) + '" class="pr-modal-img" onload="procurementSyncSplitPane(this)">';
             }
             html += '</div>';
-            html += '<div class="pr-split-right"><div class="pr-split-page"><div class="pr-md pr-doc-md">' + renderMd(doc.text_md) + '</div></div></div>';
+            html += '<div class="pr-split-right"><div class="pr-split-page"><div class="pr-md pr-doc-md">' + renderMd(markdownText) + '</div></div></div>';
             html += '</div>';
         }
         

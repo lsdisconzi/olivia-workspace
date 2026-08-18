@@ -460,6 +460,43 @@ except ValueError:
 VPS_GATEWAY_URL = os.environ.get("VPS_GATEWAY_URL", "http://localhost:8183")
 _MCP_CONFIG_PATH = Olivia_ROOT / "config" / ".mcp-bridge-config.json"
 
+# Ecosystem server names (used in agent configs, the frontend editor and the
+# tool catalog) -> runtime bridge config keys (config/.mcp-bridge-config.json).
+# The bridge file historically used legacy names; agents select servers by the
+# canonical ecosystem name. Without this map only servers whose name matches
+# exactly (e.g. garage-qdrant) get connected, silently dropping the rest.
+_MCP_SERVER_NAME_ALIASES: dict[str, str] = {
+    "audio-mcp": "audio-main",
+    "juris-mcp": "juris-search",
+    "ocr-core": "ocr-main-ocr",
+    "pdf-server": "ocr-main-pdf",
+    "transcription-core": "transcription-transcription",
+    "diarization": "transcription-transcripts",
+    "translate": "transcription-meta",
+    "filesystem": "mcp-server-files",
+}
+
+_MCP_BRIDGE_TO_ECOSYSTEM_NAME: dict[str, str] = {
+    v: k for k, v in _MCP_SERVER_NAME_ALIASES.items()
+}
+
+
+def _resolve_mcp_server_key(server_name: str, available: dict) -> str | None:
+    """Return the bridge-config key that backs an ecosystem server name.
+
+    Prefers an exact match; falls back to the authoritative alias map. Returns
+    None when neither the name nor its alias exists in the available config.
+    """
+    name = str(server_name or "").strip()
+    if not name:
+        return None
+    if name in available:
+        return name
+    alias = _MCP_SERVER_NAME_ALIASES.get(name)
+    if alias and alias in available:
+        return alias
+    return None
+
 def _ensure_mcp_config() -> str | None:
     """Ensure MCP config exists and return its path.
 
@@ -534,6 +571,266 @@ def _agent_unrestricted_tools(agent_id: str) -> bool:
     return _coerce_bool(config.get("unrestricted_tools"))
 
 
+def _normalized_permitted_tools(raw) -> list[str]:
+    """Normalize per-agent permitted MCP tool names into a unique flat list.
+
+    Accepts a flat list of tool names (frontend checkbox values) or a
+    {server_name: [tool, ...]} dict (future-proof; both are flattened to the
+    bare tool names). These are the per-tool allowances edited in the agent
+    editor's MCP server tool panels.
+    """
+    if isinstance(raw, dict):
+        items: list[object] = []
+        for tools in raw.values():
+            if isinstance(tools, list):
+                items.extend(tools)
+    elif isinstance(raw, list):
+        items = list(raw)
+    else:
+        items = []
+    out: list[str] = []
+    seen: set[str] = set()
+    for it in items:
+        name = str(it or "").strip()
+        if not name or name in seen:
+            continue
+        if len(name) > 128 or not re.match(r"^[A-Za-z0-9_.:+-]+$", name):
+            continue
+        seen.add(name)
+        out.append(name)
+    return out
+
+
+def _agent_permitted_tools(agent_id: str) -> list[str]:
+    """Return the agent's individually permitted MCP tool names (flat list)."""
+    config = _agent_config_dict(agent_id)
+    return _normalized_permitted_tools(config.get("permitted_tools"))
+
+
+def _normalize_mcp_server_name(name: str) -> str:
+    """Mirror OpenClaude's normalizeNameForMCP for building mcp__<server>__<tool> ids."""
+    return re.sub(r"[^a-zA-Z0-9_-]", "_", str(name or "")).strip("_")
+
+
+def _mcp_catalog_tools_by_server() -> dict[str, list[str]]:
+    """Map MCP server name -> catalog tool names from the ecosystem metadata.
+
+    Sources (first wins per server name):
+      1. config/ecosystem_metadata.json  -> <project>.mcp_servers[].tools
+      2. config/ecosystem_agents.json    -> mcp_servers_flat[].tools
+    These catalog names are the same names rendered as the per-tool checkboxes.
+    """
+    result: dict[str, list[str]] = {}
+
+    def _add(name, tools) -> None:
+        srv_name = str(name or "").strip()
+        if not srv_name or not isinstance(tools, list):
+            return
+        names = [t if isinstance(t, str) else str((t or {}).get("name") or "") for t in tools]
+        names = [n for n in names if n]
+        if names:
+            result.setdefault(srv_name, list(names))
+
+    meta = Olivia_ROOT / "config" / "ecosystem_metadata.json"
+    try:
+        meta_data = json.loads(meta.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        meta_data = None
+    if isinstance(meta_data, dict):
+        for project in meta_data.values():
+            if not isinstance(project, dict):
+                continue
+            for srv in project.get("mcp_servers") or []:
+                if isinstance(srv, dict):
+                    _add(srv.get("name"), srv.get("tools"))
+
+    agents = Olivia_ROOT / "config" / "ecosystem_agents.json"
+    try:
+        agent_data = json.loads(agents.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        agent_data = None
+    if isinstance(agent_data, dict):
+        for srv in agent_data.get("mcp_servers_flat") or []:
+            if isinstance(srv, dict):
+                _add(srv.get("name"), srv.get("tools"))
+
+    return result
+
+
+def _build_mcp_tool_allowances_context(agent_id: str) -> str:
+    """Build the [Agent MCP tool allowances] awareness block.
+
+    Derived from the agent's enabled MCP servers and its per-tool checkbox
+    allowances (permitted_tools). This is the toolset the agent sees in its
+    context — the same source of truth as the editor's per-server tool panels.
+    """
+    config = _agent_config_dict(agent_id)
+    servers = _normalize_mcp_server_names(config.get("mcp_servers", []))
+    if not servers:
+        return ""
+    permitted = set(_normalized_permitted_tools(config.get("permitted_tools")))
+    catalog = _mcp_catalog_tools_by_server()
+    lines = [
+        "[Agent MCP tool allowances]",
+        "- Source: per-server individual tool checkboxes (mcp_servers + permitted_tools).",
+        "- Rule: only the tools listed below as enabled are usable through the enabled MCP servers; tools not listed are disabled.",
+    ]
+    for srv in servers:
+        tools = list(catalog.get(srv, []))
+        if not tools:
+            detail = ", ".join(sorted(t for t in permitted if t))
+            lines.append(f"- {srv}: catalog unavailable — permitted names in config: {detail or 'none'}")
+        elif permitted:
+            enabled = sorted(t for t in tools if t in permitted)
+            if enabled:
+                lines.append(f"- {srv}: {len(enabled)}/{len(tools)} tools enabled — {', '.join(enabled)}")
+            else:
+                lines.append(f"- {srv}: 0/{len(tools)} tools enabled (server reachable, all individual tools disabled)")
+        else:
+            lines.append(f"- {srv}: all {len(tools)} catalog tools enabled (no per-tool restriction)")
+    return "\n".join(lines)
+
+
+def _agent_mcp_denied_tool_names(agent_id: str) -> list[str]:
+    """Full OpenClaude tool ids (mcp__<server>__<tool>) to deny for this agent.
+
+    Denial is computed as (catalog tools of enabled servers) minus (permitted
+    tools). When permitted_tools is empty no restriction applies and nothing is
+    denied; the denial list can never include a tool the user explicitly
+    checked. Built-in (non-MCP) tools are never denied.
+    """
+    config = _agent_config_dict(agent_id)
+    servers = _normalize_mcp_server_names(config.get("mcp_servers", []))
+    permitted = set(_normalized_permitted_tools(config.get("permitted_tools")))
+    if not permitted or not servers:
+        return []
+    catalog = _mcp_catalog_tools_by_server()
+    denied: list[str] = []
+    for srv in servers:
+        for tool in catalog.get(srv, []):
+            if tool not in permitted:
+                denied.append(f"mcp__{_normalize_mcp_server_name(srv)}__{tool}")
+    return sorted(set(denied))
+
+
+def _sanitize_mcp_spec(spec: dict) -> dict:
+    """Return a frontend-safe view of a bridge server spec (no env secrets)."""
+    if not isinstance(spec, dict):
+        return {}
+    out: dict[str, object] = {}
+    for k in ("type", "url", "command"):
+        if k in spec:
+            out[k] = spec.get(k)
+    if isinstance(spec.get("args"), list):
+        out["args"] = [str(a) for a in spec["args"]]
+    return out
+
+
+_MCP_PROBE_CACHE: dict[str, tuple[float, bool]] = {}
+_MCP_PROBE_TTL = 15.0
+_MCP_PROBE_TIMEOUT = 0.8
+
+
+def _mcp_server_reachable(spec: dict, name: str = "") -> bool:
+    """Best-effort reachability probe for an MCP server spec.
+
+    HTTP/SSE servers are checked with a socket connect (fast, no body read);
+    stdio servers are always considered reachable (launched by the client).
+    Results are cached briefly to keep panel refreshes cheap.
+    """
+    if not isinstance(spec, dict):
+        return False
+    if spec.get("command"):
+        return True  # stdio — launched locally by the MCP client
+    url = str(spec.get("url") or "").strip()
+    if not url:
+        return False
+    try:
+        parsed = urllib.parse.urlparse(url)
+        if parsed.scheme not in ("http", "https"):
+            return False
+        host = parsed.hostname or "127.0.0.1"
+        port = parsed.port or (443 if parsed.scheme == "https" else 80)
+    except Exception:
+        return False
+    cache_key = f"{host}:{port}"
+    now = time.time()
+    hit = _MCP_PROBE_CACHE.get(cache_key)
+    if hit and (now - hit[0]) < _MCP_PROBE_TTL:
+        return hit[1]
+    ok = False
+    try:
+        with socket.create_connection((host, port), timeout=_MCP_PROBE_TIMEOUT):
+            ok = True
+    except Exception:
+        ok = False
+    _MCP_PROBE_CACHE[cache_key] = (now, ok)
+    return ok
+
+
+def _agent_mcp_toolset_summary(agent_id: str) -> dict:
+    """Structured per-server MCP toolset for an agent (memory panel / editors).
+
+    Combines the agent's enabled servers and per-tool allowances with the
+    tool catalog and the runtime bridge wiring, so the UI can show exactly
+    which servers are connected, how many tools each exposes, and any server
+    that is enabled but not wired to a runtime bridge entry (diagnostic).
+    """
+    config = _agent_config_dict(agent_id)
+    servers = _normalize_mcp_server_names(config.get("mcp_servers", []))
+    permitted = set(_normalized_permitted_tools(config.get("permitted_tools")))
+    catalog = _mcp_catalog_tools_by_server()
+    bridge: dict[str, dict] = {}
+    try:
+        if _MCP_CONFIG_PATH.is_file():
+            base_cfg = json.loads(_MCP_CONFIG_PATH.read_text(encoding="utf-8"))
+            bridge = base_cfg.get("mcpServers") or {}
+    except Exception:
+        bridge = {}
+
+    server_list: list[dict] = []
+    for srv in servers:
+        key = _resolve_mcp_server_key(srv, bridge)
+        tools = list(catalog.get(srv, []))
+        if permitted:
+            enabled = sorted(t for t in tools if t in permitted)
+            denied_ids = [
+                f"mcp__{_normalize_mcp_server_name(srv)}__{t}"
+                for t in tools if t not in permitted
+            ]
+        else:
+            enabled = tools
+            denied_ids = []
+        spec = _sanitize_mcp_spec(bridge.get(key)) if key else {}
+        server_list.append({
+            "name": srv,
+            "bridge_key": key,
+            "wired": key is not None,
+            "reachable": _mcp_server_reachable(bridge.get(key), srv) if key else False,
+            "spec": spec,
+            "tools": tools,
+            "total_tools": len(tools),
+            "enabled_tools": len(enabled),
+            "unrestricted": not permitted,
+            "denied_tool_ids": sorted(set(denied_ids)),
+        })
+
+    return {
+        "agent_id": str(agent_id or ""),
+        "unrestricted_tools": _coerce_bool(config.get("unrestricted_tools")),
+        "permitted_tools": sorted(permitted),
+        "servers": server_list,
+        "wired_count": sum(1 for s in server_list if s["wired"]),
+        "server_count": len(server_list),
+        "tool_count": sum(s["total_tools"] for s in server_list),
+        "enabled_tool_count": sum(s["enabled_tools"] for s in server_list),
+        "denied_tool_ids": sorted(
+            t for s in server_list for t in s["denied_tool_ids"]
+        ),
+        "aliases": dict(_MCP_SERVER_NAME_ALIASES),
+    }
+
+
 def _expand_mcp_config_tokens(servers: dict) -> dict:
     """Expand {PROJECT_ROOT}/${PROJECT_ROOT} tokens in MCP server args.
 
@@ -586,7 +883,15 @@ def _resolve_mcp_config_path(enabled_servers: list[str] | None = None) -> str | 
         return cfg_path
 
     if selected:
-        filtered = {name: servers[name] for name in selected if name in servers}
+        # Resolve ecosystem server names through the alias map and register
+        # each entry under its canonical ecosystem name so MCP tool ids match
+        # mcp__<ecosystem_name>__<tool> (per-tool allowances depend on this).
+        filtered = {}
+        for name in selected:
+            key = _resolve_mcp_server_key(name, servers)
+            if key is None:
+                continue
+            filtered[name] = servers[key]
         if not filtered:
             return cfg_path
     else:
@@ -8206,6 +8511,7 @@ def _openclaude_cmd(
     prompt_via_stdin: bool = False,
     mcp_servers: list[str] | None = None,
     permission_bridge: bool = False,
+    denied_tools: list[str] | None = None,
 ) -> list[str]:
     """Build the subprocess argv for openclaude.
 
@@ -8255,6 +8561,11 @@ def _openclaude_cmd(
     mcp_cfg = _resolve_mcp_config_path(mcp_servers)
     if mcp_cfg:
         cmd += ["--mcp-config", mcp_cfg]
+    # Per-tool allowances: deny the individual MCP tools the agent did NOT
+    # enable in the editor (never touches built-in non-MCP tools).
+    denied = [d for d in (denied_tools or []) if d]
+    if denied:
+        cmd += ["--disallowed-tools", ",".join(denied)]
     if not persist:
         cmd.append("--no-session-persistence")
     if partial_messages:
@@ -8722,6 +9033,7 @@ def _run_openclaude_agent(
     api_key: str | None = None,
     base_url: str | None = None,
     system_prompt: str | None = None,
+    denied_tools: list[str] | None = None,
 ):
     """Run openclaude as an autonomous agent; push Olivia-format events onto event_q."""
     use_stdin = _prompt_too_big_for_argv(prompt)
@@ -8735,6 +9047,7 @@ def _run_openclaude_agent(
         prompt_via_stdin=use_stdin,
         mcp_servers=mcp_servers,
         system=system_prompt,
+        denied_tools=denied_tools,
     )
     env = _openclaude_env(provider=provider, model=model, api_key=api_key, base_url=base_url)
     safe_cmd = ' '.join(cmd[:6]) + f' ... ({len(cmd)} args{", prompt via stdin" if use_stdin else ""})'
@@ -10344,6 +10657,68 @@ def _procurement_file_kind(path):
     if ext in (".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tiff", ".tif"):
         return "image"
     return "none"
+
+
+def _procurement_md_cell(value):
+    """Escape a value for use in a markdown table cell."""
+    s = "" if value is None else str(value)
+    return s.replace("|", "\\|").replace("\n", "<br>").strip()
+
+
+def _procurement_analysis_to_markdown(data):
+    """Synthesize an invoice-style markdown view from the structured LLM
+    analysis JSON (report_metadata / key_metrics / table_structures /
+    content_summary). Falls back to an empty string if nothing usable."""
+    if not isinstance(data, dict):
+        return ""
+    cell = _procurement_md_cell
+    meta = data.get("report_metadata") or {}
+    lines = []
+
+    title = meta.get("company_name") or meta.get("report_type") or "Invoice"
+    lines.append(f"### {title}")
+    lines.append("")
+
+    kv = {}
+    if meta.get("report_type"):
+        kv["Report type"] = meta["report_type"]
+    if meta.get("report_generation_date"):
+        kv["Date"] = meta["report_generation_date"]
+    for km in data.get("key_metrics") or []:
+        name = km.get("metric_name") if isinstance(km, dict) else None
+        if not name:
+            continue
+        val = km.get("value") or ""
+        unit = km.get("unit") or ""
+        kv[name] = (val + (" " + unit if unit else "")).strip() or "-"
+    if kv:
+        rows = "".join(f"| {cell(k)} | {cell(v)} |\n" for k, v in kv.items())
+        lines.append(f"| Field | Value |\n|---|---|\n{rows}".rstrip())
+        lines.append("")
+
+    if data.get("content_summary"):
+        lines.append(cell(data["content_summary"]))
+        lines.append("")
+
+    for ts in data.get("table_structures") or []:
+        headers = ts.get("headers") or []
+        rows = ts.get("sample_rows") or []
+        if not headers or not rows:
+            continue
+        lines.append("**Line items**")
+        lines.append("")
+        lines.append("| " + " | ".join(cell(h) for h in headers) + " |")
+        lines.append("| " + " | ".join("---" for _ in headers) + " |")
+        for r in rows:
+            lines.append("| " + " | ".join(cell(c) for c in r) + " |")
+        lines.append("")
+
+    cats = data.get("financial_categories") or []
+    if cats:
+        lines.append(f"**Categories:** {', '.join(cell(c) for c in cats)}")
+        lines.append("")
+
+    return "\n".join(lines).strip()
 
 
 def _procurement_resolve_image_file(project_id, filename):
@@ -12763,12 +13138,19 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 oc_system = _QUADRANT_SEARCH_INSTRUCTION
         full_prompt = oc_user
         selected_mcp_servers = _agent_mcp_servers(str(agent_id or ""))
+        # Per-tool allowances: derive the agent's enabled toolset from its
+        # per-server tool checkboxes (permitted_tools) and surface it in the
+        # agent's awareness (system prompt) + enforce it via --disallowed-tools.
+        agent_allowances_ctx = _build_mcp_tool_allowances_context(str(agent_id or "")) if agent_id else ""
+        if agent_allowances_ctx:
+            oc_system = (oc_system + "\n\n" + agent_allowances_ctx) if oc_system else agent_allowances_ctx
+        agent_denied_tools = _agent_mcp_denied_tool_names(str(agent_id or "")) if agent_id else []
 
         event_q = queue.Queue()
         thread = threading.Thread(
             target=_run_openclaude_agent,
             args=(full_prompt, event_q, model, provider, MAX_AGENT_TURNS, session_id, selected_mcp_servers, custom_api_key, base_url),
-            kwargs={"system_prompt": oc_system} if oc_system else {},
+            kwargs={"system_prompt": oc_system, "denied_tools": agent_denied_tools} if oc_system else {"denied_tools": agent_denied_tools},
             daemon=True,
         )
         thread.start()
@@ -13294,6 +13676,12 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             extra_ctx.append({"role": "system", "content": f"[Section routing context]\n{section_system}"})
         if project_binding_ctx:
             extra_ctx.append({"role": "system", "content": project_binding_ctx})
+        if agent_id:
+            # Per-tool MCP allowances derived from the agent's editor checkboxes
+            # (permitted_tools) — surfaced in the agent's own awareness.
+            agent_allowances_ctx = _build_mcp_tool_allowances_context(str(agent_id))
+            if agent_allowances_ctx:
+                extra_ctx.append({"role": "system", "content": agent_allowances_ctx})
         if uploads_ctx:
             extra_ctx.append({"role": "system", "content": uploads_ctx})
         if will_use_openclaude_route:
@@ -15799,10 +16187,14 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
     def _transcripts_api_get(self, path: str):
         """GET /api/transcripts[/<id>] — proxy to backend transcription service.
 
-        Falls back to local olivia/transcripts/ index when the backend is
-        unreachable so the Listening context browser still works offline.
+        The backend origin honors the frontend's ?target= hint (see
+        _transcribe_proxy_target) so status polls reach the configured
+        Pinocchio service instead of the env default. Falls back to local
+        olivia/transcripts/ index when the backend is unreachable so the
+        Listening context browser still works offline.
         """
-        target = self._TRANSCRIPTION_BACKEND_URL + path
+        origin = self._transcribe_proxy_target()
+        target = origin + path
         try:
             req = urllib.request.Request(target, headers={"Accept": "application/json"})
             with urllib.request.urlopen(req, timeout=8) as resp:
@@ -15824,6 +16216,12 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 payload["transcripts"] = merged
                 payload["local_count"] = len(local_ids)
             self._json_response(payload)
+        except urllib.error.HTTPError as exc:
+            # Backend answered with an error (e.g. 404 unknown job) — pass the
+            # status through so the frontend can rotate to the next endpoint.
+            raw = exc.read()
+            ctype = exc.headers.get("Content-Type") or "application/json"
+            self._send_raw(raw, ctype, exc.code)
         except Exception as exc:
             # Backend unreachable → fall back to local index only.
             if path == "/api/transcripts":
@@ -15833,6 +16231,99 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                     "warning": f"backend_unreachable: {exc}",
                 })
                 return
+            self._json_response({"error": "backend_unreachable", "message": str(exc)}, 502)
+
+    # ── Diarization proxy (Pinocchio backend) ─────────────────────────────
+    # The browser can't call the Pinocchio service directly — its CORS
+    # allowlist (config.py) doesn't include this gateway's origin — so
+    # transcription starts, status polls and health probes go through the
+    # gateway. The frontend passes its configured backend origin as ?target=;
+    # it is validated to local/private hosts so the gateway can't be used as
+    # an open proxy. Without a hint we fall back to the environment default.
+    _DIARIZATION_PROXY_TIMEOUT_S = int(os.environ.get("OLIVIA_DIARIZATION_PROXY_TIMEOUT", "300"))
+
+    def _transcribe_proxy_target(self) -> str:
+        try:
+            parsed = urllib.parse.urlparse(self.path)
+            qs = urllib.parse.parse_qs(parsed.query)
+            target = (qs.get("target") or [""])[0].strip()
+        except Exception:
+            target = ""
+        if target:
+            try:
+                tp = urllib.parse.urlparse(target)
+            except Exception:
+                tp = None
+            if tp is not None:
+                host = (tp.hostname or "").lower()
+                if (
+                    tp.scheme in ("http", "https")
+                    and host
+                    and not tp.path
+                    and not tp.query
+                    and not tp.fragment
+                    and (
+                        host in ("localhost", "::1")
+                        or host == "127.0.0.1"
+                        or host.startswith("127.")
+                        or host.endswith(".local")
+                        or host.endswith(".localdomain")
+                        or host.startswith("10.")
+                        or host.startswith("192.168.")
+                        or host.startswith("172.")
+                    )
+                ):
+                    return target.rstrip("/")
+        return self._TRANSCRIPTION_BACKEND_URL
+
+    def _transcribe_proxy_get(self, path: str):
+        """GET /api/diarization/... — proxy to the Pinocchio backend.
+
+        Used for status/health lookups so the service-registry probe and the
+        listening status polls reach the real backend regardless of CORS.
+        Backend 404s pass through so the frontend can rotate endpoints.
+        """
+        target = self._transcribe_proxy_target()
+        url = target + path
+        try:
+            req = urllib.request.Request(url, headers={"Accept": "application/json"})
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                raw = resp.read()
+                ctype = resp.headers.get("Content-Type") or "application/json"
+            self._send_raw(raw, ctype, 200)
+        except urllib.error.HTTPError as exc:
+            raw = exc.read()
+            ctype = exc.headers.get("Content-Type") or "application/json"
+            self._send_raw(raw, ctype, exc.code)
+        except Exception as exc:
+            self._json_response({"error": "backend_unreachable", "message": str(exc)}, 502)
+
+    def _transcribe_proxy_post(self, path: str):
+        """POST /api/diarization/transcribe[/async] — forward the raw body
+        (multipart file + params) to the Pinocchio backend and return its
+        reply. The async route answers quickly with {job_id, status_url}; the
+        caller polls status through the GET proxy. Backend HTTP status passes
+        through so the frontend can fall back to the legacy synchronous flow
+        when the backend has no /async route.
+        """
+        target = self._transcribe_proxy_target()
+        url = target + path
+        length = int(self.headers.get("Content-Length", 0) or 0)
+        raw_body = self.rfile.read(length) if length > 0 else b""
+        headers = {"Content-Type": self.headers.get("Content-Type", "application/json")}
+        if self.headers.get("Accept"):
+            headers["Accept"] = self.headers["Accept"]
+        try:
+            req = urllib.request.Request(url, data=raw_body, headers=headers, method="POST")
+            with urllib.request.urlopen(req, timeout=self._DIARIZATION_PROXY_TIMEOUT_S) as resp:
+                raw = resp.read()
+                ctype = resp.headers.get("Content-Type") or "application/json"
+            self._send_raw(raw, ctype, 200)
+        except urllib.error.HTTPError as exc:
+            raw = exc.read()
+            ctype = exc.headers.get("Content-Type") or "application/json"
+            self._send_raw(raw, ctype, exc.code)
+        except Exception as exc:
             self._json_response({"error": "backend_unreachable", "message": str(exc)}, 502)
 
     def _transcripts_local_ids(self) -> list[str]:
@@ -17649,6 +18140,14 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._transcripts_api_get(path)
             return
 
+        # Diarization proxy → Pinocchio backend (GET health/status lookups).
+        # The backend's CORS allowlist doesn't include this origin, so the
+        # listening status polls and the service-registry probe go through the
+        # gateway. ?target= picks the backend the frontend configured.
+        if path.startswith("/api/diarization/transcribe"):
+            self._transcribe_proxy_get(path)
+            return
+
         stubs = {
             "/api/shared/scopes": {"scopes": []},
             "/api/transcripts/list": [],
@@ -18000,6 +18499,15 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 limit = 10
             suggestions = _perm_get_suggestions(limit=limit)
             self._json_response({"suggestions": suggestions})
+            return
+
+        # Diarization proxy → Pinocchio backend. The browser can't reach the
+        # backend directly (CORS), so transcription starts go through the
+        # gateway; ?target= carries the endpoint the user configured in the
+        # Listening UI. Backend 404/405 pass through so the frontend can fall
+        # back to the legacy synchronous flow.
+        if path.startswith("/api/diarization/transcribe"):
+            self._transcribe_proxy_post(path)
             return
 
         if _is_disabled_api_path(path):
@@ -18938,10 +19446,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                     "text": text,
                     "kind": kind,
                     "image_url": None,
-                    "text_md": "",
+                    "text_md": str(doc.get("text_md") or ""),
                     "text_json": "",
                 }
-                
+
                 if project_id and fname:
                     entry["image_url"] = (
                         "/api/procurement/image?project_id="
@@ -18949,7 +19457,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                         + "&file="
                         + urllib.parse.quote(fname)
                     )
-                    
+
                     # Try to fetch md and json files
                     analysis_dir = PROJECTS_DIR / project_id / "procurement" / "workspace" / "image_processing_workspace" / "analysis_refined"
                     if analysis_dir.is_dir():
@@ -18959,13 +19467,21 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                                 entry["text_md"] = md_path.read_text(encoding="utf-8")
                             except OSError:
                                 pass
-                        
+
                         json_path = analysis_dir / f"{fname}_analysis_refined.json"
                         if json_path.is_file():
                             try:
                                 entry["text_json"] = json_path.read_text(encoding="utf-8")
                             except OSError:
                                 pass
+                            # No .md file is ever written by the pipeline; synthesize
+                            # markdown from the structured analysis so the viewer's
+                            # Markdown / Side-by-Side tabs have real content.
+                            if not entry["text_md"]:
+                                try:
+                                    entry["text_md"] = _procurement_analysis_to_markdown(json.loads(entry["text_json"]))
+                                except (ValueError, TypeError):
+                                    pass
 
                 docs.append(entry)
             self._json_response({"documents": docs})
@@ -19672,6 +20188,8 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 self._json_response(data)
             elif sub == "artifacts":
                 self._json_response([])  # stub
+            elif sub == "mcp-tools":
+                self._json_response(_agent_mcp_toolset_summary(agent_id))
             else:
                 self._json_response({"status": "ok", "agent_id": agent_id})
         except Exception as e:
@@ -19754,10 +20272,12 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                        "qdrant_collections", "create_neo4j_db",
                        "neo4j_graph_data", "initial_memory_files",
                        "custom_shared_paths", "skills", "model",
-                       "mcp_servers",
+                       "mcp_servers", "permitted_tools",
                        "temperature", "section_profiles"):
                 if k in body:
                     config[k] = body[k]
+            if "permitted_tools" in config:
+                config["permitted_tools"] = _normalized_permitted_tools(config.get("permitted_tools"))
 
             if "workspace_scope" in config:
                 config["workspace_scope"] = _normalized_workspace_scope(config.get("workspace_scope"))
@@ -20401,13 +20921,15 @@ Exemplo de formato:
                            "qdrant_collections", "create_neo4j_db",
                            "neo4j_graph_data", "initial_memory_files",
                            "custom_shared_paths", "skills", "model",
-                           "mcp_servers",
+                           "mcp_servers", "permitted_tools",
                            "temperature", "section_profiles", "project_id")
             changed_config = False
             for k in config_keys:
                 if k in body:
                     old_config[k] = body[k]
                     changed_config = True
+            if "permitted_tools" in old_config:
+                old_config["permitted_tools"] = _normalized_permitted_tools(old_config.get("permitted_tools"))
 
             if "workspace_scope" in old_config:
                 old_config["workspace_scope"] = _normalized_workspace_scope(old_config.get("workspace_scope"))

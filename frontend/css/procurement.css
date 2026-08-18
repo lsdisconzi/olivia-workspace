@@ -747,13 +747,21 @@ body.pr-modal-lock { overflow: hidden; }
 }
 .pr-doc-viewer-content {
     flex: 1; min-height: 0; position: relative;
-    background: var(--bg); display: flex;
+    background: var(--bg); display: flex; flex-direction: column;
 }
 .pr-doc-pane {
     display: none; width: 100%; height: 100%; overflow: auto; padding: 16px;
 }
 .pr-doc-pane.active { display: flex; flex-direction: column; }
 .pr-doc-pane[data-pane="image"] { align-items: center; justify-content: center; }
+
+/* Base rule for split pane */
+.pr-doc-pane-split {
+    display: none; width: 100%; height: 100%; flex-direction: row; gap: 16px;
+    flex: 1;
+    min-height: 0;
+    --pr-split-ratio: 0.7071; /* fallback ~A4 portrait, overridden per-image via JS */
+}
 
 .pr-doc-raw {
     font-family: var(--mono); font-size: 13px; color: var(--white);
@@ -763,28 +771,72 @@ body.pr-modal-lock { overflow: hidden; }
     max-width: 800px; margin: 0 auto; width: 100%;
 }
 
-.pr-doc-pane-split {
-    display: none; width: 100%; height: 100%; flex-direction: row; gap: 16px;
-    --pr-split-ratio: 0.7071; /* fallback ~A4 portrait, overridden per-image via JS */
-}
-.pr-doc-pane-split.active { display: flex; flex-direction: row; }
-.pr-split-left {
-    flex: 1; min-width: 0; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    border-right: 1px solid var(--border); padding-right: 16px;
-}
-.pr-split-right {
-    flex: 1; min-width: 0; height: 100%; overflow: hidden;
-    display: flex; align-items: flex-start; justify-content: center;
-    padding-left: 16px;
-}
-/* The "page" mirrors the image pane's aspect ratio so the rendered markdown
-   occupies the same footprint as the source document for easy compare. */
-.pr-split-page {
-    width: 100%;
-    max-width: 100%;
+/* Force split pane to be row-direction and always win */
+.pr-doc-pane.pr-doc-pane-split.active {
+    display: flex !important;
+    flex-direction: row !important;
     height: 100%;
-    max-height: 100%;
+    flex: 1;
+    min-height: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+/* Guarantee both columns take half width and do not shrink */
+.pr-split-left,
+.pr-split-right {
+    flex: 1 1 50%;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.pr-split-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+    padding-right: 16px;
+    overflow: hidden;
+    flex: 1 1 50%;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.pr-split-right {
+    padding-left: 16px;
+    flex: 1 1 50%;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Make image/PDF fill the left pane without distortion */
+.pr-split-left img,
+.pr-split-left iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: none;
+}
+
+/* Markdown "page" mirrors the source image's aspect ratio: height fills the
+   right pane and width is derived from --pr-split-ratio (set per-image via JS
+   from naturalWidth/naturalHeight). Setting width explicitly would disable
+   aspect-ratio, so width is left auto here. */
+.pr-split-page {
+    height: 100%;
+    max-width: 100%;
     aspect-ratio: var(--pr-split-ratio, 0.7071);
     overflow-y: auto;
     background: var(--bg-card);
@@ -819,16 +871,7 @@ body.pr-modal-lock { overflow: hidden; }
 .pr-doc-md td { color: var(--white); word-break: break-word; }
 
 @media (max-width: 720px) {
-    .pr-doc-pane-split.active { flex-direction: column; }
+    .pr-doc-pane.pr-doc-pane-split.active { flex-direction: column !important; }
     .pr-split-left  { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 12px; height: 45%; }
     .pr-split-right { padding-left: 0; padding-top: 12px; height: 55%; }
 }
-
-/* ── Visualization Cards (simplified procurement) ──────────────────────── */
-.pr-viz-section { margin-bottom: 28px; }
-.pr-viz-section-title {
-    font-family: var(--serif); font-size: 16px; color: var(--white);
-    margin: 0 0 12px; display: flex; align-items: center; gap: 8px;
-}
-.pr-viz-section-title i { color: #C4622D; font-size: 14px; }
-/* ... add more procurement-specific visualization classes as needed ... */

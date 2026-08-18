@@ -203,6 +203,30 @@
       "output_cost_per_1m": 0.0,
       "supports_vision": false,
       "supports_thinking": true
+    },
+    {
+      "id": "accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b",
+      "name": "Nemotron Lightning 3.5 30B A3B",
+      "provider": "fireworks",
+      "tier": "paid",
+      "best_for": "",
+      "context_window": 262144,
+      "input_cost_per_1m": 0.05,
+      "output_cost_per_1m": 0.2,
+      "supports_vision": false,
+      "supports_thinking": false
+    },
+    {
+      "id": "accounts/fireworks/models/muse-glimmer-30b",
+      "name": "Muse Glimmer 30B",
+      "provider": "fireworks",
+      "tier": "paid",
+      "best_for": "",
+      "context_window": 131072,
+      "input_cost_per_1m": 0.35,
+      "output_cost_per_1m": 1.5,
+      "supports_vision": true,
+      "supports_thinking": false
     }
   ],
   "overrides": {

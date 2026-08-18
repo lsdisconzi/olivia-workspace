@@ -4502,6 +4502,21 @@ async function downloadLastResponseAsPdf() {
   addSystemBubble(_t('brandExport.preparing', 'Preparando PDF com a identidade Olivia...'));
 }
 
+// ─── PDF Export (Preview Panel — Kate Briefing) ──────────────────────────────
+// Exports the current preview panel content straight to PDF. Mermaid graphs
+// are rendered inside #previewBody as inline SVGs, so the browser print
+// pipeline (Save as PDF) captures text and diagrams exactly as displayed. A
+// Word-compatible .doc cannot carry those SVG graphs reliably, so this option
+// routes through the preview panel's own downloadPreviewAsPdf pipeline
+// (identical capture logic, graphs included).
+function downloadKateBriefingDocx() {
+  if (typeof window.downloadPreviewAsPdf === 'function') {
+    window.downloadPreviewAsPdf();
+    return;
+  }
+  addSystemBubble(_t('brandExport.noPreview', 'Nada para exportar no painel de pré-visualização.'));
+}
+
 // Clear chat
 async function clearChat() {
   if (!await window.customConfirm(_t('chat.clearConfirm', 'Limpar esta conversa? O histórico não será salvo.'))) return;
@@ -4594,6 +4609,7 @@ window.loadSavedChat = loadSavedChat;
 window.copyLastAssistantMessage = copyLastAssistantMessage;
 window.exportLastMessageTxt = exportLastMessageTxt;
 window.downloadLastResponseAsPdf = downloadLastResponseAsPdf;
+window.downloadKateBriefingDocx = downloadKateBriefingDocx;
 window.clearChat = clearChat;
 window.setPanelContextEnabled = setPanelContextEnabled;
 window.refreshPanelContextStatus = refreshPanelContextStatus;

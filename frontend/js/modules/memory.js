@@ -142,6 +142,22 @@ function renderAgentMemoryInfo(agent) {
     ? scopes.map(s => `<span style="display:inline-block;font-size:10px;padding:2px 7px;margin:2px;border-radius:4px;background:rgba(28,69,50,.06);color:var(--amber);border:1px solid rgba(28,69,50,.12);font-family:var(--mono)">${escapeHtml(s)}</span>`).join('')
     : '<span style="color:var(--gray);font-size:11px">No shared scopes</span>';
 
+  // MCP toolset — rendered synchronously from the agent config, then enriched
+  // with live per-server detail (tool counts, bridge wiring, reachability).
+  const cfg = agent.config || {};
+  const mcpServers = Array.isArray(cfg.mcp_servers) ? cfg.mcp_servers : [];
+  const permitted = Array.isArray(cfg.permitted_tools) ? cfg.permitted_tools : null;
+  const mcpToolsHtml = mcpServers.length
+    ? mcpServers.map(function (s) {
+        return `<span class="mcp-tool-chip" style="display:inline-block;font-size:10px;padding:2px 7px;margin:2px;border-radius:4px;background:rgba(28,69,50,.06);color:var(--amber);border:1px solid rgba(28,69,50,.12);font-family:var(--mono)">${escapeHtml(s)}</span>`;
+      }).join('')
+    : '<span style="color:var(--gray);font-size:11px">No MCP servers enabled</span>';
+  const mcpSummaryHtml = mcpServers.length
+    ? (permitted
+        ? `${mcpServers.length} servers · per-tool restrictions (${permitted.length} tool names)`
+        : `${mcpServers.length} servers · all catalog tools enabled`)
+    : '';
+
   const panel = document.createElement('div');
   panel.id = 'agentMemoryPanel';
   panel.className = 'agent-memory-info';
@@ -150,9 +166,50 @@ function renderAgentMemoryInfo(agent) {
     <div style="margin-bottom:6px"><span class="mem-label">Shared Data Access</span><br>${scopesHtml}</div>
     <div style="margin-bottom:6px"><span class="mem-label">Qdrant Collection</span><br><span class="mem-value">${escapeHtml(qdrant)}</span></div>
     <div style="margin-bottom:6px"><span class="mem-label">Neo4j Database</span><br><span class="mem-value">${escapeHtml(neo4j)}</span></div>
+    <div style="margin-bottom:6px"><span class="mem-label">MCP Tools</span><br>${mcpToolsHtml}<div style="font-size:10px;color:var(--gray);margin-top:2px">${escapeHtml(mcpSummaryHtml)}</div><div id="agentMcpToolsDetail" style="margin-top:3px"><span style="color:var(--gray);font-size:11px">Loading detail…</span></div></div>
     <div><span class="mem-label">Linked Files</span>${filesHtml}</div>
   `;
   if (list) list.appendChild(panel);
+
+  // Enrich asynchronously from the backend toolset summary.
+  if (mcpServers.length && agent.agent_id) {
+    _renderAgentMcpToolsetDetail(agent.agent_id, panel);
+  }
+}
+
+// Enrich the agent memory panel with per-server MCP toolset detail.
+async function _renderAgentMcpToolsetDetail(agentId, panel) {
+  try {
+    const res = await fetch(`${API_BASE}/api/agents/${encodeURIComponent(agentId)}/mcp-tools`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const detailEl = document.getElementById('agentMcpToolsDetail');
+    if (!detailEl || !document.body.contains(panel)) return; // panel was replaced
+    if (!Array.isArray(data.servers)) {
+      detailEl.innerHTML = '<span style="color:var(--gray);font-size:11px">Detail unavailable</span>';
+      return;
+    }
+    const rows = data.servers.map(function (s) {
+      const dot = s.reachable ? 'ok' : (s.wired ? 'down' : 'off');
+      const dotColor = dot === 'ok' ? '#4caf7d' : (dot === 'down' ? '#e2a03f' : '#999');
+      const wiredLabel = s.wired ? (s.bridge_key ? `${s.bridge_key}` : 'wired') : 'not wired';
+      const countLabel = s.unrestricted ? `${s.enabled_tools}/${s.total_tools} tools` : `${s.enabled_tools} of ${s.total_tools} enabled`;
+      return `<div style="display:flex;align-items:center;gap:6px;font-size:10px;margin:2px 0;font-family:var(--mono);color:var(--text)">
+        <span style="width:8px;height:8px;border-radius:50%;background:${dotColor};flex:0 0 auto" title="${dot}"></span>
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(s.name)}</span>
+        <span style="color:var(--gray);flex:0 0 auto">${countLabel}</span>
+        <span style="color:var(--gray);flex:0 0 auto">${escapeHtml(wiredLabel)}</span>
+      </div>`;
+    }).join('');
+    const reachableCount = data.servers.filter(function (s) { return s.reachable; }).length;
+    const summary = `${reachableCount}/${data.servers.length} reachable · ${data.enabled_tool_count}/${data.tool_count} tools`;
+    detailEl.innerHTML = rows + `<div style="font-size:10px;color:var(--gray);margin-top:3px">${escapeHtml(summary)}</div>`;
+  } catch (_e) {
+    const detailEl = document.getElementById('agentMcpToolsDetail');
+    if (detailEl && document.body.contains(panel)) {
+      detailEl.innerHTML = '<span style="color:var(--gray);font-size:11px">Detail unavailable</span>';
+    }
+  }
 }
 
 // Memory view toast notification

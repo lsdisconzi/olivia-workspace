@@ -23,12 +23,14 @@
   if (window.__oliviaPdfExportLoaded) return;
   window.__oliviaPdfExportLoaded = true;
 
-  // Guard: if stream.js already exposed the function, skip ALL declarations.
-  // stream.js defines const OLIVIA_PDF_BRAND + downloadLastResponseAsPdf()
-  // and sets window.downloadLastResponseAsPdf. If we set window.OLIVIA_PDF_BRAND
-  // here first, stream.js's const OLIVIA_PDF_BRAND would fail with
-  // "Identifier has already been declared". So we must check this FIRST.
-  if (typeof window.downloadLastResponseAsPdf === 'function') return;
+  // Guard: if BOTH exports already exist on window (e.g. stream.js embedded
+  // the same code), skip ALL declarations to stay idempotent. If only the PDF
+  // export is present but the DOCX (Kate Briefing) one is missing, keep going
+  // so window.downloadKateBriefingDocx still gets exposed below. Reassigning
+  // window.OLIVIA_PDF_BRAND / window.downloadLastResponseAsPdf in that case is
+  // harmless (same values) and avoids duplicate top-level const declarations.
+  if (typeof window.downloadLastResponseAsPdf === 'function'
+      && typeof window.downloadKateBriefingDocx === 'function') return;
 
   // ─── Shared brand kit — reuse this for any other export/print surface ───
   window.OLIVIA_PDF_BRAND = {
@@ -311,6 +313,25 @@
   iframe.srcdoc = printDoc;
   addSystemBubble('Preparando PDF com a identidade Olivia...');
 }
+
+// ─── PDF Export (Preview Panel — Kate Briefing) ──────────────────────────────
+// Exports the current preview panel content straight to PDF. Mermaid graphs
+// are rendered inside #previewBody as inline SVGs, so the browser print
+// pipeline (Save as PDF) captures text and diagrams exactly as displayed. A
+// Word-compatible .doc cannot carry those SVG graphs reliably, so this option
+// routes through the preview panel's own downloadPreviewAsPdf pipeline
+// (identical capture logic, graphs included).
+
+function downloadKateBriefingDocx() {
+  if (typeof window.downloadPreviewAsPdf === 'function') {
+    window.downloadPreviewAsPdf();
+    return;
+  }
+  addSystemBubble('Nada para exportar no painel de pré-visualização.');
+}
+
+// Expose globally alongside the PDF function
+window.downloadKateBriefingDocx = downloadKateBriefingDocx;
 
 // Expose to global scope so inline onclick="downloadLastResponseAsPdf()" works
 window.downloadLastResponseAsPdf = downloadLastResponseAsPdf;
