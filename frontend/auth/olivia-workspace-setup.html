@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olivia · Setup</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%237FA98E'/><g transform='translate(6,7) scale(0.31)'><path d='M12 52 Q24 38,34 30 Q44 22,54 16' fill='none' stroke='%23FAF6EF' stroke-width='2.6' stroke-linecap='round' opacity='.75'/><ellipse cx='22' cy='42' rx='4.4' ry='5.5' fill='%23D98A5E'/></g></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #191917;
+      --bg-card: #1f1f1d;
+      --border: #2a2a28;
+      --border-hi: #363634;
+      --amber: #D98A5E;
+      --amber-lo: rgba(217,138,94,.12);
+      --green: #7FA98E;
+      --green-lo: rgba(127,169,142,.10);
+      --blue: #7AAFC5;
+      --blue-lo: rgba(122,175,197,.10);
+      --white: #ede8df;
+      --gray: #6b6b68;
+      --gray-hi: #9a9a96;
+      --btn-bg: #ede8df;
+      --btn-text: #191917;
+      --input-bg: #191917;
+      --input-border: #363634;
+      --error-bg: rgba(217,100,90,.08);
+      --error-border: rgba(217,100,90,.28);
+      --error-color: #d96a5a;
+    }
+    [data-theme="light"] {
+      --bg: #FAF6EF;
+      --bg-card: #FFFFFF;
+      --border: rgba(63,97,82,.10);
+      --border-hi: rgba(63,97,82,.22);
+      --amber: #D98A5E;
+      --amber-lo: rgba(217,138,94,.08);
+      --green: #3F6152;
+      --green-lo: rgba(63,97,82,.08);
+      --blue: #5A8DA6;
+      --blue-lo: rgba(90,141,166,.08);
+      --white: #34302A;
+      --gray: #ADA396;
+      --gray-hi: #6B6458;
+      --btn-bg: #3F6152;
+      --btn-text: #FAF6EF;
+      --input-bg: #FFFFFF;
+      --input-border: rgba(63,97,82,.20);
+      --error-bg: rgba(196,80,70,.06);
+      --error-border: rgba(196,80,70,.25);
+      --error-color: #b0453c;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      display: grid; place-items: center;
+      padding: 24px;
+      transition: background .35s, color .35s;
+    }
+    body.modal-mode {
+      min-height: auto;
+      display: block;
+      padding: 0;
+      background: transparent;
+    }
+    .container {
+      max-width: 560px; width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 34px 30px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.06);
+      transition: background .35s, border-color .35s;
+    }
+    body.modal-mode .container {
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 16px 60px rgba(0,0,0,.3);
+    }
+    .step-indicator {
+      display: flex; justify-content: space-between; margin-bottom: 28px;
+    }
+    .step-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--border-hi); transition: background .2s;
+    }
+    .step-dot.active { background: var(--amber); box-shadow: 0 0 8px var(--amber-lo); }
+    .step-dot.done { background: var(--green); }
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+    h2 { font-family: 'Fraunces', serif; font-size: 1.5rem; margin-bottom: 12px; letter-spacing: -0.02em; }
+    p { color: var(--gray-hi); line-height: 1.6; margin-bottom: 18px; font-size: .9rem; }
+    .btn {
+      display: inline-block; border: none; border-radius: 9px;
+      padding: 11px 20px; font-family: inherit; font-size: .9rem; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .15s;
+    }
+    .btn-primary {
+      background: var(--btn-bg); color: var(--btn-text);
+    }
+    .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-secondary {
+      background: transparent; border: 1px solid var(--border-hi); color: var(--gray-hi);
+    }
+    .btn-secondary:hover { border-color: var(--amber); color: var(--white); }
+    .btn-block { width: 100%; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: .7rem; color: var(--gray); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+    input, select {
+      width: 100%; background: var(--input-bg); border: 1px solid var(--input-border);
+      border-radius: 9px; color: var(--white); padding: 11px 14px;
+      font-family: inherit; font-size: .9rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus, select:focus { border-color: var(--amber); box-shadow: 0 0 0 3px var(--amber-lo); outline: none; }
+    .provider-cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+    .provider-card {
+      border: 1px solid var(--border-hi); border-radius: 10px; padding: 14px;
+      cursor: pointer; transition: border-color .15s, background .15s;
+    }
+    .provider-card:hover { border-color: var(--amber); background: var(--amber-lo); }
+    .provider-card.selected { border-color: var(--green); background: var(--green-lo); }
+    .provider-card .name { font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .provider-card .desc { font-size: .78rem; color: var(--gray-hi); }
+    .badge {
+      display: inline-block; font-size: .65rem; padding: 2px 8px; border-radius: 999px;
+      border: 1px solid var(--green); color: var(--green); background: var(--green-lo);
+      margin-left: 8px;
+    }
+    .badge-rec { border-color: var(--amber); color: var(--amber); background: var(--amber-lo); }
+    .error-box {
+      display: none; padding: 11px 15px; border-radius: 10px;
+      border: 1px solid var(--error-border); background: var(--error-bg); color: var(--error-color);
+      margin-bottom: 16px; font-size: .85rem;
+    }
+    .success-box {
+      display: none; padding: 11px 15px; border-radius: 10px;
+      border: 1px solid rgba(127,169,142,.5); background: var(--green-lo); color: var(--green);
+      margin-bottom: 16px; font-size: .85rem;
+    }
+    .model-list { max-height: 220px; overflow-y: auto; border: 1px solid var(--border-hi); border-radius: 9px; margin-bottom: 12px; }
+    .model-item {
+      padding: 10px 14px; border-bottom: 1px solid var(--border); cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .model-item:hover { background: var(--amber-lo); }
+    .model-item.selected { background: var(--green-lo); }
+    .model-item .model-name { font-size: .9rem; }
+    .model-item .model-cost { font-size: .75rem; color: var(--gray); }
+    .skip-link { color: var(--gray); text-decoration: underline; cursor: pointer; font-size: .8rem; }
+    .theme-toggle {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: 1px solid var(--border-hi); border-radius: 8px;
+      padding: 6px 10px; color: var(--gray-hi); cursor: pointer; font-size: .8rem;
+    }
+    .theme-toggle:hover { border-color: var(--amber); color: var(--white); }
+    .key-status { font-size: .8rem; margin-top: 6px; }
+    .key-status.valid { color: var(--green); }
+    .key-status.invalid { color: var(--error-color); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .module-note { font-size: .8rem; color: var(--gray); margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+
+    <div class="step-indicator" id="stepIndicator"></div>
+
+    <!-- STEP 1: Welcome -->
+    <div class="step-content active" data-step="1">
+      <h2>Welcome to Olivia</h2>
+      <p>Olivia connects to the AI models and services <em>you</em> choose. We'll guide you through setting up all integrations in about 3–5 minutes. You can skip any module now and configure it later.</p>
+      <button class="btn btn-primary btn-block" onclick="nextStep(2)">Start Setup</button>
+      <div class="skip-link" onclick="skipAll()" style="text-align:center;margin-top:16px;">Skip for now — continue without integrations</div>
+    </div>
+
+    <!-- STEP 2: Language & Profile -->
+    <div class="step-content" data-step="2">
+      <h2>Your preferences</h2>
+      <div class="form-group">
+        <label for="setupLanguage">Response language</label>
+        <select id="setupLanguage">
+          <option value="auto">Auto (match input language)</option>
+          <option value="en">English</option>
+          <option value="pt">Portugues</option>
+          <option value="es">Espanol</option>
+          <option value="it">Italiano</option>
+          <option value="fr">Francais</option>
+          <option value="de">Deutsch</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveProfile()">Next</button>
+    </div>
+
+    <!-- STEP 3: AI Provider (Primary) -->
+    <div class="step-content" data-step="3">
+      <h2>Connect an AI</h2>
+      <p>Choose your primary AI provider. You can add additional API keys later.</p>
+      <div id="providerCards" class="provider-cards"></div>
+      <div class="form-group" id="customProviderGroup" style="display:none;">
+        <label for="customProviderUrl">Custom endpoint URL</label>
+        <input id="customProviderUrl" type="url" placeholder="https://api.example.com/v1">
+      </div>
+      <div class="skip-link" onclick="skipTo(6)" style="text-align:center;">Skip AI for now</div>
+    </div>
+
+    <!-- STEP 4: Primary AI API Key + Model -->
+    <div class="step-content" data-step="4">
+      <h2 id="providerStepTitle">Connect Provider</h2>
+      <div id="providerInstructions"></div>
+      <div class="form-group">
+        <label id="credentialLabel" for="apiKeyInput">API Key</label>
+        <input id="apiKeyInput" type="password" placeholder="">
+      </div>
+      <div class="key-status" id="keyStatus"></div>
+      <div class="error-box" id="connectionError"></div>
+      <div class="success-box" id="connectionSuccess"></div>
+      <button class="btn btn-primary btn-block" id="testConnectionBtn" onclick="testConnection()">Verify &amp; Continue</button>
+      <div id="modelSelectionArea" style="display:none;">
+        <p style="margin-top:18px;">Select a default model:</p>
+        <div class="model-list" id="modelList"></div>
+        <button class="btn btn-primary btn-block" onclick="saveProviderAndModel()">Save &amp; Continue</button>
+      </div>
+      <div class="skip-link" onclick="skipTo(6)" style="text-align:center;margin-top:12px;">Skip</div>
+    </div>
+
+    <!-- STEP 5: Other AI Keys -->
+    <div class="step-content" data-step="5">
+      <h2>Additional AI Keys</h2>
+      <p>Optional — enter API keys for other providers. You can leave any blank.</p>
+      <div class="form-group">
+        <label for="deepseekKey">DeepSeek API Key</label>
+        <input id="deepseekKey" type="password" placeholder="sk-...">
+      </div>
+      <div class="form-group">
+        <label for="openrouterKey">OpenRouter API Key</label>
+        <input id="openrouterKey" type="password" placeholder="sk-or-...">
+      </div>
+      <div class="form-group">
+        <label for="fireworksKey">Fireworks AI API Key</label>
+        <input id="fireworksKey" type="password" placeholder="fw_...">
+      </div>
+      <div class="form-group">
+        <label for="openaiKey">OpenAI API Key</label>
+        <input id="openaiKey" type="password" placeholder="sk-...">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveAdditionalKeys()">Next</button>
+      <div class="skip-link" onclick="skipTo(6)" style="text-align:center;margin-top:12px;">Skip</div>
+    </div>
+
+    <!-- STEP 6: Qdrant -->
+    <div class="step-content" data-step="6">
+      <h2>Qdrant Vector Database</h2>
+      <p>Optional — used for semantic search and long-term memory. Get your credentials from the Qdrant Cloud dashboard.</p>
+      <div class="form-group">
+        <label for="qdrantUrl">Cluster Endpoint URL</label>
+        <input id="qdrantUrl" type="url" placeholder="https://<cluster-id>.aws.cloud.qdrant.io">
+      </div>
+      <div class="form-group">
+        <label for="qdrantApiKey">API Key</label>
+        <input id="qdrantApiKey" type="password" placeholder="eyJ...">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveQdrant()">Next</button>
+      <div class="skip-link" onclick="skipTo(7)" style="text-align:center;margin-top:12px;">Skip</div>
+    </div>
+
+    <!-- STEP 7: Neo4j -->
+    <div class="step-content" data-step="7">
+      <h2>Neo4j Graph Database</h2>
+      <p>Optional — stores the legal knowledge graph. Connection details can be found in your AuraDB console.</p>
+      <div class="form-group">
+        <label for="neo4jUri">Connection URI</label>
+        <input id="neo4jUri" type="text" placeholder="neo4j+s://<dbid>.databases.neo4j.io">
+      </div>
+      <div class="two-col">
+        <div class="form-group">
+          <label for="neo4jUsername">Username</label>
+          <input id="neo4jUsername" type="text" placeholder="neo4j">
+        </div>
+        <div class="form-group">
+          <label for="neo4jPassword">Password</label>
+          <input id="neo4jPassword" type="password" placeholder="••••••••">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="neo4jQueryApiUrl">Query API URL</label>
+        <input id="neo4jQueryApiUrl" type="url" placeholder="https://<dbid>.databases.neo4j.io/db/<dbid>/query/v2">
+      </div>
+      <div class="form-group">
+        <label for="neo4jMcpUrl">MCP URL</label>
+        <input id="neo4jMcpUrl" type="url" placeholder="https://<dbid>.mcp-instances.neo4j.io">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveNeo4j()">Next</button>
+      <div class="skip-link" onclick="skipTo(8)" style="text-align:center;margin-top:12px;">Skip</div>
+    </div>
+
+    <!-- STEP 8: Google Drive -->
+    <div class="step-content" data-step="8">
+      <h2>Google Drive Integration</h2>
+      <p>Optional — allows Olivia to ingest documents from your Drive.</p>
+      <div class="form-group">
+        <label for="googleClientId">Google Client ID</label>
+        <input id="googleClientId" type="text" placeholder="xxxxx.apps.googleusercontent.com">
+      </div>
+      <div class="form-group">
+        <label for="googleDriveToken">Drive Token (OAuth)</label>
+        <input id="googleDriveToken" type="password" placeholder="ya29...">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveGoogleDrive()">Next</button>
+      <div class="skip-link" onclick="skipTo(9)" style="text-align:center;margin-top:12px;">Skip</div>
+    </div>
+
+    <!-- STEP 9: Local Directories -->
+    <div class="step-content" data-step="9">
+      <h2>Local Knowledge Directories</h2>
+      <p>Optional — paths to your legal document collections. Olivia will create them if they don't exist.</p>
+      <div class="form-group">
+        <label for="lawLibraryRoot">Law Library Root</label>
+        <input id="lawLibraryRoot" type="text" placeholder="/path/to/law_library">
+      </div>
+      <div class="form-group">
+        <label for="violationsRoot">Violations Root</label>
+        <input id="violationsRoot" type="text" placeholder="/path/to/violations">
+      </div>
+      <div class="form-group">
+        <label for="jurisprudenceRoot">Jurisprudence Root (optional)</label>
+        <input id="jurisprudenceRoot" type="text" placeholder="/path/to/jurisprudence">
+      </div>
+      <div class="form-group">
+        <label for="masterFilesRoot">Master Files Root (optional)</label>
+        <input id="masterFilesRoot" type="text" placeholder="/path/to/master_files">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveDirectories()">Next</button>
+      <div class="skip-link" onclick="skipTo(10)" style="text-align:center;margin-top:12px;">Skip</div>
+    </div>
+
+    <!-- STEP 10: Optional Services -->
+    <div class="step-content" data-step="10">
+      <h2>Optional Backends</h2>
+      <p>Completely optional — configure additional services.</p>
+      <div class="form-group">
+        <label for="comfyuiBackend">ComfyUI Backend URL</label>
+        <input id="comfyuiBackend" type="url" placeholder="http://localhost:8188">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveOptionalServices()">Next</button>
+      <div class="skip-link" onclick="skipTo(11)" style="text-align:center;margin-top:12px;">Skip</div>
+    </div>
+
+    <!-- STEP 11: Review & Finish -->
+    <div class="step-content" data-step="11">
+      <h2>Review &amp; Finish</h2>
+      <p>We'll now save your configuration. You can always edit these settings later.</p>
+      <div id="reviewSummary" style="margin-bottom:20px;"></div>
+      <button class="btn btn-primary btn-block" onclick="finishSetup()">Finish Setup</button>
+    </div>
+  </div>
+
+  <script>
+    // ── State ──────────────────────────────────────
+    let currentStep = 1;
+    let selectedProvider = 'fireworks';
+    let customBaseUrl = '';
+    let chosenModelId = null;
+    let catalogModels = [];
+    let isModalMode = false;
+    let existingPrefs = {};
+
+    // Additional collected data
+    let configData = {
+      language: { response: 'auto', input: 'auto' },
+      primaryProvider: null,
+      primaryApiKey: '',
+      primaryModel: '',
+      additionalKeys: {},
+      qdrant: {},
+      neo4j: {},
+      googleDrive: {},
+      directories: {},
+      optionalServices: {}
+    };
+
+    // ── Init ──────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Detect modal mode
+      if (window.parent !== window || document.body.classList.contains('modal-mode')) {
+        isModalMode = true;
+        document.body.classList.add('modal-mode');
+      }
+
+      // Load existing preferences
+      try {
+        const resp = await fetch('/api/user/preferences', { credentials: 'include' });
+        if (resp.ok) {
+          existingPrefs = await resp.json();
+          if (existingPrefs.setup_complete) {
+            // Pre-fill fields if editing
+            if (existingPrefs.language && existingPrefs.language.response) {
+              document.getElementById('setupLanguage').value = existingPrefs.language.response;
+            }
+            if (existingPrefs.provider) selectedProvider = existingPrefs.provider;
+            if (existingPrefs.config) {
+              configData = Object.assign({}, configData, existingPrefs.config);
+            }
+          }
+        }
+      } catch (e) {}
+
+      // Auto-detect language
+      const lang = (navigator.language || 'en').slice(0, 2);
+      const sel = document.getElementById('setupLanguage');
+      if (sel && [...sel.options].some(o => o.value === lang)) {
+        if (!existingPrefs.language) sel.value = lang;
+      }
+
+      // Restore theme
+      var savedTheme = localStorage.getItem('olivia_setup_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+
+      // Build step indicator
+      buildStepIndicator();
+      renderProviderCards();
+    });
+
+    function toggleTheme() {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('olivia_setup_theme', next);
+    }
+
+    function buildStepIndicator() {
+      const totalSteps = 11;
+      const container = document.getElementById('stepIndicator');
+      container.innerHTML = '';
+      for (let i = 1; i <= totalSteps; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'step-dot';
+        dot.dataset.step = i;
+        container.appendChild(dot);
+      }
+    }
+
+    // ── Step navigation ────────────────────────────
+    function setStep(step) {
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+      const target = document.querySelector(`.step-content[data-step="${step}"]`);
+      if (target) target.classList.add('active');
+      document.querySelectorAll('.step-dot').forEach(d => {
+        const s = parseInt(d.dataset.step);
+        d.classList.remove('active', 'done');
+        if (s === step) d.classList.add('active');
+        else if (s < step) d.classList.add('done');
+      });
+      currentStep = step;
+    }
+
+    function nextStep(step) { setStep(step); }
+
+    function skipTo(step) { setStep(step); }
+
+    async function skipAll() {
+      // Mark as skipped, close or redirect
+      try {
+        await fetch('/api/user/preferences', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ setup_complete: true, skipped: true })
+        });
+      } catch (e) {}
+      closeOrRedirect();
+    }
+
+    // ── Step 2: Save profile ──────────────────────
+    async function saveProfile() {
+      const language = document.getElementById('setupLanguage').value;
+      configData.language = { response: language, input: 'auto' };
+      try {
+        await fetch('/api/user/preferences', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ language: configData.language })
+        });
+      } catch (e) {}
+      setStep(3);
+    }
+
+    // ── Provider cards (Step 3) ───────────────────
+    function renderProviderCards() {
+      const providers = [
+        { id: 'fireworks', name: 'Fireworks AI', desc: 'Fast inference, many open models', recommended: true },
+        { id: 'openrouter', name: 'OpenRouter', desc: 'Access Claude, GPT, Gemini, and more', recommended: false },
+        { id: 'deepseek', name: 'DeepSeek', desc: 'High-performance reasoning models', recommended: false },
+        { id: 'ollama', name: 'Ollama (local)', desc: 'Run models locally, no API key needed', recommended: false },
+        { id: 'custom', name: 'Custom provider', desc: 'OpenAI-compatible endpoint', recommended: false }
+      ];
+
+      const container = document.getElementById('providerCards');
+      let html = '';
+      providers.forEach(p => {
+        const badge = p.recommended ? '<span class="badge badge-rec">Recommended</span>' : '';
+        const selectedClass = (selectedProvider === p.id) ? ' selected' : '';
+        html += `<div class="provider-card${selectedClass}" onclick="selectProvider('${p.id}')">
+          <div class="name">${p.name} ${badge}</div>
+          <div class="desc">${p.desc}</div>
+        </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function selectProvider(id) {
+      selectedProvider = id;
+      renderProviderCards();
+
+      if (id === 'custom') {
+        document.getElementById('customProviderGroup').style.display = 'block';
+      } else {
+        document.getElementById('customProviderGroup').style.display = 'none';
+      }
+
+      prepareProviderStep();
+      setStep(4);
+    }
+
+    // ── Step 4: Provider details ──────────────────
+    function prepareProviderStep() {
+      const title = document.getElementById('providerStepTitle');
+      const instructions = document.getElementById('providerInstructions');
+      const credLabel = document.getElementById('credentialLabel');
+      const input = document.getElementById('apiKeyInput');
+      const keyStatus = document.getElementById('keyStatus');
+      document.getElementById('connectionError').style.display = 'none';
+      document.getElementById('connectionSuccess').style.display = 'none';
+      document.getElementById('modelSelectionArea').style.display = 'none';
+      keyStatus.textContent = '';
+      chosenModelId = null;
+
+      const providerNames = {
+        fireworks: 'Fireworks AI',
+        openrouter: 'OpenRouter',
+        deepseek: 'DeepSeek',
+        ollama: 'Ollama',
+        custom: 'Custom Provider'
+      };
+
+      title.textContent = 'Connect ' + (providerNames[selectedProvider] || selectedProvider);
+
+      if (selectedProvider === 'ollama') {
+        instructions.innerHTML = '<p>Ollama runs locally. Enter your Ollama server URL (default: http://localhost:11434).</p>';
+        credLabel.textContent = 'Ollama Server URL';
+        input.type = 'url';
+        input.placeholder = 'http://localhost:11434';
+        input.value = existingPrefs.api_keys && existingPrefs.api_keys.ollama_url ? existingPrefs.api_keys.ollama_url : 'http://localhost:11434';
+      } else if (selectedProvider === 'custom') {
+        instructions.innerHTML = '<p>Enter your OpenAI-compatible endpoint URL and API key.</p>';
+        credLabel.textContent = 'API Key';
+        input.type = 'password';
+        input.placeholder = 'sk-...';
+        input.value = '';
+      } else {
+        const links = {
+          fireworks: '<a href="https://fireworks.ai" target="_blank">fireworks.ai</a>',
+          openrouter: '<a href="https://openrouter.ai" target="_blank">openrouter.ai</a>',
+          deepseek: '<a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a>'
+        };
+        instructions.innerHTML = `<p>Get your API key from ${links[selectedProvider] || 'your provider'} and paste it below.</p>`;
+        credLabel.textContent = 'API Key';
+        input.type = 'password';
+        const placeholders = { fireworks: 'fw_...', openrouter: 'sk-or-...', deepseek: 'sk-...' };
+        input.placeholder = placeholders[selectedProvider] || 'sk-...';
+        input.value = (existingPrefs.api_keys && existingPrefs.api_keys[selectedProvider]) || '';
+      }
+    }
+
+    // ── Test connection & verify key ──────────────
+    async function testConnection() {
+      const errorEl = document.getElementById('connectionError');
+      const successEl = document.getElementById('connectionSuccess');
+      const keyStatus = document.getElementById('keyStatus');
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+      keyStatus.textContent = '';
+      const btn = document.getElementById('testConnectionBtn');
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+
+      const apiKey = document.getElementById('apiKeyInput').value.trim();
+
+      if (selectedProvider === 'ollama') {
+        try {
+          const ollamaUrl = apiKey || 'http://localhost:11434';
+          const resp = await fetch(ollamaUrl + '/api/tags');
+          if (resp.ok) {
+            const data = await resp.json();
+            const models = (data.models || []).map(m => ({ id: m.name, name: m.name, provider: 'ollama' }));
+            catalogModels = models;
+            successEl.textContent = `Connected! ${models.length} local models available.`;
+            successEl.style.display = 'block';
+            if (models.length) renderModelSelection(models);
+            else {
+              successEl.textContent = 'Connected! No models found. Pull a model with: ollama pull llama3';
+            }
+          } else {
+            errorEl.textContent = 'Could not connect to Ollama at ' + ollamaUrl;
+            errorEl.style.display = 'block';
+          }
+        } catch (e) {
+          errorEl.textContent = 'Could not reach Ollama server. Make sure it is running.';
+          errorEl.style.display = 'block';
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Verify & Continue';
+        }
+        return;
+      }
+
+      if (!apiKey) {
+        errorEl.textContent = 'Please enter an API key.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Verify & Continue';
+        return;
+      }
+
+      try {
+        const verifyResp = await fetch('/api/verify-key', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ provider: selectedProvider, key: apiKey })
+        });
+        const verifyData = await verifyResp.json();
+
+        if (!verifyData.valid) {
+          errorEl.textContent = verifyData.error || 'Invalid API key. Please check and try again.';
+          errorEl.style.display = 'block';
+          keyStatus.textContent = 'Invalid key';
+          keyStatus.className = 'key-status invalid';
+          btn.disabled = false;
+          btn.textContent = 'Verify & Continue';
+          return;
+        }
+
+        keyStatus.textContent = 'Key verified';
+        keyStatus.className = 'key-status valid';
+
+        const catalogResp = await fetch('/api/models/catalog', { credentials: 'include' });
+        if (catalogResp.ok) {
+          const catalog = await catalogResp.json();
+          const providerModels = catalog[selectedProvider] || [];
+          catalogModels = providerModels.map(m => ({
+            id: m.id || m.name || m.value,
+            name: m.name || m.id || m.value,
+            provider: selectedProvider,
+            cost: m.input_cost_per_1m || 0
+          }));
+        }
+
+        if (catalogModels.length) {
+          successEl.textContent = `Key verified! ${catalogModels.length} models available.`;
+          successEl.style.display = 'block';
+          renderModelSelection(catalogModels);
+        } else {
+          successEl.textContent = 'Key verified! You can select a model later.';
+          successEl.style.display = 'block';
+          chosenModelId = null;
+          setTimeout(() => saveProviderAndModel(), 1200);
+        }
+      } catch (e) {
+        errorEl.textContent = 'Could not reach server. Check your connection.';
+        errorEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Verify & Continue';
+      }
+    }
+
+    function renderModelSelection(models) {
+      document.getElementById('modelSelectionArea').style.display = 'block';
+      chosenModelId = models[0] ? models[0].id : null;
+      const list = document.getElementById('modelList');
+      list.innerHTML = models.map(m => {
+        const costStr = m.cost ? '$' + m.cost + '/1M' : 'Free';
+        const selClass = m.id === chosenModelId ? ' selected' : '';
+        return `<div class="model-item${selClass}" onclick="selectModel('${m.id.replace(/'/g, "\\'")}', this)">
+          <span class="model-name">${m.name || m.id}</span>
+          <span class="model-cost">${costStr}</span>
+        </div>`;
+      }).join('');
+    }
+
+    function selectModel(id, el) {
+      document.querySelectorAll('.model-item').forEach(i => i.classList.remove('selected'));
+      el.classList.add('selected');
+      chosenModelId = id;
+    }
+
+    // ── Save primary provider & model ─────────────
+    async function saveProviderAndModel() {
+      const apiKey = document.getElementById('apiKeyInput').value.trim();
+      const customUrl = document.getElementById('customProviderUrl').value.trim();
+
+      configData.primaryProvider = selectedProvider;
+      configData.primaryApiKey = apiKey;
+      configData.primaryModel = chosenModelId || '';
+      if (selectedProvider === 'custom') configData.customUrl = customUrl;
+
+      // Also store in additionalKeys map for consistency
+      if (selectedProvider !== 'ollama' && selectedProvider !== 'custom' && apiKey) {
+        configData.additionalKeys[selectedProvider] = apiKey;
+      }
+
+      setStep(5);
+    }
+
+    // ── Step 5: Save additional keys ──────────────
+    async function saveAdditionalKeys() {
+      configData.additionalKeys.deepseek = document.getElementById('deepseekKey').value.trim();
+      configData.additionalKeys.openrouter = document.getElementById('openrouterKey').value.trim();
+      configData.additionalKeys.fireworks = document.getElementById('fireworksKey').value.trim();
+      configData.additionalKeys.openai = document.getElementById('openaiKey').value.trim();
+      setStep(6);
+    }
+
+    // ── Step 6: Save Qdrant ──────────────────────
+    async function saveQdrant() {
+      configData.qdrant = {
+        url: document.getElementById('qdrantUrl').value.trim(),
+        apiKey: document.getElementById('qdrantApiKey').value.trim()
+      };
+      setStep(7);
+    }
+
+    // ── Step 7: Save Neo4j ──────────────────────
+    async function saveNeo4j() {
+      configData.neo4j = {
+        uri: document.getElementById('neo4jUri').value.trim(),
+        username: document.getElementById('neo4jUsername').value.trim(),
+        password: document.getElementById('neo4jPassword').value.trim(),
+        queryApiUrl: document.getElementById('neo4jQueryApiUrl').value.trim(),
+        mcpUrl: document.getElementById('neo4jMcpUrl').value.trim()
+      };
+      setStep(8);
+    }
+
+    // ── Step 8: Save Google Drive ────────────────
+    async function saveGoogleDrive() {
+      configData.googleDrive = {
+        clientId: document.getElementById('googleClientId').value.trim(),
+        token: document.getElementById('googleDriveToken').value.trim()
+      };
+      setStep(9);
+    }
+
+    // ── Step 9: Save directories ────────────────
+    async function saveDirectories() {
+      configData.directories = {
+        lawLibraryRoot: document.getElementById('lawLibraryRoot').value.trim(),
+        violationsRoot: document.getElementById('violationsRoot').value.trim(),
+        jurisprudenceRoot: document.getElementById('jurisprudenceRoot').value.trim(),
+        masterFilesRoot: document.getElementById('masterFilesRoot').value.trim()
+      };
+      setStep(10);
+    }
+
+    // ── Step 10: Save optional services ─────────
+    async function saveOptionalServices() {
+      configData.optionalServices = {
+        comfyuiBackend: document.getElementById('comfyuiBackend').value.trim()
+      };
+      setStep(11);
+      renderReviewSummary();
+    }
+
+    function renderReviewSummary() {
+      const summary = document.getElementById('reviewSummary');
+      const lines = [];
+      lines.push(`<strong>Language:</strong> ${configData.language.response}`);
+      if (configData.primaryProvider) {
+        lines.push(`<strong>Primary AI:</strong> ${configData.primaryProvider}${configData.primaryModel ? ' (' + configData.primaryModel + ')' : ''}`);
+      }
+      const additionalKeys = Object.entries(configData.additionalKeys).filter(([k,v]) => v);
+      if (additionalKeys.length) lines.push(`<strong>Additional AI keys:</strong> ${additionalKeys.map(([k]) => k).join(', ')}`);
+      if (configData.qdrant.url) lines.push(`<strong>Qdrant:</strong> ${configData.qdrant.url}`);
+      if (configData.neo4j.uri) lines.push(`<strong>Neo4j:</strong> ${configData.neo4j.uri}`);
+      if (configData.googleDrive.clientId) lines.push(`<strong>Google Drive:</strong> configured`);
+      const dirs = Object.entries(configData.directories).filter(([k,v]) => v);
+      if (dirs.length) lines.push(`<strong>Directories:</strong> ${dirs.length} path(s) set`);
+      if (configData.optionalServices.comfyuiBackend) lines.push(`<strong>ComfyUI:</strong> ${configData.optionalServices.comfyuiBackend}`);
+      summary.innerHTML = lines.map(l => `<p style="margin-bottom:4px;">${l}</p>`).join('');
+    }
+
+    // ── Finish setup ─────────────────────────────
+    async function finishSetup() {
+      // Build final configuration object to send
+      const payload = {
+        setup_complete: true,
+        skipped: false,
+        language: configData.language,
+        config: {
+          primary_provider: configData.primaryProvider || null,
+          primary_model: configData.primaryModel || null,
+          custom_url: configData.customUrl || null,
+          qdrant_url: configData.qdrant.url || null,
+          qdrant_api_key: configData.qdrant.apiKey || null,
+          neo4j_uri: configData.neo4j.uri || null,
+          neo4j_username: configData.neo4j.username || null,
+          neo4j_password: configData.neo4j.password || null,
+          neo4j_query_api_url: configData.neo4j.queryApiUrl || null,
+          neo4j_mcp_url: configData.neo4j.mcpUrl || null,
+          google_client_id: configData.googleDrive.clientId || null,
+          google_drive_token: configData.googleDrive.token || null,
+          law_library_root: configData.directories.lawLibraryRoot || null,
+          violations_root: configData.directories.violationsRoot || null,
+          jurisprudence_root: configData.directories.jurisprudenceRoot || null,
+          master_files_root: configData.directories.masterFilesRoot || null,
+          comfyui_backend: configData.optionalServices.comfyuiBackend || null,
+          deepseek_api_key: configData.additionalKeys.deepseek || null,
+          openrouter_api_key: configData.additionalKeys.openrouter || null,
+          fireworks_api_key: configData.additionalKeys.fireworks || null,
+          openai_api_key: configData.additionalKeys.openai || null,
+          // Also include primary key if not already in additionalKeys
+          primary_api_key: configData.primaryApiKey || null,
+          ollama_url: (configData.primaryProvider === 'ollama' && configData.primaryApiKey) ? configData.primaryApiKey : null
+        }
+      };
+
+      // Try to send to backend endpoint
+      try {
+        await fetch('/api/setup/save', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {}
+
+      // Also update localStorage for backward compatibility
+      try {
+        const wsConfig = JSON.parse(localStorage.getItem('OliviaLegal.workspace.config') || '{}');
+        if (payload.config.primary_model) wsConfig.model = payload.config.primary_model;
+        if (payload.config.primary_provider) wsConfig.provider = payload.config.primary_provider;
+        localStorage.setItem('OliviaLegal.workspace.config', JSON.stringify(wsConfig));
+
+        const apiKeys = JSON.parse(localStorage.getItem('OliviaLegal.api.keys') || '{}');
+        if (payload.config.primary_provider && payload.config.primary_api_key) {
+          apiKeys[payload.config.primary_provider] = payload.config.primary_api_key;
+        }
+        if (payload.config.deepseek_api_key) apiKeys.deepseek = payload.config.deepseek_api_key;
+        if (payload.config.openrouter_api_key) apiKeys.openrouter = payload.config.openrouter_api_key;
+        if (payload.config.fireworks_api_key) apiKeys.fireworks = payload.config.fireworks_api_key;
+        if (payload.config.openai_api_key) apiKeys.openai = payload.config.openai_api_key;
+        localStorage.setItem('OliviaLegal.api.keys', JSON.stringify(apiKeys));
+      } catch (e) {}
+
+      if (isModalMode) {
+        try {
+          window.parent.postMessage({ type: 'olivia-setup-complete', prefs: payload }, '*');
+        } catch (e) {}
+      }
+
+      closeOrRedirect();
+    }
+
+    function closeOrRedirect() {
+      if (isModalMode) {
+        const overlay = document.getElementById('setup-overlay');
+        if (overlay) overlay.style.display = 'none';
+        try {
+          const parentOverlay = window.parent.document.getElementById('setup-overlay');
+          if (parentOverlay) parentOverlay.style.display = 'none';
+        } catch (e) {}
+        document.body.style.display = 'none';
+      } else {
+        window.location.href = '/';
+      }
+    }
+  </script>
+</body>
+</html>

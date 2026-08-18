@@ -11496,6 +11496,137 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         except Exception as exc:
             self._json_response({"error": str(exc)}, 400)
 
+    def _setup_save_post(self):
+        """POST /api/setup/save — persist workspace setup config from the wizard.
+
+        Expected payload (from frontend/auth/olivia-workspace-setup.html):
+            {
+              "setup_complete": true,
+              "skipped": false,
+              "language": "en",          # response language preference
+              "config": {
+                "primary_provider": "openrouter",
+                "primary_model": "google/gemini-2.5-flash",
+                "custom_url": null,
+                "qdrant_url": "http://localhost:6333",
+                "qdrant_api_key": null,
+                "neo4j_uri": null,
+                "neo4j_username": null,
+                "neo4j_password": null,
+                "neo4j_query_api_url": null,
+                "neo4j_mcp_url": null,
+                "google_client_id": null,
+                "google_drive_token": null,
+                "law_library_root": null,
+                "violations_root": null,
+                "jurisprudence_root": null,
+                "master_files_root": null,
+                "comfyui_backend": null,
+                "deepseek_api_key": null,
+                "openrouter_api_key": null,
+                "fireworks_api_key": null,
+                "openai_api_key": null,
+                "primary_api_key": null,
+                "ollama_url": null
+              }
+            }
+        """
+        body = self._read_body()
+        config = body.get("config", {}) if isinstance(body, dict) else {}
+        if not isinstance(config, dict):
+            config = {}
+
+        # Map config keys → .env variable names, writing only non-null secrets
+        # so existing env values are preserved when the wizard leaves a field blank.
+        env_map = {
+            "deepseek_api_key":   ("DEEPSEEK_API_KEY",   config.get("deepseek_api_key")),
+            "openrouter_api_key": ("OPENROUTER_API_KEY", config.get("openrouter_api_key")),
+            "fireworks_api_key":  ("FIREWORKS_API_KEY",  config.get("fireworks_api_key")),
+            "openai_api_key":     ("OPENAI_API_KEY",     config.get("openai_api_key")),
+            "qdrant_url":         ("QDRANT_URL",         config.get("qdrant_url")),
+            "qdrant_api_key":     ("QDRANT_API_KEY",     config.get("qdrant_api_key")),
+            "neo4j_uri":          ("NEO4J_URI",          config.get("neo4j_uri")),
+            "neo4j_username":     ("NEO4J_USER",         config.get("neo4j_username")),
+            "neo4j_password":     ("NEO4J_PASS",         config.get("neo4j_password")),
+            "neo4j_query_api_url":("NEO4J_QUERY_API_URL",config.get("neo4j_query_api_url")),
+            "google_client_id":   ("GOOGLE_CLIENT_ID",   config.get("google_client_id")),
+            "google_drive_token": ("GOOGLE_DRIVE_TOKEN", config.get("google_drive_token")),
+            "law_library_root":   ("Olivia_LAW_LIBRARY_ROOT", config.get("law_library_root")),
+            "violations_root":    ("Olivia_VIOLATIONS_ROOT", config.get("violations_root")),
+            "jurisprudence_root": ("Olivia_JURISPRUDENCE_ROOT", config.get("jurisprudence_root")),
+            "master_files_root":  ("Olivia_MASTER_FILES_ROOT", config.get("master_files_root")),
+            "comfyui_backend":    ("OLIVIA_COMFYUI_BACKEND_URL", config.get("comfyui_backend")),
+        }
+        for _var, (env_name, value) in env_map.items():
+            if value is None:
+                continue
+            v = str(value).strip()
+            if not v:
+                continue
+            os.environ[env_name] = v
+            try:
+                self._persist_env_var(env_name, v)
+            except Exception:
+                pass
+
+        # Ollama handled slightly differently: provider=ollama ⇒ primary field is a URL
+        if config.get("primary_provider") == "ollama":
+            ollama_url = (config.get("ollama_url") or config.get("primary_api_key") or "").strip()
+            if ollama_url:
+                os.environ["OLLAMA_HOST"] = ollama_url
+                try:
+                    self._persist_env_var("OLLAMA_HOST", ollama_url)
+                except Exception:
+                    pass
+
+        # Save user-scoped preferences (non-secret defaults + setup state) so the
+        # wizard is remembered per-user across sessions.
+        email = self._auth_current_email()
+        if email:
+            prefs = _auth_get_preferences(email)
+            prefs["setup_complete"] = bool(body.get("setup_complete", False))
+            prefs["skipped"] = bool(body.get("skipped", False))
+            prefs["provider"] = config.get("primary_provider")
+            prefs["primary_model"] = config.get("primary_model")
+            if body.get("language"):
+                prefs["language"] = {"response": body.get("language")}
+            # Persist a non-secret config snapshot for quick restore
+            safe_config = {
+                "primary_provider": config.get("primary_provider"),
+                "primary_model": config.get("primary_model"),
+                "qdrant_url": config.get("qdrant_url"),
+                "neo4j_uri": config.get("neo4j_uri"),
+                "law_library_root": config.get("law_library_root"),
+                "violations_root": config.get("violations_root"),
+                "jurisprudence_root": config.get("jurisprudence_root"),
+                "master_files_root": config.get("master_files_root"),
+                "comfyui_backend": config.get("comfyui_backend"),
+            }
+            prefs["config"] = safe_config
+            try:
+                _auth_update_preferences(email, prefs)
+            except Exception:
+                pass
+
+        # Reload module-level env-driven globals so newly set keys take effect
+        # without a restart for things like model availability checks.
+        try:
+            import importlib as _importlib
+            _globals = globals()
+            _globals["DEEPSEEK_API_KEY"] = os.environ.get("DEEPSEEK_API_KEY", "")
+            _globals["OPENROUTER_API_KEY"] = os.environ.get("OPENROUTER_API_KEY", "")
+            _globals["OPENAI_API_KEY"] = os.environ.get("OPENAI_API_KEY", "")
+            _globals["FIREWORKS_API_KEY"] = os.environ.get("FIREWORKS_API_KEY", "")
+        except Exception:
+            pass
+
+        self._json_response({
+            "status": "ok",
+            "setup_complete": bool(body.get("setup_complete", False)),
+            "provider": config.get("primary_provider"),
+            "model": config.get("primary_model"),
+        })
+
     def _supplied_admin_token(self) -> str:
         direct = str(self.headers.get(_ADMIN_TOKEN_HEADER) or "").strip()
         if direct:
@@ -18477,6 +18608,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # ── User Context Files API ───────────────────────────────────
         if path == "/api/user/context-files":
             self._user_context_files_post()
+            return
+
+        # ── Setup Wizard API ────────────────────────────────────────
+        if path == "/api/setup/save":
+            self._setup_save_post()
             return
 
         # ── User Preferences API ─────────────────────────────────────
