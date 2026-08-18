@@ -2,6 +2,34 @@
 
 Olivia is the central assistant and agent-communication layer for the Olivia legal workspace: UI/chat orchestration, an MCP bridge that exposes VPS endpoints as tools, case-context injection into every run, and planning continuity.
 
+## First run / Initial setup
+
+After starting the server for the first time and logging in, you'll see the **Setup Wizard** — a guided, 11-step onboarding flow that lets you connect Olivia to your preferred AI providers, databases, and local document directories.
+
+You can reach it at `http://localhost:3229/olivia/setup` or it will open automatically on first login.
+
+The wizard steps:
+
+| Step | What you configure | Required? |
+|------|--------------------|-----------|
+| 1. Welcome | Overview — skip or get started | No |
+| 2. Language | Response language preference | No |
+| 3. AI Provider | Choose your **primary** AI (Fireworks, OpenRouter, DeepSeek, Ollama local, or Custom) | No |
+| 4. API Key + Model | Enter key for the primary provider and select a default model | No |
+| 5. Additional AI Keys | Optional keys for other providers you may switch to later | No |
+| 6. Qdrant | Vector DB for semantic search / long-term memory | No |
+| 7. Neo4j | Graph DB for the legal knowledge graph | No |
+| 8. Google Drive | OAuth credentials so Olivia can ingest Drive documents | No |
+| 9. Local directories | Paths for law library, violations, jurisprudence, master files | No |
+| 10. Optional backends | ComfyUI endpoint (for image/document generation) | No |
+| 11. Review & Finish | Confirm your selections — written to `.env` via the backend | — |
+
+**Every step can be skipped** — you can always complete configuration later by re-running the setup wizard (`/olivia/setup`) or editing your `.env` file directly.
+
+When you finish, the wizard sends the configuration to `POST /api/setup/save`, which writes the non-null values to your `.env` file and stores a safe (non-secret) snapshot in your user preferences. On subsequent runs, the wizard loads your existing preferences (`/api/user/preferences`) and pre-fills fields you've already configured, so you can update individual keys without re-entering everything.
+
+If the app is embedded (e.g., inside the Electron desktop client), the wizard detects modal mode and communicates completion back to the host window via `postMessage`.
+
 ## Quick start
 
 ```bash

@@ -774,6 +774,102 @@
                 opacity: .75;
             }
         }
+        /* ═══════════════════════════════════════════
+           SETUP MODAL OVERLAY
+           ═══════════════════════════════════════════ */
+        .setup-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 10000;
+        }
+
+        .setup-modal-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .setup-modal {
+            background: var(--bg-card, #1f1f1d);
+            border: 1px solid var(--border, #2a2a28);
+            border-radius: 16px;
+            padding: 28px 32px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            transform: translateY(-10px);
+            transition: transform 0.3s ease;
+        }
+
+        .setup-modal-overlay.show .setup-modal {
+            transform: translateY(0);
+        }
+
+        .setup-modal .mode-icon {
+            margin: 0 auto 16px;
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+        }
+
+        .setup-modal h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 22px;
+            font-weight: 500;
+            margin: 0 0 8px;
+            color: var(--text, #e8e8e8);
+        }
+
+        .setup-modal p {
+            color: var(--text-muted, #a8a8a8);
+            font-size: 14px;
+            margin: 0 0 24px;
+            line-height: 1.5;
+        }
+
+        .setup-modal .btn-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .setup-modal .btn-row button {
+            flex: 1;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .setup-modal .btn-skip {
+            background: transparent;
+            color: var(--text-muted, #a8a8a8);
+        }
+
+        .setup-modal .btn-skip:hover {
+            color: var(--text, #e8e8e8);
+        }
+
+        .setup-modal .btn-start {
+            background: var(--green-dark, #7FA98E);
+            color: #fff;
+        }
+
+        .setup-modal .btn-start:hover {
+            background: var(--green-mid, #A9CBB7);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 
@@ -819,9 +915,22 @@
             </div>
         </header>
 
+        <!-- ═══ SETUP MODAL ═══ -->
+        <div class="setup-modal-overlay" id="setupModalOverlay">
+            <div class="setup-modal">
+                <div class="mode-icon terra"><i class="fas fa-cog"></i></div>
+                <h3 class="setup-title">Initial Setup</h3>
+                <p class="setup-msg">Let's configure your workspace environment.</p>
+                <div class="btn-row">
+                    <button type="button" class="btn-skip" id="skipSetupBtn">Do it later</button>
+                    <button type="button" class="btn-start" id="startSetupBtn">Start Setup</button>
+                </div>
+            </div>
+        </div>
+
         <!-- ═══ MODE CARDS ═══ -->
-        <div class="grid reveal">
-            <a class="mode-card" href="/olivia/olivia">
+        <div class="grid reveal" id="modeCards">
+            <a class="mode-card" href="/olivia/olivia" id="workspaceCard">
                 <div class="mode-icon verde"><i class="fas fa-table-columns"></i></div>
                 <div class="mode-title" data-i18n="workspaceTitle">Workspace</div>
                 <div class="mode-desc" data-i18n="workspaceDesc">Ambiente completo para análise jurídica, agentes de IA,
@@ -829,15 +938,7 @@
                 <span class="mode-arrow" data-i18n="access">Acessar <i class="fas fa-arrow-right"></i></span>
             </a>
 
-            <a class="mode-card" href="/olivia/residente">
-                <div class="mode-icon azul"><i class="fas fa-mobile-screen-button"></i></div>
-                <div class="mode-title" data-i18n="mobileTitle">Mobile Remote</div>
-                <div class="mode-desc" data-i18n="mobileDesc">Acesso simplificado para acompanhamento, consultas rápidas
-                    e operação remota.</div>
-                <span class="mode-arrow" data-i18n="access">Acessar <i class="fas fa-arrow-right"></i></span>
-            </a>
-
-            <a class="mode-card" href="/olivia/agent">
+            <a class="mode-card" href="/olivia/agent" id="agentCard">
                 <div class="mode-icon terra"><i class="fas fa-comments"></i></div>
                 <div class="mode-title" data-i18n="agentTitle">Agent Mobile</div>
                 <div class="mode-desc" data-i18n="agentDesc">Assistente conversacional otimizado para análise, consultas
@@ -898,7 +999,11 @@
                 errorNotif: 'Não foi possível carregar notificações.',
                 homeLink: '<i class="fas fa-arrow-left"></i> Página inicial',
                 logoutLink: '<i class="fas fa-sign-out-alt"></i> Sair',
-                markRead: 'Marcar lida'
+                markRead: 'Marcar lida',
+                setupTitle: 'Configuração Inicial',
+                setupMsg: 'Vamos configurar seu ambiente de trabalho.',
+                setupSkip: 'Fazer isso depois',
+                setupStart: 'Iniciar Configuração'
             },
             en: {
                 kicker: '<span class="pulse-dot"></span> Active session · Olivia',
@@ -918,7 +1023,11 @@
                 errorNotif: 'Could not load notifications.',
                 homeLink: '<i class="fas fa-arrow-left"></i> Home',
                 logoutLink: '<i class="fas fa-sign-out-alt"></i> Logout',
-                markRead: 'Mark read'
+                markRead: 'Mark read',
+                setupTitle: 'Initial Setup',
+                setupMsg: 'Let\'s configure your workspace environment.',
+                setupSkip: 'Do it later',
+                setupStart: 'Start Setup'
             },
             es: {
                 kicker: '<span class="pulse-dot"></span> Sesión activa · OliviaLegal',
@@ -1261,7 +1370,85 @@
 
             // Notifications
             loadNotifications();
+
+            // ═══ DEVICE-DETECTION AUTO-REDIRECT ═══
+            // Mobile → Agent Mobile, Computer → Workspace (auto)
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+                .test(navigator.userAgent);
+            // Allow manual override via ?mode=workspace or ?mode=agent
+            const urlParams = new URLSearchParams(window.location.search);
+            const forcedMode = urlParams.get('mode');
+            if (!forcedMode) {
+                const target = isMobile
+                    ? '/olivia/agent'
+                    : '/olivia/olivia';
+                window.location.href = target;
+                return; // do not show the page, we're redirecting
+            }
+
+            // ═══ SETUP MODAL (4s delay on first Workspace visit) ═══
+            // Only fires for computer/workspace users on first visit
+            const setupModal = document.getElementById('setupModalOverlay');
+            if (setupModal) {
+                const hasSeenSetup = sessionStorage.getItem('olivia_setup_complete');
+                if (!hasSeenSetup && (isMobile === false || forcedMode === 'workspace')) {
+                    setTimeout(() => {
+                        setupModal.classList.add('show');
+                        // Apply translated text
+                        const dict = getCurrentDict();
+                        if (dict) {
+                            const title = setupModal.querySelector('.setup-title');
+                            const msg = setupModal.querySelector('.setup-msg');
+                            const skip = setupModal.querySelector('.btn-skip');
+                            const start = setupModal.querySelector('.btn-start');
+                            if (title) title.textContent = dict.setupTitle;
+                            if (msg) msg.textContent = dict.setupMsg;
+                            if (skip) skip.textContent = dict.setupSkip;
+                            if (start) start.textContent = dict.setupStart;
+                        }
+                    }, 4000);
+                }
+            }
         });
+
+        // Helper: show the setup modal on demand (e.g. from a button)
+        window.openSetupModal = function() {
+            const overlay = document.getElementById('setupModalOverlay');
+            if (overlay) overlay.classList.add('show');
+        };
+
+        // Close handler
+        (function() {
+            const closeAndRedirect = function() {
+                const overlay = document.getElementById('setupModalOverlay');
+                if (overlay) overlay.classList.remove('show');
+                // Mark as seen so we don't ask again
+                sessionStorage.setItem('olivia_setup_complete', 'true');
+                window.location.href = '/olivia/olivia-setup';
+            };
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.btn-start') || e.target.closest('#startSetupBtn')) {
+                    e.preventDefault();
+                    closeAndRedirect();
+                }
+                if (e.target.closest('.btn-skip') || e.target.closest('#skipSetupBtn')) {
+                    e.preventDefault();
+                    const overlay = document.getElementById('setupModalOverlay');
+                    if (overlay) overlay.classList.remove('show');
+                    sessionStorage.setItem('olivia_setup_complete', 'true');
+                }
+            });
+        })();
+
+        // Helper to get current translation dict
+        function getCurrentDict() {
+            const currentLang = detectLanguage();
+            const langs = window.LANGUAGES || {};
+            if (currentLang === 'pt' || currentLang === 'pt-BR') {
+                return langs.pt || langs['pt-BR'];
+            }
+            return langs.en || null;
+        }
     </script>
     <script src="/olivia/auth-activity/tracker.js"></script>
 </body>
