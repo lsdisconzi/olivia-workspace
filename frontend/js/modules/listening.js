@@ -247,6 +247,10 @@ var lsClipEnd = null;            // clip end time in seconds (null = until end)
 /* ── ALLOWED VIDEO EXTENSIONS ── */
 var LS_VIDEO_EXTS = ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'];
 
+/* ── SEGMENT PLAYBACK STATE ── */
+var lsSegmentAudio = null;
+var lsSegmentPlayingBtn = null;
+
 /* ── SHOW / HIDE VIEW ── */
 window.listeningShowView = function(){
   var hide = ['chatHeader','welcomeState','chatLog','chatCompose','chatToolbar'];
@@ -271,6 +275,8 @@ window.listeningShowView = function(){
   lsLoadConfig();
   // Best-effort: refresh context lists when the panel is shown.
   try { if(typeof window.lsRefreshContext === 'function') window.lsRefreshContext(); } catch(_e){}
+  // Initialise collapsible cards
+  lsInitCollapsibleCards();
 };
 
 window.listeningHideView = function(){
@@ -1052,15 +1058,104 @@ async function lsRunTranscription(file){
   }
 }
 
-/* ── RENDER TRANSCRIPT ── */
+/* ── COLLAPSIBLE CARDS ── */
+function lsInitCollapsibleCards() {
+  document.querySelectorAll('.ls-card-head').forEach(function(head) {
+    if (head.dataset.lsCollapsibleBound) return;
+    head.dataset.lsCollapsibleBound = 'true';
+
+    if (!head.querySelector('.ls-toggle-icon')) {
+      var icon = document.createElement('i');
+      icon.className = 'fas fa-chevron-down ls-toggle-icon';
+      head.appendChild(icon);
+    }
+
+    head.addEventListener('click', function(e) {
+      if (e.target.closest('button, input, select, textarea, a')) return;
+      var card = head.closest('.ls-card');
+      if (card) card.classList.toggle('collapsed');
+    });
+  });
+}
+
+/* ── SEGMENT PLAYBACK ── */
+window.lsPlaySegment = function(start, end, btn) {
+  if (lsSegmentAudio) {
+    lsSegmentAudio.pause();
+    lsSegmentAudio.currentTime = 0;
+    lsSegmentAudio = null;
+  }
+  if (lsSegmentPlayingBtn) {
+    lsSegmentPlayingBtn.classList.remove('playing');
+    lsSegmentPlayingBtn.innerHTML = '▶';
+    lsSegmentPlayingBtn = null;
+  }
+
+  if (!lsSelectedFileUrl && !lsSelectedFile) {
+    lsToast('⚠️ Mídia original não disponível para reprodução');
+    return;
+  }
+
+  var audioUrl = lsSelectedFileUrl;
+  if (!audioUrl && lsSelectedFile) {
+    audioUrl = URL.createObjectURL(lsSelectedFile);
+    lsSelectedFileUrl = audioUrl; // cache it
+  }
+
+  lsSegmentAudio = new Audio(audioUrl);
+  lsSegmentAudio.currentTime = Math.max(0, start);
+  lsSegmentPlayingBtn = btn;
+  if (btn) {
+    btn.classList.add('playing');
+    btn.innerHTML = '⏸';
+  }
+
+  lsSegmentAudio.play().catch(function(err) {
+    lsToast('Playback error: ' + err.message);
+    if (btn) {
+      btn.classList.remove('playing');
+      btn.innerHTML = '▶';
+    }
+  });
+
+  var stopAt = end;
+  var checkInterval = setInterval(function() {
+    if (lsSegmentAudio && lsSegmentAudio.currentTime >= stopAt) {
+      lsSegmentAudio.pause();
+      clearInterval(checkInterval);
+      if (lsSegmentPlayingBtn) {
+        lsSegmentPlayingBtn.classList.remove('playing');
+        lsSegmentPlayingBtn.innerHTML = '▶';
+        lsSegmentPlayingBtn = null;
+      }
+      lsSegmentAudio = null;
+    }
+  }, 250);
+
+  lsSegmentAudio._stopInterval = checkInterval;
+  lsSegmentAudio.addEventListener('pause', function() {
+    clearInterval(checkInterval);
+    if (lsSegmentPlayingBtn) {
+      lsSegmentPlayingBtn.classList.remove('playing');
+      lsSegmentPlayingBtn.innerHTML = '▶';
+      lsSegmentPlayingBtn = null;
+    }
+    if (lsSegmentAudio === this) lsSegmentAudio = null;
+  });
+};
+
+/* ── RENDER TRANSCRIPT (updated with play button + editable text) ── */
 function lsRenderTranscript(segments){
   var body = document.getElementById('lsTranscriptBody'); if(!body) return;
   body.innerHTML = '';
-  var speakerIdx = {}, idx = 0;
-  (segments||[]).forEach(function(seg){
+  var speakerIdx = {};
+  var speakerColorIdx = 0;
+  (segments||[]).forEach(function(seg, segIndex){
     var text = (seg.text||'').trim(); if(!text) return;
     var spk = seg.speaker || 'UNKNOWN';
-    if(speakerIdx[spk] === undefined) speakerIdx[spk] = idx++;
+    if(speakerIdx[spk] === undefined) {
+      speakerIdx[spk] = speakerColorIdx++;
+    }
     var name = lsSpeakerLabels[spk] || spk;
     var color = lsSpeakerColor(speakerIdx[spk]);
     var row = document.createElement('div');
@@ -1068,12 +1163,54 @@ function lsRenderTranscript(segments){
     row.innerHTML =
       '<div class="ls-seg-time">'+lsFmtTime(seg.start)+'</div>'+
       '<div class="ls-seg-dot" style="background:'+color+'"></div>'+
+      '<button class="ls-seg-play" data-start="'+seg.start+'" data-end="'+seg.end+'" data-index="'+segIndex+'" title="Play segment">▶</button>'+
       '<div class="ls-seg-body">' +
         '<div class="ls-seg-speaker" style="color:'+color+'">'+name+'</div>'+
-        '<div class="ls-seg-text">'+text+'</div>'+
+        '<div class="ls-seg-text" contenteditable="true" data-index="'+segIndex+'" spellcheck="false">'+text+'</div>'+
       '</div>';
     body.appendChild(row);
   });
+
+  // Attach play button events
+  body.querySelectorAll('.ls-seg-play').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var start = parseFloat(btn.dataset.start);
+      var end = parseFloat(btn.dataset.end);
+      if(isNaN(start) || isNaN(end)){
+        lsToast('Segmento sem timestamps válidos');
+        return;
+      }
+      lsPlaySegment(start, end, btn);
+    });
+  });
+
+  // Attach editable text events
+  body.querySelectorAll('.ls-seg-text').forEach(function(el){
+    el.addEventListener('input', function(){
+      var idx = parseInt(el.dataset.index);
+      var newText = el.textContent.trim();
+      if(lsCurrentResponse && lsCurrentResponse.segments && lsCurrentResponse.segments[idx]){
+        lsCurrentResponse.segments[idx].text = newText;
+      }
+    });
+
+    el.addEventListener('blur', function(){
+      var idx = parseInt(el.dataset.index);
+      if(lsCurrentResponse && lsCurrentResponse.segments && lsCurrentResponse.segments[idx]){
+        var newText = el.textContent.trim();
+        if(newText !== lsCurrentResponse.segments[idx].text){
+          lsCurrentResponse.segments[idx].text = newText;
+          lsToast('Segmento atualizado');
+          // Optionally re-render speakers to update word counts
+          lsRenderSpeakers(lsCurrentResponse.segments);
+        }
+      }
+    });
+  });
+
+  // Ensure collapsible cards are initialised
+  lsInitCollapsibleCards();
 }
 
 /* ── RENDER SPEAKERS ── */
@@ -1128,6 +1265,9 @@ function lsRenderSpeakers(segments){
     if(actions) actions.classList.add('visible');
     if(btn) btn.classList.add('active');
   }
+
+  // Ensure collapsible cards are initialised
+  lsInitCollapsibleCards();
 }
 
 /* ── INLINE SPEAKER EDITOR ── */

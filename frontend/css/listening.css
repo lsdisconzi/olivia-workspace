@@ -95,3 +95,65 @@
 .shared-endpoint-item .ep-method.post{background:rgba(100,150,220,.15);color:#8ab8e8}
 .shared-endpoint-item .ep-path{flex:1;font-family:var(--mono);color:var(--gray-hi);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .shared-endpoint-item .ep-ctx{width:14px;height:14px;accent-color:var(--blue);cursor:pointer}
+
+/* ── COLLAPSIBLE CARDS ── */
+.ls-card-head {
+  cursor: pointer;
+  user-select: none;
+}
+.ls-card-head .ls-toggle-icon {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  font-size: 11px;
+  color: var(--gray);
+}
+.ls-card.collapsed .ls-card-body {
+  display: none;
+}
+.ls-card.collapsed .ls-toggle-icon {
+  transform: rotate(-90deg);
+}
+
+/* ── SEGMENT PLAY BUTTON ── */
+.ls-seg-play {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--gray-hi);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.15s;
+  margin-top: 2px;
+}
+.ls-seg-play:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-lo);
+}
+.ls-seg-play.playing {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: white;
+}
+
+/* ── EDITABLE SEGMENT TEXT ── */
+.ls-seg-text[contenteditable="true"] {
+  outline: none;
+  border-bottom: 1px dashed transparent;
+  transition: border-color 0.15s, background 0.15s;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.ls-seg-text[contenteditable="true"]:hover {
+  border-bottom-color: var(--border-hi);
+}
+.ls-seg-text[contenteditable="true"]:focus {
+  border-bottom-color: var(--amber);
+  background: var(--amber-lo);
+}

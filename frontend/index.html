@@ -3573,6 +3573,16 @@
             </div>
           </div>
         </div>
+        <!-- SEARCH RESULT MODAL -->
+        <div id="mvSearchResultModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:10001;overflow:auto;cursor:pointer"
+          onclick="mvCloseSearchResultModal()">
+          <div class="mv-result-modal-content" onclick="event.stopPropagation()">
+            <button onclick="mvCloseSearchResultModal()"
+              style="position:absolute;top:8px;right:12px;background:none;border:1px solid var(--border);color:var(--gray);border-radius:4px;padding:4px 8px;cursor:pointer"><i
+                class="fas fa-times"></i></button>
+            <div id="mvSearchResultModalBody"></div>
+          </div>
+        </div>
         <!-- INGEST panel -->
         <div class="mv-panel" id="mvPanel-ingest">
           <!-- Ingest type selector -->
@@ -7911,6 +7921,9 @@ function copyPanelContent(panelId) {
       if (window.OliviaUserPrefs && window.OliviaUserPrefs.load) {
         window.OliviaUserPrefs.load();
       }
+    }
+    if (event.data && event.data.type === 'olivia-close-setup') {
+      closeSetupModal();
     }
   });
 

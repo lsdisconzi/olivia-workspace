@@ -1770,6 +1770,9 @@
           OliviaUserPrefs.load();
         }
       }
+      if (event.data && event.data.type === 'olivia-close-setup') {
+        closeSetupModal();
+      }
     });
 
     /* ── INIT ── */

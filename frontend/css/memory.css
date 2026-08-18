@@ -61,6 +61,11 @@
 .mv-empty{text-align:center;padding:32px 16px;color:var(--gray)}
 .mv-loading{display:flex;align-items:center;gap:8px;padding:16px;font-size:12px;color:var(--gray)}
 .mv-error{padding:16px;color:var(--red);font-size:12px}
+.mv-result-modal-content{background:var(--panel);margin:5vh auto;padding:20px;border-radius:8px;max-width:800px;max-height:80vh;overflow:auto;position:relative;top:50%;transform:translateY(-50%);padding-left:40px}
+.mv-result-modal-body{margin-top:10px}
+.mv-result-modal .mv-result-header .mv-result-collection{color:var(--amber);font-weight:600}
+.mv-result-modal .mv-result-text{font-size:13px;color:var(--gray-hi);line-height:1.6;white-space:pre-wrap}
+.mv-result-modal .mv-result-meta div{background:rgba(0,0,0,0.04);padding:6px 10px;border-radius:4px}
 .mv-quadrant-item{font-size:11px;color:var(--gray-hi);padding:4px 0;border-bottom:1px solid var(--border);line-height:1.4}
 .mv-tag-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;background:rgba(200,160,60,.12);border:1px solid rgba(200,160,60,.25);color:var(--amber);font-size:10px;font-family:var(--mono)}
 .mv-tag-pill button{background:none;border:none;cursor:pointer;color:var(--amber);font-size:10px;padding:0;line-height:1}
@@ -101,3 +106,41 @@
 .mv-routing-flags label{display:flex;gap:4px;align-items:center;cursor:pointer}
 .mv-routing-input{width:100%;box-sizing:border-box;padding:6px 8px;border:1px solid var(--border);background:var(--bg);color:var(--white);font-family:var(--mono);font-size:10px;border-radius:6px;outline:none}
 .mv-routing-input:focus{border-color:var(--amber)}
+
+/* ── FULL-SCREEN MEMORY VIEW ── */
+#memoryView {
+  flex: 1;
+  min-height: 0;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+}
+#memoryView.active {
+  display: flex;
+}
+
+/* ── COLLAPSIBLE MEMORY CARDS / SECTIONS ── */
+.mv-card-head,
+.mv-panel-section-head,
+[data-mv-collapse] {
+  cursor: pointer;
+  user-select: none;
+}
+.mv-card-head .mv-toggle-icon,
+.mv-panel-section-head .mv-toggle-icon {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  font-size: 11px;
+  color: var(--gray);
+}
+.mv-card.collapsed .mv-card-body,
+.mv-panel-section.collapsed .mv-panel-section-body,
+[data-mv-collapse].collapsed + .mv-panel-section-body,
+[data-mv-collapse].collapsed + .mv-card-body {
+  display: none;
+}
+.mv-card.collapsed .mv-toggle-icon,
+.mv-panel-section.collapsed .mv-toggle-icon {
+  transform: rotate(-90deg);
+}

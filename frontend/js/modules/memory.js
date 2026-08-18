@@ -1,19 +1,3 @@
-/* ═══════════════════════════════════════════════════════════════════
-   MEMORY MODULE - Memory system, Qdrant, Neo4j, and memory management
-   ═══════════════════════════════════════════════════════════════════ */
-
-// Global memory variables
-let _mvCollections = [];
-let _mvShortMemory = [];
-let _mvChatHistory = [];
-let _mvIngestTags = [];
-let _mvGraphData = null;
-let _mvSelectedCollection = '';
-let _mvPrevOpen = null;
-let _mvRoutingConfig = { default_qdrant_url: '', rules: {} };
-let _mvCollectionDetailsOpen = '';
-let _mvPanelCtxListenerBound = false;
-
 // ── Phase 4.5 pilot: capability availability gate ─────────────────
 // Consumes window.OliviaCapabilities (Phase 3 primitive; D-005 says
 // availability ≠ raw service health). ADVISORY and DEFENSIVE: when the
@@ -85,30 +69,62 @@ function _mvUpdatePanelContextIndicator() {
     : 'Nenhum painel selecionado esta ativo no momento.';
 }
 
+// Global memory variables
+let _mvCollections = [];
+let _mvShortMemory = [];
+let _mvChatHistory = [];
+let _mvIngestTags = [];
+let _mvGraphData = null;
+let _mvSelectedCollection = '';
+let _mvPrevOpen = null;
+let _mvRoutingConfig = { default_qdrant_url: '', rules: {} };
+let _mvCollectionDetailsOpen = '';
+let _mvPanelCtxListenerBound = false;
+
 // Show memory view
 window.memoryShowView = function () {
   var hide = ['chatHeader', 'welcomeState', 'chatLog', 'chatCompose', 'chatToolbar'];
   hide.forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
+
+  // Collapse main content so memory gets full workspace width
+  var mc = document.querySelector('.main-content');
+  if (mc) { mc._mvDisplay = mc.style.display; mc.style.display = 'none'; }
+
   if (typeof aexHideMain === 'function') aexHideMain();
+
+  // Deactivate competing full-screen views
   var lv = document.getElementById('listeningView'); if (lv) lv.classList.remove('active');
   var sv = document.getElementById('studioView'); if (sv) sv.classList.remove('active');
   var dv = document.getElementById('discoverView'); if (dv) dv.classList.remove('active');
+
   var mv = document.getElementById('memoryView');
   if (mv) {
     mv.style.display = '';
     mv.classList.add('active');
+
     var op = document.getElementById('outputPanel'), bp = document.getElementById('browserPanel');
-    if (op) { _mvPrevOpen = { output: op.classList.contains('open') }; op.classList.remove('open'); }
-    if (bp) { bp._lsPrevOpen = bp.classList.contains('open'); bp.classList.remove('open'); }
+    if (op || bp) {
+      _mvPrevOpen = {
+        output: op ? op.classList.contains('open') : false,
+        browser: bp ? bp.classList.contains('open') : false
+      };
+      if (op) op.classList.remove('open');
+      if (bp) bp.classList.remove('open');
+    }
+
     mvLoadOverview();
     mvLoadConfig();
     mvLoadSidebarSummary();
     mvLoadRoutingConfig();
+
     if (!_mvPanelCtxListenerBound) {
       window.addEventListener('LA8159:panel-context-updated', _mvUpdatePanelContextIndicator);
       _mvPanelCtxListenerBound = true;
     }
     _mvUpdatePanelContextIndicator();
+
+    // Initialise collapsible sections after view is shown
+    mvInitCollapsibleCards();
   }
 };
 
@@ -116,11 +132,18 @@ window.memoryShowView = function () {
 window.memoryHideView = function () {
   var mv = document.getElementById('memoryView');
   if (mv) { mv.style.display = 'none'; mv.classList.remove('active'); }
+
+  // Restore main content
+  var mc = document.querySelector('.main-content');
+  if (mc) { mc.style.display = mc._mvDisplay !== undefined ? mc._mvDisplay : ''; delete mc._mvDisplay; }
+
   var show = ['chatHeader', 'welcomeState', 'chatLog', 'chatCompose', 'chatToolbar'];
   show.forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = ''; });
+
+  // Restore panels that were open before entering memory view
   var op = document.getElementById('outputPanel'), bp = document.getElementById('browserPanel');
   if (op && _mvPrevOpen && _mvPrevOpen.output) op.classList.add('open');
-  if (bp && bp._lsPrevOpen) bp.classList.add('open');
+  if (bp && _mvPrevOpen && _mvPrevOpen.browser) bp.classList.add('open');
 };
 
 // Render agent memory information
@@ -219,6 +242,27 @@ function mvToast(msg, duration) {
   t._timer = setTimeout(function () { t.style.display = 'none'; }, duration || 3000);
 }
 
+// Collapsible cards initialisation
+function mvInitCollapsibleCards() {
+  document.querySelectorAll('.mv-card-head, .mv-panel-section-head, [data-mv-collapse]').forEach(function (head) {
+    if (head.dataset.mvCollapsibleBound) return;
+    head.dataset.mvCollapsibleBound = 'true';
+
+    if (!head.querySelector('.mv-toggle-icon')) {
+      var icon = document.createElement('i');
+      icon.className = 'fas fa-chevron-down mv-toggle-icon';
+      head.appendChild(icon);
+    }
+
+    head.addEventListener('click', function (e) {
+      if (e.target.closest('button, input, select, textarea, a, label')) return;
+      var container = head.closest('.mv-card, .mv-panel-section, [data-mv-collapse-container]');
+      if (container) container.classList.toggle('collapsed');
+    });
+  });
+}
+window.mvInitCollapsibleCards = mvInitCollapsibleCards;
+
 // Load memory overview
 function _mvSet(id, val, prop) { var e = document.getElementById(id); if (e) e[prop || 'textContent'] = val; }
 
@@ -300,6 +344,8 @@ async function mvLoadOverview() {
   var nodesEl2 = document.getElementById('mvStatNodes');
   var header = document.getElementById('mvHeaderStatus');
   if (header) header.textContent = total.toLocaleString() + ' memórias · ' + _mvCollections.length + ' coleções · ' + ((nodesEl2 ? nodesEl2.textContent : '') || '0') + ' nós';
+
+  mvInitCollapsibleCards();
 }
 
 // Set health status indicator
@@ -318,6 +364,7 @@ window.mvSwitchPanel = function (panel) {
   if (panel === 'redistribute') mvLoadRedistribute();
   if (panel === 'collections') mvLoadCollectionsPanel();
   if (panel === 'chat') _mvUpdatePanelContextIndicator();
+  mvInitCollapsibleCards();
 };
 
 // Refresh all memory data
@@ -367,6 +414,35 @@ window.mvSetSearchFilter = function (btn, collection) {
   document.getElementById('mvSearchInput').focus();
 };
 
+// Expanded search result viewer
+window._mvMemorySearchResults = [];
+window.expandMemoryResult = function (i) {
+  var r = window._mvMemorySearchResults[i];
+  if (!r) return;
+  var html = '<div class="mv-result-modal-body">' +
+    '<div class="mv-result-header"><span class="mv-result-collection">' + escapeHtml(r.collection || 'default') + '</span>' +
+    '<span class="mv-result-score">' + (r.score || 0).toFixed(4) + '</span></div>' +
+    '<div class="mv-result-text">' + escapeHtml(r.text || r.content || '') + '</div>' +
+    '<div class="mv-result-meta">' +
+    '<div style="margin-top:10px;padding:8px;background:rgba(0,0,0,0.04);border-radius:4px;font-size:10px;font-family:var(--mono)">' +
+    '<strong>Collection:</strong> ' + escapeHtml(r.collection || 'default') + '<br>' +
+    (r.file_path ? '<strong>File:</strong> ' + escapeHtml(r.file_path) + '<br>' : '') +
+    (r.doc_type ? '<strong>Type:</strong> ' + escapeHtml(r.doc_type) + '<br>' : '') +
+    (r.created_at ? '<strong>Created:</strong> ' + escapeHtml(r.created_at) + '<br>' : '') +
+    '</div>' +
+    '</div>' +
+    '</div>';
+  var container = document.getElementById('mvSearchResultModalBody');
+  if (!container) return;
+  container.innerHTML = html;
+  document.getElementById('mvSearchResultModal').style.display = 'block';
+};
+
+window.mvCloseSearchResultModal = function () {
+  var m = document.getElementById('mvSearchResultModal');
+  if (m) m.style.display = 'none';
+};
+
 // Search memory
 window.mvSearch = async function () {
   var input = document.getElementById('mvSearchInput');
@@ -386,6 +462,7 @@ window.mvSearch = async function () {
   try {
     var data = await LA8159API.memory.search(query, _mvSelectedCollection);
     var items = data.results || [];
+    window._mvMemorySearchResults = items;
 
     if (!items.length) {
       results.innerHTML = '<div class="mv-empty"><i class="fas fa-search"></i><p>No results</p></div>';
@@ -829,6 +906,7 @@ function mvLoadRedistribute() {
   // Hide AI analysis panel on reload
   var analysisEl = document.getElementById('mvRedistAnalysis');
   if (analysisEl) analysisEl.style.display = 'none';
+  mvInitCollapsibleCards();
 }
 
 // AI-powered memory analysis — asks LA8159 to advise on memory distribution
@@ -926,6 +1004,8 @@ function mvRenderRoutingRules() {
       '<input class="mv-routing-input mv-routing-notes" type="text" value="' + escapeHtml(notes) + '" placeholder="Observações da regra (opcional)" name="mvRoutingNotes_' + escapeHtml(name) + '">' +
       '</div>';
   }).join('');
+
+  mvInitCollapsibleCards();
 }
 
 window.mvAddRoutingRule = function () {
@@ -1293,6 +1373,8 @@ function mvRenderCollectionsList() {
       window.mvOpenCollectionDetails(_mvCollectionDetailsOpen, true);
     }
   }
+
+  mvInitCollapsibleCards();
 }
 
 window.mvOpenCollectionDetails = async function (collectionName, silent) {

@@ -420,6 +420,19 @@
       if (window.parent !== window || document.body.classList.contains('modal-mode')) {
         isModalMode = true;
         document.body.classList.add('modal-mode');
+        // ESC key closes the modal (goes back to workspace/agent)
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            closeDashboard();
+          }
+        });
+        // Click outside the container closes the modal
+        document.addEventListener('click', function(e) {
+          var container = document.querySelector('.container');
+          if (container && !container.contains(e.target) && !e.target.closest('.dashboard-link') && !e.target.closest('.dashboard-item')) {
+            closeDashboard();
+          }
+        });
       }
 
       // Load existing preferences
@@ -465,7 +478,25 @@
     });
 
     // ── Dashboard: completion overview ────────────
-    function renderSetupDashboard() {
+    async function renderSetupDashboard() {
+      // Re-fetch preferences to reflect the current .env/backend state
+      try {
+        const resp = await fetch('/api/user/preferences', { credentials: 'include' });
+        if (resp.ok) {
+          existingPrefs = await resp.json();
+          const savedConfig = existingPrefs.config || {};
+          configData.primaryProvider = savedConfig.primary_provider || configData.primaryProvider;
+          configData.primaryModel = savedConfig.primary_model || configData.primaryModel;
+          if (savedConfig.qdrant_url) { configData.qdrant = { url: savedConfig.qdrant_url, apiKey: savedConfig.qdrant_api_key || '' }; }
+          if (savedConfig.neo4j_uri) { configData.neo4j = { uri: savedConfig.neo4j_uri, username: savedConfig.neo4j_username || '', password: savedConfig.neo4j_password || '', queryApiUrl: savedConfig.neo4j_query_api_url || '', mcpUrl: savedConfig.neo4j_mcp_url || '' }; }
+          if (savedConfig.google_client_id) { configData.googleDrive = { clientId: savedConfig.google_client_id, token: savedConfig.google_drive_token || '' }; }
+          if (savedConfig.law_library_root) { configData.directories = { lawLibraryRoot: savedConfig.law_library_root, violationsRoot: savedConfig.violations_root || '', jurisprudenceRoot: savedConfig.jurisprudence_root || '', masterFilesRoot: savedConfig.master_files_root || '' }; }
+          if (savedConfig.comfyui_backend) { configData.optionalServices = { comfyuiBackend: savedConfig.comfyui_backend }; }
+          const extraKeys = { deepseek: savedConfig.deepseek_api_key, openrouter: savedConfig.openrouter_api_key, fireworks: savedConfig.fireworks_api_key, openai: savedConfig.openai_api_key };
+          configData.additionalKeys = Object.fromEntries(Object.entries(extraKeys).filter(([_, v]) => v));
+        }
+      } catch (e) {}
+
       const c = configData;
       const steps = [
         { key: 'language', label: 'Language & Profile', done: !!c.language && c.language.response, step: 2 },
@@ -486,7 +517,7 @@
         dashboard.className = 'step-content active';
         dashboard.dataset.step = '0';
         const container = document.querySelector('.container');
-        container.parentNode.insertBefore(dashboard, container.firstChild);
+        container.insertBefore(dashboard, container.firstChild);
       }
 
       const doneCount = steps.filter(s => s.done).length;
@@ -506,8 +537,18 @@
         </div>`;
       });
       html += `</div>`;
+      if (isModalMode) {
+        html += `<button class="btn btn-ghost" style="margin-top:20px;width:100%;" onclick="closeDashboard()">Close</button>`;
+      }
+      html += `</div>`;
 
       dashboard.innerHTML = html;
+    }
+
+    function closeDashboard() {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'olivia-close-setup' }, '*');
+      }
     }
 
     function toggleTheme() {
@@ -552,8 +593,8 @@
       if (link) link.style.display = (step === 0) ? 'none' : 'flex';
     }
 
-    function backToDashboard() {
-      renderSetupDashboard();
+    async function backToDashboard() {
+      await renderSetupDashboard();
       setStep(0);
     }
 
