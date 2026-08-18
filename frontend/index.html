@@ -6740,7 +6740,8 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
       <!-- Navigation -->
       <div class="settings-section">
         <div class="settings-section-label">Navigation</div>
-        <a class="settings-nav-item" href="/olivia/"><i class="fas fa-home"></i>Home</a>
+        <a class="settings-nav-item" href="/olivia/auth/admin-users.html"><i class="fas fa-home"></i>Home</a>
+        <a class="settings-nav-item" href="/olivia/auth/olivia-workspace-setup.html"><i class="fas fa-cog"></i>Setup & Integrations</a>
         <a class="settings-nav-item" href="/olivia/arquitetura"><i class="fas fa-sitemap"></i>Architecture</a>
         <a class="settings-nav-item" href="/olivia/agent"><i class="fas fa-comments"></i>Mobile Agent</a>
         <a class="settings-nav-item active" href="/olivia/olivia.html"><i class="fas fa-th-large"></i>Workspace</a>
@@ -6773,6 +6774,13 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   </div>
   <div class="ep-toast" id="epToast"></div>
   <datalist id="epSuggestions"></datalist>
+  <!-- ═══ Setup Welcoming Overlay ═══ -->
+  <div class="setup-overlay" id="setupOverlay">
+    <div class="setup-modal">
+      <button class="setup-modal-close" onclick="closeSetupModal()"></button>
+      <iframe id="setupFrame" src="about:blank" title="Setup"></iframe>
+    </div>
+  </div>
   <!-- ═══ JS Modules ═══ -->
   <script src="js/lib/logger.js"></script>
   <script src="js/config.js"></script>
@@ -6780,6 +6788,7 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <script src="js/app-state.js"></script>
   <script src="js/session-state.js"></script>
   <script src="js/lib/api-client.js"></script>
+  <script src="js/modules/user-prefs.js"></script>
   <!-- Phase 3 platform primitives (additive; loaded before feature modules) -->
   <script src="js/lib/service-registry.js"></script>
   <script src="js/lib/permission-interface.js"></script>
@@ -7826,6 +7835,114 @@ function copyPanelContent(panelId) {
     document.execCommand('copy');
     document.body.removeChild(ta);
   }
+}
+</script>
+<!-- ═══ Setup Welcoming Overlay CSS + Logic ═══ -->
+<style>
+.setup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+}
+.setup-overlay.open {
+  display: block;
+}
+.setup-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 720px;
+  height: 85vh;
+  max-height: 700px;
+  background: #1a1f2b;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.setup-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+}
+.setup-modal-close::after,
+.setup-modal-close::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 2px;
+  background: #fff;
+  transform: translate(-50%, -50()) rotate(45deg);
+}
+.setup-modal-close::after {
+  transform: translate(-50%, -50()) rotate(-45deg);
+}
+.setup-modal iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+</style>
+<script>
+(function() {
+  // Listen for setup completion message from the iframe
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'olivia-setup-complete') {
+      // Navigate iframe to full workspace setup page so user can configure remaining integrations
+      var frame = document.getElementById('setupFrame');
+      if (frame) {
+        frame.src = '/olivia/auth/olivia-workspace-setup.html';
+      }
+      // Reload preferences so the rest of the app picks up changes
+      if (window.OliviaUserPrefs && window.OliviaUserPrefs.load) {
+        window.OliviaUserPrefs.load();
+      }
+    }
+  });
+
+  function checkSetupComplete() {
+    if (!window.OliviaUserPrefs) return;
+    try {
+      var prefs = JSON.parse(localStorage.getItem('OliviaLegal.user.preferences') || '{}');
+      if (!prefs.setup_complete) {
+        var overlay = document.getElementById('setupOverlay');
+        if (overlay) {
+          overlay.classList.add('open');
+          var frame = document.getElementById('setupFrame');
+          if (frame) {
+            frame.src = '/olivia/auth/olivia-setup.html?mode=modal';
+          }
+        }
+      }
+    } catch(e) {
+      console.error('[setup] check failed:', e);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkSetupComplete);
+  } else {
+    checkSetupComplete();
+  }
+})();
+
+function closeSetupModal() {
+  var overlay = document.getElementById('setupOverlay');
+  if (overlay) overlay.classList.remove('open');
 }
 </script>
 </body>

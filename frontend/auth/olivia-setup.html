@@ -598,27 +598,10 @@
       } catch (e) {}
 
       if (isModalMode) {
-        // Notify parent window
+        // Notify parent: primary provider is set, parent will navigate iframe to full setup page
         try {
           window.parent.postMessage({ type: 'olivia-setup-complete', prefs: merged }, '*');
         } catch (e) {}
-      }
-
-      closeOrRedirect();
-    }
-
-    function closeOrRedirect() {
-      if (isModalMode) {
-        // Close modal overlay in parent
-        var overlay = document.getElementById('setup-overlay');
-        if (overlay) overlay.style.display = 'none';
-        // Also try parent
-        try {
-          var parentOverlay = window.parent.document.getElementById('setup-overlay');
-          if (parentOverlay) parentOverlay.style.display = 'none';
-        } catch (e) {}
-        // If embedded as iframe, hide self
-        document.body.style.display = 'none';
       } else {
         window.location.href = '/';
       }

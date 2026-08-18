@@ -1762,11 +1762,12 @@
     }
     window.addEventListener('message', async function (event) {
       if (event.data && event.data.type === 'olivia-setup-complete') {
-        closeSetupModal();
-        if (window.OliviaUserPrefs) {
-          await OliviaUserPrefs.load();
-          await OliviaUserPrefs.syncWorkspaceConfig();
-          updateModelPillDisplay();
+        var frame = document.getElementById('setupFrame');
+        if (frame) {
+          frame.src = '/olivia/auth/olivia-workspace-setup.html';
+        }
+        if (window.OliviaUserPrefs && window.OliviaUserPrefs.load) {
+          OliviaUserPrefs.load();
         }
       }
     });

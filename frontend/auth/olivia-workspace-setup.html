@@ -63,10 +63,10 @@
       transition: background .35s, color .35s;
     }
     body.modal-mode {
-      min-height: auto;
+      min-height: fit-content;
       display: block;
       padding: 0;
-      background: transparent;
+      background: none;
     }
     .container {
       max-width: 560px; width: 100%;
@@ -78,10 +78,9 @@
       transition: background .35s, border-color .35s;
     }
     body.modal-mode .container {
-      max-height: 90vh;
+      max-height: auto;
       overflow-y: auto;
-      border-radius: 14px;
-      box-shadow: 0 16px 60px rgba(0,0,0,.3);
+      border-radius: 1px;
     }
     .step-indicator {
       display: flex; justify-content: space-between; margin-bottom: 28px;
@@ -92,6 +91,31 @@
     }
     .step-dot.active { background: var(--amber); box-shadow: 0 0 8px var(--amber-lo); }
     .step-dot.done { background: var(--green); }
+    .dashboard-link {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-hi);
+      color: var(--white);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: all .2s;
+    }
+    .dashboard-link:hover {
+      background: var(--border);
+    }
+    .dashboard-item.done:hover {
+      background: var(--green-lo);
+      border-color: var(--green);
+    }
+    .dashboard-item.pending:hover {
+      background: var(--amber-lo);
+      border-color: var(--amber);
+    }
     .step-content { display: none; }
     .step-content.active { display: block; }
     h2 { font-family: 'Fraunces', serif; font-size: 1.5rem; margin-bottom: 12px; letter-spacing: -0.02em; }
@@ -173,6 +197,9 @@
     <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
 
     <div class="step-indicator" id="stepIndicator"></div>
+    <button class="dashboard-link" id="dashboardLink" onclick="backToDashboard()" style="display:none;">
+      <i class="fas fa-arrow-left"></i> Back to Overview
+    </button>
 
     <!-- STEP 1: Welcome -->
     <div class="step-content active" data-step="1">
@@ -427,7 +454,61 @@
       // Build step indicator
       buildStepIndicator();
       renderProviderCards();
+
+      // If setup is already complete, show the dashboard first
+      if (existingPrefs.setup_complete) {
+        renderSetupDashboard();
+        setStep(0);
+      } else {
+        setStep(1);
+      }
     });
+
+    // ── Dashboard: completion overview ────────────
+    function renderSetupDashboard() {
+      const c = configData;
+      const steps = [
+        { key: 'language', label: 'Language & Profile', done: !!c.language && c.language.response, step: 2 },
+        { key: 'primaryProvider', label: 'Primary AI Provider', done: !!c.primaryProvider, step: 3 },
+        { key: 'additionalKeys', label: 'Additional AI Keys', done: !!(c.additionalKeys && Object.keys(c.additionalKeys).filter(k => c.additionalKeys[k]).length), step: 5 },
+        { key: 'qdrant', label: 'Qdrant Vector DB', done: !!(c.qdrant && c.qdrant.url), step: 6 },
+        { key: 'neo4j', label: 'Neo4j Graph DB', done: !!(c.neo4j && c.neo4j.uri), step: 7 },
+        { key: 'googleDrive', label: 'Google Drive', done: !!(c.googleDrive && c.googleDrive.clientId), step: 8 },
+        { key: 'directories', label: 'Local Directories', done: !!(c.directories && Object.keys(c.directories).filter(k => c.directories[k]).length), step: 9 },
+        { key: 'optionalServices', label: 'Optional Backends (ComfyUI)', done: !!(c.optionalServices && c.optionalServices.comfyuiBackend), step: 10 }
+      ];
+
+      // Replace step 1 content with dashboard if it exists, or build dynamically
+      let dashboard = document.getElementById('setupDashboard');
+      if (!dashboard) {
+        dashboard = document.createElement('div');
+        dashboard.id = 'setupDashboard';
+        dashboard.className = 'step-content active';
+        dashboard.dataset.step = '0';
+        const container = document.querySelector('.container');
+        container.parentNode.insertBefore(dashboard, container.firstChild);
+      }
+
+      const doneCount = steps.filter(s => s.done).length;
+      let html = `
+        <h2>Setup &amp; Integrations</h2>
+        <p>${doneCount} of ${steps.length} modules configured. Click any module to edit.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px;">
+      `;
+      steps.forEach(s => {
+        const cls = s.done ? 'done' : 'pending';
+        const icon = s.done ? '<i class="fas fa-check-circle" style="color:var(--green);margin-right:8px;"></i>' : '<i class="fas fa-circle-notch" style="color:var(--amber);margin-right:8px;"></i>';
+        html += `<div class="dashboard-item ${cls}" onclick="setStep(${s.step})" style="padding:12px 16px;border:1px solid var(--border-hi);border-radius:10px;cursor:pointer;">
+          <div style="display:flex;align-items:center;font-weight:500;">
+            ${icon}
+            <span>${s.label}</span>
+          </div>
+        </div>`;
+      });
+      html += `</div>`;
+
+      dashboard.innerHTML = html;
+    }
 
     function toggleTheme() {
       var current = document.documentElement.getAttribute('data-theme');
@@ -457,9 +538,23 @@
         const s = parseInt(d.dataset.step);
         d.classList.remove('active', 'done');
         if (s === step) d.classList.add('active');
-        else if (s < step) d.classList.add('done');
+        else if (s < step && s > 0) d.classList.add('done');
       });
       currentStep = step;
+
+      // If dashboard step, reset dots to all-done state
+      if (step === 0) {
+        document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
+      }
+
+      // Show/hide back-to-dashboard link
+      const link = document.getElementById('dashboardLink');
+      if (link) link.style.display = (step === 0) ? 'none' : 'flex';
+    }
+
+    function backToDashboard() {
+      renderSetupDashboard();
+      setStep(0);
     }
 
     function nextStep(step) { setStep(step); }
