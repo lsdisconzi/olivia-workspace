@@ -504,7 +504,7 @@ function mvLoadIngestDropdowns() {
         sel.value = activeAgentCollection;
       }
     } else {
-      sel.innerHTML = '<option value="awa_documents">awa_documents</option>';
+      sel.innerHTML = '<option value="uploads-global">uploads-global</option>';
     }
   }
   // Violation collection selector — show all + ensure awa_violations on top
@@ -558,7 +558,7 @@ window.mvDoIngest = async function () {
   var statusEl = document.getElementById('mvIngestStatus');
 
   var text = textEl ? textEl.value.trim() : '';
-  var collection = collEl ? collEl.value : 'awa_documents';
+  var collection = collEl ? collEl.value : 'uploads-global';
 
   var gate = _mvCapabilityGate('memory.ingest');
   if (!gate.ok) {
@@ -1336,10 +1336,14 @@ function mvRenderCollectionsList() {
   }
   var totalPts = _mvCollections.reduce(function (s, c) { return s + _mvCollectionPoints(c); }, 0);
   var labels = {
-    awa_documents: 'Documentos, specs, SOPs',
-    awa_conversations: 'Conversas e sessões de agente',
-    awa_code: 'Código-fonte, funções, scripts',
-    awa_ontology: 'Ontologia e invariantes do sistema',
+    'uploads-global': 'Documentos enviados (uploads)',
+    'olivia_ecosystem': 'Docs do ecossistema, ontologia e invariantes',
+    'olivia-dev-code': 'Código-fonte, funções, scripts',
+    'olivia-memory-capture-agent': 'Memória e sessões de agente',
+    'transcription_transcripts': 'Transcrições e sessões',
+    'reviewed_transcripts': 'Transcrições revisadas',
+    'olivia_project_index': 'Índice de projetos',
+    'juris_br_v01': 'Jurisprudência BR',
     awa_violations: 'Violações refinadas e evidências'
   };
   list.innerHTML = _mvCollections.map(function (c) {

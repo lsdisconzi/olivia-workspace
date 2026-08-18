@@ -3321,7 +3321,7 @@ def _generate_fallback_agent_config(description: str) -> dict:
         agent_type = "Analysis"
         model = "deepseek-v4-pro"
         skills = ["analysis/quality-review", "research/docs-explorer"]
-        collections = ["awa_documents"]
+        collections = ["uploads-global"]
         mcp_servers = ["brave-search", "filesystem"]
         shared_scopes = ["docs", "ontology"]
         system_prompt = f"Você é um agente de análise de dados especializado. Sua função é analisar dados, identificar padrões e gerar relatórios claros e acionáveis. Trabalhe com precisão e sempre cite suas fontes."
@@ -3329,7 +3329,7 @@ def _generate_fallback_agent_config(description: str) -> dict:
         agent_type = "Research"
         model = "deepseek-v4-pro"
         skills = ["research/docs-explorer", "analysis/quality-review"]
-        collections = ["awa_documents", "agent_custom_collection"]
+        collections = ["uploads-global", "agent_custom_collection"]
         mcp_servers = ["brave-search", "filesystem", "notion"]
         shared_scopes = ["docs", "corpus"]
         system_prompt = f"Você é um agente de pesquisa especializado. Sua função é coletar, organizar e sintetizar informações de diversas fontes. Trabalhe de forma metódica e sempre verifique a confiabilidade das fontes."
@@ -3337,7 +3337,7 @@ def _generate_fallback_agent_config(description: str) -> dict:
         agent_type = "Operations"
         model = "deepseek-v4-pro"
         skills = ["analysis/quality-review"]
-        collections = ["awa_documents"]
+        collections = ["uploads-global"]
         mcp_servers = ["brave-search", "filesystem"]
         shared_scopes = ["docs"]
         system_prompt = f"Você é um agente de operações especializado. Sua função é otimizar processos, gerenciar workflows e garantir a eficiência operacional. Trabalhe com foco em resultados e melhoria contínua."
@@ -3345,7 +3345,7 @@ def _generate_fallback_agent_config(description: str) -> dict:
         agent_type = "General"
         model = "deepseek-v4-pro"
         skills = ["research/docs-explorer"]
-        collections = ["awa_documents"]
+        collections = ["uploads-global"]
         mcp_servers = ["brave-search", "filesystem"]
         shared_scopes = ["docs"]
         system_prompt = f"Você é um agente de IA especializado. Sua função é auxiliar o usuário com base na descrição fornecida: {description}"
@@ -16492,13 +16492,15 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         try:
             self._TRANSCRIPTS_LOCAL_DIR.mkdir(parents=True, exist_ok=True)
             target = self._TRANSCRIPTS_LOCAL_DIR / safe
+            do_qdrant = str(body.get("save_to_qdrant") or "true").lower() in {"1", "true", "yes", "on"}
+            qdrant_collection = str(body.get("qdrant_collection") or "").strip()
             payload = {
                 "filename": safe,
                 "saved_at": datetime.now(timezone.utc).isoformat(),
                 "run_id": body.get("run_id") or "",
                 "params": body.get("params") or {},
-                "save_to_qdrant": str(body.get("save_to_qdrant") or "true").lower() in {"1", "true", "yes", "on"},
-                "qdrant_collection": str(body.get("qdrant_collection") or "").strip(),
+                "save_to_qdrant": do_qdrant,
+                "qdrant_collection": qdrant_collection,
                 "data": data,
             }
             target.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -16506,13 +16508,45 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 rel = str(target.relative_to(PROJECT_ROOT))
             except Exception:
                 rel = str(target)
-            self._json_response({
+            result = {
                 "status": "ok",
                 "filename": safe,
                 "path": rel,
                 "absolute_path": str(target),
                 "run_id": payload["run_id"],
-            })
+            }
+            if do_qdrant and qdrant_collection and self._qdrant_collection_name_ok(qdrant_collection):
+                try:
+                    text = ""
+                    if isinstance(data, dict):
+                        text = data.get("text") or ""
+                        if not text:
+                            for k in ("transcript", "full_transcript"):
+                                v = data.get(k)
+                                if isinstance(v, str):
+                                    text = v
+                                    break
+                                elif isinstance(v, (dict, list)):
+                                    text = json.dumps(v, ensure_ascii=False)
+                                    break
+                    if text:
+                        point_id = f"tts:{payload['run_id'] or safe}"
+                        point_payload = {
+                            "filename": safe,
+                            "run_id": payload["run_id"],
+                            "source": "transcript_save",
+                            "collection": qdrant_collection,
+                            "text": text[:4000],
+                            "full_text_available": len(text) > 4000,
+                            "created_at": payload["saved_at"],
+                            "params": payload["params"],
+                        }
+                        self._qdrant_upsert_point(qdrant_collection, point_id, point_payload, text)
+                        result["ingested"] = True
+                        result["point_id"] = point_id
+                except Exception as e:
+                    result["ingest_error"] = str(e)
+            self._json_response(result)
         except Exception as exc:
             self._json_response({"error": "save_failed", "message": str(exc)}, 500)
 
@@ -20519,7 +20553,7 @@ Exemplo de formato:
   "workspace_scope": "workspace",
   "system_prompt": "Você é um agente de análise de dados especializado...",
   "skills": ["analysis/quality-review", "research/docs-explorer"],
-  "qdrant_collections": ["awa_documents"],
+  "qdrant_collections": ["uploads-global"],
   "mcp_servers": ["brave-search", "filesystem"],
   "shared_scopes": ["docs", "ontology"],
   "temperature": 0.7

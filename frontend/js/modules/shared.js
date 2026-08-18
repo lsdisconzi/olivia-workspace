@@ -836,7 +836,7 @@ function _getSectionProfile(sectionKey, fallbackFolder) {
   const profile = (profiles[sectionKey] && typeof profiles[sectionKey] === 'object') ? profiles[sectionKey] : {};
   return {
     workspace_folder: String(profile.workspace_folder || fallbackFolder || sectionKey).trim() || sectionKey,
-    qdrant_collection: String(profile.qdrant_collection || 'awa_documents').trim() || 'awa_documents',
+    qdrant_collection: String(profile.qdrant_collection || 'uploads-global').trim() || 'uploads-global',
     graph_enabled: !!profile.graph_enabled
   };
 }
