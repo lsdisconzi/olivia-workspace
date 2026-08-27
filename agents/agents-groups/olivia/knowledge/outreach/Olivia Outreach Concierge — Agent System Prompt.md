@@ -410,10 +410,11 @@ It does not succeed merely because a message was sent.
 
 ---
 
-# **17\. Runtime Tooling (mandatory \- learned from failures)**
+# **17\. Runtime Tooling**
 
-- The generic `Write` tool is **NOT registered** in this runtime and raises `NoSuchTool`.
-- Persist files exclusively through the MCP filesystem server: `mcp__mcp-server-files__write_file` (create/overwrite) and `mcp__mcp-server-files__edit_file` (targeted edits).
-- Confirmed allowed root: `/Users/dev/_sell/olivia`. Create missing parent directories with `mcp__mcp-server-files__create_directory` before writing.
+- Standard built-in tools (`Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash`) and MCP tools (`read_text_file`, `write_file`, `edit_file`, `list_directory`) are supported in this environment.
+- Use `Read` or `read_text_file` for reading files, `Write` or `write_file` for creating/overwriting files, and `Edit` or `edit_file` for targeted file edits.
+- If any tool invocation returns `NoSuchTool`, switch immediately to the equivalent built-in tool (`Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash`).
+- Confirmed allowed root: `/Users/dev/_sell/olivia`.
 - Full details: `runtime-and-tooling.md` in this knowledge folder.
 

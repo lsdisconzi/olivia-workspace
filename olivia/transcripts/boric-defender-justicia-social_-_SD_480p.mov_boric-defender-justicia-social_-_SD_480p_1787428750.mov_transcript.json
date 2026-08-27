@@ -1,0 +1,317 @@
+{
+  "filename": "boric-defender-justicia-social_-_SD_480p.mov_boric-defender-justicia-social_-_SD_480p_1787428750.mov_transcript.json",
+  "saved_at": "2026-08-22T20:04:31.717139+00:00",
+  "run_id": "boric-defender-justicia-social_-_SD_480p_1787428750.mov",
+  "params": {
+    "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+    "language": "es-CL",
+    "model": "large-v3-turbo",
+    "min_speakers": 1,
+    "max_speakers": 2,
+    "diarization": "true",
+    "align_output": "true",
+    "remove_silence": "false",
+    "noise_reduce": "true",
+    "voice_enhance": "true",
+    "word_timestamps": "true",
+    "vad_threshold": 0.1,
+    "whisper_temp": 0,
+    "beam_size": 7,
+    "best_of": 7,
+    "chunk_size": 30,
+    "batch_size": 24,
+    "initial_prompt": "",
+    "save_to_qdrant": "false",
+    "qdrant_collection": "ic_netto",
+    "cors_mode": "auto"
+  },
+  "save_to_qdrant": false,
+  "qdrant_collection": "ic_netto",
+  "data": {
+    "transcript_id": "boric-defender-justicia-social_-_SD_480p_1787428750.mov",
+    "segments": [
+      {
+        "index": 1,
+        "speaker": "SPEAKER_00",
+        "start": 0.03096875,
+        "end": 7.894718750000001,
+        "duration": 7.864,
+        "text": " Creo que es importante debatir entre nosotros. La senadora dijo una frase con la que me gustaría debatir."
+      },
+      {
+        "index": 2,
+        "speaker": "SPEAKER_00",
+        "start": 9.46409375,
+        "end": 11.927843750000001,
+        "duration": 2.464,
+        "text": " Dijiste, prefiero la polarización que el consenso."
+      },
+      {
+        "index": 3,
+        "speaker": "SPEAKER_00",
+        "start": 13.83471875,
+        "end": 14.222843750000003,
+        "duration": 0.388,
+        "text": " Eben"
+      },
+      {
+        "index": 4,
+        "speaker": "SPEAKER_00",
+        "start": 17.05784375,
+        "end": 17.53034375,
+        "duration": 0.473,
+        "text": " Yo..."
+      },
+      {
+        "index": 5,
+        "speaker": "SPEAKER_00",
+        "start": 18.84659375,
+        "end": 20.90534375,
+        "duration": 2.059,
+        "text": " Creo que nosotros tenemos que abogar"
+      },
+      {
+        "index": 6,
+        "speaker": "SPEAKER_00",
+        "start": 21.78284375,
+        "end": 28.58346875,
+        "duration": 6.801,
+        "text": " en nuestros campos de acción política a ojalá tratar de lograr consensos en ciertos aspectos de largo plazo."
+      },
+      {
+        "index": 7,
+        "speaker": "SPEAKER_00",
+        "start": 29.54534375,
+        "end": 30.22034375,
+        "duration": 0.675,
+        "text": " Porque..."
+      },
+      {
+        "index": 8,
+        "speaker": "SPEAKER_00",
+        "start": 31.097843750000003,
+        "end": 36.29534375,
+        "duration": 5.197,
+        "text": " Esto lo decimos siempre, lo hemos compartido con muchos. Los gobiernos pasan y los pueblos quedan."
+      },
+      {
+        "index": 9,
+        "speaker": "SPEAKER_00",
+        "start": 37.27409375,
+        "end": 38.47221875,
+        "duration": 1.198,
+        "text": " Y hay políticas."
+      },
+      {
+        "index": 10,
+        "speaker": "SPEAKER_00",
+        "start": 38.860343750000006,
+        "end": 47.68596875,
+        "duration": 8.826,
+        "text": " políticas públicas que requieren de mucho más tiempo de implementación que cuatro o cinco años y por lo tanto uno tiene que tener una proyección en el largo plazo para su implementación."
+      },
+      {
+        "index": 11,
+        "speaker": "SPEAKER_00",
+        "start": 49.05284375,
+        "end": 52.697843750000004,
+        "duration": 3.645,
+        "text": " Políticas de infancia, políticas de infraestructura pública, políticas de energía."
+      },
+      {
+        "index": 12,
+        "speaker": "SPEAKER_00",
+        "start": 52.96784375,
+        "end": 61.60784375,
+        "duration": 8.64,
+        "text": " Siempre la política necesariamente va a tener un debate y una fricción, pero yo creo que con ciertas derechas es posible también llegar a acuerdos."
+      },
+      {
+        "index": 13,
+        "speaker": "SPEAKER_00",
+        "start": 62.46846875000001,
+        "end": 70.58534375,
+        "duration": 8.117,
+        "text": " Una de las cosas que yo creo que el sistema político espero que hayamos aprendido en Chile es que no se puede construir país."
+      },
+      {
+        "index": 14,
+        "speaker": "SPEAKER_00",
+        "start": 70.97346875000001,
+        "end": 74.31471875000001,
+        "duration": 3.341,
+        "text": " Sin el sector, sin un sector que."
+      },
+      {
+        "index": 15,
+        "speaker": "SPEAKER_00",
+        "start": 74.65221875,
+        "end": 77.68971875000001,
+        "duration": 3.038,
+        "text": " puede ser eventualmente minoritario de forma temporal."
+      },
+      {
+        "index": 16,
+        "speaker": "SPEAKER_00",
+        "start": 79.02284375,
+        "end": 88.48971875000001,
+        "duration": 9.467,
+        "text": " Noten ustedes lo que pasó en Chile en la primera convención constitucional y en la segunda. En la primera una mayoría progresista, en la segunda una mayoría de derechas."
+      },
+      {
+        "index": 17,
+        "speaker": "SPEAKER_00",
+        "start": 90.44721875,
+        "end": 92.03346875000001,
+        "duration": 1.586,
+        "text": " ambas mayorías"
+      },
+      {
+        "index": 18,
+        "speaker": "SPEAKER_00",
+        "start": 93.77159375000001,
+        "end": 96.82596875,
+        "duration": 3.054,
+        "text": " Finalmente el texto que emitieron."
+      },
+      {
+        "index": 19,
+        "speaker": "SPEAKER_00",
+        "start": 98.41221875000001,
+        "end": 99.05346875000001,
+        "duration": 0.641,
+        "text": " Tenía..."
+      },
+      {
+        "index": 20,
+        "speaker": "SPEAKER_00",
+        "start": 99.42471875000001,
+        "end": 105.73596875000001,
+        "duration": 6.311,
+        "text": " No necesariamente esto es intencional, pero tenía o subyacía a que era posible."
+      },
+      {
+        "index": 21,
+        "speaker": "SPEAKER_00",
+        "start": 106.46159375,
+        "end": 111.72659375,
+        "duration": 5.265,
+        "text": " Construir una constitución sin el concurso de quienes habían sido minoría en ese proceso."
+      },
+      {
+        "index": 22,
+        "speaker": "SPEAKER_00",
+        "start": 112.95846875000001,
+        "end": 113.58284375000001,
+        "duration": 0.624,
+        "text": " Entonces."
+      },
+      {
+        "index": 23,
+        "speaker": "SPEAKER_00",
+        "start": 115.74284375,
+        "end": 131.62221875,
+        "duration": 15.879,
+        "text": " Tenemos que ser opositores muy duros y muy firmes respecto a políticas que contradigan lo que nosotros creemos correcto y principios esenciales en la lucha contra la desigualdad, en la lucha contra la vulneración de los derechos humanos, pero también hay espacios en que tenemos que buscar consensos."
+      },
+      {
+        "index": 24,
+        "speaker": "SPEAKER_00",
+        "start": 132.61784375000002,
+        "end": 143.18159375000002,
+        "duration": 10.564,
+        "text": " No siempre vamos a tener el 100% de lo que queramos. Y esto yo sé que muchas veces es menos popular, cuesta más decirlo porque no aleona tanto."
+      },
+      {
+        "index": 25,
+        "speaker": "SPEAKER_00",
+        "start": 143.82284375,
+        "end": 151.28159375,
+        "duration": 7.459,
+        "text": " y yo creo que si conversáramos un rato con la senadora sin lugar a dudas llegaríamos a un punto de encuentro Ernesto, no quiero caricaturizar la posición"
+      },
+      {
+        "index": 26,
+        "speaker": "SPEAKER_00",
+        "start": 151.85534375,
+        "end": 153.18846875,
+        "duration": 1.333,
+        "text": " pero..."
+      },
+      {
+        "index": 27,
+        "speaker": "SPEAKER_00",
+        "start": 154.67346875,
+        "end": 155.09534375,
+        "duration": 0.422,
+        "text": " Pero..."
+      },
+      {
+        "index": 28,
+        "speaker": "SPEAKER_00",
+        "start": 156.36096875,
+        "end": 169.20284375,
+        "duration": 12.842,
+        "text": " Hay sectores que no piensan conozor, que vienen de ideologías distintas, no digo dentro de la familia de la izquierda, fuera de esa familia, con los cuales es posible tener acuerdos en pos del bienestar del país. Y eso es importante buscar cómo construirlo."
+      },
+      {
+        "index": 29,
+        "speaker": "SPEAKER_00",
+        "start": 169.84409375,
+        "end": 171.39659375000002,
+        "duration": 1.553,
+        "text": " Creo que es importante debatir entre nosotros."
+      }
+    ],
+    "timings": {
+      "save_s": 0.03,
+      "convert_s": 0.31,
+      "preprocess_s": 24.62,
+      "diarization_s": 112.51,
+      "model_load_s": 0,
+      "transcription_s": 177.38,
+      "total_s": 319.94
+    },
+    "params": {
+      "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+      "language": "es-CL",
+      "model": "large-v3-turbo",
+      "min_speakers": 1,
+      "max_speakers": 2,
+      "diarization": "true",
+      "align_output": "true",
+      "remove_silence": false,
+      "noise_reduce": true,
+      "voice_enhance": true,
+      "word_timestamps": true,
+      "vad_threshold": 0.1,
+      "whisper_temp": 0,
+      "beam_size": 7,
+      "best_of": 7,
+      "chunk_size": 30,
+      "batch_size": 24,
+      "initial_prompt": "",
+      "save_to_qdrant": "false",
+      "qdrant_collection": "ic_netto",
+      "cors_mode": "auto",
+      "model_size": "large-v3-turbo",
+      "diarization_fallback": false,
+      "diarization_fallback_reason": null,
+      "temperature": 0,
+      "diarization_timeout_s": 180,
+      "min_turn_duration_s": 0,
+      "merge_gap_s": 0,
+      "max_diarization_segments": 1000,
+      "reduction_db": 25,
+      "apply_gain": true,
+      "target_lufs": -16,
+      "silence_thresh": -45,
+      "min_silence_len": 250,
+      "keep_audio_artifacts": true,
+      "saved_audio_file": "boric-defender-justicia-social - SD 480p_1787428750.mov.wav",
+      "processed_audio_file": "boric-defender-justicia-social - SD 480p_1787428750.mov_processed.wav"
+    },
+    "run_id": "boric-defender-justicia-social_-_SD_480p_1787428750.mov",
+    "client_run_id": "boric-defender-justicia-social_-_SD_480p_1787428750.mov"
+  }
+}

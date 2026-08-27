@@ -1,0 +1,693 @@
+{
+  "filename": "Olivia-2026-06-09_17-02-44_Olivia-2026-06-09_17-02-44_1787432289_transcript.json",
+  "saved_at": "2026-08-22T21:10:47.120985+00:00",
+  "run_id": "Olivia-2026-06-09_17-02-44_1787432289",
+  "params": {
+    "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+    "language": "es-CL",
+    "model": "large-v3-turbo",
+    "min_speakers": 1,
+    "max_speakers": 3,
+    "diarization": "true",
+    "align_output": "true",
+    "remove_silence": "true",
+    "noise_reduce": "true",
+    "voice_enhance": "true",
+    "word_timestamps": "true",
+    "vad_threshold": 0.4,
+    "whisper_temp": 0,
+    "beam_size": 9,
+    "best_of": 9,
+    "chunk_size": 30,
+    "batch_size": 24,
+    "initial_prompt": "",
+    "save_to_qdrant": "false",
+    "qdrant_collection": "ic_netto",
+    "cors_mode": "auto"
+  },
+  "save_to_qdrant": false,
+  "qdrant_collection": "ic_netto",
+  "data": {
+    "transcript_id": "Olivia-2026-06-09_17-02-44_1787432289",
+    "segments": [
+      {
+        "index": 1,
+        "speaker": "SPEAKER_01",
+        "start": 0.03096875,
+        "end": 1.22909375,
+        "duration": 1.198,
+        "text": " Lina del Mondo."
+      },
+      {
+        "index": 2,
+        "speaker": "SPEAKER_01",
+        "start": 4.21596875,
+        "end": 9.68346875,
+        "duration": 5.467,
+        "text": " Pero, ¿y qué está haciendo en el teléfono? Se está enrugando con algo."
+      },
+      {
+        "index": 3,
+        "speaker": "SPEAKER_00",
+        "start": 9.68346875,
+        "end": 13.14284375,
+        "duration": 3.459,
+        "text": " Que se salió un pedazo de hoja."
+      },
+      {
+        "index": 4,
+        "speaker": "SPEAKER_00",
+        "start": 13.277843750000002,
+        "end": 14.324093750000003,
+        "duration": 1.046,
+        "text": " Y lo salpiqué."
+      },
+      {
+        "index": 5,
+        "speaker": "SPEAKER_01",
+        "start": 15.302843750000001,
+        "end": 19.234718750000003,
+        "duration": 3.932,
+        "text": " Oye, como tanto granito, tiene harto granito, mi corazóncito."
+      },
+      {
+        "index": 6,
+        "speaker": "SPEAKER_01",
+        "start": 22.00221875,
+        "end": 24.48284375,
+        "duration": 2.481,
+        "text": " ¿Qué qué? No, para mirar bien tu carita."
+      },
+      {
+        "index": 7,
+        "speaker": "SPEAKER_01",
+        "start": 26.33909375,
+        "end": 29.882843750000003,
+        "duration": 3.544,
+        "text": " Tú está rugando con el teléfono."
+      },
+      {
+        "index": 8,
+        "speaker": "SPEAKER_01",
+        "start": 30.32159375,
+        "end": 31.43534375,
+        "duration": 1.114,
+        "text": " Saca tu lengua."
+      },
+      {
+        "index": 9,
+        "speaker": "SPEAKER_01",
+        "start": 31.48596875,
+        "end": 31.50284375,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 10,
+        "speaker": "SPEAKER_01",
+        "start": 31.55346875,
+        "end": 31.671593750000003,
+        "duration": 0.118,
+        "text": " Gracias."
+      },
+      {
+        "index": 11,
+        "speaker": "SPEAKER_01",
+        "start": 32.78534375,
+        "end": 33.814718750000004,
+        "duration": 1.029,
+        "text": " ¡Vamos!"
+      },
+      {
+        "index": 12,
+        "speaker": "SPEAKER_01",
+        "start": 34.439093750000005,
+        "end": 34.759718750000005,
+        "duration": 0.321,
+        "text": " ¿Qué?"
+      },
+      {
+        "index": 13,
+        "speaker": "SPEAKER_01",
+        "start": 35.19846875,
+        "end": 45.13784375,
+        "duration": 9.939,
+        "text": " Uy, esos dientes tan bonitos que están, hace sí, el papá ve tus dientes. Ah, qué bueno que tú tienes los dientes de la mamá, qué bueno."
+      },
+      {
+        "index": 14,
+        "speaker": "SPEAKER_01",
+        "start": 45.89721875,
+        "end": 49.55909375,
+        "duration": 3.662,
+        "text": " Tus dentes son muy parecidos con los de mamá y son muy buenos."
+      },
+      {
+        "index": 15,
+        "speaker": "SPEAKER_00",
+        "start": 50.41971875,
+        "end": 52.44471875,
+        "duration": 2.025,
+        "text": " ¿Quieres ojos azules?"
+      },
+      {
+        "index": 16,
+        "speaker": "SPEAKER_01",
+        "start": 52.44471875,
+        "end": 54.65534375,
+        "duration": 2.211,
+        "text": " Yo tengo ojos azules, no sé si"
+      },
+      {
+        "index": 17,
+        "speaker": "SPEAKER_01",
+        "start": 56.00534375,
+        "end": 56.039093750000006,
+        "duration": 0.034,
+        "text": ""
+      },
+      {
+        "index": 18,
+        "speaker": "SPEAKER_00",
+        "start": 56.039093750000006,
+        "end": 57.220343750000005,
+        "duration": 1.181,
+        "text": " ¡Beginé!"
+      },
+      {
+        "index": 19,
+        "speaker": "SPEAKER_01",
+        "start": 57.220343750000005,
+        "end": 60.34221875,
+        "duration": 3.122,
+        "text": " Y el tuyo, de la mirada Mi ma... Colores son tus ojos"
+      },
+      {
+        "index": 20,
+        "speaker": "SPEAKER_00",
+        "start": 60.34221875,
+        "end": 61.47284375,
+        "duration": 1.131,
+        "text": " Blancos."
+      },
+      {
+        "index": 21,
+        "speaker": "SPEAKER_01",
+        "start": 61.91159375,
+        "end": 65.23596875,
+        "duration": 3.324,
+        "text": " blanco no son blanco como castanho"
+      },
+      {
+        "index": 22,
+        "speaker": "SPEAKER_00",
+        "start": 65.23596875,
+        "end": 65.97846875,
+        "duration": 0.743,
+        "text": " Nego"
+      },
+      {
+        "index": 23,
+        "speaker": "SPEAKER_01",
+        "start": 65.97846875,
+        "end": 68.07096875,
+        "duration": 2.093,
+        "text": " no son negros, son castanhos"
+      },
+      {
+        "index": 24,
+        "speaker": "SPEAKER_00",
+        "start": 68.39159375,
+        "end": 71.20971875000001,
+        "duration": 2.818,
+        "text": " Café, café, café, café, café."
+      },
+      {
+        "index": 25,
+        "speaker": "SPEAKER_01",
+        "start": 71.81721875000001,
+        "end": 73.97721875,
+        "duration": 2.16,
+        "text": " y luego de papá también"
+      },
+      {
+        "index": 26,
+        "speaker": "SPEAKER_00",
+        "start": 73.97721875,
+        "end": 76.47471875000001,
+        "duration": 2.498,
+        "text": " Ahora verás cómo son los aritos ya."
+      },
+      {
+        "index": 27,
+        "speaker": "SPEAKER_01",
+        "start": 76.47471875000001,
+        "end": 80.44034375000001,
+        "duration": 3.966,
+        "text": " Oh, es una mariposa. Espera, ahí no veo. Es una mariposa."
+      },
+      {
+        "index": 28,
+        "speaker": "SPEAKER_00",
+        "start": 80.44034375000001,
+        "end": 80.82846875,
+        "duration": 0.388,
+        "text": " Hola."
+      },
+      {
+        "index": 29,
+        "speaker": "SPEAKER_01",
+        "start": 80.82846875,
+        "end": 84.91221875000001,
+        "duration": 4.084,
+        "text": " Que bacana, una mariposa de colores muy lindas"
+      },
+      {
+        "index": 30,
+        "speaker": "SPEAKER_00",
+        "start": 84.91221875000001,
+        "end": 87.02159375000001,
+        "duration": 2.109,
+        "text": " Yo me puedo sacarla. ¿Sí?"
+      },
+      {
+        "index": 31,
+        "speaker": "SPEAKER_00",
+        "start": 87.46034375,
+        "end": 88.27034375000001,
+        "duration": 0.81,
+        "text": " ¡Kiko!"
+      },
+      {
+        "index": 32,
+        "speaker": "SPEAKER_01",
+        "start": 88.27034375000001,
+        "end": 89.14784375,
+        "duration": 0.877,
+        "text": " y no te duele?"
+      },
+      {
+        "index": 33,
+        "speaker": "SPEAKER_00",
+        "start": 89.14784375,
+        "end": 89.16471875,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 34,
+        "speaker": "SPEAKER_01",
+        "start": 89.16471875,
+        "end": 89.24909375,
+        "duration": 0.084,
+        "text": " Gracias."
+      },
+      {
+        "index": 35,
+        "speaker": "SPEAKER_00",
+        "start": 89.24909375,
+        "end": 97.24784375,
+        "duration": 7.999,
+        "text": " ¿Me puedes poner tú esto? Yo me lo puedo sacar Yo te voy a mostrar Pero me debes poner"
+      },
+      {
+        "index": 36,
+        "speaker": "SPEAKER_00",
+        "start": 97.29846875000001,
+        "end": 97.87221875,
+        "duration": 0.574,
+        "text": " De acuerdo."
+      },
+      {
+        "index": 37,
+        "speaker": "SPEAKER_00",
+        "start": 97.90596875,
+        "end": 98.53034375,
+        "duration": 0.624,
+        "text": " Gracias."
+      },
+      {
+        "index": 38,
+        "speaker": "SPEAKER_00",
+        "start": 98.68221875,
+        "end": 100.18409375,
+        "duration": 1.502,
+        "text": " Pero debería ponerlo después."
+      },
+      {
+        "index": 39,
+        "speaker": "SPEAKER_00",
+        "start": 100.70721875000001,
+        "end": 102.15846875000001,
+        "duration": 1.451,
+        "text": " Pásenlo aquí, pásenlo."
+      },
+      {
+        "index": 40,
+        "speaker": "SPEAKER_00",
+        "start": 102.39471875000001,
+        "end": 104.18346875,
+        "duration": 1.789,
+        "text": " Pero pase lo que pase, ¿ok?"
+      },
+      {
+        "index": 41,
+        "speaker": "SPEAKER_00",
+        "start": 104.85846875,
+        "end": 105.55034375000001,
+        "duration": 0.692,
+        "text": " Gracias."
+      },
+      {
+        "index": 42,
+        "speaker": "SPEAKER_00",
+        "start": 106.24221875,
+        "end": 110.91659375,
+        "duration": 4.674,
+        "text": " Me voy a sacar para... Mira, Kiko. ¿Kiko? ¿Puedes?"
+      },
+      {
+        "index": 43,
+        "speaker": "SPEAKER_00",
+        "start": 111.23721875000001,
+        "end": 113.85284375,
+        "duration": 2.616,
+        "text": " Y ahora, esta es la parte más difícil."
+      },
+      {
+        "index": 44,
+        "speaker": "SPEAKER_00",
+        "start": 114.62909375000001,
+        "end": 118.20659375000001,
+        "duration": 3.578,
+        "text": " Mira, me saqué un, me voy a sacar los aros para, mira."
+      },
+      {
+        "index": 45,
+        "speaker": "SPEAKER_01",
+        "start": 118.20659375000001,
+        "end": 123.64034375000001,
+        "duration": 5.434,
+        "text": " ¡Oh, qué bonito! ¿Colta en el otro lado de remirar? No, que no se pierda el broche que está ahí, por favor."
+      },
+      {
+        "index": 46,
+        "speaker": "SPEAKER_01",
+        "start": 123.82596875,
+        "end": 124.95659375000001,
+        "duration": 1.131,
+        "text": " y tutu"
+      },
+      {
+        "index": 47,
+        "speaker": "SPEAKER_00",
+        "start": 124.95659375000001,
+        "end": 125.66534375,
+        "duration": 0.709,
+        "text": " Gracias."
+      },
+      {
+        "index": 48,
+        "speaker": "SPEAKER_00",
+        "start": 125.80034375000001,
+        "end": 128.36534375,
+        "duration": 2.565,
+        "text": " No, no, no, no, no, no, no."
+      },
+      {
+        "index": 49,
+        "speaker": "SPEAKER_00",
+        "start": 128.85471875000002,
+        "end": 130.03596875,
+        "duration": 1.181,
+        "text": " No, no, no, no, no, no."
+      },
+      {
+        "index": 50,
+        "speaker": "SPEAKER_00",
+        "start": 130.23846875,
+        "end": 132.46596875,
+        "duration": 2.227,
+        "text": " A más ratito que se molesta."
+      },
+      {
+        "index": 51,
+        "speaker": "SPEAKER_00",
+        "start": 133.42784375000002,
+        "end": 133.78221875,
+        "duration": 0.354,
+        "text": " de todo."
+      },
+      {
+        "index": 52,
+        "speaker": "SPEAKER_00",
+        "start": 134.25471875,
+        "end": 134.99721875,
+        "duration": 0.743,
+        "text": " Gracias por ver el video."
+      },
+      {
+        "index": 53,
+        "speaker": "SPEAKER_00",
+        "start": 135.53721875000002,
+        "end": 140.88659375,
+        "duration": 5.349,
+        "text": " Y el otro también me lo ves. Mira, primero me saco esta parte."
+      },
+      {
+        "index": 54,
+        "speaker": "SPEAKER_01",
+        "start": 142.03409375,
+        "end": 145.24034375000002,
+        "duration": 3.206,
+        "text": " tiene que ir de sitio y no te hace mal, no te machuca"
+      },
+      {
+        "index": 55,
+        "speaker": "SPEAKER_00",
+        "start": 145.24034375000002,
+        "end": 147.53534375,
+        "duration": 2.295,
+        "text": " Después me saco esta parte."
+      },
+      {
+        "index": 56,
+        "speaker": "SPEAKER_01",
+        "start": 148.36221875,
+        "end": 149.15534375000001,
+        "duration": 0.793,
+        "text": " de cada vez"
+      },
+      {
+        "index": 57,
+        "speaker": "SPEAKER_00",
+        "start": 149.15534375000001,
+        "end": 155.51721875,
+        "duration": 6.362,
+        "text": " No hay que sacarlo tan rápido, porque si no van a tener un hoyito gigante en la orejita."
+      },
+      {
+        "index": 58,
+        "speaker": "SPEAKER_01",
+        "start": 156.51284375,
+        "end": 160.47846875000002,
+        "duration": 3.966,
+        "text": " Y en un poeta es muy grande el ojito en el lado de orejita, ¿cierto? No."
+      },
+      {
+        "index": 59,
+        "speaker": "SPEAKER_00",
+        "start": 160.47846875000002,
+        "end": 160.68096875,
+        "duration": 0.202,
+        "text": ""
+      },
+      {
+        "index": 60,
+        "speaker": "SPEAKER_00",
+        "start": 161.18721875,
+        "end": 161.35596875000002,
+        "duration": 0.169,
+        "text": " No."
+      },
+      {
+        "index": 61,
+        "speaker": "SPEAKER_01",
+        "start": 161.62596875,
+        "end": 161.69346875000002,
+        "duration": 0.068,
+        "text": " Gracias."
+      },
+      {
+        "index": 62,
+        "speaker": "SPEAKER_00",
+        "start": 161.69346875000002,
+        "end": 161.71034375000002,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 63,
+        "speaker": "SPEAKER_01",
+        "start": 161.71034375000002,
+        "end": 164.89971875,
+        "duration": 3.189,
+        "text": " Porque siquiera tiene igual a de papá, ¿sabía?"
+      },
+      {
+        "index": 64,
+        "speaker": "SPEAKER_00",
+        "start": 164.89971875,
+        "end": 165.15284375000002,
+        "duration": 0.253,
+        "text": " No."
+      },
+      {
+        "index": 65,
+        "speaker": "SPEAKER_00",
+        "start": 165.82784375,
+        "end": 168.02159375000002,
+        "duration": 2.194,
+        "text": " ¡Ahhh!"
+      },
+      {
+        "index": 66,
+        "speaker": "SPEAKER_01",
+        "start": 168.02159375000002,
+        "end": 170.40096875,
+        "duration": 2.379,
+        "text": " Pero hasta tengo en uno, lo otro no tengo."
+      },
+      {
+        "index": 67,
+        "speaker": "SPEAKER_00",
+        "start": 170.95784375000002,
+        "end": 174.87284375000002,
+        "duration": 3.915,
+        "text": " ¿No tienes? ¿Por qué tienes un hoyito ahí y...?"
+      },
+      {
+        "index": 68,
+        "speaker": "SPEAKER_00",
+        "start": 175.39596875,
+        "end": 177.53909375,
+        "duration": 2.143,
+        "text": " ¿Y ni siquiera tienes un aro?"
+      },
+      {
+        "index": 69,
+        "speaker": "SPEAKER_01",
+        "start": 177.57284375,
+        "end": 184.18784375,
+        "duration": 6.615,
+        "text": " Porque el papá cuando era más chico, el papá tenía un narito pero solo en una oreja."
+      },
+      {
+        "index": 70,
+        "speaker": "SPEAKER_00",
+        "start": 184.49159375000002,
+        "end": 193.63784375,
+        "duration": 9.146,
+        "text": " Pero tú te lo sacabas, tú te lo sacabas muy, muy fuerte."
+      },
+      {
+        "index": 71,
+        "speaker": "SPEAKER_01",
+        "start": 193.63784375,
+        "end": 211.18784375,
+        "duration": 17.55,
+        "text": " Sí, por eso que tiene que sacar despacito. ¿Como yo? Sí, para que no se hace mal. El papá es como lo machucó un poquito y de ahí se quedó loito mayor. Y te explicaron que no puedes sacar mucho y colocar porque si no se queda así, ¿cierto?"
+      },
+      {
+        "index": 72,
+        "speaker": "SPEAKER_00",
+        "start": 211.18784375,
+        "end": 216.92534375000002,
+        "duration": 5.738,
+        "text": " ¿Sabes que estos aritos los compré con mi plata?"
+      },
+      {
+        "index": 73,
+        "speaker": "SPEAKER_01",
+        "start": 217.04346875000002,
+        "end": 221.54909375000003,
+        "duration": 4.506,
+        "text": " con tu plata, mas que bacana, y donde compraste?"
+      },
+      {
+        "index": 74,
+        "speaker": "SPEAKER_00",
+        "start": 221.54909375000003,
+        "end": 226.27409375000002,
+        "duration": 4.725,
+        "text": " En la feria del..."
+      },
+      {
+        "index": 75,
+        "speaker": "SPEAKER_00",
+        "start": 226.47659375,
+        "end": 230.64471875,
+        "duration": 4.168,
+        "text": " La feria de Claudio."
+      },
+      {
+        "index": 76,
+        "speaker": "SPEAKER_00",
+        "start": 230.93159375000002,
+        "end": 230.96534375000002,
+        "duration": 0.034,
+        "text": ""
+      }
+    ],
+    "timings": {
+      "save_s": 0.1,
+      "convert_s": 0,
+      "preprocess_s": 46.5,
+      "diarization_s": 170.3,
+      "model_load_s": 0,
+      "transcription_s": 534.33,
+      "total_s": 756.07
+    },
+    "params": {
+      "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+      "language": "es-CL",
+      "model": "large-v3-turbo",
+      "min_speakers": 1,
+      "max_speakers": 3,
+      "diarization": "true",
+      "align_output": "true",
+      "remove_silence": true,
+      "noise_reduce": true,
+      "voice_enhance": true,
+      "word_timestamps": true,
+      "vad_threshold": 0.4,
+      "whisper_temp": 0,
+      "beam_size": 9,
+      "best_of": 9,
+      "chunk_size": 30,
+      "batch_size": 24,
+      "initial_prompt": "",
+      "save_to_qdrant": "false",
+      "qdrant_collection": "ic_netto",
+      "cors_mode": "auto",
+      "model_size": "large-v3-turbo",
+      "diarization_fallback": false,
+      "diarization_fallback_reason": null,
+      "temperature": 0,
+      "diarization_timeout_s": 180,
+      "min_turn_duration_s": 0,
+      "merge_gap_s": 0,
+      "max_diarization_segments": 1000,
+      "reduction_db": 25,
+      "apply_gain": true,
+      "target_lufs": -16,
+      "silence_thresh": -45,
+      "min_silence_len": 250,
+      "keep_audio_artifacts": true,
+      "saved_audio_file": "Olivia-2026-06-09 17-02-44_1787432289.wav",
+      "processed_audio_file": "Olivia-2026-06-09 17-02-44_1787432289_processed.wav"
+    },
+    "run_id": "Olivia-2026-06-09_17-02-44_1787432289",
+    "client_run_id": "Olivia-2026-06-09_17-02-44_1787432289"
+  }
+}

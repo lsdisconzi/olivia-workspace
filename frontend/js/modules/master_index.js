@@ -47,6 +47,71 @@
     return div.innerHTML;
   }
 
+  function _miFmtVal(value, depth) {
+    depth = depth || 0;
+
+    if (value === null || value === undefined || value === '') {
+      return '-';
+    }
+
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    if (typeof value === 'number' || typeof value === 'boolean') {
+      return String(value);
+    }
+
+    if (Array.isArray(value)) {
+      if (!value.length) return '[]';
+
+      var maxItems = depth > 1 ? 4 : 8;
+      var items = value.slice(0, maxItems).map(function (v) {
+        return _miFmtVal(v, depth + 1);
+      });
+
+      var suffix = value.length > maxItems
+        ? ' ... +' + (value.length - maxItems)
+        : '';
+
+      return items.join(', ') + suffix;
+    }
+
+    if (typeof value === 'object') {
+      try {
+        var keys = Object.keys(value);
+        if (!keys.length) return '{}';
+
+        var maxKeys = depth > 1 ? 4 : 6;
+        var parts = keys.slice(0, maxKeys).map(function (k) {
+          return k + ': ' + _miFmtVal(value[k], depth + 1);
+        });
+
+        var keySuffix = keys.length > maxKeys
+          ? ' ... +' + (keys.length - maxKeys)
+          : '';
+
+        return '{ ' + parts.join(', ') + keySuffix + ' }';
+      } catch (err) {
+        return '[Object]';
+      }
+    }
+
+    return String(value);
+  }
+
+  function _miName(value) {
+    if (value == null) return '';
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+      return String(value);
+    }
+    if (typeof value === 'object') {
+      if (typeof value.nome === 'string' && value.nome.trim()) return value.nome;
+      return _miFmtVal(value);
+    }
+    return String(value);
+  }
+
   function _miSetStatus(message, tone) {
     var el = _miById('masterIndexStatus');
     if (!el) return;
@@ -166,7 +231,14 @@
 
   function _miFormatWhen(doc) {
     if (!doc) return '-';
-    return String(doc.data_julgamento || doc.data_publicacao || doc.data_registro || doc.downloaded_at || '-');
+
+    return _miFmtVal(
+      doc.data_julgamento ||
+      doc.data_publicacao ||
+      doc.data_registro ||
+      doc.downloaded_at ||
+      '-'
+    );
   }
 
   function _miRenderCourtChips() {
@@ -187,38 +259,44 @@
     });
 
     var html = [];
+
     var allActive = _mi.filterCourt === 'all' ? ' active' : '';
     html.push(
-      '<span class="vw-chip' + allActive + '" data-court="all" onclick="masterIndexFilterCourt(\'all\',this)">' +
+      '<button type="button" class="vw-chip' + allActive + '" data-court="all">' +
       'Todos | ' + _miEsc(String(_miTotalDocuments())) +
-      '</span>'
+      '</button>'
     );
 
     courts.forEach(function (court) {
-      var encoded = encodeURIComponent(court);
       var active = (_mi.filterCourt === court) ? ' active' : '';
       html.push(
-        '<span class="vw-chip' + active + '" data-court="' + _miEsc(court) + '" onclick="masterIndexFilterCourt(\'' + encoded + '\',this)">' +
+        '<button type="button" class="vw-chip' + active +
+        '" data-court="' + _miEsc(encodeURIComponent(court)) + '">' +
         _miEsc(court) + ' | ' + _miEsc(String(counts[court] || 0)) +
-        '</span>'
+        '</button>'
       );
     });
 
     host.innerHTML = html.join('');
+
+    Array.prototype.forEach.call(host.querySelectorAll('.vw-chip'), function (btn) {
+      btn.addEventListener('click', function () {
+        window.masterIndexFilterCourt(btn.getAttribute('data-court'));
+      });
+    });
   }
 
-  function _miTreeEntry(label, hint, onclick, active, icon) {
+  function _miTreeEntry(label, hint, action, active, icon, payload) {
     return [
-      '<div class="mi-tree-item' + (active ? ' active' : '') + '" onclick="' + onclick + '"',
-      ' style="padding:8px 10px;border-radius:6px;cursor:pointer;margin:2px 4px;border:1px solid transparent;',
-      active ? 'background:var(--bg-hi);border-color:var(--amber)' : '',
-      '">',
-      '<div style="font-size:12px;color:var(--gray-hi);font-weight:600;line-height:1.3">',
-      icon ? ('<i class="' + icon + '" style="color:var(--amber);margin-right:6px"></i>') : '',
+      '<button type="button" class="mi-tree-item' + (active ? ' active' : '') +
+        '" data-action="' + _miEsc(action) +
+        '" data-id="' + _miEsc(payload || '') + '">',
+      '<div class="mi-tree-title">',
+      icon ? '<i class="' + icon + '"></i>' : '',
       _miEsc(label),
       '</div>',
-      hint ? ('<div style="font-size:11px;color:var(--gray);line-height:1.35;margin-top:3px">' + _miEsc(hint) + '</div>') : '',
-      '</div>',
+      hint ? '<div class="mi-tree-hint">' + _miEsc(hint) + '</div>' : '',
+      '</button>'
     ].join('');
   }
 
@@ -232,10 +310,11 @@
     }
 
     var html = [];
+
     html.push(_miTreeEntry(
       'Visao Geral',
       'Totais, distribuicoes e estado das pipelines',
-      'masterIndexSelectOverview()',
+      'overview',
       _mi.selected.type === 'overview',
       'fas fa-chart-line'
     ));
@@ -243,13 +322,14 @@
     html.push(_miTreeEntry(
       'Arquivo master_index.md',
       'Navegacao completa em markdown',
-      'masterIndexSelectMarkdown()',
+      'markdown',
       _mi.selected.type === 'markdown',
       'fas fa-file-lines'
     ));
 
     var docs = _miDocs().filter(_miMatchesDoc).sort(_miSortDocs);
     var grouped = Object.create(null);
+
     docs.forEach(function (doc) {
       var court = String((doc && doc.tribunal) || 'OUTROS');
       if (!grouped[court]) grouped[court] = [];
@@ -257,7 +337,9 @@
     });
 
     var courts = Object.keys(grouped).sort(function (a, b) {
-      if (grouped[a].length !== grouped[b].length) return grouped[b].length - grouped[a].length;
+      if (grouped[a].length !== grouped[b].length) {
+        return grouped[b].length - grouped[a].length;
+      }
       return a < b ? -1 : 1;
     });
 
@@ -269,48 +351,89 @@
 
     courts.forEach(function (court) {
       html.push(
-        '<div style="font-size:10px;letter-spacing:.12em;color:var(--amber);text-transform:uppercase;padding:8px 8px 6px">' +
-        _miEsc(court) + ' <span style="color:var(--gray)">| ' + _miEsc(String(grouped[court].length)) + '</span>' +
+        '<div class="mi-court-label">' +
+        _miEsc(court) + ' <span>| ' + _miEsc(String(grouped[court].length)) + '</span>' +
         '</div>'
       );
 
       grouped[court].forEach(function (doc) {
         var key = _miDocKey(doc);
         var active = (_mi.selected.type === 'doc' && _mi.selected.id === key);
-        var encoded = encodeURIComponent(key);
         var title = String(doc.numero_processo || doc.cnj_numero || doc.id || key);
-        var hint = [_miFormatWhen(doc), doc.relator || '', (doc.outcomes || []).slice(0, 2).join(', ')].filter(Boolean).join(' | ');
-        html.push(_miTreeEntry(title, hint, 'masterIndexSelectDoc(\'' + encoded + '\')', active, 'fas fa-scale-balanced'));
+        var outcomesHint = Array.isArray(doc.outcomes) && doc.outcomes.length
+          ? _miJoinList(doc.outcomes, 2)
+          : '';
+
+        var hint = [
+          _miFormatWhen(doc),
+          doc.relator || '',
+          outcomesHint
+        ].filter(Boolean).join(' | ');
+
+        html.push(_miTreeEntry(
+          title,
+          hint,
+          'doc',
+          active,
+          'fas fa-scale-balanced',
+          key
+        ));
       });
     });
 
     tree.innerHTML = html.join('');
+
+    if (!tree._miTreeBound) {
+      tree.addEventListener('click', function (e) {
+        var btn = e.target.closest ? e.target.closest('.mi-tree-item') : null;
+        if (!btn) return;
+
+        var action = btn.getAttribute('data-action');
+        var id = btn.getAttribute('data-id') || '';
+
+        if (action === 'overview') {
+          masterIndexSelectOverview();
+        } else if (action === 'markdown') {
+          masterIndexSelectMarkdown();
+        } else if (action === 'doc' && id) {
+          masterIndexSelectDoc(encodeURIComponent(id));
+        }
+      });
+
+      tree._miTreeBound = true;
+    }
   }
 
   function _miTableFromObject(obj, keyLabel, valueLabel, limit) {
     if (!obj || typeof obj !== 'object') return '';
+
     var keys = Object.keys(obj);
     if (!keys.length) return '';
+
     keys.sort(function (a, b) {
       var av = Number(obj[a] || 0);
       var bv = Number(obj[b] || 0);
       if (av !== bv) return bv - av;
       return a < b ? -1 : 1;
     });
+
     if (limit && limit > 0) keys = keys.slice(0, limit);
 
     var rows = keys.map(function (k) {
-      return '<tr><td style="padding:6px 8px;color:var(--gray-hi)">' + _miEsc(k) + '</td><td style="padding:6px 8px;color:var(--amber);font-family:var(--mono);text-align:right">' + _miEsc(String(obj[k])) + '</td></tr>';
+      return '<tr>' +
+        '<td class="mi-td-key">' + _miEsc(k) + '</td>' +
+        '<td class="mi-td-val">' + _miEsc(_miFmtVal(obj[k])) + '</td>' +
+        '</tr>';
     }).join('');
 
     return [
-      '<table style="width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:8px;overflow:hidden">',
-      '<thead><tr style="background:var(--bg-hi)">',
-      '<th style="padding:7px 8px;text-align:left;font-size:11px;color:var(--gray);font-weight:500">' + _miEsc(keyLabel || 'Chave') + '</th>',
-      '<th style="padding:7px 8px;text-align:right;font-size:11px;color:var(--gray);font-weight:500">' + _miEsc(valueLabel || 'Total') + '</th>',
+      '<table class="mi-table">',
+      '<thead><tr>',
+      '<th>' + _miEsc(keyLabel || 'Chave') + '</th>',
+      '<th style="text-align:right">' + _miEsc(valueLabel || 'Total') + '</th>',
       '</tr></thead>',
-      '<tbody>', rows, '</tbody>',
-      '</table>',
+      '<tbody>' + rows + '</tbody>',
+      '</table>'
     ].join('');
   }
 
@@ -333,7 +456,7 @@
     var byOutcome = _miTableFromObject(idx.by_outcome, 'Outcome', 'Total', 15);
 
     return [
-      '<div style="padding:24px;max-width:980px">',
+      '<div class="mi-panel">',
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px">',
       '<div>',
       '<div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber)">Jurisprudence Master Index</div>',
@@ -380,7 +503,7 @@
     var preview = truncated ? text.slice(0, MI_MD_PREVIEW_CHARS) : text;
 
     return [
-      '<div style="padding:24px;max-width:980px">',
+      '<div class="mi-panel">',
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px">',
       '<div>',
       '<div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber)">Arquivo markdown</div>',
@@ -401,7 +524,7 @@
     if (!Array.isArray(list) || !list.length) return '-';
     var trimmed = list.slice(0, limit || list.length);
     var suffix = list.length > trimmed.length ? (' ... +' + (list.length - trimmed.length)) : '';
-    return trimmed.map(function (v) { return String(v || ''); }).join(', ') + suffix;
+    return trimmed.map(function (v) { return _miFmtVal(v); }).join(', ') + suffix;
   }
 
   function _miLinkOrText(url) {
@@ -419,8 +542,8 @@
     lines.push('# ' + String(doc.id || 'documento'));
     lines.push('Tribunal: ' + String(doc.tribunal || ''));
     lines.push('Processo: ' + String(doc.numero_processo || doc.cnj_numero || ''));
-    lines.push('Relator: ' + String(doc.relator || ''));
-    lines.push('Comarca: ' + String(doc.comarca || ''));
+    lines.push('Relator: ' + _miName(doc.relator));
+    lines.push('Comarca: ' + _miName(doc.comarca));
     lines.push('Data: ' + _miFormatWhen(doc));
     lines.push('Outcomes: ' + _miJoinList(doc.outcomes || [], 10));
     if (doc.ementa) lines.push('\n## Ementa\n' + String(doc.ementa));
@@ -437,9 +560,9 @@
       ['ID', doc.id],
       ['Tribunal', doc.tribunal],
       ['Processo', doc.numero_processo || doc.cnj_numero],
-      ['Relator', doc.relator],
+      ['Relator', _miName(doc.relator)],
       ['Orgao julgador', doc.orgao_julgador],
-      ['Comarca', doc.comarca],
+      ['Comarca', _miName(doc.comarca)],
       ['Data', _miFormatWhen(doc)],
       ['Parser', doc.parser],
       ['Texto (chars)', doc.text_chars],
@@ -448,21 +571,24 @@
     ];
 
     var tableRows = rows.map(function (row) {
-      return '<tr><td style="padding:7px 8px;color:var(--gray);font-size:11px;white-space:nowrap">' + _miEsc(row[0]) + '</td><td style="padding:7px 8px;color:var(--gray-hi);font-size:12px">' + _miEsc(String(row[1] == null ? '-' : row[1])) + '</td></tr>';
+      return '<tr>' +
+        '<td class="mi-key">' + _miEsc(row[0]) + '</td>' +
+        '<td class="mi-val">' + _miEsc(_miFmtVal(row[1])) + '</td>' +
+        '</tr>';
     }).join('');
 
     var outcomes = Array.isArray(doc.outcomes) ? doc.outcomes : [];
     var outcomesHtml = outcomes.length
       ? outcomes.map(function (o) {
-        return '<span style="display:inline-block;padding:3px 8px;margin:2px 4px 2px 0;border:1px solid var(--border);border-radius:12px;font-size:11px;color:var(--gray-hi);background:var(--bg)">' + _miEsc(String(o)) + '</span>';
+        return '<span class="mi-badge">' + _miEsc(_miFmtVal(o)) + '</span>';
       }).join('')
-      : '<span style="color:var(--gray);font-size:12px">Sem outcomes mapeados.</span>';
+      : '<span class="mi-muted">Sem outcomes mapeados.</span>';
 
     var excerpt = String(doc.text_excerpt || doc.ementa || '').trim();
     var excerptShown = excerpt ? excerpt.slice(0, 5000) : '';
 
     return [
-      '<div style="padding:24px;max-width:980px">',
+      '<div class="mi-panel">',
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px">',
       '<div style="min-width:0">',
       '<div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber)">' + _miEsc(String(doc.tribunal || 'TRIBUNAL')) + '</div>',
@@ -475,7 +601,7 @@
       '</div>',
       '</div>',
 
-      '<table style="width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px">' + tableRows + '</table>',
+      '<table class="mi-table">' + tableRows + '</table>',
 
       '<div style="margin-bottom:14px">',
       '<h3 style="margin:0 0 8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)">Outcomes</h3>',

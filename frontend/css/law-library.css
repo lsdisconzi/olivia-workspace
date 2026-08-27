@@ -1,0 +1,388 @@
+/* law-library.css */
+:root {
+    --ll-bg: var(--bg, #0f1115);
+    --ll-bg-soft: var(--bg-hi, #171a21);
+    --ll-border: var(--border, #252a35);
+    --ll-text: var(--gray-hi, #e6e6e6);
+    --ll-muted: var(--gray, #8b93a1);
+    --ll-accent: var(--amber, #f5b342);
+    --ll-red: var(--red, #e05252);
+}
+
+/* Full-section mode */
+#lawLibView {
+    display: none;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 auto;
+    background: var(--ll-bg);
+    color: var(--ll-text);
+    overflow: hidden;
+}
+
+#lawLibView.active {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+body.lawlib-open .main-content,
+body.lawlib-open #chatHeader,
+body.lawlib-open #welcomeState,
+body.lawlib-open #chatLog,
+body.lawlib-open #chatCompose,
+body.lawlib-open #chatToolbar {
+    display: none !important;
+}
+
+/* Sidebar */
+#lawLibSidebar {
+    width: 340px;
+    min-width: 260px;
+    max-width: 480px;
+    flex: 0 0 auto;
+    border-right: 1px solid var(--ll-border);
+    background: var(--ll-bg-soft);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#lawLibStatus {
+    padding: 8px 12px;
+    font-size: 11px;
+    color: var(--ll-muted);
+    border-bottom: 1px solid var(--ll-border);
+    background: var(--ll-bg);
+    min-height: 20px;
+}
+
+#lawLibTree {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 8px;
+    scrollbar-color: var(--ll-border) transparent;
+}
+
+.ll-jur-section {
+    margin-bottom: 8px;
+}
+
+.ll-jur-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--ll-accent);
+    text-transform: uppercase;
+    padding: 6px 8px;
+}
+
+.ll-count {
+    color: var(--ll-muted);
+}
+
+.ll-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin: 2px 0;
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+}
+
+.ll-item:hover {
+    background: var(--ll-bg);
+    border-color: var(--ll-border);
+}
+
+.ll-item.active {
+    background: var(--ll-bg-soft);
+    border-color: var(--ll-accent);
+}
+
+.ll-item-id {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ll-text);
+    line-height: 1.3;
+}
+
+.ll-item-title {
+    display: block;
+    font-size: 11px;
+    color: var(--ll-muted);
+    line-height: 1.4;
+    margin-top: 3px;
+}
+
+.ll-empty {
+    padding: 12px;
+    color: var(--ll-muted);
+    font-size: 11px;
+}
+
+/* Resizer */
+#lawLibResize {
+    width: 4px;
+    flex: 0 0 4px;
+    cursor: col-resize;
+    background: transparent;
+}
+
+#lawLibResize:hover {
+    background: var(--ll-border);
+}
+
+/* Viewer */
+#lawLibViewer {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-y: auto;
+    padding: 24px;
+    scrollbar-color: var(--ll-border) transparent;
+}
+
+.ll-welcome {
+    max-width: 780px;
+}
+
+.ll-welcome h2 {
+    margin: 0 0 8px;
+    color: var(--ll-text);
+    font-size: 22px;
+}
+
+.ll-welcome-sub {
+    color: var(--ll-muted);
+    font-size: 13px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.ll-pills {
+    margin-bottom: 18px;
+}
+
+.ll-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid var(--ll-border);
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--ll-text);
+    background: var(--ll-bg);
+    margin: 2px 4px;
+}
+
+.ll-pill strong {
+    color: var(--ll-accent);
+    font-weight: 600;
+}
+
+.ll-hint {
+    margin-top: 16px;
+    padding: 14px;
+    border: 1px dashed var(--ll-border);
+    border-radius: 8px;
+    color: var(--ll-muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Source viewer */
+.ll-source {
+    max-width: 980px;
+}
+
+.ll-source-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.ll-source-title-box {
+    min-width: 0;
+}
+
+.ll-path {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ll-accent);
+    overflow-wrap: anywhere;
+}
+
+.ll-source-title {
+    margin: 4px 0 0;
+    color: var(--ll-text);
+    line-height: 1.25;
+    font-size: 20px;
+    overflow-wrap: anywhere;
+}
+
+.ll-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.ll-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--ll-border);
+    background: var(--ll-bg-soft);
+    color: var(--ll-text);
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.ll-btn:hover {
+    border-color: var(--ll-accent);
+}
+
+.ll-btn-primary {
+    background: var(--ll-accent);
+    color: #1b1b1b;
+    border-color: var(--ll-accent);
+    font-weight: 600;
+}
+
+.ll-btn-ghost {
+    background: transparent;
+}
+
+/* Metadata */
+.ll-meta-card {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border: 1px solid var(--ll-border);
+    border-radius: 8px;
+    background: var(--ll-bg-soft);
+}
+
+.ll-meta-row {
+    display: flex;
+    gap: 8px;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.ll-meta-key {
+    color: var(--ll-accent);
+    min-width: 120px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.ll-meta-value,
+.ll-meta-link {
+    color: var(--ll-text);
+    word-break: break-word;
+}
+
+.ll-meta-link {
+    color: var(--ll-accent);
+    word-break: break-all;
+    text-decoration: none;
+}
+
+.ll-meta-link:hover {
+    text-decoration: underline;
+}
+
+/* Body / markdown */
+.ll-body.answer-md {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ll-text);
+    background: var(--ll-bg);
+    padding: 18px 20px;
+    border: 1px solid var(--ll-border);
+    border-radius: 8px;
+    overflow-wrap: anywhere;
+}
+
+.ll-pre {
+    white-space: pre-wrap;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ll-text);
+    background: var(--ll-bg);
+    padding: 14px;
+    border: 1px solid var(--ll-border);
+    border-radius: 8px;
+    overflow-wrap: anywhere;
+}
+
+/* Context bar */
+#lawLibContextBar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 1px solid var(--ll-border);
+    padding: 8px 12px;
+    background: var(--ll-bg);
+    color: var(--ll-muted);
+    font-size: 11px;
+}
+
+#lawLibContextBar.empty {
+    opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+    #lawLibView.active {
+        flex-direction: column;
+    }
+
+    #lawLibSidebar {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--ll-border);
+        max-height: 45vh;
+    }
+
+    #lawLibResize {
+        display: none;
+    }
+
+    #lawLibViewer {
+        padding: 14px;
+    }
+
+    .ll-source-header {
+        flex-direction: column;
+    }
+
+    .ll-actions {
+        justify-content: flex-start;
+    }
+
+    .ll-meta-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .ll-meta-key {
+        min-width: 0;
+    }
+}

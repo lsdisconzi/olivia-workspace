@@ -458,8 +458,8 @@
         <p style="color:var(--gray);font-size:13px;margin-top:4px;">Gerencie usuários autorizados sem editar código.</p>
       </div>
       <div class="badges">
-        <div class="badge-tag">Admin: <strong>__ACTOR_NAME__</strong></div>
-        <div class="badge-tag">ID: <strong>__ACTOR_ID__</strong></div>
+        <div class="badge-tag">Admin: <strong id="actorName">__ACTOR_NAME__</strong></div>
+        <div class="badge-tag">ID: <strong id="actorId">__ACTOR_ID__</strong></div>
       </div>
     </div>
 
@@ -569,7 +569,7 @@
       </div>
       <div class="panel-body">
         <p style="color:var(--gray);font-size:12px;margin-bottom:12px;">
-          Adicione modelos do <strong>OpenRouter</strong> ou <strong>Fireworks</strong>. Modelos existentes podem ser
+          Adicione modelos do <strong>OpenRouter</strong>, <strong>Fireworks</strong> ou <strong>Grok (xAI)</strong>. Modelos existentes podem ser
           ocultados, editados ou removidos (remoção de modelos nativos é restável).
         </p>
 
@@ -623,15 +623,26 @@
 
         <!-- Model add form -->
         <form id="addModelForm">
-          <input id="modelProvider" name="provider" type="hidden" value="openrouter">
           <div class="grid">
             <div class="field">
-              <label for="modelId">ID do modelo (OpenRouter)</label>
-              <input id="modelId" name="id" type="text" placeholder="openrouter/free" required autocomplete="off">
+              <label for="modelProvider">Provedor</label>
+              <select id="modelProvider" name="provider" class="mini-select" autocomplete="off" style="padding:10px 12px;font-size:14px;">
+                <option value="cerebras">Cerebras</option>
+                <option value="xai">Grok (xAI)</option>
+                <option value="openrouter" selected>OpenRouter</option>
+                <option value="fireworks">Fireworks</option>
+                <option value="deepseek">DeepSeek</option>
+                <option value="anthropic">Anthropic</option>
+                <option value="ollama">Ollama</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="modelId">Model ID</label>
+              <input id="modelId" name="id" type="text" placeholder="grok-4.6" required autocomplete="off">
             </div>
             <div class="field">
               <label for="modelName">Nome de exibição</label>
-              <input id="modelName" name="name" placeholder="OpenRouter Free" required autocomplete="off">
+              <input id="modelName" name="name" placeholder="Grok 4.6" required autocomplete="off">
             </div>
             <div class="field">
               <label for="modelTier">Tier</label>
@@ -776,8 +787,19 @@
       panel.classList.toggle('collapsed');
     }
 
-    /* Original script below (unchanged except minor adjustments for data-label attributes) */
-    const currentUserId = '__ACTOR_ID__';
+    // Sanitize any template placeholders if served statically
+    (function sanitizeActorBadges() {
+      const nameEl = document.getElementById('actorName');
+      const idEl = document.getElementById('actorId');
+      if (nameEl && nameEl.textContent.trim() === '__ACTOR_NAME__') {
+        nameEl.textContent = 'admin';
+      }
+      if (idEl && idEl.textContent.trim() === '__ACTOR_ID__') {
+        idEl.textContent = '—';
+      }
+    })();
+
+    let currentUserId = '__ACTOR_ID__';
     const ASSISTANT_MODE_OPTIONS = [
       { value: 'read_only', label: 'Somente leitura' },
       { value: 'read_write', label: 'Ler + editar + criar' },
@@ -838,6 +860,20 @@
         const res = await fetch('/olivia/admin/users');
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Falha ao carregar usuários.');
+
+        // Update dynamic actor badge details in top right
+        const actorNameEl = document.getElementById('actorName');
+        const actorIdEl = document.getElementById('actorId');
+        if (actorNameEl && (data.actor_name || data.actor_id)) {
+          actorNameEl.textContent = data.actor_name || data.actor_id || 'admin';
+        }
+        if (actorIdEl && (data.actor_id || data.actor_name)) {
+          actorIdEl.textContent = data.actor_id || '—';
+        }
+        if (data.actor_id) {
+          currentUserId = data.actor_id;
+        }
+
         const users = Array.isArray(data.users) ? data.users : [];
         const admins = new Set(Array.isArray(data.admins) ? data.admins : []);
         if (Array.isArray(data.available_sections)) window.__SECTION_REGISTRY = data.available_sections;

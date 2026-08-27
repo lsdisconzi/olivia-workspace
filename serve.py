@@ -142,6 +142,10 @@ OPENROUTER_BASE_URL = os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.
 FIREWORKS_API_KEY   = os.environ.get("FIREWORKS_API_KEY", "")
 FIREWORKS_BASE_URL  = os.environ.get("FIREWORKS_BASE_URL", "https://api.fireworks.ai/inference/v1")
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "")
+XAI_API_KEY = os.environ.get("XAI_API_KEY", "xai-3xJ475QSK5V7CAVadIpPVoIRv0dmQwkbMJVN7FVjkpxNHeoBHequIs2dSVBnHAPH29kBMmYbOzvrNrMi")
+XAI_BASE_URL = os.environ.get("XAI_BASE_URL", "https://api.x.ai/v1")
+CEREBRAS_API_KEY = os.environ.get("CEREBRAS_API_KEY", "csk-cyvvdcvwfd966hhjf85y9c4f998nvtffvn253533y55v2283")
+CEREBRAS_BASE_URL = os.environ.get("CEREBRAS_BASE_URL", "https://api.cerebras.ai/v1")
 try:
     # Prevent mid-answer cutoffs on long assistant responses.
     LLM_STREAM_MAX_TOKENS = max(512, int(_Olivia_env("LLM_STREAM_MAX_TOKENS", "8192")))
@@ -247,7 +251,10 @@ def _build_llm_request_headers(base_url: str | None, api_key: str | None) -> dic
     if not target_base:
         target_base = "https://api.deepseek.com"
 
-    headers: dict[str, str] = {"Content-Type": "application/json"}
+    headers: dict[str, str] = {
+        "Content-Type": "application/json",
+        "User-Agent": "Olivia/1.0 (CerebrasClient)",
+    }
 
     if "generativelanguage.googleapis.com" in target_base:
         if api_key:
@@ -4738,6 +4745,7 @@ def _extract_pdf_text(path: Path, limit: int | None = None) -> str:
     if not path.is_file():
         return ""
     try:
+        # pyrefly: ignore [missing-import]
         from pypdf import PdfReader
         reader = PdfReader(str(path))
         parts = []
@@ -6187,9 +6195,98 @@ def _count_project_files(project_dir: Path) -> int:
     """Count all files in a project directory (excluding metadata files)."""
     count = 0
     for f in project_dir.rglob("*"):
-        if f.is_file() and f.name not in ("project.json", "index.json"):
-            count += 1
+        if not f.is_file():
+            continue
+        if f.name in ("project.json", "index.json"):
+            continue
+        try:
+            rel = str(f.relative_to(project_dir))
+        except Exception:
+            rel = f.name
+        if not _is_renderable_project_file(rel, f.stat().st_size):
+            continue
+        count += 1
     return count
+
+
+# ── Renderable project-file filter ─────────────────────────────────────
+# Keeps project indexes (index.json) lean and the workspace fast: only
+# files the UI can actually render as text/code are indexed. Dependency
+# trees, build output, caches and OS junk are skipped so a heavy upload
+# (e.g. a web_app with node_modules/) never bloats the rendered file list.
+
+_PROJECT_SKIP_DIR_SEGMENTS = frozenset({
+    ".git", ".hg", ".svn",
+    "node_modules", ".sites-runtime", ".npm", ".yarn", ".pnpm-store",
+    ".next", ".nuxt", ".output", ".svelte-kit", ".vercel", ".netlify",
+    ".wrangler", ".cache", ".parcel-cache", ".turbo", ".vite",
+    "dist", ".venv", "venv", "__pycache__", ".pytest_cache", ".mypy_cache",
+    ".ruff_cache", ".coverage", "htmlcov", ".idea", ".vscode",
+    ".terraform", ".serverless", "coverage", ".openai", ".openclaude",
+})
+
+_PROJECT_SKIP_FILENAMES = frozenset({
+    ".DS_Store", "Thumbs.db", "desktop.ini",
+    "package-lock.json", "npm-shrinkwrap.json", "package-lock.yml",
+    "yarn.lock", "pnpm-lock.yaml", "bun.lockb",
+})
+
+# Extensions the workspace viewer can render as text/code content.
+_PROJECT_RENDERABLE_EXTS = frozenset({
+    ".md", ".markdown", ".mdown", ".rst", ".adoc", ".txt",
+    ".json", ".jsonc", ".geojson", ".ipynb",
+    ".csv", ".tsv", ".yaml", ".yml", ".toml",
+    ".ini", ".cfg", ".conf", ".config", ".properties",
+    ".xml", ".html", ".htm", ".xhtml", ".svg",
+    ".css", ".scss", ".sass", ".less",
+    ".js", ".mjs", ".cjs", ".jsx", ".ts", ".mts", ".cts", ".tsx",
+    ".py", ".rb", ".go", ".rs", ".java", ".kt", ".kts", ".scala",
+    ".c", ".h", ".cc", ".cpp", ".hpp", ".cs", ".php", ".swift",
+    ".lua", ".r", ".dart", ".ex", ".exs", ".clj", ".hs",
+    ".sh", ".bash", ".zsh", ".fish", ".ps1", ".bat", ".cmd",
+    ".awk", ".sed", ".diff", ".patch",
+    ".sql", ".prisma", ".graphql", ".gql", ".proto",
+    ".dockerfile", ".gitignore", ".gitattributes", ".gitmodules",
+    ".npmrc", ".nvmrc", ".eslintrc", ".eslintrc.json", ".eslintignore",
+    ".prettierrc", ".editorconfig", ".env",
+    ".svelte", ".vue", ".astro",
+})
+
+# Large generated/cache files are never "necessary" to render; cap keeps
+# the index small and prevents a single big file from weighing down the UI.
+_PROJECT_RENDERABLE_MAX_BYTES = 250_000
+
+
+def _is_renderable_project_file(rel_path: str, size: int) -> bool:
+    """Return True only for files the workspace should list/render.
+
+    ``rel_path`` is the project-relative path (posix separators). Skips
+    dependency/build/cache directories, OS junk, generated lockfiles and
+    non-text binaries, and caps the size of what is considered renderable.
+    """
+    rel = str(rel_path or "").replace("\\", "/").strip("/")
+    if not rel:
+        return False
+    name = rel.split("/")[-1]
+    if name in _PROJECT_SKIP_FILENAMES:
+        return False
+    # Skip any path segment that is a known junk/generated directory.
+    if any(seg in _PROJECT_SKIP_DIR_SEGMENTS for seg in rel.split("/")):
+        return False
+    # The config files that are plain metadata lives outside sections and
+    # is already excluded by callers; treat them as non-renderable anyway.
+    if name in ("project.json", "index.json"):
+        return False
+    if size is not None and size > _PROJECT_RENDERABLE_MAX_BYTES:
+        return False
+    # A leading-dot file without a known extension (e.g. `.gitignore`) is
+    # renderable as text; otherwise require a known text/code extension.
+    suffix = ("." + name.split(".", 1)[1]) if "." in name and not name.startswith(".") else ""
+    if name.startswith(".") and suffix.lower() not in _PROJECT_RENDERABLE_EXTS:
+        # Dotfiles with no extension (e.g. .gitignore, .env) are text.
+        # Dotfiles with an unknown extension (e.g. .woff2) are not.
+        return name not in {".gitignore", ".gitattributes", ".gitmodules", ".env", ".editorconfig"}
+    return suffix.lower() in _PROJECT_RENDERABLE_EXTS
 
 
 def _list_archived_projects() -> list[dict]:
@@ -6393,8 +6490,15 @@ def _count_project_files(project_dir: Path) -> int:
         if not sd.is_dir():
             continue
         for f in sd.rglob("*"):
-            if f.is_file():
-                total += 1
+            if not f.is_file():
+                continue
+            try:
+                rel = str(f.relative_to(sd))
+            except Exception:
+                rel = f.name
+            if not _is_renderable_project_file(rel, f.stat().st_size):
+                continue
+            total += 1
     return total
 
 
@@ -6817,12 +6921,6 @@ def _read_project_context(max_chars: int = 12000, project_id: str | None = None)
     if not project_dir or not project_dir.is_dir():
         return ""
 
-    text_exts = {
-        ".md", ".txt", ".json", ".csv", ".yaml", ".yml", ".toml",
-        ".py", ".js", ".ts", ".html", ".css", ".sh", ".xml", ".rst",
-        ".cfg", ".ini", ".log", ".sql", ".env",
-    }
-
     candidates: list[Path] = []
     for preferred in (project_dir / "project.json", project_dir / "index.json"):
         if preferred.is_file():
@@ -6834,7 +6932,11 @@ def _read_project_context(max_chars: int = 12000, project_id: str | None = None)
             continue
         if file_path in candidates:
             continue
-        if file_path.suffix.lower() not in text_exts:
+        try:
+            rel = str(file_path.relative_to(project_dir))
+        except Exception:
+            rel = file_path.name
+        if not _is_renderable_project_file(rel, file_path.stat().st_size):
             continue
         scanned.append(file_path)
 
@@ -8458,6 +8560,20 @@ _PERMISSION_AUTO_ALLOW_TOOLS = {
     "list_directory",
     "write_file",
     "search_files",
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep",
+    "View",
+    "Bash",
+    "read",
+    "write",
+    "edit",
+    "glob",
+    "grep",
+    "view",
+    "bash",
 }
 
 
@@ -8553,9 +8669,9 @@ def _openclaude_cmd(
     # falls back to the default Anthropic model, which Vertex mode renders as
     # claude-sonnet-4-5@20250929 and 400s on OpenRouter).
     if provider:
-        # For Ollama, use "openai" provider since we connect via OpenAI-compatible
+        # For Ollama and Cerebras, use "openai" provider since we connect via OpenAI-compatible
         # API (CLAUDE_CODE_USE_OPENAI / OPENAI_BASE_URL / OPENAI_MODEL env vars).
-        oc_provider = "openai" if str(provider).strip().lower() == "ollama" else provider
+        oc_provider = "openai" if str(provider).strip().lower() in {"ollama", "cerebras"} else provider
         cmd += ["--provider", oc_provider]
     # Attach MCP servers selected for this run (or all when not specified).
     mcp_cfg = _resolve_mcp_config_path(mcp_servers)
@@ -8742,8 +8858,10 @@ def _stream_openclaude(
                 continue
             mtype = msg.get("type", "")
             if mtype == "system":
-                sess = msg.get("session", {})
-                print(f"[openclaude:stream]   system: model={sess.get('model','?')}  session_id={sess.get('session_id','?')}")
+                sess = msg.get("session") if isinstance(msg.get("session"), dict) else msg
+                model_name = msg.get("model") or sess.get("model") or "?"
+                sess_id = msg.get("session_id") or sess.get("session_id") or msg.get("sessionId") or "?"
+                print(f"[openclaude:stream]   system: model={model_name}  session_id={sess_id}")
             elif mtype == "stream_event":
                 ev = msg.get("event", {})
                 if isinstance(ev, dict) and ev.get("type") == "content_block_delta":
@@ -9309,14 +9427,26 @@ def _is_gemini_request(provider: str | None = None, model: str | None = None) ->
     return p == "gemini" or m.startswith("gemini-")
 
 
+def _is_xai_request(provider: str | None = None, model: str | None = None) -> bool:
+    p = str(provider or "").strip().lower()
+    m = str(model or "").strip().lower()
+    return p in {"xai", "grok"} or m.startswith("grok") or m.startswith("xai/") or m.startswith("x-ai/")
+
+
+def _is_cerebras_request(provider: str | None = None, model: str | None = None) -> bool:
+    p = str(provider or "").strip().lower()
+    m = str(model or "").strip().lower()
+    return p == "cerebras" or m.startswith("cerebras/") or m.startswith("csk-") or m in {"gemma-4-31b", "gpt-oss-120b", "llama-3.3-70b", "qwen3-235b-a22b"} and p == "cerebras"
+
+
 def _has_explicit_remote_provider_selection(provider: str | None = None, model: str | None = None) -> bool:
     p = str(provider or "").strip().lower()
     m = str(model or "").strip().lower()
-    if p in {"deepseek", "openai", "openrouter", "ollama", "gemini"}:
+    if p in {"deepseek", "openai", "openrouter", "ollama", "gemini", "xai", "grok", "cerebras"}:
         return True
-    if m.startswith("deepseek"):
+    if m.startswith("deepseek") or m.startswith("grok"):
         return True
-    if m.startswith("google/") or m.startswith("anthropic/") or m.startswith("meta-"):
+    if m.startswith("google/") or m.startswith("anthropic/") or m.startswith("meta-") or m.startswith("xai/") or m.startswith("x-ai/") or m.startswith("cerebras/"):
         return True
     return False
 
@@ -9362,21 +9492,25 @@ def _remote_request_supports_vision(provider: str | None = None, model: str | No
 def _should_use_openclaude_chat(provider: str | None = None, model: str | None = None) -> bool:
     """Choose OpenClaude only for Claude/Anthropic style requests.
 
-    DeepSeek/OpenAI model IDs should flow through direct OpenAI-compatible streaming.
+    DeepSeek/OpenAI/Grok/Cerebras model IDs should flow through direct OpenAI-compatible streaming.
     """
     p = str(provider or "").strip().lower()
     m = str(model or "").strip().lower()
 
-    # Gemini/Ollama/OpenRouter requests go direct — never through openclaude
+    # Gemini/Ollama/OpenRouter/xAI/Cerebras requests go direct — never through openclaude
     if _is_ollama_request(provider, model):
         return False
     if _is_openrouter_request(provider, model):
         return False
     if _is_gemini_request(provider, model):
         return False
-    if p in {"deepseek", "openai", "openrouter"}:
+    if _is_xai_request(provider, model):
         return False
-    if m.startswith("deepseek"):
+    if _is_cerebras_request(provider, model):
+        return False
+    if p in {"deepseek", "openai", "openrouter", "xai", "grok", "cerebras"}:
+        return False
+    if m.startswith("deepseek") or m.startswith("grok"):
         return False
     if p in {"anthropic", "openclaude", "claude"}:
         return True
@@ -9759,6 +9893,74 @@ def _build_models_catalog_payload() -> dict:
     if OPENROUTER_API_KEY:
         models.extend(OPENROUTER_CATALOG_MODELS)
 
+    # Grok (xAI) native models
+    models.extend([
+        {
+            "id": "grok-4.6",
+            "name": "Grok 4.6",
+            "provider": "xai",
+            "cost_per_1k": 0.005,
+            "base_url": "https://api.x.ai/v1",
+            "best_for": "Raciocínio avançado, código e inteligência multimodal",
+            "supports_vision": True,
+            "supports_thinking": True,
+        },
+        {
+            "id": "grok-4.3",
+            "name": "Grok 4.3",
+            "provider": "xai",
+            "cost_per_1k": 0.003,
+            "base_url": "https://api.x.ai/v1",
+            "best_for": "Tarefas gerais e raciocínio rápido",
+            "supports_vision": True,
+            "supports_thinking": True,
+        },
+        {
+            "id": "grok-4.1-fast",
+            "name": "Grok 4.1 Fast",
+            "provider": "xai",
+            "cost_per_1k": 0.001,
+            "base_url": "https://api.x.ai/v1",
+            "best_for": "Alta velocidade e respostas instantâneas",
+            "supports_vision": False,
+            "supports_thinking": False,
+        },
+    ])
+
+    # Cerebras native models
+    models.extend([
+        {
+            "id": "gemma-4-31b",
+            "name": "Gemma 4 31B (Cerebras)",
+            "provider": "cerebras",
+            "cost_per_1k": 0.00099,
+            "base_url": "https://api.cerebras.ai/v1",
+            "best_for": "Raciocínio multimodal ultra-rápido (~1850 tok/s)",
+            "supports_vision": True,
+            "supports_thinking": True,
+        },
+        {
+            "id": "gpt-oss-120b",
+            "name": "GPT OSS 120B (Cerebras)",
+            "provider": "cerebras",
+            "cost_per_1k": 0.00035,
+            "base_url": "https://api.cerebras.ai/v1",
+            "best_for": "Raciocínio em ciência, matemática e código (~3000 tok/s)",
+            "supports_vision": False,
+            "supports_thinking": True,
+        },
+        {
+            "id": "llama-3.3-70b",
+            "name": "Llama 3.3 70B (Cerebras)",
+            "provider": "cerebras",
+            "cost_per_1k": 0.0006,
+            "base_url": "https://api.cerebras.ai/v1",
+            "best_for": "Model de propósito geral de alta velocidade",
+            "supports_vision": False,
+            "supports_thinking": False,
+        },
+    ])
+
     models.extend(_discover_ollama_models(force=False))
 
     # Admin overrides: drop removed, overlay edits, append added openrouter
@@ -9823,6 +10025,10 @@ def _resolve_remote_llm_target(provider: str | None = None, model: str | None = 
             api_key = FIREWORKS_API_KEY or None
         elif p == "gemini":
             api_key = GOOGLE_API_KEY or None
+        elif p in {"xai", "grok"}:
+            api_key = XAI_API_KEY or None
+        elif p == "cerebras":
+            api_key = CEREBRAS_API_KEY or None
         elif p == "deepseek":
             api_key = DEEPSEEK_API_KEY or None
         return (_normalize_openai_base_url(base_url) or base_url, api_key)
@@ -9837,6 +10043,16 @@ def _resolve_remote_llm_target(provider: str | None = None, model: str | None = 
         return (
             _normalize_openai_base_url(FIREWORKS_BASE_URL) or "https://api.fireworks.ai/inference/v1",
             FIREWORKS_API_KEY or None,
+        )
+    if _is_xai_request(provider, model):
+        return (
+            _normalize_openai_base_url(XAI_BASE_URL) or "https://api.x.ai/v1",
+            XAI_API_KEY or None,
+        )
+    if _is_cerebras_request(provider, model):
+        return (
+            _normalize_openai_base_url(CEREBRAS_BASE_URL) or "https://api.cerebras.ai/v1",
+            CEREBRAS_API_KEY or None,
         )
     if _is_ollama_request(provider, model):
         target = _resolve_ollama_target(model)
@@ -9860,6 +10076,10 @@ def _remote_provider_label(provider: str | None = None, model: str | None = None
         return "OpenRouter"
     if _is_fireworks_request(provider, model):
         return "Fireworks"
+    if _is_xai_request(provider, model):
+        return "Grok (xAI)"
+    if _is_cerebras_request(provider, model):
+        return "Cerebras"
     if _is_ollama_request(provider, model):
         return "Ollama"
     if _is_gemini_request(provider, model):
@@ -9871,6 +10091,10 @@ def _remote_provider_label(provider: str | None = None, model: str | None = None
         base = str(LLM_BASE_URL).lower()
         if "deepseek.com" in base:
             return "DeepSeek"
+        if "cerebras.ai" in base:
+            return "Cerebras"
+        if "x.ai" in base:
+            return "Grok (xAI)"
         if "openai.com" in base:
             return "OpenAI"
         if "anthropic.com" in base:
@@ -11226,20 +11450,38 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
     _ADMIN_ACTIVITY_ALIASES = {
         "/olivia/admin/activity",
         "/olivia/admin/activity/",
-        "/olivia/admin/activity",
-        "/olivia/admin/activity/",
+        "/admin/activity",
+        "/admin/activity/",
+        "/olivia/auth/admin-activity.html",
+        "/olivia/auth/admin-activity",
+        "/auth/admin-activity.html",
+        "/auth/admin-activity",
+        "/frontend/auth/admin-activity.html",
+        "/admin-activity.html",
     }
     _ADMIN_USERS_UI_ALIASES = {
         "/olivia/admin/users-ui",
         "/olivia/admin/users-ui/",
-        "/olivia/admin/users-ui",
-        "/olivia/admin/users-ui/",
+        "/admin/users-ui",
+        "/admin/users-ui/",
+        "/olivia/auth/admin-users.html",
+        "/olivia/auth/admin-users",
+        "/auth/admin-users.html",
+        "/auth/admin-users",
+        "/frontend/auth/admin-users.html",
+        "/admin-users.html",
     }
     _ADMIN_PAGES_UI_ALIASES = {
         "/olivia/admin/pages",
         "/olivia/admin/pages/",
-        "/olivia/admin/pages",
-        "/olivia/admin/pages/",
+        "/admin/pages",
+        "/admin/pages/",
+        "/olivia/auth/admin-pages.html",
+        "/olivia/auth/admin-pages",
+        "/auth/admin-pages.html",
+        "/auth/admin-pages",
+        "/frontend/auth/admin-pages.html",
+        "/admin-pages.html",
     }
 
     def __init__(self, *args, **kwargs):
@@ -12171,6 +12413,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self._html_response(html_text)
 
     def _admin_activity_page_get(self):
+        if not self._auth_current_user():
+            self._send_redirect(f"/olivia/login?next={urllib.parse.quote(self.path)}")
+            return
         if not self._auth_is_admin():
             self._json_response({"error": "forbidden"}, 403)
             return
@@ -12181,6 +12426,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self._html_response(html_text)
 
     def _admin_users_ui_get(self):
+        if not self._auth_current_user():
+            self._send_redirect(f"/olivia/login?next={urllib.parse.quote(self.path)}")
+            return
         if not self._auth_is_admin():
             self._json_response({"error": "forbidden"}, 403)
             return
@@ -12198,6 +12446,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         self._html_response(html_text)
 
     def _admin_pages_ui_get(self):
+        if not self._auth_current_user():
+            self._send_redirect(f"/olivia/login?next={urllib.parse.quote(self.path)}")
+            return
         if not self._auth_is_admin():
             self._json_response({"error": "forbidden"}, 403)
             return
@@ -17944,6 +18195,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             "openrouter": "https://openrouter.ai/api/v1/auth/key",
             "fireworks": "https://api.fireworks.ai/inference/v1/models",
             "deepseek": "https://api.deepseek.com/models",
+            "xai": "https://api.x.ai/v1/models",
+            "grok": "https://api.x.ai/v1/models",
+            "cerebras": "https://api.cerebras.ai/v1/models",
         }
 
         test_url = provider_urls.get(provider)
@@ -17959,7 +18213,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             conn = _http_client.HTTPSConnection(parsed.hostname, timeout=10)
             conn.request(
                 "GET", parsed.path or "/",
-                headers={"Authorization": f"Bearer {api_key}", "Accept": "application/json"},
+                headers={"Authorization": f"Bearer {api_key}", "Accept": "application/json", "User-Agent": "Olivia/1.0 (CerebrasClient)"},
             )
             resp = conn.getresponse()
             body_bytes = resp.read()
@@ -17969,7 +18223,15 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             else:
                 detail = ""
                 try:
-                    detail = _json.loads(body_bytes).get("error", {}).get("message", "")
+                    raw = _json.loads(body_bytes)
+                    if isinstance(raw, dict):
+                        err_val = raw.get("error")
+                        if isinstance(err_val, str):
+                            detail = err_val
+                        elif isinstance(err_val, dict):
+                            detail = err_val.get("message", "")
+                        if not detail and raw.get("message"):
+                            detail = str(raw.get("message"))
                 except Exception:
                     pass
                 self._json_response({"valid": False, "error": detail or f"HTTP {resp.status}"})
@@ -18801,6 +19063,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                 pod_params["countryCodes"] = [spec.get("region")]
 
             # Call MCP tool via HTTP
+            # pyrefly: ignore [missing-import]
             import httpx
             mcp_url = os.environ.get("MCP_SERVER_RUNPOD_API", "https://mcp.getrunpod.io/")
 
@@ -18849,6 +19112,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         try:
+            # pyrefly: ignore [missing-import]
             import httpx
             mcp_url = os.environ.get("MCP_SERVER_RUNPOD_API", "https://mcp.getrunpod.io/")
 
@@ -18906,6 +19170,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         api_key = qs.get("apiKey", [""])[0] or os.environ.get("RUNPOD_API_KEY", "")
 
         try:
+            # pyrefly: ignore [missing-import]
             import httpx
             mcp_url = os.environ.get("MCP_SERVER_RUNPOD_API", "https://mcp.getrunpod.io/")
 
@@ -18961,6 +19226,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         try:
+            # pyrefly: ignore [missing-import]
             import httpx
             mcp_url = os.environ.get("MCP_SERVER_RUNPOD_API", "https://mcp.getrunpod.io/")
             session_id = str(uuid.uuid4())
@@ -19056,6 +19322,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         try:
+            # pyrefly: ignore [missing-import]
             import httpx
             mcp_url = os.environ.get("MCP_SERVER_RUNPOD_API", "https://mcp.getrunpod.io/")
 
@@ -21647,6 +21914,9 @@ Exemplo de formato:
                 if not f.is_file() or f.name in ("project.json", "index.json"):
                     continue
                 rel = str(f.relative_to(project_dir))
+                # Only index files the workspace viewer can render.
+                if not _is_renderable_project_file(rel, f.stat().st_size):
+                    continue
                 files.append({
                     "name": rel,
                     "size": f.stat().st_size,
@@ -21932,9 +22202,14 @@ Exemplo de formato:
                     for f in sorted(section_dir.rglob("*")):
                         if f.is_file():
                             rel = str(f.relative_to(section_dir))
+                            size = f.stat().st_size
+                            # Only index files the workspace viewer can render
+                            # (skips node_modules, dist, caches, binaries, ...).
+                            if not _is_renderable_project_file(rel, size):
+                                continue
                             files.append({
                                 "name": rel,
-                                "size": f.stat().st_size,
+                                "size": size,
                                 "modified_at": datetime.fromtimestamp(
                                     f.stat().st_mtime, tz=timezone.utc
                                 ).isoformat(),
@@ -22881,6 +23156,7 @@ Exemplo de formato:
     def _drive_build_service(self):
         """Build a fresh google.drive v3 service for this request."""
         try:
+            # pyrefly: ignore [missing-import]
             from googleapiclient.discovery import build
         except ImportError:
             raise RuntimeError(
@@ -22994,6 +23270,7 @@ Exemplo de formato:
 
         # Upload to Google Drive
         try:
+            # pyrefly: ignore [missing-import]
             from googleapiclient.http import MediaIoBaseUpload
             import io
         except ImportError:

@@ -1,0 +1,365 @@
+{
+  "filename": "tremenda-irresponsabilidad-20th-aug-26-SD-480p_tremenda-irresponsabilidad-20th-aug-26-SD-480p_1787429888.mp4_transcript.json",
+  "saved_at": "2026-08-22T20:22:20.452049+00:00",
+  "run_id": "tremenda-irresponsabilidad-20th-aug-26-SD-480p_1787429888.mp4",
+  "params": {
+    "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+    "language": "es-CL",
+    "model": "large-v3-turbo",
+    "min_speakers": 1,
+    "max_speakers": 2,
+    "diarization": "true",
+    "align_output": "true",
+    "remove_silence": "false",
+    "noise_reduce": "true",
+    "voice_enhance": "true",
+    "word_timestamps": "true",
+    "vad_threshold": 0.1,
+    "whisper_temp": 0,
+    "beam_size": 7,
+    "best_of": 7,
+    "chunk_size": 30,
+    "batch_size": 24,
+    "initial_prompt": "",
+    "save_to_qdrant": "false",
+    "qdrant_collection": "ic_netto",
+    "cors_mode": "auto"
+  },
+  "save_to_qdrant": false,
+  "qdrant_collection": "ic_netto",
+  "data": {
+    "transcript_id": "tremenda-irresponsabilidad-20th-aug-26-SD-480p_1787429888.mp4",
+    "segments": [
+      {
+        "index": 1,
+        "speaker": "SPEAKER_00",
+        "start": 0.03096875,
+        "end": 6.32534375,
+        "duration": 6.294,
+        "text": " aprobaron una reforma tremendamente regresiva. Este gobierno, la reforma que aprobó es tremendamente regresiva."
+      },
+      {
+        "index": 2,
+        "speaker": "SPEAKER_00",
+        "start": 7.11846875,
+        "end": 9.869093750000001,
+        "duration": 2.751,
+        "text": " que va además en contra de muchas de las cosas que se plantean acá."
+      },
+      {
+        "index": 3,
+        "speaker": "SPEAKER_00",
+        "start": 10.493468750000002,
+        "end": 14.84721875,
+        "duration": 4.354,
+        "text": " Porque si un problema vivimos durante el gobierno fue justamente producto de la caída de los ingresos."
+      },
+      {
+        "index": 4,
+        "speaker": "SPEAKER_00",
+        "start": 15.015968750000003,
+        "end": 15.032843750000001,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 5,
+        "speaker": "SPEAKER_00",
+        "start": 15.083468750000002,
+        "end": 18.01971875,
+        "duration": 2.936,
+        "text": " Y ahí hay un desafío muy especial respecto al impuesto a la renta."
+      },
+      {
+        "index": 6,
+        "speaker": "SPEAKER_00",
+        "start": 18.49221875,
+        "end": 20.21346875,
+        "duration": 1.721,
+        "text": " es la estrechez fiscal."
+      },
+      {
+        "index": 7,
+        "speaker": "SPEAKER_00",
+        "start": 21.69846875,
+        "end": 23.824718750000002,
+        "duration": 2.126,
+        "text": " producto también de las obligaciones legales de gasto."
+      },
+      {
+        "index": 8,
+        "speaker": "SPEAKER_00",
+        "start": 24.347843750000003,
+        "end": 26.22096875,
+        "duration": 1.873,
+        "text": " que es más del 90% del presupuesto."
+      },
+      {
+        "index": 9,
+        "speaker": "SPEAKER_00",
+        "start": 26.84534375,
+        "end": 29.02221875,
+        "duration": 2.177,
+        "text": " Y este gobierno va a generar más déficit fiscal."
+      },
+      {
+        "index": 10,
+        "speaker": "SPEAKER_00",
+        "start": 29.950343750000002,
+        "end": 30.777218750000003,
+        "duration": 0.827,
+        "text": " Más déficit fiscal."
+      },
+      {
+        "index": 11,
+        "speaker": "SPEAKER_00",
+        "start": 32.61659375,
+        "end": 33.15659375,
+        "duration": 0.54,
+        "text": " ¿Cuándo?"
+      },
+      {
+        "index": 12,
+        "speaker": "SPEAKER_00",
+        "start": 33.713468750000004,
+        "end": 34.877843750000004,
+        "duration": 1.164,
+        "text": " Recién había sido electo."
+      },
+      {
+        "index": 13,
+        "speaker": "SPEAKER_00",
+        "start": 35.26596875,
+        "end": 40.125968750000006,
+        "duration": 4.86,
+        "text": " Los analistas de la derecha decían, ahora sí está el optimismo, ahora sí las cosas van a ir mejor."
+      },
+      {
+        "index": 14,
+        "speaker": "SPEAKER_00",
+        "start": 41.57721875,
+        "end": 42.92721875,
+        "duration": 1.35,
+        "text": " Hoy día salieron las cuentas nacionales."
+      },
+      {
+        "index": 15,
+        "speaker": "SPEAKER_00",
+        "start": 44.024093750000006,
+        "end": 45.59346875,
+        "duration": 1.569,
+        "text": " Hoy día salió el informe de las cuentas nacionales."
+      },
+      {
+        "index": 16,
+        "speaker": "SPEAKER_00",
+        "start": 46.555343750000006,
+        "end": 47.196593750000005,
+        "duration": 0.641,
+        "text": " En donde..."
+      },
+      {
+        "index": 17,
+        "speaker": "SPEAKER_00",
+        "start": 48.71534375,
+        "end": 49.829093750000006,
+        "duration": 1.114,
+        "text": " Se revisaron en la baja."
+      },
+      {
+        "index": 18,
+        "speaker": "SPEAKER_00",
+        "start": 50.453468750000006,
+        "end": 51.90471875,
+        "duration": 1.451,
+        "text": " Y tenemos dos trimestres de..."
+      },
+      {
+        "index": 19,
+        "speaker": "SPEAKER_00",
+        "start": 52.39409375,
+        "end": 53.119718750000004,
+        "duration": 0.726,
+        "text": " crecimiento negativo."
+      },
+      {
+        "index": 20,
+        "speaker": "SPEAKER_00",
+        "start": 55.02659375,
+        "end": 55.515968750000006,
+        "duration": 0.489,
+        "text": " Entonces."
+      },
+      {
+        "index": 21,
+        "speaker": "SPEAKER_00",
+        "start": 56.14034375000001,
+        "end": 57.16971875,
+        "duration": 1.029,
+        "text": " yo creo"
+      },
+      {
+        "index": 22,
+        "speaker": "SPEAKER_00",
+        "start": 57.760343750000004,
+        "end": 60.291593750000004,
+        "duration": 2.531,
+        "text": " que la reforma tributaria que aprobó este gobierno."
+      },
+      {
+        "index": 23,
+        "speaker": "SPEAKER_00",
+        "start": 61.455968750000004,
+        "end": 73.16721875,
+        "duration": 11.711,
+        "text": " Es de una tremenda irresponsabilidad en materia fiscal. Es legítimo que lo planteen. Yo no estoy en contra de la ideología cuando hay críticas de nuestro sector que dicen este gobierno es muy ideológico. Bueno, en buena hora, si ganaron."
+      },
+      {
+        "index": 24,
+        "speaker": "SPEAKER_00",
+        "start": 74.65221875,
+        "end": 75.73221875,
+        "duration": 1.08,
+        "text": " ¿Está bien tener ideología?"
+      },
+      {
+        "index": 25,
+        "speaker": "SPEAKER_00",
+        "start": 76.06971875,
+        "end": 77.67284375,
+        "duration": 1.603,
+        "text": " Hay que defenderla si la política no es..."
+      },
+      {
+        "index": 26,
+        "speaker": "SPEAKER_00",
+        "start": 77.84159375,
+        "end": 79.30971875,
+        "duration": 1.468,
+        "text": " Un mero acuerdo técnico."
+      },
+      {
+        "index": 27,
+        "speaker": "SPEAKER_00",
+        "start": 81.30096875000001,
+        "end": 85.33409375000001,
+        "duration": 4.033,
+        "text": " Pero las consecuencias prácticas de la reforma yo creo que van a ser muy negativas para el país."
+      },
+      {
+        "index": 28,
+        "speaker": "SPEAKER_00",
+        "start": 86.44784375,
+        "end": 86.81909375000001,
+        "duration": 0.371,
+        "text": " y"
+      },
+      {
+        "index": 29,
+        "speaker": "SPEAKER_00",
+        "start": 87.44346875000001,
+        "end": 88.99596875,
+        "duration": 1.552,
+        "text": " tocará en el futuro."
+      },
+      {
+        "index": 30,
+        "speaker": "SPEAKER_00",
+        "start": 89.83971875,
+        "end": 90.73409375,
+        "duration": 0.894,
+        "text": " a otros"
+      },
+      {
+        "index": 31,
+        "speaker": "SPEAKER_00",
+        "start": 91.57784375,
+        "end": 92.53971875,
+        "duration": 0.962,
+        "text": " tratar de solucionarlo."
+      },
+      {
+        "index": 32,
+        "speaker": "SPEAKER_00",
+        "start": 93.61971875,
+        "end": 94.51409375,
+        "duration": 0.894,
+        "text": " Pero no va a ser fácil."
+      },
+      {
+        "index": 33,
+        "speaker": "SPEAKER_00",
+        "start": 95.30721875,
+        "end": 95.56034375,
+        "duration": 0.253,
+        "text": " Gracias."
+      },
+      {
+        "index": 34,
+        "speaker": "SPEAKER_00",
+        "start": 95.74596875,
+        "end": 96.06659375000001,
+        "duration": 0.321,
+        "text": " No."
+      },
+      {
+        "index": 35,
+        "speaker": "SPEAKER_00",
+        "start": 96.18471875,
+        "end": 97.34909375000001,
+        "duration": 1.164,
+        "text": " La reforma que aprobó..."
+      }
+    ],
+    "timings": {
+      "save_s": 0.01,
+      "convert_s": 0.48,
+      "preprocess_s": 13.54,
+      "diarization_s": 61.12,
+      "model_load_s": 0,
+      "transcription_s": 169.64,
+      "total_s": 250.11
+    },
+    "params": {
+      "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+      "language": "es-CL",
+      "model": "large-v3-turbo",
+      "min_speakers": 1,
+      "max_speakers": 2,
+      "diarization": "true",
+      "align_output": "true",
+      "remove_silence": false,
+      "noise_reduce": true,
+      "voice_enhance": true,
+      "word_timestamps": true,
+      "vad_threshold": 0.1,
+      "whisper_temp": 0,
+      "beam_size": 7,
+      "best_of": 7,
+      "chunk_size": 30,
+      "batch_size": 24,
+      "initial_prompt": "",
+      "save_to_qdrant": "false",
+      "qdrant_collection": "ic_netto",
+      "cors_mode": "auto",
+      "model_size": "large-v3-turbo",
+      "diarization_fallback": false,
+      "diarization_fallback_reason": null,
+      "temperature": 0,
+      "diarization_timeout_s": 180,
+      "min_turn_duration_s": 0,
+      "merge_gap_s": 0,
+      "max_diarization_segments": 1000,
+      "reduction_db": 25,
+      "apply_gain": true,
+      "target_lufs": -16,
+      "silence_thresh": -45,
+      "min_silence_len": 250,
+      "keep_audio_artifacts": true,
+      "saved_audio_file": "tremenda-irresponsabilidad-20th-aug-26-SD-480p_1787429888.mp4.wav",
+      "processed_audio_file": "tremenda-irresponsabilidad-20th-aug-26-SD-480p_1787429888.mp4_processed.wav"
+    },
+    "run_id": "tremenda-irresponsabilidad-20th-aug-26-SD-480p_1787429888.mp4",
+    "client_run_id": "tremenda-irresponsabilidad-20th-aug-26-SD-480p_1787429888.mp4"
+  }
+}

@@ -7,6 +7,9 @@ let _assistantHistory = [];
 const CHAT_KEY = 'OliviaLegal.chat.saved';
 const MODEL_PROVIDER_META = {
   deepseek: { label: 'DeepSeek', icon: 'fa-brain' },
+  cerebras: { label: 'Cerebras', icon: 'fa-cpu' },
+  xai: { label: 'Grok (xAI)', icon: 'fa-bolt' },
+  grok: { label: 'Grok (xAI)', icon: 'fa-bolt' },
   anthropic: { label: 'Anthropic', icon: 'fa-feather-pointed' },
   openrouter: { label: 'OpenRouter', icon: 'fa-network-wired' },
   fireworks: { label: 'Fireworks', icon: 'fa-fire' },
@@ -15,6 +18,19 @@ const MODEL_PROVIDER_META = {
   gemini: { label: 'Gemini', icon: 'fa-cloud' },
   other: { label: 'Outros', icon: 'fa-microchip' }
 };
+
+const ALLOWED_CEREBRAS_MODELS = new Set([
+  'gemma-4-31b',
+  'gpt-oss-120b',
+  'llama-3.3-70b',
+  'qwen3-235b-a22b',
+]);
+
+const ALLOWED_XAI_MODELS = new Set([
+  'grok-4.6',
+  'grok-4.3',
+  'grok-4.1-fast',
+]);
 
 // --- DeepSeek (fallback LLM provider, OpenAI‑compatible) ---------------------
 // Only the models actually configured in the environment
@@ -146,6 +162,8 @@ function normalizeWorkspaceModel(rawModel, fallback) {
 
   const lower = model.toLowerCase();
   if (ALLOWED_DEEPSEEK_MODELS.has(lower)) return lower;
+  if (ALLOWED_CEREBRAS_MODELS.has(lower)) return lower;
+  if (ALLOWED_XAI_MODELS.has(lower)) return lower;
   if (ALLOWED_GEMINI_MODELS.has(lower)) return lower;
   if (ALLOWED_OPENROUTER_MODELS.has(lower)) return lower;
   if (ALLOWED_ANTHROPIC_MODELS.has(lower)) return lower;

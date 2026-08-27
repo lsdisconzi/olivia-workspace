@@ -1,0 +1,437 @@
+{
+  "filename": "16.30-18.04min_16.30-18.04min_1787430821.m4a_transcript.json",
+  "saved_at": "2026-08-22T20:38:28.751445+00:00",
+  "run_id": "16.30-18.04min_1787430821.m4a",
+  "params": {
+    "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+    "language": "es-CL",
+    "model": "large-v3-turbo",
+    "min_speakers": 1,
+    "max_speakers": 2,
+    "diarization": "true",
+    "align_output": "true",
+    "remove_silence": "false",
+    "noise_reduce": "true",
+    "voice_enhance": "true",
+    "word_timestamps": "true",
+    "vad_threshold": 0.1,
+    "whisper_temp": 0,
+    "beam_size": 7,
+    "best_of": 7,
+    "chunk_size": 30,
+    "batch_size": 24,
+    "initial_prompt": "",
+    "save_to_qdrant": "false",
+    "qdrant_collection": "ic_netto",
+    "cors_mode": "auto"
+  },
+  "save_to_qdrant": false,
+  "qdrant_collection": "ic_netto",
+  "data": {
+    "transcript_id": "16.30-18.04min_1787430821.m4a",
+    "segments": [
+      {
+        "index": 1,
+        "speaker": "SPEAKER_00",
+        "start": 0.03096875,
+        "end": 1.0265937500000002,
+        "duration": 0.996,
+        "text": " ¡No!"
+      },
+      {
+        "index": 2,
+        "speaker": "SPEAKER_00",
+        "start": 1.14471875,
+        "end": 1.93784375,
+        "duration": 0.793,
+        "text": " Ya."
+      },
+      {
+        "index": 3,
+        "speaker": "SPEAKER_01",
+        "start": 2.03909375,
+        "end": 3.25409375,
+        "duration": 1.215,
+        "text": " ¡Oh!"
+      },
+      {
+        "index": 4,
+        "speaker": "SPEAKER_01",
+        "start": 3.7772187500000003,
+        "end": 5.363468750000001,
+        "duration": 1.586,
+        "text": " Claro que sí que tú."
+      },
+      {
+        "index": 5,
+        "speaker": "SPEAKER_00",
+        "start": 5.599718750000001,
+        "end": 11.47221875,
+        "duration": 5.872,
+        "text": " La verdad es que en algunos años se va a casar mi mamá con el José."
+      },
+      {
+        "index": 6,
+        "speaker": "SPEAKER_01",
+        "start": 11.691593750000003,
+        "end": 15.505343750000002,
+        "duration": 3.814,
+        "text": " Que bacana mi corazón, papá se queda muy contento"
+      },
+      {
+        "index": 7,
+        "speaker": "SPEAKER_00",
+        "start": 17.15909375,
+        "end": 17.20971875,
+        "duration": 0.051,
+        "text": " Gracias."
+      },
+      {
+        "index": 8,
+        "speaker": "SPEAKER_01",
+        "start": 17.20971875,
+        "end": 17.22659375,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 9,
+        "speaker": "SPEAKER_00",
+        "start": 17.22659375,
+        "end": 17.80034375,
+        "duration": 0.574,
+        "text": " ¿Qué?"
+      },
+      {
+        "index": 10,
+        "speaker": "SPEAKER_01",
+        "start": 17.80034375,
+        "end": 18.50909375,
+        "duration": 0.709,
+        "text": " Contente."
+      },
+      {
+        "index": 11,
+        "speaker": "SPEAKER_00",
+        "start": 19.96034375,
+        "end": 22.238468750000003,
+        "duration": 2.278,
+        "text": " Pero falta mucho tiempo para ir."
+      },
+      {
+        "index": 12,
+        "speaker": "SPEAKER_00",
+        "start": 22.74471875,
+        "end": 24.49971875,
+        "duration": 1.755,
+        "text": " Y tiene una hermanita."
+      },
+      {
+        "index": 13,
+        "speaker": "SPEAKER_01",
+        "start": 25.360343750000002,
+        "end": 25.37721875,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 14,
+        "speaker": "SPEAKER_00",
+        "start": 25.37721875,
+        "end": 27.03096875,
+        "duration": 1.654,
+        "text": " Quiero conocer una hermanita."
+      },
+      {
+        "index": 15,
+        "speaker": "SPEAKER_01",
+        "start": 27.50346875,
+        "end": 30.777218750000003,
+        "duration": 3.274,
+        "text": " ¿Ya tienes una hermanita o vas a tener una hermanita?"
+      },
+      {
+        "index": 16,
+        "speaker": "SPEAKER_00",
+        "start": 31.38471875,
+        "end": 32.17784375,
+        "duration": 0.793,
+        "text": " Voy a acudir."
+      },
+      {
+        "index": 17,
+        "speaker": "SPEAKER_01",
+        "start": 32.17784375,
+        "end": 32.31284375,
+        "duration": 0.135,
+        "text": ""
+      },
+      {
+        "index": 18,
+        "speaker": "SPEAKER_00",
+        "start": 32.31284375,
+        "end": 32.430968750000005,
+        "duration": 0.118,
+        "text": " Gracias."
+      },
+      {
+        "index": 19,
+        "speaker": "SPEAKER_01",
+        "start": 33.56159375,
+        "end": 33.89909375,
+        "duration": 0.337,
+        "text": " Nero no."
+      },
+      {
+        "index": 20,
+        "speaker": "SPEAKER_00",
+        "start": 33.89909375,
+        "end": 33.93284375,
+        "duration": 0.034,
+        "text": ""
+      },
+      {
+        "index": 21,
+        "speaker": "SPEAKER_01",
+        "start": 33.93284375,
+        "end": 33.94971875,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 22,
+        "speaker": "SPEAKER_00",
+        "start": 33.94971875,
+        "end": 36.05909375,
+        "duration": 2.109,
+        "text": " No quengo, no quengo."
+      },
+      {
+        "index": 23,
+        "speaker": "SPEAKER_00",
+        "start": 36.39659375,
+        "end": 37.594718750000006,
+        "duration": 1.198,
+        "text": " Voy a querer."
+      },
+      {
+        "index": 24,
+        "speaker": "SPEAKER_01",
+        "start": 37.64534375,
+        "end": 40.32846875,
+        "duration": 2.683,
+        "text": " va a tener, que bacana mira"
+      },
+      {
+        "index": 25,
+        "speaker": "SPEAKER_01",
+        "start": 40.75034375,
+        "end": 45.64409375,
+        "duration": 4.894,
+        "text": " Si eso pasa el papá va a quedar el hombre más feliz del mundo."
+      },
+      {
+        "index": 26,
+        "speaker": "SPEAKER_01",
+        "start": 46.251593750000005,
+        "end": 47.46659375,
+        "duration": 1.215,
+        "text": " más feliz del mundo"
+      },
+      {
+        "index": 27,
+        "speaker": "SPEAKER_00",
+        "start": 47.46659375,
+        "end": 47.719718750000006,
+        "duration": 0.253,
+        "text": ""
+      },
+      {
+        "index": 28,
+        "speaker": "SPEAKER_00",
+        "start": 48.00659375,
+        "end": 49.06971875,
+        "duration": 1.063,
+        "text": " Sabes que?"
+      },
+      {
+        "index": 29,
+        "speaker": "SPEAKER_00",
+        "start": 50.23409375,
+        "end": 52.259093750000005,
+        "duration": 2.025,
+        "text": " El José será su papá."
+      },
+      {
+        "index": 30,
+        "speaker": "SPEAKER_01",
+        "start": 53.828468750000006,
+        "end": 56.32596875,
+        "duration": 2.497,
+        "text": " Será el papá de la hermanita."
+      },
+      {
+        "index": 31,
+        "speaker": "SPEAKER_01",
+        "start": 56.899718750000005,
+        "end": 57.119093750000005,
+        "duration": 0.219,
+        "text": " y"
+      },
+      {
+        "index": 32,
+        "speaker": "SPEAKER_01",
+        "start": 57.625343750000006,
+        "end": 59.39721875,
+        "duration": 1.772,
+        "text": " Puedo diciéndose a Ratu Papa"
+      },
+      {
+        "index": 33,
+        "speaker": "SPEAKER_00",
+        "start": 60.46034375000001,
+        "end": 60.83159375,
+        "duration": 0.371,
+        "text": " Tú."
+      },
+      {
+        "index": 34,
+        "speaker": "SPEAKER_01",
+        "start": 60.83159375,
+        "end": 63.666593750000004,
+        "duration": 2.835,
+        "text": " ¡Op!"
+      },
+      {
+        "index": 35,
+        "speaker": "SPEAKER_00",
+        "start": 64.47659375,
+        "end": 67.88534375,
+        "duration": 3.409,
+        "text": " Sí, aunque tenga dos papas mi hermanito."
+      },
+      {
+        "index": 36,
+        "speaker": "SPEAKER_01",
+        "start": 69.96096875,
+        "end": 72.00284375000001,
+        "duration": 2.042,
+        "text": " no tu hermanita va tener un papá"
+      },
+      {
+        "index": 37,
+        "speaker": "SPEAKER_00",
+        "start": 73.11659375,
+        "end": 74.55096875000001,
+        "duration": 1.434,
+        "text": " Sí, que es el José."
+      },
+      {
+        "index": 38,
+        "speaker": "SPEAKER_01",
+        "start": 74.55096875000001,
+        "end": 77.90909375000001,
+        "duration": 3.358,
+        "text": " Sí, y ahí tú tienes el papá que es tu papá."
+      },
+      {
+        "index": 39,
+        "speaker": "SPEAKER_00",
+        "start": 79.05659375,
+        "end": 81.03096875,
+        "duration": 1.974,
+        "text": " Tú eres."
+      },
+      {
+        "index": 40,
+        "speaker": "SPEAKER_00",
+        "start": 81.09846875000001,
+        "end": 81.97596875,
+        "duration": 0.877,
+        "text": " Gracias por ver."
+      },
+      {
+        "index": 41,
+        "speaker": "SPEAKER_01",
+        "start": 82.71846875,
+        "end": 88.64159375,
+        "duration": 5.923,
+        "text": " Sí, mi corazón. Eso es una noticia muy buena. Papá se queda muy contento."
+      },
+      {
+        "index": 42,
+        "speaker": "SPEAKER_01",
+        "start": 88.87784375000001,
+        "end": 89.53596875000001,
+        "duration": 0.658,
+        "text": " Porque"
+      },
+      {
+        "index": 43,
+        "speaker": "SPEAKER_01",
+        "start": 90.63284375,
+        "end": 90.66659375,
+        "duration": 0.034,
+        "text": ""
+      },
+      {
+        "index": 44,
+        "speaker": "SPEAKER_01",
+        "start": 91.02096875000001,
+        "end": 92.42159375,
+        "duration": 1.401,
+        "text": " Una de las tristezas."
+      }
+    ],
+    "timings": {
+      "save_s": 0,
+      "convert_s": 0.2,
+      "preprocess_s": 12.82,
+      "diarization_s": 56.88,
+      "model_load_s": 0,
+      "transcription_s": 210.18,
+      "total_s": 285.03
+    },
+    "params": {
+      "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+      "language": "es-CL",
+      "model": "large-v3-turbo",
+      "min_speakers": 1,
+      "max_speakers": 2,
+      "diarization": "true",
+      "align_output": "true",
+      "remove_silence": false,
+      "noise_reduce": true,
+      "voice_enhance": true,
+      "word_timestamps": true,
+      "vad_threshold": 0.1,
+      "whisper_temp": 0,
+      "beam_size": 7,
+      "best_of": 7,
+      "chunk_size": 30,
+      "batch_size": 24,
+      "initial_prompt": "",
+      "save_to_qdrant": "false",
+      "qdrant_collection": "ic_netto",
+      "cors_mode": "auto",
+      "model_size": "large-v3-turbo",
+      "diarization_fallback": false,
+      "diarization_fallback_reason": null,
+      "temperature": 0,
+      "diarization_timeout_s": 180,
+      "min_turn_duration_s": 0,
+      "merge_gap_s": 0,
+      "max_diarization_segments": 1000,
+      "reduction_db": 25,
+      "apply_gain": true,
+      "target_lufs": -16,
+      "silence_thresh": -45,
+      "min_silence_len": 250,
+      "keep_audio_artifacts": true,
+      "saved_audio_file": "16.30-18.04min_1787430821.m4a.wav",
+      "processed_audio_file": "16.30-18.04min_1787430821.m4a_processed.wav"
+    },
+    "run_id": "16.30-18.04min_1787430821.m4a",
+    "client_run_id": "16.30-18.04min_1787430821.m4a"
+  }
+}

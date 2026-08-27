@@ -4,21 +4,12 @@
 > Purpose: prevent repeated tooling failures and standardise workspace writes.
 > Last updated: 2026-08-07 (case: `andrew-neary`)
 
-## Write path (CRITICAL — learned from repeated failures)
+## Tooling & Execution Path
 
-- The generic `Write` tool is **NOT registered** in this runtime.
-- Calling it raises `NoSuchTool` and the file is not persisted.
-- **Correct write path:** MCP filesystem server
-  - `mcp__mcp-server-files__write_file` — create / fully overwrite a file
-  - `mcp__mcp-server-files__edit_file` — targeted line-based edits (dry-run supported)
+- Standard built-in tools (`Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash`) and MCP tools (`read_text_file`, `write_file`, `edit_file`, `list_directory`) are supported in this environment.
+- Use `Read` or `read_text_file` for reading files, `Write` or `write_file` for creating/overwriting files, and `Edit` or `edit_file` for targeted line-based edits.
+- If any tool invocation returns `NoSuchTool`, switch immediately to the equivalent built-in tool (`Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash`).
 - Confirmed allowed root: `/Users/dev/_sell/olivia` (covers all projects, agents, and knowledge paths).
-- Before writing a new file, verify the parent directory exists (`list_directory`); create it with `mcp__mcp-server-files__create_directory` when missing (create parents first — nested creation fails if the parent does not exist).
-- Do not attempt `Write`, `Bash` heredocs, or `echo >` to persist files.
-
-## Read path
-
-- Use the local `Read` tool or `mcp__mcp-server-files__read_text_file` for exact file contents.
-- Use `garage-qdrant` semantic search for Olivia ecosystem / project document queries when content is large or when the answer is not in the visible context.
 
 ## Workspace conventions
 

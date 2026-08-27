@@ -62,12 +62,15 @@
   <link href="css/output-panel.css" rel="stylesheet" />
   <link href="css/mermaid.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/material-darker.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/material-darker.min.css"
+    rel="stylesheet" />
   <link href="css/browser-panel.css" rel="stylesheet" />
   <link href="css/shaders.css" rel="stylesheet" />
   <link href="css/meshy-studio.css" rel="stylesheet" />
   <link href="css/spaces.css" rel="stylesheet" />
   <link href="css/section-views.css" rel="stylesheet" />
+  <link href="css/master-index.css" rel="stylesheet" />
+  <link href="css/law-library.css" rel="stylesheet" />
   <link href="css/api-explorer.css" rel="stylesheet" />
   <link href="css/background-workers.css" rel="stylesheet" />
   <link href="css/architecture.css" rel="stylesheet" />
@@ -492,6 +495,10 @@
                 <div class="provider-tabs" id="providerTabs">
                   <button class="provider-tab active" data-provider="deepseek" onclick="selectProvider('deepseek')"><i
                       class="fas fa-brain" style="font-size:10px"></i> DeepSeek</button>
+                  <button class="provider-tab" data-provider="cerebras" onclick="selectProvider('cerebras')"><i
+                      class="fas fa-cpu" style="font-size:10px"></i> Cerebras</button>
+                  <button class="provider-tab" data-provider="xai" onclick="selectProvider('xai')"><i
+                      class="fas fa-bolt" style="font-size:10px"></i> Grok</button>
                   <button class="provider-tab" data-provider="anthropic" onclick="selectProvider('anthropic')"><i
                       class="fas fa-feather-pointed" style="font-size:10px"></i> Anthropic</button>
                   <button class="provider-tab" data-provider="openrouter" onclick="selectProvider('openrouter')"><i
@@ -839,9 +846,11 @@
           <div class="sidebar-section" id="tab-files">
             <div style="padding:12px 14px">
               <!-- Active Project Chip (6.1) -->
-              <div id="tabFilesProjectChip" style="margin-bottom:12px;padding:6px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;display:none;align-items:center;gap:8px;font-size:11px">
+              <div id="tabFilesProjectChip"
+                style="margin-bottom:12px;padding:6px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;display:none;align-items:center;gap:8px;font-size:11px">
                 <i class="fas fa-folder-open" style="color:var(--accent);flex-shrink:0"></i>
-                <span id="tabFilesProjectName" style="flex:1;color:var(--white);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+                <span id="tabFilesProjectName"
+                  style="flex:1;color:var(--white);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
                 <span id="tabFilesProjectFilesCount" style="color:var(--gray);font-size:10px;flex-shrink:0"></span>
               </div>
               <!-- Project Planning Overview (placed at top for quick status) -->
@@ -861,7 +870,9 @@
                 </div>
                 <!-- CONTEXT CONFIG PANEL (Context Injection) -->
                 <div class="context-config-section" style="margin-top:12px">
-                  <div class="context-config-header" role="button" tabindex="0" aria-controls="contextConfigBody" aria-expanded="false" onclick="toggleContextConfigPanel()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleContextConfigPanel();}"
+                  <div class="context-config-header" role="button" tabindex="0" aria-controls="contextConfigBody"
+                    aria-expanded="false" onclick="toggleContextConfigPanel()"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleContextConfigPanel();}"
                     style="cursor:pointer;padding:8px 12px;background:var(--bg2);border-radius:6px;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600;color:var(--purple)">
                     <span><i class="fas fa-sliders"></i> Context Injection</span>
                     <i class="fas fa-chevron-down" id="contextConfigChevron"></i>
@@ -928,14 +939,25 @@
                     <input type="text" id="tabFilesSearchInput" placeholder="Filter files..."
                       oninput="_sessionSetFilter(this.value)"
                       style="width:100%;padding:5px 8px 5px 24px;font-size:11px;border:1px solid var(--border);border-radius:5px;background:var(--bg2);color:var(--white);outline:none;box-sizing:border-box">
-                    <i class="fas fa-search" style="position:absolute;left:7px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--gray)"></i>
+                    <i class="fas fa-search"
+                      style="position:absolute;left:7px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--gray)"></i>
                   </div>
-                  <button class="ss-sort-btn active" data-sort="recent" onclick="_sessionSetSort('recent')" style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer" title="Most recent first"><i class="fas fa-clock"></i></button>
-                  <button class="ss-sort-btn" data-sort="name" onclick="_sessionSetSort('name')" style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer" title="Sort by name"><i class="fas fa-sort-alpha-down"></i></button>
-                  <button class="ss-sort-btn" data-sort="size" onclick="_sessionSetSort('size')" style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer" title="Sort by size"><i class="fas fa-sort-size-down"></i></button>
+                  <button class="ss-sort-btn active" data-sort="recent" onclick="_sessionSetSort('recent')"
+                    style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer"
+                    title="Most recent first"><i class="fas fa-clock"></i></button>
+                  <button class="ss-sort-btn" data-sort="name" onclick="_sessionSetSort('name')"
+                    style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer"
+                    title="Sort by name"><i class="fas fa-sort-alpha-down"></i></button>
+                  <button class="ss-sort-btn" data-sort="size" onclick="_sessionSetSort('size')"
+                    style="padding:4px 7px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--gray);cursor:pointer"
+                    title="Sort by size"><i class="fas fa-sort-size-down"></i></button>
                 </div>
                 <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap">
-                  <button data-session-files-permission-toggle data-active="false" data-active-label="<i class='fas fa-shield-check'></i> Allow tools" data-inactive-label="<i class='fas fa-shield-alt'></i> Allow tools" onclick="setSessionFilesToolPermissionMode(this.getAttribute('data-active') !== 'true')" style="font-size:10px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--white);cursor:pointer">
+                  <button data-session-files-permission-toggle data-active="false"
+                    data-active-label="<i class='fas fa-shield-check'></i> Allow tools"
+                    data-inactive-label="<i class='fas fa-shield-alt'></i> Allow tools"
+                    onclick="setSessionFilesToolPermissionMode(this.getAttribute('data-active') !== 'true')"
+                    style="font-size:10px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--white);cursor:pointer">
                     <i class="fas fa-shield-alt"></i> Allow tools
                   </button>
                 </div>
@@ -959,21 +981,28 @@
                 </div>
               </div>
               <!-- Bulk action bar (6.6) -->
-              <div id="tabFilesBulkBar" style="display:none;margin-top:6px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:rgba(255,255,255,0.03);align-items:center;gap:6px;flex-wrap:wrap">
+              <div id="tabFilesBulkBar"
+                style="display:none;margin-top:6px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:rgba(255,255,255,0.03);align-items:center;gap:6px;flex-wrap:wrap">
                 <span id="tabFilesBulkCount" style="font-size:10px;color:var(--gray);font-weight:500"></span>
                 <div style="display:flex;gap:4px;margin-left:auto">
-                  <button class="add-agent-btn" onclick="_sessionBulkAttach()" style="font-size:10px;padding:3px 8px"><i class="fas fa-paperclip"></i> Context</button>
-                  <button class="add-agent-btn" onclick="_sessionBulkDownload()" style="font-size:10px;padding:3px 10px;color:var(--green);font-weight:600;background:rgba(16,185,129,0.1);border:1px solid var(--green);border-radius:4px"><i class="fas fa-download"></i> Download</button>
-                  <button class="add-agent-btn" onclick="_sessionBulkDelete()" style="font-size:10px;padding:3px 8px;color:var(--red)"><i class="fas fa-trash"></i> Delete</button>
+                  <button class="add-agent-btn" onclick="_sessionBulkAttach()" style="font-size:10px;padding:3px 8px"><i
+                      class="fas fa-paperclip"></i> Context</button>
+                  <button class="add-agent-btn" onclick="_sessionBulkDownload()"
+                    style="font-size:10px;padding:3px 10px;color:var(--green);font-weight:600;background:rgba(16,185,129,0.1);border:1px solid var(--green);border-radius:4px"><i
+                      class="fas fa-download"></i> Download</button>
+                  <button class="add-agent-btn" onclick="_sessionBulkDelete()"
+                    style="font-size:10px;padding:3px 8px;color:var(--red)"><i class="fas fa-trash"></i> Delete</button>
                 </div>
               </div>
               <!-- Staleness signal (6.8) -->
-              <div id="tabFilesStaleness" style="font-size:9px;color:var(--gray);opacity:.6;text-align:right;padding:2px 2px 6px;display:none"></div>
+              <div id="tabFilesStaleness"
+                style="font-size:9px;color:var(--gray);opacity:.6;text-align:right;padding:2px 2px 6px;display:none">
+              </div>
               <button class="add-agent-btn" onclick="clearSessionFiles()" style="margin-top:4px"><i
                   class="fas fa-trash-can"></i> Clear All</button>
             </div>
-            <input type="file" id="contextFileInput" multiple
-              style="display:none" onchange="handleContextFileImport(this.files);this.value=''">
+            <input type="file" id="contextFileInput" multiple style="display:none"
+              onchange="handleContextFileImport(this.files);this.value=''">
           </div>
           <!-- TAB: Projects -->
           <div class="sidebar-section" id="tab-projects">
@@ -983,9 +1012,11 @@
                   projects...</span></p>
             </div>
             <div style="padding:0 8px 8px;display:flex;gap:6px;flex-wrap:wrap">
-              <button class="add-agent-btn" onclick="createProject()" style="flex:1 1 100%"><i class="fas fa-plus"></i> New
+              <button class="add-agent-btn" onclick="createProject()" style="flex:1 1 100%"><i class="fas fa-plus"></i>
+                New
                 Project</button>
-              <button class="add-agent-btn" onclick="openProjectImportModal()" style="flex:1 1 calc(50% - 3px)"><i class="fas fa-file-import"></i> Import Archived</button>
+              <button class="add-agent-btn" onclick="openProjectImportModal()" style="flex:1 1 calc(50% - 3px)"><i
+                  class="fas fa-file-import"></i> Import Archived</button>
               <button class="add-agent-btn" onclick="loadProjects()" style="flex:0 0 auto;padding:8px 10px"
                 title="Reload projects"><i class="fas fa-sync-alt"></i></button>
             </div>
@@ -1720,7 +1751,8 @@
                 style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
                 <i class="fas fa-cube" style="color:var(--amber)"></i> ComfyUI
               </div>
-              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Importe, visualize e refine
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Importe, visualize e
+                refine
                 workflows ComfyUI — nós, máscaras e parâmetros com edição granular.</p>
               <button class="btn" onclick="comfyuiShowView()" style="width:100%;justify-content:center"><i
                   class="fas fa-cube"></i> Open ComfyUI</button>
@@ -1734,7 +1766,8 @@
                 <i class="fas fa-share-nodes" style="color:var(--amber)"></i> Social Media
               </div>
               <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px"><span
-                  data-i18n="linkedin_profiles_chat_assistant_content_generat">LinkedIn profiles chat assistant &amp; content generation.</span></p>
+                  data-i18n="linkedin_profiles_chat_assistant_content_generat">LinkedIn profiles chat assistant &amp;
+                  content generation.</span></p>
               <button class="btn" onclick="socialMediaShowView()" style="width:100%;justify-content:center"><i
                   class="fas fa-share-nodes"></i> Open Social Media</button>
             </div>
@@ -1783,7 +1816,8 @@
                 style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
                 <i class="fas fa-heart-pulse" style="color:#2e9a6a"></i> Health
               </div>
-              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Upload exames, prontuários e
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Upload exames,
+                prontuários e
                 documentos de saúde. A Olivia extrai o texto com OCR, guarda uma linha do tempo da sua saúde e conversa
                 com você sobre os documentos.</p>
               <button class="btn" onclick="healthShowView()" style="width:100%;justify-content:center"><i
@@ -1797,7 +1831,8 @@
                 style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
                 <i class="fas fa-receipt" style="color:#C4622D"></i> Procurement
               </div>
-              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Upload de notas fiscais e
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Upload de notas fiscais
+                e
                 faturas de fornecedores. A Olivia extrai os dados com OCR, monta uma linha do tempo do pipeline e
                 conversa com você sobre as faturas processadas.</p>
               <button class="btn" onclick="procurementShowView()" style="width:100%;justify-content:center"><i
@@ -1862,8 +1897,8 @@
                   off</span></span></button>
             <button class="btn btn-sm header-opt" onclick="toggleFocusMode()" title="Focus mode"><i
                 class="fas fa-expand-alt"></i></button>
-            <button class="btn btn-sm header-opt panel-toggle" id="outputToggleBtn" onclick="toggleOutputPanel()" title="Output panel"><i
-                class="fas fa-columns"></i></button>
+            <button class="btn btn-sm header-opt panel-toggle" id="outputToggleBtn" onclick="toggleOutputPanel()"
+              title="Output panel"><i class="fas fa-columns"></i></button>
             <button class="btn btn-sm header-opt panel-toggle" id="browserToggleBtn" onclick="toggleBrowserPanel()"
               title="Browser view"><i class="fas fa-globe"></i></button>
             <button class="btn btn-sm header-opt" onclick="clearChat()"><i class="fas fa-trash"></i></button>
@@ -2340,8 +2375,8 @@
               title="Auto-read new responses"><i class="fas fa-headphones"></i> Auto</span>
           </div>
           <div class="toolbar-group">
-            <button class="tbtn panel-toggle" id="sidebarOutputToggleBtn" data-tip="Output Panel" onclick="toggleOutputPanel()"><i
-                class="fas fa-columns"></i></button>
+            <button class="tbtn panel-toggle" id="sidebarOutputToggleBtn" data-tip="Output Panel"
+              onclick="toggleOutputPanel()"><i class="fas fa-columns"></i></button>
             <button class="tbtn danger" data-tip="Clear" onclick="clearChat()"><i class="fas fa-trash"></i></button>
           </div>
         </div>
@@ -2385,8 +2420,8 @@
             <button class="btn btn-sm" onclick="studioOpenCfgModal()"
               style="background:rgba(28,69,50,.1);border-color:rgba(28,69,50,.3);color:var(--amber)"><i
                 class="fas fa-cog"></i> AI</button>
-            <button class="btn btn-sm panel-toggle" id="studioAiFabBtn" onclick="studioToggleAiPanel()" title="AI Assistant"><i
-                class="fas fa-wand-magic-sparkles"></i></button>
+            <button class="btn btn-sm panel-toggle" id="studioAiFabBtn" onclick="studioToggleAiPanel()"
+              title="AI Assistant"><i class="fas fa-wand-magic-sparkles"></i></button>
             <button class="btn btn-sm" id="studioSidebarBtn" onclick="studioToggleMainSidebar()"
               title="Show/hide the trunk (sidebar menu)"><i class="fas fa-bars"></i></button>
             <button class="btn btn-sm" onclick="studioHideView()" title="Close Web Builder"><i
@@ -2449,7 +2484,9 @@
                     class="fas fa-desktop"></i></button>
                 <button class="studio-mode-btn" onclick="studioRefreshPreview()" title="Refresh"><i
                     class="fas fa-sync-alt"></i></button>
-                <button class="studio-mode-btn studio-inspect-btn" id="studioInspectBtn" onclick="studioToggleInspectMode()" title="Click elements in the preview to capture for the agent"><i class="fas fa-mouse-pointer"></i></button>
+                <button class="studio-mode-btn studio-inspect-btn" id="studioInspectBtn"
+                  onclick="studioToggleInspectMode()" title="Click elements in the preview to capture for the agent"><i
+                    class="fas fa-mouse-pointer"></i></button>
               </div>
             </div>
             <div class="studio-preview-stage">
@@ -3279,15 +3316,17 @@
 
               <!-- Media Preview (hidden until file selected) -->
               <div id="lsMediaPreview" style="display:none;margin-top:10px">
-                <div id="lsPreviewFileName"
-                  style="font-size:11px;font-weight:600;color:var(--white);margin-bottom:6px">
+                <div id="lsPreviewFileName" style="font-size:11px;font-weight:600;color:var(--white);margin-bottom:6px">
                 </div>
                 <div id="lsMediaPlayer"
                   style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px;margin-bottom:8px">
                 </div>
                 <!-- Clip controls -->
-                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px">
-                  <span style="font-size:10px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:.06em"><span data-i18n="clipSection">Clip</span></span>
+                <div
+                  style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px">
+                  <span
+                    style="font-size:10px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:.06em"><span
+                      data-i18n="clipSection">Clip</span></span>
                   <span style="font-size:10px;color:var(--gray)"><span data-i18n="from">From</span>:</span>
                   <input id="lsClipStart" type="text" placeholder="0:00"
                     style="width:64px;padding:4px 6px;border:1px solid var(--border);background:var(--bg-card);color:var(--white);font-family:var(--mono);font-size:11px;border-radius:4px;outline:none"
@@ -3305,7 +3344,8 @@
 
               <div style="margin-top:10px;display:flex;gap:8px">
                 <button class="btn" id="lsRunBtn" onclick="if(typeof lsRun==='function')lsRun()"
-                  style="border-color:var(--green);color:var(--green);flex:1;opacity:0.5;cursor:default" disabled><i class="fas fa-play"></i>
+                  style="border-color:var(--green);color:var(--green);flex:1;opacity:0.5;cursor:default" disabled><i
+                    class="fas fa-play"></i>
                   <span data-i18n="transcribeSelected">Transcribe</span></button>
                 <button class="btn btn-sm" onclick="if(typeof lsStop==='function')lsStop()"
                   style="border-color:var(--red);color:var(--red)" title="Stop"><i class="fas fa-stop"></i></button>
@@ -3394,14 +3434,17 @@
           <div class="ls-card" id="lsSpeakerPanel" style="display:none">
             <div class="ls-card-head">
               <h2><i class="fas fa-users"></i> Speakers</h2>
-              <button id="lsSpeakerEditBtn" class="ls-speaker-edit-btn" onclick="lsToggleSpeakerEdit()"><i class="fas fa-pen"></i> Edit</button>
+              <button id="lsSpeakerEditBtn" class="ls-speaker-edit-btn" onclick="lsToggleSpeakerEdit()"><i
+                  class="fas fa-pen"></i> Edit</button>
             </div>
             <div class="ls-card-body" id="lsSpeakerCardBody">
               <div id="lsSpeakerGrid" style="display:flex;gap:6px;flex-wrap:wrap"></div>
             </div>
             <div class="ls-speaker-edit-actions" id="lsSpeakerEditActions">
-              <button class="ls-speaker-edit-cancel" onclick="lsCancelSpeakerEdit()"><i class="fas fa-times"></i> Cancel</button>
-              <button class="ls-speaker-edit-save" onclick="lsSaveSpeakerEdits()"><i class="fas fa-check"></i> Save</button>
+              <button class="ls-speaker-edit-cancel" onclick="lsCancelSpeakerEdit()"><i class="fas fa-times"></i>
+                Cancel</button>
+              <button class="ls-speaker-edit-save" onclick="lsSaveSpeakerEdits()"><i class="fas fa-check"></i>
+                Save</button>
             </div>
           </div>
           <div class="ls-card" id="lsTranscriptCard" style="display:none">
@@ -3574,7 +3617,8 @@
           </div>
         </div>
         <!-- SEARCH RESULT MODAL -->
-        <div id="mvSearchResultModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:10001;overflow:auto;cursor:pointer"
+        <div id="mvSearchResultModal"
+          style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:10001;overflow:auto;cursor:pointer"
           onclick="mvCloseSearchResultModal()">
           <div class="mv-result-modal-content" onclick="event.stopPropagation()">
             <button onclick="mvCloseSearchResultModal()"
@@ -3982,7 +4026,8 @@
                 onchange="setPanelContextEnabled('output', this.checked)" type="checkbox" />
               <span><span data-i18n="chat_context">Chat context</span></span>
             </label>
-            <button class="tbtn" data-tip="Copy panel content" onclick="copyPanelContent('output')" style="width:26px;height:26px;font-size:11px"><i class="fas fa-copy"></i></button>
+            <button class="tbtn" data-tip="Copy panel content" onclick="copyPanelContent('output')"
+              style="width:26px;height:26px;font-size:11px"><i class="fas fa-copy"></i></button>
             <button class="btn btn-sm" onclick="toggleOutputPanel()"><i class="fas fa-times"></i></button>
           </div>
         </div>
@@ -4009,7 +4054,8 @@
                 onchange="setPanelContextEnabled('preview', this.checked)" type="checkbox" />
               <span><span data-i18n="chat_context_1">Chat context</span></span>
             </label>
-            <button class="tbtn" data-tip="Copy panel content" onclick="copyPanelContent('preview')" style="width:26px;height:26px;font-size:11px"><i class="fas fa-copy"></i></button>
+            <button class="tbtn" data-tip="Copy panel content" onclick="copyPanelContent('preview')"
+              style="width:26px;height:26px;font-size:11px"><i class="fas fa-copy"></i></button>
             <div class="dropdown" id="previewDownloadDropdown" style="display:none">
               <button class="btn btn-sm dropdown-toggle" id="previewDownloadBtn" onclick="downloadCurrentPreview()"
                 title="Download options"><i class="fas fa-download"></i></button>
@@ -4025,7 +4071,8 @@
                 </button>
                 <button class="dropdown-item" onclick="downloadKateBriefingDocx();closeDownloadDropdown()"
                   style="display:block;width:100%;text-align:left;background:none;border:none;color:var(--white);padding:8px 12px;cursor:pointer;font-size:12px;border-radius:4px">
-                  <i class="fas fa-file-pdf" style="margin-right:8px;width:16px;color:var(--red)"></i> Export as PDF (Kate Briefing)
+                  <i class="fas fa-file-pdf" style="margin-right:8px;width:16px;color:var(--red)"></i> Export as PDF
+                  (Kate Briefing)
                 </button>
               </div>
             </div>
@@ -4067,8 +4114,11 @@
               onchange="setPanelContextEnabled('browser', this.checked)" type="checkbox" />
             <span><span data-i18n="chat_context_2">Chat context</span></span>
           </label>
-          <button id="browserShareBtn" class="tbtn" data-tip="Share this browser page with the agent" onclick="shareBrowserPageWithAgent()" style="width:26px;height:26px;font-size:11px"><i class="fas fa-share-alt"></i></button>
-          <button class="tbtn" data-tip="Copy panel content" onclick="copyPanelContent('browser')" style="width:26px;height:26px;font-size:11px"><i class="fas fa-copy"></i></button>
+          <button id="browserShareBtn" class="tbtn" data-tip="Share this browser page with the agent"
+            onclick="shareBrowserPageWithAgent()" style="width:26px;height:26px;font-size:11px"><i
+              class="fas fa-share-alt"></i></button>
+          <button class="tbtn" data-tip="Copy panel content" onclick="copyPanelContent('browser')"
+            style="width:26px;height:26px;font-size:11px"><i class="fas fa-copy"></i></button>
           <button class="browser-nav-btn" onclick="toggleBrowserPanel()" title="Close browser"><i
               class="fas fa-times"></i></button>
         </div>
@@ -5986,159 +6036,168 @@ https://.../side.png" rows="3"
             </div>
           </div>
         </div>
+        <!-- Context bar -->
+        <div id="lawLibContextBar" class="empty">
+          <i class="fas fa-paperclip"></i>
+          <span id="lawLibContextNum">0</span>
+          <span data-i18n="lawLibAttachedCount"> sources as context</span>
+          <button type="button" class="btn btn-xs"
+            onclick="if(typeof lawLibClearContext==='function')lawLibClearContext()" title="Clear"><i
+              class="fas fa-times"></i></button>
+        </div>
       </div>
       <!-- ═══════ MASTER INDEX VIEW — Jurisprudencia ═══════ -->
       <div class="vw-view" id="masterIndexView">
         <div class="vw-edge-resize" id="masterIndexEdgeResize" title="Drag to resize the view"></div>
         <div class="vw-hbar">
           <div class="vw-hbar-title">
-            <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#4b3b22 0%,#2d785a 100%)"><i
-                class="fas fa-landmark"></i></div>
-            <div>
-              <h1><span data-i18n="master_jurisprudence_index">Master Jurisprudence Index</span></h1>
-              <p><span data-i18n="consolidated_search_statistics_and_indexed_documen">Consolidated search, statistics,
-                  and indexed documents</span></p>
-            </div>
-            <div></div>
+          <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#4b3b22 0%,#2d785a 100%)"><i
+              class="fas fa-landmark"></i></div>
+          <div>
+            <h1><span data-i18n="master_jurisprudence_index">Master Jurisprudence Index</span></h1>
+            <p><span data-i18n="consolidated_search_statistics_and_indexed_documen">Consolidated search, statistics,
+                and indexed documents</span></p>
           </div>
-          <div class="vw-hbar-actions">
-            <button class="btn btn-sm" onclick="if(typeof masterIndexRefresh==='function')masterIndexRefresh()"
-              title="Refresh"><i class="fas fa-sync-alt"></i></button>
-            <button class="btn btn-sm" onclick="if(typeof masterIndexHideView==='function')masterIndexHideView()"
-              title="Close"><i class="fas fa-times"></i></button>
+          <div></div>
+        </div>
+        <div class="vw-hbar-actions">
+          <button class="btn btn-sm" onclick="if(typeof masterIndexRefresh==='function')masterIndexRefresh()"
+            title="Refresh"><i class="fas fa-sync-alt"></i></button>
+          <button class="btn btn-sm" onclick="if(typeof masterIndexHideView==='function')masterIndexHideView()"
+            title="Close"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="vw-layout">
+        <div class="vw-sidebar" id="masterIndexSidebar">
+          <div class="vw-sidebar-head">
+            <input id="masterIndexSearchInput"
+              oninput="if(typeof masterIndexSearch==='function')masterIndexSearch(this.value)"
+              placeholder="Search by process, judge, court..." type="search" />
+            <div class="vw-chips" id="masterIndexCourtChips"></div>
+          </div>
+          <div class="vw-tree" id="masterIndexTree">
+            <div class="vw-tree-empty"><span data-i18n="driveAuthStatus">Loading…</span></div>
           </div>
         </div>
-        <div class="vw-layout">
-          <div class="vw-sidebar" id="masterIndexSidebar">
-            <div class="vw-sidebar-head">
-              <input id="masterIndexSearchInput"
-                oninput="if(typeof masterIndexSearch==='function')masterIndexSearch(this.value)"
-                placeholder="Search by process, judge, court..." type="search" />
-              <div class="vw-chips" id="masterIndexCourtChips"></div>
-            </div>
-            <div class="vw-tree" id="masterIndexTree">
-              <div class="vw-tree-empty"><span data-i18n="driveAuthStatus">Loading…</span></div>
-            </div>
-          </div>
-          <div class="vw-resize-handle" id="masterIndexResize"></div>
-          <div class="vw-main">
-            <div class="vw-status" id="masterIndexStatus">—</div>
-            <div class="vw-viewer" id="masterIndexViewer">
-              <div class="vw-empty"><span data-i18n="select_an_entry_from_the_sidebar">Select an entry from the
-                  sidebar.</span></div>
-            </div>
+        <div class="vw-resize-handle" id="masterIndexResize"></div>
+        <div class="vw-main">
+          <div class="vw-status" id="masterIndexStatus">—</div>
+          <div class="vw-viewer" id="masterIndexViewer">
+            <div class="vw-empty"><span data-i18n="select_an_entry_from_the_sidebar">Select an entry from the
+                sidebar.</span></div>
           </div>
         </div>
       </div>
-      <!-- ═══════ CASE DOSSIER VIEW — Consolidated case documentation ═══════ -->
-      <div class="vw-view" id="caseDossierView">
-        <div class="vw-edge-resize" id="caseDossierEdgeResize" title="Drag to resize the view"></div>
-        <div class="vw-hbar">
-          <div class="vw-hbar-title">
-            <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#4b3b22 0%,#a13a2c 100%)"><i
-                class="fas fa-folder-open"></i></div>
-            <div>
-              <h1><span data-i18n="case_dossier_la8159">Case Dossier · LA8159</span></h1>
-              <p><span data-i18n="consolidated_documentation_master_report_indexes_f">Consolidated documentation: master
-                  report, indexes, final exhibits, frameworks, and timelines</span></p>
-            </div>
-            <div></div>
+    </div>
+    <!-- ═══════ CASE DOSSIER VIEW — Consolidated case documentation ═══════ -->
+    <div class="vw-view" id="caseDossierView">
+      <div class="vw-edge-resize" id="caseDossierEdgeResize" title="Drag to resize the view"></div>
+      <div class="vw-hbar">
+        <div class="vw-hbar-title">
+          <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#4b3b22 0%,#a13a2c 100%)"><i
+              class="fas fa-folder-open"></i></div>
+          <div>
+            <h1><span data-i18n="case_dossier_la8159">Case Dossier · LA8159</span></h1>
+            <p><span data-i18n="consolidated_documentation_master_report_indexes_f">Consolidated documentation: master
+                report, indexes, final exhibits, frameworks, and timelines</span></p>
           </div>
-          <div class="vw-hbar-actions">
-            <button class="btn btn-sm" onclick="if(typeof caseDossierRefresh==='function')caseDossierRefresh()"
-              title="Refresh"><i class="fas fa-sync-alt"></i></button>
-            <button class="btn btn-sm" onclick="if(typeof caseDossierHideView==='function')caseDossierHideView()"
-              title="Close"><i class="fas fa-times"></i></button>
+          <div></div>
+        </div>
+        <div class="vw-hbar-actions">
+          <button class="btn btn-sm" onclick="if(typeof caseDossierRefresh==='function')caseDossierRefresh()"
+            title="Refresh"><i class="fas fa-sync-alt"></i></button>
+          <button class="btn btn-sm" onclick="if(typeof caseDossierHideView==='function')caseDossierHideView()"
+            title="Close"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="vw-layout">
+        <div class="vw-sidebar" id="caseDossierSidebar">
+          <div class="vw-tree" id="caseDossierTree">
+            <div class="vw-tree-empty"><span data-i18n="driveAuthStatus">Loading…</span></div>
           </div>
         </div>
-        <div class="vw-layout">
-          <div class="vw-sidebar" id="caseDossierSidebar">
-            <div class="vw-tree" id="caseDossierTree">
-              <div class="vw-tree-empty"><span data-i18n="driveAuthStatus">Loading…</span></div>
-            </div>
-          </div>
-          <div class="vw-resize-handle" id="caseDossierResize"></div>
-          <div class="vw-main">
-            <div class="vw-status" id="caseDossierStatus">—</div>
-            <div class="vw-viewer" id="caseDossierViewer" style="height:calc(100% - 32px)">
-              <div class="vw-empty"><span data-i18n="select_a_document_from_the_sidebar">Select a document from the
-                  sidebar.</span></div>
-            </div>
+        <div class="vw-resize-handle" id="caseDossierResize"></div>
+        <div class="vw-main">
+          <div class="vw-status" id="caseDossierStatus">—</div>
+          <div class="vw-viewer" id="caseDossierViewer" style="height:calc(100% - 32px)">
+            <div class="vw-empty"><span data-i18n="select_a_document_from_the_sidebar">Select a document from the
+                sidebar.</span></div>
           </div>
         </div>
       </div>
-      <!-- ═══════ LEGAL ROUTER VIEW — Olivia ═══════ -->
-      <div class="vw-view" id="legalRouterView">
-        <div class="vw-edge-resize" id="legalRouterEdgeResize" title="Drag to resize the view"></div>
-        <div class="vw-hbar">
-          <div class="vw-hbar-title">
-            <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#5a2d78 0%,#a13a2c 100%)"><i
-                class="fas fa-route"></i></div>
-            <div>
-              <h1><span data-i18n="Olivia_legal_router">Olivia Legal Router</span></h1>
-              <p><span data-i18n="resolves_violation_ids_frameworks_and_personnel">Resolves violation IDs, frameworks,
-                  and personnel</span></p>
-            </div>
-            <div></div>
+    </div>
+    <!-- ═══════ LEGAL ROUTER VIEW — Olivia ═══════ -->
+    <div class="vw-view" id="legalRouterView">
+      <div class="vw-edge-resize" id="legalRouterEdgeResize" title="Drag to resize the view"></div>
+      <div class="vw-hbar">
+        <div class="vw-hbar-title">
+          <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#5a2d78 0%,#a13a2c 100%)"><i
+              class="fas fa-route"></i></div>
+          <div>
+            <h1><span data-i18n="Olivia_legal_router">Olivia Legal Router</span></h1>
+            <p><span data-i18n="resolves_violation_ids_frameworks_and_personnel">Resolves violation IDs, frameworks,
+                and personnel</span></p>
           </div>
-          <div class="vw-hbar-actions">
-            <button class="btn btn-sm" onclick="if(typeof legalRouterRefresh==='function')legalRouterRefresh()"
-              title="Refresh"><i class="fas fa-sync-alt"></i></button>
-            <button class="btn btn-sm" onclick="if(typeof legalRouterHideView==='function')legalRouterHideView()"
-              title="Close"><i class="fas fa-times"></i></button>
+          <div></div>
+        </div>
+        <div class="vw-hbar-actions">
+          <button class="btn btn-sm" onclick="if(typeof legalRouterRefresh==='function')legalRouterRefresh()"
+            title="Refresh"><i class="fas fa-sync-alt"></i></button>
+          <button class="btn btn-sm" onclick="if(typeof legalRouterHideView==='function')legalRouterHideView()"
+            title="Close"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="vw-layout">
+        <div class="vw-sidebar" id="legalRouterSidebar">
+          <div class="vw-sidebar-head">
+            <input id="legalRouterQuery"
+              onkeydown="if(event.key==='Enter'&& typeof legalRouterResolve==='function')legalRouterResolve()"
+              placeholder="BR-014, sandra-assali, MC99…" type="search" />
+            <div class="vw-chips" id="legalRouterRoleChips">
+              <span class="vw-chip active" data-role="all"
+                onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('all',this)"><span
+                  data-i18n="all_roles">All
+                  roles</span></span>
+              <span class="vw-chip" data-role="primary"
+                onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('primary',this)"><span
+                  data-i18n="primary">Primary</span></span>
+              <span class="vw-chip" data-role="supporting"
+                onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('supporting',this)"><span
+                  data-i18n="supporting">Supporting</span></span>
+              <span class="vw-chip" data-role="router"
+                onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('router',this)"><span
+                  data-i18n="router">Router</span></span>
+              <span class="vw-chip" data-role="person"
+                onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('person',this)"><span
+                  data-i18n="personnel">Personnel</span></span>
+            </div>
+          </div>
+          <div class="vw-tree" id="legalRouterTree">
+            <div class="vw-tree-empty"><span data-i18n="enter_an_id_or_term_above">Enter an ID or term above.</span>
+            </div>
           </div>
         </div>
-        <div class="vw-layout">
-          <div class="vw-sidebar" id="legalRouterSidebar">
-            <div class="vw-sidebar-head">
-              <input id="legalRouterQuery"
-                onkeydown="if(event.key==='Enter'&& typeof legalRouterResolve==='function')legalRouterResolve()"
-                placeholder="BR-014, sandra-assali, MC99…" type="search" />
-              <div class="vw-chips" id="legalRouterRoleChips">
-                <span class="vw-chip active" data-role="all"
-                  onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('all',this)"><span
-                    data-i18n="all_roles">All
-                    roles</span></span>
-                <span class="vw-chip" data-role="primary"
-                  onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('primary',this)"><span
-                    data-i18n="primary">Primary</span></span>
-                <span class="vw-chip" data-role="supporting"
-                  onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('supporting',this)"><span
-                    data-i18n="supporting">Supporting</span></span>
-                <span class="vw-chip" data-role="router"
-                  onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('router',this)"><span
-                    data-i18n="router">Router</span></span>
-                <span class="vw-chip" data-role="person"
-                  onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('person',this)"><span
-                    data-i18n="personnel">Personnel</span></span>
-              </div>
-            </div>
-            <div class="vw-tree" id="legalRouterTree">
-              <div class="vw-tree-empty"><span data-i18n="enter_an_id_or_term_above">Enter an ID or term above.</span>
-              </div>
-            </div>
-          </div>
-          <div class="vw-resize-handle" id="legalRouterResize"></div>
-          <div class="vw-main">
-            <div class="vw-status" id="legalRouterStatus">—</div>
-            <div class="vw-viewer" id="legalRouterResults">
-              <div class="vw-empty"><span data-i18n="resolution_result_appears_here">Resolution result appears
-                  here.</span></div>
-            </div>
+        <div class="vw-resize-handle" id="legalRouterResize"></div>
+        <div class="vw-main">
+          <div class="vw-status" id="legalRouterStatus">—</div>
+          <div class="vw-viewer" id="legalRouterResults">
+            <div class="vw-empty"><span data-i18n="resolution_result_appears_here">Resolution result appears
+                here.</span></div>
           </div>
         </div>
       </div>
-      <!-- ═══════ API EXPLORER — MAIN VIEW ═══════ -->
-      <div class="aex-main-view" id="aexMainView">
-        <div class="aex-main-header">
-          <i class="fas fa-plug" style="color:var(--amber);font-size:12px"></i>
-          <span class="aex-main-title">API Explorer <span style="font-size:10px;color:var(--gray);font-weight:400"><span
-                data-i18n="full_function_registry">— full function registry</span></span></span>
-          <button class="btn btn-sm" onclick="aexToggleMain()" style="font-size:10px;padding:3px 10px"
-            title="Minimize to sidebar"><i class="fas fa-compress-alt"></i> Minimize</button>
-        </div>
-        <!-- #aexPanel is relocated here by JS when in main mode -->
+    </div>
+    <!-- ═══════ API EXPLORER — MAIN VIEW ═══════ -->
+    <div class="aex-main-view" id="aexMainView">
+      <div class="aex-main-header">
+        <i class="fas fa-plug" style="color:var(--amber);font-size:12px"></i>
+        <span class="aex-main-title">API Explorer <span style="font-size:10px;color:var(--gray);font-weight:400"><span
+              data-i18n="full_function_registry">— full function registry</span></span></span>
+        <button class="btn btn-sm" onclick="aexToggleMain()" style="font-size:10px;padding:3px 10px"
+          title="Minimize to sidebar"><i class="fas fa-compress-alt"></i> Minimize</button>
       </div>
+      <!-- #aexPanel is relocated here by JS when in main mode -->
+    </div>
     </div>
   </main>
   <!-- ═══════ CREATE AGENT MODAL ═══════ -->
@@ -6152,11 +6211,8 @@ https://.../side.png" rows="3"
           type="button">
           <i class="fas fa-upload"></i>
         </button>
-        <button class="btn btn-xs btn-icon-reveal"
-          onclick="openAgentAIBuilderModal()"
-          type="button"
-          id="agentAIBuilderBtn"
-          title="Criar agente com ajuda da IA">
+        <button class="btn btn-xs btn-icon-reveal" onclick="openAgentAIBuilderModal()" type="button"
+          id="agentAIBuilderBtn" title="Criar agente com ajuda da IA">
           <i class="fas fa-robot"></i>
         </button>
         <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
@@ -6576,11 +6632,14 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
     </div>
     <div style="padding:12px 0">
       <div style="margin-bottom:14px">
-        <label class="config-label" for="agentAIBuilderDesc"><span data-i18n="agent_description_prompt">Descrição do Agente</span></label>
+        <label class="config-label" for="agentAIBuilderDesc"><span data-i18n="agent_description_prompt">Descrição do
+            Agente</span></label>
         <textarea class="config-textarea" id="agentAIBuilderDesc" name="agentAIBuilderDesc"
-          placeholder="Descreva o tipo de agente que você quer criar. Ex: 'Um agente de análise de dados que conecta ao BigQuery e gera relatórios semanais'" rows="4"></textarea>
+          placeholder="Descreva o tipo de agente que você quer criar. Ex: 'Um agente de análise de dados que conecta ao BigQuery e gera relatórios semanais'"
+          rows="4"></textarea>
         <div style="margin-top:6px;font-size:10px;color:var(--gray)">
-          <i class="fas fa-info-circle"></i> Descreva com detalhes o propósito, habilidades e comportamento desejado. A IA preencherá todos os campos do formulário automaticamente.
+          <i class="fas fa-info-circle"></i> Descreva com detalhes o propósito, habilidades e comportamento desejado. A
+          IA preencherá todos os campos do formulário automaticamente.
         </div>
       </div>
       <div id="agentAIBuilderStatus" style="display:none;margin-bottom:12px">
@@ -6589,7 +6648,8 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
           <span>Gerando configuração do agente...</span>
         </div>
       </div>
-      <div id="agentAIBuilderError" style="display:none;margin-bottom:12px;padding:8px;border-radius:6px;background:rgba(239,68,68,0.1);border:1px solid var(--red);color:var(--red);font-size:12px">
+      <div id="agentAIBuilderError"
+        style="display:none;margin-bottom:12px;padding:8px;border-radius:6px;background:rgba(239,68,68,0.1);border:1px solid var(--red);color:var(--red);font-size:12px">
         <i class="fas fa-exclamation-triangle" style="margin-right:6px"></i>
         <span id="agentAIBuilderErrorMsg"></span>
       </div>
@@ -6744,14 +6804,16 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <div class="settings-sidebar" id="settingsSidebar">
     <div class="settings-sidebar-header">
       <h3>Settings</h3>
-      <button class="settings-sidebar-close" onclick="toggleSettingsSidebar()" aria-label="Close settings">&times;</button>
+      <button class="settings-sidebar-close" onclick="toggleSettingsSidebar()"
+        aria-label="Close settings">&times;</button>
     </div>
     <div class="settings-sidebar-body">
       <!-- Navigation -->
       <div class="settings-section">
         <div class="settings-section-label">Navigation</div>
         <a class="settings-nav-item" href="/olivia/auth/admin-users.html"><i class="fas fa-home"></i>Home</a>
-        <a class="settings-nav-item" href="/olivia/auth/olivia-workspace-setup.html"><i class="fas fa-cog"></i>Setup & Integrations</a>
+        <a class="settings-nav-item" href="/olivia/auth/olivia-workspace-setup.html"><i class="fas fa-cog"></i>Setup &
+          Integrations</a>
         <a class="settings-nav-item" href="/olivia/arquitetura"><i class="fas fa-sitemap"></i>Architecture</a>
         <a class="settings-nav-item" href="/olivia/agent"><i class="fas fa-comments"></i>Mobile Agent</a>
         <a class="settings-nav-item active" href="/olivia/olivia.html"><i class="fas fa-th-large"></i>Workspace</a>
@@ -7810,154 +7872,160 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
           data-i18n="confirm_1">Confirm</span></button>
     </div>
   </div>
-<script>
-function copyPanelContent(panelId) {
-  var text = '';
-  if (panelId === 'output') {
-    var el = document.getElementById('outputBody');
-    if (el) text = el.innerText || el.textContent || '';
-  } else if (panelId === 'preview') {
-    var el = document.getElementById('previewBody');
-    if (el) text = el.innerText || el.textContent || '';
-  } else if (panelId === 'browser') {
-    var frame = document.getElementById('browserFrame');
-    try {
-      var doc = frame.contentDocument || frame.contentWindow.document;
-      if (doc) text = doc.body.innerText || doc.body.textContent || '';
-    } catch(e) { text = 'Cannot access browser content (cross-origin)'; }
-  }
-  text = (text || '').trim();
-  if (!text) return;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).catch(function() {
-      var ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-    });
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-  }
-}
-</script>
-<!-- ═══ Setup Welcoming Overlay CSS + Logic ═══ -->
-<style>
-.setup-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 9999;
-}
-.setup-overlay.open {
-  display: block;
-}
-.setup-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90vw;
-  max-width: 720px;
-  height: 85vh;
-  max-height: 700px;
-  background: #1a1f2b;
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.setup-modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.1);
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-}
-.setup-modal-close::after,
-.setup-modal-close::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 18px;
-  height: 2px;
-  background: #fff;
-  transform: translate(-50%, -50()) rotate(45deg);
-}
-.setup-modal-close::after {
-  transform: translate(-50%, -50()) rotate(-45deg);
-}
-.setup-modal iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-</style>
-<script>
-(function() {
-  // Listen for setup completion message from the iframe
-  window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'olivia-setup-complete') {
-      // Navigate iframe to full workspace setup page so user can configure remaining integrations
-      var frame = document.getElementById('setupFrame');
-      if (frame) {
-        frame.src = '/olivia/auth/olivia-workspace-setup.html';
+  <script>
+    function copyPanelContent(panelId) {
+      var text = '';
+      if (panelId === 'output') {
+        var el = document.getElementById('outputBody');
+        if (el) text = el.innerText || el.textContent || '';
+      } else if (panelId === 'preview') {
+        var el = document.getElementById('previewBody');
+        if (el) text = el.innerText || el.textContent || '';
+      } else if (panelId === 'browser') {
+        var frame = document.getElementById('browserFrame');
+        try {
+          var doc = frame.contentDocument || frame.contentWindow.document;
+          if (doc) text = doc.body.innerText || doc.body.textContent || '';
+        } catch (e) { text = 'Cannot access browser content (cross-origin)'; }
       }
-      // Reload preferences so the rest of the app picks up changes
-      if (window.OliviaUserPrefs && window.OliviaUserPrefs.load) {
-        window.OliviaUserPrefs.load();
+      text = (text || '').trim();
+      if (!text) return;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).catch(function () {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
       }
     }
-    if (event.data && event.data.type === 'olivia-close-setup') {
-      closeSetupModal();
+  </script>
+  <!-- ═══ Setup Welcoming Overlay CSS + Logic ═══ -->
+  <style>
+    .setup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
     }
-  });
 
-  function checkSetupComplete() {
-    if (!window.OliviaUserPrefs) return;
-    try {
-      var prefs = JSON.parse(localStorage.getItem('OliviaLegal.user.preferences') || '{}');
-      if (!prefs.setup_complete) {
-        var overlay = document.getElementById('setupOverlay');
-        if (overlay) {
-          overlay.classList.add('open');
+    .setup-overlay.open {
+      display: block;
+    }
+
+    .setup-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90vw;
+      max-width: 720px;
+      height: 85vh;
+      max-height: 700px;
+      background: #1a1f2b;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .setup-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .setup-modal-close::after,
+    .setup-modal-close::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 18px;
+      height: 2px;
+      background: #fff;
+      transform: translate(-50%, -50()) rotate(45deg);
+    }
+
+    .setup-modal-close::after {
+      transform: translate(-50%, -50()) rotate(-45deg);
+    }
+
+    .setup-modal iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+  <script>
+    (function () {
+      // Listen for setup completion message from the iframe
+      window.addEventListener('message', function (event) {
+        if (event.data && event.data.type === 'olivia-setup-complete') {
+          // Navigate iframe to full workspace setup page so user can configure remaining integrations
           var frame = document.getElementById('setupFrame');
           if (frame) {
-            frame.src = '/olivia/auth/olivia-setup.html?mode=modal';
+            frame.src = '/olivia/auth/olivia-workspace-setup.html';
+          }
+          // Reload preferences so the rest of the app picks up changes
+          if (window.OliviaUserPrefs && window.OliviaUserPrefs.load) {
+            window.OliviaUserPrefs.load();
           }
         }
+        if (event.data && event.data.type === 'olivia-close-setup') {
+          closeSetupModal();
+        }
+      });
+
+      function checkSetupComplete() {
+        if (!window.OliviaUserPrefs) return;
+        try {
+          var prefs = JSON.parse(localStorage.getItem('OliviaLegal.user.preferences') || '{}');
+          if (!prefs.setup_complete) {
+            var overlay = document.getElementById('setupOverlay');
+            if (overlay) {
+              overlay.classList.add('open');
+              var frame = document.getElementById('setupFrame');
+              if (frame) {
+                frame.src = '/olivia/auth/olivia-setup.html?mode=modal';
+              }
+            }
+          }
+        } catch (e) {
+          console.error('[setup] check failed:', e);
+        }
       }
-    } catch(e) {
-      console.error('[setup] check failed:', e);
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkSetupComplete);
+      } else {
+        checkSetupComplete();
+      }
+    })();
+
+    function closeSetupModal() {
+      var overlay = document.getElementById('setupOverlay');
+      if (overlay) overlay.classList.remove('open');
     }
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', checkSetupComplete);
-  } else {
-    checkSetupComplete();
-  }
-})();
-
-function closeSetupModal() {
-  var overlay = document.getElementById('setupOverlay');
-  if (overlay) overlay.classList.remove('open');
-}
-</script>
+  </script>
 </body>
 
 </html>

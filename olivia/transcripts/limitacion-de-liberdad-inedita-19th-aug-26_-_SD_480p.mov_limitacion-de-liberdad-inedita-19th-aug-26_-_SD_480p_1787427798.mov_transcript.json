@@ -1,0 +1,269 @@
+{
+  "filename": "limitacion-de-liberdad-inedita-19th-aug-26_-_SD_480p.mov_limitacion-de-liberdad-inedita-19th-aug-26_-_SD_480p_1787427798.mov_transcript.json",
+  "saved_at": "2026-08-22T19:46:59.730000+00:00",
+  "run_id": "limitacion-de-liberdad-inedita-19th-aug-26_-_SD_480p_1787427798.mov",
+  "params": {
+    "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+    "language": "es-CL",
+    "model": "large-v3-turbo",
+    "min_speakers": 1,
+    "max_speakers": 2,
+    "diarization": "true",
+    "align_output": "true",
+    "remove_silence": "false",
+    "noise_reduce": "true",
+    "voice_enhance": "true",
+    "word_timestamps": "true",
+    "vad_threshold": 0.1,
+    "whisper_temp": 0,
+    "beam_size": 7,
+    "best_of": 7,
+    "chunk_size": 30,
+    "batch_size": 24,
+    "initial_prompt": "",
+    "save_to_qdrant": "false",
+    "qdrant_collection": "ic_netto",
+    "cors_mode": "auto"
+  },
+  "save_to_qdrant": false,
+  "qdrant_collection": "ic_netto",
+  "data": {
+    "transcript_id": "limitacion-de-liberdad-inedita-19th-aug-26_-_SD_480p_1787427798.mov",
+    "segments": [
+      {
+        "index": 1,
+        "speaker": "SPEAKER_00",
+        "start": 0.63846875,
+        "end": 2.1234687500000002,
+        "duration": 1.485,
+        "text": " Les voy a contar una infidencia."
+      },
+      {
+        "index": 2,
+        "speaker": "SPEAKER_00",
+        "start": 2.29221875,
+        "end": 2.8153437500000003,
+        "duration": 0.523,
+        "text": " e"
+      },
+      {
+        "index": 3,
+        "speaker": "SPEAKER_00",
+        "start": 3.69284375,
+        "end": 12.09659375,
+        "duration": 8.404,
+        "text": " Me llamó ayer, anteayer, o el domingo, no me acuerdo, Macarena Lobos, que fue nuestra última ministra de Zexpress. Una tremenda mujer."
+      },
+      {
+        "index": 4,
+        "speaker": "SPEAKER_00",
+        "start": 12.78846875,
+        "end": 19.403468750000002,
+        "duration": 6.615,
+        "text": " Y me dice que del gobierno la invitaron a participar de la Comisión de Reforma al Empleo Público. ¿Y qué pensaba yo?"
+      },
+      {
+        "index": 5,
+        "speaker": "SPEAKER_00",
+        "start": 20.98971875,
+        "end": 24.49971875,
+        "duration": 3.51,
+        "text": " Uno dice, con este gobierno y la actitud que ha tenido en general,"
+      },
+      {
+        "index": 6,
+        "speaker": "SPEAKER_00",
+        "start": 25.664093750000003,
+        "end": 28.566593750000003,
+        "duration": 2.902,
+        "text": " Como que es difícil conversar, negociar."
+      },
+      {
+        "index": 7,
+        "speaker": "SPEAKER_00",
+        "start": 29.562218750000003,
+        "end": 29.96721875,
+        "duration": 0.405,
+        "text": " Pero..."
+      },
+      {
+        "index": 8,
+        "speaker": "SPEAKER_00",
+        "start": 30.777218750000003,
+        "end": 33.494093750000005,
+        "duration": 2.717,
+        "text": " Yo le planteé, Macarera, hay que ir de todas maneras."
+      },
+      {
+        "index": 9,
+        "speaker": "SPEAKER_00",
+        "start": 34.70909375,
+        "end": 37.37534375,
+        "duration": 2.666,
+        "text": " Hay que estar ahí, hay que dar nuestros puntos de vista."
+      },
+      {
+        "index": 10,
+        "speaker": "SPEAKER_00",
+        "start": 37.94909375,
+        "end": 40.73346875,
+        "duration": 2.784,
+        "text": " Tratar de hacer un aporte porque se requiere una modernización."
+      },
+      {
+        "index": 11,
+        "speaker": "SPEAKER_00",
+        "start": 42.06659375,
+        "end": 43.21409375,
+        "duration": 1.148,
+        "text": " Lo que no significa..."
+      },
+      {
+        "index": 12,
+        "speaker": "SPEAKER_00",
+        "start": 43.80471875,
+        "end": 45.39096875,
+        "duration": 1.586,
+        "text": " Denigrar al empleo público."
+      },
+      {
+        "index": 13,
+        "speaker": "SPEAKER_00",
+        "start": 47.28096875,
+        "end": 58.77284375000001,
+        "duration": 11.492,
+        "text": " lo que no significa tratar de achicar al Estado a costa de derechos sociales. Bueno, Mario hace algunas propuestas ahí respecto a este tema, de distinguir el tipo de funcionarios públicos según su rol."
+      },
+      {
+        "index": 14,
+        "speaker": "SPEAKER_00",
+        "start": 59.80221875,
+        "end": 61.62471875000001,
+        "duration": 1.823,
+        "text": " Pero es un debate que tenemos que estar, tenemos que dar."
+      },
+      {
+        "index": 15,
+        "speaker": "SPEAKER_00",
+        "start": 63.329093750000006,
+        "end": 63.869093750000005,
+        "duration": 0.54,
+        "text": " Porque..."
+      },
+      {
+        "index": 16,
+        "speaker": "SPEAKER_00",
+        "start": 64.49346875,
+        "end": 65.59034375,
+        "duration": 1.097,
+        "text": " Los gobiernos pasan."
+      },
+      {
+        "index": 17,
+        "speaker": "SPEAKER_00",
+        "start": 66.07971875,
+        "end": 67.93596875,
+        "duration": 1.856,
+        "text": " El Estado y los pueblos quedan."
+      },
+      {
+        "index": 18,
+        "speaker": "SPEAKER_00",
+        "start": 68.76284375,
+        "end": 71.54721875,
+        "duration": 2.784,
+        "text": " Y quienes estamos en política tenemos que siempre estar dispuestos a colaborar."
+      },
+      {
+        "index": 19,
+        "speaker": "SPEAKER_00",
+        "start": 71.74971875,
+        "end": 73.30221875000001,
+        "duration": 1.553,
+        "text": " con quien quiera que sea el gobierno"
+      },
+      {
+        "index": 20,
+        "speaker": "SPEAKER_00",
+        "start": 73.77471875,
+        "end": 75.20909375000001,
+        "duration": 1.434,
+        "text": " para políticas de Estado."
+      },
+      {
+        "index": 21,
+        "speaker": "SPEAKER_00",
+        "start": 76.00221875000001,
+        "end": 79.10721875,
+        "duration": 3.105,
+        "text": " Lo que no significa ceder en convicciones que son claras."
+      },
+      {
+        "index": 22,
+        "speaker": "SPEAKER_00",
+        "start": 79.57971875,
+        "end": 85.21596875,
+        "duration": 5.636,
+        "text": " Por eso toda la oposición rechazó la reforma regresiva del presidente y yo espero..."
+      },
+      {
+        "index": 23,
+        "speaker": "SPEAKER_00",
+        "start": 85.51971875000001,
+        "end": 104.21721875,
+        "duration": 18.697,
+        "text": " Que haya una posición franca, respetuosa, pero abierta, clara y firme respecto de esta reforma constitucional que quieren instaurar un Estado de sitio de 240 días con la atribución exclusiva del Presidente de la República. Con una limitación de libertades que no se había visto inédita en la democracia chilena."
+      }
+    ],
+    "timings": {
+      "save_s": 0.01,
+      "convert_s": 0.39,
+      "preprocess_s": 14.77,
+      "diarization_s": 69.44,
+      "model_load_s": 0,
+      "transcription_s": 130.78,
+      "total_s": 219.72
+    },
+    "params": {
+      "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+      "language": "es-CL",
+      "model": "large-v3-turbo",
+      "min_speakers": 1,
+      "max_speakers": 2,
+      "diarization": "true",
+      "align_output": "true",
+      "remove_silence": false,
+      "noise_reduce": true,
+      "voice_enhance": true,
+      "word_timestamps": true,
+      "vad_threshold": 0.1,
+      "whisper_temp": 0,
+      "beam_size": 7,
+      "best_of": 7,
+      "chunk_size": 30,
+      "batch_size": 24,
+      "initial_prompt": "",
+      "save_to_qdrant": "false",
+      "qdrant_collection": "ic_netto",
+      "cors_mode": "auto",
+      "model_size": "large-v3-turbo",
+      "diarization_fallback": false,
+      "diarization_fallback_reason": null,
+      "temperature": 0,
+      "diarization_timeout_s": 180,
+      "min_turn_duration_s": 0,
+      "merge_gap_s": 0,
+      "max_diarization_segments": 1000,
+      "reduction_db": 25,
+      "apply_gain": true,
+      "target_lufs": -16,
+      "silence_thresh": -45,
+      "min_silence_len": 250,
+      "keep_audio_artifacts": true,
+      "saved_audio_file": "limitacion-de-liberdad-inedita-19th-aug-26 - SD 480p_1787427798.mov.wav",
+      "processed_audio_file": "limitacion-de-liberdad-inedita-19th-aug-26 - SD 480p_1787427798.mov_processed.wav"
+    },
+    "run_id": "limitacion-de-liberdad-inedita-19th-aug-26_-_SD_480p_1787427798.mov",
+    "client_run_id": "limitacion-de-liberdad-inedita-19th-aug-26_-_SD_480p_1787427798.mov"
+  }
+}

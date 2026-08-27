@@ -66,6 +66,8 @@
   <link href="css/meshy-studio.css" rel="stylesheet" />
   <link href="css/spaces.css" rel="stylesheet" />
   <link href="css/section-views.css" rel="stylesheet" />
+  <link href="css/master-index.css" rel="stylesheet" />
+  <link href="css/law-library.css" rel="stylesheet" />
   <link href="css/api-explorer.css" rel="stylesheet" />
   <link href="css/architecture.css" rel="stylesheet" />
   <link href="css/responsive.css" rel="stylesheet" />
@@ -278,6 +280,10 @@
                 <div class="provider-tabs" id="providerTabs">
                   <button class="provider-tab active" data-provider="deepseek" onclick="selectProvider('deepseek')"><i
                       class="fas fa-brain" style="font-size:10px"></i> DeepSeek</button>
+                  <button class="provider-tab" data-provider="cerebras" onclick="selectProvider('cerebras')"><i
+                      class="fas fa-cpu" style="font-size:10px"></i> Cerebras</button>
+                  <button class="provider-tab" data-provider="xai" onclick="selectProvider('xai')"><i
+                      class="fas fa-bolt" style="font-size:10px"></i> Grok</button>
                   <button class="provider-tab" data-provider="anthropic" onclick="selectProvider('anthropic')"><i
                       class="fas fa-feather-pointed" style="font-size:10px"></i> Anthropic</button>
                   <button class="provider-tab" data-provider="openrouter" onclick="selectProvider('openrouter')"><i
@@ -5594,6 +5600,15 @@ https://.../side.png" rows="3"
                   tree.</span></div>
             </div>
           </div>
+        </div>
+        <!-- Context bar -->
+        <div id="lawLibContextBar" class="empty">
+          <i class="fas fa-paperclip"></i>
+          <span id="lawLibContextNum">0</span>
+          <span data-i18n="lawLibAttachedCount"> sources as context</span>
+          <button type="button" class="btn btn-xs"
+            onclick="if(typeof lawLibClearContext==='function')lawLibClearContext()" title="Clear"><i
+              class="fas fa-times"></i></button>
         </div>
       </div>
       <!-- ═══════ MASTER INDEX VIEW — Jurisprudencia ═══════ -->

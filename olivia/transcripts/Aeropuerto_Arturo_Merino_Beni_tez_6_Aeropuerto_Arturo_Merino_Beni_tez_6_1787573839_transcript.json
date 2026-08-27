@@ -1,0 +1,181 @@
+{
+  "filename": "Aeropuerto_Arturo_Merino_Beni_tez_6_Aeropuerto_Arturo_Merino_Beni_tez_6_1787573839_transcript.json",
+  "saved_at": "2026-08-24T12:23:02.137390+00:00",
+  "run_id": "Aeropuerto_Arturo_Merino_Beni_tez_6_1787573839",
+  "params": {
+    "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+    "language": "es-CL",
+    "model": "large-v3",
+    "min_speakers": 1,
+    "max_speakers": 3,
+    "diarization": "true",
+    "align_output": "true",
+    "remove_silence": "true",
+    "noise_reduce": "true",
+    "voice_enhance": "true",
+    "word_timestamps": "true",
+    "vad_threshold": 0.4,
+    "whisper_temp": 0,
+    "beam_size": 8,
+    "best_of": 8,
+    "chunk_size": 30,
+    "batch_size": 24,
+    "initial_prompt": "",
+    "save_to_qdrant": "false",
+    "qdrant_collection": "olivia_transcripts",
+    "cors_mode": "auto"
+  },
+  "save_to_qdrant": false,
+  "qdrant_collection": "olivia_transcripts",
+  "data": {
+    "transcript_id": "Aeropuerto_Arturo_Merino_Beni_tez_6_1787573839",
+    "segments": [
+      {
+        "index": 1,
+        "speaker": "SPEAKER_00",
+        "start": 0.03096875,
+        "end": 7.27034375,
+        "duration": 7.239,
+        "text": " Nosotros lo hacemos porque la compañía informa, esos son los protocolos de seguridad de los aeropuertos."
+      },
+      {
+        "index": 2,
+        "speaker": "SPEAKER_00",
+        "start": 7.64159375,
+        "end": 8.316593750000003,
+        "duration": 0.675,
+        "text": " No, no, no."
+      },
+      {
+        "index": 3,
+        "speaker": "SPEAKER_00",
+        "start": 8.50221875,
+        "end": 10.30784375,
+        "duration": 1.806,
+        "text": " Hablar con policía."
+      },
+      {
+        "index": 4,
+        "speaker": "SPEAKER_00",
+        "start": 12.923468750000001,
+        "end": 19.977218750000002,
+        "duration": 7.054,
+        "text": " De hecho a la policía tú le podés colocar igual una denuncia al tiro. Una denuncia. A la policía tú le explicas que hay puto y que hay..."
+      },
+      {
+        "index": 5,
+        "speaker": "SPEAKER_01",
+        "start": 19.977218750000002,
+        "end": 26.11971875,
+        "duration": 6.142,
+        "text": " Pero ahora van a tener que darme algún tipo de prueba de por qué me sacaron del vuelo."
+      },
+      {
+        "index": 6,
+        "speaker": "SPEAKER_01",
+        "start": 27.16596875,
+        "end": 32.430968750000005,
+        "duration": 5.265,
+        "text": " el comandante lo pidió. Ya, pero ahí igual. ¿Por qué el comandante lo pidió?"
+      },
+      {
+        "index": 7,
+        "speaker": "SPEAKER_01",
+        "start": 33.072218750000005,
+        "end": 36.10971875,
+        "duration": 3.037,
+        "text": " Por eso, eso se lo dice esa policía."
+      },
+      {
+        "index": 8,
+        "speaker": "SPEAKER_01",
+        "start": 41.408468750000004,
+        "end": 42.032843750000005,
+        "duration": 0.624,
+        "text": " Gracias."
+      },
+      {
+        "index": 9,
+        "speaker": "SPEAKER_01",
+        "start": 43.06221875,
+        "end": 44.05784375,
+        "duration": 0.996,
+        "text": " ¿Quiere libertad?"
+      },
+      {
+        "index": 10,
+        "speaker": "SPEAKER_01",
+        "start": 45.59346875,
+        "end": 52.83284375,
+        "duration": 7.239,
+        "text": " ¿Estabas acá de vacaciones? No, yo estoy un año viviendo acá No, no, estoy viviendo acá y estoy divorciando de una chilena en ese dato momento"
+      },
+      {
+        "index": 11,
+        "speaker": "SPEAKER_01",
+        "start": 53.81159375,
+        "end": 57.27096875,
+        "duration": 3.459,
+        "text": " Venía simplemente para ver a mi hija y a verla mejor."
+      },
+      {
+        "index": 12,
+        "speaker": "SPEAKER_01",
+        "start": 57.59159375,
+        "end": 59.970968750000004,
+        "duration": 2.379,
+        "text": " ¿El L5? Sí, el L5. Ah, ya. El pasajero."
+      }
+    ],
+    "timings": {
+      "save_s": 0,
+      "convert_s": 0,
+      "preprocess_s": 8.94,
+      "diarization_s": 43.78,
+      "model_load_s": 0,
+      "transcription_s": 275.52,
+      "total_s": 340.95
+    },
+    "params": {
+      "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+      "language": "es-CL",
+      "model": "large-v3",
+      "min_speakers": 1,
+      "max_speakers": 3,
+      "diarization": "true",
+      "align_output": "true",
+      "remove_silence": true,
+      "noise_reduce": true,
+      "voice_enhance": true,
+      "word_timestamps": true,
+      "vad_threshold": 0.4,
+      "whisper_temp": 0,
+      "beam_size": 8,
+      "best_of": 8,
+      "chunk_size": 30,
+      "batch_size": 24,
+      "initial_prompt": "",
+      "save_to_qdrant": "false",
+      "qdrant_collection": "olivia_transcripts",
+      "cors_mode": "auto",
+      "model_size": "large-v3",
+      "diarization_fallback": false,
+      "diarization_fallback_reason": null,
+      "temperature": 0,
+      "diarization_timeout_s": 180,
+      "min_turn_duration_s": 0,
+      "merge_gap_s": 0,
+      "max_diarization_segments": 1000,
+      "reduction_db": 25,
+      "apply_gain": true,
+      "target_lufs": -16,
+      "silence_thresh": -45,
+      "min_silence_len": 250,
+      "keep_audio_artifacts": true,
+      "saved_audio_file": "Aeropuerto Arturo Merino Benítez 6_1787573839.wav",
+      "processed_audio_file": "Aeropuerto Arturo Merino Benítez 6_1787573839_processed.wav"
+    },
+    "run_id": "Aeropuerto_Arturo_Merino_Beni_tez_6_1787573839",
+    "client_run_id": "Aeropuerto_Arturo_Merino_Beni_tez_6_1787573839"
+  }
+}

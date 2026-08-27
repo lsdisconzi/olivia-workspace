@@ -1,0 +1,290 @@
+/* ============================================================
+   MASTER INDEX MODULE — full-section layout + clean rendering
+   Light theme by default; dark theme only when explicitly toggled.
+   ============================================================ */
+
+#masterIndexView {
+    display: none;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+
+    /* ---- Light (default) theme tokens, scoped to this module ---- */
+    --mi-bg: #ffffff;
+    --mi-bg-card: #f7f7f8;
+    --mi-bg-hi: #eef0f3;
+    --mi-border: #e3e4e8;
+    --mi-border-hi: #c7c9d0;
+    --mi-gray: #71757c;
+    --mi-gray-hi: #232428;
+    --mi-fg: #16171a;
+    --mi-amber: #a8501f;
+
+    background: var(--mi-bg);
+}
+
+#masterIndexView.active {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+}
+
+/* ---- Dark theme overrides ----
+   Fires when a dark-mode flag is present on an ancestor. Adjust/trim
+   these selectors to match whichever toggle mechanism the app actually
+   uses; all three are here just so this drops in and works immediately. */
+[data-theme="dark"] #masterIndexView,
+.dark #masterIndexView,
+.theme-dark #masterIndexView {
+    --mi-bg: #121212;
+    --mi-bg-card: #1a1a1f;
+    --mi-bg-hi: #232323;
+    --mi-border: #2a2a2a;
+    --mi-border-hi: #444444;
+    --mi-gray: #9a9a9a;
+    --mi-gray-hi: #d0d0d0;
+    --mi-fg: #ffffff;
+    --mi-amber: #c4622d;
+}
+
+/* Optional: respect OS-level dark mode when no manual theme has been
+   set. Remove this block if the app already has an explicit light/dark
+   switch and you don't want the OS preference to override it. */
+@media (prefers-color-scheme: dark) {
+    #masterIndexView:not([data-theme]):not(.dark):not(.theme-dark) {
+        --mi-bg: #121212;
+        --mi-bg-card: #1a1a1f;
+        --mi-bg-hi: #232323;
+        --mi-border: #2a2a2a;
+        --mi-border-hi: #444444;
+        --mi-gray: #9a9a9a;
+        --mi-gray-hi: #d0d0d0;
+        --mi-fg: #ffffff;
+        --mi-amber: #c4622d;
+    }
+}
+
+/* Sidebar */
+#masterIndexSidebar {
+    width: 340px;
+    min-width: 260px;
+    max-width: 50%;
+    flex-shrink: 0;
+    border-right: 1px solid var(--mi-border);
+    background: var(--mi-bg-card);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#masterIndexStatus {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--mi-border);
+    font-size: 11px;
+    color: var(--mi-gray);
+}
+
+#masterIndexCourtChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--mi-border);
+}
+
+#masterIndexTree {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+#masterIndexResize {
+    width: 5px;
+    cursor: col-resize;
+    flex-shrink: 0;
+    background: transparent;
+    position: relative;
+    z-index: 20;
+}
+
+#masterIndexResize:hover,
+#masterIndexResize.dragging {
+    background: var(--mi-border-hi);
+}
+
+/* Viewer — takes the remaining full section width */
+#masterIndexViewer {
+    flex: 1;
+    min-width: 0;
+    overflow: auto;
+    background: var(--mi-bg);
+}
+
+#masterIndexViewer>.mi-panel {
+    max-width: none !important;
+    padding: 24px !important;
+}
+
+/* Court chips */
+.vw-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border: 1px solid var(--mi-border);
+    border-radius: 999px;
+    background: var(--mi-bg-card);
+    color: var(--mi-gray-hi);
+    cursor: pointer;
+    font-size: 11px;
+    font-family: inherit;
+    transition: all .15s ease;
+    white-space: nowrap;
+}
+
+.vw-chip:hover {
+    border-color: var(--mi-border-hi);
+    color: var(--mi-fg);
+}
+
+.vw-chip.active {
+    border-color: var(--mi-amber);
+    color: var(--mi-fg);
+    background: rgba(196, 98, 45, .12);
+}
+
+/* Tree */
+.mi-tree-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 2px 0;
+    border: 1px solid transparent;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.3;
+    color: var(--mi-gray-hi);
+    transition: background .15s ease, border-color .15s ease;
+}
+
+.mi-tree-item:hover {
+    background: var(--mi-bg-hi);
+    border-color: var(--mi-border);
+}
+
+.mi-tree-item.active {
+    background: var(--mi-bg-hi);
+    border-color: var(--mi-amber);
+}
+
+.mi-tree-title {
+    font-size: 12px;
+    color: var(--mi-gray-hi);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.mi-tree-title i {
+    color: var(--mi-amber);
+    margin-right: 6px;
+}
+
+.mi-tree-hint {
+    font-size: 11px;
+    color: var(--mi-gray);
+    line-height: 1.35;
+    margin-top: 3px;
+}
+
+.mi-court-label {
+    font-size: 10px;
+    letter-spacing: .12em;
+    color: var(--mi-amber);
+    text-transform: uppercase;
+    padding: 8px 8px 6px;
+}
+
+.mi-court-label span {
+    color: var(--mi-gray);
+}
+
+/* Tables */
+.mi-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--mi-border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.mi-table th {
+    padding: 7px 8px;
+    text-align: left;
+    font-size: 11px;
+    color: var(--mi-gray);
+    font-weight: 500;
+    background: var(--mi-bg-hi);
+}
+
+.mi-table td {
+    padding: 6px 8px;
+    border-top: 1px solid var(--mi-border);
+}
+
+.mi-td-key {
+    color: var(--mi-gray-hi);
+}
+
+.mi-td-val {
+    color: var(--mi-amber);
+    font-family: var(--mono, monospace);
+    text-align: right;
+}
+
+/* Document details */
+.mi-key {
+    padding: 7px 8px;
+    color: var(--mi-gray);
+    font-size: 11px;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.mi-val {
+    padding: 7px 8px;
+    color: var(--mi-gray-hi);
+    font-size: 12px;
+    text-align: left;
+    word-break: break-word;
+}
+
+.mi-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    margin: 2px 4px 2px 0;
+    border: 1px solid var(--mi-border);
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--mi-gray-hi);
+    background: var(--mi-bg);
+}
+
+.mi-muted {
+    color: var(--mi-gray);
+    font-size: 12px;
+}
+
+/* Empty state */
+.vw-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--mi-gray);
+    font-size: 13px;
+}
