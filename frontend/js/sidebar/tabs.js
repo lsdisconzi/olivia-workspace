@@ -288,6 +288,9 @@ function switchSidebarTab(tab) {
   // Show comfyui workflow view when ComfyUI tab is selected
   if (tab === 'comfyui' && typeof comfyuiShowView === 'function') comfyuiShowView();
 
+  // Show event map view when Event Map tab is selected
+  if (tab === 'eventmap' && typeof eventMapShowView === 'function') eventMapShowView();
+
   // Show drive view when Drive tab is selected
   if (tab === 'drive' && typeof driveShowView === 'function') {
     driveShowView();

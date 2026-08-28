@@ -2035,6 +2035,7 @@ SECTION_REGISTRY = [
     {"id": "craudio", "label": "Craudio", "icon": "fa-gavel"},
     {"id": "outreach", "label": "Outreach", "icon": "fa-share-nodes", "onclick": "outreachShowView()"},
     {"id": "comfyui", "label": "ComfyUI", "icon": "fa-cube", "onclick": "comfyuiShowView()"},
+    {"id": "eventmap", "label": "Event Map", "icon": "fa-map-location-dot", "onclick": "eventMapShowView()"},
     {"id": "drive", "label": "Drive", "icon": "fa-cloud"},
     { "id": "writer", "label": "Writer", "icon": "fa-pen-fancy", "onclick": "" },
     {"id": "sheets", "label": "Sheets", "icon": "fa-table", "onclick": "" },

@@ -12,6 +12,7 @@
         knowledgeBase: '/api/procurement/knowledge-base',
         timeline: '/api/procurement/timeline',
         assistant: '/api/procurement/assistant/chat',
+        models: '/api/procurement/models',
     };
 
     var PROCUREMENT_PRIMER = [
@@ -31,6 +32,7 @@
     var pSessionId = null;
     var pPrimerSent = false;
     var pStreaming = false;
+    var pSelectedModel = '';
     var PROCUREMENT_STORAGE_KEY = 'Olivia_procurement_chat_v1';
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -130,6 +132,11 @@
             '<input type="file" id="procurementFileInput" accept="image/*,.pdf" multiple style="display:none" onchange="procurementHandleFiles(this.files)">' +
             '</div>' +
             '<div class="pr-pipeline-controls">' +
+            '<div class="pr-model-select-wrap">' +
+            '<div class="config-section-title"><i class="fas fa-microchip"></i> Model Selection</div>' +
+            '<div class="provider-tabs" id="procurementProviderTabs"></div>' +
+            '<div class="model-cards" id="procurementModelCards"></div>' +
+            '</div>' +
             '<button class="btn btn-primary" id="procurementRunBtn" onclick="procurementRunPipeline()" disabled>' +
             '<i class="fas fa-play"></i> Run Pipeline</button>' +
             '<span class="pr-status" id="procurementPipelineStatus">Ready</span>' +
@@ -201,7 +208,7 @@
         tabs.forEach(function (t) {
             t.classList.toggle('active', t.getAttribute('data-panel') === name);
         });
-        if (name === 'pipeline') procurementRefreshPipeline();
+        if (name === 'pipeline') { procurementRefreshPipeline(); loadPipelineModels(); }
         else if (name === 'documents') procurementLoadDocuments();
         else if (name === 'reports') procurementLoadReports();
         else if (name === 'timeline') procurementLoadTimeline();
@@ -219,7 +226,7 @@
         var names = Array.from(files).map(function (f) { return f.name; }).join(', ');
         area.innerHTML = '<p>' + esc(names) + ' (' + files.length + ' files)</p>';
         area.dataset.hasFiles = 'true';
-        document.getElementById('procurementRunBtn').disabled = false;
+        document.getElementById('procurementRunBtn').disabled = !(files.length > 0 && pSelectedModel);
         window._procurementFiles = files;
     };
 
@@ -248,6 +255,10 @@
         if (!files || files.length === 0) return;
         var statusEl = document.getElementById('procurementPipelineStatus');
         var runBtn = document.getElementById('procurementRunBtn');
+        if (!pSelectedModel) {
+            if (statusEl) statusEl.textContent = 'Select a model first';
+            return;
+        }
         if (statusEl) statusEl.textContent = 'Uploading & running...';
         if (runBtn) runBtn.disabled = true;
 
@@ -267,7 +278,7 @@
                 return fetch(apiBase() + PROCUREMENT_API.run, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ upload_id: uploadData.upload_id, project_id: procurementProjectId() })
+                    body: JSON.stringify({ upload_id: uploadData.upload_id, project_id: procurementProjectId(), model: pSelectedModel })
                 });
             })
             .then(function (res) {
@@ -302,8 +313,164 @@
         }
         html += '</div>';
         container.innerHTML = html;
-        document.getElementById('procurementRunBtn').disabled = false;
+        var runBtn = document.getElementById('procurementRunBtn');
+        if (runBtn) runBtn.disabled = !(window._procurementFiles && window._procurementFiles.length > 0 && pSelectedModel);
     }
+
+    function loadPipelineModels() {
+        var tabs = document.getElementById('procurementProviderTabs');
+        var cards = document.getElementById('procurementModelCards');
+        if (!tabs || !cards) return;
+        // Avoid re-populating duplicates on repeated tab opens.
+        if (tabs.dataset.loaded === '1') return;
+        tabs.dataset.loaded = '1';
+
+        // Populate from the same model catalog used by the main config section
+        // (window._modelCatalog, loaded from /api/models/catalog which merges
+        // models-overrides.json + ollama-servers.json server-side).
+        var catalog = window._modelCatalog;
+        if (!catalog) {
+            cards.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:12px;padding:12px">Carregando modelos...</p>';
+            // Retry once the catalog becomes available.
+            var tries = 0;
+            var timer = setInterval(function () {
+                tries++;
+                if (window._modelCatalog) {
+                    clearInterval(timer);
+                    renderProcurementCatalog(window._modelCatalog);
+                } else if (tries > 20) {
+                    clearInterval(timer);
+                    cards.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:12px;padding:12px">Nenhum modelo dispon\u00edvel</p>';
+                }
+            }, 250);
+            return;
+        }
+        renderProcurementCatalog(catalog);
+    }
+
+    // Provider label/icon meta matching the main config section (history.js MODEL_PROVIDER_META).
+    var PROCUREMENT_PROVIDER_META = {
+        deepseek: { label: 'DeepSeek', icon: 'fa-brain' },
+        cerebras: { label: 'Cerebras', icon: 'fa-cpu' },
+        xai: { label: 'Grok (xAI)', icon: 'fa-bolt' },
+        grok: { label: 'Grok (xAI)', icon: 'fa-bolt' },
+        anthropic: { label: 'Anthropic', icon: 'fa-feather-pointed' },
+        openrouter: { label: 'OpenRouter', icon: 'fa-network-wired' },
+        fireworks: { label: 'Fireworks', icon: 'fa-fire' },
+        openai: { label: 'OpenAI', icon: 'fa-robot' },
+        ollama: { label: 'Ollama', icon: 'fa-hard-drive' },
+        gemini: { label: 'Gemini', icon: 'fa-cloud' },
+        other: { label: 'Outros', icon: 'fa-microchip' }
+    };
+    function procurementProviderMeta(provider) {
+        var key = String(provider || 'other').trim().toLowerCase();
+        return PROCUREMENT_PROVIDER_META[key] || { label: key ? key.charAt(0).toUpperCase() + key.slice(1) : 'Outros', icon: 'fa-microchip' };
+    }
+
+    function renderProcurementCatalog(catalog) {
+        var tabs = document.getElementById('procurementProviderTabs');
+        var cards = document.getElementById('procurementModelCards');
+        if (!tabs || !cards || !catalog) return;
+
+        var providers = Object.keys(catalog).filter(function (p) {
+            return Array.isArray(catalog[p]) && catalog[p].length;
+        });
+        if (!providers.length) {
+            tabs.innerHTML = '';
+            cards.innerHTML = '<p style="color:var(--gray);text-align:center;font-size:12px;padding:12px">Nenhum modelo dispon\u00edvel</p>';
+            return;
+        }
+
+        // Determine active provider: the one matching the currently selected model,
+        // else the first available.
+        var activeProvider = providers[0];
+        if (pSelectedModel) {
+            for (var i = 0; i < providers.length; i++) {
+                var p = providers[i];
+                if (catalog[p].some(function (m) { return m.id === pSelectedModel; })) {
+                    activeProvider = p;
+                    break;
+                }
+            }
+        }
+
+        // Render provider tabs (reuse global meta + CSS classes).
+        tabs.innerHTML = providers.map(function (provider) {
+            var meta = procurementProviderMeta(provider);
+            var activeClass = provider === activeProvider ? ' active' : '';
+            return '<button class="provider-tab' + activeClass + '" data-provider="' + esc(provider) + '" ' +
+                'onclick="procurementSelectProvider(\'' + esc(provider) + '\')">' +
+                '<i class="fas ' + (meta.icon || 'fa-microchip') + '" style="font-size:10px"></i> ' +
+                esc(meta.label || provider) + '</button>';
+        }).join('');
+
+        renderProcurementModelCards(activeProvider, catalog);
+    }
+
+    function renderProcurementModelCards(provider, catalog) {
+        var cards = document.getElementById('procurementModelCards');
+        if (!cards || !catalog || !catalog[provider]) return;
+
+        function fmtCtx(n) {
+            if (!n) return 'N/A';
+            var k = Math.round(n / 1000);
+            return k >= 1000 ? (k / 1000).toFixed(0) + 'M' : k + 'k';
+        }
+
+        var html = '';
+        catalog[provider].forEach(function (model) {
+            var isCurrent = model.id === pSelectedModel;
+            var tier = model.tier || '';
+            var ctx = fmtCtx(model.context_window);
+            html += '<div class="model-card' + (isCurrent ? ' active' : '') + '" data-model="' + esc(model.id) + '">';
+            html += '<div class="model-card-header">';
+            html += '<span class="model-card-name">' + esc(model.name) + '</span>';
+            if (tier) html += '<span class="model-card-tier ' + esc(tier) + '">' + esc(tier.toUpperCase()) + '</span>';
+            html += '</div>';
+            html += '<div class="model-card-desc">' + esc(model.best_for || model.description || '') + '</div>';
+            html += '<div class="model-card-pricing">';
+            html += '<span>&#9632; ' + ctx + ' ctx</span>';
+            if (model.input_cost_per_1m != null) html += '<span>&#8595; $' + model.input_cost_per_1m + '/1M in</span>';
+            if (model.output_cost_per_1m != null) html += '<span>&#8593; $' + model.output_cost_per_1m + '/1M out</span>';
+            if (model.supports_thinking) html += '<span style="color:var(--amber)">&#9670; thinking</span>';
+            if (model.supports_vision) html += '<span>&#9654; vision</span>';
+            html += '</div>';
+            html += '<div class="model-card-footer" style="margin-top:8px">';
+            html += '<button class="btn btn-sm' + (isCurrent ? ' active' : '') + '" ' +
+                'onclick="procurementSwitchModel(\'' + esc(model.id) + '\')" style="font-size:11px;width:100%">' +
+                (isCurrent ? '&#10003; Em uso' : 'Selecionar') + '</button>';
+            html += '</div>';
+            html += '</div>';
+        });
+
+        cards.innerHTML = html || '<p style="color:var(--gray);text-align:center;font-size:12px;padding:12px">Nenhum modelo dispon\u00edvel</p>';
+    }
+
+    window.procurementSelectProvider = function (provider) {
+        var tabs = document.getElementById('procurementProviderTabs');
+        if (tabs) {
+            tabs.querySelectorAll('.provider-tab').forEach(function (btn) {
+                btn.classList.toggle('active', btn.dataset.provider === provider);
+            });
+        }
+        renderProcurementModelCards(provider, window._modelCatalog);
+    };
+
+    window.procurementSwitchModel = function (modelId) {
+        pSelectedModel = modelId || '';
+        // Re-render cards to reflect the active selection.
+        var catalog = window._modelCatalog;
+        if (catalog) {
+            for (var provider in catalog) {
+                if (catalog[provider].some(function (m) { return m.id === pSelectedModel; })) {
+                    renderProcurementModelCards(provider, catalog);
+                    break;
+                }
+            }
+        }
+        var btn = document.getElementById('procurementRunBtn');
+        if (btn) btn.disabled = !(window._procurementFiles && window._procurementFiles.length > 0 && pSelectedModel);
+    };
 
     window.procurementRefreshPipeline = function () {
         var area = document.getElementById('procurementUploadArea');
@@ -982,6 +1149,7 @@
         if (ws) ws.classList.add('pr-open');
         procurementLoadStats();
         setupUploadDrag();
+        loadPipelineModels();
     };
 
     window.procurementHideView = function () {

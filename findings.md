@@ -1,0 +1,30 @@
+# Findings
+
+- Event Map already supports own-format, transcript, violations, and email JSON import helpers.
+- Case files live under `_shared/cases/la8159`.
+- `serve.py` serves `/olivia/*` from `frontend/`; `_shared` is not directly under that namespace.
+- The requested transcript source is an HTML index, so it needs browser-side DOM parsing or a server endpoint.
+- Current module has no source fetch or New-map chooser yet.
+- Existing `/api/shared/raw?path=...` serves shared case files and supports the requested lowercase `la8159` path.
+- Current source counts are 72 violations, 27 transcript cards, and 29 emails.
+- New Map now fetches fresh source data and combines selected groups with `source_type` provenance.
+- The previous renderer used 200x70 nodes with single-line SVG titles, which caused collisions for long case titles.
+- Nodes now use a 240x104 layout with deterministic five-column arrangement and wrapped titles.
+- The desired visual reference is a hierarchical diagram; the renderer now uses source lanes, lane counts, and directional SVG connectors.
+- Derived connectors are limited to transcript chronology, transcript references found in violation records, and explicit email mappings.
+- The New Map empty path previously left the map with zero events, and the existing add function had no visible graph-toolbar trigger.
+- Empty Map now seeds one editable event and the graph toolbar exposes Add.
+- Dynamic event fields are rendered as collapsible rich sections; the new Add field dialog lets users propose known fields or create a new top-level field.
+- Global field-rule controls were confusing across mixed sources; rules are now created and displayed inside each source group and carry a source scope.
+- Card visibility now exposes every available field per source; dynamic fields are rendered compactly on the card and excluded geometry fields remain internal.
+- Per-node and per-field visibility is stored on the event (`ev.hidden`, `ev.hiddenFields`) and layered on top of source-level visibility; the entities view must also respect `ev.hidden` to stay consistent with the graph and timeline.
+- Arrow/link editing uses a link-mode toggle: while active, clicking a source node then a target node creates a link; clicking an existing arrow selects it and shows a detail panel with a relationship-type selector and a remove button.
+- "Add arrow" buttons in the event detail toolbar and link detail panel call `eventMapStartLinkFrom(sourceId)`, which pre-sets `linkSourceId` and enters link mode so the next node click creates the arrow; a transient `.em-link-hint` toast guides the user.
+- Field visibility buttons use `data-field-value`/`data-event-id` and open a `.em-field-value-popover` anchored to the button (right side, flipping left on overflow) showing the field's actual value and a Hide/Show toggle; the toggle writes `ev.hiddenFields[field]` and persists. Boolean card values render as "yes"/"no" to avoid raw `true`/`false` code in the card.
+- Persistence is client-side only via localStorage (`olivia.eventMap.v1`); the `/api/event-map/save` endpoint does not exist in `serve.py`, so `eventMapSaveEvents` falls back to a local save notice and a best-effort fetch that will fail silently if the endpoint is absent.
+- Shorthand hex colors (e.g. `#888`) are invalid for SVG/CSS color parsing; `EVENT_CATEGORIES['Other']` and `RELATIONSHIP_TYPES['related to']` were changed to full `#888888`.
+- `new Date(invalidValue).toISOString()` throws `RangeError: Invalid time value`; a `safeDate()` helper now guards all date parsing/display (detail panel, date input, `eventMapUpdateEvent`, graph card label, timeline sort and rendering), returning `null` for invalid dates so callers can fall back to the raw string or "no date".
+- The event detail panel is horizontally resizable via a `.em-detail-resize` handle on its left edge (drag to resize 240–640px). The width is stored in localStorage under `panelWidth` and restored on load, so the user's preferred panel width persists across sessions.
+- The resize handle must be re-inserted after every `renderEventDetail`/`renderLinkDetail` call because those functions overwrite `panel.innerHTML`, which destroys the handle. `ensureDetailResizeHandle()` re-adds and re-wires it (via `wireDetailResize`) after each render; the drag logic lives in a reusable `wireDetailResize(handle, panel)`.
+- Violation JSON files (e.g. `_shared/cases/la8159/01-violations/_json/EN/CL-001.json`) are single objects, not wrapped in `{meta, entries}`. `importData` now detects them via `isViolation()` (has `violation_id`/`incident_id` plus `legal_basis`/`element_grids`/`allegation_summary`/`incident_timestamp`). The violation schema uses `incident_timestamp` (not `incident_date`) and has no `primary_agents`/`supporting_agents`; `violationToEvent` extracts date from `incident_timestamp`, entities from `aliases` + `key_admissions[].speaker`, and flattens `severity`, `legal_basis_summary`, `element_grids_summary`, `confidence`, etc. for the detail panel. New violation categories are auto-registered in `EVENT_CATEGORIES` via `ensureCategory()`.
+- Violation imports now decompose into a full connected map via `violationToMap(v)` instead of a single node. The map is a radial cluster around a central violation node: legal-basis article nodes (`involved` links), element-grid nodes per article (`documented by` links), key-admission group nodes (`documented by`), evidence nodes (`documented by`), and related-violation placeholder nodes (`related to`). `violationIndexToMap(violations)` lays out multiple violation clusters side-by-side horizontally. `importData` routes single violations, arrays, and `{meta, entries}` indexes through these. CL-001.json → 38 events + 37 links; no NaN coords; no dangling links.
