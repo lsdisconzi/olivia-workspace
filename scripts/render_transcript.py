@@ -276,6 +276,24 @@ CSS_BODY = """
       border-color: var(--accent);
     }
 
+    .transcript-segment .seg-play-btn {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 3px 9px;
+      border-radius: 2px;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      cursor: pointer;
+      transition: background-color 0.15s, color 0.15s;
+      font-weight: 500;
+    }
+
+    .transcript-segment .seg-play-btn:hover {
+      background-color: var(--accent-dim);
+      color: var(--accent);
+    }
+
     /* evidence / violation cards */
     .evidence-grid {
       display: grid;
