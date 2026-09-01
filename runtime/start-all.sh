@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # start-all.sh — Start Olivia (standalone)
-# Usage:  ./start-all.sh [--port 3229] [--no-tail] [--watch-functions] [--watch-interval 20] [--skip-config-doctor] [--smoke] [--ollama] [--index] [--reindex-qdrant] [--fetch-ecosystem]
+# Usage:  ./start-all.sh [--port 3229] [--no-tail] [--watch-functions] [--watch-interval 20] [--skip-config-doctor] [--smoke] [--ollama] [--index] [--reindex-qdrant] [--fetch-ecosystem] [--skip-audio-map]
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
@@ -19,6 +19,7 @@ START_OLLAMA=0
 RUN_INDEXER=0
 RUN_QDRANT_REINDEX=0
 FETCH_ECOSYSTEM=0
+REGEN_AUDIO_MAP=1
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -27,6 +28,7 @@ while [[ $# -gt 0 ]]; do
     --watch-functions) WATCH_FUNCTIONS=1; shift ;;
     --watch-interval) WATCH_INTERVAL="$2"; shift 2 ;;
     --skip-config-doctor) RUN_CONFIG_DOCTOR=0; shift ;;
+    --skip-audio-map) REGEN_AUDIO_MAP=0; shift ;;
     --smoke) RUN_SMOKE=1; shift ;;
     --build-electron) BUILD_ELECTRON=1; shift ;;
     --ollama) START_OLLAMA=1; shift ;;
@@ -208,6 +210,108 @@ if [[ $START_OLLAMA -eq 1 && $ollama_already_running -eq 0 ]]; then
   fi
 elif [[ $START_OLLAMA -eq 0 && $ollama_already_running -eq 0 ]]; then
   echo "   ollama      → not running (add --ollama to auto-start)"
+fi
+
+# ── 3.6. Regenerate audio mapping (case evidence) ───────────────────────────
+if [[ $REGEN_AUDIO_MAP -eq 1 ]]; then
+  AUDIO_MAP_SCRIPT="$PROJECT_ROOT/runtime/regenerate_audio_map.py"
+  if [[ ! -f "$AUDIO_MAP_SCRIPT" ]]; then
+    echo "  Creating audio map regenerator script..."
+    mkdir -p "$PROJECT_ROOT/runtime"
+    cat > "$AUDIO_MAP_SCRIPT" << 'AUDIO_MAP_EOF'
+#!/usr/bin/env python3
+"""Regenerate audio_map.json from live case segment directories."""
+import sys
+import json
+import re
+from pathlib import Path
+
+def regenerate_audio_map():
+    root = Path("_shared/cases/la8159/10-audio")
+    map_path = Path("_shared/cases/la8159/02-transcripts/transcripts_rendered/audio_map.json")
+    
+    if not root.exists():
+        print(f"⚠  Audio case directory not found: {root}", file=sys.stderr)
+        return False
+    
+    new_map = {}
+    
+    # Scan all segment folders
+    for folder in sorted(root.iterdir()):
+        if not folder.is_dir() or not folder.name.endswith("_segments_all"):
+            continue
+        
+        seg_dir = folder / "audio_segments"
+        wavs = sorted(seg_dir.glob("*.wav")) if seg_dir.exists() else []
+        
+        if not wavs:
+            continue
+        
+        # Try to extract audio_id from transcript metadata
+        audio_id = None
+        transcript = next(iter(sorted(folder.glob("*_transcript.json"))), None)
+        if transcript is not None:
+            try:
+                data = json.loads(transcript.read_text())
+                audio_id = data.get("audio_id")
+            except Exception:
+                pass
+        
+        # Generate map key
+        if audio_id:
+            key = re.sub(r"[^a-z0-9]+", "_", str(audio_id).lower()).strip("_")
+        else:
+            stem = folder.name.replace("_segments_all", "")
+            m = re.search(r"stg[_-]?([0-9]+)", stem, re.IGNORECASE)
+            if m:
+                key = f"aeropuerto_stg_{m.group(1)}"
+            else:
+                key = re.sub(r"[^a-z0-9]+", "_", stem.lower()).strip("_")
+        
+        # Map segment index to WAV path
+        new_map[key] = {
+            str(i): f"_shared/cases/la8159/10-audio/{folder.name}/audio_segments/{w.name}"
+            for i, w in enumerate(wavs)
+        }
+    
+    # Add backward-compatibility aliases
+    legacy_aliases = {
+        "aeropuerto_arturo_merino_benitez_1": new_map.get("aeropuerto_stg_1"),
+        "aeropuerto_arturo_merino_benitez_2": new_map.get("aeropuerto_stg_2"),
+        "aeropuerto_arturo_merino_benitez_5": new_map.get("aeropuerto_stg_5"),
+        "aeropuerto_arturo_merino_benitez_6": new_map.get("aeropuerto_stg_6"),
+        "aeropuerto_arturo_merino_benitez_7": new_map.get("aeropuerto_stg_7"),
+        "aeropuerto_arturo_merino_benitez_8": new_map.get("aeropuerto_stg_8"),
+        "aeropuerto_arturo_merino_benitez_13": new_map.get("aeropuerto_stg_13"),
+        "aeropuerto_arturo_merino_benitez_15": new_map.get("aeropuerto_stg_15"),
+        "aeropuerto_arturo_merino_benitez_16": new_map.get("aeropuerto_stg_16"),
+    }
+    for alias, value in legacy_aliases.items():
+        if value is not None:
+            new_map[alias] = value
+    
+    # Write map
+    map_path.parent.mkdir(parents=True, exist_ok=True)
+    map_path.write_text(json.dumps(new_map, ensure_ascii=False, indent=2) + "\n")
+    
+    print(f"✓  audio_map.json regenerated with {len(new_map)} audio IDs", flush=True)
+    return True
+
+if __name__ == "__main__":
+    success = regenerate_audio_map()
+    sys.exit(0 if success else 1)
+AUDIO_MAP_EOF
+    chmod +x "$AUDIO_MAP_SCRIPT"
+  fi
+  
+  if [[ -f "$AUDIO_MAP_SCRIPT" ]]; then
+    echo "  Regenerating audio segment mapping..."
+    if "$PYTHON" "$AUDIO_MAP_SCRIPT"; then
+      echo "✓  audio segment mapping refreshed"
+    else
+      echo "⚠  audio mapping regeneration failed (non-fatal)"
+    fi
+  fi
 fi
 
 # ── 4. Rebuild project index (optional) ──────────────────────────────────────
