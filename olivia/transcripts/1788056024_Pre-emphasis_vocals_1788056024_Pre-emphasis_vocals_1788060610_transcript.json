@@ -1,0 +1,269 @@
+{
+  "filename": "1788056024_Pre-emphasis_vocals_1788056024_Pre-emphasis_vocals_1788060610_transcript.json",
+  "saved_at": "2026-08-30T03:34:54.914101+00:00",
+  "run_id": "1788056024_Pre-emphasis_vocals_1788060610",
+  "params": {
+    "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+    "language": "es-CL",
+    "model": "large-v3",
+    "min_speakers": 1,
+    "max_speakers": 4,
+    "diarization": "false",
+    "align_output": "false",
+    "remove_silence": "false",
+    "noise_reduce": "false",
+    "voice_enhance": "false",
+    "word_timestamps": "true",
+    "vad_threshold": 0.4,
+    "whisper_temp": 0,
+    "beam_size": 8,
+    "best_of": 8,
+    "chunk_size": 30,
+    "batch_size": 24,
+    "initial_prompt": "",
+    "save_to_qdrant": "true",
+    "qdrant_collection": "olivia_transcripts",
+    "cors_mode": "auto"
+  },
+  "save_to_qdrant": true,
+  "qdrant_collection": "olivia_transcripts",
+  "data": {
+    "transcript_id": "1788056024_Pre-emphasis_vocals_1788060610",
+    "segments": [
+      {
+        "index": 1,
+        "speaker": "SPEAKER_02",
+        "start": 6.42659375,
+        "end": 6.46034375,
+        "duration": 0.034,
+        "text": ""
+      },
+      {
+        "index": 2,
+        "speaker": "SPEAKER_02",
+        "start": 6.494093750000001,
+        "end": 6.544718750000001,
+        "duration": 0.051,
+        "text": " Gracias."
+      },
+      {
+        "index": 3,
+        "speaker": "SPEAKER_02",
+        "start": 6.679718750000001,
+        "end": 7.92846875,
+        "duration": 1.249,
+        "text": " ¡Gracias!"
+      },
+      {
+        "index": 4,
+        "speaker": "SPEAKER_02",
+        "start": 8.02971875,
+        "end": 8.434718750000002,
+        "duration": 0.405,
+        "text": " Gracias."
+      },
+      {
+        "index": 5,
+        "speaker": "SPEAKER_02",
+        "start": 8.89034375,
+        "end": 12.029093750000001,
+        "duration": 3.139,
+        "text": " Gracias."
+      },
+      {
+        "index": 6,
+        "speaker": "SPEAKER_00",
+        "start": 12.029093750000001,
+        "end": 12.434093750000002,
+        "duration": 0.405,
+        "text": " Gracias."
+      },
+      {
+        "index": 7,
+        "speaker": "SPEAKER_00",
+        "start": 12.484718750000003,
+        "end": 12.771593750000001,
+        "duration": 0.287,
+        "text": ""
+      },
+      {
+        "index": 8,
+        "speaker": "SPEAKER_04",
+        "start": 23.824718750000002,
+        "end": 24.26346875,
+        "duration": 0.439,
+        "text": ""
+      },
+      {
+        "index": 9,
+        "speaker": "SPEAKER_04",
+        "start": 25.309718750000002,
+        "end": 25.360343750000002,
+        "duration": 0.051,
+        "text": " Gracias."
+      },
+      {
+        "index": 10,
+        "speaker": "SPEAKER_00",
+        "start": 25.360343750000002,
+        "end": 25.96784375,
+        "duration": 0.607,
+        "text": " ¡Gracias!"
+      },
+      {
+        "index": 11,
+        "speaker": "SPEAKER_04",
+        "start": 25.96784375,
+        "end": 26.10284375,
+        "duration": 0.135,
+        "text": " ¡Gracias!"
+      },
+      {
+        "index": 12,
+        "speaker": "SPEAKER_04",
+        "start": 27.18284375,
+        "end": 28.02659375,
+        "duration": 0.844,
+        "text": " Gracias."
+      },
+      {
+        "index": 13,
+        "speaker": "SPEAKER_03",
+        "start": 40.26096875,
+        "end": 40.345343750000005,
+        "duration": 0.084,
+        "text": " ¡Gracias!"
+      },
+      {
+        "index": 14,
+        "speaker": "SPEAKER_03",
+        "start": 40.362218750000004,
+        "end": 40.53096875,
+        "duration": 0.169,
+        "text": ""
+      },
+      {
+        "index": 15,
+        "speaker": "SPEAKER_03",
+        "start": 41.96534375,
+        "end": 42.657218750000006,
+        "duration": 0.692,
+        "text": " Gracias."
+      },
+      {
+        "index": 16,
+        "speaker": "SPEAKER_03",
+        "start": 42.92721875,
+        "end": 42.94409375,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 17,
+        "speaker": "SPEAKER_03",
+        "start": 42.977843750000005,
+        "end": 43.04534375,
+        "duration": 0.067,
+        "text": " Gracias."
+      },
+      {
+        "index": 18,
+        "speaker": "SPEAKER_01",
+        "start": 44.361593750000004,
+        "end": 44.64846875,
+        "duration": 0.287,
+        "text": " ¡Gracias!"
+      },
+      {
+        "index": 19,
+        "speaker": "SPEAKER_01",
+        "start": 44.69909375,
+        "end": 46.60596875,
+        "duration": 1.907,
+        "text": " que hay en los ríos porque no queremos"
+      },
+      {
+        "index": 20,
+        "speaker": "SPEAKER_01",
+        "start": 46.875968750000006,
+        "end": 46.92659375,
+        "duration": 0.051,
+        "text": " Gracias."
+      },
+      {
+        "index": 21,
+        "speaker": "SPEAKER_03",
+        "start": 47.87159375,
+        "end": 49.15409375,
+        "duration": 1.282,
+        "text": " Adiós."
+      },
+      {
+        "index": 22,
+        "speaker": "SPEAKER_01",
+        "start": 49.45784375,
+        "end": 49.69409375,
+        "duration": 0.236,
+        "text": " Gracias."
+      },
+      {
+        "index": 23,
+        "speaker": "SPEAKER_01",
+        "start": 53.67659375,
+        "end": 54.368468750000005,
+        "duration": 0.692,
+        "text": " Gracias."
+      }
+    ],
+    "timings": {
+      "save_s": 0.01,
+      "convert_s": 0,
+      "preprocess_s": 0.06,
+      "diarization_s": 38.11,
+      "model_load_s": 0,
+      "transcription_s": 239.49,
+      "total_s": 282.53
+    },
+    "params": {
+      "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+      "language": "es-CL",
+      "model": "large-v3",
+      "min_speakers": 1,
+      "max_speakers": 4,
+      "diarization": "false",
+      "align_output": "false",
+      "remove_silence": false,
+      "noise_reduce": false,
+      "voice_enhance": false,
+      "word_timestamps": true,
+      "vad_threshold": 0.4,
+      "whisper_temp": 0,
+      "beam_size": 8,
+      "best_of": 8,
+      "chunk_size": 30,
+      "batch_size": 24,
+      "initial_prompt": "",
+      "save_to_qdrant": "true",
+      "qdrant_collection": "olivia_transcripts",
+      "cors_mode": "auto",
+      "model_size": "large-v3",
+      "diarization_fallback": false,
+      "diarization_fallback_reason": null,
+      "temperature": 0,
+      "diarization_timeout_s": 180,
+      "min_turn_duration_s": 0,
+      "merge_gap_s": 0,
+      "max_diarization_segments": 1000,
+      "reduction_db": 25,
+      "apply_gain": true,
+      "target_lufs": -16,
+      "silence_thresh": -45,
+      "min_silence_len": 250,
+      "keep_audio_artifacts": true,
+      "saved_audio_file": "1788056024_Pre-emphasis_vocals_1788060610.wav",
+      "processed_audio_file": "1788056024_Pre-emphasis_vocals_1788060610_processed.wav"
+    },
+    "run_id": "1788056024_Pre-emphasis_vocals_1788060610",
+    "client_run_id": "1788056024_Pre-emphasis_vocals_1788060610"
+  }
+}

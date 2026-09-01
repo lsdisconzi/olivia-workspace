@@ -1,0 +1,285 @@
+{
+  "filename": "segment_274_segment_274_1787908466_transcript.json",
+  "saved_at": "2026-08-28T09:21:27.298860+00:00",
+  "run_id": "segment_274_1787908466",
+  "params": {
+    "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+    "language": "es-CL",
+    "model": "large-v3",
+    "min_speakers": 1,
+    "max_speakers": 5,
+    "diarization": "true",
+    "align_output": "true",
+    "remove_silence": "false",
+    "noise_reduce": "false",
+    "voice_enhance": "false",
+    "word_timestamps": "false",
+    "vad_threshold": 0.3,
+    "whisper_temp": 0,
+    "beam_size": 9,
+    "best_of": 9,
+    "chunk_size": 30,
+    "batch_size": 24,
+    "initial_prompt": "",
+    "save_to_qdrant": "true",
+    "qdrant_collection": "",
+    "cors_mode": "auto"
+  },
+  "save_to_qdrant": true,
+  "qdrant_collection": "",
+  "data": {
+    "transcript_id": "segment_274_1787908466",
+    "segments": [
+      {
+        "index": 1,
+        "speaker": "SPEAKER_00",
+        "start": 0.03096875,
+        "end": 4.97534375,
+        "duration": 4.944,
+        "text": " pero ahí va a tener que tener algún tipo de justificación para eso"
+      },
+      {
+        "index": 2,
+        "speaker": "SPEAKER_00",
+        "start": 5.48159375,
+        "end": 6.40971875,
+        "duration": 0.928,
+        "text": " ¿Y teléfono?"
+      },
+      {
+        "index": 3,
+        "speaker": "SPEAKER_00",
+        "start": 8.78909375,
+        "end": 11.45534375,
+        "duration": 2.666,
+        "text": " No, el... ¿Ah, ya va el trago? ¡Anda!"
+      },
+      {
+        "index": 4,
+        "speaker": "SPEAKER_00",
+        "start": 12.450968750000001,
+        "end": 13.26096875,
+        "duration": 0.81,
+        "text": " Ando a buscarla."
+      },
+      {
+        "index": 5,
+        "speaker": "SPEAKER_00",
+        "start": 14.442218750000002,
+        "end": 15.505343750000002,
+        "duration": 1.063,
+        "text": " ¿Dónde está Tommy Levan?"
+      },
+      {
+        "index": 6,
+        "speaker": "SPEAKER_00",
+        "start": 16.43346875,
+        "end": 18.12096875,
+        "duration": 1.688,
+        "text": " A migración abajo."
+      },
+      {
+        "index": 7,
+        "speaker": "SPEAKER_00",
+        "start": 22.84596875,
+        "end": 23.23409375,
+        "duration": 0.388,
+        "text": " ¿Ponlo?"
+      },
+      {
+        "index": 8,
+        "speaker": "SPEAKER_00",
+        "start": 25.49534375,
+        "end": 29.258468750000002,
+        "duration": 3.763,
+        "text": " Fondo a la izquierda y luego fondo a la izquierda."
+      },
+      {
+        "index": 9,
+        "speaker": "SPEAKER_00",
+        "start": 33.44346875,
+        "end": 34.439093750000005,
+        "duration": 0.996,
+        "text": " Yo soy un joven"
+      },
+      {
+        "index": 10,
+        "speaker": "SPEAKER_00",
+        "start": 37.62846875,
+        "end": 38.438468750000006,
+        "duration": 0.81,
+        "text": " sensadores"
+      },
+      {
+        "index": 11,
+        "speaker": "SPEAKER_00",
+        "start": 39.77159375,
+        "end": 43.48409375,
+        "duration": 3.712,
+        "text": " y"
+      },
+      {
+        "index": 12,
+        "speaker": "SPEAKER_00",
+        "start": 43.78784375,
+        "end": 43.939718750000004,
+        "duration": 0.152,
+        "text": " Gracias."
+      },
+      {
+        "index": 13,
+        "speaker": "SPEAKER_00",
+        "start": 46.572218750000005,
+        "end": 47.36534375,
+        "duration": 0.793,
+        "text": " Ya no hay más necesidad."
+      },
+      {
+        "index": 14,
+        "speaker": "SPEAKER_00",
+        "start": 50.63909375,
+        "end": 52.562843750000006,
+        "duration": 1.924,
+        "text": " Quizá a veces hemos gritado más cosas."
+      },
+      {
+        "index": 15,
+        "speaker": "SPEAKER_00",
+        "start": 53.018468750000004,
+        "end": 72.35721875,
+        "duration": 19.339,
+        "text": " ¿Sabes? Hemos evitado más cosas. ¿Has evitado más cosas? Si simplemente hubiese accedido al diálogo con nosotros. Yo estaba dialogando. Mira, no, no, porque aquello ahí es bueno para demostrar lo que pasa. Porque mi problema es que si yo tuviese hecho algo... No, no hiciste nada. Si yo tuviese hecho algo para..."
+      },
+      {
+        "index": 16,
+        "speaker": "SPEAKER_00",
+        "start": 72.77909375,
+        "end": 87.49409375,
+        "duration": 14.715,
+        "text": " Mira, yo saliría caminando, pero mi problema es que es injusticia eso, es injusticia porque alguien se picó con una pregunta sobre el trabajo, sobre el trabajo, sobre el vuelo, y la persona se picó."
+      },
+      {
+        "index": 17,
+        "speaker": "SPEAKER_00",
+        "start": 87.94971875,
+        "end": 88.59096875,
+        "duration": 0.641,
+        "text": " ¿Y de ahí?"
+      },
+      {
+        "index": 18,
+        "speaker": "SPEAKER_00",
+        "start": 89.87346875,
+        "end": 91.51034375,
+        "duration": 1.637,
+        "text": " Primero intenta que yo lo agredí."
+      },
+      {
+        "index": 19,
+        "speaker": "SPEAKER_00",
+        "start": 91.69596875,
+        "end": 106.37721875000001,
+        "duration": 14.681,
+        "text": " y de claramente que vieron la cámara y que eso no pasó y de ahí vieron cualquier otra cosa pero fue él mismo que estaba allí que recibió mi pasaporte ahora, si él no sacó mi boarding pass de dentro de mi pasaporte que estaba allí dentro"
+      },
+      {
+        "index": 20,
+        "speaker": "SPEAKER_00",
+        "start": 106.78221875000001,
+        "end": 107.25471875000001,
+        "duration": 0.472,
+        "text": " ahí"
+      },
+      {
+        "index": 21,
+        "speaker": "SPEAKER_00",
+        "start": 107.98034375,
+        "end": 108.21659375,
+        "duration": 0.236,
+        "text": " Bien."
+      },
+      {
+        "index": 22,
+        "speaker": "SPEAKER_00",
+        "start": 109.17846875000001,
+        "end": 109.60034375000001,
+        "duration": 0.422,
+        "text": " ¿Entiendes?"
+      },
+      {
+        "index": 23,
+        "speaker": "SPEAKER_00",
+        "start": 109.85346875,
+        "end": 111.06846875000001,
+        "duration": 1.215,
+        "text": " Pero la cámara..."
+      },
+      {
+        "index": 24,
+        "speaker": "SPEAKER_00",
+        "start": 111.65909375000001,
+        "end": 112.31721875000001,
+        "duration": 0.658,
+        "text": " Vamos atrás."
+      },
+      {
+        "index": 25,
+        "speaker": "SPEAKER_00",
+        "start": 120.26534375000001,
+        "end": 121.21034375,
+        "duration": 0.945,
+        "text": " Muy chocolate."
+      }
+    ],
+    "timings": {
+      "save_s": 0.01,
+      "convert_s": 0,
+      "preprocess_s": 0.08,
+      "diarization_s": 85.25,
+      "model_load_s": 0,
+      "transcription_s": 328.49,
+      "total_s": 419.61
+    },
+    "params": {
+      "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+      "language": "es-CL",
+      "model": "large-v3",
+      "min_speakers": 1,
+      "max_speakers": 5,
+      "diarization": "true",
+      "align_output": "true",
+      "remove_silence": false,
+      "noise_reduce": false,
+      "voice_enhance": false,
+      "word_timestamps": false,
+      "vad_threshold": 0.3,
+      "whisper_temp": 0,
+      "beam_size": 9,
+      "best_of": 9,
+      "chunk_size": 30,
+      "batch_size": 24,
+      "initial_prompt": "",
+      "save_to_qdrant": "true",
+      "qdrant_collection": "",
+      "cors_mode": "auto",
+      "model_size": "large-v3",
+      "diarization_fallback": false,
+      "diarization_fallback_reason": null,
+      "temperature": 0,
+      "diarization_timeout_s": 180,
+      "min_turn_duration_s": 0,
+      "merge_gap_s": 0,
+      "max_diarization_segments": 1000,
+      "reduction_db": 25,
+      "apply_gain": true,
+      "target_lufs": -16,
+      "silence_thresh": -45,
+      "min_silence_len": 250,
+      "keep_audio_artifacts": true,
+      "saved_audio_file": "segment_274_1787908466.wav",
+      "processed_audio_file": "segment_274_1787908466_processed.wav"
+    },
+    "run_id": "segment_274_1787908466",
+    "client_run_id": "segment_274_1787908466"
+  }
+}

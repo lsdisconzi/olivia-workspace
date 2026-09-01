@@ -8538,11 +8538,15 @@ def _openclaude_env(provider: str | None = None, model: str | None = None,
                 env["OPENROUTER_API_KEY"] = api_key
             elif "deepseek" in _base_lower:
                 env["DEEPSEEK_API_KEY"] = api_key
+            elif "cerebras" in _base_lower:
+                env["CEREBRAS_API_KEY"] = api_key
+            elif "x.ai" in _base_lower or "xai" in _base_lower:
+                env["XAI_API_KEY"] = api_key
         else:
             # No API key available — explicitly clear provider-specific keys
             # so OpenClaude doesn't inherit empty values from .env and can
             # try fallback keys (OPENAI_API_KEY, etc.).
-            for _k in ("DEEPSEEK_API_KEY", "FIREWORKS_API_KEY", "OPENROUTER_API_KEY", "OPENAI_API_KEYS"):
+            for _k in ("DEEPSEEK_API_KEY", "FIREWORKS_API_KEY", "OPENROUTER_API_KEY", "CEREBRAS_API_KEY", "XAI_API_KEY", "OPENAI_API_KEYS"):
                 env.pop(_k, None)
 
         # For Ollama, extract the raw model name (strip "ollama|port|" prefix)

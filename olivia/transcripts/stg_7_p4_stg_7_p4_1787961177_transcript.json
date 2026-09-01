@@ -1,0 +1,661 @@
+{
+  "filename": "stg_7_p4_stg_7_p4_1787961177_transcript.json",
+  "saved_at": "2026-08-29T00:13:47.680025+00:00",
+  "run_id": "stg_7_p4_1787961177",
+  "params": {
+    "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+    "language": "es-CL",
+    "model": "large-v3",
+    "min_speakers": 2,
+    "max_speakers": 3,
+    "diarization": "true",
+    "align_output": "false",
+    "remove_silence": "false",
+    "noise_reduce": "false",
+    "voice_enhance": "false",
+    "word_timestamps": "true",
+    "vad_threshold": 0.2,
+    "whisper_temp": 0,
+    "beam_size": 8,
+    "best_of": 8,
+    "chunk_size": 30,
+    "batch_size": 24,
+    "initial_prompt": "",
+    "save_to_qdrant": "false",
+    "qdrant_collection": "",
+    "cors_mode": "auto"
+  },
+  "save_to_qdrant": false,
+  "qdrant_collection": "",
+  "data": {
+    "transcript_id": "stg_7_p4_1787961177",
+    "segments": [
+      {
+        "index": 1,
+        "speaker": "SPEAKER_00",
+        "start": 0.03096875,
+        "end": 6.74721875,
+        "duration": 6.716,
+        "text": " Sí, sí, mira, como te explico, para mí es una gracia tenerte acá."
+      },
+      {
+        "index": 2,
+        "speaker": "SPEAKER_00",
+        "start": 7.202843750000001,
+        "end": 17.12534375,
+        "duration": 9.922,
+        "text": " A mí no es gracioso. Yo tengo muchas cosas que hacer, tengo cosas importantes por lograr, pero tengo investigaciones que hacer y esto es un problema."
+      },
+      {
+        "index": 3,
+        "speaker": "SPEAKER_00",
+        "start": 17.51346875,
+        "end": 19.70721875,
+        "duration": 2.194,
+        "text": " Para mí lo más fácil es deshacerme de esto rápido."
+      },
+      {
+        "index": 4,
+        "speaker": "SPEAKER_01",
+        "start": 19.70721875,
+        "end": 20.027843750000002,
+        "duration": 0.321,
+        "text": " Claro."
+      },
+      {
+        "index": 5,
+        "speaker": "SPEAKER_00",
+        "start": 20.027843750000002,
+        "end": 20.48346875,
+        "duration": 0.456,
+        "text": " Me..."
+      },
+      {
+        "index": 6,
+        "speaker": "SPEAKER_01",
+        "start": 20.48346875,
+        "end": 20.719718750000002,
+        "duration": 0.236,
+        "text": " Gracias."
+      },
+      {
+        "index": 7,
+        "speaker": "SPEAKER_00",
+        "start": 20.719718750000002,
+        "end": 24.938468750000002,
+        "duration": 4.219,
+        "text": " Y le pide al tiro, ya no te vayas, ves que hay que ir."
+      },
+      {
+        "index": 8,
+        "speaker": "SPEAKER_00",
+        "start": 25.22534375,
+        "end": 25.360343750000002,
+        "duration": 0.135,
+        "text": " Gracias."
+      },
+      {
+        "index": 9,
+        "speaker": "SPEAKER_00",
+        "start": 25.63034375,
+        "end": 32.36346875,
+        "duration": 6.733,
+        "text": " Pero yo lo que estoy tratando de hacer es bajarle un poco el tema que bueno, que él está llorando, que me revolve, mentira."
+      },
+      {
+        "index": 10,
+        "speaker": "SPEAKER_00",
+        "start": 32.549093750000004,
+        "end": 32.70096875,
+        "duration": 0.152,
+        "text": " ..."
+      },
+      {
+        "index": 11,
+        "speaker": "SPEAKER_01",
+        "start": 32.70096875,
+        "end": 32.92034375,
+        "duration": 0.219,
+        "text": " Mira."
+      },
+      {
+        "index": 12,
+        "speaker": "SPEAKER_00",
+        "start": 32.92034375,
+        "end": 33.12284375,
+        "duration": 0.203,
+        "text": " Gracias."
+      },
+      {
+        "index": 13,
+        "speaker": "SPEAKER_01",
+        "start": 33.12284375,
+        "end": 33.96659375,
+        "duration": 0.844,
+        "text": " Hay la cámara."
+      },
+      {
+        "index": 14,
+        "speaker": "SPEAKER_00",
+        "start": 33.96659375,
+        "end": 36.19409375,
+        "duration": 2.227,
+        "text": " Ahí lo tengo, mira. Exactamente. Progresa."
+      },
+      {
+        "index": 15,
+        "speaker": "SPEAKER_00",
+        "start": 37.13909375,
+        "end": 38.033468750000004,
+        "duration": 0.894,
+        "text": " Perfecto."
+      },
+      {
+        "index": 16,
+        "speaker": "SPEAKER_01",
+        "start": 38.38784375,
+        "end": 39.26534375,
+        "duration": 0.877,
+        "text": " No hay nada en la cámara."
+      },
+      {
+        "index": 17,
+        "speaker": "SPEAKER_00",
+        "start": 39.26534375,
+        "end": 40.362218750000004,
+        "duration": 1.097,
+        "text": " No, no va a hacer nada."
+      },
+      {
+        "index": 18,
+        "speaker": "SPEAKER_01",
+        "start": 40.49721875,
+        "end": 41.37471875,
+        "duration": 0.877,
+        "text": " No, pero..."
+      },
+      {
+        "index": 19,
+        "speaker": "SPEAKER_01",
+        "start": 41.77971875,
+        "end": 42.94409375,
+        "duration": 1.164,
+        "text": " Yo puedo tener..."
+      },
+      {
+        "index": 20,
+        "speaker": "SPEAKER_01",
+        "start": 43.28159375,
+        "end": 45.728468750000005,
+        "duration": 2.447,
+        "text": " la parte de la grabación que fui acusado de"
+      },
+      {
+        "index": 21,
+        "speaker": "SPEAKER_01",
+        "start": 46.08284375,
+        "end": 47.415968750000005,
+        "duration": 1.333,
+        "text": " Nosotros vamos a tratar de recuperarlos."
+      },
+      {
+        "index": 22,
+        "speaker": "SPEAKER_00",
+        "start": 47.415968750000005,
+        "end": 48.884093750000005,
+        "duration": 1.468,
+        "text": " ni nosotros lo tenemos todavía."
+      },
+      {
+        "index": 23,
+        "speaker": "SPEAKER_01",
+        "start": 49.002218750000004,
+        "end": 54.03096875,
+        "duration": 5.029,
+        "text": " Pero ya fue, ya no pasó nada. ¿No podrían hacer eso en cuanto yo estaba en el vuelo?"
+      },
+      {
+        "index": 24,
+        "speaker": "SPEAKER_00",
+        "start": 54.87471875000001,
+        "end": 55.110968750000005,
+        "duration": 0.236,
+        "text": ""
+      },
+      {
+        "index": 25,
+        "speaker": "SPEAKER_00",
+        "start": 57.338468750000004,
+        "end": 59.312843750000006,
+        "duration": 1.974,
+        "text": " Tiene que haber algo."
+      },
+      {
+        "index": 26,
+        "speaker": "SPEAKER_00",
+        "start": 60.02159375,
+        "end": 66.02909375,
+        "duration": 6.008,
+        "text": " Lo que tú puedes hacer es hacer el reclamo directamente a la compañía, ni siquiera acá, a la compañía directa."
+      },
+      {
+        "index": 27,
+        "speaker": "SPEAKER_01",
+        "start": 66.02909375,
+        "end": 70.21409375,
+        "duration": 4.185,
+        "text": " yo ya tengo un proceso contra ello ya en Andamérica"
+      },
+      {
+        "index": 28,
+        "speaker": "SPEAKER_00",
+        "start": 70.43346875,
+        "end": 72.98159375,
+        "duration": 2.548,
+        "text": " Ya, perfecto Y esa confusión"
+      },
+      {
+        "index": 29,
+        "speaker": "SPEAKER_01",
+        "start": 72.98159375,
+        "end": 73.26846875000001,
+        "duration": 0.287,
+        "text": " truco."
+      },
+      {
+        "index": 30,
+        "speaker": "SPEAKER_00",
+        "start": 73.26846875000001,
+        "end": 73.30221875000001,
+        "duration": 0.034,
+        "text": ""
+      },
+      {
+        "index": 31,
+        "speaker": "SPEAKER_00",
+        "start": 73.35284375,
+        "end": 73.38659375,
+        "duration": 0.034,
+        "text": ""
+      },
+      {
+        "index": 32,
+        "speaker": "SPEAKER_00",
+        "start": 73.40346875,
+        "end": 74.56784375000001,
+        "duration": 1.164,
+        "text": " Va a ser hoy."
+      },
+      {
+        "index": 33,
+        "speaker": "SPEAKER_01",
+        "start": 74.56784375000001,
+        "end": 75.68159375,
+        "duration": 1.114,
+        "text": " ¿Entiendes?"
+      },
+      {
+        "index": 34,
+        "speaker": "SPEAKER_01",
+        "start": 76.00221875000001,
+        "end": 76.54221875,
+        "duration": 0.54,
+        "text": " Eh..."
+      },
+      {
+        "index": 35,
+        "speaker": "SPEAKER_01",
+        "start": 77.85846875,
+        "end": 82.29659375,
+        "duration": 4.438,
+        "text": " Es todo el desperdicio también de tiempo de ustedes."
+      },
+      {
+        "index": 36,
+        "speaker": "SPEAKER_00",
+        "start": 82.29659375,
+        "end": 83.19096875000001,
+        "duration": 0.894,
+        "text": " Exactamente."
+      },
+      {
+        "index": 37,
+        "speaker": "SPEAKER_01",
+        "start": 83.19096875000001,
+        "end": 85.73909375000001,
+        "duration": 2.548,
+        "text": " del otro funcionario que tuvieron que ir allá"
+      },
+      {
+        "index": 38,
+        "speaker": "SPEAKER_01",
+        "start": 86.26221875,
+        "end": 86.54909375000001,
+        "duration": 0.287,
+        "text": " el sector."
+      },
+      {
+        "index": 39,
+        "speaker": "SPEAKER_01",
+        "start": 86.71784375,
+        "end": 88.62471875,
+        "duration": 1.907,
+        "text": " ¿Entiendes?"
+      },
+      {
+        "index": 40,
+        "speaker": "SPEAKER_01",
+        "start": 89.06346875,
+        "end": 92.91096875000001,
+        "duration": 3.848,
+        "text": " Los pasajeros que se quedaron en el vuelo."
+      },
+      {
+        "index": 41,
+        "speaker": "SPEAKER_01",
+        "start": 93.55221875000001,
+        "end": 97.18034375,
+        "duration": 3.628,
+        "text": " muchos van a perder su vuelo de conexión exacto"
+      },
+      {
+        "index": 42,
+        "speaker": "SPEAKER_01",
+        "start": 97.28159375,
+        "end": 100.04909375000001,
+        "duration": 2.768,
+        "text": " ¡Todo eso! ¿Por?"
+      },
+      {
+        "index": 43,
+        "speaker": "SPEAKER_00",
+        "start": 100.04909375000001,
+        "end": 100.43721875,
+        "duration": 0.388,
+        "text": " Por..."
+      },
+      {
+        "index": 44,
+        "speaker": "SPEAKER_01",
+        "start": 100.43721875,
+        "end": 104.09909375000001,
+        "duration": 3.662,
+        "text": " Una persona intentando se victimizar."
+      },
+      {
+        "index": 45,
+        "speaker": "SPEAKER_00",
+        "start": 104.50409375000001,
+        "end": 105.02721875,
+        "duration": 0.523,
+        "text": " Gracias."
+      },
+      {
+        "index": 46,
+        "speaker": "SPEAKER_00",
+        "start": 105.60096875,
+        "end": 107.62596875000001,
+        "duration": 2.025,
+        "text": " Ya mira, lo que ya hemos hecho nosotros es..."
+      },
+      {
+        "index": 47,
+        "speaker": "SPEAKER_00",
+        "start": 109.39784375,
+        "end": 111.16971875,
+        "duration": 1.772,
+        "text": " Vamos a tratar de dejar todo acá."
+      },
+      {
+        "index": 48,
+        "speaker": "SPEAKER_00",
+        "start": 111.55784375,
+        "end": 111.57471875,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 49,
+        "speaker": "SPEAKER_01",
+        "start": 111.57471875,
+        "end": 111.62534375000001,
+        "duration": 0.051,
+        "text": " Gracias."
+      },
+      {
+        "index": 50,
+        "speaker": "SPEAKER_00",
+        "start": 111.62534375000001,
+        "end": 111.64221875000001,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 51,
+        "speaker": "SPEAKER_01",
+        "start": 111.64221875000001,
+        "end": 111.69284375000001,
+        "duration": 0.051,
+        "text": " Gracias."
+      },
+      {
+        "index": 52,
+        "speaker": "SPEAKER_00",
+        "start": 111.69284375000001,
+        "end": 120.53534375000001,
+        "duration": 8.843,
+        "text": " Espera un momento, vamos a hacer un control de identidad, que verificamos que tú vas a estar bien y todo eso."
+      },
+      {
+        "index": 53,
+        "speaker": "SPEAKER_00",
+        "start": 121.85159375,
+        "end": 124.75409375000001,
+        "duration": 2.903,
+        "text": " Vamos, vas a poder seguir con tu... Tratar de reesquintar todo el otro..."
+      },
+      {
+        "index": 54,
+        "speaker": "SPEAKER_01",
+        "start": 124.75409375000001,
+        "end": 125.02409375,
+        "duration": 0.27,
+        "text": " A ver."
+      },
+      {
+        "index": 55,
+        "speaker": "SPEAKER_00",
+        "start": 125.02409375,
+        "end": 125.05784375,
+        "duration": 0.034,
+        "text": ""
+      },
+      {
+        "index": 56,
+        "speaker": "SPEAKER_01",
+        "start": 125.05784375,
+        "end": 125.31096875,
+        "duration": 0.253,
+        "text": " y"
+      },
+      {
+        "index": 57,
+        "speaker": "SPEAKER_00",
+        "start": 125.31096875,
+        "end": 125.42909375,
+        "duration": 0.118,
+        "text": " ¡Gracias!"
+      },
+      {
+        "index": 58,
+        "speaker": "SPEAKER_01",
+        "start": 125.42909375,
+        "end": 126.94784375,
+        "duration": 1.519,
+        "text": " ¿Y qué va a pasar con mi vuelo?"
+      },
+      {
+        "index": 59,
+        "speaker": "SPEAKER_00",
+        "start": 127.72409375000001,
+        "end": 130.66034375,
+        "duration": 2.936,
+        "text": " Tienes que regendarlo, si ya obviamente No, sí, pero"
+      },
+      {
+        "index": 60,
+        "speaker": "SPEAKER_01",
+        "start": 130.66034375,
+        "end": 131.95971875,
+        "duration": 1.299,
+        "text": " pero yo tengo"
+      },
+      {
+        "index": 61,
+        "speaker": "SPEAKER_00",
+        "start": 131.95971875,
+        "end": 131.97659375,
+        "duration": 0.017,
+        "text": ""
+      },
+      {
+        "index": 62,
+        "speaker": "SPEAKER_01",
+        "start": 131.97659375,
+        "end": 133.03971875000002,
+        "duration": 1.063,
+        "text": " ¿Tú quieres agendarlo?"
+      },
+      {
+        "index": 63,
+        "speaker": "SPEAKER_00",
+        "start": 133.71471875,
+        "end": 136.02659375000002,
+        "duration": 2.312,
+        "text": " Tienes que viajar Sí"
+      },
+      {
+        "index": 64,
+        "speaker": "SPEAKER_01",
+        "start": 136.02659375000002,
+        "end": 138.10221875000002,
+        "duration": 2.076,
+        "text": " No, sí no había un intento, es que sí, pero..."
+      },
+      {
+        "index": 65,
+        "speaker": "SPEAKER_00",
+        "start": 138.33846875,
+        "end": 140.88659375,
+        "duration": 2.548,
+        "text": " Pero claro, ahí ya lo ves, es un tema entre partículas."
+      },
+      {
+        "index": 66,
+        "speaker": "SPEAKER_01",
+        "start": 140.88659375,
+        "end": 147.97409375,
+        "duration": 7.088,
+        "text": " Sí, pero entre yo y la compañera. Sí, claro, pero estoy te preguntando..."
+      },
+      {
+        "index": 67,
+        "speaker": "SPEAKER_01",
+        "start": 148.61534375000002,
+        "end": 157.55909375000002,
+        "duration": 8.944,
+        "text": " Como alguien que tal vez sabe de desinformación, no quiere ser de tu parte, ¿entiendes? Pero pasó eso, tú sacas a una persona del vuelo sin..."
+      },
+      {
+        "index": 68,
+        "speaker": "SPEAKER_01",
+        "start": 157.66034375,
+        "end": 160.96784375000001,
+        "duration": 3.308,
+        "text": " Justificación, sin motivo, sin razón."
+      },
+      {
+        "index": 69,
+        "speaker": "SPEAKER_00",
+        "start": 160.96784375000001,
+        "end": 166.40159375000002,
+        "duration": 5.434,
+        "text": " Eso tienes que tratar de explicarlo Cuando vayas a reagendarlo"
+      },
+      {
+        "index": 70,
+        "speaker": "SPEAKER_01",
+        "start": 166.40159375000002,
+        "end": 168.03846875000002,
+        "duration": 1.637,
+        "text": " No, pero..."
+      },
+      {
+        "index": 71,
+        "speaker": "SPEAKER_00",
+        "start": 168.03846875000002,
+        "end": 175.22721875000002,
+        "duration": 7.189,
+        "text": " Porque ellos en el sistema van a tener que tú llegaste a la hora, que tú estuviste todo bien, que no hay ninguna denuncia en tu contra."
+      },
+      {
+        "index": 72,
+        "speaker": "SPEAKER_00",
+        "start": 175.63221875000002,
+        "end": 179.96909375,
+        "duration": 4.337,
+        "text": " Y van a decir, ok, acá hay un problema, un problema quizás entre el particular."
+      }
+    ],
+    "timings": {
+      "save_s": 0.05,
+      "convert_s": 0,
+      "preprocess_s": 0.11,
+      "diarization_s": 120.86,
+      "model_load_s": 0,
+      "transcription_s": 1119.45,
+      "total_s": 1249.01
+    },
+    "params": {
+      "api_endpoint": "http://127.0.0.1:8049/api/diarization/transcribe",
+      "language": "es-CL",
+      "model": "large-v3",
+      "min_speakers": 2,
+      "max_speakers": 3,
+      "diarization": "true",
+      "align_output": "false",
+      "remove_silence": false,
+      "noise_reduce": false,
+      "voice_enhance": false,
+      "word_timestamps": true,
+      "vad_threshold": 0.2,
+      "whisper_temp": 0,
+      "beam_size": 8,
+      "best_of": 8,
+      "chunk_size": 30,
+      "batch_size": 24,
+      "initial_prompt": "",
+      "save_to_qdrant": "false",
+      "qdrant_collection": "",
+      "cors_mode": "auto",
+      "model_size": "large-v3",
+      "diarization_fallback": false,
+      "diarization_fallback_reason": null,
+      "temperature": 0,
+      "diarization_timeout_s": 180,
+      "min_turn_duration_s": 0,
+      "merge_gap_s": 0,
+      "max_diarization_segments": 1000,
+      "reduction_db": 25,
+      "apply_gain": true,
+      "target_lufs": -16,
+      "silence_thresh": -45,
+      "min_silence_len": 250,
+      "keep_audio_artifacts": true,
+      "saved_audio_file": "stg_7_p4_1787961177.wav",
+      "processed_audio_file": "stg_7_p4_1787961177_processed.wav"
+    },
+    "run_id": "stg_7_p4_1787961177",
+    "client_run_id": "stg_7_p4_1787961177"
+  }
+}

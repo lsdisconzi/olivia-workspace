@@ -14,6 +14,59 @@
     return isNaN(d.getTime()) ? null : d;
   }
 
+  // ── File references (attachments + auto-detected file-like fields) ──────
+  var FILE_EXT_KIND = {
+    pdf: 'pdf',
+    jpg: 'image', jpeg: 'image', png: 'image', gif: 'image', webp: 'image', bmp: 'image', svg: 'image',
+    eml: 'eml',
+    txt: 'text', md: 'text', csv: 'text', log: 'text', json: 'text',
+    html: 'html', htm: 'html',
+    mp3: 'audio', wav: 'audio', m4a: 'audio', ogg: 'audio',
+    mp4: 'video', mov: 'video', webm: 'video'
+  };
+
+  function fileExt(name) {
+    var m = /\.([a-z0-9]+)$/i.exec(String(name || '').split('?')[0]);
+    return m ? m[1].toLowerCase() : '';
+  }
+
+  function fileKind(name) {
+    return FILE_EXT_KIND[fileExt(name)] || 'other';
+  }
+
+  function fileIconName(ref) {
+    var kind = fileKind(ref.name || ref.path || ref.url || '');
+    if (kind === 'pdf') return 'file-pdf';
+    if (kind === 'image') return 'file-image';
+    if (kind === 'eml') return 'envelope';
+    if (kind === 'text') return 'file-lines';
+    if (kind === 'html') return 'file-code';
+    if (kind === 'audio') return 'file-audio';
+    if (kind === 'video') return 'file-video';
+    return 'file';
+  }
+
+  // Recognizes a plain string value that looks like a file path or URL with
+  // a known extension, so any field anywhere (imported data, custom fields)
+  // can offer a "View" affordance without needing an explicit attachment.
+  function looksLikeFileRef(value) {
+    if (typeof value !== 'string') return null;
+    var v = value.trim();
+    if (!v || v.length > 600) return null;
+    var ext = fileExt(v);
+    if (!ext || !FILE_EXT_KIND[ext]) return null;
+    if (/^https?:\/\//i.test(v)) return { name: v.split('/').pop(), kind: 'url', url: v, ext: ext };
+    if (/[\s<>"]/.test(v)) return null; // avoid matching prose that merely contains a dot-extension-like word
+    return { name: v.split('/').pop(), kind: 'path', path: v, ext: ext };
+  }
+
+  function resolveFileSrc(fileRef) {
+    if (fileRef.kind === 'upload') return Promise.resolve(fileRef.dataUrl);
+    if (fileRef.kind === 'path') return Promise.resolve(sharedSourceUrl(fileRef.path));
+    if (fileRef.kind === 'url') return Promise.resolve(fileRef.url);
+    return Promise.reject(new Error('Unrecognized file reference'));
+  }
+
   // ── Categories & Legend ──────────────────────────────────────────────────
   var EVENT_CATEGORIES = {
     'Transcript': '#4a9eff',
@@ -49,7 +102,7 @@
   var scale = 0.8;
   var offset = null;
   var searchQuery = '';
-  var entityFilter = null;
+  var entityFilter = [];
   var visibleSources = {};
   var defaultVisibleFields = { title: true, date: true, description: true, tags: false };
   var visibleFieldsBySource = {};
@@ -64,6 +117,19 @@
   var linkMode = false;
   var linkSourceId = null;
   var selectedLinkId = null;
+
+  // Flag to prevent duplicate document-level listeners for detail resize
+  var detailResizeWired = false;
+  // Shared resize state — lives outside wireDetailResize so re-rendered handles can access it
+  var panelResizing = false;
+  var panelStartX = 0;
+  var panelStartWidth = 0;
+
+  // ── Field expand state ────────────────────────────────────────────────
+  // expandedFields[evId] = Set of field keys currently expanded in the sidebar
+  var expandedFields = {};
+  // The field key currently shown in the card-field popover (for toggle behaviour)
+  var cardFieldPopoverState = null; // { evId, field }
 
   // ── SVG Icons ──────────────────────────────────────────────────────────
   var ICONS = {
@@ -86,69 +152,70 @@
 
     view.innerHTML =
       '<div class="em-head">' +
-        '<div class="em-head-brand">' +
-          '<span class="em-logo">' + ICONS.map + '</span>' +
-          '<span class="em-title">Event Map</span>' +
-          '<span class="em-sub">Chronology &amp; Case Builder</span>' +
-        '</div>' +
-        '<div class="em-head-actions">' +
-          '<span class="em-head-stats" id="emHeadStats"></span>' +
-          '<button class="btn btn-sm" onclick="eventMapNewMap()" title="Start a new event map">' + ICONS.plus + ' New</button>' +
-          '<button class="btn btn-sm" onclick="eventMapImportEvents()" title="Import event map JSON (auto-detects format)">' + ICONS.import + ' Import</button>' +
-          '<button class="btn btn-sm" onclick="eventMapExportEvents()" title="Download event map JSON">' + ICONS.export + ' Export</button>' +
-          '<button class="btn btn-sm" onclick="eventMapSaveEvents()" title="Save to workspace">' + ICONS.save + ' Save</button>' +
-          '<button class="btn btn-sm" onclick="eventMapHideView()" title="Close">' +
-            '<i class="fas fa-times"></i>' +
-          '</button>' +
-        '</div>' +
+      '<div class="em-head-brand">' +
+      '<span class="em-logo">' + ICONS.map + '</span>' +
+      '<span class="em-title">Event Map</span>' +
+      '<span class="em-sub">Chronology &amp; Case Builder</span>' +
+      '</div>' +
+      '<div class="em-head-actions">' +
+      '<span class="em-head-stats" id="emHeadStats"></span>' +
+      '<button class="btn btn-sm" onclick="eventMapNewMap()" title="Start a new event map">' + ICONS.plus + ' New</button>' +
+      '<button class="btn btn-sm" onclick="eventMapImportEvents()" title="Import event map JSON (auto-detects format)">' + ICONS.import + ' Import</button>' +
+      '<button class="btn btn-sm" onclick="eventMapExportEvents()" title="Download event map JSON">' + ICONS.export + ' Export</button>' +
+      '<button class="btn btn-sm" onclick="eventMapSaveEvents()" title="Save to workspace">' + ICONS.save + ' Save</button>' +
+      '<button class="btn btn-sm" onclick="eventMapHideView()" title="Close">' +
+      '<i class="fas fa-times"></i>' +
+      '</button>' +
+      '</div>' +
       '</div>' +
       '<div class="em-subnav">' +
-        '<button class="em-tab active" data-panel="map" onclick="eventMapSwitchPanel(\'map\')">' + ICONS.map + ' Map</button>' +
-        '<button class="em-tab" data-panel="timeline" onclick="eventMapSwitchPanel(\'timeline\')">' + ICONS.timeline + ' Timeline</button>' +
-        '<button class="em-tab" data-panel="entities" onclick="eventMapSwitchPanel(\'entities\')">' + ICONS.users + ' Entities</button>' +
-        '<button class="em-tab em-toggle-btn" id="emToggleLegend" onclick="eventMapToggleLegend()" title="Show/hide legend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg></button>' +
-        '<button class="em-tab em-toggle-btn" id="emToggleSidebar" onclick="eventMapToggleSidebar()" title="Show/hide detail sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="15" y1="3" x2="15" y2="21"></line></svg></button>' +
-        '<div class="em-subnav-spacer"></div>' +
-        '<div class="em-search-wrap">' +
-          '<span class="em-search-icon">' + ICONS.search + '</span>' +
-          '<input type="text" class="em-search-input" id="emSearchInput" placeholder="Search events…" oninput="eventMapSearchEvents(this.value)">' +
-        '</div>' +
-        '<span class="em-search-count" id="emSearchCount"></span>' +
-          '<button class="btn btn-sm em-filter-toggle" type="button" onclick="eventMapToggleFilters()" title="Filter visible sources and fields"><i class="fas fa-filter"></i> Filters</button>' +
+      '<button class="em-tab active" data-panel="map" onclick="eventMapSwitchPanel(\'map\')">' + ICONS.map + ' Map</button>' +
+      '<button class="em-tab" data-panel="timeline" onclick="eventMapSwitchPanel(\'timeline\')">' + ICONS.timeline + ' Timeline</button>' +
+      '<button class="em-tab" data-panel="entities" onclick="eventMapSwitchPanel(\'entities\')">' + ICONS.users + ' Entities</button>' +
+      '<button class="em-tab em-toggle-btn" id="emToggleLegend" onclick="eventMapToggleLegend()" title="Show/hide legend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg></button>' +
+      '<button class="em-tab em-toggle-btn" id="emToggleSidebar" onclick="eventMapToggleSidebar()" title="Show/hide detail sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="15" y1="3" x2="15" y2="21"></line></svg></button>' +
+      '<div class="em-subnav-spacer"></div>' +
+      '<div class="em-search-wrap">' +
+      '<span class="em-search-icon">' + ICONS.search + '</span>' +
+      '<input type="text" class="em-search-input" id="emSearchInput" placeholder="Search events…" oninput="eventMapSearchEvents(this.value)">' +
       '</div>' +
-        '<div class="em-filter-panel" id="emFilterPanel" hidden></div>' +
+      '<span class="em-search-count" id="emSearchCount"></span>' +
+      '<button class="btn btn-sm em-filter-toggle" type="button" onclick="eventMapToggleFilters()" title="Filter visible sources and fields"><i class="fas fa-filter"></i> Filters</button>' +
+      '</div>' +
+      '<div class="em-filter-panel" id="emFilterPanel" hidden></div>' +
       '<div class="em-panels">' +
-        '<div id="emPanel-map" class="em-panel active">' +
-          '<div class="em-editor-layout">' +
-            '<div class="em-graph-container" id="emGraphContainer">' +
-              '<div class="em-graph-controls">' +
-                '<button class="btn btn-sm" onclick="eventMapZoomIn()" title="Zoom in"><i class="fas fa-plus"></i></button>' +
-                '<button class="btn btn-sm" onclick="eventMapZoomOut()" title="Zoom out"><i class="fas fa-minus"></i></button>' +
-                '<button class="btn btn-sm" onclick="eventMapZoomFit()" title="Fit to view"><i class="fas fa-expand"></i></button>' +
-                '<button class="btn btn-sm" onclick="eventMapArrangeNodes()" title="Arrange nodes"><i class="fas fa-table-cells"></i></button>' +
-                '<button class="btn btn-sm" onclick="eventMapAddEvent()" title="Add event"><i class="fas fa-plus"></i> Add</button>' +
-                '<button class="btn btn-sm em-link-mode-btn" id="emLinkModeBtn" onclick="eventMapToggleLinkMode()" title="Add or remove arrows between nodes"><i class="fas fa-project-diagram"></i> Link</button>' +
-              '</div>' +
-              '<div class="em-legend" id="emLegend"></div>' +
-              '<svg id="emGraphSvg" class="em-graph-svg"></svg>' +
-              '<span class="em-zoom-readout" id="emZoomReadout">80%</span>' +
-            '</div>' +
-            '<div class="em-detail-panel" id="emDetailPanel">' +
-              '<div class="em-detail-resize" id="emDetailResize" title="Drag to resize"></div>' +
-              '<div class="em-detail-placeholder">Click an event to inspect and edit details. Drag nodes to move them, drag empty canvas to pan, scroll to zoom.</div>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div id="emPanel-timeline" class="em-panel">' +
-          '<div class="em-timeline-list" id="emTimelineList"></div>' +
-        '</div>' +
-        '<div id="emPanel-entities" class="em-panel">' +
-          '<div class="em-entities-list" id="emEntitiesList"></div>' +
-        '</div>' +
+      '<div id="emPanel-map" class="em-panel active">' +
+      '<div class="em-editor-layout">' +
+      '<div class="em-graph-container" id="emGraphContainer">' +
+      '<div class="em-graph-controls">' +
+      '<button class="btn btn-sm" onclick="eventMapZoomIn()" title="Zoom in"><i class="fas fa-plus"></i></button>' +
+      '<button class="btn btn-sm" onclick="eventMapZoomOut()" title="Zoom out"><i class="fas fa-minus"></i></button>' +
+      '<button class="btn btn-sm" onclick="eventMapZoomFit()" title="Fit to view"><i class="fas fa-expand"></i></button>' +
+      '<button class="btn btn-sm" onclick="eventMapArrangeNodes()" title="Arrange nodes"><i class="fas fa-table-cells"></i></button>' +
+      '<button class="btn btn-sm" onclick="eventMapAddEvent()" title="Add event"><i class="fas fa-plus"></i> Add</button>' +
+      '<button class="btn btn-sm em-link-mode-btn" id="emLinkModeBtn" onclick="eventMapToggleLinkMode()" title="Add or remove arrows between nodes"><i class="fas fa-project-diagram"></i> Link</button>' +
+      '</div>' +
+      '<div class="em-legend" id="emLegend"></div>' +
+      '<svg id="emGraphSvg" class="em-graph-svg"></svg>' +
+      '<span class="em-zoom-readout" id="emZoomReadout">80%</span>' +
+      '</div>' +
+      '<div class="em-detail-panel" id="emDetailPanel">' +
+      '<div class="em-detail-resize" id="emDetailResize" title="Drag to resize"></div>' +
+      '<div class="em-detail-placeholder">Click an event to inspect and edit details. Drag nodes to move them, drag empty canvas to pan, scroll to zoom.</div>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '<div id="emPanel-timeline" class="em-panel">' +
+      '<div class="em-timeline-list" id="emTimelineList"></div>' +
+      '</div>' +
+      '<div id="emPanel-entities" class="em-panel">' +
+      '<div class="em-entities-list" id="emEntitiesList"></div>' +
+      '</div>' +
       '</div>';
 
     built = true;
     loadState();
+    loadExpandedFields();
     restoreViewToggles();
     renderLegend();
     renderFilters();
@@ -163,7 +230,7 @@
     try {
       legendHidden = localStorage.getItem('olivia.eventMap.legendHidden') === '1';
       sidebarHidden = localStorage.getItem('olivia.eventMap.sidebarHidden') === '1';
-    } catch (e) {}
+    } catch (e) { }
     var legend = document.getElementById('emLegend');
     if (legend && legendHidden) legend.classList.add('is-hidden');
     var panel = document.getElementById('emDetailPanel');
@@ -182,9 +249,21 @@
     }).join('');
     el.innerHTML = items +
       '<div class="em-legend-item em-legend-actions">' +
-        '<button class="em-legend-more" onclick="eventMapToggleLegendConfig(event)" title="Configure category colors"><i class="fas fa-ellipsis-h"></i></button>' +
+      '<button class="em-legend-more" onclick="eventMapToggleLegendConfig(event)" title="Configure category colors"><i class="fas fa-ellipsis-h"></i></button>' +
       '</div>' +
       '<div class="em-legend-config" id="emLegendConfig" style="display:none"></div>';
+  }
+
+  function detachResizeHandle(panel) {
+    var handle = panel.querySelector('.em-detail-resize');
+    if (handle) panel.removeChild(handle);
+    return handle;
+  }
+
+  function reattachResizeHandle(panel, handle) {
+    if (handle && !panel.contains(handle)) {
+      panel.insertBefore(handle, panel.firstChild);
+    }
   }
 
   window.eventMapToggleLegendConfig = function (e) {
@@ -241,7 +320,7 @@
       if (typeof value !== 'object') return;
       Object.keys(value).forEach(function (key) {
         var path = prefix ? prefix + '.' + key : key;
-        if (['x', 'y', 'links', 'width', 'height'].indexOf(key) === -1 && paths.indexOf(path) === -1) paths.push(path);
+        if (['id', 'Id', 'ID', 'x', 'y', 'links', 'width', 'height'].indexOf(key) === -1 && paths.indexOf(path) === -1) paths.push(path);
         if (value[key] && typeof value[key] === 'object') visit(value[key], path, depth + 1);
       });
     }
@@ -279,8 +358,7 @@
   function fieldVisibilityButton(ev, field) {
     var visible = fieldIsVisible(ev, field);
     return '<button type="button" class="em-field-visibility ' + (visible ? '' : 'is-hidden') + '" data-field-value="' +
-      encodeURIComponent(field) + '" data-event-id="' + ev.id + '" title="' + (visible ? 'Hide field on card' : 'Show field on card') + '"><i class="fas fa-' +
-      (visible ? 'eye' : 'eye-slash') + '"></i></button>';
+      encodeURIComponent(field) + '" data-event-id="' + ev.id + '" title="' + (visible ? 'Hide field on card' : 'Show field on card') + '">' + ICONS.eye + '</button>';
   }
 
   function renderFilters() {
@@ -314,6 +392,7 @@
       var sourceFields = availableFieldKeys(source);
       return '<details class="em-filter-source-group" open><summary class="em-filter-source-head"><label class="em-filter-check"><input type="checkbox" data-filter-source="' + esc(source) + '"' +
         (visibleSources[source] ? ' checked' : '') + '> <strong>' + esc(sourceLabel(source)) + '</strong></label><small>' + events.filter(function (ev) { return sourceKey(ev) === source; }).length + ' records</small></summary>' +
+        '<details class="em-filter-advanced"><summary>Advanced Filters</summary>' +
         '<div class="em-filter-source-fields"><div class="em-filter-title">Visible fields on cards</div>' + fieldHtml +
         '<div class="em-filter-title em-filter-rule-title">Filter fields in ' + esc(sourceLabel(source)) + '</div>' +
         '<div class="em-filter-rule-editor" data-rule-source="' + esc(source) + '"><select class="em-filter-select" data-rule-field>' +
@@ -322,16 +401,17 @@
         '<input class="em-filter-input" data-rule-value type="text" placeholder="value, ID, status, text...">' +
         '<button class="btn btn-sm" type="button" data-add-source-rule title="Add filter for this source"><i class="fas fa-plus"></i> Add</button></div>' +
         '<div class="em-filter-rules" data-source-rules="' + esc(source) + '">' + (sourceRuleHtml || '<span class="em-filter-empty">No filters for this source</span>') + '</div>' +
-        '</div></details>';
+        '</div></details></details>';
     }).join('');
     panel.innerHTML = '<div class="em-filter-head"><strong>Map visibility</strong>' +
       '<button class="btn btn-sm" type="button" onclick="eventMapResetFilters()">Reset</button></div>' +
-      '<div class="em-filter-note">Source toggles hide records. Node fields control the compact card face. Field rules filter record values.</div>' +
+      '<div class="em-filter-note">Source toggles hide records. Field visibility and value rules are available under Advanced Filters.</div>' +
       '<div class="em-filter-source-groups">' + sourceGroupsHtml + '</div>';
     panel.querySelectorAll('[data-filter-source]').forEach(function (input) {
       input.addEventListener('change', function () {
         visibleSources[input.getAttribute('data-filter-source')] = input.checked;
         renderGraph(); renderTimeline();
+        persistState();
       });
     });
     panel.querySelectorAll('[data-filter-field]').forEach(function (input) {
@@ -339,6 +419,7 @@
         var source = input.getAttribute('data-filter-field-source');
         fieldsForSource(source)[input.getAttribute('data-filter-field')] = input.checked;
         renderGraph();
+        persistState();
       });
     });
     panel.querySelectorAll('[data-rule-source]').forEach(function (editor) {
@@ -370,13 +451,13 @@
         var source = editor.getAttribute('data-rule-source');
         if (!field || !value || !source) return;
         fieldFilters.push({ source: source, field: field, value: value, operator: operator });
-        renderFilters(); renderGraph(); renderTimeline();
+        renderFilters(); renderGraph(); renderTimeline(); persistState();
       });
     });
     panel.querySelectorAll('[data-remove-field-filter]').forEach(function (button) {
       button.addEventListener('click', function () {
         fieldFilters.splice(Number(button.getAttribute('data-remove-field-filter')), 1);
-        renderFilters(); renderGraph(); renderTimeline();
+        renderFilters(); renderGraph(); renderTimeline(); persistState();
       });
     });
   }
@@ -393,7 +474,7 @@
     var hidden = legend.classList.toggle('is-hidden');
     var btn = document.getElementById('emToggleLegend');
     if (btn) btn.classList.toggle('active', !hidden);
-    try { localStorage.setItem('olivia.eventMap.legendHidden', hidden ? '1' : '0'); } catch (e) {}
+    try { localStorage.setItem('olivia.eventMap.legendHidden', hidden ? '1' : '0'); } catch (e) { }
   };
 
   window.eventMapToggleSidebar = function () {
@@ -402,7 +483,7 @@
     var hidden = panel.classList.toggle('is-hidden');
     var btn = document.getElementById('emToggleSidebar');
     if (btn) btn.classList.toggle('active', !hidden);
-    try { localStorage.setItem('olivia.eventMap.sidebarHidden', hidden ? '1' : '0'); } catch (e) {}
+    try { localStorage.setItem('olivia.eventMap.sidebarHidden', hidden ? '1' : '0'); } catch (e) { }
   };
 
   window.eventMapResetFilters = function () {
@@ -412,6 +493,7 @@
     renderFilters();
     renderGraph();
     renderTimeline();
+    persistState();
   };
 
   // ── Panel switching ────────────────────────────────────────────────────
@@ -430,23 +512,26 @@
   };
 
   // ── Search / Filter ────────────────────────────────────────────────────
+  // FIX #11: Improved performance by avoiding JSON.stringify
   function matchesSearch(ev) {
     if (!searchQuery) return true;
     var hay = (
       (ev.title || '') + ' ' +
       (ev.description || '') + ' ' +
+      (ev.summary || '') + ' ' +
       (ev.category || '') + ' ' +
-      (ev.tags || []).join(' ') + ' ' +
+      (ev.status || '') + ' ' +
       (ev.transcript_id || '') + ' ' +
       (ev.violation_id || '') + ' ' +
       (ev.subject || '') + ' ' +
-      JSON.stringify(ev).toLowerCase()
+      (ev.entities || []).join(' ') + ' ' +
+      (ev.tags || []).join(' ')
     ).toLowerCase();
     return hay.indexOf(searchQuery) !== -1;
   }
 
   function matchesEntityFilter(ev) {
-    if (!entityFilter) return true;
+    if (!entityFilter || entityFilter.length === 0) return true;
     var entities = ev.entities || [];
     if (ev.participants) {
       ev.participants.forEach(function (p) {
@@ -454,7 +539,8 @@
         if (p.speaker_label) entities.push(p.speaker_label);
       });
     }
-    return entities.indexOf(entityFilter) !== -1;
+    // Check if event has AT LEAST ONE of the filtered entities
+    return entityFilter.some(function(ef) { return entities.indexOf(ef) !== -1; });
   }
 
   function fieldValues(value, parts, index) {
@@ -605,6 +691,32 @@
         e.preventDefault();
         window.eventMapDeleteEvent(selectedEventId);
       }
+      if (e.key === 'Escape') {
+        closeNodeEditor();
+        closeContextMenu();
+        closeFieldValuePopover();
+      }
+    });
+
+    // ── Right-click context menu ──────────────────────────────────────────
+    container.addEventListener('contextmenu', function (e) {
+      var nodeGroup = e.target && e.target.closest ? e.target.closest('.em-node-group') : null;
+      if (nodeGroup) {
+        var id = Number(nodeGroup.getAttribute('data-node-id'));
+        showContextMenu(e.clientX, e.clientY, [
+          { label: 'Edit event', action: function () { window.eventMapShowNodeEditor(id); } },
+          { label: 'Duplicate', action: function () { window.eventMapDuplicateEvent(id); } },
+          { label: 'Delete', action: function () { window.eventMapDeleteEvent(id); } },
+          { separator: true },
+          { label: 'Add arrow from here', action: function () { window.eventMapStartLinkFrom(id); } },
+          { label: 'Add field', action: function () { window.eventMapAddField(id); } }
+        ]);
+      } else {
+        showContextMenu(e.clientX, e.clientY, [
+          { label: 'Add event', action: window.eventMapAddEvent },
+          { label: 'Paste', disabled: true }
+        ]);
+      }
     });
 
     // ── Detail panel horizontal resize ────────────────────────────────────
@@ -613,21 +725,11 @@
     if (resizeHandle && detailPanel) wireDetailResize(resizeHandle, detailPanel);
   }
 
-  function wireDetailResize(resizeHandle, detailPanel) {
-    var panelResizing = false;
-    var panelStartX = 0;
-    var panelStartWidth = 0;
-
-    resizeHandle.addEventListener('mousedown', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      panelResizing = true;
-      panelStartX = e.clientX;
-      panelStartWidth = detailPanel.getBoundingClientRect().width;
-      detailPanel.classList.add('is-resizing');
-      document.body.style.cursor = 'col-resize';
-      document.body.style.userSelect = 'none';
-    });
+  // Attaches the one-time document-level mousemove/mouseup listeners for panel resize.
+  // Called once; subsequent calls are no-ops.
+  function wireDetailResizeDocListeners(detailPanel) {
+    if (detailResizeWired) return;
+    detailResizeWired = true;
 
     document.addEventListener('mousemove', function (e) {
       if (!panelResizing) return;
@@ -646,6 +748,26 @@
     });
   }
 
+  // Wires the mousedown listener to a (possibly freshly created) resize handle element.
+  // Safe to call every time the handle is re-inserted into the DOM.
+  function wireDetailResize(resizeHandle, detailPanel) {
+    // Attach document listeners once
+    wireDetailResizeDocListeners(detailPanel);
+
+    // Always attach mousedown to the current handle element so re-rendered
+    // panels don't lose their drag affordance.
+    resizeHandle.addEventListener('mousedown', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      panelResizing = true;
+      panelStartX = e.clientX;
+      panelStartWidth = detailPanel.getBoundingClientRect().width;
+      detailPanel.classList.add('is-resizing');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    });
+  }
+
   // ── Graph rendering ────────────────────────────────────────────────────
   var NODE_WIDTH = 240;
   var NODE_HEIGHT = 120;
@@ -657,14 +779,22 @@
   function cardFieldEntries(ev) {
     var standard = ['title', 'date', 'description', 'summary', 'category', 'status', 'entities', 'tags'];
     return availableFieldKeys(sourceKey(ev)).filter(function (field) {
-      return standard.indexOf(field) === -1 && fieldIsVisible(ev, field) && fieldValues(ev, field.split('.'), 0).length;
+      if (standard.indexOf(field) !== -1) return false;
+      if (!fieldIsVisible(ev, field)) return false;
+      var values = fieldValues(ev, field.split('.'), 0);
+      // Skip fields where all values are null/undefined/empty strings
+      return values.some(function (v) {
+        return v !== null && v !== undefined && String(v).trim() !== '';
+      });
     }).map(function (field) {
       var values = fieldValues(ev, field.split('.'), 0);
-      return { field: field, value: values.map(function (value) {
-        if (value && typeof value === 'object') return JSON.stringify(value);
-        if (typeof value === 'boolean') return value ? 'yes' : 'no';
-        return String(value == null ? '' : value);
-      }).join(', ') };
+      return {
+        field: field, value: values.map(function (value) {
+          if (value && typeof value === 'object') return JSON.stringify(value);
+          if (typeof value === 'boolean') return value ? 'yes' : 'no';
+          return String(value == null ? '' : value);
+        }).join(', ')
+      };
     });
   }
 
@@ -744,7 +874,10 @@
     links = derived;
   }
 
-  function appendWrappedText(parent, value, x, y, maxChars, lineHeight, maxLines, className, fontSize, color) {
+  // FIX #10: Scale-aware character wrapping using explicit pixel widths
+  function appendWrappedText(parent, value, x, y, maxWidthPx, lineHeight, maxLines, className, fontSize, color) {
+    var charWidth = fontSize * 0.6; // approx for monospace
+    var adjustedMaxChars = Math.max(5, Math.floor(maxWidthPx / charWidth));
     var text = document.createElementNS(NS, 'text');
     text.setAttribute('x', x);
     text.setAttribute('y', y);
@@ -757,7 +890,7 @@
     var line = '';
     words.forEach(function (word) {
       var candidate = line ? line + ' ' + word : word;
-      if (line && candidate.length > maxChars) {
+      if (line && candidate.length > adjustedMaxChars) {
         lines.push(line);
         line = word;
       } else {
@@ -778,6 +911,19 @@
       text.appendChild(tspan);
     });
     parent.appendChild(text);
+  }
+
+  // Counts explicit uploads ({ name, type, dataUrl }) plus string values that
+  // look like a file path/URL with a known extension.
+  function countFileAttachments(ev) {
+    var count = 0;
+    for (var key in ev) {
+      if (['id', 'x', 'y', 'links', 'width', 'height'].indexOf(key) !== -1) continue;
+      var v = ev[key];
+      if (v && typeof v === 'object' && v.dataUrl) count++;
+      else if (typeof v === 'string' && looksLikeFileRef(v)) count++;
+    }
+    return count;
   }
 
   function renderGraph() {
@@ -971,8 +1117,11 @@
       g.appendChild(rect);
 
       var title = ev.title || ev.transcript_id || ev.violation_id || ev.subject || 'Untitled';
-      if (fieldIsVisible(ev, 'title')) appendWrappedText(g, title + ' (#' + ev.id + ')', x + 12 * scale, y + 18 * scale,
-        29, 15 * scale, 2, 'em-node-title', Math.max(10, 13 * scale), 'var(--white)');
+      if (fieldIsVisible(ev, 'title')) {
+        var titleMaxWidth = (nodeWidth(ev) - 24) * scale;
+        appendWrappedText(g, title + ' (#' + ev.id + ')', x + 12 * scale, y + 18 * scale,
+          titleMaxWidth, 15 * scale, 2, 'em-node-title', Math.max(10, 13 * scale), 'var(--white)');
+      }
 
       var cardDate = safeDate(ev.date);
       var dateStr = cardDate ? cardDate.toLocaleDateString() : (ev.recording_datetime || ev.incident_date || ev.date_utc || 'no date');
@@ -988,23 +1137,132 @@
       }
 
       var description = ev.description || ev.summary || '';
+      var contentMaxWidth = (nodeWidth(ev) - 24) * scale;
       if (fieldIsVisible(ev, 'description') && description) {
-        appendWrappedText(g, description, x + 12 * scale, y + 70 * scale,
-          34, 12 * scale, 1, 'em-node-summary', Math.max(8, 9 * scale), 'var(--gray)');
+        var descBlockX = x + 8 * scale;
+        var descBlockY = y + 60 * scale;
+        var descBlockW = (nodeWidth(ev) - 16) * scale;
+        var descBlockH = Math.max(24, 28 * scale);
+        var descriptionBg = document.createElementNS(NS, 'rect');
+        descriptionBg.setAttribute('x', descBlockX);
+        descriptionBg.setAttribute('y', descBlockY);
+        descriptionBg.setAttribute('width', descBlockW);
+        descriptionBg.setAttribute('height', descBlockH);
+        descriptionBg.setAttribute('rx', 6);
+        descriptionBg.setAttribute('fill', 'rgba(196, 98, 45, 0.10)');
+        descriptionBg.setAttribute('stroke', 'rgba(196, 98, 45, 0.75)');
+        descriptionBg.setAttribute('stroke-width', 1);
+        g.appendChild(descriptionBg);
+
+        var descriptionLabel = document.createElementNS(NS, 'text');
+        descriptionLabel.setAttribute('x', x + 14 * scale);
+        descriptionLabel.setAttribute('y', y + 68 * scale);
+        descriptionLabel.setAttribute('font-size', Math.max(7, 8 * scale));
+        descriptionLabel.setAttribute('fill', 'var(--amber)');
+        descriptionLabel.setAttribute('font-family', 'var(--mono)');
+        descriptionLabel.textContent = 'DESCRIPTION';
+        g.appendChild(descriptionLabel);
+
+        appendWrappedText(g, description, x + 12 * scale, y + 82 * scale,
+          contentMaxWidth, 12 * scale, 2, 'em-node-summary em-node-summary-featured', Math.max(8, 9 * scale), 'var(--white)');
+
+        var descriptionHit = document.createElementNS(NS, 'rect');
+        descriptionHit.setAttribute('x', descBlockX);
+        descriptionHit.setAttribute('y', descBlockY);
+        descriptionHit.setAttribute('width', descBlockW);
+        descriptionHit.setAttribute('height', descBlockH + 28 * scale);
+        descriptionHit.setAttribute('fill', 'transparent');
+        descriptionHit.setAttribute('class', 'em-node-description-hit');
+        descriptionHit.style.cursor = 'pointer';
+        descriptionHit.addEventListener('mousedown', function (e) { e.stopPropagation(); });
+        descriptionHit.addEventListener('click', function (e) {
+          e.stopPropagation();
+          window.eventMapOpenEventDescription(ev.id);
+        });
+        g.appendChild(descriptionHit);
       }
       if (fieldIsVisible(ev, 'tags') && ev.tags && ev.tags.length) {
         appendWrappedText(g, ev.tags.slice(0, 2).join(' · '), x + 12 * scale, y + 86 * scale,
-          34, 12 * scale, 1, 'em-node-summary', Math.max(8, 9 * scale), 'var(--amber)');
+          contentMaxWidth, 12 * scale, 1, 'em-node-summary', Math.max(8, 9 * scale), 'var(--amber)');
       }
 
       var cardEntries = cardFieldEntries(ev);
       cardEntries.forEach(function (entry, index) {
-        appendWrappedText(g, fieldLabel(entry.field) + ': ' + entry.value, x + 12 * scale,
-          y + (104 + index * 18) * scale, 34, 12 * scale, 1, 'em-node-summary',
-          Math.max(8, 9 * scale), 'var(--gray-hi)');
+        var rowY = (104 + index * 18) * scale;
+        // Separator line between rows
+        if (index > 0) {
+          var lineY = y + (102 + index * 18 - 8) * scale;
+          var sepLine = document.createElementNS(NS, 'line');
+          sepLine.setAttribute('x1', x + 6 * scale);
+          sepLine.setAttribute('x2', x + (nodeWidth(ev) - 18) * scale);
+          sepLine.setAttribute('y1', lineY);
+          sepLine.setAttribute('y2', lineY);
+          sepLine.setAttribute('stroke', 'var(--border)');
+          sepLine.setAttribute('stroke-width', 0.5);
+          g.appendChild(sepLine);
+        }
+        // Label in amber (distinct from value)
+        var labelStr = fieldLabel(entry.field);
+        var labelMaxWidth = Math.min((nodeWidth(ev) - 24) * scale, 120 * scale); // Don't let label take entire card width
+        appendWrappedText(g, labelStr, x + 12 * scale,
+          y + rowY, labelMaxWidth, 12 * scale, 1, 'em-node-field-label',
+          Math.max(7, 9 * scale), 'var(--amber)');
+        // Value in white after label — offset by label's actual rendered width
+        var labelCharWidth = Math.min(labelStr.length, Math.floor(labelMaxWidth / (Math.max(7, 9 * scale) * 0.6)));
+        var labelPxOffset = (labelCharWidth * 5.5 + 6) * scale;
+        var valueMaxWidth = (nodeWidth(ev) - 24) * scale - labelPxOffset;
+        appendWrappedText(g, entry.value, x + 12 * scale + labelPxOffset,
+          y + rowY, valueMaxWidth, 12 * scale, 1, 'em-node-field-value',
+          Math.max(8, 10.5 * scale), 'var(--white)');
+        // Invisible hit rect — makes the full row clickable without intercepting drag
+        (function (capturedEntry, capturedIndex) {
+          var hitRect = document.createElementNS(NS, 'rect');
+          hitRect.setAttribute('x', x + 4 * scale);
+          hitRect.setAttribute('y', y + (96 + capturedIndex * 18) * scale);
+          hitRect.setAttribute('width', (nodeWidth(ev) - 22) * scale);
+          hitRect.setAttribute('height', 16 * scale);
+          hitRect.setAttribute('fill', 'transparent');
+          hitRect.setAttribute('class', 'em-card-field-hit');
+          hitRect.style.cursor = 'pointer';
+          hitRect.addEventListener('mousedown', function (e) { e.stopPropagation(); });
+          hitRect.addEventListener('click', function (e) {
+            e.stopPropagation();
+            window.eventMapOpenCardFieldPopover(ev.id, capturedEntry.field);
+          });
+          g.appendChild(hitRect);
+        }(entry, index));
       });
 
       g.appendChild(resizeHandle);
+
+      // ── Inline "edit" affordance ──────────────────────────────────────
+      var editBtn = document.createElementNS(NS, 'circle');
+      editBtn.setAttribute('cx', x + w - 12);
+      editBtn.setAttribute('cy', y + 12);
+      editBtn.setAttribute('r', 10);
+      editBtn.setAttribute('fill', 'rgba(255,255,255,0.9)');
+      editBtn.setAttribute('stroke', color);
+      editBtn.setAttribute('stroke-width', 1);
+      editBtn.setAttribute('class', 'em-node-edit-btn');
+      editBtn.style.cursor = 'pointer';
+      editBtn.addEventListener('mousedown', function (e) { e.stopPropagation(); });
+      editBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        window.eventMapShowNodeEditor(ev.id);
+      });
+      g.appendChild(editBtn);
+
+      // ── File-attachment indicator ─────────────────────────────────────
+      var attachCount = countFileAttachments(ev);
+      if (attachCount) {
+        var clip = document.createElementNS(NS, 'text');
+        clip.setAttribute('x', x + 12 * scale);
+        clip.setAttribute('y', y + h - 6);
+        clip.setAttribute('font-size', Math.max(9, 12 * scale));
+        clip.setAttribute('class', 'em-node-paperclip');
+        clip.textContent = '\uD83D\uDCCE' + (attachCount > 1 ? ' ' + attachCount : '');
+        g.appendChild(clip);
+      }
 
       svg.appendChild(g);
     });
@@ -1033,7 +1291,7 @@
     wireDetailResize(handle, panel);
   }
 
-  function renderEventDetail(id) {
+  function renderEventDetail(id, focusField) {
     var panel = document.getElementById('emDetailPanel');
     if (!panel) return;
     if (id === null || id === undefined) {
@@ -1067,11 +1325,11 @@
 
     // Basic editable fields (always shown)
     html += '<div class="em-widget-row"><label class="em-widget-label">Title</label>' +
-      '<input type="text" class="em-widget-input" value="' + esc(ev.title || '') + '" onchange="eventMapUpdateEvent(' + ev.id + ', \'title\', this.value)">' + fieldVisibilityButton(ev, 'title') + '</div>';
+      '<input type="text" class="em-widget-input" value="' + esc(ev.title || '') + '" onchange="eventMapUpdateEvent(' + ev.id + ', \'title\', this.value)"></div>';
     var dateInputValue = safeDate(ev.date) ? safeDate(ev.date).toISOString().slice(0, 16) : '';
     html += '<div class="em-widget-row"><label class="em-widget-label">Date</label>' +
       '<input type="datetime-local" class="em-widget-input" value="' + dateInputValue +
-      '" onchange="eventMapUpdateEvent(' + ev.id + ', \'date\', this.value)">' + fieldVisibilityButton(ev, 'date') + '</div>';
+      '" onchange="eventMapUpdateEvent(' + ev.id + ', \'date\', this.value)"></div>';
     html += '<div class="em-widget-row"><label class="em-widget-label">Category</label>' +
       '<select class="em-widget-select" onchange="eventMapCategoryChanged(' + ev.id + ', this)">';
     Object.keys(EVENT_CATEGORIES).forEach(function (cat) {
@@ -1084,9 +1342,9 @@
       '<button class="btn btn-sm" onclick="eventMapConfirmNewCategory(' + ev.id + ')">Add</button>' +
       '<button class="btn btn-sm" onclick="eventMapCancelNewCategory(' + ev.id + ')">Cancel</button></div></div>';
     html += '<div class="em-widget-row"><label class="em-widget-label">Status</label>' +
-      '<input type="text" class="em-widget-input" value="' + esc(ev.status || '') + '" onchange="eventMapUpdateEvent(' + ev.id + ', \'status\', this.value)">' + fieldVisibilityButton(ev, 'status') + '</div>';
+      '<input type="text" class="em-widget-input" value="' + esc(ev.status || '') + '" onchange="eventMapUpdateEvent(' + ev.id + ', \'status\', this.value)"></div>';
     html += '<div class="em-widget-row em-widget-col"><label class="em-widget-label">Description</label>' +
-      '<textarea class="em-widget-textarea" onchange="eventMapUpdateEvent(' + ev.id + ', \'description\', this.value)">' + esc(ev.description || ev.summary || '') + '</textarea>' + fieldVisibilityButton(ev, 'description') + '</div>';
+      '<textarea class="em-widget-textarea" onchange="eventMapUpdateEvent(' + ev.id + ', \'description\', this.value)">' + esc(ev.description || ev.summary || '') + '</textarea></div>';
 
     // Entities / tags
     var entities = ev.entities || [];
@@ -1098,11 +1356,11 @@
     entities = Array.from(new Set(entities));
     html += '<div class="em-widget-row em-widget-col"><label class="em-widget-label">Entities (comma separated)</label>' +
       '<input type="text" class="em-widget-input" value="' + esc(entities.join(', ')) +
-      '" onchange="eventMapUpdateEvent(' + ev.id + ', \'entities\', this.value.split(\',\').map(s=>s.trim()).filter(Boolean))">' + fieldVisibilityButton(ev, 'entities') + '</div>';
+      '" onchange="eventMapUpdateEvent(' + ev.id + ', \'entities\', this.value.split(\',\').map(s=>s.trim()).filter(Boolean))"></div>';
     var tags = ev.tags || [];
     html += '<div class="em-widget-row em-widget-col"><label class="em-widget-label">Tags (comma separated)</label>' +
       '<input type="text" class="em-widget-input" value="' + esc(tags.join(', ')) +
-      '" onchange="eventMapUpdateEvent(' + ev.id + ', \'tags\', this.value.split(\',\').map(s=>s.trim()).filter(Boolean))">' + fieldVisibilityButton(ev, 'tags') + '</div>';
+      '" onchange="eventMapUpdateEvent(' + ev.id + ', \'tags\', this.value.split(\',\').map(s=>s.trim()).filter(Boolean))"></div>';
 
     // Render all other fields dynamically (collapsible)
     var exclude = ['id', 'title', 'date', 'description', 'summary', 'category', 'status', 'entities', 'tags', 'x', 'y', 'links'];
@@ -1113,7 +1371,9 @@
     }
 
     html += '</div>';
+    var resizeHandle = detachResizeHandle(panel);
     panel.innerHTML = html;
+    if (resizeHandle) reattachResizeHandle(panel, resizeHandle);
     ensureDetailResizeHandle();
     panel.querySelectorAll('[data-field-value]').forEach(function (button) {
       button.addEventListener('click', function (e) {
@@ -1122,11 +1382,34 @@
         showFieldValuePopover(ev, field, button);
       });
     });
+
+    // Auto-expand and scroll to focusField if specified
+    if (focusField) {
+      var target = panel.querySelector('.em-rich-section[data-field-key="' + focusField + '"]');
+      if (target) {
+        var header = target.querySelector('.em-rich-header');
+        var body = target.querySelector('.em-rich-body');
+        if (header && body && !header.classList.contains('open')) {
+          header.classList.add('open');
+          body.classList.add('open');
+          // Persist this expansion
+          if (!expandedFields[ev.id]) expandedFields[ev.id] = new Set();
+          expandedFields[ev.id].add(focusField);
+          saveExpandedFields();
+        }
+        // Highlight and scroll
+        target.classList.add('is-focused');
+        setTimeout(function () {
+          target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          setTimeout(function () { target.classList.remove('is-focused'); }, 1200);
+        }, 50);
+      }
+    }
   }
 
+  // FIX #9: Stop propagation on popover so toggle button works
   function showFieldValuePopover(ev, field, btn) {
     closeFieldValuePopover();
-    var visible = fieldIsVisible(ev, field);
     var value = fieldValues(ev, field.split('.'), 0);
     var display = value.length ? value.map(function (v) {
       if (v && typeof v === 'object') return JSON.stringify(v);
@@ -1138,11 +1421,15 @@
     pop.className = 'em-field-value-popover';
     pop.innerHTML =
       '<div class="em-field-value-head">' +
-        '<span class="em-field-value-name">' + esc(fieldLabel(field)) + '</span>' +
-        '<button type="button" class="em-field-value-toggle ' + (visible ? '' : 'is-hidden') + '" title="' + (visible ? 'Hide on card' : 'Show on card') + '"><i class="fas fa-' + (visible ? 'eye' : 'eye-slash') + '"></i> ' + (visible ? 'Hide' : 'Show') + '</button>' +
+      '<span class="em-field-value-name">' + esc(fieldLabel(field)) + '</span>' +
       '</div>' +
       '<div class="em-field-value-body">' + esc(display) + '</div>';
     document.body.appendChild(pop);
+
+    // Prevent clicks inside the popover from closing it
+    pop.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
 
     // Position to the right of the button
     var rect = btn.getBoundingClientRect();
@@ -1154,15 +1441,6 @@
     pop.style.left = left + 'px';
     pop.style.top = top + 'px';
 
-    pop.querySelector('.em-field-value-toggle').addEventListener('click', function () {
-      ev.hiddenFields = ev.hiddenFields || {};
-      ev.hiddenFields[field] = fieldIsVisible(ev, field);
-      closeFieldValuePopover();
-      renderEventDetail(ev.id);
-      renderGraph();
-      persistState();
-    });
-
     setTimeout(function () {
       document.addEventListener('click', closeFieldValuePopover, { once: true });
     }, 0);
@@ -1171,6 +1449,253 @@
   function closeFieldValuePopover() {
     var pop = document.getElementById('emFieldValuePopover');
     if (pop) pop.remove();
+    cardFieldPopoverState = null;
+  }
+
+  window.eventMapOpenEventDescription = function (evId) {
+    var ev = events.find(function (e) { return e.id === evId; });
+    if (!ev) return;
+    var text = ev.description || ev.summary || '';
+    if (!String(text).trim()) return;
+
+    var modal = document.createElement('div');
+    modal.className = 'em-event-description-modal';
+    modal.innerHTML =
+      '<div class="em-event-description-card" role="dialog" aria-modal="true" aria-labelledby="emEventDescriptionTitle">' +
+        '<div class="em-event-description-head">' +
+          '<div>' +
+            '<div class="em-event-description-kicker">Description</div>' +
+            '<h3 id="emEventDescriptionTitle">' + esc(ev.title || ev.violation_id || ev.transcript_id || ev.subject || 'Untitled') + '</h3>' +
+          '</div>' +
+          '<button type="button" class="em-event-description-close" title="Close"><i class="fas fa-times"></i></button>' +
+        '</div>' +
+        '<div class="em-event-description-body">' + esc(text).replace(/\n/g, '<br>') + '</div>' +
+        '<div class="em-event-description-foot">' +
+          '<button type="button" class="em-event-description-sidebar-link"><i class="fas fa-sidebar"></i> View &amp; edit in sidebar</button>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(modal);
+
+    var closeModal = function () { modal.remove(); };
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) closeModal();
+    });
+    modal.querySelector('.em-event-description-close').addEventListener('click', function (e) {
+      e.stopPropagation();
+      closeModal();
+    });
+    modal.querySelector('.em-event-description-sidebar-link').addEventListener('click', function (e) {
+      e.stopPropagation();
+      selectedEventId = evId;
+      renderGraph();
+      renderEventDetail(evId, 'description');
+      closeModal();
+      var panel = document.getElementById('emDetailPanel');
+      if (panel && panel.classList.contains('is-hidden')) {
+        window.eventMapToggleSidebar();
+      }
+    });
+  };
+
+  // ── Card-field popover (floating, next to the node) ───────────────────
+  window.eventMapOpenCardFieldPopover = function (evId, field) {
+    // Toggle off if already showing this field
+    if (cardFieldPopoverState && cardFieldPopoverState.evId === evId && cardFieldPopoverState.field === field) {
+      closeFieldValuePopover();
+      return;
+    }
+    closeFieldValuePopover();
+
+    var ev = events.find(function (e) { return e.id === evId; });
+    if (!ev) return;
+
+    var values = fieldValues(ev, field.split('.'), 0);
+    var display = values.length ? values.map(function (v) {
+      if (v && typeof v === 'object') return JSON.stringify(v, null, 2);
+      return String(v == null ? '' : v);
+    }).join('\n') : '(empty)';
+
+    cardFieldPopoverState = { evId: evId, field: field };
+
+    var pop = document.createElement('div');
+    pop.id = 'emFieldValuePopover';
+    pop.className = 'em-card-field-popover';
+    pop.innerHTML =
+      '<div class="em-card-field-popover-head">' +
+        '<span class="em-field-value-name">' + esc(fieldLabel(field)) + '</span>' +
+        '<button class="em-card-field-popover-close" title="Close"><i class="fas fa-times"></i></button>' +
+      '</div>' +
+      '<div class="em-card-field-popover-body">' + esc(display) + '</div>' +
+      '<div class="em-card-field-popover-foot">' +
+        '<button class="em-card-field-popover-sidebar-link" title="Expand in sidebar"><i class="fas fa-sidebar"></i> View &amp; edit in sidebar</button>' +
+      '</div>';
+
+    document.body.appendChild(pop);
+
+    // Position: right of the card node in screen space
+    var container = document.getElementById('emGraphContainer');
+    var containerRect = container ? container.getBoundingClientRect() : { left: 0, top: 0 };
+    var nodeX = (ev.x || 0) * scale + (offset ? offset.x : 0) + containerRect.left;
+    var nodeY = (ev.y || 0) * scale + (offset ? offset.y : 0) + containerRect.top;
+    var nodeW = nodeWidth(ev) * scale;
+    var popRect = pop.getBoundingClientRect();
+    var left = nodeX + nodeW + 14;
+    var top = nodeY;
+    if (left + popRect.width > window.innerWidth - 8) left = Math.max(8, nodeX - popRect.width - 14);
+    if (top + popRect.height > window.innerHeight - 8) top = Math.max(8, window.innerHeight - popRect.height - 8);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+
+    pop.addEventListener('click', function (e) { e.stopPropagation(); });
+
+    pop.querySelector('.em-card-field-popover-close').addEventListener('click', function (e) {
+      e.stopPropagation();
+      closeFieldValuePopover();
+    });
+
+    pop.querySelector('.em-card-field-popover-sidebar-link').addEventListener('click', function (e) {
+      e.stopPropagation();
+      // Select event and expand the field in the sidebar
+      selectedEventId = evId;
+      renderGraph();
+      renderEventDetail(evId, field);
+      // Make sure sidebar is visible
+      var panel = document.getElementById('emDetailPanel');
+      if (panel && panel.classList.contains('is-hidden')) {
+        window.eventMapToggleSidebar();
+      }
+    });
+
+    setTimeout(function () {
+      document.addEventListener('click', function dismissPop() {
+        closeFieldValuePopover();
+        document.removeEventListener('click', dismissPop);
+      });
+    }, 0);
+
+    // Also select event + expand field in sidebar silently
+    if (selectedEventId !== evId) {
+      selectedEventId = evId;
+      renderGraph();
+    }
+    renderEventDetail(evId, field);
+  };
+
+  // ── Inline node editor ────────────────────────────────────────────────
+  // FIX #14: Added entities/tags fields and __add__ category option
+  function buildEditorHtml(ev) {
+    var html = '<div class="em-node-editor-head"><strong>' + esc(ev.title || 'Event #' + ev.id) + '</strong>' +
+      '<button type="button" class="em-node-editor-close" data-close title="Close"><i class="fas fa-times"></i></button></div>';
+    html += '<div class="em-node-editor-body">';
+    html += '<div class="em-widget-row"><label class="em-widget-label">Title</label>' +
+      '<input type="text" class="em-widget-input" value="' + esc(ev.title || '') + '" onchange="eventMapUpdateEvent(' + ev.id + ', \'title\', this.value)"></div>';
+    var dateInputValue = safeDate(ev.date) ? safeDate(ev.date).toISOString().slice(0, 16) : '';
+    html += '<div class="em-widget-row"><label class="em-widget-label">Date</label>' +
+      '<input type="datetime-local" class="em-widget-input" value="' + dateInputValue + '" onchange="eventMapUpdateEvent(' + ev.id + ', \'date\', this.value)"></div>';
+    html += '<div class="em-widget-row"><label class="em-widget-label">Category</label>' +
+      '<select class="em-widget-select" onchange="eventMapCategoryChanged(' + ev.id + ', this)">';
+    Object.keys(EVENT_CATEGORIES).forEach(function (cat) {
+      html += '<option value="' + cat + '"' + (ev.category === cat ? ' selected' : '') + '>' + cat + '</option>';
+    });
+    html += '<option value="__add__">+ Add new category…</option>';
+    html += '</select></div>';
+    html += '<div class="em-widget-row"><label class="em-widget-label">Status</label>' +
+      '<input type="text" class="em-widget-input" value="' + esc(ev.status || '') + '" onchange="eventMapUpdateEvent(' + ev.id + ', \'status\', this.value)"></div>';
+    html += '<div class="em-widget-row em-widget-col"><label class="em-widget-label">Description</label>' +
+      '<textarea class="em-widget-textarea" onchange="eventMapUpdateEvent(' + ev.id + ', \'description\', this.value)">' + esc(ev.description || ev.summary || '') + '</textarea></div>';
+
+    // Add entities and tags for consistency
+    var entities = ev.entities || [];
+    html += '<div class="em-widget-row em-widget-col"><label class="em-widget-label">Entities (comma separated)</label>' +
+      '<input type="text" class="em-widget-input" value="' + esc(entities.join(', ')) +
+      '" onchange="eventMapUpdateEvent(' + ev.id + ', \'entities\', this.value.split(\',\').map(s=>s.trim()).filter(Boolean))"></div>';
+    var tags = ev.tags || [];
+    html += '<div class="em-widget-row em-widget-col"><label class="em-widget-label">Tags (comma separated)</label>' +
+      '<input type="text" class="em-widget-input" value="' + esc(tags.join(', ')) +
+      '" onchange="eventMapUpdateEvent(' + ev.id + ', \'tags\', this.value.split(\',\').map(s=>s.trim()).filter(Boolean))"></div>';
+
+    html += '<div class="em-node-editor-actions">' +
+      '<button class="btn btn-sm" onclick="eventMapAddField(' + ev.id + ')" title="Add a field"><i class="fas fa-plus"></i> Add field</button>' +
+      '<button class="btn btn-sm" onclick="eventMapDuplicateEvent(' + ev.id + ')" title="Duplicate">' + ICONS.copy + ' Duplicate</button>' +
+      '<button class="btn btn-sm" onclick="eventMapStartLinkFrom(' + ev.id + ')" title="Add an arrow from this event"><i class="fas fa-project-diagram"></i> Arrow</button>' +
+      '<button class="btn btn-sm danger" onclick="eventMapDeleteEvent(' + ev.id + ')" title="Delete this event">' + ICONS.trash + ' Delete</button>' +
+      '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  function positionNodeEditor(pop, ev) {
+    var x = (ev.x || 0) * scale + (offset ? offset.x : 0);
+    var y = (ev.y || 0) * scale + (offset ? offset.y : 0);
+    var w = nodeWidth(ev) * scale;
+    var left = x + w + 12;
+    var top = y;
+    var pr = pop.getBoundingClientRect();
+    if (left + pr.width > window.innerWidth - 8) left = Math.max(8, x - pr.width - 12);
+    if (top + pr.height > window.innerHeight - 8) top = Math.max(8, window.innerHeight - pr.height - 8);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+  }
+
+  function closeNodeEditor() {
+    var pop = document.getElementById('emNodeEditorPopover');
+    if (pop) pop.remove();
+  }
+
+  window.eventMapShowNodeEditor = function (id) {
+    var ev = events.find(function (e) { return e.id === id; });
+    if (!ev) return;
+    closeNodeEditor();
+    var pop = document.createElement('div');
+    pop.id = 'emNodeEditorPopover';
+    pop.className = 'em-node-editor-popover';
+    pop.innerHTML = buildEditorHtml(ev);
+    document.body.appendChild(pop);
+    positionNodeEditor(pop, ev);
+    pop.querySelector('[data-close]').addEventListener('click', function (e) {
+      e.stopPropagation();
+      closeNodeEditor();
+    });
+    setTimeout(function () {
+      document.addEventListener('click', function handler(e) {
+        if (!pop.contains(e.target)) { closeNodeEditor(); document.removeEventListener('click', handler); }
+      });
+    }, 0);
+  };
+
+  // ── Right-click context menu ──────────────────────────────────────────
+  function closeContextMenu() {
+    var menu = document.querySelector('.em-context-menu');
+    if (menu) menu.remove();
+  }
+
+  function showContextMenu(x, y, items) {
+    closeContextMenu();
+    var menu = document.createElement('div');
+    menu.className = 'em-context-menu';
+    document.body.appendChild(menu);
+    var html = '';
+    items.forEach(function (item) {
+      if (item.separator) { html += '<div class="em-context-separator"></div>'; return; }
+      html += '<button type="button" class="em-context-item' + (item.disabled ? ' is-disabled' : '') + '"' +
+        (item.disabled ? ' disabled' : '') + ' data-index="' + items.indexOf(item) + '">' + esc(item.label) + '</button>';
+    });
+    menu.innerHTML = html;
+    var menuRect = menu.getBoundingClientRect();
+    menu.style.left = Math.min(x, window.innerWidth - menuRect.width - 8) + 'px';
+    menu.style.top = Math.min(y, window.innerHeight - menuRect.height - 8) + 'px';
+    menu.querySelectorAll('[data-index]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var idx = Number(btn.getAttribute('data-index'));
+        var item = items[idx];
+        closeContextMenu();
+        if (item && item.action) item.action();
+      });
+    });
+    setTimeout(function () {
+      document.addEventListener('click', closeContextMenu, { once: true });
+    }, 0);
   }
 
   window.eventMapToggleNodeVisibility = function (id) {
@@ -1221,6 +1746,82 @@
     if (dialog) dialog.remove();
   }
 
+  // Reads a picked file into a data URL and remembers it on the input so the
+  // Add Field handler can store it as an attachment { name, type, dataUrl }.
+  window.eventMapReadFile = function (input) {
+    var file = input.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      input._fileData = e.target.result;
+      input._fileName = file.name;
+      input._fileType = file.type;
+      var info = document.getElementById('emAddFieldFileName');
+      if (info) info.textContent = 'Ready: ' + file.name + ' (' + (file.type || 'unknown type') + ', ' + Math.round(file.size / 1024) + ' KB)';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // FIX #8: Handle path/URL references, not just dataUrl
+  window.eventMapOpenFile = function (eventId, fieldName) {
+    var ev = events.find(function (e) { return e.id === eventId; });
+    if (!ev) return;
+
+    var file = null;
+    if (Object.prototype.hasOwnProperty.call(ev, fieldName)) {
+      file = ev[fieldName];
+    } else {
+      var vals = fieldValues(ev, String(fieldName).split('.'), 0);
+      if (vals.length) file = vals[0];
+    }
+    if (!file || file === null || file === undefined) return;
+
+    // Object with dataUrl
+    if (typeof file === 'object' && file.dataUrl) {
+      openFileModal(file.name || 'File', file.type || '', file.dataUrl);
+      return;
+    }
+
+    // String that looks like a path or URL
+    if (typeof file === 'string') {
+      var ref = looksLikeFileRef(file);
+      if (ref) {
+        if (ref.kind === 'url') {
+          openFileModal(ref.name, '', ref.url);
+        } else if (ref.kind === 'path') {
+          var src = sharedSourceUrl(ref.path);
+          window.open(src, '_blank');
+        }
+        return;
+      }
+    }
+  };
+
+  // Helper to open a file modal
+  function openFileModal(name, type, src) {
+    var modal = document.createElement('div');
+    modal.className = 'em-file-modal';
+    var lowerName = String(name || '').toLowerCase();
+    
+    if (type && type.indexOf('image/') === 0) {
+      modal.innerHTML = '<div class="em-file-modal-card"><div class="em-file-modal-head"><span>' + esc(name || 'Image') + '</span><button class="btn btn-sm" data-close><i class="fas fa-times"></i></button></div>' +
+        '<div class="em-file-modal-body"><img src="' + src + '" alt="' + esc(name || '') + '"></div></div>';
+    } else if (type === 'application/pdf' || lowerName.indexOf('.pdf') !== -1) {
+      modal.innerHTML = '<div class="em-file-modal-card em-file-modal-card-tall"><div class="em-file-modal-head"><span>' + esc(name || 'PDF') + '</span><button class="btn btn-sm" data-close><i class="fas fa-times"></i></button></div>' +
+        '<iframe src="' + src + '"></iframe></div>';
+    } else if ((type && type.indexOf('video/') === 0) || lowerName.match(/\.(mp4|webm|ogg|mov)$/)) {
+      modal.innerHTML = '<div class="em-file-modal-card em-file-modal-card-tall"><div class="em-file-modal-head"><span>' + esc(name || 'Video') + '</span><button class="btn btn-sm" data-close><i class="fas fa-times"></i></button></div>' +
+        '<div class="em-file-modal-body" style="display: flex; justify-content: center; align-items: center; background: #000; height: 100%;"><video src="' + src + '" controls autoplay style="max-width: 100%; max-height: 100%;"></video></div></div>';
+    } else {
+      modal.innerHTML = '<div class="em-file-modal-card"><div class="em-file-modal-head"><span>' + esc(name || 'File') + '</span><button class="btn btn-sm" data-close><i class="fas fa-times"></i></button></div>' +
+        '<div class="em-file-modal-body"><pre>' + esc('(binary or unsupported type)') + '</pre></div></div>';
+    }
+    document.body.appendChild(modal);
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal || (e.target && e.target.closest && e.target.closest('[data-close]'))) modal.remove();
+    });
+  }
+
   window.eventMapAddField = function (id) {
     var ev = events.find(function (item) { return item.id === id; });
     if (!ev) return;
@@ -1236,7 +1837,7 @@
     dialog.innerHTML = '<div class="em-add-field-card" role="dialog" aria-modal="true" aria-labelledby="emAddFieldTitle">' +
       '<div class="em-new-map-head"><h3 id="emAddFieldTitle">Add field to event #' + ev.id + '</h3>' +
       '<button class="btn btn-sm" type="button" data-close title="Close"><i class="fas fa-times"></i></button></div>' +
-      '<p class="em-new-map-sub">Choose a known field or define a new one. The value can be text or valid JSON.</p>' +
+      '<p class="em-new-map-sub">Choose a known field or define a new one. The value can be text, valid JSON, or a file attachment.</p>' +
       '<label class="em-add-field-label">Known fields</label>' +
       '<select id="emAddFieldSelect" class="em-filter-select"><option value="">Choose a field...</option>' +
       options.map(function (key) { return '<option value="' + esc(key) + '">' + esc(fieldLabel(key)) + ' · ' + esc(key) + '</option>'; }).join('') +
@@ -1245,6 +1846,9 @@
       '<input id="emAddFieldName" class="em-filter-input" type="text" placeholder="e.g. legal_note or review_status">' +
       '<label class="em-add-field-label">Value</label>' +
       '<textarea id="emAddFieldValue" class="em-add-field-value" rows="5" placeholder="Enter text or JSON..."></textarea>' +
+      '<label class="em-add-field-label">File (optional)</label>' +
+      '<input type="file" id="emAddFieldFile" onchange="eventMapReadFile(this)">' +
+      '<div id="emAddFieldFileName" class="em-add-field-file-name"></div>' +
       '<div class="em-add-field-preview-title">Markdown preview</div><pre id="emAddFieldPreview" class="em-add-field-preview">## Field\n\nValue</pre>' +
       '<div class="em-add-field-actions"><button class="btn btn-sm" type="button" data-cancel>Cancel</button>' +
       '<button class="btn btn-sm" type="button" data-add><i class="fas fa-plus"></i> Add field</button></div>' +
@@ -1278,7 +1882,11 @@
       if (rawValue.trim()) {
         try { parsedValue = JSON.parse(rawValue); } catch (_error) { parsedValue = rawValue; }
       }
-      ev[name] = parsedValue;
+      var fileInput = dialog.querySelector('#emAddFieldFile');
+      var fileData = (fileInput && fileInput._fileData)
+        ? { name: fileInput._fileName, type: fileInput._fileType || '', dataUrl: fileInput._fileData }
+        : null;
+      ev[name] = fileData || parsedValue;
       renderEventDetail(id);
       renderFilters();
       renderGraph();
@@ -1287,36 +1895,260 @@
   };
 
   // Recursively render a field value as a collapsible section
+  // Recursively render a field value as a collapsible, editable section
   function renderRichSection(key, value, ev) {
     var label = key.replace(/_/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
-    var sectionId = 'em-section-' + key + '-' + Math.random().toString(36).substr(2, 5);
-    var html = '<div class="em-rich-section">';
-    html += '<div class="em-rich-header"><span onclick="this.parentElement.classList.toggle(\'open\'); this.nextElementSibling.classList.toggle(\'open\');">' +
-      esc(label) + '</span>' + fieldVisibilityButton(ev, key) + '<span class="em-rich-toggle">v</span></div>';
-    html += '<div class="em-rich-body">';
-    html += renderValue(value);
+    // Restore expand state persisted in expandedFields
+    var evExpanded = expandedFields[ev.id];
+    var isOpen = evExpanded && evExpanded.has ? evExpanded.has(key) : false;
+    var openClass = isOpen ? ' open' : '';
+    var html = '<div class="em-rich-section" data-field-key="' + esc(key) + '">';
+    html += '<div class="em-rich-header' + openClass + '" onclick="eventMapToggleRichSection(this,' + ev.id + ',\'' + esc(key).replace(/'/g, "\\''") + '\')"><span>' + esc(label) + '</span><span class="em-rich-toggle">v</span></div>';
+    html += '<div class="em-rich-body' + openClass + '">';
+    html += renderEditableValue(key, value, ev);
+    html += '</div></div>';
+    return html;
+  }
+  // Updates a rich field from an editable textarea
+  window.eventMapUpdateRichField = function (eventId, fieldKey, newValue, originalType) {
+    var ev = events.find(function (e) { return e.id === eventId; });
+    if (!ev) return;
+    var parsedValue;
+    if (originalType === 'object') {
+      try {
+        parsedValue = JSON.parse(newValue);
+        
+        // Restore truncated dataUrls
+        var restoreDataUrls = function(oldObj, newObj) {
+          if (!oldObj || !newObj || typeof oldObj !== 'object' || typeof newObj !== 'object') return;
+          if (Array.isArray(oldObj) && Array.isArray(newObj)) {
+            newObj.forEach(function(newItem, i) {
+              if (newItem && newItem.dataUrl === '<dataUrl hidden in editor>') {
+                var oldItem = oldObj.find(function(o) { return o && o.name === newItem.name && o.dataUrl; }) || oldObj[i];
+                if (oldItem && oldItem.dataUrl) newItem.dataUrl = oldItem.dataUrl;
+              } else {
+                restoreDataUrls(oldObj[i], newItem);
+              }
+            });
+          } else if (!Array.isArray(oldObj) && !Array.isArray(newObj)) {
+            if (newObj.dataUrl === '<dataUrl hidden in editor>' && oldObj.dataUrl) {
+              newObj.dataUrl = oldObj.dataUrl;
+            }
+            Object.keys(newObj).forEach(function(k) {
+              restoreDataUrls(oldObj[k], newObj[k]);
+            });
+          }
+        };
+        restoreDataUrls(ev[fieldKey], parsedValue);
+        
+      } catch (e) {
+        alert('Invalid JSON – field not updated.');
+        return;
+      }
+    } else if (originalType === 'number') {
+      var num = Number(newValue);
+      if (isNaN(num)) {
+        alert('Invalid number – field not updated.');
+        return;
+      }
+      parsedValue = num;
+    } else if (originalType === 'boolean') {
+      if (newValue === 'true' || newValue === 'false') {
+        parsedValue = newValue === 'true';
+      } else {
+        alert('Enter "true" or "false" – field not updated.');
+        return;
+      }
+    } else {
+      parsedValue = newValue;
+    }
+    ev[fieldKey] = parsedValue;
+    persistState();
+    renderEventDetail(eventId); // re-render to reflect updated value
+    renderGraph(); // in case this field affects card display
+  };
+
+  // New helper: returns an editable input/textarea for a field value
+  function renderEditableValue(fieldKey, value, ev) {
+    var inputId = 'em-edit-' + ev.id + '-' + fieldKey.replace(/\./g, '-');
+    var originalType = typeof value;
+    var displayValue;
+    if (value === null || value === undefined) {
+      displayValue = '';
+    } else if (typeof value === 'string') {
+      displayValue = value;
+    } else if (typeof value === 'number' || typeof value === 'boolean') {
+      displayValue = String(value);
+    } else {
+      // objects and arrays → JSON string, but hide massive dataUrls
+      displayValue = JSON.stringify(value, function(k, v) {
+        if (k === 'dataUrl' && typeof v === 'string' && v.length > 100) {
+          return '<dataUrl hidden in editor>';
+        }
+        return v;
+      }, 2);
+    }
+    
+    // Check if the value contains any file attachments, and render them visually
+    var attachmentsHtml = '';
+    if (Array.isArray(value)) {
+       value.forEach(function(item, idx) {
+          if (item && item.dataUrl) attachmentsHtml += renderAttachmentHtml(item, ev, fieldKey + '.' + idx);
+          else if (typeof item === 'string' && looksLikeFileRef(item)) attachmentsHtml += renderAttachmentHtml({ name: item, dataUrl: null }, ev, fieldKey + '.' + idx);
+       });
+    } else if (value && typeof value === 'object' && value.dataUrl) {
+       attachmentsHtml += renderAttachmentHtml(value, ev, fieldKey);
+    } else if (typeof value === 'string' && looksLikeFileRef(value)) {
+       attachmentsHtml += renderAttachmentHtml({ name: value, dataUrl: null }, ev, fieldKey);
+    }
+    
+    // Use a textarea for all types for simplicity; single-line input could be used for primitives
+    var html = '<div class="em-editable-value-wrap" style="position: relative;">';
+    if (attachmentsHtml) {
+       html += '<div style="margin-bottom: 8px; display: flex; flex-direction: column; gap: 4px;">' + attachmentsHtml + '</div>';
+    }
+    html += '<textarea class="em-widget-textarea" id="' + inputId + '" data-event-id="' + ev.id + '" data-field-key="' + esc(fieldKey) + '" data-original-type="' + originalType + '" onchange="eventMapUpdateRichField(' + ev.id + ', \'' + esc(fieldKey).replace(/'/g, '\\\'') + '\', this.value, this.getAttribute(\'data-original-type\'))">' + esc(displayValue) + '</textarea>';
+    html += '<div style="margin-top: 6px; display: flex; justify-content: flex-end;">';
+    html += '<label class="btn btn-sm" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">';
+    html += '<i class="fas fa-upload"></i> Upload File';
+    html += '<input type="file" style="display: none" onchange="eventMapUploadFieldFile(' + ev.id + ', \'' + esc(fieldKey).replace(/'/g, '\\\'') + '\', this)">';
+    html += '</label>';
     html += '</div></div>';
     return html;
   }
 
-  function renderValue(val) {
+  window.eventMapUploadFieldFile = function (eventId, fieldKey, input) {
+    var file = input.files[0];
+    if (!file) return;
+    
+    var ev = events.find(function (item) { return item.id === eventId; });
+    if (!ev) return;
+    
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var fileObj = {
+        name: file.name,
+        type: file.type || '',
+        dataUrl: e.target.result
+      };
+      
+      // If the field was originally an array, append to it (or replace matching filename string). 
+      // Otherwise, replace it.
+      var currentValue = ev[fieldKey];
+      
+      if (Array.isArray(currentValue)) {
+        var replaced = false;
+        for (var i = 0; i < currentValue.length; i++) {
+          if (typeof currentValue[i] === 'string' && currentValue[i] === fileObj.name) {
+            currentValue[i] = fileObj;
+            replaced = true;
+            break;
+          }
+        }
+        if (!replaced) currentValue.push(fileObj);
+        ev[fieldKey] = currentValue;
+      } else {
+        // If it was a matching string, replace it
+        if (typeof currentValue === 'string' && currentValue === fileObj.name) {
+          ev[fieldKey] = fileObj;
+        } else if (currentValue && typeof currentValue === 'string') {
+          // If it was some other string, maybe convert to array?
+          // Let's just replace it for simplicity, or make it an array.
+          ev[fieldKey] = [currentValue, fileObj];
+        } else {
+          ev[fieldKey] = fileObj;
+        }
+      }
+      
+      persistState();
+      renderEventDetail(eventId, fieldKey); // re-render sidebar, keeping focus on this field
+      renderGraph(); // re-render map in case this affects card
+    };
+    reader.readAsDataURL(file);
+  };
+
+  function saveExpandedFields() {
+    try {
+      var serialized = {};
+      Object.keys(expandedFields).forEach(function (evId) {
+        var set = expandedFields[evId];
+        serialized[evId] = set && set.forEach ? (function () { var a = []; set.forEach(function (k) { a.push(k); }); return a; }()) : [];
+      });
+      localStorage.setItem('olivia.eventMap.expandedFields', JSON.stringify(serialized));
+    } catch (e) { }
+  }
+
+  function loadExpandedFields() {
+    try {
+      var raw = localStorage.getItem('olivia.eventMap.expandedFields');
+      if (!raw) return;
+      var parsed = JSON.parse(raw);
+      Object.keys(parsed).forEach(function (evId) {
+        expandedFields[evId] = new Set(parsed[evId]);
+      });
+    } catch (e) { }
+  }
+
+  window.eventMapToggleRichSection = function (header, evId, fieldKey) {
+    var body = header.nextElementSibling;
+    if (body && body.classList.contains('em-rich-body')) {
+      var nowOpen = header.classList.toggle('open');
+      body.classList.toggle('open');
+      // Persist expand state
+      if (evId !== undefined && fieldKey !== undefined) {
+        if (!expandedFields[evId]) expandedFields[evId] = new Set();
+        if (nowOpen) {
+          expandedFields[evId].add(fieldKey);
+        } else {
+          expandedFields[evId].delete(fieldKey);
+        }
+        saveExpandedFields();
+      }
+    }
+  };
+
+  // FIX #15: Only show "Open" button if ref can be opened
+  function renderAttachmentHtml(ref, ev, fieldPath) {
+    var name = ref.name || 'Attachment';
+    var icon = fileIconName(ref) || 'file';
+    var canOpen = false;
+    if (ref.dataUrl) canOpen = true;
+    else if (ref.kind === 'url') canOpen = true;
+    else if (ref.kind === 'path') canOpen = true;
+
+    var openBtn = (ev && fieldPath && canOpen)
+      ? '<button type="button" class="btn btn-sm" onclick="eventMapOpenFile(' + ev.id + ',\'' + String(fieldPath).replace(/'/g, '\\\'') + '\')">Open</button>'
+      : '';
+
+    return '<div class="em-file-attachment"><i class="fas fa-' + icon + ' em-file-icon"></i>' +
+      '<span class="em-file-name">' + esc(name) + '</span>' + openBtn + '</div>';
+  }
+
+  function renderValue(val, ev, fieldPath) {
     if (val === null || val === undefined) return '<span class="em-kv-value">null</span>';
     if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+      if (typeof val === 'string') {
+        var ref = looksLikeFileRef(val);
+        if (ref) return renderAttachmentHtml({ name: ref, dataUrl: null }, ev, fieldPath);
+      }
       return '<span class="em-kv-value">' + esc(String(val)) + '</span>';
+    }
+    if (typeof val === 'object' && !Array.isArray(val) && val.dataUrl) {
+      return renderAttachmentHtml(val, ev, fieldPath);
     }
     if (Array.isArray(val)) {
       if (val.length === 0) return '<span class="em-kv-value">(empty array)</span>';
       var items = val.map(function (item, idx) {
         if (typeof item === 'object' && item !== null) {
-          return '<div class="em-array-item"><strong>[' + idx + ']</strong> ' + renderValue(item) + '</div>';
+          return '<div class="em-array-item"><strong>[' + idx + ']</strong> ' + renderValue(item, ev, fieldPath ? fieldPath + '.' + idx : fieldPath) + '</div>';
         }
-        return '<div class="em-array-item"><strong>[' + idx + ']</strong> ' + renderValue(item) + '</div>';
+        return '<div class="em-array-item"><strong>[' + idx + ']</strong> ' + renderValue(item, ev, fieldPath ? fieldPath + '.' + idx : fieldPath) + '</div>';
       }).join('');
       return items;
     }
     if (typeof val === 'object') {
       var rows = Object.keys(val).map(function (k) {
-        return '<div class="em-kv-row"><span class="em-kv-key">' + esc(k) + ':</span> ' + renderValue(val[k]) + '</div>';
+        return '<div class="em-kv-row"><span class="em-kv-key">' + esc(k) + ':</span> ' + renderValue(val[k], ev, fieldPath ? fieldPath + '.' + k : k) + '</div>';
       }).join('');
       return rows;
     }
@@ -1401,6 +2233,7 @@
     });
   }
 
+  // FIX #13: Attempt to parse date from HTML instead of hardcoding
   function transcriptEventsFromHtml(html) {
     var doc = new DOMParser().parseFromString(html, 'text/html');
     return Array.prototype.slice.call(doc.querySelectorAll('a.evidence-card')).map(function (card) {
@@ -1410,7 +2243,18 @@
         return el ? el.textContent.trim() : '';
       };
       var time = text('.ev-time');
-      var date = /^\d{1,2}:\d{2}$/.test(time) ? '2024-07-05T' + time : null;
+      var date = null;
+      if (/^\d{1,2}:\d{2}$/.test(time)) {
+        // Try to find a date in the parent phase or document
+        var phaseTitle = phase ? textFromElement(phase, '.phase-title') : '';
+        var docDate = doc.querySelector('meta[data-date]');
+        var dateStr = phaseTitle.match(/\d{4}-\d{2}-\d{2}/) || (docDate && docDate.getAttribute('data-date'));
+        if (dateStr) {
+          date = dateStr + 'T' + time;
+        } else {
+          date = '2024-07-05T' + time; // Fallback
+        }
+      }
       return {
         title: text('h3') || text('.ev-badge') || 'Transcript',
         date: date,
@@ -1572,8 +2416,8 @@
       tags: [],
       evidence: [],
       status: '',
-      x: (offset ? (window.innerWidth/2 - offset.x) / scale : 200) + Math.random()*50,
-      y: (offset ? (window.innerHeight/2 - offset.y) / scale : 100) + Math.random()*50
+      x: (offset ? (window.innerWidth / 2 - offset.x) / scale : 200) + Math.random() * 50,
+      y: (offset ? (window.innerHeight / 2 - offset.y) / scale : 100) + Math.random() * 50
     };
     events.push(newEv);
     visibleSources[sourceKey(newEv)] = true;
@@ -1588,6 +2432,8 @@
   window.eventMapDuplicateEvent = function (id) {
     var ev = events.find(function (e) { return e.id === id; });
     if (!ev) return;
+    closeNodeEditor();
+    closeContextMenu();
     var maxId = events.reduce(function (m, e) { return Math.max(m, e.id); }, 0);
     var clone = JSON.parse(JSON.stringify(ev));
     clone.id = maxId + 1;
@@ -1605,6 +2451,8 @@
 
   window.eventMapDeleteEvent = function (id) {
     if (!confirm('Delete this event? Its links will be removed too.')) return;
+    closeNodeEditor();
+    closeContextMenu();
     events = events.filter(function (e) { return e.id !== id; });
     links = links.filter(function (l) { return l.source !== id && l.target !== id; });
     if (selectedEventId === id) selectedEventId = null;
@@ -1760,7 +2608,8 @@
     }
     var html = '<div class="em-entities-list">';
     entityNames.forEach(function (ent) {
-      html += '<div class="em-entity-chip' + (entityFilter === ent ? ' active' : '') + '" onclick="eventMapFilterByEntity(\'' + esc(ent).replace(/'/g, '\\\'') + '\')">' +
+      var isActive = entityFilter.indexOf(ent) !== -1;
+      html += '<div class="em-entity-chip' + (isActive ? ' active' : '') + '" onclick="eventMapFilterByEntity(\'' + esc(ent).replace(/'/g, '\\\'') + '\')">' +
         esc(ent) + ' <span class="em-entity-count">' + entityCounts[ent] + '</span></div>';
     });
     html += '</div>';
@@ -1768,8 +2617,12 @@
   }
 
   window.eventMapFilterByEntity = function (entity) {
-    if (entityFilter === entity) entityFilter = null;
-    else entityFilter = entity;
+    var idx = entityFilter.indexOf(entity);
+    if (idx !== -1) {
+      entityFilter.splice(idx, 1); // deselect
+    } else {
+      entityFilter.push(entity); // select
+    }
     renderEntities();
     renderGraph();
     renderTimeline();
@@ -1866,19 +2719,19 @@
   }
 
   function transcriptToEvent(t) {
-    var ev = Object.assign({}, t); // copy all fields
+    var ev = Object.assign({}, t);
     ev.title = t.title || t.transcript_id || 'Transcript';
-    ev.date = t.recording_datetime || t.metadata?.timestamps?.File_Modified_Date || null;
+    ev.date = t.recording_datetime || (t.metadata && t.metadata.timestamps && t.metadata.timestamps.File_Modified_Date) || null;
     ev.category = 'Transcript';
     ev.description = t.subtitle || t.summary || '';
-    ev.entities = t.participants ? t.participants.map(p => p.canonical_name).filter(Boolean) : [];
+    ev.entities = t.participants ? t.participants.map(function (p) { return p.canonical_name; }).filter(Boolean) : [];
     ev.tags = t.tags || [];
     ev.status = t.status || '';
     return ev;
   }
 
   function violationToEvent(v) {
-    var ev = Object.assign({}, v); // copy all fields
+    var ev = Object.assign({}, v);
     ev.title = v.title || v.violation_id || 'Violation';
     ev.date = v.incident_timestamp || v.incident_date || v.date_utc || null;
     ev.category = ensureCategory(v.category || 'Violation');
@@ -1896,7 +2749,6 @@
     if (v.jurisdiction) ev.tags.push(v.jurisdiction);
     ev.status = v.required_elements_status || v.status || '';
 
-    // Flatten useful legal metadata into top-level fields for the detail panel
     if (v.incident) ev.incident = v.incident;
     if (v.incident_id) ev.incident_id = v.incident_id;
     if (v.severity) ev.severity = v.severity;
@@ -1923,7 +2775,6 @@
     return ev;
   }
 
-  // Decompose a single violation object into a connected map of nodes.
   function violationToMap(v) {
     var events = [];
     var links = [];
@@ -1942,7 +2793,6 @@
       links.push({ id: 'link-' + idCounter + '-' + Math.random().toString(36).substr(2, 5), source: source, target: target, type: type || 'related to' });
     }
 
-    // ── Central violation node ────────────────────────────────────────────
     var central = addEvent({
       title: v.title || v.violation_id || 'Violation',
       date: v.incident_timestamp || v.incident_date || v.date_utc || null,
@@ -1971,7 +2821,6 @@
     if (central.severity) central.tags.push(central.severity);
     if (central.jurisdiction) central.tags.push(central.jurisdiction);
 
-    // ── Legal basis article nodes ─────────────────────────────────────────
     var articleNodes = {};
     if (v.legal_basis && Array.isArray(v.legal_basis)) {
       v.legal_basis.forEach(function (lb, i) {
@@ -1994,7 +2843,6 @@
       });
     }
 
-    // ── Element grid nodes (per article) ──────────────────────────────────
     if (v.element_grids && typeof v.element_grids === 'object') {
       Object.keys(v.element_grids).forEach(function (article) {
         var grid = v.element_grids[article];
@@ -2020,7 +2868,6 @@
       });
     }
 
-    // ── Key admission nodes (grouped by group label) ──────────────────────
     var admissionGroups = {};
     if (v.key_admissions && Array.isArray(v.key_admissions)) {
       v.key_admissions.forEach(function (ka) {
@@ -2047,7 +2894,6 @@
       addLink(central.id, node.id, 'documented by');
     });
 
-    // ── Evidence nodes ────────────────────────────────────────────────────
     if (v.evidence && Array.isArray(v.evidence)) {
       v.evidence.forEach(function (e) {
         if (!e) return;
@@ -2065,7 +2911,6 @@
       });
     }
 
-    // ── Related violation nodes ───────────────────────────────────────────
     var related = v.related_violations || [];
     if (v.cross_references && Array.isArray(v.cross_references)) {
       v.cross_references.forEach(function (cr) {
@@ -2086,7 +2931,6 @@
       addLink(central.id, node.id, 'related to');
     });
 
-    // ── Layout: arrange in a radial/column layout around the central node ─
     var centerX = 0, centerY = 0;
     central.x = centerX; central.y = centerY;
     var ring = 0, ringIndex = 0;
@@ -2105,14 +2949,12 @@
     return { events: events, links: links };
   }
 
-  // Decompose an array of violations into a connected map.
   function violationIndexToMap(violations) {
     var allEvents = [];
     var allLinks = [];
     var offsetX = 0;
     violations.forEach(function (v) {
       var m = violationToMap(v);
-      // Shift each violation's cluster horizontally so they don't overlap
       var clusterMinX = Infinity, clusterMaxX = -Infinity;
       m.events.forEach(function (e) {
         if (e.x < clusterMinX) clusterMinX = e.x;
@@ -2151,6 +2993,7 @@
   // ── Persistence (localStorage) ─────────────────────────────────────────
   var STORAGE_KEY = 'olivia.eventMap.v1';
 
+  // FIX #12: Persist scale and offset
   function persistState() {
     try {
       var panel = document.getElementById('emDetailPanel');
@@ -2159,7 +3002,12 @@
         events: events,
         links: links,
         categories: EVENT_CATEGORIES,
-        panelWidth: panelWidth
+        panelWidth: panelWidth,
+        visibleSources: visibleSources,
+        visibleFieldsBySource: visibleFieldsBySource,
+        fieldFilters: fieldFilters,
+        scale: scale,
+        offset: offset
       }));
     } catch (err) {
       // storage may be unavailable; ignore
@@ -2182,6 +3030,11 @@
         var panel = document.getElementById('emDetailPanel');
         if (panel) panel.style.width = Math.max(240, Math.min(640, Number(data.panelWidth))) + 'px';
       }
+      if (data.visibleSources && typeof data.visibleSources === 'object') visibleSources = data.visibleSources;
+      if (data.visibleFieldsBySource && typeof data.visibleFieldsBySource === 'object') visibleFieldsBySource = data.visibleFieldsBySource;
+      if (data.fieldFilters && Array.isArray(data.fieldFilters)) fieldFilters = data.fieldFilters;
+      if (data.scale && typeof data.scale === 'number') scale = data.scale;
+      if (data.offset && typeof data.offset === 'object') offset = data.offset;
       return true;
     } catch (err) {
       return false;
@@ -2189,7 +3042,7 @@
   }
 
   window.eventMapClearSaved = function () {
-    try { localStorage.removeItem(STORAGE_KEY); } catch (err) {}
+    try { localStorage.removeItem(STORAGE_KEY); } catch (err) { }
     alert('Saved event map cleared.');
   };
 
