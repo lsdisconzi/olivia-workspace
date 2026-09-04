@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="clean-professional">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disconzi v. LATAM — NAR-10 · STG_16 · Counter Confrontation (Full Narrative)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8f7f4; --bg-card: #ffffff; --bg-card-hover: #f2f0ea; --bg-surface: #f1efe8;
+            --border: #e1ddd1; --border-strong: #c7c1b0; --text-primary: #1b1c1e; --text-secondary: #52555c;
+            --text-muted: #8a8b87; --accent: #24405f; --accent-dim: rgba(36, 64, 95, 0.07);
+            --status-flag: #7a3733; --status-flag-dim: rgba(122, 55, 51, 0.08); --status-analysis: #8a6a2c;
+            --status-analysis-dim: rgba(138, 106, 44, 0.09); --status-note: #3f6b4f; --status-note-dim: rgba(63, 107, 79, 0.08);
+            --mono: 'JetBrains Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; --sans: 'Inter', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--sans); background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; padding-bottom: 60px; }
+        a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+        code { font-family: var(--mono); font-size: 0.85em; color: var(--accent); background: var(--bg-surface); padding: 1px 6px; border-radius: 2px; }
+        .masthead { border-bottom: 1px solid var(--border); padding: 44px 0 32px; }
+        .masthead-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .masthead-back { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; display: inline-block; }
+        .masthead-back:hover { color: var(--accent); text-decoration: none; }
+        .masthead-badge { display: inline-block; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-strong); padding: 5px 12px; border-radius: 2px; margin-bottom: 20px; }
+        .masthead h1 { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 600; line-height: 1.25; margin-bottom: 10px; color: var(--text-primary); }
+        .masthead-sub { font-size: 0.96rem; color: var(--text-secondary); max-width: 760px; line-height: 1.7; }
+        .stats-bar { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stats-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; display: flex; gap: 0; flex-wrap: wrap; }
+        .stat-item { flex: 1 1 180px; padding: 18px 14px; border-right: 1px solid var(--border); }
+        .stat-item:last-child { border-right: none; }
+        .stat-val { font-family: var(--mono); font-size: 0.92rem; font-weight: 500; color: var(--text-primary); word-break: break-word; }
+        .stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 5px; }
+        .main { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .section-head { padding: 44px 0 18px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+        .section-head h2 { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; padding-bottom: 14px; }
+        .section-head p { color: var(--text-secondary); font-size: 0.9rem; padding-bottom: 16px; max-width: 760px; }
+        .panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 18px 22px; margin-bottom: 14px; }
+        .meta-key { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+        .finding-box { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 3px; padding: 18px 20px; margin: 16px 0; }
+        .finding-box.flag { border-left-color: var(--status-flag); }
+        .finding-box.analysis { border-left-color: var(--status-analysis); }
+        .finding-box h3 { font-family: var(--serif); font-size: 1.1rem; margin-bottom: 8px; }
+        .finding-box p, .finding-box li { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.72; }
+        .finding-box ul { margin-top: 10px; padding-left: 18px; }
+        .page-footer { border-top: 1px solid var(--border); padding: 28px 0; text-align: center; margin-top: 48px; }
+        .page-footer p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.8; }
+        .mono { font-family: var(--mono); }
+        @media (max-width: 600px) { .masthead { padding: 28px 0 22px; } .masthead-inner, .main { padding: 0 16px; } }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="masthead">
+            <div class="masthead-inner">
+                <a class="masthead-back" href="../index.html">&larr; Evidence Archive · Index</a>
+                <div class="masthead-badge">Narrative · NAR-10 · STG_16 · Counter Confrontation</div>
+                <h1>The Counter Confrontation: Third Justification, Retaliation, and the Refusal to Document</h1>
+                <p class="masthead-sub">Full narrative integrating the direct confrontation with LATAM security, the recurring false-removal justifications, the retaliation admission, and the closed-loop refusal to produce a written explanation.</p>
+            </div>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stats-inner">
+                <div class="stat-item"><div class="stat-val">json_aeropuerto_arturo_merino_benitez_16</div><div class="stat-label">Audio file</div></div>
+                <div class="stat-item"><div class="stat-val">~5.5 min</div><div class="stat-label">Duration</div></div>
+                <div class="stat-item"><div class="stat-val">2024-07-05 · 16:47</div><div class="stat-label">Date</div></div>
+                <div class="stat-item"><div class="stat-val">SCL · Counter area</div><div class="stat-label">Location</div></div>
+                <div class="stat-item"><div class="stat-val">es-CL</div><div class="stat-label">Language</div></div>
+            </div>
+        </div>
+
+        <main class="main">
+            <div class="section-head">
+                <h2>Overview</h2>
+                <p>This recording captures the direct confrontation between the passenger and Joaquín Barraza, LATAM security chief, approximately 21 minutes after the luggage-counter discussion. It is one of the clearest examples in the case of a shifting-facts pattern: the removal is justified first by an alleged aggression, then by a boarding-pass issue, then by unauthorized entry, and each explanation is met with evidence that contradicts it. The decisive element is the flat refusal to provide a written explanation.</p>
+            </div>
+
+            <div class="panel">
+                <div class="meta-key">Case / Narrative ID</div>
+                <div><strong>LA8159</strong> · <code>I-002_09_NAR-10_STG_16_counter_confrontation</code> · Source: <code>_shared/cases/la8159/02-transcripts/I-002/I-002_09_NAR-10_STG_16_counter_confrontation.json</code></div>
+            </div>
+
+            <div class="panel">
+                <div class="meta-key">Key evidentiary fact</div>
+                <p>The strongest fact in this recording is not merely that the passenger disputes the airline’s narrative. It is the direct, on-tape admission that there is no written document to justify the action, and that the airline is refusing to cooperate because the passenger did not “collaborate” with a false accusation. This is a retaliation rationale stated aloud.</p>
+            </div>
+
+            <div class="section-head">
+                <h2>Methodology</h2>
+                <p>The transcript is evaluated as a continuation of the same evidentiary chain: false aggression, shifting after-the-fact explanations, refusal to produce documentation, and institutional closure. The importance of STG_16 is that it captures the airline’s own internal logic in plain speech: the narrative keeps shifting, the paper trail does not exist, and the passenger is told no one will assist him.</p>
+            </div>
+
+            <div class="finding-box flag">
+                <h3>Finding 1 — A third removal justification appears on tape</h3>
+                <p>Barraza states: “porque ingresaste sin autorización al avión.” This is the third distinct justification for the same removal, after the earlier false-aggression allegation and the later “boarding pass” narrative. The pattern itself is evidentiary: each new explanation appears only after the previous one collapses under scrutiny, suggesting a post-hoc rationalization rather than a stable factual basis.</p>
+            </div>
+
+            <div class="finding-box analysis">
+                <h3>Finding 2 — The document does not exist, and the airline admits it</h3>
+                <p>The passenger reconstructs the full chain: Barraza cites the camera, refuses to show it, and asks for a written explanation. Barraza then says, effectively, that the document does not exist. This is a critical admission: the airline claims access to the evidence but refuses to show or document it. The absence of a written explanation is not a neutral omission; it is a direct evidentiary vacuum.</p>
+                <ul>
+                    <li>Claim made: “I saw it on camera.”</li>
+                    <li>Response: “I cannot show you the camera.”</li>
+                    <li>Request: “Give me a document explaining it.”</li>
+                    <li>Answer: no document exists.</li>
+                </ul>
+            </div>
+
+            <div class="finding-box flag">
+                <h3>Finding 3 — Retaliation is stated explicitly</h3>
+                <p>Barraza says: “Tú no quisiste colaborar, yo no te voy a colaborar… nadie te va a colaborar.” This is not a vague suggestion but a direct statement that assistance is denied because the passenger refused to cooperate with a false accusation. That is a retaliation rationale, stated plainly and on recording.</p>
+                <p>The legal significance is substantial: the passenger is not refusing a lawful process; he is refusing to participate in a false narrative. The airline responds by turning the entire service relationship into retaliation rather than lawful process.</p>
+            </div>
+
+            <div class="finding-box analysis">
+                <h3>Finding 4 — The airline closes the channel and refuses to answer</h3>
+                <p>Barraza concludes with an institutional message: “Nadie más le va a dar otra respuesta.” This echoes the same pattern seen elsewhere in the case: the passenger is not given a remedy, a written basis, or a direct response; instead, he is funneled into an internal channel that closes on him. The issue is not technical uncertainty; it is deliberate channel closure.</p>
+            </div>
+
+            <div class="finding-box flag">
+                <h3>Finding 5 — The passenger invokes the governing law</h3>
+                <p>He explicitly states: “es mi derecho… dentro de la Chilean Aviation Law.” He demands a written explanation and a certified basis for the removal. This is a legally grounded demand, not a complaint from a confused passenger. The airline’s answer is not to provide the document but to deny it exists and to deny assistance.</p>
+            </div>
+
+            <div class="section-head">
+                <h2>Summary of legal significance</h2>
+                <p>STG_16 is a high-value record because it captures a direct confrontation in which the airline’s shifting removal narratives, lack of documentation, and retaliation are all stated on tape. The narrative is not a single mistake; it is a pattern of bad faith, channel closure, and procedural denial.</p>
+            </div>
+
+            <div class="panel">
+                <div class="meta-key">Master finding candidates</div>
+                <ul>
+                    <li><strong>F-003 expanded:</strong> The removal rationale evolves into a third false justification — unauthorized entry.</li>
+                    <li><strong>F-005 confirmation:</strong> No written document exists to support the removal; the passenger is denied the explanation he is entitled to.</li>
+                    <li><strong>F-012 confirmation:</strong> Retaliatory non-cooperation is stated as the airline’s policy toward the passenger.</li>
+                    <li><strong>F-016 confirmation:</strong> “Nadie más le va a dar otra respuesta” confirms the internal-channel closure pattern.</li>
+                </ul>
+            </div>
+
+            <div class="panel">
+                <div class="meta-key">Cross-recording anchors</div>
+                <p>Backward: STG_15 luggage counter and STG_13 corridor, where the written-document issue and retaliation patterns are already visible. Forward: subsequent counter and procedural phases, where the same closed-loop response continues. This stage is a direct consolidation of the case’s internal contradiction and refusal logic.</p>
+            </div>
+        </main>
+
+        <footer class="page-footer">
+            <p class="mono">LA8159 · Narrative record · STG_16 · Counter Confrontation</p>
+            <p>Attorney work product — privileged and confidential.</p>
+        </footer>
+    </div>
+</body>
+</html>

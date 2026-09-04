@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="clean-professional">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disconzi v. LATAM — NAR-03 · STG_5 · On-Aircraft Removal Order (Full Narrative)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8f7f4; --bg-card: #ffffff; --bg-card-hover: #f2f0ea; --bg-surface: #f1efe8;
+            --border: #e1ddd1; --border-strong: #c7c1b0; --text-primary: #1b1c1e; --text-secondary: #52555c;
+            --text-muted: #8a8b87; --accent: #24405f; --accent-dim: rgba(36, 64, 95, 0.07);
+            --status-flag: #7a3733; --status-flag-dim: rgba(122, 55, 51, 0.08); --status-analysis: #8a6a2c;
+            --status-analysis-dim: rgba(138, 106, 44, 0.09); --status-note: #3f6b4f; --status-note-dim: rgba(63, 107, 79, 0.08);
+            --mono: 'JetBrains Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; --sans: 'Inter', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--sans); background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; padding-bottom: 60px; }
+        a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+        code { font-family: var(--mono); font-size: 0.85em; color: var(--accent); background: var(--bg-surface); padding: 1px 6px; border-radius: 2px; }
+        .masthead { border-bottom: 1px solid var(--border); padding: 44px 0 32px; }
+        .masthead-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .masthead-back { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; display: inline-block; }
+        .masthead-back:hover { color: var(--accent); text-decoration: none; }
+        .masthead-badge { display: inline-block; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-strong); padding: 5px 12px; border-radius: 2px; margin-bottom: 20px; }
+        .masthead h1 { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 600; line-height: 1.25; margin-bottom: 10px; color: var(--text-primary); }
+        .masthead-sub { font-size: 0.96rem; color: var(--text-secondary); max-width: 700px; line-height: 1.7; }
+        .stats-bar { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stats-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; display: flex; gap: 0; flex-wrap: wrap; }
+        .stat-item { flex: 1 1 180px; padding: 18px 14px; border-right: 1px solid var(--border); }
+        .stat-item:last-child { border-right: none; }
+        .stat-val { font-family: var(--mono); font-size: 0.92rem; font-weight: 500; color: var(--text-primary); word-break: break-word; }
+        .stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 5px; }
+        .main { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .section-head { padding: 44px 0 18px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+        .section-head h2 { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; padding-bottom: 14px; }
+        .section-head p { color: var(--text-secondary); font-size: 0.9rem; padding-bottom: 16px; max-width: 700px; }
+        .transcript-list { display: flex; flex-direction: column; gap: 6px; padding-bottom: 8px; }
+        .transcript-segment { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 13px 18px; }
+        .transcript-segment.seg-passenger { border-left-color: var(--accent); }
+        .transcript-segment.seg-other { border-left-style: dashed; border-left-color: var(--status-analysis); }
+        .transcript-segment .seg-time { font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.02em; }
+        .transcript-segment .seg-speaker { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+        .transcript-segment .seg-text { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65; font-style: italic; }
+        .transcript-segment .seg-actions { margin-top: 8px; display: flex; gap: 8px; }
+        .transcript-segment .seg-note-btn { font-family: var(--mono); font-size: 0.65rem; padding: 3px 9px; border-radius: 2px; background: transparent; color: var(--text-muted); border: 1px solid var(--border); cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+        .transcript-segment .seg-note-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .transcript-segment .seg-play-btn { font-family: var(--mono); font-size: 0.65rem; padding: 3px 9px; border-radius: 2px; background: transparent; color: var(--accent); border: 1px solid var(--accent); cursor: pointer; transition: background-color 0.15s, color 0.15s; font-weight: 500; margin-right: 8px; line-height: 1.4; }
+        .transcript-segment .seg-play-btn:hover { background-color: var(--accent-dim); color: var(--accent); }
+        .evidence-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .evidence-card { display: grid; grid-template-columns: 100px 1fr 150px; align-items: start; gap: 20px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 18px 22px; }
+        .ev-time-col { padding-top: 2px; }
+        .ev-time { font-family: var(--mono); font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
+        .ev-duration { font-family: var(--mono); font-size: 0.66rem; color: var(--text-muted); margin-top: 4px; }
+        .ev-body h3 { font-size: 0.94rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+        .ev-body .ev-summary { font-size: 0.86rem; color: var(--text-secondary); line-height: 1.68; }
+        .ev-provisions { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); margin-top: 10px; }
+        .ev-meta-col { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; text-align: right; }
+        .ev-type { font-family: var(--mono); font-size: 0.63rem; padding: 4px 9px; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; white-space: nowrap; }
+        .type-primary { background: var(--status-flag-dim); color: var(--status-flag); }
+        .type-procedural { background: var(--status-analysis-dim); color: var(--status-analysis); }
+        .type-analysis { background: var(--accent-dim); color: var(--accent); }
+        .ev-open { font-family: var(--mono); font-size: 0.66rem; background: transparent; border: none; color: var(--accent); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 2px; }
+        .ev-open:hover { color: var(--text-primary); }
+        .notes-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px; margin-top: 12px; }
+        .notes-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+        .notes-label { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); }
+        .notes-count { font-family: var(--mono); font-size: 0.68rem; padding: 3px 9px; border-radius: 2px; border: 1px solid var(--border-strong); color: var(--text-muted); }
+        .notes-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .note-card { background: var(--bg-surface); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 13px 16px; }
+        .note-card.note-admission { border-left-color: var(--status-flag); }
+        .note-card.note-xref { border-left-color: var(--accent); }
+        .note-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 7px; }
+        .note-type { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 2px; background: var(--bg-card); border: 1px solid var(--border-strong); color: var(--text-muted); }
+        .note-card.note-admission .note-type { color: var(--status-flag); border-color: var(--status-flag); }
+        .note-card.note-xref .note-type { color: var(--accent); border-color: var(--accent); }
+        .note-author { font-size: 0.86rem; font-weight: 600; color: var(--text-primary); }
+        .note-seg { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); margin-left: auto; }
+        .note-body { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; white-space: pre-wrap; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(20, 20, 18, 0.55); z-index: 1000; justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-y: auto; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--bg-primary); border: 1px solid var(--border-strong); border-radius: 6px; max-width: 760px; width: 100%; margin: auto 0; }
+        .modal-header { padding: 22px 28px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 16px; }
+        .modal-header-body { flex: 1; }
+        .modal-type-badge { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 2px; display: inline-block; margin-bottom: 10px; }
+        .modal-title { font-family: var(--serif); font-size: 1.25rem; font-weight: 600; line-height: 1.3; color: var(--text-primary); }
+        .modal-audio-ref { font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); margin-top: 6px; }
+        .modal-close { background: transparent; border: 1px solid var(--border-strong); color: var(--text-muted); width: 30px; height: 30px; border-radius: 3px; cursor: pointer; font-size: 1.05rem; }
+        .modal-close:hover { color: var(--text-primary); border-color: var(--text-primary); }
+        .modal-body { padding: 22px 28px; }
+        .modal-status { display: flex; align-items: center; gap: 8px; margin-bottom: 22px; padding: 10px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; }
+        .modal-status-text { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); }
+        .modal-section { margin-bottom: 22px; }
+        .modal-section-label { font-family: var(--mono); font-size: 0.63rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .modal-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        .modal-segments { display: flex; flex-direction: column; gap: 8px; }
+        .modal-segment { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 3px; padding: 12px 16px; }
+        .modal-segment-time { font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; }
+        .modal-segment-speaker { font-size: 0.76rem; font-weight: 600; margin-bottom: 4px; color: var(--text-primary); }
+        .modal-segment-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; font-style: italic; }
+        .modal-jurisdictions, .modal-xrefs { display: flex; flex-wrap: wrap; gap: 6px; }
+        .jurisdiction-pill { display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; padding: 12px 16px; min-width: 200px; flex: 1; }
+        .jurisdiction-name { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 6px; }
+        .jurisdiction-laws { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
+        .jurisdiction-article { font-family: var(--mono); font-size: 0.7rem; color: var(--text-primary); background: var(--bg-surface); padding: 2px 6px; border-radius: 2px; display: inline-block; margin: 2px 2px 2px 0; }
+        .xref-tag { font-family: var(--mono); font-size: 0.68rem; padding: 4px 10px; border-radius: 2px; background: var(--bg-card); border: 1px solid var(--border-strong); color: var(--text-muted); }
+        .modal-footer { padding: 14px 28px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .modal-footer-note { font-family: var(--mono); font-size: 0.66rem; color: var(--text-muted); flex: 1; }
+        .modal-download-btn { font-family: var(--mono); font-size: 0.66rem; padding: 6px 14px; border-radius: 3px; background: transparent; border: 1px solid var(--border-strong); color: var(--text-secondary); cursor: pointer; }
+        .modal-download-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .page-footer { border-top: 1px solid var(--border); padding: 28px 0; text-align: center; margin-top: 48px; }
+        .page-footer p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.8; }
+        .page-footer .mono { font-family: var(--mono); }
+        .pinned-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(248, 247, 244, 0.94); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; gap: 16px; }
+        .pinned-nav-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); text-decoration: none; padding: 5px 12px; border-radius: 3px; border: 1px solid var(--border-strong); }
+        .pinned-nav-link:hover { background: var(--accent-dim); text-decoration: none; }
+        .pinned-nav-label { font-family: var(--mono); font-size: 0.64rem; color: var(--text-muted); letter-spacing: 0.04em; }
+        @media (max-width: 900px) { .evidence-card { grid-template-columns: 1fr; gap: 8px; } .ev-meta-col { flex-direction: row-reverse; align-items: center; text-align: left; justify-content: flex-end; } }
+        @media (max-width: 600px) { .masthead { padding: 28px 0 22px; } .masthead-inner, .main { padding: 0 16px; } .modal-overlay { padding: 16px 10px; } .pinned-nav { padding: 8px 14px; } .pinned-nav-label { display: none; } }
+    </style>
+  <meta name="n118-translation" content="true">
+  <meta name="translation-language" content="es">
+  <meta name="translation-label" content="N118 Spanish translation copy">
+</head>
+<body data-audio-stem="aeropuerto_STG_5" data-audio-map-key="i_002_03_nar_05_stg_5_aircraft_removal">
+  <div style="position:sticky;top:0;z-index:999;background:#f4efe6;border-bottom:1px solid #d7cdb9;padding:10px 16px;font:600 12px 'Inter',sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#4a3b2a;">N118 Spanish translation copy</div>
+
+<div class="page">
+    <header class="masthead">
+        <div class="masthead-inner">
+            <a class="masthead-back" href="../index.html">&larr; Evidence Archive · Index</a>
+            <div class="masthead-badge">Narrative · NAR-03 · STG_5 · On-Aircraft Removal Order</div>
+            <h1>On-Aircraft Removal Order</h1>
+            <p class="masthead-sub">Full narrative integrating transcript, forensic reasoning, and legal significance. Segments are aligned for listening while reading.</p>
+        </div>
+    </header>
+    <div class="stats-bar">
+        <div class="stats-inner">
+            <div class="stat-item"><div class="stat-val">aeropuerto_STG_5.m4a</div><div class="stat-label">Audio File</div></div>
+            <div class="stat-item"><div class="stat-val">3m 5.899s</div><div class="stat-label">Duration</div></div>
+            <div class="stat-item"><div class="stat-val">July 05, 2024 · 13:30:00</div><div class="stat-label">Date</div></div>
+            <div class="stat-item"><div class="stat-val">SCL · Cabin of LA8159, Seat 22A</div><div class="stat-label">Location</div></div>
+            <div class="stat-item"><div class="stat-val">es (primary) · pt fragments</div><div class="stat-label">Language</div></div>
+        </div>
+    </div>
+    <div class="main">
+
+        <!-- Recording Identification & Purpose -->
+        <div class="section-head">
+            <h2>Recording Identification & Purpose</h2>
+            <p>Metadata and evidentiary function of the central audio in the LA8159 timeline.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:32px;">
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; padding:18px 22px;">
+                <div style="font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Case / Narrative ID</div>
+                <div><strong>LA8159</strong> · <code>NAR-03_STG_5_aircraft_removal</code> · Source: <code>02-transcripts/I-002/I-002_03_NAR-05_STG_5_aircraft_removal.json</code></div>
+            </div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; padding:18px 22px;">
+                <div style="font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Speakers (JSON labels, verbatim)</div>
+                <div><code>[[SPK-passenger-leandro]] (passenger)</code> · <code>[[SPK-passenger-leandro]]</code> (same individual) · <code>Latam [[SPK-stewardess-accuser]]</code> — <strong>exactly two speakers; no third party</strong></div>
+            </div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; padding:18px 22px;">
+                <div style="font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Why This Recording Matters</div>
+                <p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.7;">
+                    1. <strong>Removal order issued without contemporaneous reason.</strong> Seg 1: "Tiene que salir del avion, tiene que bajar." 2. <strong>Passenger asks "why" three times</strong> (segs 2–4) before any reason is offered. 3. <strong>First and only reason offered is incomplete:</strong> "agressivo y" (seg 5). 4. <strong>The [[SPK-stewardess-accuser]] names the trigger herself:</strong> delay complaint (seg 14). 5. <strong>Both parties agree airport cameras can resolve the dispute</strong> (segs 21, 24, 25). 6. <strong>"Ventas" escalation pattern</strong> captured on tape (seg 28).
+                </p>
+            </div>
+        </div>
+
+        <!-- Methodology Binding -->
+        <div class="section-head">
+            <h2>Methodology Binding</h2>
+            <p>This recording has <strong>exactly two speakers</strong> in the source JSON: <code>[[SPK-passenger-leandro]]</code> and <code>Latam [[SPK-stewardess-accuser]]</code>. No third party speaks. Any analysis introducing a male steward, captain, unnamed third party, or "co-worker on the line" is fabricated. See <em>Olivia_case_methodology.md</em>.</p>
+        </div>
+
+        <!-- Segment-by-Segment Forensic Walk-Through -->
+        <div class="section-head">
+            <h2>Segment-by-Segment Forensic Walk-Through</h2>
+            <p>Chronological analysis with linked reasoning → article → violation chains. Select <strong>▶ Play</strong> to listen to each segment while reading.</p>
+        </div>
+        <div class="transcript-list">
+
+            <!-- Cluster 1 -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 1 — The Removal Order Without Reason (seg 0–4)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-0">
+                    <div class="seg-time">0.40s → 1.03s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Sí, acá."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="0" data-start="0.4" data-end="1.03">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-1">
+                    <div class="seg-time">2.87s → 3.52s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Tiene que salir del avión, tiene que bajar"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="1" data-start="2.87" data-end="3.52">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-2">
+                    <div class="seg-time">4.37s → 5.53s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"¿Por qué? Vengame a explicar el por qué"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="2" data-start="4.37" data-end="5.53">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-3">
+                    <div class="seg-time">8.50s → 9.11s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"¿Por qué?"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="3" data-start="8.5" data-end="9.11">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-4">
+                    <div class="seg-time">11.30s → 11.76s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"¿Por qué?"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="4" data-start="11.3" data-end="11.76">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> The removal order at seg 1 is bare: no reason, no reference to conduct, no invocation of safety. Passenger asks "why" three times in 7 seconds; no contemporaneous answer is given. This places the airline in immediate breach of duty to inform (LPDC Art. 3 lit. b; CACH 133; ACHR Art. 8). <strong>Articles engaged:</strong> LPDC Art. 3 lit. b, LPDC Art. 12, CACH Art. 133, CONST Art. 19 N°3, ACHR Art. 8. <strong>Violations linked:</strong> WRONGFUL-REMOVAL-NO-REASON, LPDC-PROFESSIONALISM-12, CACH-INFO-133A.</p>
+            </div>
+
+            <!-- Cluster 2 -->
+            <div style="margin-bottom:16px; border-left:3px solid var(--status-flag); padding-left:14px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem; color:var(--status-flag);">Cluster 2 — 🚨 The "agressivo y" Incomplete Reason (seg 5–8)</h3>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-5">
+                    <div class="seg-time">12.80s → 14.10s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Por qué fue agressivo y"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="5" data-start="12.8" data-end="14.1">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-6">
+                    <div class="seg-time">14.43s → 22.73s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"ya ¿dónde está la prueba? porque yo no fui agresivo, entonces de verdad vengan y me expliquen, me saquen de acá y me expliquen por qué"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="6" data-start="14.43" data-end="22.73">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-7">
+                    <div class="seg-time">23.52s → 25.93s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Me muestran dónde fui agresivo. ¿Tiene prueba?"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="7" data-start="23.52" data-end="25.93">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-8">
+                    <div class="seg-time">25.99s → 30.20s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Tiene que salir. Estaba mi compañero allí igual afuera. Tiene que salir"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="8" data-start="25.99" data-end="30.2">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> 🚨 The reason offered is grammatically incomplete: "Por qué fue agressivo y" — the conjunction "y" implies a second clause that never arrives. Passenger immediately denies and demands proof. The stewardess's seg 8 reply does not provide proof; she defers to a "companero ali igual afuera" — shifting the witness to the gate area where staff had laughed and agreed with the passenger's critique (STG_2). <strong>Articles engaged:</strong> CONST Art. 19 N°4, CONST Art. 19 N°3, Ley 20.609. <strong>Violations linked:</strong> FALSE-ACCUSATION-OF-AGGRESSION, WRONGFUL-REMOVAL-NO-REASON, LEY-20.609-DISCRIMINATION (gateway).</p>
+            </div>
+
+            <!-- Cluster 3 -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 3 — Refusal to Leave Without Proof + Notice of Recording (seg 9–13)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-9">
+                    <div class="seg-time">30.20s → 41.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Yo no voy a salir, simple, porque yo no tengo motivo. Si usted tiene una prueba y yo salgo de acá, si no, no. Mira, yo estoy por acá con ustedes. Usted cree que puede hacer todo, ¿no?"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="9" data-start="30.2" data-end="41.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-10">
+                    <div class="seg-time">40.00s → 47.50s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Oye, el pasajero no se quiere mover, no quiere bajar y no sé lo que va a pasar"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="10" data-start="40.0" data-end="47.5">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-11">
+                    <div class="seg-time">44.18s → 49.90s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"No, yo estoy grabando también, sólo para informarte de lo que está pasando en el audio. Simplemente para que tú sepas."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="11" data-start="44.18" data-end="49.9">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-12">
+                    <div class="seg-time">50.00s → 51.70s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Ya activamos seguridad. Igual va a tener que bajar"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="12" data-start="50.0" data-end="51.7">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-13">
+                    <div class="seg-time">52.00s → 61.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Mira, yo bajo de acá si tengo una prueba o algo que demuestra que tengo que salir, porque está un absurdo todo, está un absurdo todo."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="13" data-start="52.0" data-end="61.0">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> Seg 11 is forensically critical: passenger gives on-the-record notice of recording to the stewardess. From this point onward, all parties are on notice. Seg 12 escalates by invoking "seguridad". No security personnel speak on the recording. Seg 13 reiterates the passenger's position calmly — "está un absurdo todo" repeated twice. <strong>Articles engaged:</strong> CONST Art. 19 N°3, LPDC Art. 3 lit. b, ACHR Art. 8. <strong>Violations linked:</strong> WRONGFUL-REMOVAL-NO-REASON, WRONGFUL-USE-OF-SECURITY.</p>
+            </div>
+
+            <!-- Cluster 4 -->
+            <div style="margin-bottom:16px; border-left:3px solid var(--status-flag); padding-left:14px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem; color:var(--status-flag);">Cluster 4 — 🚨 The [[SPK-stewardess-accuser]] Names the Trigger (seg 14–17)</h3>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-14">
+                    <div class="seg-time">62.10s → 64.40s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Usted empezó desde un comienzo a decir que el vuelo estaba tarde"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="14" data-start="62.1" data-end="64.4">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-15">
+                    <div class="seg-time">64.60s → 66.90s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Yo pregunté, yo hice preguntas"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="15" data-start="64.6" data-end="66.9">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-16">
+                    <div class="seg-time">67.10s → 67.30s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Pero..."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="16" data-start="67.1" data-end="67.3">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-17">
+                    <div class="seg-time">67.40s → 75.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"yo pregunté y también tengo eso grabado acá, ya. ......Lo embarque duró, lo embarque duró 15 minutos"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="17" data-start="67.4" data-end="75.0">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> 🚨 The cabin crew's own causal statement of why removal is being ordered is "Usted empiezo ha un comienzo a decir que el vuelo estava tarde" — the delay complaint. The trigger is therefore a protected consumer complaint (LPDC Art. 23 bis · Art. 3(b) · Art. 28). The passenger reframes accurately: "yo pregunté, yo hice preguntas" — consistent with STG_1 and STG_2. A removal whose on-tape stated trigger is a protected consumer complaint is textbook retaliation. <strong>Articles engaged:</strong> LPDC Art. 23 bis, Art. 3 lit. b/e, Art. 28, CACH Art. 133/133A/133B, CONST Art. 19 N°2, Ley 20.609, ACHR Art. 13/24. <strong>Violations linked:</strong> RETALIATION-FOR-COMPLAINT, LEY-20.609-DISCRIMINATION, LPDC-INFO-23BIS.</p>
+            </div>
+
+            <!-- Cluster 5 -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 5 — The "Touch" Cluster: Brazilian "chao" Gesture (seg 18–22)</h3>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-18">
+                    <div class="seg-time">75.10s → 79.00s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"... Usted no tiene el derecho de tocar a mi compañero ni haber sido..."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="18" data-start="75.1" data-end="79.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-19">
+                    <div class="seg-time">79.05s → 84.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Y yo toqué sin querer, yo soy de Brasil, nosotros nos tocamos, y yo dije, ya, chao, y como así."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="19" data-start="79.05" data-end="84.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-20">
+                    <div class="seg-time">84.20s → 85.10s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"No fue así."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="20" data-start="84.2" data-end="85.1">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-21">
+                    <div class="seg-time">85.00s → 86.60s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Ya, entonces si tiene cámara..."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="21" data-start="85.0" data-end="86.6">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-22">
+                    <div class="seg-time">86.75s → 87.30s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Tiene que bajar."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="22" data-start="86.75" data-end="87.3">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> Only on-tape physical-contact element appears after the delay-complaint trigger was named (seg 14) — order of disclosure matters. Passenger does not deny contact; contextualises it as unintentional Brazilian-style farewell ("chao"). Stewardess's "No fue asi" is bare denial. Both parties then converge on resolution by camera review (seg 21). <strong>Articles engaged:</strong> CONST Art. 19 N°4, CPCL, Ley 20.609. <strong>Violations linked:</strong> FALSE-ACCUSATION-OF-AGGRESSION, LEY-20.609-DISCRIMINATION.</p>
+            </div>
+
+            <!-- Cluster 6 -->
+            <div style="margin-bottom:16px; border-left:3px solid var(--status-analysis); padding-left:14px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem; color:var(--status-analysis);">Cluster 6 — 🚨 Both Parties Agree to Camera Review (seg 21, 24, 25)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-21b">
+                    <div class="seg-time">85.00s → 86.60s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Ya, entonces si tiene cámara..."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="21" data-start="85.0" data-end="86.6">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-23">
+                    <div class="seg-time">89.95s → 91.50s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Podemos pedir las cámaras del aeropuerto."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="23" data-start="89.95" data-end="91.5">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-24">
+                    <div class="seg-time">91.60s → 93.50s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"muy bien, muy bien. después de eso sí."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="24" data-start="91.6" data-end="93.5">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> 🚨 The stewardess herself proposes camera review. This establishes: (1) airline considered airport cameras authoritative on the contact dispute; (2) on-tape duty to preserve and produce that footage — later loss/destruction bears against LATAM as spoliation; (3) connects forward to STG_7 seg 44 where PDI confirms cameras show no aggression. The airline proposed the test, and the test came back against the airline. <strong>Articles engaged:</strong> CONST Art. 19 N°3, LPDC Art. 50, ACHR Art. 8/25. <strong>Violations linked:</strong> FALSE-ACCUSATION-OF-AGGRESSION, EVIDENCE-PRESERVATION-DUTY.</p>
+            </div>
+
+            <!-- Cluster 7 -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 7 — Refusal to Leave Without Police; Forecasting "el proceso" (seg 23, 26, 27)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-22b">
+                    <div class="seg-time">87.70s → 89.30s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"No voy a bajar, mira, si la policía..."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="22" data-start="87.7" data-end="89.3">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-25">
+                    <div class="seg-time">93.20s → 93.70s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Vai ter que bajar."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="25" data-start="93.2" data-end="93.7">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-26">
+                    <div class="seg-time">93.70s → 102.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"No, no voy, punto. Mira, me saquen de acá a fuerza y de ahí tenemos más algo para el proceso contra Latam."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="26" data-start="93.7" data-end="102.0">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> Seg 22 expresses willingness to leave only through proper authority (police) — textbook posture of a passenger refusing a non-justified order while remaining law-abiding. Seg 26 explicitly anticipates a legal process and frames forced removal as evidence-positive. Passenger never threatens, never raises voice in audible aggression. <strong>Articles engaged:</strong> CONST Art. 19 N°3/7, ACHR Art. 7/8. <strong>Violations linked:</strong> WRONGFUL-USE-OF-SECURITY.</p>
+            </div>
+
+            <!-- Cluster 8 -->
+            <div style="margin-bottom:16px; border-left:3px solid var(--status-flag); padding-left:14px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem; color:var(--status-flag);">Cluster 8 — 🚨 The "Llamen a la Ventas" Pattern (seg 28)</h3>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-27b">
+                    <div class="seg-time">100.01s → 104.50s</div>
+                    <div class="seg-speaker">Latam [[SPK-stewardess-accuser]]</div>
+                    <p class="seg-text">"Llamen a la ventas. No hay caso, el pasagero no quieres bajar , asi que avise avisen quando lleggue securidad"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="27" data-start="100.01" data-end="104.5">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> 🚨 The stewardess instructs that "Ventas" be called. "Ventas" = sales. There is no operational reason a sales channel would be called for an in-cabin removal of a refusing passenger. This reproduces the Ventas pattern documented elsewhere in the case file. STG_5 seg 28 is the only on-tape anchor at this point in the analysis. <strong>Articles engaged:</strong> LPDC Art. 12, CONST Art. 19 N°3, Ley 20.609. <strong>Violations linked:</strong> VENTAS-PATTERN-ESCALATION, WRONGFUL-USE-OF-INTERNAL-CHANNEL.</p>
+            </div>
+        </div>
+
+        <!-- End-State Synthesis -->
+        <div class="section-head">
+            <h2>End-State Synthesis</h2>
+            <p>The chain in one paragraph.</p>
+        </div>
+        <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:18px 22px; margin-bottom:32px;">
+            <p style="font-size:0.92rem; color:var(--text-secondary); line-height:1.75;">
+                In 105 seconds: a removal order is given without contemporaneous reason (seg 1); the passenger asks "why" three times (segs 2–4); the only reason ever offered is the incomplete <em>"agressivo y"</em> (seg 5); the [[SPK-stewardess-accuser]] herself <strong>names the actual trigger as the delay complaint</strong> (seg 14); both parties <strong>agree the airport cameras can resolve the contact dispute</strong> (segs 21, 24, 25); the [[SPK-stewardess-accuser]] invokes <strong>"la Ventas"</strong> to coordinate (seg 28). The cameras subsequently come back against LATAM (STG_7 seg 44). The chain is closed.
+            </p>
+            <p style="font-family:var(--mono); font-size:0.8rem; color:var(--accent); margin-top:12px;">
+                STG_1 seg 4 (delay complaint, protected) + STG_2 seg 45 (staff: "no ta correcto", admission) ⇒ STG_5 seg 5 (incomplete "agressivo y") + STG_5 seg 14 (delay complaint named as trigger) ⇒ STG_5 seg 24 (airline proposes camera review) ⇒ STG_7 seg 44 (PDI: cameras show no aggression) ⇒ Violations: WRONGFUL-REMOVAL-NO-REASON, FALSE-ACCUSATION-OF-AGGRESSION, RETALIATION-FOR-COMPLAINT, LEY-20.609-DISCRIMINATION (gateway), VENTAS-PATTERN-ESCALATION, WRONGFUL-USE-OF-SECURITY, EVIDENCE-PRESERVATION-DUTY.
+            </p>
+        </div>
+
+        <!-- Key Legal Analysis & Violations -->
+        <div class="section-head">
+            <h2>Key Legal Analysis & Violations</h2>
+            <p>Primary violations and legal reasoning from this recording.</p>
+        </div>
+        <div class="evidence-grid">
+            <div class="evidence-card" style="border-left-color:var(--status-flag);">
+                <div class="ev-time-col"><div class="ev-time">CL-001</div><div class="ev-duration">seg 5, 14, 18</div></div>
+                <div class="ev-body">
+                    <h3>False Accusation of Aggression (Calumnia)</h3>
+                    <div class="ev-summary">The stewardess states "Por qué fue agressivo y" (seg 5) and later "El motivo es que fue agresivo con la companera" (not in this recording but referenced). PDI's CCTV review later disproves it entirely (STG-7 seg 44). The accusation is repeated in the fabricated "carta de desembarque" despite PDI's finding.</div>
+                    <div class="ev-provisions">CPCL Art. 211 · CPCL Art. 212 · CONST Art. 19 N°4</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-primary">Primary Violation</span><button class="ev-open" onclick="openModal('v1')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-flag);">
+                <div class="ev-time-col"><div class="ev-time">CL-002</div><div class="ev-duration">seg 14</div></div>
+                <div class="ev-body">
+                    <h3>Retaliation for Protected Consumer Complaint</h3>
+                    <div class="ev-summary">The stewardess names the trigger: "Usted empezó desde un comienzo a decir que el vuelo estaba tarde." Removal predicated on exercise of consumer rights (LPDC Art. 23 bis). Textbook retaliation.</div>
+                    <div class="ev-provisions">LPDC Art. 23 bis · LPDC Art. 3 lit. b/e · Ley 20.609</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-primary">Primary Violation</span><button class="ev-open" onclick="openModal('v2')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-analysis);">
+                <div class="ev-time-col"><div class="ev-time">CL-003</div><div class="ev-duration">seg 28</div></div>
+                <div class="ev-body">
+                    <h3>Ventas Pattern Escalation</h3>
+                    <div class="ev-summary">Stewardess calls "Ventas" (Sales) instead of Security for an alleged security matter. Establishes an off-book operational channel. Corroborated by other incidents as Client Account; this is the on-tape anchor.</div>
+                    <div class="ev-provisions">LPDC Art. 12 · CONST Art. 19 N°3</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-procedural">Procedural Finding</span><button class="ev-open" onclick="openModal('v3')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-analysis);">
+                <div class="ev-time-col"><div class="ev-time">CL-004</div><div class="ev-duration">seg 1, 2, 3, 4</div></div>
+                <div class="ev-body">
+                    <h3>Wrongful Removal Without Reason</h3>
+                    <div class="ev-summary">Removal order issued without contemporaneous reason; passenger asks "why" three times unanswered. Violates duty to inform and due process.</div>
+                    <div class="ev-provisions">LPDC Art. 3 lit. b · CACH Art. 133 · CONST Art. 19 N°3 · ACHR Art. 8</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-procedural">Procedural Finding</span><button class="ev-open" onclick="openModal('v4')">Open Record</button></div>
+            </div>
+        </div>
+
+        <!-- Cross-Recording Anchors -->
+        <div class="section-head">
+            <h2>Cross-Recording Anchors</h2>
+            <p>Links to other evidence that close the chain.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:32px;">
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">backward</span> → <strong>aeropuerto_STG_1</strong> · seg 4 (delay complaint — the trigger named at seg 14 here).</div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">backward</span> → <strong>aeropuerto_STG_2</strong> · seg 45 (staff: "no ta correcto") + segs 11/13 (inbound delay conceded) — undermines any "delay-complaint was wrong" defence.</div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">backward</span> → <strong>aeropuerto_STG_2</strong> · seg 37/39 (gate staff laughed and agreed) — baseline non-aggression at the gate.</div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">forward</span> → <strong>aeropuerto_STG_7</strong> · seg 44 (PDI: cameras show no aggression) — closes the false-accusation chain.</div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">forward</span> → <strong>aeropuerto_STG_4</strong> · segs 22, 26, 30 (supervisor "Tala" cannot explain; informal ban; accusatory tone) — same airline, same evening, same incident, no rationale ever provided.</div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">internal-pattern</span> → (Client Account) "Ventas" pattern: [[SPK-diego-latam-supervisor]]/Antonella incident; 15 August 2024 Joaquim incident. Anchor on tape: STG_5 seg 28.</div>
+        </div>
+
+        <!-- Annotations & Comments -->
+        <div class="section-head">
+            <h2>Annotations & Comments</h2>
+            <p>Key forensic annotations for this audio recording.</p>
+        </div>
+        <div class="notes-panel">
+            <div class="notes-head">
+                <span class="notes-label">Forensic Notes</span>
+                <span class="notes-count">7 annotations</span>
+            </div>
+            <div class="notes-list">
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">F-003 (manufactured pretext); STG_15 seg 3-6 (same allegation repeated at luggage counter)</span></div>
+                    <div class="note-body">Aggression allegation stated as fact ('Por qué fue agresivo') with no evidence provided, despite passenger demanding proof three times</div>
+                </div>
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">F-003; STG_15 seg 3 (passenger states initial allegation was 'una mentira')</span></div>
+                    <div class="note-body">Touching allegation introduced only after aggression allegation failed to secure compliance — possible escalation of manufactured pretext</div>
+                </div>
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">Demonstrates passenger was not categorically refusing — was seeking due process</span></div>
+                    <div class="note-body">Passenger offered conditional compliance: would leave if shown proof. Stewardess never engaged with the offer.</div>
+                </div>
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">Camera evidence was never pursued. Pattern: staff invoke cameras as placation, never follow through.</span></div>
+                    <div class="note-body">Stewardess agreed to request cameras ('Podemos pedir las cámaras del aeropuerto') but immediately reverted to removal demand — agreement lasted approximately 2 seconds</div>
+                </div>
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">Passenger's warning was recorded; subsequent forced removal proceeded despite this warning</span></div>
+                    <div class="note-body">Passenger explicitly warned forced removal would strengthen legal case: 'me saquen de acá a la fuerza y de ahí tenemos más algo para el proceso contra Latam'</div>
+                </div>
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">Pattern of Portuguese use by LATAM staff under pressure; see also STG_15 seg 82 ('No senhor!')</span></div>
+                    <div class="note-body">Stewardess reverted to Portuguese ('Vai ter que bajar') at peak tension — possible indicator of stress or loss of scripted composure</div>
+                </div>
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">Recording acknowledged by both parties; stewardess's failure to object may constitute implied consent</span></div>
+                    <div class="note-body">Passenger recorded the interaction and informed the stewardess: 'yo estoy grabando también'. Stewardess did not object to recording.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="page-footer">
+        <div class="main">
+            <p>Disconzi v. LATAM Airlines — Audio Evidence Archive</p>
+            <p class="mono">aeropuerto_STG_5.m4a · 3m 5.899s · July 05, 2024 · 13:30:00</p>
+            <p style="margin-top:8px;">This page constitutes direct audio evidence for pending legal proceedings.</p>
+        </div>
+    </footer>
+</div>
+
+<!-- VIOLATION MODAL -->
+<div class="modal-overlay" id="violationModal">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-header-body">
+                <div class="modal-type-badge" id="modalBadge"></div>
+                <div class="modal-title" id="modalTitle"></div>
+                <div class="modal-audio-ref" id="modalAudioRef">Evidence: aeropuerto_STG_5</div>
+            </div>
+            <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+            <span class="modal-footer-note" id="modalFooterNote"></span>
+            <button class="modal-download-btn" onclick="downloadViolationJSON()">Download JSON</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        var modalData = {
+            v1: { badge: 'Primary Violation', badgeClass: 'type-primary', title: 'CL-001: False Accusation of Aggression (Calumnia)', footer: 'Anchor: seg 5, 14, 18', body: `<div class="modal-status"><span class="modal-status-text">Status: Disproven by PDI CCTV review (STG_7 seg 44)</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">12.80s – 14.10s</div><div class="modal-segment-speaker">Latam [[SPK-stewardess-accuser]]</div><div class="modal-segment-text">"Por qué fue agressivo y"</div></div><div class="modal-segment"><div class="modal-segment-time">62.10s – 64.40s</div><div class="modal-segment-speaker">Latam [[SPK-stewardess-accuser]]</div><div class="modal-segment-text">"Usted empezó desde un comienzo a decir que el vuelo estaba tarde"</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">CPCL Art. 211</span> <span class="jurisdiction-article">CPCL Art. 212</span> <span class="jurisdiction-article">CONST Art. 19 N°4</span></span></div></div></div>` },
+            v2: { badge: 'Primary Violation', badgeClass: 'type-primary', title: 'CL-002: Retaliation for Protected Consumer Complaint', footer: 'Anchor: seg 14', body: `<div class="modal-status"><span class="modal-status-text">Status: On-tape trigger identified by airline's own agent</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">62.10s – 64.40s</div><div class="modal-segment-speaker">Latam [[SPK-stewardess-accuser]]</div><div class="modal-segment-text">"Usted empezó desde un comienzo a decir que el vuelo estaba tarde"</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">LPDC Art. 23 bis</span> <span class="jurisdiction-article">LPDC Art. 3 lit. b/e</span> <span class="jurisdiction-article">Ley 20.609</span></span></div></div></div>` },
+            v3: { badge: 'Procedural Finding', badgeClass: 'type-procedural', title: 'CL-003: Ventas Pattern Escalation', footer: 'Anchor: seg 28', body: `<div class="modal-status"><span class="modal-status-text">Status: On-tape anchor of institutional pattern</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">100.01s – 104.50s</div><div class="modal-segment-speaker">Latam [[SPK-stewardess-accuser]]</div><div class="modal-segment-text">"Llamen a la ventas. No hay caso, el pasagero no quieres bajar , asi que avise avisen quando lleggue securidad"</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">LPDC Art. 12</span> <span class="jurisdiction-article">CONST Art. 19 N°3</span></span></div></div></div>` },
+            v4: { badge: 'Procedural Finding', badgeClass: 'type-procedural', title: 'CL-004: Wrongful Removal Without Reason', footer: 'Anchor: seg 1, 2, 3, 4', body: `<div class="modal-status"><span class="modal-status-text">Status: Direct violation of duty to inform</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">2.87s – 3.52s</div><div class="modal-segment-speaker">Latam [[SPK-stewardess-accuser]]</div><div class="modal-segment-text">"Tiene que salir del avión, tiene que bajar"</div></div><div class="modal-segment"><div class="modal-segment-time">4.37s – 11.76s</div><div class="modal-segment-speaker">[[SPK-passenger-leandro]] (passenger)</div><div class="modal-segment-text">"¿Por qué? … ¿Por qué? … ¿Por qué?"</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">LPDC Art. 3 lit. b</span> <span class="jurisdiction-article">CACH Art. 133</span> <span class="jurisdiction-article">CONST Art. 19 N°3</span> <span class="jurisdiction-article">ACHR Art. 8</span></span></div></div></div>` }
+        };
+        var activeVid = null;
+        window.openModal = function(vid) { var d = modalData[vid]; if (!d) return; activeVid = vid; document.getElementById('modalBadge').textContent = d.badge; document.getElementById('modalBadge').className = 'modal-type-badge ' + d.badgeClass; document.getElementById('modalTitle').textContent = d.title; document.getElementById('modalBody').innerHTML = d.body; document.getElementById('modalFooterNote').textContent = d.footer; document.getElementById('modalAudioRef').textContent = 'Evidence: aeropuerto_STG_5'; document.getElementById('violationModal').classList.add('active'); document.body.style.overflow = 'hidden'; };
+        window.closeModal = function() { document.getElementById('violationModal').classList.remove('active'); document.body.style.overflow = ''; activeVid = null; };
+        window.downloadViolationJSON = function() { if (!activeVid) return; var blob = new Blob([JSON.stringify(modalData[activeVid] || {}, null, 2)], { type: 'application/json' }); var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = activeVid + '.json'; a.click(); };
+        document.getElementById('violationModal').addEventListener('click', function(e) { if (e.target === this) window.closeModal(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') window.closeModal(); });
+    })();
+</script>
+<script src="/case_files/02-transcripts/transcripts_rendered/audio_player.js"></script>
+<div class="pinned-nav"><a class="pinned-nav-link" href="../index.html">&larr; Case Index</a><span class="pinned-nav-label">Disconzi v. LATAM Airlines</span></div>
+</body>
+</html>

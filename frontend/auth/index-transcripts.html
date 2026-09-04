@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NETIFY Transcript Bundle</title>
+  <style>
+    :root {
+      --bg-primary: #f8f7f4;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f2f0ea;
+      --bg-surface: #f1efe8;
+      --border: #e1ddd1;
+      --border-strong: #c7c1b0;
+      --text-primary: #1b1c1e;
+      --text-secondary: #52555c;
+      --text-muted: #8a8b87;
+      --accent: #24405f;
+      --accent-dim: rgba(36, 64, 95, 0.07);
+      --status-flag: #7a3733;
+      --status-flag-dim: rgba(122, 55, 51, 0.08);
+      --status-analysis: #8a6a2c;
+      --status-analysis-dim: rgba(138, 106, 44, 0.09);
+      --status-note: #3f6b4f;
+      --status-note-dim: rgba(63, 107, 79, 0.08);
+      --mono: 'JetBrains Mono', 'Courier New', monospace;
+      --serif: 'Source Serif 4', Georgia, serif;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 44px 0 32px;
+    }
+
+    .masthead-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .masthead-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-strong);
+      padding: 5px 12px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+
+    .masthead h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      font-weight: 600;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .masthead-sub {
+      font-size: 0.96rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      line-height: 1.7;
+    }
+
+    .stats-bar {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      flex: 1 1 180px;
+      padding: 18px 14px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat-item:last-child {
+      border-right: none;
+    }
+
+    .stat-val {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-top: 5px;
+    }
+
+    .main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .section-head {
+      padding: 44px 0 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      padding-bottom: 14px;
+    }
+
+    .section-head p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      padding-bottom: 16px;
+      max-width: 700px;
+    }
+
+    .transcript-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-bottom: 8px;
+    }
+
+    .transcript-segment {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border-strong);
+      border-radius: 3px;
+      padding: 16px 18px;
+      transition: background-color 0.15s, border-left-color 0.15s;
+    }
+
+    .transcript-segment:hover {
+      background: var(--bg-card-hover);
+      border-left-color: var(--accent);
+    }
+
+    .transcript-segment .seg-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .transcript-segment .seg-meta {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .page-footer p {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .page-footer .mono {
+      font-family: var(--mono);
+    }
+
+    @media (max-width: 600px) {
+      .masthead {
+        padding: 28px 0 22px;
+      }
+
+      .masthead-inner,
+      .main {
+        padding: 0 16px;
+      }
+
+      .stat-item {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .stat-item:last-child {
+        border-bottom: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <span class="masthead-badge">Transcript Bundle</span>
+      <h1>NETIFY Transcript Bundle</h1>
+      <p class="masthead-sub">Drop this folder directly into a NETIFY static site. The bundle contains rendered transcript pages, local audio segment copies, and a ready-to-use audio map.</p>
+    </div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-val">19</div>
+        <div class="stat-label">Transcripts</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">HTML</div>
+        <div class="stat-label">Format</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">Local</div>
+        <div class="stat-label">Audio Storage</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">v2</div>
+        <div class="stat-label">Bundle Version</div>
+      </div>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="section-head">
+      <h2>Transcript Files</h2>
+      <p>Select a transcript to view the rendered page with synchronized audio segments.</p>
+    </div>
+    
+    <div class="transcript-list">
+      <a href="transcripts/I-002_01_NAR-01_STG_1_pre_boarding.html" class="transcript-segment">
+        <div class="seg-title">01 - Aeropuerto Arturo Merino Benítez</div>
+        <div class="seg-meta">I-002_01_NAR-01_STG_1</div>
+      </a>
+      <a href="transcripts/I-002_02_NAR-02_STG_2_boarding_gate.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 2 — FINAL v2</div>
+        <div class="seg-meta">I-002_02_NAR-02_STG_2</div>
+      </a>
+      <a href="transcripts/I-002_03_NAR-05_STG_5_aircraft_removal.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 5 — FINAL v2</div>
+        <div class="seg-meta">I-002_03_NAR-05_STG_5</div>
+      </a>
+      <a href="transcripts/I-002_04_NAR-06_STG_6_jetbridge_standoff.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 6 — FINAL v2</div>
+        <div class="seg-meta">I-002_04_NAR-06_STG_6</div>
+      </a>
+      <a href="transcripts/I-002_05_NAR-07_STG_7_post_removal_investigation.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 7 — FINAL v2</div>
+        <div class="seg-meta">I-002_05_NAR-07_STG_7</div>
+      </a>
+      <a href="transcripts/I-002_06_NAR-STG_8_pdi_identity_control.html" class="transcript-segment">
+        <div class="seg-title">aeropuerto_arturo_merino_benitez_8</div>
+        <div class="seg-meta">I-002_06_NAR-STG_8</div>
+      </a>
+      <a href="transcripts/I-002_07_NAR-06_STG_13_post_PDI_corridor.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 13 — FINAL v2</div>
+        <div class="seg-meta">I-002_07_NAR-06_STG_13</div>
+      </a>
+      <a href="transcripts/I-002_08_NAR-09_STG_15_luggage_recovery.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 15 — FINAL v2</div>
+        <div class="seg-meta">I-002_08_NAR-09_STG_15</div>
+      </a>
+      <a href="transcripts/I-002_09_NAR-10_STG_16_counter_confrontation.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 16 — FINAL v2</div>
+        <div class="seg-meta">I-002_09_NAR-10_STG_16</div>
+      </a>
+      <a href="transcripts/I-002_10_NAR-13_STG_20_barraza_counter.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 20 — FINAL v2</div>
+        <div class="seg-meta">I-002_10_NAR-13_STG_20</div>
+      </a>
+      <a href="transcripts/I-002_11_NAR-14_Terminal_Internacional_T2_counter.html" class="transcript-segment">
+        <div class="seg-title">Terminal Internacional T2 — FINAL v2</div>
+        <div class="seg-meta">I-002_11_NAR-14</div>
+      </a>
+      <a href="transcripts/I-002_12_NAR-15_STG_22_DGAC_office.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 22 — DGAC Office</div>
+        <div class="seg-meta">I-002_12_NAR-15_STG_22</div>
+      </a>
+      <a href="transcripts/I-002_14_NAR-16_STG_23_DGAC_don_nicolas.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 23 — FINAL v2</div>
+        <div class="seg-meta">I-002_14_NAR-16_STG_23</div>
+      </a>
+      <a href="transcripts/I-002_16_NAR-20_STG_28.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 28 — FINAL v2</div>
+        <div class="seg-meta">I-002_16_NAR-20_STG_28</div>
+      </a>
+      <a href="transcripts/I-002_17_NAR-21_STG_29.html" class="transcript-segment">
+        <div class="seg-title">Aeropuerto Arturo Merino Benítez 29 — FINAL v2</div>
+        <div class="seg-meta">I-002_17_NAR-21_STG_29</div>
+      </a>
+      <a href="transcripts/I-002_18_NAR_LATAM_STG_2.html" class="transcript-segment">
+        <div class="seg-title">LATAM STG 2 — FINAL v2</div>
+        <div class="seg-meta">I-002_18_NAR_LATAM_STG_2</div>
+      </a>
+      <a href="transcripts/I-002_19_NAR_LATAM_STG_3.html" class="transcript-segment">
+        <div class="seg-title">LATAM STG 3 — FINAL v2</div>
+        <div class="seg-meta">I-002_19_NAR_LATAM_STG_3</div>
+      </a>
+      <a href="transcripts/I-002_20_NAR_LATAM_STG_4.html" class="transcript-segment">
+        <div class="seg-title">LATAM STG 4 — FINAL v2</div>
+        <div class="seg-meta">I-002_20_NAR_LATAM_STG_4</div>
+      </a>
+      <a href="transcripts/I-002_24_NAR-19_STG_12.html" class="transcript-segment">
+        <div class="seg-title">STG-12 — Day 2 Counter Interaction (Boarding Denial & Pattern Confirmation)</div>
+        <div class="seg-meta">I-002_24_NAR-19_STG_12</div>
+      </a>
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <p>
+      <span class="mono">NETIFY Transcript Bundle</span><br>
+      All transcript files, audio segments, and metadata are stored locally<br>
+      Version 2 — FINAL
+    </p>
+  </footer>
+</body>
+</html>

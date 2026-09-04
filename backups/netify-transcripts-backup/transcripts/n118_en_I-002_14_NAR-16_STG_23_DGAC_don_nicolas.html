@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="clean-professional">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disconzi v. LATAM — aeropuerto_STG_23</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+
+    :root {
+      --bg-primary: #f8f7f4;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f2f0ea;
+      --bg-surface: #f1efe8;
+      --border: #e1ddd1;
+      --border-strong: #c7c1b0;
+      --text-primary: #1b1c1e;
+      --text-secondary: #52555c;
+      --text-muted: #8a8b87;
+      --accent: #24405f;
+      --accent-dim: rgba(36, 64, 95, 0.07);
+      --status-flag: #7a3733;
+      --status-flag-dim: rgba(122, 55, 51, 0.08);
+      --status-analysis: #8a6a2c;
+      --status-analysis-dim: rgba(138, 106, 44, 0.09);
+      --status-note: #3f6b4f;
+      --status-note-dim: rgba(63, 107, 79, 0.08);
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Source Serif 4', Georgia, serif;
+      --sans: 'Inter', -apple-system, sans-serif;
+    }
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      color: var(--accent);
+      background: var(--bg-surface);
+      padding: 1px 6px;
+      border-radius: 2px;
+    }
+
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 44px 0 32px;
+    }
+
+    .masthead-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .masthead-back {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      display: inline-block;
+    }
+
+    .masthead-back:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .masthead-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-strong);
+      padding: 5px 12px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+
+    .masthead h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      font-weight: 600;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .masthead-sub {
+      font-size: 0.96rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      line-height: 1.7;
+    }
+
+    .stats-bar {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      flex: 1 1 180px;
+      padding: 18px 14px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat-item:last-child {
+      border-right: none;
+    }
+
+    .stat-val {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-top: 5px;
+    }
+
+    .main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .section-head {
+      padding: 44px 0 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      padding-bottom: 14px;
+    }
+
+    .section-head p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      padding-bottom: 16px;
+      max-width: 700px;
+    }
+
+    /* transcript */
+    .transcript-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-bottom: 8px;
+    }
+
+    .transcript-segment {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border-strong);
+      border-radius: 3px;
+      padding: 13px 18px;
+    }
+
+    .transcript-segment.seg-passenger {
+      border-left-color: var(--accent);
+    }
+
+    .transcript-segment.seg-other {
+      border-left-style: dashed;
+      border-left-color: var(--status-analysis);
+    }
+
+    .transcript-segment .seg-time {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .transcript-segment .seg-speaker {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .transcript-segment .seg-text {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    .transcript-segment .seg-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .transcript-segment .seg-note-btn {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 3px 9px;
+      border-radius: 2px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .transcript-segment .seg-note-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .transcript-segment .seg-play-btn {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 3px 9px;
+      border-radius: 2px;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      cursor: pointer;
+      transition: background-color 0.15s, color 0.15s;
+      font-weight: 500;
+      margin-right: 8px;
+      line-height: 1.4;
+    }
+
+    .transcript-segment .seg-play-btn:hover {
+      background-color: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    /* evidence / violation cards */
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .evidence-card {
+      display: grid;
+      grid-template-columns: 100px 1fr 150px;
+      align-items: start;
+      gap: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border-strong);
+      border-radius: 3px;
+      padding: 18px 22px;
+    }
+
+    .ev-time-col {
+      padding-top: 2px;
+    }
+
+    .ev-time {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .ev-duration {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .ev-body h3 {
+      font-size: 0.94rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .ev-body .ev-summary {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.68;
+    }
+
+    .ev-provisions {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .ev-meta-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      text-align: right;
+    }
+
+    .ev-type {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      padding: 4px 9px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .type-primary {
+      background: var(--status-flag-dim);
+      color: var(--status-flag);
+    }
+
+    .type-procedural {
+      background: var(--status-analysis-dim);
+      color: var(--status-analysis);
+    }
+
+    .type-analysis {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .ev-open {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .ev-open:hover {
+      color: var(--text-primary);
+    }
+
+    /* notes panel */
+    .notes-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 24px 28px;
+      margin-top: 12px;
+    }
+
+    .notes-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .notes-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    .notes-count {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 3px 9px;
+      border-radius: 2px;
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+    }
+
+    .notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .notes-empty {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 14px;
+      background: var(--bg-surface);
+      border: 1px dashed var(--border);
+      border-radius: 3px;
+      text-align: center;
+    }
+
+    .note-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border-strong);
+      border-radius: 3px;
+      padding: 13px 16px;
+    }
+
+    .note-card.note-admission {
+      border-left-color: var(--status-flag);
+    }
+
+    .note-card.note-xref {
+      border-left-color: var(--accent);
+    }
+
+    .note-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+
+    .note-type {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 7px;
+      border-radius: 2px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+    }
+
+    .note-card.note-admission .note-type {
+      color: var(--status-flag);
+      border-color: var(--status-flag);
+    }
+
+    .note-card.note-xref .note-type {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .note-author {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .note-seg {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .note-body {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    /* modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 20, 18, 0.55);
+      z-index: 1000;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      max-width: 760px;
+      width: 100%;
+      margin: auto 0;
+    }
+
+    .modal-header {
+      padding: 22px 28px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .modal-header-body {
+      flex: 1;
+    }
+
+    .modal-type-badge {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 2px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .modal-title {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+
+    .modal-audio-ref {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+      width: 30px;
+      height: 30px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 22px 28px;
+    }
+
+    .modal-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 22px;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+    }
+
+    .modal-status-text {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+    }
+
+    .modal-section {
+      margin-bottom: 22px;
+    }
+
+    .modal-section-label {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .modal-segments {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .modal-segment {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 3px;
+      padding: 12px 16px;
+    }
+
+    .modal-segment-time {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .modal-segment-speaker {
+      font-size: 0.76rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+
+    .modal-segment-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .modal-jurisdictions,
+    .modal-xrefs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .jurisdiction-pill {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 12px 16px;
+      min-width: 200px;
+      flex: 1;
+    }
+
+    .jurisdiction-name {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .jurisdiction-laws {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .jurisdiction-article {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-primary);
+      background: var(--bg-surface);
+      padding: 2px 6px;
+      border-radius: 2px;
+      display: inline-block;
+      margin: 2px 2px 2px 0;
+    }
+
+    .xref-tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 4px 10px;
+      border-radius: 2px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+    }
+
+    .modal-footer {
+      padding: 14px 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-footer-note {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      flex: 1;
+    }
+
+    .modal-download-btn {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      padding: 6px 14px;
+      border-radius: 3px;
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .modal-download-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .page-footer p {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .page-footer .mono {
+      font-family: var(--mono);
+    }
+
+    @media (max-width: 900px) {
+      .evidence-card {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .ev-meta-col {
+        flex-direction: row-reverse;
+        align-items: center;
+        text-align: left;
+        justify-content: flex-end;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .masthead {
+        padding: 28px 0 22px;
+      }
+
+      .masthead-inner,
+      .main {
+        padding: 0 16px;
+      }
+
+      .modal-overlay {
+        padding: 16px 10px;
+      }
+
+      .pinned-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(248, 247, 244, 0.94);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        gap: 16px;
+      }
+
+      .pinned-nav-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--accent);
+        text-decoration: none;
+        padding: 5px 12px;
+        border-radius: 3px;
+        border: 1px solid var(--border-strong);
+      }
+
+      .pinned-nav-link:hover {
+        background: var(--accent-dim);
+        text-decoration: none;
+      }
+
+      .pinned-nav-label {
+        font-family: var(--mono);
+        font-size: 0.64rem;
+        color: var(--text-muted);
+        letter-spacing: 0.04em;
+      }
+
+      @media (max-width: 600px) {
+        .pinned-nav {
+          padding: 8px 14px;
+        }
+
+        .pinned-nav-label {
+          display: none;
+        }
+      }
+
+  </style>
+  <meta name="n118-translation" content="true">
+  <meta name="translation-language" content="en">
+  <meta name="translation-label" content="N118 English translation copy">
+</head>
+<body data-audio-stem="aeropuerto_STG_23" data-audio-map-key="i_002_14_nar_16_stg_23_dgac_don_nicolas">
+  <div style="position:sticky;top:0;z-index:999;background:#f4efe6;border-bottom:1px solid #d7cdb9;padding:10px 16px;font:600 12px 'Inter',sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#4a3b2a;">N118 English translation copy</div>
+
+  <div class="page">
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a class="masthead-back" href="../index.html">&larr; Evidence Archive &middot; Index</a>
+      <div class="masthead-badge">Audio Evidence &middot; aeropuerto_STG_23</div>
+      <h1>aeropuerto_STG_23</h1>
+      <p class="masthead-sub">DGAC Don Nicolas — Legal Framework &amp; &#x27;Atados de Mano&#x27; Admission</p>
+    </div>
+  </header>
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-val">aeropuerto_STG_23.m4a</div>
+        <div class="stat-label">Audio File</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">42m 43.989s</div>
+        <div class="stat-label">Duration</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">July 05, 2024 &middot; 19:11:00</div>
+        <div class="stat-label">Date</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">21192.87 KB</div>
+        <div class="stat-label">File Size</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">Arturo Merino Benítez International Airport (SCL), Santiago, Chile — DGAC Office</div>
+        <div class="stat-label">Location</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">es</div>
+        <div class="stat-label">Language</div>
+      </div>
+    </div>
+  </div>
+    <div class="main">
+      <div class="section-head">
+        <h2>Full Transcript</h2>
+        <p>Speaker-attributed segments in chronological order. Select <strong>+ add note</strong> on any segment to record an annotation against this audio.</p>
+      </div>
+      <div class="transcript-list">
+        <div class="transcript-segment seg-staff" id="seg-0">
+          <div class="seg-time">35.27s &rarr; 35.87s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"enviar algo, gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="0" data-start="35.265" data-end="35.865">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('35.27s&ndash;35.87s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-1">
+          <div class="seg-time">282.19s &rarr; 291.11s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Porta Llamas, Salón Central, en la puerta 27 de la R1, en el lugar de carga celular, dejando el bolsito listo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="1" data-start="282.185" data-end="291.105">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('282.19s&ndash;291.11s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-2">
+          <div class="seg-time">294.00s &rarr; 296.79s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Buenas tardes."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="2" data-start="294.005" data-end="296.785">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('294.00s&ndash;296.79s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-3">
+          <div class="seg-time">298.55s &rarr; 301.79s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Yo te explico, ya te explicaron que está pasando. ¿Cuál es su consulta? ¿Mi consulta?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="3" data-start="298.545" data-end="301.785">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('298.55s&ndash;301.79s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-4">
+          <div class="seg-time">310.81s &rarr; 318.76s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"escrito el porqué, uno, me sacaron del vuelo a una de la tarde, usaron fuerza para me sacar de allá, y la dos..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="4" data-start="310.805" data-end="318.765">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('310.81s&ndash;318.76s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-5">
+          <div class="seg-time">319.19s &rarr; 327.14s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"acusaciones de por qué me sacarían del vuelo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="5" data-start="319.185" data-end="327.145">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('319.19s&ndash;327.14s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-6">
+          <div class="seg-time">328.05s &rarr; 331.85s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"fueron desprobadas como difamaciones, mentiras."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="6" data-start="328.045" data-end="331.845">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('328.05s&ndash;331.85s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-7">
+          <div class="seg-time">332.62s &rarr; 333.20s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"bien la pelea."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="7" data-start="332.625" data-end="333.205">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('332.62s&ndash;333.20s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-8">
+          <div class="seg-time">335.38s &rarr; 353.64s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"¿Ya? Vieron las cámaras, pero empezó con una agresión. Dicieron que yo lo agredí, pero de ahí chequearon y yo creo las cámaras y de ahí vieron con que yo pasé sin mostrar mi boarding pass. Pero era la misma persona. Y la policía, la PDI, lo probó."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="8" data-start="335.385" data-end="353.645">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('335.38s&ndash;353.64s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-9">
+          <div class="seg-time">354.17s &rarr; 356.43s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"¿No? ¿O no?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="9" data-start="354.165" data-end="356.425">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('354.17s&ndash;356.43s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-10">
+          <div class="seg-time">354.17s &rarr; 356.43s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"No, ahora dije me voy a explicarlo un poquitito. Sí, por favor."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="10" data-start="354.165" data-end="356.425">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('354.17s&ndash;356.43s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-11">
+          <div class="seg-time">355.76s &rarr; 356.43s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"por favor."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="11" data-start="355.765" data-end="356.425">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('355.76s&ndash;356.43s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-12">
+          <div class="seg-time">356.85s &rarr; 362.06s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Lo que pasa es que en un principio, a lo mejor lo que ustedes le dijeron, era una..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="12" data-start="356.845" data-end="362.065">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('356.85s&ndash;362.06s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-13">
+          <div class="seg-time">362.62s &rarr; 370.82s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"situación que le planteó la persona de la compañía, pero la verdad de las cosas es que la situación por la que nosotros actuamos fue algo totalmente..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="13" data-start="362.625" data-end="370.825">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('362.62s&ndash;370.82s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-14">
+          <div class="seg-time">370.82s &rarr; 371.37s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"No lo tengo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="14" data-start="370.825" data-end="371.365">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('370.82s&ndash;371.37s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-15">
+          <div class="seg-time">371.37s &rarr; 394.93s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Le cuento, el Derecho Aeronáutico y específicamente el Código Aeronáutico Chileno especifica que la única y máxima autoridad a bordo de la aeronave es el comandante de la aeronave. Ya. Él decide quién se queda arriba y quién no. Ok. Quién es pasajero y quién no viaja. ... No. Él tiene toda la autoridad, lo dice el Código Aeronáutico. Entonces, ¿por qué no?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="15" data-start="371.365" data-end="394.925">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('371.37s&ndash;394.93s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-16">
+          <div class="seg-time">383.17s &rarr; 384.85s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Pero no existe alguna..?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="16" data-start="383.165" data-end="384.845">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('383.17s&ndash;384.85s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-17">
+          <div class="seg-time">388.61s &rarr; 392.81s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"fue decisión total."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="17" data-start="388.605" data-end="392.805">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('388.61s&ndash;392.81s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-18">
+          <div class="seg-time">392.87s &rarr; 394.93s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"del piloto? Está en la ley."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="18" data-start="392.865" data-end="394.925">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('392.87s&ndash;394.93s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-19">
+          <div class="seg-time">395.73s &rarr; 396.61s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"código aeronáutico."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="19" data-start="395.725" data-end="396.605">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('395.73s&ndash;396.61s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-20">
+          <div class="seg-time">396.61s &rarr; 400.05s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Y también está en la ley que yo debo ser informado sobre todo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="20" data-start="396.605" data-end="400.045">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('396.61s&ndash;400.05s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-21">
+          <div class="seg-time">400.05s &rarr; 403.87s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Le estoy hablando, escúcheme primero y después voy a hacer las preguntas."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="21" data-start="400.045" data-end="403.865">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('400.05s&ndash;403.87s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-22">
+          <div class="seg-time">404.26s &rarr; 431.88s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"El Código Aeronáutico menciona que el piloto es la única y máxima autoridad a bordo de la aeronave por lo tanto él decide quién viaja y quién no. Asimismo, la compañía aérea decide a quién lleva y a quién no lleva a bordo de la aeronave y en su minuto ellos decidieron, por las razones que fueran en este caso o que consideraron pertinentes, ellos a nosotros nos solicitan la colaboración porque a usted le quitan la condición de pasajero y usted pasa a ser una persona, un ciudadano normal y tendría que, por lo tanto, abandonar la aeronave y salir."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="22" data-start="404.265" data-end="431.885">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('404.26s&ndash;431.88s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-23">
+          <div class="seg-time">432.46s &rarr; 456.93s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Si eso es algo, una conducta o que usted consiguiere arbitraria que no corresponda a lo mejor a lo que le están imputando en el momento, por el motivo que sea, usted tiene todo el derecho después de hacer los reclamos a través de una demanda civil, con un abogado, en fin, todo lo que usted quiera, contra la compañía aérea, pero cuando la compañía aérea pide ya la colaboración."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="23" data-start="432.465" data-end="456.925">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('432.46s&ndash;456.93s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-24">
+          <div class="seg-time">457.73s &rarr; 474.93s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"de la Dirección Aeronáutica como para poder prestarle colaboración en el sentido de que una persona que dejó de ser pasajero no quiere desembarcar de la aeronave, ese pasajero toma la condición que legalmente se le llama pasajero insubordinado o pasajero disruptivo, que es un pasajero que está causando daño a la aeronave."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="24" data-start="457.725" data-end="474.925">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('457.73s&ndash;474.93s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-25">
+          <div class="seg-time">475.69s &rarr; 484.88s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"más que un desorden está causando un problema la seguridad del aeronave y la seguridad en ese caso claro cuando usted no obedece"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="25" data-start="475.685" data-end="484.885">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('475.69s&ndash;484.88s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-26">
+          <div class="seg-time">484.88s &rarr; 489.49s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Pero la instrucción estaba siendo porque estaban me acusando de algo que no era verdad."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="26" data-start="484.885" data-end="489.485">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('484.88s&ndash;489.49s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-27">
+          <div class="seg-time">489.49s &rarr; 492.23s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"no, no....no.. Le cuento. No, no le cuento."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="27" data-start="489.485" data-end="492.225">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('489.49s&ndash;492.23s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-28">
+          <div class="seg-time">492.81s &rarr; 499.75s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"No importa para este efecto el motivo, lo que importa es que a usted el comandante dijo a él no lo voy a llevar."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="28" data-start="492.805" data-end="499.745">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('492.81s&ndash;499.75s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-29">
+          <div class="seg-time">500.38s &rarr; 527.68s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"¿Qué tenemos que hacer? Salir de la aeronave, ver, solucionar el problema con la compañía aérea y si usted tiene reclamos que hacer, los puede hacer. Puede hacer los reclamos contra la compañía, contra la persona que lo abusó injustamente, contra quien lo hizo bajar, que no correspondía. Pero nosotros como autoridad tenemos que hacer lo que nos pide la compañía, que es cuando usted pierde su condición de pasajero, salir. Entiendo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="29" data-start="500.385" data-end="527.685">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('500.38s&ndash;527.68s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-30">
+          <div class="seg-time">522.49s &rarr; 527.68s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"¿Puedo decirlo ahora? Entiendo. Entiendo. Ya. Entendí totalmente lo que está diciendo. Bacán."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="30" data-start="522.485" data-end="527.685">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('522.49s&ndash;527.68s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-31">
+          <div class="seg-time">530.71s &rarr; 534.61s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"se fue una defamación dos veces"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="31" data-start="530.705" data-end="534.605">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('530.71s&ndash;534.61s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-32">
+          <div class="seg-time">535.25s &rarr; 536.76s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Fue una mentira."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="32" data-start="535.245" data-end="536.765">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('535.25s&ndash;536.76s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-33">
+          <div class="seg-time">537.54s &rarr; 546.90s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"contra mi persona, dos veces, y eso ocasionó yo perder mi vuelo, ocasionó vergüenza, porque yo..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="33" data-start="537.545" data-end="546.905">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('537.54s&ndash;546.90s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-34">
+          <div class="seg-time">547.38s &rarr; 558.02s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"a causa de toda otra persona, a causa de una pérdida de plata, a causa de una... Entonces, es por mentira. Y el problema es que esa mentira ya fue comprobada abajo con la PDI."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="34" data-start="547.385" data-end="558.025">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('547.38s&ndash;558.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-35">
+          <div class="seg-time">558.02s &rarr; 559.40s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Entonces haga una demanda"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="35" data-start="558.025" data-end="559.405">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('558.02s&ndash;559.40s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-36">
+          <div class="seg-time">560.83s &rarr; 561.35s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"yo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="36" data-start="560.825" data-end="561.345">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('560.83s&ndash;561.35s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-37">
+          <div class="seg-time">562.12s &rarr; 568.68s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Tengo derecho de ter una carta de desembarque"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="37" data-start="562.125" data-end="568.685">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('562.12s&ndash;568.68s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-38">
+          <div class="seg-time">568.68s &rarr; 575.54s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"¿Dónde está la carta de desembache? ¿Dónde está la carta de desembache? ¿Usted acá? No, yo te dejé hablar."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="38" data-start="568.685" data-end="575.545">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('568.68s&ndash;575.54s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-39">
+          <div class="seg-time">568.68s &rarr; 572.42s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Haver, espera un segundo.um segundo...nnonono..no no no. nono, espera"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="39" data-start="568.685" data-end="572.425">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('568.68s&ndash;572.42s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-40">
+          <div class="seg-time">576.12s &rarr; 581.28s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Pero le estoy dando explicaciones, yo entiendo su punto. Pero la verdad es que venir acá, esto no corresponde."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="40" data-start="576.125" data-end="581.285">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('576.12s&ndash;581.28s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-41">
+          <div class="seg-time">581.28s &rarr; 593.76s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Mira, me contaron de la información del aeropuerto, me mandaron ver acá. Mira, tome, haciendo un jueguito de ping-pong, para allá, para acá. La información está mal, porque... Vaya, pero yo no soy yo quien..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="41" data-start="581.285" data-end="593.765">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('581.28s&ndash;593.76s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-42">
+          <div class="seg-time">593.76s &rarr; 608.68s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Por eso, yo le estoy dando la información exacta, la información exacta es que si usted quiere una respuesta formal, tiene que hacer una pregunta formal, no informal como lo está haciendo ahora, porque ahora usted se está acercando y está preguntando de manera informal."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="42" data-start="593.765" data-end="608.685">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('593.76s&ndash;608.68s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-43">
+          <div class="seg-time">610.80s &rarr; 616.99s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"No es mi punto de tomar. YO estoy en el aeropuerto!"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="43" data-start="610.805" data-end="616.985">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('610.80s&ndash;616.99s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-44">
+          <div class="seg-time">618.47s &rarr; 636.66s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Formalmente es a través de la página de la direcion aeronautica."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="44" data-start="618.465" data-end="636.665">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('618.47s&ndash;636.66s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-45">
+          <div class="seg-time">610.80s &rarr; 616.99s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Pero yo quiero un documento que demuestre por qué se..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="45" data-start="610.805" data-end="616.985">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('610.80s&ndash;616.99s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-46">
+          <div class="seg-time">618.47s &rarr; 636.66s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Escuchen, a través de la página de la dirección de aeronautica..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="46" data-start="618.465" data-end="636.665">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('618.47s&ndash;636.66s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-47">
+          <div class="seg-time">618.47s &rarr; 642.18s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"las preguntas que necesite y la dirección de redondos de manera formal le va a responder y le va a entregar lo que pueda entregarle de lo que usted está solicitando, eso es la evidencia. Dejeac.cl, esa es la página de la dirección, le recomiendo que entre ahí y haga la respuesta correcta. ¿Cuál es? Esto es informe, acá yo no le puedo entregar nada de lo que usted está pidiendo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="47" data-start="618.465" data-end="642.185">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('618.47s&ndash;642.18s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-48">
+          <div class="seg-time">642.18s &rarr; 652.18s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Yo estoy ACA! ....... ¿Cuál es? .. ahora yo posso.."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="48" data-start="642.185" data-end="652.185">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('642.18s&ndash;652.18s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-49">
+          <div class="seg-time">642.18s &rarr; 652.18s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"¿Puedo hacerle una pregunta? Sí ¿Cuál es el motivo, la responsabilidad de la DGAC?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="49" data-start="642.185" data-end="652.185">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('642.18s&ndash;652.18s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-50">
+          <div class="seg-time">653.09s &rarr; 654.33s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"lo que hace la DGAC."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="50" data-start="653.085" data-end="654.325">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('653.09s&ndash;654.33s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-51">
+          <div class="seg-time">376.02s &rarr; 376.51s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="51" data-start="376.02" data-end="376.51">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('376.02s&ndash;376.51s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-52">
+          <div class="seg-time">655.54s &rarr; 659.57s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"la seguridad del aeropuerto, de las instalaciones aéreas, de la seguridad de la aviacion."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="52" data-start="655.545" data-end="659.565">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('655.54s&ndash;659.57s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-53">
+          <div class="seg-time">659.66s &rarr; 669.09s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"de la seguridad? No tiene tambien QUE LAS AEROLINEAS"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="53" data-start="659.665" data-end="669.085">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('659.66s&ndash;669.09s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-54">
+          <div class="seg-time">659.66s &rarr; 669.09s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"sigan la ley, que ustedes también tengan la responsabilidad de asegurar que ellos.."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="54" data-start="659.665" data-end="669.085">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('659.66s&ndash;669.09s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-55">
+          <div class="seg-time">669.09s &rarr; 683.37s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"No somos un organismo rector, eso es la JAC, la Junta Aeronautica Central. Si usted a través entra también a la página jac.cl"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="55" data-start="669.085" data-end="683.365">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('669.09s&ndash;683.37s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-56">
+          <div class="seg-time">683.37s &rarr; 687.64s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Yo voy a ser un reclamo también en general, pero en general."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="56" data-start="683.365" data-end="687.645">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('683.37s&ndash;687.64s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-57">
+          <div class="seg-time">685.75s &rarr; 690.62s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Claro. Ellos son el organismo rector de la compañía aerea."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="57" data-start="685.745" data-end="690.625">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('685.75s&ndash;690.62s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-58">
+          <div class="seg-time">691.73s &rarr; 695.09s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"lo que me impresiona es que..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="58" data-start="691.725" data-end="695.085">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('691.73s&ndash;695.09s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-59">
+          <div class="seg-time">696.02s &rarr; 705.59s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Ese documento, la carta de desembarque, fue pasada a la PDI. Tenía el personal que tiene en su teléfono."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="59" data-start="696.025" data-end="705.585">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('696.02s&ndash;705.59s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-60">
+          <div class="seg-time">706.54s &rarr; 707.57s</div>
+          <div class="seg-speaker">DGAC - EDGARDO ORTIZ?</div>
+          <p class="seg-text">"Pa que no pense que nosotros .. (lies again, exposing what have not been asked) guilt tripping"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="60" data-start="706.545" data-end="707.565">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('706.54s&ndash;707.57s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-61">
+          <div class="seg-time">706.54s &rarr; 707.57s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Yo..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="61" data-start="706.545" data-end="707.565">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('706.54s&ndash;707.57s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-62">
+          <div class="seg-time">706.54s &rarr; 707.57s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"deveria"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="62" data-start="706.545" data-end="707.565">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('706.54s&ndash;707.57s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-63">
+          <div class="seg-time">708.09s &rarr; 709.83s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Saber, por que estan haciendo eso"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="63" data-start="708.085" data-end="709.825">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('708.09s&ndash;709.83s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-64">
+          <div class="seg-time">715.59s &rarr; 727.80s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"La solicitud es una acusación de cargo en contra su día. El comandante aeronave, a través de un documento interno, nosotros lo solicita, necesito que se baje este pasajero. Ellos no hacen nada. Él no hace esa solicitud."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="64" data-start="715.585" data-end="727.805">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('715.59s&ndash;727.80s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-65">
+          <div class="seg-time">727.80s &rarr; 730.00s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Y sin ni un motivo?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="65" data-start="727.805" data-end="730.005">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('727.80s&ndash;730.00s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-66">
+          <div class="seg-time">730.49s &rarr; 732.78s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Esto puede ser simplesmente descriminacion?!"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="66" data-start="730.485" data-end="732.785">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('730.49s&ndash;732.78s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-67">
+          <div class="seg-time">732.78s &rarr; 738.07s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"E nel, Es que .. Para eso usted reclame contra la compania aerea.. si lo estai diciendo de tu principio"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="67" data-start="732.785" data-end="738.065">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('732.78s&ndash;738.07s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-68">
+          <div class="seg-time">738.64s &rarr; 742.97s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Yo pense que ustedes tenian como otra función."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="68" data-start="738.645" data-end="742.965">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('738.64s&ndash;742.97s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-69">
+          <div class="seg-time">742.97s &rarr; 747.02s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"No.. No, no, no es esa la función. No, nosotros no regimos la compañía aérea."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="69" data-start="742.965" data-end="747.025">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('742.97s&ndash;747.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-70">
+          <div class="seg-time">748.59s &rarr; 754.90s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"No es regir, es controlar que ellos sigan las leyes de aviación, ¿o estoy incorrecto? ..Ya"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="70" data-start="748.585" data-end="754.905">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('748.59s&ndash;754.90s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-71">
+          <div class="seg-time">754.90s &rarr; 756.16s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"No somos un organismo reitor."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="71" data-start="754.905" data-end="756.165">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('754.90s&ndash;756.16s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-72">
+          <div class="seg-time">754.90s &rarr; 756.16s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"La JAC - Junta aeronautica central"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="72" data-start="754.905" data-end="756.165">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('754.90s&ndash;756.16s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-73">
+          <div class="seg-time">760.76s &rarr; 767.37s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Entonces, explicame lo que tengo yo que hacer, ahora, porque ahora yo no tengo vuelo y no tengo mi... ¿Dónde he quedado? Lo que hago yo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="73" data-start="760.765" data-end="767.365">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('760.76s&ndash;767.37s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-74">
+          <div class="seg-time">479.97s &rarr; 480.02s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="74" data-start="479.97" data-end="480.02">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('479.97s&ndash;480.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-75">
+          <div class="seg-time">767.37s &rarr; 771.50s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"¿Cuál es el problema medicinal que le están ofreciendo a la compañía?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="75" data-start="767.365" data-end="771.505">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('767.37s&ndash;771.50s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-76">
+          <div class="seg-time">771.50s &rarr; 772.61s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"No ofreceron nada"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="76" data-start="771.505" data-end="772.605">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('771.50s&ndash;772.61s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-77">
+          <div class="seg-time">772.61s &rarr; 780.09s</div>
+          <div class="seg-speaker">SPEAKER_00</div>
+          <p class="seg-text">"Quedó vetado por 24 horas y no le han ofrecido nada por lo que sucedió. Por eso el motivo de que no puede volver a viajar y tiene que esperar. Le consulté a la inseración y quería saber bien y me dijeron que eso que estaba vetado por 24 horas por eso en la tampa Exacto, se reservaba el derecho de embarcarlo hasta después de 24 horas. Que el aplauso y viento vinieron."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="77" data-start="772.605" data-end="780.085">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('772.61s&ndash;780.09s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-78">
+          <div class="seg-time">496.73s &rarr; 497.40s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="78" data-start="496.73" data-end="497.4">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('496.73s&ndash;497.40s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-79">
+          <div class="seg-time">791.71s &rarr; 805.02s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Exato, se reverva el derecho de bancar lo hasta despues de 24 horas"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="79" data-start="791.705" data-end="805.025">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('791.71s&ndash;805.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-80">
+          <div class="seg-time">791.71s &rarr; 805.02s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Y ahora, bueno, en realidad Latam tiene, como les menciono, por ley, por código aeronáutico, ellos tienen la facultad de reservarse el derecho de ver a los pasajeros o a las personas que ellos van a transportar. Es un tema de ellos"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="80" data-start="791.705" data-end="805.025">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('791.71s&ndash;805.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-81">
+          <div class="seg-time">805.02s &rarr; 810.07s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Entonces antes de que yo compre mi pasaje, porque mi problema es que..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="81" data-start="805.025" data-end="810.065">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('805.02s&ndash;810.07s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-82">
+          <div class="seg-time">811.90s &rarr; 819.40s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"La razón por la que lo hicieron fue desprobada. En verdad, eso se torna..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="82" data-start="811.905" data-end="819.405">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('811.90s&ndash;819.40s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-83">
+          <div class="seg-time">820.78s &rarr; 825.42s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"contra ellos, porque en vez de ir, hicieron una cagada fea."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="83" data-start="820.785" data-end="825.425">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('820.78s&ndash;825.42s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-84">
+          <div class="seg-time">548.38s &rarr; 548.54s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="84" data-start="548.38" data-end="548.54">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('548.38s&ndash;548.54s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-85">
+          <div class="seg-time">825.85s &rarr; 850.71s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Yo hasta le entiendo a usted, de verdad, si lo conversamos."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="85" data-start="825.845" data-end="850.705">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('825.85s&ndash;850.71s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-86">
+          <div class="seg-time">825.85s &rarr; 850.71s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"de mano, porque la Dirección Tecnológica invoca la ley y nos dice, necesito que me apoyen. Y nosotros quedamos así. Nosotros no podemos objetar. Yo no puedo poner en tela de juicio, a ver, pero dígame, ¿por qué quiere que lo baje? No, es la verdad que ellos dicen, necesito que lo baje."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="86" data-start="825.845" data-end="850.705">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('825.85s&ndash;850.71s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-87">
+          <div class="seg-time">850.71s &rarr; 852.76s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Yo estaba hablando con un carabinero afuera."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="87" data-start="850.705" data-end="852.765">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('850.71s&ndash;852.76s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-88">
+          <div class="seg-time">584.19s &rarr; 584.55s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"¿Por qué?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="88" data-start="584.19" data-end="584.55">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('584.19s&ndash;584.55s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-89">
+          <div class="seg-time">863.99s &rarr; 871.59s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Yo voy a hacer una demanda contra la persona también, personalmente, contra latam, pero ahora..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="89" data-start="863.985" data-end="871.585">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('863.99s&ndash;871.59s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-90">
+          <div class="seg-time">871.92s &rarr; 875.54s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"simplemente se sentió en el derecho"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="90" data-start="871.925" data-end="875.545">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('871.92s&ndash;875.54s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-91">
+          <div class="seg-time">877.11s &rarr; 880.30s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"de me hacer mal, de mi hacer mal."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="91" data-start="877.105" data-end="880.305">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('877.11s&ndash;880.30s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-92">
+          <div class="seg-time">601.23s &rarr; 602.17s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"EXACTO!"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="92" data-start="601.23" data-end="602.17">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('601.23s&ndash;602.17s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-93">
+          <div class="seg-time">880.76s &rarr; 883.02s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"mal físicamente, mentalmente."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="93" data-start="880.765" data-end="883.025">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('880.76s&ndash;883.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-94">
+          <div class="seg-time">883.11s &rarr; 887.54s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Financeramente, simplemente, ¿qué va a pasar con esa persona?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="94" data-start="883.105" data-end="887.545">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('883.11s&ndash;887.54s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-95">
+          <div class="seg-time">607.29s &rarr; 610.30s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Per supuesto... per supuesto..y sabe lo que mas"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="95" data-start="607.29" data-end="610.3">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('607.29s&ndash;610.30s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-96">
+          <div class="seg-time">888.42s &rarr; 897.14s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Conversamos mucho rato más en el caso suyo. De hecho, Felipe me llamó y me conversó la situación."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="96" data-start="888.425" data-end="897.145">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('888.42s&ndash;897.14s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-97">
+          <div class="seg-time">897.68s &rarr; 913.28s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"en solicitar que se cambie esa parte de la normativa donde la compañía aérea esté obligada, por lo menos, a mostrar un poco de bases como para poder.."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="97" data-start="897.685" data-end="913.285">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('897.68s&ndash;913.28s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-98">
+          <div class="seg-time">913.28s &rarr; 914.71s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Claro, Pero esto no esta sendo pasado"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="98" data-start="913.285" data-end="914.705">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('913.28s&ndash;914.71s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-99">
+          <div class="seg-time">914.71s &rarr; 926.18s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"el problema que, como le digo.."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="99" data-start="914.705" data-end="926.185">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('914.71s&ndash;926.18s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-100">
+          <div class="seg-time">914.71s &rarr; 939.02s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Legalmente, nosotros hoy día estamos atados de mano porque ellos solamente invocan la ley y nos dicen necesito que me apoyen ustedes porque yo me reservo el derecho de llevar a esta persona, así que yo no lo voy a llevar. Nosotros quedamos así, no le podemos preguntar por qué no lo quiere llevar. Ya, bueno, señor, tenemos que bajar. No, es que no quiero, señor, es que tiene que bajar, sabemos que la compañía ya nos pidió que usted tiene que bajar. Es que no, es que no quiero, me tiene que bajar a la fuerza."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="100" data-start="914.705" data-end="939.025">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('914.71s&ndash;939.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-101">
+          <div class="seg-time">939.61s &rarr; 943.35s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"no tiene algo que..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="101" data-start="939.605" data-end="943.345">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('939.61s&ndash;943.35s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-102">
+          <div class="seg-time">943.62s &rarr; 947.38s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Quien controlas que ellos estan seguindo la ley??????????????"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="102" data-start="943.625" data-end="947.385">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('943.62s&ndash;947.38s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-103">
+          <div class="seg-time">947.38s &rarr; 949.95s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"E Ley. E una ley que esta.?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="103" data-start="947.385" data-end="949.945">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('947.38s&ndash;949.95s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-104">
+          <div class="seg-time">951.85s &rarr; 957.52s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Si, pero quien controlas que ellos no estan utilizando la ley de ma fe? O no estan usando la ley de forma incorrecta?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="104" data-start="951.845" data-end="957.525">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('951.85s&ndash;957.52s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-105">
+          <div class="seg-time">957.52s &rarr; 960.61s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"Para eso existen los tribunales"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="105" data-start="957.525" data-end="960.605">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('957.52s&ndash;960.61s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-106">
+          <div class="seg-time">980.11s &rarr; 983.97s</div>
+          <div class="seg-speaker">DGAC - Don Nicolas</div>
+          <p class="seg-text">"No, ahora lo que te queda es esperar el tiempo que la compañía... ¡Voy a estar en otra compañía!"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="106" data-start="980.105" data-end="983.965">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('980.11s&ndash;983.97s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-107">
+          <div class="seg-time">985.25s &rarr; 987.04s</div>
+          <div class="seg-speaker">SPEAKER_00</div>
+          <p class="seg-text">"que la realidad se reserva el derecho por lo que pasó, por dónde..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="107" data-start="985.245" data-end="987.045">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('985.25s&ndash;987.04s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-108">
+          <div class="seg-time">987.62s &rarr; 991.37s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"Pero mira, yo no quiero volar con la lata, mira, yo quiero que..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="108" data-start="987.625" data-end="991.365">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('987.62s&ndash;991.37s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-109">
+          <div class="seg-time">1000.02s &rarr; 1009.88s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"como tres veces más caro, me salió un vuelo como de 38 horas en vez de 4 horas."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="109" data-start="1000.025" data-end="1009.885">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('1000.02s&ndash;1009.88s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-110">
+          <div class="seg-time">732.83s &rarr; 733.71s</div>
+          <div class="seg-speaker">Leandro Disconzi (passenger)</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="110" data-start="732.83" data-end="733.71">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('732.83s&ndash;733.71s')">+ add note</button>
+          </div>
+        </div>
+      </div>
+      <div class="section-head">
+        <h2>Related Violations</h2>
+        <p>Structured legal records linked to this audio. Each record identifies the violation, engaged provisions, and evidentiary anchor. <strong>Primary Evidence</strong> denotes an on-tape admission or directly observed fact; <strong>Legal Analysis</strong> denotes an inference drawn from the record and cross-referenced material.</p>
+      </div>
+      <div class="evidence-grid" id="relatedViolations">
+      </div>
+      <div class="section-head">
+        <h2>Annotations &amp; Comments</h2>
+        <p>Key forensic annotations for this audio recording are documented below. These notes identify the legally significant moments captured in this evidence.</p>
+      </div>
+      <div class="notes-panel" id="notesPanel">
+        <div class="notes-head">
+          <span class="notes-label">Forensic Notes</span>
+          <span class="notes-count">8 annotations</span>
+        </div>
+        <div class="notes-list">
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg">T2, STG_22</span>
+            </div>
+            <div class="note-body">Captain&#x27;s absolute authority under Código Aeronáutico explained by DGAC.</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg">F-019, F-014</span>
+            </div>
+            <div class="note-body">&#x27;No importa para este efecto el motivo&#x27; — disruption classification is motive-blind.</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg">pending F-006, Ley 20.609</span>
+            </div>
+            <div class="note-body">&#x27;Esto puede ser simplesmente descriminacion?!&#x27; — discrimination question raised directly.</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg">T2, STG_22</span>
+            </div>
+            <div class="note-body">&#x27;Atados de mano&#x27; — DGAC cannot question airline&#x27;s removal decision.</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg">T2 seg 2</span>
+            </div>
+            <div class="note-body">&#x27;No le podemos preguntar por qué&#x27; — DGAC cannot ask the reason.</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg">ACHR Art. 25</span>
+            </div>
+            <div class="note-body">&#x27;Para eso existen los tribunales&#x27; — only courts can check bad-faith invocations.</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg">Structural evidence</span>
+            </div>
+            <div class="note-body">Don Nicolas advocates for law reform — &#x27;se cambie esa parte de la normativa&#x27;.</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg">Damages evidence</span>
+            </div>
+            <div class="note-body">Leandro quantifies damages: replacement flight 3x cost, 38hr vs 4hr.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <footer class="page-footer">
+    <div class="main">
+      <p>Disconzi v. LATAM Airlines &mdash; Audio Evidence Archive</p>
+      <p class="mono">aeropuerto_STG_23.m4a &middot; 42m 43.989s &middot; July 05, 2024 &middot; 19:11:00</p>
+      <p style="margin-top:8px;">This page constitutes direct audio evidence for pending legal proceedings.</p>
+    </div>
+  </footer>
+  </div>
+  <!-- VIOLATION MODAL -->
+  <div class="modal-overlay" id="violationModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-header-body">
+          <div class="modal-type-badge" id="modalBadge"></div>
+          <div class="modal-title" id="modalTitle"></div>
+          <div class="modal-audio-ref" id="modalAudioRef">Evidence: aeropuerto_STG_23</div>
+        </div>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <span class="modal-footer-note" id="modalFooterNote"></span>
+        <button class="modal-download-btn" onclick="downloadViolationJSON()">Download JSON</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var modalData = {
+
+      };
+
+      var activeVid = null;
+
+      window.openModal = function (vid) {
+        var d = modalData[vid];
+        if (!d) return;
+        activeVid = vid;
+        var modal = document.getElementById('violationModal');
+        var badge = document.getElementById('modalBadge');
+        var title = document.getElementById('modalTitle');
+        var body = document.getElementById('modalBody');
+        var note = document.getElementById('modalFooterNote');
+        var audioRef = document.getElementById('modalAudioRef');
+
+        badge.textContent = d.badge;
+        badge.className = 'modal-type-badge ' + d.badgeClass;
+        title.textContent = d.title;
+        body.innerHTML = d.body;
+        note.textContent = d.footer;
+        if (audioRef) {
+          audioRef.textContent = 'Evidence: aeropuerto_STG_23';
+        }
+
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      };
+
+      window.closeModal = function () {
+        var modal = document.getElementById('violationModal');
+        if (modal) modal.classList.remove('open');
+        document.body.style.overflow = '';
+        activeVid = null;
+      };
+
+      window.downloadViolationJSON = function () {
+        if (!activeVid) return;
+        var blob = new Blob([JSON.stringify(modalData[activeVid] || {}, null, 2)], { type: 'application/json' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = activeVid + '.json';
+        a.click();
+      };
+
+      document.getElementById('violationModal').addEventListener('click', function (e) {
+        if (e.target === this) {
+          window.closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') window.closeModal();
+      });
+    })();
+  </script>
+  <script src="/case_files/02-transcripts/transcripts_rendered/audio_player.js"></script>
+  <div class="pinned-nav"><a class="pinned-nav-link" href="../index.html">&larr; Case Index</a><span class="pinned-nav-label">Disconzi v. LATAM Airlines</span></div>
+</body>
+
+</html>

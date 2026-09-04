@@ -1,0 +1,256 @@
+{
+  "transcript_id": "I-002_19_NAR_LATAM_STG_3",
+  "source_file": "",
+  "language": "es",
+  "timestamp": "2024-07-05T23:10:00",
+  "provider": "",
+  "original_transcript_id": "I-002_19_NAR_LATAM_STG_3",
+  "metadata": {},
+  "title": "LATAM STG 3 — FINAL v2",
+  "subtitle": "Gate / Boarding Area Interaction",
+  "recording_datetime": "2024-07-05T23:10:00",
+  "location": "Arturo Merino Benítez International Airport, Santiago, Chile",
+  "audio_id": "latam_STG_3",
+  "case_id": "I-002",
+  "narrative_id": "NAR_LATAM_STG_3",
+  "chronological_order": 22,
+  "prior_stage": "I-002_18_NAR_LATAM_STG_2",
+  "next_stage": "I-002_20_NAR_LATAM_STG_4",
+  "classification": "Attorney Work Product — Privileged and Confidential",
+  "participants": [
+    {
+      "canonical_name": "Leandro Disconzi",
+      "role": "Passenger",
+      "speaker_label": "Passenger (Leandro Disconzi)",
+      "speaker_id": "SPK-passenger-leandro"
+    }
+  ],
+  "violations_cited": [],
+  "tags": [
+    "transcript",
+    "narrative",
+    "evidence",
+    "latam"
+  ],
+  "forensic_clusters": {},
+  "key_evidentiary_findings": [
+    {
+      "id": "LS3-1",
+      "finding": "LATAM-specific interaction — context to be reviewed.",
+      "strength": "Medium"
+    }
+  ],
+  "corrections_applied": [],
+  "segments": [
+    {
+      "index": 0,
+      "speaker": "passenger",
+      "start": 0.008488964346349746,
+      "end": 7.98811544991511,
+      "duration": 7.97962648556536,
+      "text": "entonces me fue enviado una carta explicándome lo que pasó, pero no hay una asignatura ni un timbre de latam.",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:00.008"
+    },
+    {
+      "index": 1,
+      "speaker": "passenger",
+      "start": 9.193548387096776,
+      "end": 12.062818336162989,
+      "duration": 2.869269949066213,
+      "text": "creo que queda un poco complejo esto.",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:09.193"
+    },
+    {
+      "index": 2,
+      "speaker": "unresolved_speaker",
+      "start": 12.181663837011886,
+      "end": 12.283531409168083,
+      "duration": 0.101867572156197,
+      "text": ".",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:12.181"
+    },
+    {
+      "index": 3,
+      "speaker": "passenger",
+      "start": 12.317487266553481,
+      "end": 16.001697792869273,
+      "duration": 3.684210526315792,
+      "text": "mira, están me pasando un documento sin firma.",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:12.317"
+    },
+    {
+      "index": 4,
+      "speaker": "passenger",
+      "start": 16.239388794567063,
+      "end": 16.884550084889646,
+      "duration": 0.645161290322583,
+      "text": "¡firma tú!",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:16.239"
+    },
+    {
+      "index": 5,
+      "speaker": "passenger",
+      "start": 18.293718166383705,
+      "end": 19.482173174872663,
+      "duration": 1.188455008488958,
+      "text": "¿por qué tú no quieres firmar?",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:18.293"
+    },
+    {
+      "index": 6,
+      "speaker": "passenger",
+      "start": 22.996604414261462,
+      "end": 27.190152801358238,
+      "duration": 4.193548387096776,
+      "text": "puedo hacer una pregunta. ¿quién escribió la carta?",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:22.996"
+    },
+    {
+      "index": 7,
+      "speaker": "passenger",
+      "start": 28.887945670628184,
+      "end": 40.97623089983022,
+      "duration": 12.088285229202036,
+      "text": "yo estoy haciendo una pregunta. Yo estoy haciendo una pregunta.",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:28.887"
+    },
+    {
+      "index": 8,
+      "speaker": "passenger",
+      "start": 30.280135823429546,
+      "end": 32.86078098471987,
+      "duration": 2.580645161290324,
+      "text": "Pero tú me pasó una carta sin firmar. Tú me pasaste una carta sin firmar.",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:30.280"
+    },
+    {
+      "index": 9,
+      "speaker": "passenger",
+      "start": 34.21901528013582,
+      "end": 34.25297113752122,
+      "duration": 0.0339558573854,
+      "text": "[silencio]",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:34.219"
+    },
+    {
+      "index": 10,
+      "speaker": "passenger",
+      "start": 34.30390492359932,
+      "end": 34.64346349745331,
+      "duration": 0.33955857385399,
+      "text": "tu nombre, antonella.",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:34.303"
+    },
+    {
+      "index": 11,
+      "speaker": "passenger",
+      "start": 41.7911714770798,
+      "end": 53.421052631578945,
+      "duration": 11.629881154499145,
+      "text": "Antonella sara algo. Mira, me pasó un documento que estoy esperando a ocho más horas sin una firma.",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:41.791"
+    },
+    {
+      "index": 12,
+      "speaker": "passenger",
+      "start": 55.78098471986418,
+      "end": 57.12224108658744,
+      "duration": 1.34125636672326,
+      "text": "y yo estoy esperando a la firma.",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:55.780"
+    },
+    {
+      "index": 13,
+      "speaker": "passenger",
+      "start": 58.2427843803056,
+      "end": 58.75212224108659,
+      "duration": 0.50933786078099,
+      "text": "¿ya?",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:10:58.242"
+    },
+    {
+      "index": 14,
+      "speaker": "passenger",
+      "start": 61.48556876061121,
+      "end": 61.926994906621395,
+      "duration": 0.441426146010185,
+      "text": "[silencio]",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:11:01.485"
+    },
+    {
+      "index": 15,
+      "speaker": "unresolved_speaker",
+      "start": 73.59083191850596,
+      "end": 73.65874363327674,
+      "duration": 0.06791171477078,
+      "text": "[silencio]",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:11:13.590"
+    },
+    {
+      "index": 16,
+      "speaker": "passenger",
+      "start": 80.90831918505941,
+      "end": 83.09847198641765,
+      "duration": 2.19015280135824,
+      "text": "un documento no necesita de una firma?",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:11:20.908"
+    },
+    {
+      "index": 17,
+      "speaker": "unresolved_speaker",
+      "start": 86.32427843803057,
+      "end": 87.52971137521223,
+      "duration": 1.20543293718166,
+      "text": "[silencio]",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:11:26.324"
+    },
+    {
+      "index": 18,
+      "speaker": "passenger",
+      "start": 88.3616298811545,
+      "end": 89.65195246179965,
+      "duration": 1.29032258064515,
+      "text": "nadie responde.",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:11:28.361"
+    },
+    {
+      "index": 19,
+      "speaker": "passenger",
+      "start": 101.34974533106961,
+      "end": 105.0339558573854,
+      "duration": 3.68421052631579,
+      "text": "entiendo que es abuso de autoridad lo que están haciendo.",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:11:41.349"
+    },
+    {
+      "index": 20,
+      "speaker": "passenger",
+      "start": 108.8370118845501,
+      "end": 109.95755517826825,
+      "duration": 1.12054329371815,
+      "text": "¿es un discaso!",
+      "reviewed": true,
+      "segment_datetime": "2024-07-05T23:11:48.837"
+    }
+  ]
+}

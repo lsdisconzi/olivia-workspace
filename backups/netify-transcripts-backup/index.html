@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NETIFY Transcript Bundle — Disconzi v. LATAM</title>
+  <style>
+    :root {
+      --bg-primary: #f8f7f4;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f2f0ea;
+      --bg-surface: #f1efe8;
+      --border: #e1ddd1;
+      --border-strong: #c7c1b0;
+      --text-primary: #1b1c1e;
+      --text-secondary: #52555c;
+      --text-muted: #8a8b87;
+      --accent: #24405f;
+      --accent-dim: rgba(36, 64, 95, 0.07);
+      --status-flag: #7a3733;
+      --status-flag-dim: rgba(122, 55, 51, 0.08);
+      --status-analysis: #8a6a2c;
+      --status-analysis-dim: rgba(138, 106, 44, 0.09);
+      --status-note: #3f6b4f;
+      --status-note-dim: rgba(63, 107, 79, 0.08);
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Source Serif 4', Georgia, serif;
+      --sans: 'Inter', -apple-system, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: var(--text-primary);
+    }
+
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 44px 0 32px;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-surface) 100%);
+    }
+
+    .masthead-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .masthead-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-strong);
+      padding: 5px 12px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+      background: var(--bg-card);
+    }
+
+    .masthead h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      font-weight: 600;
+      line-height: 1.25;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .masthead-sub {
+      font-size: 0.96rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      line-height: 1.7;
+    }
+
+    .stats-bar {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      flex: 1 1 180px;
+      padding: 18px 14px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat-item:last-child {
+      border-right: none;
+    }
+
+    .stat-val {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-top: 5px;
+    }
+
+    .main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .section-head {
+      padding: 44px 0 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      padding-bottom: 14px;
+      color: var(--text-primary);
+    }
+
+    .section-head p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      padding-bottom: 16px;
+      max-width: 700px;
+      line-height: 1.6;
+    }
+
+    .transcript-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 8px;
+      padding-bottom: 8px;
+    }
+
+    .transcript-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 3px;
+      padding: 12px 16px;
+      transition: all 0.15s ease;
+      display: block;
+    }
+
+    .transcript-item:hover {
+      background: var(--bg-card-hover);
+      border-left-color: var(--text-primary);
+      text-decoration: none;
+      transform: translateX(2px);
+    }
+
+    .transcript-item .item-title {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .transcript-item .item-meta {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .evidence-card {
+      display: grid;
+      grid-template-columns: 100px 1fr 150px;
+      align-items: start;
+      gap: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border-strong);
+      border-radius: 3px;
+      padding: 18px 22px;
+      transition: all 0.15s ease;
+    }
+
+    .evidence-card:hover {
+      border-left-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .ev-time-col {
+      padding-top: 2px;
+    }
+
+    .ev-time {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .ev-body h3 {
+      font-size: 0.94rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .ev-body .ev-summary {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.68;
+    }
+
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .page-footer p {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .page-footer .mono {
+      font-family: var(--mono);
+    }
+
+    @media (max-width: 900px) {
+      .masthead {
+        padding: 28px 0 22px;
+      }
+
+      .masthead-inner,
+      .main {
+        padding: 0 16px;
+      }
+
+      .transcript-list {
+        grid-template-columns: 1fr;
+      }
+
+      .evidence-card {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="masthead">
+    <div class="masthead-inner">
+      <span class="masthead-badge">Case Documentation</span>
+      <h1>NETIFY Transcript Bundle</h1>
+      <p class="masthead-sub">
+        Disconzi v. LATAM Airlines — Complete transcript collection, narrative summaries, 
+        and audio references. Drop this folder directly into a NETIFY static site for 
+        immediate deployment.
+      </p>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-val">19</div>
+        <div class="stat-label">Transcript Files</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">96</div>
+        <div class="stat-label">Full Narratives</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">6+</div>
+        <div class="stat-label">Languages</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">Static</div>
+        <div class="stat-label">Deployment Ready</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="section-head">
+      <h2>Transcript Files</h2>
+      <p>Primary transcript segments organized by stage and location. Each file contains detailed audio-synced documentation.</p>
+    </div>
+
+    <div class="transcript-list">
+      <a href="transcripts/I-002_01_NAR-01_STG_1_pre_boarding.html" class="transcript-item">
+        <div class="item-title">01 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-01 · Pre-Boarding · NAR-01</div>
+      </a>
+      <a href="transcripts/I-002_02_NAR-02_STG_2_boarding_gate.html" class="transcript-item">
+        <div class="item-title">02 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-02 · Boarding Gate · NAR-02 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_03_NAR-05_STG_5_aircraft_removal.html" class="transcript-item">
+        <div class="item-title">03 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-05 · Aircraft Removal · NAR-05 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_04_NAR-06_STG_6_jetbridge_standoff.html" class="transcript-item">
+        <div class="item-title">04 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-06 · Jetbridge Standoff · NAR-06 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_05_NAR-07_STG_7_post_removal_investigation.html" class="transcript-item">
+        <div class="item-title">05 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-07 · Post-Removal Investigation · NAR-07 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_06_NAR-STG_8_pdi_identity_control.html" class="transcript-item">
+        <div class="item-title">06 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-08 · PDI Identity Control</div>
+      </a>
+      <a href="transcripts/I-002_07_NAR-06_STG_13_post_PDI_corridor.html" class="transcript-item">
+        <div class="item-title">07 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-13 · Post-PDI Corridor · NAR-06 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_08_NAR-09_STG_15_luggage_recovery.html" class="transcript-item">
+        <div class="item-title">08 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-15 · Luggage Recovery · NAR-09 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_09_NAR-10_STG_16_counter_confrontation.html" class="transcript-item">
+        <div class="item-title">09 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-16 · Counter Confrontation · NAR-10 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_10_NAR-13_STG_20_barraza_counter.html" class="transcript-item">
+        <div class="item-title">10 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-20 · Barraza Counter · NAR-13 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_11_NAR-14_Terminal_Internacional_T2_counter.html" class="transcript-item">
+        <div class="item-title">11 — Terminal Internacional T2</div>
+        <div class="item-meta">T2 Counter · NAR-14 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_12_NAR-15_STG_22_DGAC_office.html" class="transcript-item">
+        <div class="item-title">12 — DGAC Office</div>
+        <div class="item-meta">STG-22 · DGAC Office · NAR-15</div>
+      </a>
+      <a href="transcripts/I-002_14_NAR-16_STG_23_DGAC_don_nicolas.html" class="transcript-item">
+        <div class="item-title">13 — DGAC Don Nicolas</div>
+        <div class="item-meta">STG-23 · DGAC Don Nicolas · NAR-16 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_16_NAR-20_STG_28.html" class="transcript-item">
+        <div class="item-title">14 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-28 · Escalation · NAR-20 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_17_NAR-21_STG_29.html" class="transcript-item">
+        <div class="item-title">15 — Aeropuerto Arturo Merino Benítez</div>
+        <div class="item-meta">STG-29 · Final Confrontation · NAR-21 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_18_NAR_LATAM_STG_2.html" class="transcript-item">
+        <div class="item-title">16 — LATAM STG 2</div>
+        <div class="item-meta">LATAM Counter · Stage 2 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_19_NAR_LATAM_STG_3.html" class="transcript-item">
+        <div class="item-title">17 — LATAM STG 3</div>
+        <div class="item-meta">LATAM Counter · Stage 3 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_20_NAR_LATAM_STG_4.html" class="transcript-item">
+        <div class="item-title">18 — LATAM STG 4</div>
+        <div class="item-meta">LATAM Counter · Stage 4 · FINAL v2</div>
+      </a>
+      <a href="transcripts/I-002_24_NAR-19_STG_12.html" class="transcript-item">
+        <div class="item-title">19 — STG-12 Day 2 Counter Interaction</div>
+        <div class="item-meta">STG-12 · Boarding Denial & Pattern Confirmation · NAR-19</div>
+      </a>
+    </div>
+
+    <div class="section-head">
+      <h2>Full Narratives</h2>
+      <p>Complete narrative documents with detailed analysis, legal references, and cross-referenced segments. Available in multiple languages including English, Spanish, German, Italian, Polish, and Portuguese.</p>
+    </div>
+
+    <div class="transcript-list">
+      <a href="transcripts/Disconzi v. LATAM — Carabineros Dartnell 1 · Constancia (Official Police Statement) (Full Narrative).html" class="transcript-item">
+        <div class="item-title">Carabineros Dartnell 1 — Constancia</div>
+        <div class="item-meta">Official Police Statement · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — Carabineros Dartnell 2 · Independent Law Enforcement Pattern Confirmation (Full Narrative).html" class="transcript-item">
+        <div class="item-title">Carabineros Dartnell 2 — Pattern Confirmation</div>
+        <div class="item-meta">Independent Law Enforcement · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — Carabineros Dartnell 3 · Conclusion and Documentation Right (Full Narrative).html" class="transcript-item">
+        <div class="item-title">Carabineros Dartnell 3 — Conclusion</div>
+        <div class="item-meta">Documentation Right · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-01 · STG_1 · Pre-Boarding (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-01 — Pre-Boarding</div>
+        <div class="item-meta">STG-01 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-02 · STG_2 · Gate-Boarding-Display Dispute (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-02 — Boarding Gate Dispute</div>
+        <div class="item-meta">STG-02 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-03 · STG_5 · On-Aircraft Removal Order (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-03 — Aircraft Removal Order</div>
+        <div class="item-meta">STG-05 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-04 · STG_6 · Jetbridge Standoff (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-04 — Jetbridge Standoff</div>
+        <div class="item-meta">STG-06 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-05 · STG_7 · PDI Office (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-05 — PDI Office</div>
+        <div class="item-meta">STG-07 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-06 · STG_13 · Post-PDI Corridor (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-06 — Post-PDI Corridor</div>
+        <div class="item-meta">STG-13 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-09 · STG_15 · Luggage Recovery (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-09 — Luggage Recovery</div>
+        <div class="item-meta">STG-15 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-10 · STG_16 · Counter Confrontation (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-10 — Counter Confrontation</div>
+        <div class="item-meta">STG-16 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-13 · STG · Barraza Counter (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-13 — Barraza Counter</div>
+        <div class="item-meta">STG-20 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-15 · STG · Dgac Office (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-15 — DGAC Office</div>
+        <div class="item-meta">STG-22 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-16 · STG · Dgac Don Nicolas (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-16 — DGAC Don Nicolas</div>
+        <div class="item-meta">STG-23 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-19 · STG · STG-12 · Next-Day Boarding Denial and Narrative Shift Confirmation (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-19 — Next-Day Boarding Denial</div>
+        <div class="item-meta">STG-12 · Narrative Shift Confirmation · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-20 · STG · STG-28 · Escalation and Confrontation (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-20 — Escalation and Confrontation</div>
+        <div class="item-meta">STG-28 · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — NAR-21 · STG · STG-29 · The Final Confrontation: Document Fabrication Scheme Exposed (Full Narrative).html" class="transcript-item">
+        <div class="item-title">NAR-21 — Final Confrontation</div>
+        <div class="item-meta">STG-29 · Document Fabrication Exposed · Full Narrative</div>
+      </a>
+      <a href="transcripts/Disconzi v. LATAM — Terminal Internacional T2 · DGAC Nicolas and LATAM Counter Admissions (Full Narrative).html" class="transcript-item">
+        <div class="item-title">Terminal T2 — DGAC Admissions</div>
+        <div class="item-meta">DGAC Nicolas & LATAM Counter · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_en_Disconzi v. LATAM — NAR-01 · STG_1 · Pre-Boarding (Full Narrative).html" class="transcript-item">
+        <div class="item-title">EN — NAR-01 Pre-Boarding</div>
+        <div class="item-meta">English · STG-01 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_en_Disconzi v. LATAM — NAR-02 · STG_2 · Gate-Boarding-Display Dispute (Full Narrative).html" class="transcript-item">
+        <div class="item-title">EN — NAR-02 Boarding Gate</div>
+        <div class="item-meta">English · STG-02 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_en_Disconzi v. LATAM — NAR-03 · STG_5 · On-Aircraft Removal Order (Full Narrative).html" class="transcript-item">
+        <div class="item-title">EN — NAR-03 Aircraft Removal</div>
+        <div class="item-meta">English · STG-05 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_en_Disconzi v. LATAM — NAR-04 · STG_6 · Jetbridge Standoff (Full Narrative).html" class="transcript-item">
+        <div class="item-title">EN — NAR-04 Jetbridge Standoff</div>
+        <div class="item-meta">English · STG-06 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_en_Disconzi v. LATAM — NAR-05 · STG_7 · PDI Office (Full Narrative).html" class="transcript-item">
+        <div class="item-title">EN — NAR-05 PDI Office</div>
+        <div class="item-meta">English · STG-07 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_en_Disconzi v. LATAM — NAR-06 · STG_13 · Post-PDI Corridor (Full Narrative).html" class="transcript-item">
+        <div class="item-title">EN — NAR-06 Post-PDI Corridor</div>
+        <div class="item-meta">English · STG-13 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_es_Disconzi v. LATAM — NAR-01 · STG_1 · Pre-Boarding (Full Narrative).html" class="transcript-item">
+        <div class="item-title">ES — NAR-01 Pre-Boarding</div>
+        <div class="item-meta">Spanish · STG-01 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_es_Disconzi v. LATAM — NAR-02 · STG_2 · Gate-Boarding-Display Dispute (Full Narrative).html" class="transcript-item">
+        <div class="item-title">ES — NAR-02 Boarding Gate</div>
+        <div class="item-meta">Spanish · STG-02 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_de_Disconzi v. LATAM — NAR-01 · STG_1 · Pre-Boarding (Full Narrative).html" class="transcript-item">
+        <div class="item-title">DE — NAR-01 Pre-Boarding</div>
+        <div class="item-meta">German · STG-01 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_it_Disconzi v. LATAM — NAR-01 · STG_1 · Pre-Boarding (Full Narrative).html" class="transcript-item">
+        <div class="item-title">IT — NAR-01 Pre-Boarding</div>
+        <div class="item-meta">Italian · STG-01 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_pl_Disconzi v. LATAM — NAR-01 · STG_1 · Pre-Boarding (Full Narrative).html" class="transcript-item">
+        <div class="item-title">PL — NAR-01 Pre-Boarding</div>
+        <div class="item-meta">Polish · STG-01 · Full Narrative</div>
+      </a>
+      <a href="transcripts/n118_pt-BR_Disconzi v. LATAM — NAR-01 · STG_1 · Pre-Boarding (Full Narrative).html" class="transcript-item">
+        <div class="item-title">PT-BR — NAR-01 Pre-Boarding</div>
+        <div class="item-meta">Portuguese (BR) · STG-01 · Full Narrative</div>
+      </a>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <p>
+      <span class="mono">Disconzi v. LATAM Airlines</span> · Transcript Bundle v2.0<br>
+      NETIFY-ready static documentation · All files cross-referenced and audio-synced
+    </p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="clean-professional">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disconzi v. LATAM — NAR-09 · STG_15 · Luggage Recovery (Full Narrative)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8f7f4; --bg-card: #ffffff; --bg-card-hover: #f2f0ea; --bg-surface: #f1efe8;
+            --border: #e1ddd1; --border-strong: #c7c1b0; --text-primary: #1b1c1e; --text-secondary: #52555c;
+            --text-muted: #8a8b87; --accent: #24405f; --accent-dim: rgba(36, 64, 95, 0.07);
+            --status-flag: #7a3733; --status-flag-dim: rgba(122, 55, 51, 0.08); --status-analysis: #8a6a2c;
+            --status-analysis-dim: rgba(138, 106, 44, 0.09); --status-note: #3f6b4f; --status-note-dim: rgba(63, 107, 79, 0.08);
+            --mono: 'JetBrains Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; --sans: 'Inter', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--sans); background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; padding-bottom: 60px; }
+        a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+        code { font-family: var(--mono); font-size: 0.85em; color: var(--accent); background: var(--bg-surface); padding: 1px 6px; border-radius: 2px; }
+        .masthead { border-bottom: 1px solid var(--border); padding: 44px 0 32px; }
+        .masthead-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .masthead-back { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; display: inline-block; }
+        .masthead-back:hover { color: var(--accent); text-decoration: none; }
+        .masthead-badge { display: inline-block; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-strong); padding: 5px 12px; border-radius: 2px; margin-bottom: 20px; }
+        .masthead h1 { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 600; line-height: 1.25; margin-bottom: 10px; color: var(--text-primary); }
+        .masthead-sub { font-size: 0.96rem; color: var(--text-secondary); max-width: 760px; line-height: 1.7; }
+        .stats-bar { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stats-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; display: flex; gap: 0; flex-wrap: wrap; }
+        .stat-item { flex: 1 1 180px; padding: 18px 14px; border-right: 1px solid var(--border); }
+        .stat-item:last-child { border-right: none; }
+        .stat-val { font-family: var(--mono); font-size: 0.92rem; font-weight: 500; color: var(--text-primary); word-break: break-word; }
+        .stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 5px; }
+        .main { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .section-head { padding: 44px 0 18px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+        .section-head h2 { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; padding-bottom: 14px; }
+        .section-head p { color: var(--text-secondary); font-size: 0.9rem; padding-bottom: 16px; max-width: 760px; }
+        .panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 18px 22px; margin-bottom: 14px; }
+        .meta-key { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+        .finding-box { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 3px; padding: 18px 20px; margin: 16px 0; }
+        .finding-box.flag { border-left-color: var(--status-flag); }
+        .finding-box.analysis { border-left-color: var(--status-analysis); }
+        .finding-box h3 { font-family: var(--serif); font-size: 1.1rem; margin-bottom: 8px; }
+        .finding-box p, .finding-box li { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.72; }
+        .finding-box ul { margin-top: 10px; padding-left: 18px; }
+        .page-footer { border-top: 1px solid var(--border); padding: 28px 0; text-align: center; margin-top: 48px; }
+        .page-footer p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.8; }
+        .mono { font-family: var(--mono); }
+        @media (max-width: 600px) { .masthead { padding: 28px 0 22px; } .masthead-inner, .main { padding: 0 16px; } }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="masthead">
+            <div class="masthead-inner">
+                <a class="masthead-back" href="../index.html">&larr; Evidence Archive · Index</a>
+                <div class="masthead-badge">Narrative · NAR-09 · STG_15 · Luggage Recovery</div>
+                <h1>The Luggage Counter Standoff and the Second Removal Threat</h1>
+                <p class="masthead-sub">Full narrative integrating the transcript, refusal-to-document pattern, second removal threat, and the procedural nationality wedge raised by LATAM personnel at the baggage counter.</p>
+            </div>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stats-inner">
+                <div class="stat-item"><div class="stat-val">json_aeropuerto_arturo_merino_benitez_15</div><div class="stat-label">Audio file</div></div>
+                <div class="stat-item"><div class="stat-val">~9 min</div><div class="stat-label">Duration</div></div>
+                <div class="stat-item"><div class="stat-val">2024-07-05 · 16:26</div><div class="stat-label">Date</div></div>
+                <div class="stat-item"><div class="stat-val">SCL · Luggage Service Counter</div><div class="stat-label">Location</div></div>
+                <div class="stat-item"><div class="stat-val">es-CL</div><div class="stat-label">Language</div></div>
+            </div>
+        </div>
+
+        <main class="main">
+            <div class="section-head">
+                <h2>Overview</h2>
+                <p>This recording was taken approximately 2 hours and 56 minutes after the aircraft removal and captures a second confrontational phase at the LATAM luggage counter. The passenger returns to retrieve checked baggage and attempts to obtain written documentation explaining the removal, but LATAM personnel defer, avoid, and ultimately threaten removal from the service area rather than provide the explanation they had internally generated.</p>
+            </div>
+
+            <div class="panel">
+                <div class="meta-key">Case / Narrative ID</div>
+                <div><strong>LA8159</strong> · <code>I-002_08_NAR-09_STG_15_luggage_recovery</code> · Source: <code>_shared/cases/la8159/02-transcripts/I-002/I-002_08_NAR-09_STG_15_luggage_recovery.json</code></div>
+            </div>
+
+            <div class="panel">
+                <div class="meta-key">Key evidentiary fact</div>
+                <p>The critical fact is not simply that the passenger asked for reasons; it is that LATAM appears to have generated a written removal justification internally and then either failed to print it or withheld it from the passenger, while treating the request as a reason to threaten removal. The airline’s conduct shifts from explanation to coercion.</p>
+            </div>
+
+            <div class="section-head">
+                <h2>Methodology</h2>
+                <p>The transcript is treated as a continuation of the same chain of events: false aggression allegation, camera review, procedural deflection, internal document creation, and then a second removal threat when the passenger insists on a written basis. The value of this stage is that it exposes the mechanism of the airline’s response: denial, pass-the-buck, and coercive removal pressure.</p>
+            </div>
+
+            <div class="finding-box flag">
+                <h3>Finding 1 — The false-aggression allegation is expressly named and challenged</h3>
+                <p>The passenger immediately frames the incident as a lie: “Primero, una mentira que yo tenía agredido a una persona.” He then invokes the camera evidence and offers to leave if the accusation is proven. This is direct corroboration that the prior aggression allegation was false and that the airline’s later procedural posture was manufactured to sustain a detention narrative after the false accusation had already collapsed.</p>
+            </div>
+
+            <div class="finding-box analysis">
+                <h3>Finding 2 — The narrative shifts after camera review</h3>
+                <p>The passenger explains that the story changed after the cameras were reviewed: the original aggression allegation was replaced by a different claim related to a boarding pass or procedural issue. This is significant because it shows a post-hoc reconfiguration of the justification.</p>
+                <ul>
+                    <li>Initial narrative: “aggression” against a crew member.</li>
+                    <li>Post-camera narrative: another explanation, including a procedural pretext.</li>
+                    <li>Net result: a shifting narrative designed to preserve the removal without any valid underlying factual basis.</li>
+                </ul>
+            </div>
+
+            <div class="finding-box flag">
+                <h3>Finding 3 — The document existed, but it was withheld</h3>
+                <p>The most important evidentiary detail in this phase is the passenger’s statement that the removal letter was “hecho por LATAM,” and that it existed only on a phone. He indicates it was not printed and was shown to the police by a LATAM employee. This reveals a documented but non-passenger-accessible paper trail and shows the airline was creating a formal explanation without giving the customer a copy.</p>
+                <p>That fact is compounded by the luggage supervisor’s refusal and deflection: the passenger is told to seek the explanation elsewhere, even though the document was generated by the airline itself. This is not a neutral procedural issue; it is a withholding of written reasons.</p>
+            </div>
+
+            <div class="finding-box analysis">
+                <h3>Finding 4 — The second removal threat occurs at the luggage counter</h3>
+                <p>The supervisor says the area is a “private space” and that the passenger “debe salir” if asked. This is the second removal threat in the same day: first from the aircraft, then from the luggage service counter when the passenger requests his written explanation. This demonstrates that the airline’s answer to documentation requests was not transparency but coercive ejection from the service area.</p>
+            </div>
+
+            <div class="finding-box flag">
+                <h3>Finding 5 — National-origin is introduced as a procedural wedge</h3>
+                <p>The supervisor asserts that procedures vary by airport and country and suggests the passenger’s expectations are different because of his country of origin. This is procedurally irrelevant to the request for written reasons and may be interpreted as a nationality-based distinction inserted to diminish the passenger’s rights claims. The significance lies in its relationship to earlier references to “culture” and procedural difference.</p>
+            </div>
+
+            <div class="finding-box analysis">
+                <h3>Finding 6 — The passenger is bounced between entities</h3>
+                <p>When the passenger asks for the written explanation, he is sent from one office to another without any actual remedy. This “ping-pong” pattern is important because it demonstrates the airline and airport actors never provided a direct answer while the passenger was stranded and still unable to travel.</p>
+            </div>
+
+            <div class="section-head">
+                <h2>Summary of legal significance</h2>
+                <p>STG_15 is a high-value record because it shows the airline’s documentation refusal in its raw operational form: the airline generates a justification, fails to give the passenger a copy, and then escalates the dispute by threatening removal when the passenger insists on written reasons.</p>
+            </div>
+
+            <div class="panel">
+                <div class="meta-key">Master finding candidates</div>
+                <ul>
+                    <li><strong>F-017 candidate:</strong> Cellphone-document irregularity — the removal explanation existed on an employee’s phone rather than in a proper passenger-accessible document.</li>
+                    <li><strong>F-018 candidate:</strong> Second-area removal threat — LATAM threatened to remove the passenger again when he sought documentation.</li>
+                    <li><strong>Discrimination nexus:</strong> National-origin distinction invoked in procedural justification, corroborating a broader pattern of nationality-based framing.</li>
+                </ul>
+            </div>
+
+            <div class="panel">
+                <div class="meta-key">Cross-recording anchors</div>
+                <p>Backward: STG_13 corridor and STG_8 identity-control phase. Forward: STG_16 counter confrontation, STG_3 “ping-pong” echo, and subsequent refusal patterns. This stage is a direct continuation of the same documentation denial chain.</p>
+            </div>
+        </main>
+
+        <footer class="page-footer">
+            <p class="mono">LA8159 · Narrative record · STG_15 · Luggage Recovery</p>
+            <p>Attorney work product — privileged and confidential.</p>
+        </footer>
+    </div>
+</body>
+</html>

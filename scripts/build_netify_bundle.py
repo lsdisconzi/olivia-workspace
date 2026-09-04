@@ -1,0 +1,434 @@
+#!/usr/bin/env python3
+"""Build a static NETIFY-ready transcript bundle.
+
+This script reads transcript JSON files from an input folder, renders each page
+into a static HTML bundle, copies the referenced audio segment files, and writes
+an index page that can be dropped into a NETIFY static site without backend
+services.
+
+Example:
+    python3 scripts/build_netify_bundle.py \
+      --input-dir _shared/cases/la8159/02-transcripts/I-002 \
+      --output-dir /tmp/netify-ready \
+      --violation-dir _shared/cases/la8159/01-violations/_json
+"""
+
+import argparse
+import json
+import re
+import shutil
+import sys
+from pathlib import Path
+
+from render_transcript import render_transcript
+
+
+def normalize_key(value):
+    return re.sub(r"[^a-z0-9]+", "_", str(value or "").lower()).strip("_")
+
+
+def find_audio_map(input_dir):
+    candidates = [
+        input_dir / "audio_map.json",
+        input_dir.parent / "audio_map.json",
+        input_dir.parent.parent / "audio_map.json",
+        input_dir.parent.parent.parent / "audio_map.json",
+        input_dir.parent / "transcripts_rendered" / "audio_map.json",
+        input_dir.parent.parent / "transcripts_rendered" / "audio_map.json",
+        input_dir.parent.parent.parent / "transcripts_rendered" / "audio_map.json",
+    ]
+    if len(input_dir.parents) >= 3:
+        candidates.append(input_dir.parents[2] / "audio_map.json")
+        candidates.append(input_dir.parents[2] / "transcripts_rendered" / "audio_map.json")
+    for candidate in candidates:
+        if candidate and candidate.exists():
+            with open(candidate, "r", encoding="utf-8") as handle:
+                data = json.load(handle)
+            if isinstance(data, dict):
+                return data
+    return {}
+
+
+def repo_root_for(input_dir):
+    for parent in [
+        input_dir,
+        *list(input_dir.parents),
+    ]:
+        if (parent / ".git").exists() or (parent / "package.json").exists() or (parent / "serve.py").exists():
+            return parent
+    return input_dir.parents[4] if len(input_dir.parents) >= 5 else Path.cwd()
+
+
+def as_list(value):
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return value
+    if isinstance(value, tuple):
+        return list(value)
+    return [value]
+
+
+def resolve_audio_sources(transcript_data, audio_map, repo_root):
+    aliases = []
+    for key in [
+        transcript_data.get("transcript_id"),
+        transcript_data.get("audio_id"),
+        transcript_data.get("narrative_id"),
+        transcript_data.get("case_id"),
+        transcript_data.get("title"),
+        transcript_data.get("subtitle"),
+    ]:
+        aliases.append(key)
+
+    audio_refs = []
+    seen = set()
+
+    for alias in aliases:
+        alias_key = normalize_key(alias)
+        if not alias_key:
+            continue
+        entry = audio_map.get(alias_key)
+        if entry is None:
+            for map_key, map_value in audio_map.items():
+                if normalize_key(map_key) == alias_key:
+                    entry = map_value
+                    break
+        if not entry:
+            continue
+        values = []
+        if isinstance(entry, dict):
+            for nested in entry.values():
+                values.extend(as_list(nested))
+        else:
+            values.extend(as_list(entry))
+        for value in values:
+            if not value:
+                continue
+            resolved = str(value)
+            if resolved in seen:
+                continue
+            if resolved.startswith("/"):
+                candidate = repo_root / resolved.lstrip("/")
+            elif resolved.startswith("_shared/"):
+                candidate = repo_root / resolved
+            elif resolved.startswith("../") or resolved.startswith("./"):
+                candidate = repo_root / resolved
+            else:
+                candidate = repo_root / resolved
+            if candidate.exists():
+                audio_refs.append(candidate)
+                seen.add(resolved)
+
+    # If the map did not resolve, fall back to a direct source scan using the
+    # transcript stem and audio_id pattern against the repo's _shared/cases tree.
+    if not audio_refs:
+        audio_id = transcript_data.get("audio_id")
+        stem = transcript_data.get("transcript_id") or transcript_data.get("narrative_id")
+        patterns = []
+        if audio_id:
+            patterns.append(audio_id)
+        if stem:
+            patterns.append(stem)
+        for pattern in patterns:
+            norm = normalize_key(pattern)
+            for path in repo_root.rglob("*.wav"):
+                if norm in normalize_key(path.name) or norm in normalize_key(str(path.parent)):
+                    audio_refs.append(path)
+                    seen.add(str(path))
+
+    return audio_refs
+
+
+def copy_audio_bundle(input_dir, output_dir, audio_map):
+    repo_root = repo_root_for(input_dir)
+    audio_root = output_dir / "audio"
+    audio_root.mkdir(parents=True, exist_ok=True)
+
+    bundle_map = {}
+    title_map = {}
+
+    transcript_files = sorted(input_dir.glob("*.json")) if input_dir.is_dir() else []
+    for transcript_file in transcript_files:
+        with open(transcript_file, "r", encoding="utf-8") as handle:
+            transcript_data = json.load(handle)
+
+        stem = transcript_file.stem
+        sources = resolve_audio_sources(transcript_data, audio_map, repo_root)
+        segment_map = {}
+
+        for index, source in enumerate(sources):
+            rel_name = Path(source).name
+            transcript_audio_dir = audio_root / stem
+            transcript_audio_dir.mkdir(parents=True, exist_ok=True)
+            dest = transcript_audio_dir / rel_name
+            if not dest.exists():
+                shutil.copy2(source, dest)
+            segment_map[str(index)] = f"../audio/{stem}/{rel_name}"
+
+        if not segment_map:
+            continue
+
+        aliases = {
+            normalize_key(stem),
+            normalize_key(transcript_data.get("transcript_id")),
+            normalize_key(transcript_data.get("audio_id")),
+            normalize_key(transcript_data.get("narrative_id")),
+        }
+        for alias in sorted(a for a in aliases if a):
+            bundle_map[alias] = segment_map
+
+        title_map[stem] = transcript_data.get("title") or stem
+
+    return bundle_map, title_map
+
+
+def narrative_title_for(filename):
+    title = filename.removesuffix(".html")
+    title = re.sub(r"^n118_(en|es|it|pt-BR|de|pl)_", "", title)
+    title = title.replace("_", " ")
+    return title.strip()
+
+
+def gather_full_narratives(transcripts_dir):
+    entries = {}
+    for source in sorted(transcripts_dir.glob("*.html")):
+        name = source.name
+        if "full narrative" not in name.lower():
+            continue
+        entries[name] = narrative_title_for(name)
+    return entries
+
+
+def build_index_html(entries, narrative_entries=None):
+    transcript_cards = []
+    for stem, title in sorted(entries.items()):
+        transcript_cards.append(
+            f"""
+            <li>
+              <a href="transcripts/{stem}.html">{title}</a>
+            </li>
+            """.strip()
+        )
+
+    narrative_cards = []
+    for file_name, title in sorted((narrative_entries or {}).items()):
+        narrative_cards.append(
+            f"""
+            <li>
+              <a href="transcripts/{file_name}">{title}</a>
+            </li>
+            """.strip()
+        )
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NETIFY Transcript Bundle</title>
+  <style>
+    body {{ font-family: system-ui, -apple-system, sans-serif; background: #f7f5f2; color: #1d1e20; margin: 0; padding: 32px; }}
+    .wrap {{ max-width: 1100px; margin: 0 auto; }}
+    h1 {{ font-size: 2rem; margin-bottom: 8px; }}
+    h2 {{ font-size: 1.35rem; margin-top: 28px; margin-bottom: 12px; }}
+    p {{ color: #4d4f55; line-height: 1.6; }}
+    ul {{ list-style: none; padding: 0; margin: 12px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }}
+    li {{ margin: 0; padding: 10px 12px; background: #fff; border: 1px solid #e3dfd6; border-radius: 6px; }}
+    a {{ color: #214d73; text-decoration: none; font-weight: 600; }}
+    a:hover {{ text-decoration: underline; }}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>NETIFY Transcript Bundle</h1>
+    <p>Drop this folder directly into a NETIFY static site. The bundle contains rendered transcript pages, ready-made narrative summaries, local audio segment copies, and a ready-to-use audio map.</p>
+
+    <h2>Transcript Files</h2>
+    <ul>
+      {''.join(transcript_cards)}
+    </ul>
+
+    <h2>Full Narratives</h2>
+    <ul>
+      {''.join(narrative_cards)}
+    </ul>
+  </div>
+</body>
+</html>
+"""
+
+
+def resolve_rendered_dir(input_dir):
+    candidates = [
+        input_dir / "transcripts_rendered",
+        input_dir.parent / "transcripts_rendered",
+        input_dir.parent.parent / "transcripts_rendered",
+        input_dir.parent.parent.parent / "transcripts_rendered",
+        input_dir.parent / "_shared" / "cases" / "la8159" / "02-transcripts" / "transcripts_rendered",
+    ]
+    seen = set()
+    for candidate in candidates:
+        key = str(candidate.resolve()) if candidate.exists() else str(candidate)
+        if key in seen:
+            continue
+        seen.add(key)
+        if candidate.exists() and candidate.is_dir():
+            case_dir = candidate / input_dir.name if input_dir.name and (candidate / input_dir.name).exists() else candidate
+            if case_dir.exists() and case_dir.is_dir():
+                return case_dir
+            return candidate
+    return None
+
+
+def patch_rendered_html(path):
+    text = path.read_text(encoding="utf-8")
+    stale_patterns = [
+        '<script src="/case_files/02-transcripts/transcripts_rendered/audio_player.js"></script>',
+        'src="/case_files/02-transcripts/transcripts_rendered/audio_player.js"',
+        'src="/case_files/02-transcripts/transcripts_rendered/audio_map.json"',
+        '"/case_files/02-transcripts/transcripts_rendered/audio_player.js"',
+        '"/case_files/02-transcripts/transcripts_rendered/audio_map.json"',
+        '/case_files/02-transcripts/transcripts_rendered/audio_player.js',
+        '/case_files/02-transcripts/transcripts_rendered/audio_map.json',
+    ]
+    for stale in stale_patterns:
+        text = text.replace(stale, '../audio_player.js' if 'audio_player' in stale else '../audio_map.json')
+    path.write_text(text, encoding="utf-8")
+
+
+def patch_audio_player_js(path):
+    if not path.exists():
+        return
+    text = path.read_text(encoding="utf-8")
+    text = text.replace(
+        "var res = await fetch('/get_notes?stem=' + encodeURIComponent(stem));",
+        "if (!window._notesApiBase) return; var res = await fetch(window._notesApiBase + '/get_notes?stem=' + encodeURIComponent(stem));",
+    )
+    text = text.replace(
+        "var res = await fetch('/delete_note', {",
+        "if (!window._notesApiBase) return; var res = await fetch(window._notesApiBase + '/delete_note', {",
+    )
+    text = text.replace(
+        "var res = await fetch('/add_note', {",
+        "if (!window._notesApiBase) return; var res = await fetch(window._notesApiBase + '/add_note', {",
+    )
+    path.write_text(text, encoding="utf-8")
+
+
+def copy_rendered_html_assets(rendered_dir, transcripts_dir):
+    if rendered_dir is None or not rendered_dir.exists():
+        return
+
+    transcripts_dir.mkdir(parents=True, exist_ok=True)
+    for stale in transcripts_dir.glob("*.html"):
+        stale.unlink()
+
+    for source in sorted(rendered_dir.rglob("*.html")):
+        if source.is_dir():
+            continue
+        destination = transcripts_dir / source.name
+        shutil.copy2(source, destination)
+        patch_rendered_html(destination)
+
+    for page in sorted(transcripts_dir.glob("*.html")):
+        alias = transcripts_dir / page.name.lower()
+        if alias != page and not alias.exists():
+            shutil.copy2(page, alias)
+            patch_rendered_html(alias)
+
+
+def build_bundle(input_dir, output_dir, violation_dir=None, recursive=False):
+    input_dir = Path(input_dir).resolve()
+    output_dir = Path(output_dir).resolve()
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    transcripts_dir = output_dir / "transcripts"
+    transcripts_dir.mkdir(parents=True, exist_ok=True)
+
+    rendered_dir = resolve_rendered_dir(input_dir)
+    if rendered_dir is not None:
+        copy_rendered_html_assets(rendered_dir, transcripts_dir)
+
+    repo_root = repo_root_for(input_dir)
+    audio_map = find_audio_map(input_dir)
+    if not audio_map:
+        for probe in [
+            repo_root / "_shared" / "cases" / "la8159" / "02-transcripts" / "transcripts_rendered" / "audio_map.json",
+            repo_root / "_shared" / "cases" / "la8159" / "02-transcripts" / "audio_map.json",
+        ]:
+            if probe.exists():
+                with open(probe, "r", encoding="utf-8") as handle:
+                    audio_map = json.load(handle)
+                break
+
+    if not audio_map:
+        raise FileNotFoundError(f"No audio_map.json found near {input_dir}")
+
+    transcript_files = []
+    if recursive:
+        transcript_files = sorted(input_dir.rglob("*.json"))
+    else:
+        transcript_files = sorted(input_dir.glob("*.json"))
+
+    if not transcript_files:
+        raise FileNotFoundError(f"No JSON transcript files found in {input_dir}")
+
+    bundle_map, title_map = copy_audio_bundle(input_dir, output_dir, audio_map)
+
+    for transcript_file in transcript_files:
+        output_file = transcripts_dir / f"{transcript_file.stem}.html"
+        result = render_transcript(str(transcript_file), str(output_file), str(violation_dir) if violation_dir else None)
+        if len(result) == 0:
+            raise RuntimeError(f"Render produced empty content for {transcript_file}")
+        patch_rendered_html(output_file)
+
+    source_js = (repo_root / "_shared" / "cases" / "la8159" / "02-transcripts" / "transcripts_rendered" / "audio_player.js")
+    if not source_js.exists():
+        if rendered_dir is not None:
+            source_js = rendered_dir / "audio_player.js"
+        else:
+            source_js = input_dir.parent / "transcripts_rendered" / "audio_player.js"
+    if source_js.exists():
+        shutil.copy2(source_js, output_dir / "audio_player.js")
+        patch_audio_player_js(output_dir / "audio_player.js")
+
+    with open(output_dir / "audio_map.json", "w", encoding="utf-8") as handle:
+        json.dump(bundle_map, handle, indent=2, ensure_ascii=False)
+
+    full_narratives = gather_full_narratives(transcripts_dir)
+    index_html = build_index_html(title_map, full_narratives)
+    (output_dir / "index.html").write_text(index_html, encoding="utf-8")
+
+    return output_dir
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Build a static NETIFY-ready transcript bundle.")
+    parser.add_argument("--input-dir", required=True, help="Directory containing transcript JSON files")
+    parser.add_argument("--output-dir", required=True, help="Directory to write the NETIFY-ready bundle")
+    parser.add_argument("--violation-dir", default=None, help="Optional violations folder for rendered case pages")
+    parser.add_argument("--recursive", action="store_true", help="Process JSON files recursively in subdirectories")
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    try:
+        output_dir = build_bundle(
+            input_dir=args.input_dir,
+            output_dir=args.output_dir,
+            violation_dir=args.violation_dir,
+            recursive=args.recursive,
+        )
+        print(f"NETIFY bundle ready: {output_dir}")
+        print(f"Rendered transcripts: {len(list((output_dir / 'transcripts').glob('*.html')))}")
+        print(f"Audio copies: {len(list((output_dir / 'audio').rglob('*.wav')))}")
+    except Exception as exc:  # pragma: no cover - CLI safety
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

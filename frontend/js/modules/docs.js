@@ -17,6 +17,8 @@ const _docProjectAbsPathById = new Map();
 let _docsPinUiBound = false;
 const _DOC_TREE_OPEN_STORAGE_KEY = 'olivia.docs.openDirs';
 let _docOpenDirs = _loadDocOpenDirs();
+const _SHARED_TREE_OPEN_STORAGE_KEY = 'olivia.shared.openDirs';
+let _sharedOpenDirs = _loadSharedOpenDirs();
 const _DOCS_HIDDEN_ROOT_ENTRIES = new Set([
   'agents/functions/catalog.json',
   'src/endpoint_mapper.py',
@@ -44,6 +46,24 @@ function _loadDocOpenDirs() {
 function _persistDocOpenDirs() {
   try {
     localStorage.setItem(_DOC_TREE_OPEN_STORAGE_KEY, JSON.stringify(Array.from(_docOpenDirs)));
+  } catch (_) {
+    // Ignore storage failures.
+  }
+}
+
+function _loadSharedOpenDirs() {
+  try {
+    const raw = localStorage.getItem(_SHARED_TREE_OPEN_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return new Set(Array.isArray(parsed) ? parsed.map(String) : []);
+  } catch (_) {
+    return new Set();
+  }
+}
+
+function _persistSharedOpenDirs() {
+  try {
+    localStorage.setItem(_SHARED_TREE_OPEN_STORAGE_KEY, JSON.stringify(Array.from(_sharedOpenDirs)));
   } catch (_) {
     // Ignore storage failures.
   }
@@ -3412,7 +3432,7 @@ async function loadSharedDataTree() {
       const scopeName = String(scope.name || '').trim();
       const safeId = scopeName.replace(/[^a-zA-Z0-9]/g, '_');
       return `
-        <div class="docs-tree-item dir" onclick="toggleSharedDir('${_sharedJsQuote(scopeName)}','${safeId}',this)">
+        <div class="docs-tree-item dir" data-shared-path="${escapeHtmlAttr(scopeName)}" onclick="toggleSharedDir('${_sharedJsQuote(scopeName)}','${safeId}',this)">
           <i class="fas fa-folder"></i>
           <span class="docs-name">${escapeHtml(scopeName)}${scope.file_count ? ` (${scope.file_count})` : ''}</span>
         </div>
@@ -3423,6 +3443,7 @@ async function loadSharedDataTree() {
     el.innerHTML = nodes;
     _bindDocsPinnedPathUiSync();
     _refreshDocsPinButtons();
+    await _restoreSharedOpenDirs();
     if (typeof updateSharedContextBar === 'function') updateSharedContextBar();
   } catch(e) {
     el.innerHTML = `<p style="color:var(--red);font-size:12px;text-align:center;padding:20px">Falha ao carregar _shared: ${escapeHtml(e.message || 'erro desconhecido')}</p>`;
@@ -3811,7 +3832,7 @@ function _renderSharedEntries(basePath, entries) {
     const dirPath = basePath ? `${basePath}/${dirName}` : dirName;
     const safeId = dirPath.replace(/[^a-zA-Z0-9]/g, '_');
     return `
-      <div class="docs-tree-item dir" onclick="toggleSharedDir('${_sharedJsQuote(dirPath)}','${safeId}',this)">
+      <div class="docs-tree-item dir" data-shared-path="${escapeHtmlAttr(dirPath)}" onclick="toggleSharedDir('${_sharedJsQuote(dirPath)}','${safeId}',this)">
         <i class="fas fa-folder"></i>
         <span class="docs-name">${escapeHtml(dirName)}</span>
       </div>
@@ -3857,6 +3878,21 @@ function _renderSharedEntries(basePath, entries) {
   return dirHtml + fileHtml;
 }
 
+async function _restoreSharedOpenDirs() {
+  const paths = Array.from(_sharedOpenDirs)
+    .sort((a, b) => a.split('/').length - b.split('/').length);
+
+  for (const path of paths) {
+    const row = Array.from(document.querySelectorAll('.docs-tree-item.dir[data-shared-path]'))
+      .find(item => item.dataset.sharedPath === path);
+    if (!row) continue;
+    const safeId = path.replace(/[^a-zA-Z0-9]/g, '_');
+    const children = document.getElementById('shared-tree-' + safeId);
+    if (children && children.style.display !== 'none') continue;
+    await toggleSharedDir(path, safeId, row);
+  }
+}
+
 async function toggleSharedDir(path, safeId, el) {
   const children = document.getElementById('shared-tree-' + safeId);
   if (!children) return;
@@ -3866,12 +3902,16 @@ async function toggleSharedDir(path, safeId, el) {
     children.style.display = 'none';
     const icon = el && el.querySelector('i');
     if (icon) icon.className = 'fas fa-folder';
+    _sharedOpenDirs.delete(path);
+    _persistSharedOpenDirs();
     return;
   }
 
   children.style.display = 'block';
   const icon = el && el.querySelector('i');
   if (icon) icon.className = 'fas fa-folder-open';
+  _sharedOpenDirs.add(path);
+  _persistSharedOpenDirs();
 
   if (children.dataset.loaded === 'true') return;
   children.innerHTML = '<div style="padding:8px 12px;color:var(--gray);font-size:11px">Carregando...</div>';

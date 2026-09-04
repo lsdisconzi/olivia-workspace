@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="clean-professional">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disconzi v. LATAM — aeropuerto_STG_29</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+
+    :root {
+      --bg-primary: #f8f7f4;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f2f0ea;
+      --bg-surface: #f1efe8;
+      --border: #e1ddd1;
+      --border-strong: #c7c1b0;
+      --text-primary: #1b1c1e;
+      --text-secondary: #52555c;
+      --text-muted: #8a8b87;
+      --accent: #24405f;
+      --accent-dim: rgba(36, 64, 95, 0.07);
+      --status-flag: #7a3733;
+      --status-flag-dim: rgba(122, 55, 51, 0.08);
+      --status-analysis: #8a6a2c;
+      --status-analysis-dim: rgba(138, 106, 44, 0.09);
+      --status-note: #3f6b4f;
+      --status-note-dim: rgba(63, 107, 79, 0.08);
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Source Serif 4', Georgia, serif;
+      --sans: 'Inter', -apple-system, sans-serif;
+    }
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      color: var(--accent);
+      background: var(--bg-surface);
+      padding: 1px 6px;
+      border-radius: 2px;
+    }
+
+    .masthead {
+      border-bottom: 1px solid var(--border);
+      padding: 44px 0 32px;
+    }
+
+    .masthead-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .masthead-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .masthead-back {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: inline-block;
+    }
+
+    .masthead-back:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .masthead-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
+
+    .language-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+      padding: 6px 10px;
+      min-height: 36px;
+    }
+
+    .language-toggle label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .language-toggle select {
+      appearance: none;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 4px 18px 4px 4px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .masthead-full-narrative {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 9px 12px;
+      border-radius: 3px;
+      border: 1px solid var(--border-strong);
+      color: var(--accent);
+      background: var(--bg-card);
+      text-decoration: none;
+    }
+
+    .masthead-full-narrative:hover {
+      background: var(--accent-dim);
+      text-decoration: none;
+    }
+
+    .masthead-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-strong);
+      padding: 5px 12px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+
+    .masthead h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      font-weight: 600;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .masthead-sub {
+      font-size: 0.96rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      line-height: 1.7;
+    }
+
+    .stats-bar {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      flex: 1 1 180px;
+      padding: 18px 14px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat-item:last-child {
+      border-right: none;
+    }
+
+    .stat-val {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-top: 5px;
+    }
+
+    .main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .section-head {
+      padding: 44px 0 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      padding-bottom: 14px;
+    }
+
+    .section-head p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      padding-bottom: 16px;
+      max-width: 700px;
+    }
+
+    /* transcript */
+    .transcript-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-bottom: 8px;
+    }
+
+    .transcript-segment {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border-strong);
+      border-radius: 3px;
+      padding: 13px 18px;
+    }
+
+    .transcript-segment.seg-passenger {
+      border-left-color: var(--accent);
+    }
+
+    .transcript-segment.seg-other {
+      border-left-style: dashed;
+      border-left-color: var(--status-analysis);
+    }
+
+    .transcript-segment .seg-time {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .transcript-segment .seg-speaker {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .transcript-segment .seg-text {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    .transcript-segment .seg-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .transcript-segment .seg-note-btn {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 3px 9px;
+      border-radius: 2px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .transcript-segment .seg-note-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .transcript-segment .seg-play-btn {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 3px 9px;
+      border-radius: 2px;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      cursor: pointer;
+      transition: background-color 0.15s, color 0.15s;
+      font-weight: 500;
+      margin-right: 8px;
+      line-height: 1.4;
+    }
+
+    .transcript-segment .seg-play-btn:hover {
+      background-color: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    /* evidence / violation cards */
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .evidence-card {
+      display: grid;
+      grid-template-columns: 100px 1fr 150px;
+      align-items: start;
+      gap: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border-strong);
+      border-radius: 3px;
+      padding: 18px 22px;
+    }
+
+    .ev-time-col {
+      padding-top: 2px;
+    }
+
+    .ev-time {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .ev-duration {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .ev-body h3 {
+      font-size: 0.94rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .ev-body .ev-summary {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      line-height: 1.68;
+    }
+
+    .ev-provisions {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .ev-meta-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      text-align: right;
+    }
+
+    .ev-type {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      padding: 4px 9px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .type-primary {
+      background: var(--status-flag-dim);
+      color: var(--status-flag);
+    }
+
+    .type-procedural {
+      background: var(--status-analysis-dim);
+      color: var(--status-analysis);
+    }
+
+    .type-analysis {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .ev-open {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .ev-open:hover {
+      color: var(--text-primary);
+    }
+
+    /* notes panel */
+    .notes-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 24px 28px;
+      margin-top: 12px;
+    }
+
+    .notes-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .notes-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    .notes-count {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 3px 9px;
+      border-radius: 2px;
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+    }
+
+    .notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .notes-empty {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 14px;
+      background: var(--bg-surface);
+      border: 1px dashed var(--border);
+      border-radius: 3px;
+      text-align: center;
+    }
+
+    .note-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border-strong);
+      border-radius: 3px;
+      padding: 13px 16px;
+    }
+
+    .note-card.note-admission {
+      border-left-color: var(--status-flag);
+    }
+
+    .note-card.note-xref {
+      border-left-color: var(--accent);
+    }
+
+    .note-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+
+    .note-type {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 7px;
+      border-radius: 2px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+    }
+
+    .note-card.note-admission .note-type {
+      color: var(--status-flag);
+      border-color: var(--status-flag);
+    }
+
+    .note-card.note-xref .note-type {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .note-author {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .note-seg {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .note-body {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    /* modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 20, 18, 0.55);
+      z-index: 1000;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      max-width: 760px;
+      width: 100%;
+      margin: auto 0;
+    }
+
+    .modal-header {
+      padding: 22px 28px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .modal-header-body {
+      flex: 1;
+    }
+
+    .modal-type-badge {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 2px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .modal-title {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+
+    .modal-audio-ref {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+      width: 30px;
+      height: 30px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 22px 28px;
+    }
+
+    .modal-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 22px;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+    }
+
+    .modal-status-text {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+    }
+
+    .modal-section {
+      margin-bottom: 22px;
+    }
+
+    .modal-section-label {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .modal-segments {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .modal-segment {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 3px;
+      padding: 12px 16px;
+    }
+
+    .modal-segment-time {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .modal-segment-speaker {
+      font-size: 0.76rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+
+    .modal-segment-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    .modal-jurisdictions,
+    .modal-xrefs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .jurisdiction-pill {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 12px 16px;
+      min-width: 200px;
+      flex: 1;
+    }
+
+    .jurisdiction-name {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .jurisdiction-laws {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .jurisdiction-article {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-primary);
+      background: var(--bg-surface);
+      padding: 2px 6px;
+      border-radius: 2px;
+      display: inline-block;
+      margin: 2px 2px 2px 0;
+    }
+
+    .xref-tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 4px 10px;
+      border-radius: 2px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+    }
+
+    .modal-footer {
+      padding: 14px 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-footer-note {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      flex: 1;
+    }
+
+    .modal-download-btn {
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      padding: 6px 14px;
+      border-radius: 3px;
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .modal-download-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    .page-footer p {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .page-footer .mono {
+      font-family: var(--mono);
+    }
+
+    @media (max-width: 900px) {
+      .evidence-card {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .ev-meta-col {
+        flex-direction: row-reverse;
+        align-items: center;
+        text-align: left;
+        justify-content: flex-end;
+      }
+    }
+
+      .masthead {
+        padding: 28px 0 22px;
+      }
+
+      .masthead-inner,
+      .main {
+        padding: 0 16px;
+      }
+
+      .masthead-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .language-toggle {
+        flex: 1;
+      }
+
+      .modal-overlay {
+        padding: 16px 10px;
+      }
+
+      .pinned-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(248, 247, 244, 0.94);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        gap: 16px;
+      }
+
+      .pinned-nav-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--accent);
+        text-decoration: none;
+        padding: 5px 12px;
+        border-radius: 3px;
+        border: 1px solid var(--border-strong);
+      }
+
+      .pinned-nav-link:hover {
+        background: var(--accent-dim);
+        text-decoration: none;
+      }
+
+      .pinned-nav-label {
+        font-family: var(--mono);
+        font-size: 0.64rem;
+        color: var(--text-muted);
+        letter-spacing: 0.04em;
+      }
+
+      @media (max-width: 600px) {
+        .pinned-nav {
+          padding: 8px 14px;
+        }
+
+        .pinned-nav-label {
+          display: none;
+        }
+      }
+
+  </style>
+</head>
+<body data-audio-stem="aeropuerto_STG_29" data-audio-map-key="i_002_17_nar_21_stg_29">
+  <div class="page">
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="masthead-row">
+        <a class="masthead-back" href="../index.html">&larr; Evidence Archive &middot; Index</a>
+        <div class="masthead-actions">
+          <div class="language-toggle">
+      <label for="lang-select">Language</label>
+      <select id="lang-select" aria-label="Select language" onchange="if (this.value) window.location.href = this.value;">
+        <option value="n118_en_I-002_17_NAR-21_STG_29.html" selected>English</option><option value="n118_es_I-002_17_NAR-21_STG_29.html">Español</option><option value="n118_it_I-002_17_NAR-21_STG_29.html">Italiano</option><option value="n118_pt-BR_I-002_17_NAR-21_STG_29.html">Português (Brasil)</option><option value="n118_de_I-002_17_NAR-21_STG_29.html">Deutsch</option><option value="n118_pl_I-002_17_NAR-21_STG_29.html">Polski</option>
+      </select>
+    </div>
+          <a class="masthead-full-narrative" href="./Disconzi v. LATAM — NAR-21 · STG · 17 29 (Full Narrative).html">Full Narrative</a>
+        </div>
+      </div>
+      <div class="masthead-badge">Audio Evidence &middot; aeropuerto_STG_29</div>
+      <h1>aeropuerto_STG_29</h1>
+      <p class="masthead-sub">Post-Incident — Final Interaction / Resolution Attempt</p>
+    </div>
+  </header>
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-val">aeropuerto_STG_29.m4a</div>
+        <div class="stat-label">Audio File</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">0m 0.000s</div>
+        <div class="stat-label">Duration</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">July 05, 2024 &middot; 19:45:00</div>
+        <div class="stat-label">Date</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">Unknown</div>
+        <div class="stat-label">File Size</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">Arturo Merino Benítez International Airport (SCL)</div>
+        <div class="stat-label">Location</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">es</div>
+        <div class="stat-label">Language</div>
+      </div>
+    </div>
+  </div>
+    <div class="main">
+      <div class="section-head">
+        <h2>Full Transcript</h2>
+        <p>Speaker-attributed segments in chronological order. Select <strong>+ add note</strong> on any segment to record an annotation against this audio.</p>
+      </div>
+      <div class="transcript-list">
+        <div class="transcript-segment seg-passenger" id="seg-0">
+          <div class="seg-time">0.01s &rarr; 5.14s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"creo que puedo estar aquí mientras hablas de mi caso, ¿cierto? No es un problema ese?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="0" data-start="0.008488964346349746" data-end="5.135823429541595">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('0.01s&ndash;5.14s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-1">
+          <div class="seg-time">6.32s &rarr; 7.17s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"hola señor"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="1" data-start="6.324278438030561" data-end="7.173174872665536">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('6.32s&ndash;7.17s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-2">
+          <div class="seg-time">7.17s &rarr; 7.78s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"hola."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="2" data-start="7.173174872665536" data-end="7.784380305602717">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('7.17s&ndash;7.78s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-3">
+          <div class="seg-time">7.78s &rarr; 7.80s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="3" data-start="7.784380305602717" data-end="7.8013582342954155">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('7.78s&ndash;7.80s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-4">
+          <div class="seg-time">7.80s &rarr; 11.06s</div>
+          <div class="seg-speaker"></div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="4" data-start="7.8013582342954155" data-end="11.061120543293718">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('7.80s&ndash;11.06s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-5">
+          <div class="seg-time">11.30s &rarr; 12.33s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"¿cómo estáis lali por acá?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="5" data-start="11.298811544991512" data-end="12.334465195246182">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('11.30s&ndash;12.33s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-6">
+          <div class="seg-time">14.32s &rarr; 33.30s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"la va a llamar la tonelada para que y sí esa carta se puede y"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="6" data-start="14.320882852292021" data-end="33.302207130730054">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('14.32s&ndash;33.30s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-7">
+          <div class="seg-time">31.79s &rarr; 31.84s</div>
+          <div class="seg-speaker"></div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="7" data-start="31.7911714770798" data-end="31.842105263157897">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('31.79s&ndash;31.84s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-8">
+          <div class="seg-time">33.81s &rarr; 40.79s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"si no saben verdad, no puedo negar nadie si se lo cuento, hay un caso que fue como de hostil se fue como que..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="8" data-start="33.811544991511035" data-end="40.78947368421053">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('33.81s&ndash;40.79s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-9">
+          <div class="seg-time">36.36s &rarr; 37.94s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"vamos a tomar el sísopo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="9" data-start="36.35823429541596" data-end="37.93718166383701">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('36.36s&ndash;37.94s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-10">
+          <div class="seg-time">41.66s &rarr; 44.37s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"igual al fondo, ¿sí? Sí, sí, sí."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="10" data-start="41.6553480475382" data-end="44.37181663837012">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('41.66s&ndash;44.37s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-11">
+          <div class="seg-time">67.24s &rarr; 68.33s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"¡ah, perfecto!"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="11" data-start="67.24108658743634" data-end="68.3276740237691">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('67.24s&ndash;68.33s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-12">
+          <div class="seg-time">86.29s &rarr; 92.54s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"¿y en esa carta de contingencia podrá ajustar como para el te digo yo?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="12" data-start="86.29032258064515" data-end="92.53820033955859">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('86.29s&ndash;92.54s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-13">
+          <div class="seg-time">92.61s &rarr; 94.64s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"¿seguro o no?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="13" data-start="92.60611205432937" data-end="94.64346349745333">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('92.61s&ndash;94.64s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-14">
+          <div class="seg-time">97.75s &rarr; 110.35s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"Eso sí, el formato dice que está escribiendo lo que dice la ANTO, no mas, y después se lo manda a ventas, ella te dice que es borrero y después te lo imprime acá.  ya? ya amigo, ahora si!."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="14" data-start="97.75042444821733" data-end="110.34804753820035">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('97.75s&ndash;110.35s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-15">
+          <div class="seg-time">110.76s &rarr; 111.93s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"listo! ¡chau, chau!"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="15" data-start="110.75551782682513" data-end="111.92699490662139">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('110.76s&ndash;111.93s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-16">
+          <div class="seg-time">111.93s &rarr; 117.04s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"perfecto, entonces va a tener una carta, un documento explicando por qué me sacaron del vuelo"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="16" data-start="111.92699490662139" data-end="117.03735144312395">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('111.93s&ndash;117.04s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-17">
+          <div class="seg-time">116.73s &rarr; 134.37s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"eso, correcto. Entonces la colega va a llamar a un área, va a buscar el formato, va a redactarlo, lo van a enviar a la impresora y lo van a hacer. No es de inmediato porque están en un vuelo. Terminando el vuelo, lo hacen. Tiempo promedio 30 o 40 minutos más."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="17" data-start="116.73174872665535" data-end="134.37181663837012">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('116.73s&ndash;134.37s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-18">
+          <div class="seg-time">134.37s &rarr; 144.22s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"yo estoy aquí desde la mañana, que es lo que parece. Yo estoy aquí desde las 11. Me fui sacado del vuelo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="18" data-start="134.37181663837012" data-end="144.21901528013584">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('134.37s&ndash;144.22s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-19">
+          <div class="seg-time">144.92s &rarr; 150.77s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"me hicieron dos difamaciones que fueron comprobadas por la pdi que no pasaron."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="19" data-start="144.9151103565365" data-end="150.77249575551784">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('144.92s&ndash;150.77s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-20">
+          <div class="seg-time">151.30s &rarr; 153.51s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"y sacaron de allí a fuerza."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="20" data-start="151.2988115449915" data-end="153.50594227504246">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('151.30s&ndash;153.51s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-21">
+          <div class="seg-time">154.17s &rarr; 158.84s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"me botaron afuera, no me dieron ni una explicación y yo estoy pidiendo una explicación hace..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="21" data-start="154.16808149405773" data-end="158.8370118845501">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('154.17s&ndash;158.84s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-22">
+          <div class="seg-time">159.04s &rarr; 162.91s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"ahora, me bloquearon de la latam."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="22" data-start="159.04074702886248" data-end="162.91171477079797">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('159.04s&ndash;162.91s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-23">
+          <div class="seg-time">166.53s &rarr; 179.09s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"¿entiendes cómo es un descaso total? Porque de verdad las acusaciones fueron verificadas por la pdi. ¿qué destino tiene ahora? ¿ahora? ¿ahora nada todavía? No, pero no sé dónde iba. ¿a brasilia? Ah, brasil."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="23" data-start="166.52801358234296" data-end="179.0916808149406">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('166.53s&ndash;179.09s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-24">
+          <div class="seg-time">180.35s &rarr; 192.59s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"¿está complejo? ¿está difícil? Está difícil todo lo que está pasando. Está un poco... Está tanto que yo casi que no acredito en lo que está pasando. Es tan absurdo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="24" data-start="180.34804753820035" data-end="192.5891341256367">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('180.35s&ndash;192.59s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-25">
+          <div class="seg-time">193.69s &rarr; 199.80s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"lo importante es que van a redactar el documento."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="25" data-start="193.69269949066216" data-end="199.80475382003397">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('193.69s&ndash;199.80s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-26">
+          <div class="seg-time">200.26s &rarr; 202.95s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"Mira, lo único que quiero es un documento explicando por qué hicieron lo que hicieron."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="26" data-start="200.26315789473685" data-end="202.94567062818336">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('200.26s&ndash;202.95s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-27">
+          <div class="seg-time">205.00s &rarr; 206.58s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"Claro. Pero va ser en forma generica."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="27" data-start="205.0" data-end="206.57894736842107">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('205.00s&ndash;206.58s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-28">
+          <div class="seg-time">206.70s &rarr; 207.33s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"en forma genérica?!"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="28" data-start="206.69779286926996" data-end="207.32597623089984">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('206.70s&ndash;207.33s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-29">
+          <div class="seg-time">207.33s &rarr; 210.00s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"¿cómo de forma generica? Perdón.??"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="29" data-start="207.32597623089984" data-end="209.99660441426147">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('207.33s&ndash;210.00s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-30">
+          <div class="seg-time">210.24s &rarr; 214.25s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"Lo que pasa es que.. perdón usted me había visto a mí durante el turno? no no! yo acabo de ingresar. ya usted lo acaba de conocer.  las personas que están adentro también tienen la misma información entonces van a sacar lo global que pasó porque nadie estuvo en el hecho"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="30" data-start="210.23599320882855" data-end="214.25297113752123">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('210.24s&ndash;214.25s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-31">
+          <div class="seg-time">215.27s &rarr; 215.42s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"no?..si?."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="31" data-start="215.2716468590832" data-end="215.4244482173175">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('215.27s&ndash;215.42s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-32">
+          <div class="seg-time">223.00s &rarr; 233.06s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"por favor no me haga esto no me haga una carta explicando lo que no pasó. La PDI, La PDI confirmo"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="32" data-start="222.99660441426147" data-end="233.06451612903228">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('223.00s&ndash;233.06s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-33">
+          <div class="seg-time">232.78s &rarr; 241.18s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"pero si continúa"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="33" data-start="232.77589134125637" data-end="241.17996604414262">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('232.78s&ndash;241.18s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-34">
+          <div class="seg-time">241.18s &rarr; 241.86s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"¿Continua com o que?!"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="34" data-start="241.17996604414262" data-end="241.8590831918506">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('241.18s&ndash;241.86s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-35">
+          <div class="seg-time">241.86s &rarr; 244.66s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"ni siquiera corresponde que yo le entregue una carta."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="35" data-start="241.8590831918506" data-end="244.66044142614604">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('241.86s&ndash;244.66s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-36">
+          <div class="seg-time">244.97s &rarr; 248.99s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"no corresponde eso. Usted se upset?!. De hecho, usted lo sacó y se lo documentó."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="36" data-start="244.9660441426146" data-end="248.9898132427844">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('244.97s&ndash;248.99s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-37">
+          <div class="seg-time">249.06s &rarr; 253.61s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"por eso le digo, si no se calma, la idea es que nos ayudemos."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="37" data-start="249.0577249575552" data-end="253.60780984719867">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('249.06s&ndash;253.61s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-38">
+          <div class="seg-time">253.61s &rarr; 253.98s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"ya, pero..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="38" data-start="253.60780984719867" data-end="253.98132427843805">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('253.61s&ndash;253.98s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-39">
+          <div class="seg-time">253.98s &rarr; 254.00s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="39" data-start="253.98132427843805" data-end="253.99830220713073">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('253.98s&ndash;254.00s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-40">
+          <div class="seg-time">254.00s &rarr; 276.97s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"pónete en mi lugar, pónete en mi lugar. Yo fui acusado de agresión, eso no pasó. Yo fui acusado de pasar solo en el boarding gate. La misma persona que me acusó de agresión, eso también no pasó. La policía verificó eso en la cámara, eso fue comprobado que era una mentira."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="40" data-start="253.99830220713073" data-end="276.9694397283531">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('254.00s&ndash;276.97s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-41">
+          <div class="seg-time">254.07s &rarr; 255.53s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"¿vuelve a mirar más?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="41" data-start="254.06621392190155" data-end="255.5263157894737">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('254.07s&ndash;255.53s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-42">
+          <div class="seg-time">278.09s &rarr; 300.64s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"y yo, que tengo que tener calma, yo que tengo que... ¿entiendes? Está muy... Sí, sí, lo sé. Está triste, diego, está triste. Está muy injusto. Me pregunto por qué hicieron eso conmigo. ¿eso fue personal? ¿eso fue por mi apariencia? ¿eso fue por mi raza? ¿eso fue porque son inmigrantes? ¿por qué entonces? No lo sé. ¿tú no sabes?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="42" data-start="278.08998302207135" data-end="300.6366723259763">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('278.09s&ndash;300.64s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-43">
+          <div class="seg-time">300.91s &rarr; 305.87s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"las dos acusaciones fueron confirmadas. Confirme eso con la PDI por favor."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="43" data-start="300.90831918505944" data-end="305.86587436332763">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('300.91s&ndash;305.87s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-44">
+          <div class="seg-time">305.92s &rarr; 309.17s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"lo audio sí, yo puedo grabar lo audio. Ya, la imagen no, pero lo audio sí."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="44" data-start="305.9168081494058" data-end="309.16638370118847">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('305.92s&ndash;309.17s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-45">
+          <div class="seg-time">307.82s &rarr; 308.02s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"No es necesario."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="45" data-start="307.8183361629881" data-end="308.0220713073005">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('307.82s&ndash;308.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-46">
+          <div class="seg-time">310.47s &rarr; 319.92s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"Es necesario sí, desde el principio. ¿por qué? Mira lo que... Amigo, yo no estoy grabando a ti, estoy grabando lo que estamos hablando. Por eso, por eso."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="46" data-start="310.46519524618" data-end="319.9235993208829">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('310.47s&ndash;319.92s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-47">
+          <div class="seg-time">323.17s &rarr; 323.27s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="47" data-start="323.16638370118847" data-end="323.2682512733446">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('323.17s&ndash;323.27s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-48">
+          <div class="seg-time">323.27s &rarr; 323.34s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="48" data-start="323.2682512733446" data-end="323.33616298811546">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('323.27s&ndash;323.34s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-49">
+          <div class="seg-time">323.34s &rarr; 323.85s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="49" data-start="323.33616298811546" data-end="323.84550084889645">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('323.34s&ndash;323.85s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-50">
+          <div class="seg-time">323.85s &rarr; 324.05s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="50" data-start="323.84550084889645" data-end="324.04923599320887">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('323.85s&ndash;324.05s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-51">
+          <div class="seg-time">324.05s &rarr; 324.07s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="51" data-start="324.04923599320887" data-end="324.0662139219015">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('324.05s&ndash;324.07s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-52">
+          <div class="seg-time">324.07s &rarr; 328.01s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"no, aquí no necesito de tu nombre, no me importa."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="52" data-start="324.0662139219015" data-end="328.00509337860785">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('324.07s&ndash;328.01s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-53">
+          <div class="seg-time">328.01s &rarr; 328.70s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"bueno, bueno."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="53" data-start="328.00509337860785" data-end="328.7011884550085">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('328.01s&ndash;328.70s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-54">
+          <div class="seg-time">328.96s &rarr; 338.90s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"por lo mismo le acabo de decir, en medio de lo demás vamos a entregarle un documento donde dice cuál fue el motivo por el cual se no se puede embarcar en el vuelo. Te parece?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="54" data-start="328.955857385399" data-end="338.9049235993209">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('328.96s&ndash;338.90s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-55">
+          <div class="seg-time">338.90s &rarr; 341.25s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"el motivo es porque me sacaron del vuelo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="55" data-start="338.9049235993209" data-end="341.24787775891343">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('338.90s&ndash;341.25s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-56">
+          <div class="seg-time">341.25s &rarr; 344.61s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"o por que no embarco, o por que lo sacaran"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="56" data-start="341.24787775891343" data-end="344.60950764006793">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('341.25s&ndash;344.61s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-57">
+          <div class="seg-time">344.90s &rarr; 363.98s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"yo voy a mirar, porque tú estás me explicando cómo va a ser una carta genérica. Yo estoy entendiendo bien, más o menos, lo que va a pasar. ¿entiendes? Yo quiero exactamente lo que pasó. ¿por qué? ¿cuál fue el motivo? Porque para sacar a una persona a fuerza de un vuelo, tiene que tener un motivo. Ese motivo tiene que estar documentado."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="57" data-start="344.89813242784385" data-end="363.981324278438">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('344.90s&ndash;363.98s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-58">
+          <div class="seg-time">364.42s &rarr; 370.64s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"¿usted no se quería bajar del vuelo? ¿o no? ¿le dijeron que se bajara del vuelo?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="58" data-start="364.4227504244483" data-end="370.6366723259763">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('364.42s&ndash;370.64s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-59">
+          <div class="seg-time">368.68s &rarr; 398.85s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"¿me dijeron que bajara?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="59" data-start="368.68421052631584" data-end="398.85398981324283">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('368.68s&ndash;398.85s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-60">
+          <div class="seg-time">370.74s &rarr; 372.25s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"¿no hizo caso a las instrucciones que le entregaron?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="60" data-start="370.73853989813244" data-end="372.24957555178275">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('370.74s&ndash;372.25s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-61">
+          <div class="seg-time">400.28s &rarr; 400.38s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"Tiene que darme una explicación ¿por qué?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="61" data-start="400.28013582342953" data-end="400.3820033955858">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('400.28s&ndash;400.38s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-62">
+          <div class="seg-time">400.65s &rarr; 405.02s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"Porque me amenazaron de agresión y yo no agredí a nadie me muestra la prueba y yo lo bajo, yo bajo solo y está grabado eso también mira, probablemente yo hice lo que están me acusando que hice, yo bajo solo sin problema, pero sin acusación, sin una prueba es ridículo porque no fueron con mi cara ¿entiendes?. eso es personal. ¿pero cuál es el motivo entonces?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="62" data-start="400.65365025466895" data-end="405.01697792869277">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('400.65s&ndash;405.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-63">
+          <div class="seg-time">401.98s &rarr; 403.23s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"no, no creo que sea personal"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="63" data-start="401.9779286926995" data-end="403.2342954159593">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('401.98s&ndash;403.23s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-64">
+          <div class="seg-time">405.49s &rarr; 414.61s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"por eso le acabo de informar, lo que nosotros sabemos es que usted no acató las instrucciones que se le entraron a bordo, le dijeron que bajara del vuelo..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="64" data-start="405.49235993208833" data-end="414.60950764006793">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('405.49s&ndash;414.61s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-65">
+          <div class="seg-time">414.86s &rarr; 421.83s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"pero ¿por qué llegaron ahí? ¿entiendes? ¿ahí es donde voy?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="65" data-start="414.8641765704584" data-end="421.82512733446526">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('414.86s&ndash;421.83s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-66">
+          <div class="seg-time">417.78s &rarr; 418.09s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"Claro, porque como usted dijo recién, había habido una agresión entre usted y una..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="66" data-start="417.7843803056028" data-end="418.08998302207135">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('417.78s&ndash;418.09s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-67">
+          <div class="seg-time">421.83s &rarr; 421.86s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="67" data-start="421.82512733446526" data-end="421.8590831918506">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('421.83s&ndash;421.86s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-passenger" id="seg-68">
+          <div class="seg-time">421.86s &rarr; 426.95s</div>
+          <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+          <p class="seg-text">"no hubo una agresión, hubo una acusación que fue comprobada que fue mentira."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="68" data-start="421.8590831918506" data-end="426.95246179966045">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('421.86s&ndash;426.95s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-69">
+          <div class="seg-time">430.99s &rarr; 431.03s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"Claro!"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="69" data-start="430.99320882852294" data-end="431.02716468590836">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('430.99s&ndash;431.03s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-staff" id="seg-70">
+          <div class="seg-time">431.13s &rarr; 451.15s</div>
+          <div class="seg-speaker">Latam supervisor (Diego)</div>
+          <p class="seg-text">"eso es lo que yo sé."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="70" data-start="431.1290322580645" data-end="451.1460101867573">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('431.13s&ndash;451.15s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-71">
+          <div class="seg-time">451.66s &rarr; 483.00s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"y estaba intentando algo para me sacar de allí. Mira, esto está muy claro. Mira, esto no va a quedar bueno. ¿entiendes? Esto va a ser un proceso grande. Porque son varias cosas. Varias cosas. Entonces, yo pido ayuda, que me ayude a arreglar lo que está, porque de verdad no está bueno. No está correcto lo que se está haciendo. Lo que yo no puedo ayudar es con la carta que usted me está soltando."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="71" data-start="451.65534804753827" data-end="482.99660441426147">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('451.66s&ndash;483.00s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-72">
+          <div class="seg-time">483.00s &rarr; 497.00s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"muchas gracias muchas gracias entonces para que lo hagamos ya llegó"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="72" data-start="482.99660441426147" data-end="497.00339558573853">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('483.00s&ndash;497.00s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-73">
+          <div class="seg-time">497.00s &rarr; 497.56s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="73" data-start="497.00339558573853" data-end="497.5636672325976">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('497.00s&ndash;497.56s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-74">
+          <div class="seg-time">497.70s &rarr; 527.75s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"¿acerca o voy a estar afuera? No, voy a estar cerca de la atención del final de la venta o voy a estar afuera. Pero de verdad, yo sé que están todos con gracia de mí, parece, pero déjate explicar una cosa. Yo no hice nada y está aprobado y la pdi lo aprobó, ¿entiendes? Lo que va a pasar es que yo voy a requerir las cámaras, yo voy a requerir todo lo que se puede. Yo estoy documentando todo desde el principio."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="74" data-start="497.6994906621393" data-end="527.7504244482172">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('497.70s&ndash;527.75s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-75">
+          <div class="seg-time">502.33s &rarr; 503.15s</div>
+          <div class="seg-speaker">SPEAKER_00</div>
+          <p class="seg-text">"¿de la venta?"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="75" data-start="502.33446519524625" data-end="503.1494057724958">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('502.33s&ndash;503.15s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-76">
+          <div class="seg-time">528.36s &rarr; 548.45s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"y tengo los funcionarios de la latam diciendo que fue agresión y después que tú pasó solo. Y un funcionario de la latam, el joaquín barraza, que fue el jefe de la seguridad, comproba en audio. Yo vi la cámara, yo vi que tú no pasó, yo vi que tú fuiste solo."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="76" data-start="528.3616298811544" data-end="548.446519524618">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('528.36s&ndash;548.45s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-77">
+          <div class="seg-time">549.43s &rarr; 559.01s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"están mentiendo y están confirmando mentiras. Eso no va a quedar bueno. ¿ya? Porque yo no voy a dejar eso así."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="77" data-start="549.4312393887947" data-end="559.0067911714771">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('549.43s&ndash;559.01s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-78">
+          <div class="seg-time">559.01s &rarr; 559.30s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="78" data-start="559.0067911714771" data-end="559.295415959253">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('559.01s&ndash;559.30s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-79">
+          <div class="seg-time">561.18s &rarr; 561.98s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="79" data-start="561.1799660441427" data-end="561.9779286926994">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('561.18s&ndash;561.98s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-80">
+          <div class="seg-time">564.47s &rarr; 577.26s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"lo que se puede hacer, obviamente, aquí quedó con una cierta categoría donde no puede viajar con nosotros, hasta aquí en el área legal, como dice la colega, de lo que hay, o diga cuándo podría hacer. La empresa va a viajar, obviamente, con urgencias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="80" data-start="564.4736842105262" data-end="577.258064516129">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('564.47s&ndash;577.26s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-81">
+          <div class="seg-time">578.58s &rarr; 589.01s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"lo otro que podría hacer es pedir la adopción del boleto y viajar con otra compañera, para que pueda viajar rápido desde santiago a san luis de la fuente, para que no siga entrando acá."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="81" data-start="578.5823429541597" data-end="589.0067911714771">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('578.58s&ndash;589.01s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-82">
+          <div class="seg-time">589.01s &rarr; 595.20s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"no, no, yo no quiero más volar con la lata. Punto. Yo quiero el reembolso de mi pasaje."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="82" data-start="589.0067911714771" data-end="595.2037351443123">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('589.01s&ndash;595.20s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-83">
+          <div class="seg-time">595.51s &rarr; 595.53s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="83" data-start="595.509337860781" data-end="595.5263157894738">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('595.51s&ndash;595.53s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-84">
+          <div class="seg-time">595.54s &rarr; 595.61s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="84" data-start="595.5432937181663" data-end="595.6112054329371">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('595.54s&ndash;595.61s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-85">
+          <div class="seg-time">595.61s &rarr; 596.00s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"amén."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="85" data-start="595.6112054329371" data-end="596.0016977928692">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('595.61s&ndash;596.00s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-86">
+          <div class="seg-time">596.00s &rarr; 605.00s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"yo voy a hacerlo, pero no importa yo no quiero más volar con la lata no voy más"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="86" data-start="596.0016977928692" data-end="605.0">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('596.00s&ndash;605.00s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-87">
+          <div class="seg-time">601.40s &rarr; 601.43s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"[silencio]"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="87" data-start="601.4006791171478" data-end="601.4346349745331">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('601.40s&ndash;601.43s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-88">
+          <div class="seg-time">605.49s &rarr; 611.81s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"yo quiero una explicación, pero explico lo que pasa. Solo que no..."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="88" data-start="605.4923599320882" data-end="611.8081494057724">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('605.49s&ndash;611.81s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-89">
+          <div class="seg-time">611.89s &rarr; 625.02s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"muchas gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="89" data-start="611.893039049236" data-end="625.0169779286928">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('611.89s&ndash;625.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-90">
+          <div class="seg-time">618.63s &rarr; 619.02s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"mira."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="90" data-start="618.6332767402378" data-end="619.0237691001698">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('618.63s&ndash;619.02s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-91">
+          <div class="seg-time">625.02s &rarr; 626.88s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"sí, por otro lado."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="91" data-start="625.0169779286928" data-end="626.8845500848897">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('625.02s&ndash;626.88s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-92">
+          <div class="seg-time">625.31s &rarr; 626.27s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"¡qué hermoso!"</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="92" data-start="625.3056027164687" data-end="626.2733446519524">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('625.31s&ndash;626.27s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-93">
+          <div class="seg-time">626.88s &rarr; 627.00s</div>
+          <div class="seg-speaker">SPEAKER_01</div>
+          <p class="seg-text">"gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="93" data-start="626.8845500848897" data-end="627.0033955857386">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('626.88s&ndash;627.00s')">+ add note</button>
+          </div>
+        </div>
+        <div class="transcript-segment seg-other" id="seg-94">
+          <div class="seg-time">627.00s &rarr; 628.68s</div>
+          <div class="seg-speaker">SPEAKER_02</div>
+          <p class="seg-text">"muchas gracias."</p>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="94" data-start="627.0033955857386" data-end="628.6842105263158">▶ Play</button>
+            <button type="button" class="seg-note-btn" onclick="window._noteAt('627.00s&ndash;628.68s')">+ add note</button>
+          </div>
+        </div>
+      </div>
+      <div class="section-head">
+        <h2>Related Violations</h2>
+        <p>Structured legal records linked to this audio. Each record identifies the violation, engaged provisions, and evidentiary anchor. <strong>Primary Evidence</strong> denotes an on-tape admission or directly observed fact; <strong>Legal Analysis</strong> denotes an inference drawn from the record and cross-referenced material.</p>
+      </div>
+      <div class="evidence-grid" id="relatedViolations">
+      </div>
+      <div class="section-head">
+        <h2>Annotations &amp; Comments</h2>
+        <p>Key forensic annotations for this audio recording are documented below. These notes identify the legally significant moments captured in this evidence.</p>
+      </div>
+      <div class="notes-panel" id="notesPanel">
+        <div class="notes-head">
+          <span class="notes-label">Forensic Notes</span>
+          <span class="notes-count">7 annotations</span>
+        </div>
+        <div class="notes-list">
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg"></span>
+            </div>
+            <div class="note-body">Final post-incident interaction. Includes supplemental recording (STG_29_att).</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg"></span>
+            </div>
+            <div class="note-body">Diego orchestrates creation of a generic, falsified &#x27;carta de desembarque&#x27; using off-book channels.</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg"></span>
+            </div>
+            <div class="note-body">Document routed through Sales (Ventas) rather than Legal/Security; template is for flight cancellations, not denied boarding.</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg"></span>
+            </div>
+            <div class="note-body">Diego admits no one writing the document was present at the event (&#x27;nadie estuvo en el hecho&#x27;).</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg"></span>
+            </div>
+            <div class="note-body">Passenger explicitly raises race/national-origin discrimination (&#x27;por mi raza? porque son inmigrantes?&#x27;).</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg"></span>
+            </div>
+            <div class="note-body">LATAM staff confirm passenger has been placed in a restricted category and cannot fly, without due process.</div>
+          </div>
+
+          <div class="note-card">
+            <div class="note-meta">
+              <span class="note-type">Key Point</span>
+              <span class="note-author"></span>
+              <span class="note-seg"></span>
+            </div>
+            <div class="note-body">Passenger demands refund under CACH Art. 133, LATAM offers only rebooking on another airline.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <footer class="page-footer">
+    <div class="main">
+      <p>Disconzi v. LATAM Airlines &mdash; Audio Evidence Archive</p>
+      <p class="mono">aeropuerto_STG_29.m4a &middot; 0m 0.000s &middot; July 05, 2024 &middot; 19:45:00</p>
+      <p style="margin-top:8px;">This page constitutes direct audio evidence for pending legal proceedings.</p>
+    </div>
+  </footer>
+  </div>
+  <!-- VIOLATION MODAL -->
+  <div class="modal-overlay" id="violationModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-header-body">
+          <div class="modal-type-badge" id="modalBadge"></div>
+          <div class="modal-title" id="modalTitle"></div>
+          <div class="modal-audio-ref" id="modalAudioRef">Evidence: aeropuerto_STG_29</div>
+        </div>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <span class="modal-footer-note" id="modalFooterNote"></span>
+        <button class="modal-download-btn" onclick="downloadViolationJSON()">Download JSON</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var modalData = {
+
+      };
+
+      var activeVid = null;
+
+      window.openModal = function (vid) {
+        var d = modalData[vid];
+        if (!d) return;
+        activeVid = vid;
+        var modal = document.getElementById('violationModal');
+        var badge = document.getElementById('modalBadge');
+        var title = document.getElementById('modalTitle');
+        var body = document.getElementById('modalBody');
+        var note = document.getElementById('modalFooterNote');
+        var audioRef = document.getElementById('modalAudioRef');
+
+        badge.textContent = d.badge;
+        badge.className = 'modal-type-badge ' + d.badgeClass;
+        title.textContent = d.title;
+        body.innerHTML = d.body;
+        note.textContent = d.footer;
+        if (audioRef) {
+          audioRef.textContent = 'Evidence: aeropuerto_STG_29';
+        }
+
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      };
+
+      window.closeModal = function () {
+        var modal = document.getElementById('violationModal');
+        if (modal) modal.classList.remove('open');
+        document.body.style.overflow = '';
+        activeVid = null;
+      };
+
+      window.downloadViolationJSON = function () {
+        if (!activeVid) return;
+        var blob = new Blob([JSON.stringify(modalData[activeVid] || {}, null, 2)], { type: 'application/json' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = activeVid + '.json';
+        a.click();
+      };
+
+      document.getElementById('violationModal').addEventListener('click', function (e) {
+        if (e.target === this) {
+          window.closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') window.closeModal();
+      });
+    })();
+  </script>
+  <script src="../audio_player.js"></script>
+  <div class="pinned-nav"><a class="pinned-nav-link" href="../index.html">&larr; Case Index</a><span class="pinned-nav-label">Disconzi v. LATAM Airlines</span></div>
+</body>
+
+</html>

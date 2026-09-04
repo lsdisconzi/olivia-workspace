@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="clean-professional">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disconzi v. LATAM — NAR-05 · STG_7 · PDI Office (Full Narrative)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8f7f4; --bg-card: #ffffff; --bg-card-hover: #f2f0ea; --bg-surface: #f1efe8;
+            --border: #e1ddd1; --border-strong: #c7c1b0; --text-primary: #1b1c1e; --text-secondary: #52555c;
+            --text-muted: #8a8b87; --accent: #24405f; --accent-dim: rgba(36, 64, 95, 0.07);
+            --status-flag: #7a3733; --status-flag-dim: rgba(122, 55, 51, 0.08); --status-analysis: #8a6a2c;
+            --status-analysis-dim: rgba(138, 106, 44, 0.09); --status-note: #3f6b4f; --status-note-dim: rgba(63, 107, 79, 0.08);
+            --mono: 'JetBrains Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; --sans: 'Inter', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--sans); background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; padding-bottom: 60px; }
+        a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+        code { font-family: var(--mono); font-size: 0.85em; color: var(--accent); background: var(--bg-surface); padding: 1px 6px; border-radius: 2px; }
+        .masthead { border-bottom: 1px solid var(--border); padding: 44px 0 32px; }
+        .masthead-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .masthead-back { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; display: inline-block; }
+        .masthead-back:hover { color: var(--accent); text-decoration: none; }
+        .masthead-badge { display: inline-block; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-strong); padding: 5px 12px; border-radius: 2px; margin-bottom: 20px; }
+        .masthead h1 { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 600; line-height: 1.25; margin-bottom: 10px; color: var(--text-primary); }
+        .masthead-sub { font-size: 0.96rem; color: var(--text-secondary); max-width: 700px; line-height: 1.7; }
+        .stats-bar { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stats-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; display: flex; gap: 0; flex-wrap: wrap; }
+        .stat-item { flex: 1 1 180px; padding: 18px 14px; border-right: 1px solid var(--border); }
+        .stat-item:last-child { border-right: none; }
+        .stat-val { font-family: var(--mono); font-size: 0.92rem; font-weight: 500; color: var(--text-primary); word-break: break-word; }
+        .stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 5px; }
+        .main { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .section-head { padding: 44px 0 18px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+        .section-head h2 { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; padding-bottom: 14px; }
+        .section-head p { color: var(--text-secondary); font-size: 0.9rem; padding-bottom: 16px; max-width: 700px; }
+        .transcript-list { display: flex; flex-direction: column; gap: 6px; padding-bottom: 8px; }
+        .transcript-segment { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 13px 18px; }
+        .transcript-segment.seg-passenger { border-left-color: var(--accent); }
+        .transcript-segment.seg-other { border-left-style: dashed; border-left-color: var(--status-analysis); }
+        .transcript-segment.seg-staff { border-left-color: var(--status-flag); }
+        .transcript-segment .seg-time { font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.02em; }
+        .transcript-segment .seg-speaker { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+        .transcript-segment .seg-text { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65; font-style: italic; }
+        .transcript-segment .seg-actions { margin-top: 8px; display: flex; gap: 8px; }
+        .transcript-segment .seg-note-btn { font-family: var(--mono); font-size: 0.65rem; padding: 3px 9px; border-radius: 2px; background: transparent; color: var(--text-muted); border: 1px solid var(--border); cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+        .transcript-segment .seg-note-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .transcript-segment .seg-play-btn { font-family: var(--mono); font-size: 0.65rem; padding: 3px 9px; border-radius: 2px; background: transparent; color: var(--accent); border: 1px solid var(--accent); cursor: pointer; transition: background-color 0.15s, color 0.15s; font-weight: 500; margin-right: 8px; line-height: 1.4; }
+        .transcript-segment .seg-play-btn:hover { background-color: var(--accent-dim); color: var(--accent); }
+        .evidence-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .evidence-card { display: grid; grid-template-columns: 100px 1fr 150px; align-items: start; gap: 20px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 18px 22px; }
+        .ev-time-col { padding-top: 2px; }
+        .ev-time { font-family: var(--mono); font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
+        .ev-duration { font-family: var(--mono); font-size: 0.66rem; color: var(--text-muted); margin-top: 4px; }
+        .ev-body h3 { font-size: 0.94rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+        .ev-body .ev-summary { font-size: 0.86rem; color: var(--text-secondary); line-height: 1.68; }
+        .ev-provisions { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); margin-top: 10px; }
+        .ev-meta-col { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; text-align: right; }
+        .ev-type { font-family: var(--mono); font-size: 0.63rem; padding: 4px 9px; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; white-space: nowrap; }
+        .type-primary { background: var(--status-flag-dim); color: var(--status-flag); }
+        .type-procedural { background: var(--status-analysis-dim); color: var(--status-analysis); }
+        .type-analysis { background: var(--accent-dim); color: var(--accent); }
+        .notes-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px; margin-top: 12px; }
+        .notes-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+        .notes-label { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); }
+        .notes-count { font-family: var(--mono); font-size: 0.68rem; padding: 3px 9px; border-radius: 2px; border: 1px solid var(--border-strong); color: var(--text-muted); }
+        .notes-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .note-card { background: var(--bg-surface); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 13px 16px; }
+        .note-card.note-admission { border-left-color: var(--status-flag); }
+        .note-card.note-xref { border-left-color: var(--accent); }
+        .note-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 7px; }
+        .note-type { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 2px; background: var(--bg-card); border: 1px solid var(--border-strong); color: var(--text-muted); }
+        .note-card.note-admission .note-type { color: var(--status-flag); border-color: var(--status-flag); }
+        .note-card.note-xref .note-type { color: var(--accent); border-color: var(--accent); }
+        .note-author { font-size: 0.86rem; font-weight: 600; color: var(--text-primary); }
+        .note-seg { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); margin-left: auto; }
+        .note-body { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; white-space: pre-wrap; }
+        .cluster-block { margin-bottom: 20px; }
+        .cluster-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); }
+        .cluster-title.flag { color: var(--status-flag); }
+        .cluster-title.analysis { color: var(--status-analysis); }
+        .cluster-reasoning { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-top: 8px; padding: 10px 14px; background: var(--bg-surface); border-left: 3px solid var(--accent); border-radius: 3px; }
+        .page-footer { border-top: 1px solid var(--border); padding: 28px 0; text-align: center; margin-top: 48px; }
+        .page-footer p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.8; }
+        .page-footer .mono { font-family: var(--mono); }
+        @media (max-width: 900px) { .evidence-card { grid-template-columns: 1fr; gap: 8px; } }
+        @media (max-width: 600px) { .masthead { padding: 28px 0 22px; } .masthead-inner, .main { padding: 0 16px; } }
+    </style>
+</head>
+<body data-audio-stem="aeropuerto_STG_7" data-audio-map-key="i_002_05_nar_07_stg_7_post_removal_investigation">
+<div class="page">
+    <header class="masthead">
+        <div class="masthead-inner">
+            <a class="masthead-back" href="../index.html">&larr; Evidence Archive · Index</a>
+            <div class="masthead-badge">Narrative · NAR-05 · STG_7 · PDI Office</div>
+            <h1>The Camera Exonerates; the State Reframes: PDI Office Coaching and the Replacement Narrative</h1>
+            <p class="masthead-sub">Full narrative integrating transcript, forensic reasoning, and legal significance. The audio and transcript together show a statement of exoneration followed by a coached replacement pretext.</p>
+        </div>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stats-inner">
+            <div class="stat-item"><div class="stat-val">aeropuerto_STG_7.m4a</div><div class="stat-label">Audio File</div></div>
+            <div class="stat-item"><div class="stat-val">~18 min</div><div class="stat-label">Duration</div></div>
+            <div class="stat-item"><div class="stat-val">July 05, 2024 · 15:16</div><div class="stat-label">Date</div></div>
+            <div class="stat-item"><div class="stat-val">SCL · PDI office airside</div><div class="stat-label">Location</div></div>
+            <div class="stat-item"><div class="stat-val">es (primary)</div><div class="stat-label">Language</div></div>
+        </div>
+    </div>
+
+    <main class="main">
+        <div class="section-head">
+            <h2>Recording Identification & Purpose</h2>
+            <p>This is the evidentiary pivot in the case: the investigating authority confirms on tape that the airport camera footage shows no aggression, while LATAM and its officials are coached into re-framing the incident as a different basis for removal.</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:32px;">
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; padding:18px 22px;">
+                <div style="font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Case / Narrative ID</div>
+                <div><strong>LA8159</strong> · <code>NAR-05_STG_7_PDI_office</code> · Source: <code>I-002_05_NAR-07_STG_7_post_removal_investigation.json</code></div>
+            </div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; padding:18px 22px;">
+                <div style="font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Key forensic fact</div>
+                <p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.7;">PDI states, with the LATAM accuser present, that there is <strong>no aggression on the camera</strong>, that there are <strong>no injuries</strong>, and that the accusation is a <strong>lie</strong>. The same exchange then shifts into a coached substitute narrative: “falta de seguridad,” “por seguridad,” and “el capitán.”</p>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>Methodology Binding</h2>
+            <p>Quotations are kept in source form and are paired with the documentary chain from the investigation, camera review, and LATAM coaching sequence. This page synthesizes the findings, granular analysis, and original transcript chronology into a single evidentiary narrative.</p>
+        </div>
+
+        <div class="section-head">
+            <h2>Segment-by-Segment Forensic Walk-Through</h2>
+            <p>Chronological analysis organized into sub-segments. Select <strong>▶ Play</strong> to listen while reading.</p>
+        </div>
+
+        <div class="transcript-list">
+            <div class="cluster-block">
+                <h3 class="cluster-title flag">Sub-Segment 1 — PDI candour: “que me pegaste, mentira”</h3>
+                <div class="transcript-segment seg-staff" id="seg-1a">
+                    <div class="seg-time">~00:00s → ~00:10s</div>
+                    <div class="seg-speaker">PDI</div>
+                    <p class="seg-text">“Y esto es un problema para mí... que él está llorando ya, que me pegaste, mentira.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="1" data-start="0" data-end="10">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-1b">
+                    <div class="seg-time">~00:11s → ~00:16s</div>
+                    <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+                    <p class="seg-text">“No hay nada en la cámara?”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="2" data-start="11" data-end="16">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-1c">
+                    <div class="seg-time">~00:16s → ~00:21s</div>
+                    <div class="seg-speaker">PDI</div>
+                    <p class="seg-text">“Nosotros vamos a tratar de recuperarlo si nosotros lo tenemos todavía.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="3" data-start="16" data-end="21">▶ Play</button></div>
+                </div>
+                <div class="cluster-reasoning">
+                    <strong>Forensic reasoning:</strong> This is the first decisive record of exoneration. The state officer does not say the accusation is unproven; he says it is a <strong>lie</strong>. In the same sequence he confirms the camera must be retrieved and that the evidence may still exist — an admission of both the danger of spoliation and the centrality of footage to the fact-finding. <strong>Articles engaged:</strong> CPCL Art. 211, CONST Art. 19.3, ACHR Art. 8, LPDC Art. 50. <strong>Violations linked:</strong> FALSE-ACCUSATION-OF-AGGRESSION, EVIDENCE-PRESERVATION-DUTY, WRONGFUL-USE-OF-INTERNAL-CHANNEL.
+                </div>
+            </div>
+
+            <div class="cluster-block">
+                <h3 class="cluster-title analysis">Sub-Segment 2 — Camera review and procedural candour</h3>
+                <div class="transcript-segment seg-staff" id="seg-2a">
+                    <div class="seg-time">~03:00s → ~03:50s</div>
+                    <div class="seg-speaker">PDI / LATAM review</div>
+                    <p class="seg-text">“Cuando tu le digas que no hay ninguna agresión como has visto en la cámara.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="4" data-start="180" data-end="230">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-2b">
+                    <div class="seg-time">~03:50s → ~04:30s</div>
+                    <div class="seg-speaker">PDI</div>
+                    <p class="seg-text">“En este caso, por ese lado, lesiones no hay.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="5" data-start="230" data-end="270">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-other" id="seg-2c">
+                    <div class="seg-time">~04:30s → ~05:10s</div>
+                    <div class="seg-speaker">LATAM supervisor</div>
+                    <p class="seg-text">“¿Y sería por seguridad, porque no contribuyó…?”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="6" data-start="270" data-end="310">▶ Play</button></div>
+                </div>
+                <div class="cluster-reasoning">
+                    <strong>Forensic reasoning:</strong> The core minimization is clear: once the camera is reviewed, the original premise is gone. The response is not a new fact; it is a new pretext. That is the moment the incident becomes a narrative laundering exercise. <strong>Articles engaged:</strong> CACH Art. 131, LPDC Art. 23 bis, CPCL Arts. 211/255. <strong>Violations linked:</strong> FALSE-ACCUSATION-OF-AGGRESSION, PATTERN-OF-FAILURE, WRONGFUL-USE-OF-INTERNAL-CHANNEL.
+                </div>
+            </div>
+
+            <div class="cluster-block">
+                <h3 class="cluster-title">Sub-Segment 3 — PDI rebukes accuser; LATAM is moved from corporate complaint to individual complaint</h3>
+                <div class="transcript-segment seg-staff" id="seg-3a">
+                    <div class="seg-time">~06:00s → ~06:15s</div>
+                    <div class="seg-speaker">PDI-Felipe</div>
+                    <p class="seg-text">“Portaste mal.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="7" data-start="360" data-end="375">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-3b">
+                    <div class="seg-time">~06:18s → ~06:40s</div>
+                    <div class="seg-speaker">PDI</div>
+                    <p class="seg-text">“Vas a ser como tu persona… no como LATAM.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="8" data-start="378" data-end="400">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-3c">
+                    <div class="seg-time">~06:40s → ~07:10s</div>
+                    <div class="seg-speaker">LATAM manager</div>
+                    <p class="seg-text">“No como LATAM… todo abajo de tu responsabilidad.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="9" data-start="400" data-end="430">▶ Play</button></div>
+                </div>
+                <div class="cluster-reasoning">
+                    <strong>Forensic reasoning:</strong> This is the key structural feature of the corruption-labeled excerpt: the complaint is shifted away from the corporate entity and onto the individual employee. That transfer is itself evidence of deliberate liability avoidance and a means to avoid the airline being held to account for a removal that was already shown to be unsupported. <strong>Articles engaged:</strong> CPCL Arts. 255, 193; LPDC Art. 50. <strong>Violations linked:</strong> PROCEDURAL-FRAUD, LIABILITY-SHIELDING, WRONGFUL-USE-OF-INTERNAL-CHANNEL.
+                </div>
+            </div>
+
+            <div class="cluster-block">
+                <h3 class="cluster-title flag">Sub-Segment 4 — The replacement pretext is jointly manufactured</h3>
+                <div class="transcript-segment seg-staff" id="seg-4a">
+                    <div class="seg-time">~08:20s → ~08:50s</div>
+                    <div class="seg-speaker">LATAM boss</div>
+                    <p class="seg-text">“Sería por seguridad, porque no contribuyó con el…?”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="10" data-start="500" data-end="530">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-4b">
+                    <div class="seg-time">~08:50s → ~09:15s</div>
+                    <div class="seg-speaker">PDI</div>
+                    <p class="seg-text">“Sí, claro, es el capitán… que no aportó…”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="11" data-start="530" data-end="555">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-4c">
+                    <div class="seg-time">~09:15s → ~09:45s</div>
+                    <div class="seg-speaker">PDI / LATAM</div>
+                    <p class="seg-text">“El capitán… la falta de seguridad… no contribuyó con el protocolo…”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="12" data-start="555" data-end="585">▶ Play</button></div>
+                </div>
+                <div class="cluster-reasoning">
+                    <strong>Forensic reasoning:</strong> The false aggression claim does not survive review, so the speakers move to a substitute explanation: lack of security, failure to contribute, and finally the captain. This is not factual discovery; it is narrative substitution. It is the proof that the state-side limb is not investigating a true basis but engineering a compliant story after the fact. <strong>Articles engaged:</strong> CPCL Arts. 211, 255; CACH Art. 131. <strong>Violations linked:</strong> NARRATIVE-LAUNDERING, COERCED-LEGAL-FRAMEWORK, WRONGFUL-USE-OF-INTERNAL-CHANNEL.
+                </div>
+            </div>
+
+            <div class="cluster-block">
+                <h3 class="cluster-title analysis">Sub-Segment 5 — Passenger remains stranded while the case is deflected</h3>
+                <div class="transcript-segment seg-passenger" id="seg-5a">
+                    <div class="seg-time">~11:00s → ~11:40s</div>
+                    <div class="seg-speaker">Passenger (Leandro Disconzi)</div>
+                    <p class="seg-text">“Yo ya perdí mi vuelo, ya perdí el bus y esto me está causando un transtorno.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="13" data-start="660" data-end="700">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-5b">
+                    <div class="seg-time">~11:40s → ~12:20s</div>
+                    <div class="seg-speaker">PDI</div>
+                    <p class="seg-text">“Lo que tú puedes hacer es hacer el reclamo directamente a la compañía.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="14" data-start="700" data-end="740">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-5c">
+                    <div class="seg-time">~12:20s → ~13:00s</div>
+                    <div class="seg-speaker">PDI / DGAC</div>
+                    <p class="seg-text">“Con la compañía directa… es un tema entre particulares.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="15" data-start="740" data-end="780">▶ Play</button></div>
+                </div>
+                <div class="cluster-reasoning">
+                    <strong>Forensic reasoning:</strong> The passenger is left to chase a private remedy while the state has already identified the complaint as false and coached a different explanation. That is the practical result: legal institutionality channels the passenger to a company that already engineered the removal, instead of addressing the false allegation at its source. <strong>Articles engaged:</strong> CACH Art. 133, LPDC Art. 50, CONST Arts. 19.3/19.7. <strong>Violations linked:</strong> DENIAL-OF-REMEDY, WRONGFUL-USE-OF-INTERNAL-CHANNEL, SYSTEMIC-FAILURE.
+                </div>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>Evidence Grid</h2>
+            <p>Short-form evidentiary summary of the legal and forensic conclusions.</p>
+        </div>
+
+        <div class="evidence-grid">
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">00:00–00:21</div><div class="ev-duration">~21s</div></div>
+                <div class="ev-body">
+                    <h3>Initial admission of false accusation</h3>
+                    <div class="ev-summary">PDI says the accuser's allegation is a lie: “que me pegaste, mentira.” This is on-record state acknowledgement that the central allegation is false.</div>
+                    <div class="ev-provisions">CPCL Art. 211 · CONST Art. 19.3 · ACHR Art. 8</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-primary">Primary</div></div>
+            </div>
+
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">03:00–05:10</div><div class="ev-duration">~2m</div></div>
+                <div class="ev-body">
+                    <h3>Camera review destroys the original theory</h3>
+                    <div class="ev-summary">PDI notes there is “no aggression on camera” and “lesiones no hay.” The original rationale for removing the passenger disappears under review.</div>
+                    <div class="ev-provisions">CACH Art. 131 · LPDC Art. 23 bis · CPCL Art. 211</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-procedural">Procedural</div></div>
+            </div>
+
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">06:18–07:10</div><div class="ev-duration">~52s</div></div>
+                <div class="ev-body">
+                    <h3>Liability is shifted away from LATAM</h3>
+                    <div class="ev-summary">PDI instructs the accuser and LATAM representatives: “Vas a ser como tu persona… no como LATAM.” The airline isshielded and the employee becomes the complaint source.</div>
+                    <div class="ev-provisions">CPCL Art. 255 · LPDC Art. 50 · CONST Art. 19.3</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-analysis">Analysis</div></div>
+            </div>
+
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">08:20–09:45</div><div class="ev-duration">~1m25s</div></div>
+                <div class="ev-body">
+                    <h3>Substitute narrative is jointly manufactured</h3>
+                    <div class="ev-summary">The crew pivots from aggression to “falta de seguridad,” “no contribuyó,” and then to the captain. This is post-hoc legal framing, not fact-finding.</div>
+                    <div class="ev-provisions">CPCL Art. 255 · CACH Art. 131 · LPDC Art. 50</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-primary">Primary</div></div>
+            </div>
+
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">11:40–13:00</div><div class="ev-duration">~1m20s</div></div>
+                <div class="ev-body">
+                    <h3>Passenger is redirected to private remedy</h3>
+                    <div class="ev-summary">The passenger is not offered a proper official response; instead he is redirected to a private complaint channel while the false accusation has already been recorded as a lie.</div>
+                    <div class="ev-provisions">LPDC Art. 50 · CONST Art. 19.3 · CONST Art. 19.7</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-procedural">Procedural</div></div>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>Key Findings</h2>
+            <p>The record demonstrates a single coherent chain: the original aggression allegation fails on camera, the accuser is told it is a lie, the complaint is re-scoped away from LATAM, and a replacement pretext is then rehearsed.</p>
+        </div>
+
+        <div class="notes-panel">
+            <div class="notes-head">
+                <div class="notes-label">Forensic Notes</div>
+                <div class="notes-count">5</div>
+            </div>
+            <div class="notes-list">
+                <div class="note-card note-admission">
+                    <div class="note-meta">
+                        <div class="note-type">Admission</div>
+                        <div class="note-author">PDI</div>
+                        <div class="note-seg">Seg 9 / 44 / 47</div>
+                    </div>
+                    <div class="note-body">“Que me pegaste, mentira.” / “No hay ninguna agresión como has visto en la cámara.” / “Lesiones no hay.” These are direct admissions demolishing the original allegation.</div>
+                </div>
+                <div class="note-card note-xref">
+                    <div class="note-meta">
+                        <div class="note-type">Narrative Shift</div>
+                        <div class="note-author">LATAM / PDI</div>
+                        <div class="note-seg">Seg 45 / 69 / 72</div>
+                    </div>
+                    <div class="note-body">The complaint transforms from “aggression” to “security,” “no contribuyó,” and finally “el capitán,” showing a rehearsed post-hoc justification rather than a genuine basis for removal.</div>
+                </div>
+                <div class="note-card note-admission">
+                    <div class="note-meta">
+                        <div class="note-type">Institutional Shield</div>
+                        <div class="note-author">PDI / LATAM</div>
+                        <div class="note-seg">Seg 45 / 62</div>
+                    </div>
+                    <div class="note-body">“No como LATAM… como tu persona.” This is liability shielding and a tactic to reclassify the complaint away from the airline’s institutional conduct.</div>
+                </div>
+                <div class="note-card note-xref">
+                    <div class="note-meta">
+                        <div class="note-type">Remedy denial</div>
+                        <div class="note-author">State channel</div>
+                        <div class="note-seg">Seg 21 / 153</div>
+                    </div>
+                    <div class="note-body">The passenger is redirected to “la compañía directa” and “tema entre particulares,” even after the state actor has described the original accusation as false.</div>
+                </div>
+                <div class="note-card note-admission">
+                    <div class="note-meta">
+                        <div class="note-type">Case outcome</div>
+                        <div class="note-author">Transcript synthesis</div>
+                        <div class="note-seg">Whole file</div>
+                    </div>
+                    <div class="note-body">STG-7 closes the false-aggression finding evidentially and opens the state-side pattern of narrative laundering, liability shielding, and denial of a meaningful remedy.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>Legal Summary</h2>
+            <p>The STG-7 transcript is highly probative. It is not a mere “investigation” recording; it is the record where the original false allegation is admitted to be false and replaced with a re-framed legal narrative.</p>
+        </div>
+
+        <div class="evidence-grid">
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">Core</div><div class="ev-duration">Summary</div></div>
+                <div class="ev-body">
+                    <h3>False accusation and abuse of official position</h3>
+                    <div class="ev-summary">The central accusation is shown to be false on camera; the official response is not to correct the record but to reframe it and push the complaint into another channel.</div>
+                    <div class="ev-provisions">CPCL Art. 211 · CPCL Art. 255 · CONST Art. 19.3</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-primary">Primary</div></div>
+            </div>
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">State limb</div><div class="ev-duration">Summary</div></div>
+                <div class="ev-body">
+                    <h3>Role of the public actor</h3>
+                    <div class="ev-summary">The public actor is not neutral: he informs, coaches, reclassifies, and redirects the complaint while the fact pattern itself has already collapsed.</div>
+                    <div class="ev-provisions">CONST Art. 19.3 · CONST Art. 19.7 · LPDC Art. 50</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-procedural">Procedural</div></div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <p class="mono">Narrative synthesis prepared from STG-7 transcript evidence, granular analysis, findings, and synthesis materials.</p>
+            <p>Disconzi v. LATAM · LA8159 · NAR-05 · STG_7 · PDI Office</p>
+        </div>
+    </main>
+</div>
+</body>
+</html>

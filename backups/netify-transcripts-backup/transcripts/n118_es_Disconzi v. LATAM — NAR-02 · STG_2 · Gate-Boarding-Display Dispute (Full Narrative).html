@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="clean-professional">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disconzi v. LATAM — NAR-02 · STG_2 · Gate-Boarding-Display Dispute (Full Narrative)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8f7f4; --bg-card: #ffffff; --bg-card-hover: #f2f0ea; --bg-surface: #f1efe8;
+            --border: #e1ddd1; --border-strong: #c7c1b0; --text-primary: #1b1c1e; --text-secondary: #52555c;
+            --text-muted: #8a8b87; --accent: #24405f; --accent-dim: rgba(36, 64, 95, 0.07);
+            --status-flag: #7a3733; --status-flag-dim: rgba(122, 55, 51, 0.08); --status-analysis: #8a6a2c;
+            --status-analysis-dim: rgba(138, 106, 44, 0.09); --status-note: #3f6b4f; --status-note-dim: rgba(63, 107, 79, 0.08);
+            --mono: 'JetBrains Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; --sans: 'Inter', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--sans); background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; padding-bottom: 60px; }
+        a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+        code { font-family: var(--mono); font-size: 0.85em; color: var(--accent); background: var(--bg-surface); padding: 1px 6px; border-radius: 2px; }
+        .masthead { border-bottom: 1px solid var(--border); padding: 44px 0 32px; }
+        .masthead-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .masthead-back { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; display: inline-block; }
+        .masthead-back:hover { color: var(--accent); text-decoration: none; }
+        .masthead-badge { display: inline-block; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-strong); padding: 5px 12px; border-radius: 2px; margin-bottom: 20px; }
+        .masthead h1 { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 600; line-height: 1.25; margin-bottom: 10px; color: var(--text-primary); }
+        .masthead-sub { font-size: 0.96rem; color: var(--text-secondary); max-width: 700px; line-height: 1.7; }
+        .stats-bar { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stats-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; display: flex; gap: 0; flex-wrap: wrap; }
+        .stat-item { flex: 1 1 180px; padding: 18px 14px; border-right: 1px solid var(--border); }
+        .stat-item:last-child { border-right: none; }
+        .stat-val { font-family: var(--mono); font-size: 0.92rem; font-weight: 500; color: var(--text-primary); word-break: break-word; }
+        .stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 5px; }
+        .main { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .section-head { padding: 44px 0 18px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+        .section-head h2 { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; padding-bottom: 14px; }
+        .section-head p { color: var(--text-secondary); font-size: 0.9rem; padding-bottom: 16px; max-width: 700px; }
+        .transcript-list { display: flex; flex-direction: column; gap: 6px; padding-bottom: 8px; }
+        .transcript-segment { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 13px 18px; }
+        .transcript-segment.seg-passenger { border-left-color: var(--accent); }
+        .transcript-segment.seg-other { border-left-style: dashed; border-left-color: var(--status-analysis); }
+        .transcript-segment .seg-time { font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.02em; }
+        .transcript-segment .seg-speaker { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+        .transcript-segment .seg-text { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65; font-style: italic; }
+        .transcript-segment .seg-actions { margin-top: 8px; display: flex; gap: 8px; }
+        .transcript-segment .seg-note-btn { font-family: var(--mono); font-size: 0.65rem; padding: 3px 9px; border-radius: 2px; background: transparent; color: var(--text-muted); border: 1px solid var(--border); cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+        .transcript-segment .seg-note-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .transcript-segment .seg-play-btn { font-family: var(--mono); font-size: 0.65rem; padding: 3px 9px; border-radius: 2px; background: transparent; color: var(--accent); border: 1px solid var(--accent); cursor: pointer; transition: background-color 0.15s, color 0.15s; font-weight: 500; margin-right: 8px; line-height: 1.4; }
+        .transcript-segment .seg-play-btn:hover { background-color: var(--accent-dim); color: var(--accent); }
+        .evidence-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .evidence-card { display: grid; grid-template-columns: 100px 1fr 150px; align-items: start; gap: 20px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 18px 22px; }
+        .ev-time-col { padding-top: 2px; }
+        .ev-time { font-family: var(--mono); font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
+        .ev-duration { font-family: var(--mono); font-size: 0.66rem; color: var(--text-muted); margin-top: 4px; }
+        .ev-body h3 { font-size: 0.94rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+        .ev-body .ev-summary { font-size: 0.86rem; color: var(--text-secondary); line-height: 1.68; }
+        .ev-provisions { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); margin-top: 10px; }
+        .ev-meta-col { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; text-align: right; }
+        .ev-type { font-family: var(--mono); font-size: 0.63rem; padding: 4px 9px; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; white-space: nowrap; }
+        .type-primary { background: var(--status-flag-dim); color: var(--status-flag); }
+        .type-procedural { background: var(--status-analysis-dim); color: var(--status-analysis); }
+        .type-analysis { background: var(--accent-dim); color: var(--accent); }
+        .ev-open { font-family: var(--mono); font-size: 0.66rem; background: transparent; border: none; color: var(--accent); cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 2px; }
+        .ev-open:hover { color: var(--text-primary); }
+        .notes-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px; margin-top: 12px; }
+        .notes-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+        .notes-label { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); }
+        .notes-count { font-family: var(--mono); font-size: 0.68rem; padding: 3px 9px; border-radius: 2px; border: 1px solid var(--border-strong); color: var(--text-muted); }
+        .notes-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .note-card { background: var(--bg-surface); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 13px 16px; }
+        .note-card.note-admission { border-left-color: var(--status-flag); }
+        .note-card.note-xref { border-left-color: var(--accent); }
+        .note-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 7px; }
+        .note-type { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 2px; background: var(--bg-card); border: 1px solid var(--border-strong); color: var(--text-muted); }
+        .note-card.note-admission .note-type { color: var(--status-flag); border-color: var(--status-flag); }
+        .note-card.note-xref .note-type { color: var(--accent); border-color: var(--accent); }
+        .note-author { font-size: 0.86rem; font-weight: 600; color: var(--text-primary); }
+        .note-seg { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); margin-left: auto; }
+        .note-body { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; white-space: pre-wrap; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(20, 20, 18, 0.55); z-index: 1000; justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-y: auto; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--bg-primary); border: 1px solid var(--border-strong); border-radius: 6px; max-width: 760px; width: 100%; margin: auto 0; }
+        .modal-header { padding: 22px 28px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 16px; }
+        .modal-header-body { flex: 1; }
+        .modal-type-badge { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 2px; display: inline-block; margin-bottom: 10px; }
+        .modal-title { font-family: var(--serif); font-size: 1.25rem; font-weight: 600; line-height: 1.3; color: var(--text-primary); }
+        .modal-audio-ref { font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); margin-top: 6px; }
+        .modal-close { background: transparent; border: 1px solid var(--border-strong); color: var(--text-muted); width: 30px; height: 30px; border-radius: 3px; cursor: pointer; font-size: 1.05rem; }
+        .modal-close:hover { color: var(--text-primary); border-color: var(--text-primary); }
+        .modal-body { padding: 22px 28px; }
+        .modal-status { display: flex; align-items: center; gap: 8px; margin-bottom: 22px; padding: 10px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; }
+        .modal-status-text { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); }
+        .modal-section { margin-bottom: 22px; }
+        .modal-section-label { font-family: var(--mono); font-size: 0.63rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .modal-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        .modal-segments { display: flex; flex-direction: column; gap: 8px; }
+        .modal-segment { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 3px; padding: 12px 16px; }
+        .modal-segment-time { font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; }
+        .modal-segment-speaker { font-size: 0.76rem; font-weight: 600; margin-bottom: 4px; color: var(--text-primary); }
+        .modal-segment-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; font-style: italic; }
+        .modal-jurisdictions, .modal-xrefs { display: flex; flex-wrap: wrap; gap: 6px; }
+        .jurisdiction-pill { display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border); border-radius: 3px; padding: 12px 16px; min-width: 200px; flex: 1; }
+        .jurisdiction-name { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 6px; }
+        .jurisdiction-laws { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
+        .jurisdiction-article { font-family: var(--mono); font-size: 0.7rem; color: var(--text-primary); background: var(--bg-surface); padding: 2px 6px; border-radius: 2px; display: inline-block; margin: 2px 2px 2px 0; }
+        .xref-tag { font-family: var(--mono); font-size: 0.68rem; padding: 4px 10px; border-radius: 2px; background: var(--bg-card); border: 1px solid var(--border-strong); color: var(--text-muted); }
+        .modal-footer { padding: 14px 28px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .modal-footer-note { font-family: var(--mono); font-size: 0.66rem; color: var(--text-muted); flex: 1; }
+        .modal-download-btn { font-family: var(--mono); font-size: 0.66rem; padding: 6px 14px; border-radius: 3px; background: transparent; border: 1px solid var(--border-strong); color: var(--text-secondary); cursor: pointer; }
+        .modal-download-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .page-footer { border-top: 1px solid var(--border); padding: 28px 0; text-align: center; margin-top: 48px; }
+        .page-footer p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.8; }
+        .page-footer .mono { font-family: var(--mono); }
+        .pinned-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(248, 247, 244, 0.94); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; gap: 16px; }
+        .pinned-nav-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); text-decoration: none; padding: 5px 12px; border-radius: 3px; border: 1px solid var(--border-strong); }
+        .pinned-nav-link:hover { background: var(--accent-dim); text-decoration: none; }
+        .pinned-nav-label { font-family: var(--mono); font-size: 0.64rem; color: var(--text-muted); letter-spacing: 0.04em; }
+        @media (max-width: 900px) { .evidence-card { grid-template-columns: 1fr; gap: 8px; } .ev-meta-col { flex-direction: row-reverse; align-items: center; text-align: left; justify-content: flex-end; } }
+        @media (max-width: 600px) { .masthead { padding: 28px 0 22px; } .masthead-inner, .main { padding: 0 16px; } .modal-overlay { padding: 16px 10px; } .pinned-nav { padding: 8px 14px; } .pinned-nav-label { display: none; } }
+    </style>
+  <meta name="n118-translation" content="true">
+  <meta name="translation-language" content="es">
+  <meta name="translation-label" content="N118 Spanish translation copy">
+</head>
+<body data-audio-stem="aeropuerto_STG_2" data-audio-map-key="i_002_02_nar_02_stg_2_boarding_gate">
+  <div style="position:sticky;top:0;z-index:999;background:#f4efe6;border-bottom:1px solid #d7cdb9;padding:10px 16px;font:600 12px 'Inter',sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#4a3b2a;">N118 Spanish translation copy</div>
+
+<div class="page">
+    <header class="masthead">
+        <div class="masthead-inner">
+            <a class="masthead-back" href="../index.html">&larr; Evidence Archive · Index</a>
+            <div class="masthead-badge">Narrative · NAR-02 · STG_2 · Gate-Boarding-Display Dispute</div>
+            <h1>Gate-Boarding-Display Dispute</h1>
+            <p class="masthead-sub">Full narrative integrating transcript, forensic reasoning, and legal significance. Segments are aligned for listening while reading.</p>
+        </div>
+    </header>
+    <div class="stats-bar">
+        <div class="stats-inner">
+            <div class="stat-item"><div class="stat-val">aeropuerto_STG_2.m4a</div><div class="stat-label">Audio File</div></div>
+            <div class="stat-item"><div class="stat-val">4m 42.688s</div><div class="stat-label">Duration</div></div>
+            <div class="stat-item"><div class="stat-val">July 05, 2024 · 13:08:00</div><div class="stat-label">Date</div></div>
+            <div class="stat-item"><div class="stat-val">SCL · Arturo Merino Benítez International Airport</div><div class="stat-label">Location</div></div>
+            <div class="stat-item"><div class="stat-val">es (primary) · pt loanwords</div><div class="stat-label">Language</div></div>
+        </div>
+    </div>
+    <div class="main">
+
+        <!-- SECTION: Recording Identification & Purpose -->
+        <div class="section-head">
+            <h2>Recording Identification & Purpose</h2>
+            <p>Metadata and evidentiary function of the second audio in the LA8159 timeline.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:32px;">
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; padding:18px 22px;">
+                <div style="font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Case / Narrative ID</div>
+                <div><strong>LA8159</strong> · <code>NAR-02_STG_2_boarding_gate</code> · Source: <code>02-transcripts/I-002/I-002_02_NAR-02_STG_2_boarding_gate.json</code></div>
+            </div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; padding:18px 22px;">
+                <div style="font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Speakers (JSON labels, verbatim)</div>
+                <div><code>[[SPK-passenger-leandro]] (passenger)</code> · <code>Latam Gate Staff</code> · <code>Latam Gate Staff (Acuser)</code> · <code>Latam Gate Staff 2</code> · <code>Piloto (RUIZ)</code></div>
+            </div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; padding:18px 22px;">
+                <div style="font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Why This Recording Matters</div>
+                <p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.7;">
+                    1. <strong>On-tape staff admission of mis-display.</strong> Seg 45: gate staff concedes <em>"ah no po, no ta correcto"</em> — the boarding-display information is not correct. Contemporaneous, in-role admission against interest. 2. <strong>Locks [[SPK-pilot-ruiz]] to LA8159 / SCL→BSB.</strong> Seg 47 PA announcement confirms identity and route. 3. <strong>Documents persistent, courteous, information-seeking register.</strong> Passenger never threatens or crosses any line. Most pointed line (seg 37) is met with staff laughter and agreement. 4. <strong>Identifies the trigger speaker.</strong> Label <code>Latam Gate Staff (Acuser)</code> indicates the staffer who later figures as accuser.
+                </p>
+            </div>
+        </div>
+
+        <!-- SECTION: Methodology Binding -->
+        <div class="section-head">
+            <h2>Methodology Binding</h2>
+            <p>All quotes are verbatim from the source JSON. Segment ids (<code>seg N</code>) are shown inline. Translations are gloss only. See <em>Olivia_case_methodology.md</em>.</p>
+        </div>
+
+        <!-- SECTION: Segment-by-Segment Forensic Walk-Through -->
+        <div class="section-head">
+            <h2>Segment-by-Segment Forensic Walk-Through</h2>
+            <p>Chronological analysis with linked reasoning → article → violation chains. Select <strong>▶ Play</strong> to listen to each segment while reading.</p>
+        </div>
+        <div class="transcript-list">
+
+            <!-- Cluster 1: Polite Re-Engagement at the Gate -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 1 — Polite Re-Engagement at the Gate (seg 4–7)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-0">
+                    <div class="seg-time">25.71s → 28.97s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Voy a hacer otra pregunta a señora."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="0" data-start="25.71" data-end="28.97">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-1">
+                    <div class="seg-time">29.33s → 30.10s</div>
+                    <div class="seg-speaker">Latam Gate Staff</div>
+                    <p class="seg-text">"¿para embarcar?"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="1" data-start="29.33" data-end="30.1">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-2">
+                    <div class="seg-time">30.03s → 39.01s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Si no era una pregunta sobre... me gustaría entender lo embarque porque acá es 12.35"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="2" data-start="30.03" data-end="39.01">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-3">
+                    <div class="seg-time">38.00s → 39.50s</div>
+                    <div class="seg-speaker">Latam Gate Staff</div>
+                    <p class="seg-text">"es su presentación"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="3" data-start="38.0" data-end="39.5">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> Passenger explicitly frames the interaction as a question, addressed politely ("señora"), about the boarding-display contradiction. The displayed time 12:35 is the screen the passenger is reading contemporaneously. Staff opens with the "presentation time" line that will be repeated throughout the dispute — a defence that collapses by seg 45. <strong>Articles engaged:</strong> LPDC Art. 3 lit. b. <strong>Violations linked:</strong> precursor to LPDC-INFO-23BIS.</p>
+            </div>
+
+            <!-- Cluster 2: The Boarding-Display Contradiction -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 2 — The Boarding-Display Contradiction (seg 8–10)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-4">
+                    <div class="seg-time">41.54s → 44.53s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"allí está diciendo que ya está embarcando"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="4" data-start="41.54" data-end="44.53">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-5">
+                    <div class="seg-time">44.53s → 45.30s</div>
+                    <div class="seg-speaker">Latam Gate Staff</div>
+                    <p class="seg-text">"en uns minutos si"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="5" data-start="44.53" data-end="45.3">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-6">
+                    <div class="seg-time">45.40s → 46.50s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"si, yo entiendo, pero"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="6" data-start="45.4" data-end="46.5">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-7">
+                    <div class="seg-time">47.00s → 53.30s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"lo que exactamente significa embarque? lo, lo el procedimiento de llegar acá? el procedimiento de entrar en el avión? ... "</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="7" data-start="47.0" data-end="53.3">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-8">
+                    <div class="seg-time">53.68s → 54.40s</div>
+                    <div class="seg-speaker">Latam Gate Staff</div>
+                    <p class="seg-text">"de llegar acá"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="8" data-start="53.68" data-end="54.4">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-9">
+                    <div class="seg-time">54.40s → 55.28s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"porque lo que veo"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="9" data-start="54.4" data-end="55.28">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-11">
+                    <div class="seg-time">55.60s → 59.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Yo estoy como por acá con la Latam."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="11" data-start="55.6" data-end="59.0">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> The information-duty breach is now visible on-screen at the gate: the airline-controlled display states boarding is in progress, but staff verbally contradicts the display. Passenger explicitly asks for a definitional clarification of "embarque" — entirely reasonable and non-confrontational. <strong>Articles engaged:</strong> LPDC Art. 3 lit. b, LPDC Art. 23 bis, CACH Art. 133A. <strong>Violations linked:</strong> LPDC-INFO-23BIS, CACH-INFO-133A, LPDC-MISLEADING-DISPLAY.</p>
+            </div>
+
+            <!-- Cluster 3: Inbound Delay Concession by Acuser -->
+            <div style="margin-bottom:16px; border-left:3px solid var(--status-flag); padding-left:14px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem; color:var(--status-flag);">Cluster 3 — ⚠️ Inbound Delay Concession by Acuser (seg 11–13)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-13">
+                    <div class="seg-time">60.60s → 67.16s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Lo que veo es que este vuelo que llegó, que es el que va a Brasilia, llegó atrasado."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="13" data-start="60.6" data-end="67.16">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-14">
+                    <div class="seg-time">67.10s → 67.95s</div>
+                    <div class="seg-speaker">Latam Gate Staff ACUSER</div>
+                    <p class="seg-text">"si"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="14" data-start="67.1" data-end="67.95">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-15">
+                    <div class="seg-time">68.00s → 72.30s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Ya, entonces, lo embarque de ese va a atrasar un poco también."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="15" data-start="68.0" data-end="72.3">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-16">
+                    <div class="seg-time">72.32s → 73.00s</div>
+                    <div class="seg-speaker">Latam Gate Staff ACUSER</div>
+                    <p class="seg-text">"No"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="16" data-start="72.32" data-end="73.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-other" id="seg-17">
+                    <div class="seg-time">73.00s → 74.90s</div>
+                    <div class="seg-speaker">NEW_SPEAKER</div>
+                    <p class="seg-text">"Estamos bien en la hora del embarque,"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="17" data-start="73.0" data-end="74.9">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-18">
+                    <div class="seg-time">75.00s → 78.90s</div>
+                    <div class="seg-speaker">Latam Gate Staff (Acuser)</div>
+                    <p class="seg-text">"nosotros comenzamos el embarco 40 minutos antes de la salida del avion"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="18" data-start="75.0" data-end="78.9">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> ⚠️ On-tape concession by the same staffer who later accuses the passenger: she expressly confirms ("Si", seg 14) that the inbound arrived late. This concession is dispositive of the underlying delay-fact and corroborates STG_1 seg 4. She then attempts to disconnect the inbound delay from the boarding schedule using the "40 minutes before departure" rule (seg 18). The attempt fails by seg 45 when she concedes the display "no ta correcto". <strong>Articles engaged:</strong> LPDC Art. 23 bis, Art. 3 lit. b, CACH Art. 133, 133A. <strong>Violations linked:</strong> LPDC-INFO-23BIS, CACH-INFO-133A, LPDC-MISLEADING-DISPLAY.</p>
+            </div>
+
+            <!-- Cluster 4: What does "embarque" mean? -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 4 — "What does <em>embarque</em> mean?" (seg 14–22)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-19">
+                    <div class="seg-time">78.90s → 81.10s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"¿Qué significa el embarque acá, por favor?"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="19" data-start="78.9" data-end="81.1">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-20">
+                    <div class="seg-time">81.43s → 82.85s</div>
+                    <div class="seg-speaker">Latam Gate Staff (Acuser)</div>
+                    <p class="seg-text">"La hora de apresentacion"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="20" data-start="81.42999999999999" data-end="82.85">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-21">
+                    <div class="seg-time">82.92s → 83.80s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"¿Certeza?"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="21" data-start="82.92" data-end="83.8">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-23">
+                    <div class="seg-time">85.50s → 92.50s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"¿Tú puedes  me direccionar esa información? ¿Hay alguna documentación explicándolo? Porque me parece que es distinto."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="23" data-start="85.5" data-end="92.5">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-26">
+                    <div class="seg-time">101.25s → 103.00s</div>
+                    <div class="seg-speaker">Latam Gate Staff (Acuser)</div>
+                    <p class="seg-text">"la hora del embarque es otra."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="26" data-start="101.25" data-end="103.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-27">
+                    <div class="seg-time">103.10s → 104.50s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Donde es la hora del embarque? mostra me"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="27" data-start="103.1" data-end="104.5">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-28">
+                    <div class="seg-time">104.69s → 109.60s</div>
+                    <div class="seg-speaker">Latam Gate Staff (Acuser)</div>
+                    <p class="seg-text">"Ahí nos sale la hora del embarque. La hora del embarque nosotros la decimos acá. Pero eso es por hora de presentación"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="28" data-start="104.69" data-end="109.6">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> Passenger asks three reasonable, escalating questions, each courteous: "are you sure?", "can you point me to the source?", "is there documentation?". Acuser's seg 28 admission is structurally important: "La hora del embarque nosotros la decimos acá" — boarding time is communicated verbally at the gate, not displayed. This contradicts the airline's own display logic and confirms LATAM operates an undocumented, staff-discretionary system. <strong>Articles engaged:</strong> LPDC Art. 3 lit. b, Art. 12, Art. 23 bis, CACH Art. 133A. <strong>Violations linked:</strong> LPDC-INFO-23BIS, CACH-INFO-133A, LPDC-MISLEADING-DISPLAY, LPDC-PROFESSIONALISM-12.</p>
+            </div>
+
+            <!-- Cluster 5: Disclosure of Earlier Same-Day PDI Friction -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 5 — ⚠️ Disclosure of Earlier Same-Day "PDI" Friction (seg 23–27)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-30">
+                    <div class="seg-time">113.00s → 125.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"la Latam podría, pero yo sé por qué no lo hace, que no está avisando los atrasos, porque esto todo tiene mucha cosa envolvida, yo entiendo eso"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="30" data-start="113.0" data-end="125.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-31">
+                    <div class="seg-time">125.00s → 136.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"entiende? pero lo que me carga es porque yo tuve que correr y tener que pelear con PDI, pelear con este, pelear con aquel"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="31" data-start="125.0" data-end="136.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-33">
+                    <div class="seg-time">139.85s → 147.50s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"pero el señal ya está. Eso da señal para otras partes del sistema. El sistema esta que ya está embarcando."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="33" data-start="139.85" data-end="147.5">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> Passenger discloses, in his own voice, that before this gate exchange he had already had to "run and fight with PDI" earlier the same day. He explicitly concedes complexity ("yo entiendo eso") — the opposite of an aggressive register. He identifies the systemic consequence of the airline's misleading display: it cascades into other systems (boarding-pass scanners, app notifications, third-party widgets). <strong>Articles engaged:</strong> LPDC Art. 3 lit. b, LPDC Art. 23 bis, CACH Art. 133A, CONST Art. 19 N°4. <strong>Violations linked:</strong> LPDC-INFO-23BIS, CACH-INFO-133A, PATTERN-OF-FAILURE.</p>
+            </div>
+
+            <!-- Cluster 6: Boarding Will Begin "Now" -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 6 — Boarding Will Begin "Now" (seg 28–35)</h3>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-34">
+                    <div class="seg-time">146.70s → 149.60s</div>
+                    <div class="seg-speaker">Latam Gate Staff (Acuser)</div>
+                    <p class="seg-text">"Mira, en este minuto nosotros vamos a empezar el embarco"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="34" data-start="146.7" data-end="149.6">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-35">
+                    <div class="seg-time">149.65s → 156.50s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"y entonces ya entonces lo embarque entonces va a empezar a la 1 y 10 ya ya"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="35" data-start="149.65" data-end="156.5">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-36">
+                    <div class="seg-time">156.50s → 157.00s</div>
+                    <div class="seg-speaker">Latam Gate Staff (Acuser)</div>
+                    <p class="seg-text">"exacto"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="36" data-start="156.5" data-end="157.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-37">
+                    <div class="seg-time">157.20s → 160.50s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"¿dónde está escrito eso? ¿Dónde estaba previsto eso?"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="37" data-start="157.2" data-end="160.5">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-38">
+                    <div class="seg-time">160.60s → 167.90s</div>
+                    <div class="seg-speaker">Latam Gate Staff (Acuser)</div>
+                    <p class="seg-text">"Eso sale cuando usted compra el pasaje, que el embarque comienza 40 minutos antes. No. No en el pasaje, sale cuando usted lo compra. "</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="38" data-start="160.6" data-end="167.9">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-41">
+                    <div class="seg-time">173.20s → 177.50s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Si tú adicionas 40 minutos acá, va a dar el horario que el vuelo sale, mi amigo. Por favor, mira la. 40 minutos acá. "</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="41" data-start="173.2" data-end="177.5">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> Acuser's seg 38 line is internally incoherent ("on the ticket … no, not on the ticket"). Passenger's seg 41 demonstrates basic arithmetic: scheduled departure was 13:45; "40 minutes before" = 13:05; the screen shows 12:35; the staff defence does not add up. The passenger remains in didactic mode ("mi amigo, por favor"). <strong>Articles engaged:</strong> LPDC Art. 12, Art. 3 lit. b, Art. 23 bis. <strong>Violations linked:</strong> LPDC-INFO-23BIS, LPDC-PROFESSIONALISM-12.</p>
+            </div>
+
+            <!-- Cluster 7: "El problema es cuando se hacen estupidos" + Staff Laughs -->
+            <div style="margin-bottom:16px; border-left:3px solid var(--status-analysis); padding-left:14px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem; color:var(--status-analysis);">Cluster 7 — ⚠️ "El problema es cuando se hacen estupidos" + Staff Laughs (seg 36–39)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-43">
+                    <div class="seg-time">181.45s → 188.20s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Mira, no está bien eso, deberían avisar a las personas, porque todos tenemos la aplicación."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="43" data-start="181.45" data-end="188.2">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-44">
+                    <div class="seg-time">188.20s → 192.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Podrían avisar a las personas. Porque todos tenemos la aplicación. Entonces podría avisar. Mira. Cambió el portón también"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="44" data-start="188.2" data-end="192.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-47">
+                    <div class="seg-time">193.70s → 200.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Porque están manejando, porque están manejando los horarios y no es un problema. Pero el problema es cuando se hacen estúpidos."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="47" data-start="193.7" data-end="200.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-48">
+                    <div class="seg-time">199.80s → 201.00s</div>
+                    <div class="seg-speaker">Latam Gate Staff</div>
+                    <p class="seg-text">"laughs"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="48" data-start="199.8" data-end="201.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-49">
+                    <div class="seg-time">201.00s → 202.10s</div>
+                    <div class="seg-speaker">Latam Gate Staff</div>
+                    <p class="seg-text">"Claro, Es el"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="49" data-start="201.0" data-end="202.1">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-52">
+                    <div class="seg-time">205.00s → 207.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Mira, yo se. pero es como, es un engaño."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="52" data-start="205.0" data-end="207.0">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> ⚠️ The single most pointed line on the recording is seg 47: "el problema es cuando se hacen estupidos" — "the problem is when they act stupidly" — <em>they</em> (third person plural, generic, referring to "the system / the airline"), not <em>you / tú</em>. It is a critique of process, not a personal insult. The reaction by the non-Acuser gate staffer is to laugh and agree ("Claro (laughs)"). This is dispositive: had the line been perceived as aggression, no professional gate agent laughs and agrees. <strong>Articles engaged:</strong> LPDC Art. 28, LPDC Art. 12, 23 bis, CONST Art. 19 N°4. <strong>Violations linked:</strong> LPDC-MISLEADING-DISPLAY, LPDC-INFO-23BIS, FALSE-ACCUSATION-OF-AGGRESSION (baseline — staff laughed).</p>
+            </div>
+
+            <!-- Cluster 8: Second Staffer Joins; Boarding-Display Defence Collapses -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 8 — Second Staffer Joins; Boarding-Display Defence Collapses (seg 40–44)</h3>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-53">
+                    <div class="seg-time">207.00s → 209.60s</div>
+                    <div class="seg-speaker">Latam Gate Staff</div>
+                    <p class="seg-text">"tienen otro tiempo"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="53" data-start="207.0" data-end="209.6">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-55">
+                    <div class="seg-time">210.00s → 214.00s</div>
+                    <div class="seg-speaker">Latam Gate Staff</div>
+                    <p class="seg-text">"Ellos tienen otro tiempos al que les sale acá en su teléfono."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="55" data-start="210.0" data-end="214.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-56">
+                    <div class="seg-time">214.20s → 220.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"Sí, pero entonces si ese tiempo es más correcto, debería ser passado a los clientes"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="56" data-start="214.2" data-end="220.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-57">
+                    <div class="seg-time">219.80s → 224.50s</div>
+                    <div class="seg-speaker">Latam Gate Staff</div>
+                    <p class="seg-text">"Claro! A veces tienen que esperar a que llegue toda la tripulación y a que salgan todos los pasajeros"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="57" data-start="219.8" data-end="224.5">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> Staff 2 introduces a new defence — there are two times, an internal one and a passenger-facing one ("al que le sale acá en su teléfono"). This is itself an admission that LATAM operates two different sets of operational information, and passengers are given the wrong one. Passenger restates the duty in textbook LPDC terms ("debería ser passado a los clientes"). <strong>Articles engaged:</strong> LPDC Art. 3 lit. b, Art. 23 bis, Art. 28, CACH Art. 133A. <strong>Violations linked:</strong> LPDC-INFO-23BIS, LPDC-MISLEADING-DISPLAY, CACH-INFO-133A.</p>
+            </div>
+
+            <!-- Cluster 9: The Staff Admission "no ta correcto" -->
+            <div style="margin-bottom:16px; border-left:3px solid var(--status-flag); padding-left:14px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem; color:var(--status-flag);">Cluster 9 — 🚨 The Staff Admission "no ta correcto" (seg 45)</h3>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-58">
+                    <div class="seg-time">224.60s → 229.00s</div>
+                    <div class="seg-speaker">[[SPK-passenger-leandro]] (passenger)</div>
+                    <p class="seg-text">"esta triste eso, pero tu entiendes que no esta correcto?"</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="58" data-start="224.6" data-end="229.0">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-59">
+                    <div class="seg-time">229.10s → 231.00s</div>
+                    <div class="seg-speaker">Latam Gate Staff</div>
+                    <p class="seg-text">"Ah no po, no esta correcto."</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn" data-seg-index="59" data-start="229.1" data-end="231.0">▶ Play</button></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> 🚨 A LATAM gate staffer, on tape, in immediate response to the passenger's "¿pero tú entiende que no estás correcto?", <strong>concedes</strong> that the airline's position is not correct. This is an in-role, contemporaneous, admission against interest. It bears directly on: (1) the truth of the underlying information-duty breach (LPDC Art. 23 bis · CACH Art. 133A); (2) the reasonableness of the passenger's grievance — the passenger was correct on the merits, by the airline's own concession; (3) the pretextual nature of any later "aggression" framing — the airline cannot simultaneously be wrong on the merits as conceded on tape, and entitled to escalate the same dispute into removal a few minutes later. <strong>Articles engaged:</strong> LPDC Art. 23 bis, LPDC Art. 3 lit. b, LPDC Art. 28, CACH Art. 133A, Ley 20.609. <strong>Violations linked:</strong> LPDC-INFO-23BIS, LPDC-MISLEADING-DISPLAY, CACH-INFO-133A, RETALIATION-FOR-COMPLAINT.</p>
+            </div>
+
+            <!-- Cluster 10: Pilot Ruiz PA -->
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:6px;">
+                    <h3 style="font-family:var(--serif); font-size:1.1rem;">Cluster 10 — 🚨 [[SPK-pilot-ruiz]] PA: Identity & Operational State (seg 47, 49)</h3>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:8px;"><strong>Forensic reasoning:</strong> 🚨 The PA announcement locks the identity of the speaker in STG_1 to the commander of LA8159: same voice, same name (RUIZ), same flight. The PA also locks the flight number and route: LA8159 SCL→BSB. Seg 49's safety-related queue request is routine and unrelated to the passenger — but is captured here, contradicting any later narrative that the passenger was preventing orderly boarding. <strong>Articles engaged:</strong> LPDC Art. 3 lit. b. <strong>Violations linked:</strong> anchor only — corroborates LPDC-INFO-23BIS, CACH-INFO-133A chain across STG_1/STG_2/STG_5.</p>
+            </div>
+        </div>
+
+        <!-- SECTION: End-State Synthesis -->
+        <div class="section-head">
+            <h2>End-State Synthesis</h2>
+            <p>The chain in one paragraph.</p>
+        </div>
+        <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:18px 22px; margin-bottom:32px;">
+            <p style="font-size:0.92rem; color:var(--text-secondary); line-height:1.75;">
+                Within ~5 minutes, in Spanish, in a courteous-but-insistent register, the passenger raises one core issue — the gate display showed "embarcando" when it shouldn't have, and LATAM is not properly informing passengers about delays — and <strong>wins the argument on tape</strong>. Three different LATAM gate-staffers are recorded, two laughing in agreement (segs 48–49) and one explicitly conceding <em>"ah no po, no ta correcto"</em> (seg 59). The captain of LA8159, [[SPK-pilot-ruiz]], then comes on the PA confirming identity, flight number and route. <strong>Twenty-two minutes later, on the aircraft, the same airline removes the same passenger and labels him "agressivo" (STG_5)</strong> — although the gate staffers who were physically present at the dispute had laughed and agreed with him, and one had admitted the airline was wrong on the merits.
+            </p>
+            <p style="font-family:var(--mono); font-size:0.8rem; color:var(--accent); margin-top:12px;">
+                STG_2 seg 45 (staff: "no ta correcto") + STG_2 seg 14 (staff: "Si", inbound was late) + STG_2 seg 28 (staff: boarding time is verbal-only) ⇒ admitted LPDC Art. 23 bis · Art. 3(b) · Art. 28 · CACH Art. 133A breaches. STG_2 seg 47 + 48–49 (staff laughs and agrees with passenger's process critique) ⇒ baseline-state: no aggression at the gate. STG_5 seg 14 ([[SPK-stewardess-accuser]]: "Usted empiezo ha un comienzo a decir que el vuelo estava tarde") ⇒ closes RETALIATION-FOR-COMPLAINT. STG_7 seg 44 (PDI: cameras show no aggression) ⇒ closes FALSE-ACCUSATION-OF-AGGRESSION.
+            </p>
+        </div>
+
+        <!-- SECTION: Lies & Contradictions -->
+        <div class="section-head">
+            <h2>Lies, Contradictions & Possible Violations</h2>
+            <p>Structured analysis of demonstrably false statements, internal contradictions, and potential legal violations.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:32px;">
+            <div class="evidence-card" style="border-left-color:var(--status-flag);">
+                <div class="ev-time-col"><div class="ev-time">L-1</div><div class="ev-duration">seg 3, 20, 25, 42</div></div>
+                <div class="ev-body">
+                    <h3>Lie: "Es su presentación" — misrepresentation of boarding screen</h3>
+                    <div class="ev-summary">The screen is visibly displaying "embarcando." By staff's own later admission (segs 53, 59), the system's time differs from reality and is "no ta correcto." Calling it "presentación" is a deliberate misrepresentation.</div>
+                    <div class="ev-provisions">LPDC Art. 3 lit. b · Art. 28 · CACH Art. 133A</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-primary">Lie</span><button class="ev-open" onclick="openModal('v1')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-flag);">
+                <div class="ev-time-col"><div class="ev-time">L-2</div><div class="ev-duration">seg 18 vs 34</div></div>
+                <div class="ev-body">
+                    <h3>Lie: "Comenzamos el embarco 40 minutos antes" — false pretext</h3>
+                    <div class="ev-summary">At the moment of the statement, boarding had not started, yet the 40-minute mark had already passed (display 12:35 + 40 min = 13:15 departure). Staff later admits "en este minuto nosotros vamos a empezar el embarco" (seg 34), proving the 40-minute rule was not honoured.</div>
+                    <div class="ev-provisions">LPDC Art. 12 · Art. 3 lit. b</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-primary">Lie</span><button class="ev-open" onclick="openModal('v2')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-flag);">
+                <div class="ev-time-col"><div class="ev-time">L-3</div><div class="ev-duration">seg 28</div></div>
+                <div class="ev-body">
+                    <h3>Lie: "Ahí nos sale la hora del embarque... Pero eso es por hora de presentación" — internally contradictory equivocation</h3>
+                    <div class="ev-summary">The sentence is internally contradictory: claims the screen shows boarding time but simultaneously insists it's presentation time. This equivocation is a wilful attempt to confuse the passenger and conceal the truth.</div>
+                    <div class="ev-provisions">LPDC Art. 3 lit. b · Art. 12</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-primary">Lie</span><button class="ev-open" onclick="openModal('v3')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-analysis);">
+                <div class="ev-time-col"><div class="ev-time">C-1</div><div class="ev-duration">seg 4 vs 3, 20</div></div>
+                <div class="ev-body">
+                    <h3>Contradiction: Screen vs. verbal claim</h3>
+                    <div class="ev-summary">Gate display says "embarcando"; staff says "es su presentación" and "en unos minutos." Direct sensory contradiction.</div>
+                    <div class="ev-provisions">LPDC Art. 3 lit. b</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-procedural">Contradiction</span><button class="ev-open" onclick="openModal('v4')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-analysis);">
+                <div class="ev-time-col"><div class="ev-time">C-2</div><div class="ev-duration">seg 34 vs 18</div></div>
+                <div class="ev-body">
+                    <h3>Contradiction: 40-minute rule not applied</h3>
+                    <div class="ev-summary">Staff insist boarding starts 40 minutes before departure, yet when the passenger calculates 12:35 + 40 = 13:15 (departure time), staff avoid the maths and later concede boarding is just about to start at ~13:10.</div>
+                    <div class="ev-provisions">LPDC Art. 12</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-procedural">Contradiction</span><button class="ev-open" onclick="openModal('v5')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-analysis);">
+                <div class="ev-time-col"><div class="ev-time">C-3</div><div class="ev-duration">seg 59 vs 3, 20</div></div>
+                <div class="ev-body">
+                    <h3>Contradiction: Staff admission vs. earlier defence</h3>
+                    <div class="ev-summary">Staff 2: "Ellos tienen otro tiempo al que le sale acá en su teléfono" (seg 55) and later "ah no po, no ta correcto" (seg 59). This directly contradicts the earlier insistence that the display was correct.</div>
+                    <div class="ev-provisions">LPDC Art. 3 lit. b · Art. 28</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-procedural">Contradiction</span><button class="ev-open" onclick="openModal('v6')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-analysis);">
+                <div class="ev-time-col"><div class="ev-time">C-4</div><div class="ev-duration">seg 57 vs 17</div></div>
+                <div class="ev-body">
+                    <h3>Contradiction: Delay acknowledged vs. "estamos bien en la hora"</h3>
+                    <div class="ev-summary">Staff 2 explains that they must wait for the security crew to leave the aircraft (seg 57), acknowledging a delay. This contradicts the Acuser's earlier claim that "estamos bien en la hora."</div>
+                    <div class="ev-provisions">LPDC Art. 23 bis</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-procedural">Contradiction</span><button class="ev-open" onclick="openModal('v7')">Open Record</button></div>
+            </div>
+        </div>
+
+        <!-- SECTION: Possible Violations -->
+        <div class="section-head">
+            <h2>Possible Violations</h2>
+            <p>Conduct that may breach consumer protection laws, aviation regulations, or contractual obligations.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:32px;">
+            <div class="evidence-card" style="border-left-color:var(--status-flag);">
+                <div class="ev-time-col"><div class="ev-time">PV-1</div><div class="ev-duration">Throughout</div></div>
+                <div class="ev-body">
+                    <h3>Misleading / Deceptive Information (Infracción a la Ley del Consumidor)</h3>
+                    <div class="ev-summary">The boarding gate screen displaying "embarcando" while no boarding is taking place is a deceptive practice that induces passengers to rush, suffer stress, and make unnecessary efforts (the passenger reports having to "correr y pelear con PDI"). The staff's laughter and agreement ("Claro" when the system is called "estupido") shows awareness. This may constitute an infringement of Art. 12, 23 y 24 of the Chilean Consumer Protection Law.</div>
+                    <div class="ev-provisions">LPDC Art. 12 · Art. 23 · Art. 24 · Art. 28</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-primary">Violation</span><button class="ev-open" onclick="openModal('v8')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-flag);">
+                <div class="ev-time-col"><div class="ev-time">PV-2</div><div class="ev-duration">seg 30, 43–44</div></div>
+                <div class="ev-body">
+                    <h3>Failure to Inform Passengers of Delays (Violación del deber de información)</h3>
+                    <div class="ev-summary">The passenger explicitly states "nadie nos avisa" and that LATAM does not use the app to communicate delays, gate changes, or late boarding starts. This likely violates the airline's duty of care and applicable passenger rights regulations. The deliberate concealment of the true boarding status compounds the violation.</div>
+                    <div class="ev-provisions">LPDC Art. 23 bis · CACH Art. 133A · ANAC Res. 400/2016</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-primary">Violation</span><button class="ev-open" onclick="openModal('v9')">Open Record</button></div>
+            </div>
+            <div class="evidence-card" style="border-left-color:var(--status-analysis);">
+                <div class="ev-time-col"><div class="ev-time">PV-3</div><div class="ev-duration">Throughout</div></div>
+                <div class="ev-body">
+                    <h3>Systemic Misrepresentation / Potential "Manufactured Pretext"</h3>
+                    <div class="ev-summary">The combination of a misleading display, refusal to provide written documentation, and contradictory verbal explanations may be part of a systematic practice aimed at shifting blame to passengers. The passenger's characterisation of the system as "un engaño" (a deception) is substantiated by the evidence.</div>
+                    <div class="ev-provisions">LPDC Art. 3 lit. b · Art. 28 · CACH Art. 133A</div>
+                </div>
+                <div class="ev-meta-col"><span class="ev-type type-procedural">Analysis</span><button class="ev-open" onclick="openModal('v10')">Open Record</button></div>
+            </div>
+        </div>
+
+        <!-- SECTION: Cross-Recording Anchors -->
+        <div class="section-head">
+            <h2>Cross-Recording Anchors</h2>
+            <p>Links to other evidence that close the chain.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:32px;">
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">backward</span> → <strong>aeropuerto_STG_1</strong> · seg 4 (delay complaint) — same grievance, escalated to gate; seg 5/7 ([[SPK-pilot-ruiz]] cordial) — same pilot.</div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">forward</span> → <strong>I-002_03_NAR-05_STG_5_aircraft_removal</strong> · seg 14 ([[SPK-stewardess-accuser]] names delay complaint as removal trigger) — closes the retaliation chain that begins here.</div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">forward</span> → <strong>aeropuerto_STG_7</strong> · seg 44 (PDI: cameras show no aggression) — closes the false-accusation chain whose baseline is set in seg 47 here (staff laughed).</div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">forward</span> → <strong>aeropuerto_STG_4</strong> · seg 38–41 (supervisor "Tala" acknowledges the documentation right then dismisses) — downstream of the information-duty engagement admitted on tape here at seg 59.</div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:4px; padding:12px 16px; font-size:0.88rem;"><span style="font-family:var(--mono); color:var(--text-muted);">internal</span> → <strong>this recording</strong> · The label <code>Latam Gate Staff (Acuser)</code> flags the staffer who later figures in the alleged-aggression accusation.</div>
+        </div>
+
+        <!-- SECTION: Annotations & Comments -->
+        <div class="section-head">
+            <h2>Annotations & Comments</h2>
+            <p>Key forensic annotations for this audio recording.</p>
+        </div>
+        <div class="notes-panel">
+            <div class="notes-head">
+                <span class="notes-label">Forensic Notes</span>
+                <span class="notes-count">7 annotations</span>
+            </div>
+            <div class="notes-list">
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">Supports pattern of misleading passenger-facing information systems</span></div>
+                    <div class="note-body">Boarding display showed 'embarcando' (boarding) when boarding had not actually begun — staff confirmed 'ah no, en unos minutos'</div>
+                </div>
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">F-005 (documentation-refusal pattern)</span></div>
+                    <div class="note-body">Staff provided no written documentation to support the distinction between 'boarding time' and 'presentation time' despite passenger's direct request</div>
+                </div>
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">Establishes emotional/physical toll caused by misleading boarding-time display</span></div>
+                    <div class="note-body">Passenger had to 'correr y pelear con PDI' (run and fight with immigration) to reach the gate because the app showed boarding had started when it hadn't</div>
+                </div>
+                <div class="note-card note-admission">
+                    <div class="note-meta"><span class="note-type">Admission</span><span class="note-author"></span><span class="note-seg">Staff admission of system deficiency; captured on recording</span></div>
+                    <div class="note-body">Staff laughed and agreed ('Claro') when passenger called the system 'estupido' — implicit acknowledgment of the misleading practice</div>
+                </div>
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">System-vs-reality discrepancy acknowledged by LATAM personnel</span></div>
+                    <div class="note-body">Staff 2 admitted the system time differs from what passengers see: 'Ellos tienen otro tiempo al que le sale acá en su teléfono'</div>
+                </div>
+                <div class="note-card note-admission">
+                    <div class="note-meta"><span class="note-type">Admission</span><span class="note-author"></span><span class="note-seg">Direct staff admission that the boarding-time display system is incorrect</span></div>
+                    <div class="note-body">Staff conceded the system was not correct: 'ah no po, no ta correcto'</div>
+                </div>
+                <div class="note-card">
+                    <div class="note-meta"><span class="note-type">Key Point</span><span class="note-author"></span><span class="note-seg">F-003 (manufactured pretext pattern) — the boarding-time display may serve as part of a broader system of passenger misinformation</span></div>
+                    <div class="note-body">Passenger characterized the boarding-time display practice as 'un engaño' (a deception) — a direct allegation of misleading conduct</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="page-footer">
+        <div class="main">
+            <p>Disconzi v. LATAM Airlines — Audio Evidence Archive</p>
+            <p class="mono">aeropuerto_STG_2.m4a · 4m 42.688s · July 05, 2024 · 13:08:00</p>
+            <p style="margin-top:8px;">This page constitutes direct audio evidence for pending legal proceedings.</p>
+        </div>
+    </footer>
+</div>
+
+<!-- VIOLATION MODAL -->
+<div class="modal-overlay" id="violationModal">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-header-body">
+                <div class="modal-type-badge" id="modalBadge"></div>
+                <div class="modal-title" id="modalTitle"></div>
+                <div class="modal-audio-ref" id="modalAudioRef">Evidence: aeropuerto_STG_2</div>
+            </div>
+            <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+            <span class="modal-footer-note" id="modalFooterNote"></span>
+            <button class="modal-download-btn" onclick="downloadViolationJSON()">Download JSON</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        var modalData = {
+            v1: { badge: 'Lie', badgeClass: 'type-primary', title: 'L-1: "Es su presentación" — misrepresentation of boarding screen', footer: 'Anchor: seg 3, 20, 25, 42', body: `<div class="modal-status"><span class="modal-status-text">Status: Demonstrably false — contradicted by own admission at seg 59</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">38.00s – 39.50s</div><div class="modal-segment-speaker">Latam Gate Staff</div><div class="modal-segment-text">"es su presentación"</div></div><div class="modal-segment"><div class="modal-segment-time">229.10s – 231.00s</div><div class="modal-segment-speaker">Latam Gate Staff</div><div class="modal-segment-text">"Ah no po, no esta correcto."</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">LPDC Art. 3 lit. b</span> <span class="jurisdiction-article">LPDC Art. 28</span> <span class="jurisdiction-article">CACH Art. 133A</span></span></div></div></div><div class="modal-section"><div class="modal-section-label">Cross-References</div><div class="modal-xrefs"><span class="xref-tag">LPDC-MISLEADING-DISPLAY</span><span class="xref-tag">CACH-INFO-133A</span></div></div>` },
+            v2: { badge: 'Lie', badgeClass: 'type-primary', title: 'L-2: "Comenzamos el embarco 40 minutos antes" — false pretext', footer: 'Anchor: seg 18 vs 34', body: `<div class="modal-status"><span class="modal-status-text">Status: Demonstrably false — contradicted by own statement at seg 34</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">75.00s – 78.90s</div><div class="modal-segment-speaker">Latam Gate Staff (Acuser)</div><div class="modal-segment-text">"nosotros comenzamos el embarco 40 minutos antes de la salida del avion"</div></div><div class="modal-segment"><div class="modal-segment-time">146.70s – 149.60s</div><div class="modal-segment-speaker">Latam Gate Staff (Acuser)</div><div class="modal-segment-text">"Mira, en este minuto nosotros vamos a empezar el embarco"</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">LPDC Art. 12</span> <span class="jurisdiction-article">LPDC Art. 3 lit. b</span></span></div></div></div><div class="modal-section"><div class="modal-section-label">Cross-References</div><div class="modal-xrefs"><span class="xref-tag">LPDC-PROFESSIONALISM-12</span></div></div>` },
+            v3: { badge: 'Lie', badgeClass: 'type-primary', title: 'L-3: Internally contradictory equivocation on boarding time', footer: 'Anchor: seg 28', body: `<div class="modal-status"><span class="modal-status-text">Status: Internally contradictory — wilful equivocation</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">104.69s – 109.60s</div><div class="modal-segment-speaker">Latam Gate Staff (Acuser)</div><div class="modal-segment-text">"Ahí nos sale la hora del embarque. La hora del embarque nosotros la decimos acá. Pero eso es por hora de presentación"</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">LPDC Art. 3 lit. b</span> <span class="jurisdiction-article">LPDC Art. 12</span></span></div></div></div><div class="modal-section"><div class="modal-section-label">Cross-References</div><div class="modal-xrefs"><span class="xref-tag">LPDC-MISLEADING-DISPLAY</span></div></div>` },
+            v4: { badge: 'Contradiction', badgeClass: 'type-procedural', title: 'C-1: Screen vs. verbal claim', footer: 'Anchor: seg 4 vs 3, 20', body: `<div class="modal-status"><span class="modal-status-text">Status: Direct sensory contradiction</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">41.54s – 44.53s</div><div class="modal-segment-speaker">[[SPK-passenger-leandro]]</div><div class="modal-segment-text">"allí está diciendo que ya está embarcando"</div></div><div class="modal-segment"><div class="modal-segment-time">38.00s – 39.50s</div><div class="modal-segment-speaker">Latam Gate Staff</div><div class="modal-segment-text">"es su presentación"</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">LPDC Art. 3 lit. b</span></span></div></div></div>` },
+            v5: { badge: 'Contradiction', badgeClass: 'type-procedural', title: 'C-2: 40-minute rule not applied', footer: 'Anchor: seg 34 vs 18', body: `<div class="modal-status"><span class="modal-status-text">Status: Arithmetic contradiction</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">75.00s – 78.90s</div><div class="modal-segment-speaker">Latam Gate Staff (Acuser)</div><div class="modal-segment-text">"nosotros comenzamos el embarco 40 minutos antes de la salida del avion"</div></div><div class="modal-segment"><div class="modal-segment-time">146.70s – 149.60s</div><div class="modal-segment-speaker">Latam Gate Staff (Acuser)</div><div class="modal-segment-text">"Mira, en este minuto nosotros vamos a empezar el embarco"</div></div></div></div>` },
+            v6: { badge: 'Contradiction', badgeClass: 'type-procedural', title: 'C-3: Staff admission vs. earlier defence', footer: 'Anchor: seg 59 vs 3, 20', body: `<div class="modal-status"><span class="modal-status-text">Status: Direct contradiction between staff statements</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">210.00s – 214.00s</div><div class="modal-segment-speaker">Latam Gate Staff</div><div class="modal-segment-text">"Ellos tienen otro tiempos al que les sale acá en su teléfono."</div></div><div class="modal-segment"><div class="modal-segment-time">229.10s – 231.00s</div><div class="modal-segment-speaker">Latam Gate Staff</div><div class="modal-segment-text">"Ah no po, no esta correcto."</div></div></div></div>` },
+            v7: { badge: 'Contradiction', badgeClass: 'type-procedural', title: 'C-4: Delay acknowledged vs. "estamos bien en la hora"', footer: 'Anchor: seg 57 vs 17', body: `<div class="modal-status"><span class="modal-status-text">Status: Operational contradiction</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">73.00s – 74.90s</div><div class="modal-segment-speaker">NEW_SPEAKER</div><div class="modal-segment-text">"Estamos bien en la hora del embarque,"</div></div><div class="modal-segment"><div class="modal-segment-time">219.80s – 224.50s</div><div class="modal-segment-speaker">Latam Gate Staff</div><div class="modal-segment-text">"Claro! A veces tienen que esperar a que llegue toda la tripulación y a que salgan todos los pasajeros"</div></div></div></div>` },
+            v8: { badge: 'Violation', badgeClass: 'type-primary', title: 'PV-1: Misleading / Deceptive Information', footer: 'Anchor: Throughout recording', body: `<div class="modal-status"><span class="modal-status-text">Status: Primary evidence — confirmed by staff admission</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">41.54s – 44.53s</div><div class="modal-segment-speaker">[[SPK-passenger-leandro]]</div><div class="modal-segment-text">"allí está diciendo que ya está embarcando"</div></div><div class="modal-segment"><div class="modal-segment-time">229.10s – 231.00s</div><div class="modal-segment-speaker">Latam Gate Staff</div><div class="modal-segment-text">"Ah no po, no esta correcto."</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">LPDC Art. 12</span> <span class="jurisdiction-article">LPDC Art. 23</span> <span class="jurisdiction-article">LPDC Art. 24</span> <span class="jurisdiction-article">LPDC Art. 28</span></span></div></div></div><div class="modal-section"><div class="modal-section-label">Cross-References</div><div class="modal-xrefs"><span class="xref-tag">LPDC-MISLEADING-DISPLAY</span><span class="xref-tag">CACH-INFO-133A</span></div></div>` },
+            v9: { badge: 'Violation', badgeClass: 'type-primary', title: 'PV-2: Failure to Inform Passengers of Delays', footer: 'Anchor: seg 30, 43–44', body: `<div class="modal-status"><span class="modal-status-text">Status: Primary evidence — passenger statement corroborated by staff admission</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">113.00s – 125.00s</div><div class="modal-segment-speaker">[[SPK-passenger-leandro]]</div><div class="modal-segment-text">"la Latam podría, pero yo sé por qué no lo hace, que no está avisando los atrasos"</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">LPDC Art. 23 bis</span> <span class="jurisdiction-article">CACH Art. 133A</span></span></div><div class="jurisdiction-pill"><span class="jurisdiction-name">Brazil</span><span class="jurisdiction-laws"><span class="jurisdiction-article">ANAC Res. 400/2016</span></span></div></div></div>` },
+            v10: { badge: 'Analysis', badgeClass: 'type-procedural', title: 'PV-3: Systemic Misrepresentation / "Manufactured Pretext"', footer: 'Anchor: Throughout recording', body: `<div class="modal-status"><span class="modal-status-text">Status: Inference from recorded pattern</span></div><div class="modal-section"><div class="modal-section-label">Relevant Segments</div><div class="modal-segments"><div class="modal-segment"><div class="modal-segment-time">205.00s – 207.00s</div><div class="modal-segment-speaker">[[SPK-passenger-leandro]]</div><div class="modal-segment-text">"Mira, yo se. pero es como, es un engaño."</div></div></div></div><div class="modal-section"><div class="modal-section-label">Jurisdictions & Provisions</div><div class="modal-jurisdictions"><div class="jurisdiction-pill"><span class="jurisdiction-name">Chile</span><span class="jurisdiction-laws"><span class="jurisdiction-article">LPDC Art. 3 lit. b</span> <span class="jurisdiction-article">LPDC Art. 28</span> <span class="jurisdiction-article">CACH Art. 133A</span></span></div></div></div>` }
+        };
+        var activeVid = null;
+        window.openModal = function(vid) { var d = modalData[vid]; if (!d) return; activeVid = vid; document.getElementById('modalBadge').textContent = d.badge; document.getElementById('modalBadge').className = 'modal-type-badge ' + d.badgeClass; document.getElementById('modalTitle').textContent = d.title; document.getElementById('modalBody').innerHTML = d.body; document.getElementById('modalFooterNote').textContent = d.footer; document.getElementById('modalAudioRef').textContent = 'Evidence: aeropuerto_STG_2'; document.getElementById('violationModal').classList.add('active'); document.body.style.overflow = 'hidden'; };
+        window.closeModal = function() { document.getElementById('violationModal').classList.remove('active'); document.body.style.overflow = ''; activeVid = null; };
+        window.downloadViolationJSON = function() { if (!activeVid) return; var blob = new Blob([JSON.stringify(modalData[activeVid] || {}, null, 2)], { type: 'application/json' }); var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = activeVid + '.json'; a.click(); };
+        document.getElementById('violationModal').addEventListener('click', function(e) { if (e.target === this) window.closeModal(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') window.closeModal(); });
+    })();
+</script>
+<script src="/case_files/02-transcripts/transcripts_rendered/audio_player.js"></script>
+<div class="pinned-nav"><a class="pinned-nav-link" href="../index.html">&larr; Case Index</a><span class="pinned-nav-label">Disconzi v. LATAM Airlines</span></div>
+</body>
+</html>

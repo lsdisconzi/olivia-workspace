@@ -70,6 +70,13 @@ if str(PROJECT_ROOT) not in sys.path:
 from src.orchestration_contracts import build_agent_prompt, build_orchestration_contract_bundle, build_orchestration_contract_report
 from src.runtime_config import bootstrap_environment
 
+# Marked-segments compilation builder (importable module in scripts/). It pulls
+# in render_transcript helpers internally, so importing it here is safe.
+from scripts.build_compilation import (  # noqa: E402
+    build_compilation_html,
+    collect_marked_entries,
+)
+
 # ── MIME type extensions ──────────────────────────────────────────────────────
 mimetypes.add_type('model/gltf-binary', '.glb')
 mimetypes.add_type('model/gltf+json',   '.gltf')
@@ -13210,6 +13217,12 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._craudio_config_get()
         elif raw_path == "/get_notes":
             self._get_notes_get()
+        elif raw_path == "/get_segment_marks":
+            self._get_segment_marks_get()
+        elif raw_path == "/api/compilations/marked":
+            self._compilation_marked_get()
+        elif raw_path == "/api/compilations":
+            self._compilation_list_get()
         elif raw_path.startswith("/api/"):
             self._api_get(raw_path)
         else:
@@ -13327,6 +13340,10 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             self._add_note_post()
         elif raw_path == "/delete_note":
             self._delete_note_post()
+        elif raw_path == "/toggle_segment_mark":
+            self._toggle_segment_mark_post()
+        elif raw_path == "/api/compilations":
+            self._compilation_create_post()
         elif raw_path == "/api/craudio/import":
             self._craudio_import_post()
         elif raw_path == "/api/llm/completions":
@@ -13355,6 +13372,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         # ── RunPod Workspace API ───────────────────────────────────────────────────
         if raw_path.startswith("/api/runpod/workspaces/"):
             self._runpod_workspace_delete(raw_path)
+            return
+        # ── Marked-segments Compilations API ──────────────────────────────────────
+        comp_del_match = re.match(r"^/api/compilations/([^/]+)/?$", raw_path)
+        if comp_del_match:
+            self._compilation_delete(urllib.parse.unquote(comp_del_match.group(1)))
             return
         if raw_path.startswith("/api/projects/"):
             self._projects_api_delete(raw_path)
@@ -18980,6 +19002,52 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         fp = self._notes_file_path(stem)
         fp.write_text(json.dumps(notes, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    def _segment_marks_file_path(self, stem: str) -> Path:
+        marks_dir = Olivia_ROOT / "data" / "segment_marks"
+        marks_dir.mkdir(parents=True, exist_ok=True)
+        safe = re.sub(r"[^\w\-.]", "_", stem)
+        return marks_dir / f"{safe}.json"
+
+    def _load_segment_marks(self, stem: str) -> list[str]:
+        fp = self._segment_marks_file_path(stem)
+        if not fp.is_file():
+            return []
+        try:
+            data = json.loads(fp.read_text(encoding="utf-8"))
+            return [str(item) for item in data if isinstance(item, (int, str))] if isinstance(data, list) else []
+        except Exception:
+            return []
+
+    def _save_segment_marks(self, stem: str, marks: list[str]):
+        fp = self._segment_marks_file_path(stem)
+        fp.write_text(json.dumps(sorted(set(marks), key=int), indent=2) + "\n", encoding="utf-8")
+
+    def _get_segment_marks_get(self):
+        qs = urllib.parse.urlparse(self.path).query
+        params = urllib.parse.parse_qs(qs)
+        stem = str((params.get("stem", [""]) or [""])[0]).strip()
+        if not stem:
+            self._json_response({"ok": False, "error": "stem query param required"}, 400)
+            return
+        self._json_response({"ok": True, "marks": self._load_segment_marks(stem)})
+
+    def _toggle_segment_mark_post(self):
+        body = self._read_body()
+        stem = str(body.get("stem", "")).strip()
+        segment = str(body.get("segment", "")).strip()
+        if not stem or not segment or not segment.isdigit():
+            self._json_response({"ok": False, "error": "stem and numeric segment are required"}, 400)
+            return
+        marks = self._load_segment_marks(stem)
+        if segment in marks:
+            marks.remove(segment)
+            marked = False
+        else:
+            marks.append(segment)
+            marked = True
+        self._save_segment_marks(stem, marks)
+        self._json_response({"ok": True, "segment": segment, "marked": marked})
+
     def _add_note_post(self):
         body = self._read_body()
         stem = str(body.get("stem", "")).strip()
@@ -19022,6 +19090,156 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         filtered = [n for n in notes if n.get("id") != note_id]
         self._save_notes(stem, filtered)
         self._json_response({"ok": True})
+
+    # ── Marked-segments Compilations API ──────────────────────────────────────
+    # A "compilation" is a named HTML page that gathers the transcript segments
+    # the user marked (★) across the individual rendered transcript pages,
+    # orders them chronologically across all source recordings, and keeps a
+    # Play button per segment so each clip can be heard in place.
+    def _compilation_paths(self) -> dict:
+        """Resolve the LA8159 transcript + compilation directories."""
+        case_root = SHARED_CASES_ROOT / "LA8159"
+        transcripts_dir = case_root / "02-transcripts"
+        source_dir = transcripts_dir / "I-002"
+        rendered_dir = transcripts_dir / "transcripts_rendered"
+        return {
+            "case_root": case_root,
+            "source_dir": source_dir,
+            "rendered_dir": rendered_dir,
+            "audio_map_path": rendered_dir / "audio_map.json",
+            "out_dir": rendered_dir / "compilations",
+        }
+
+    def _compilation_audio_map(self) -> dict:
+        p = self._compilation_paths()["audio_map_path"]
+        if not p.is_file():
+            return {}
+        try:
+            data = json.loads(p.read_text("utf-8"))
+            return data if isinstance(data, dict) else {}
+        except Exception:
+            return {}
+
+    def _compilation_marks_by_stem(self) -> dict:
+        """Load every segment-marks file keyed by stem (audio_id)."""
+        marks_dir = Olivia_ROOT / "data" / "segment_marks"
+        marks_by_stem: dict = {}
+        if not marks_dir.is_dir():
+            return marks_by_stem
+        for fp in sorted(marks_dir.glob("*.json")):
+            try:
+                data = json.loads(fp.read_text("utf-8"))
+            except Exception:
+                continue
+            if isinstance(data, list):
+                marks_by_stem[fp.stem] = [str(m) for m in data]
+        return marks_by_stem
+
+    def _compilation_marked_get(self):
+        """GET /api/compilations/marked — all marked segments across pages.
+
+        Returns pages grouped by source stem (audio recording), each with the
+        full segment data + resolved audio URL so the picker UI can let the
+        user choose which marked segments to include.
+        """
+        paths = self._compilation_paths()
+        if not paths["source_dir"].is_dir():
+            self._json_response({"ok": True, "pages": [], "total": 0})
+            return
+        audio_map = self._compilation_audio_map()
+        marks_by_stem = self._compilation_marks_by_stem()
+        entries = collect_marked_entries(paths["source_dir"], audio_map, marks_by_stem)
+        by_stem: dict = {}
+        for e in entries:
+            by_stem.setdefault(e["stem"], []).append(e)
+        pages = []
+        for stem, items in by_stem.items():
+            first = items[0]
+            pages.append({
+                "stem": stem,
+                "audio_id": first.get("audio_id", stem),
+                "title": first.get("title", ""),
+                "subtitle": first.get("subtitle", ""),
+                "narrative_id": first.get("narrative_id", ""),
+                "transcript_id": first.get("transcript_id", ""),
+                "chronological_order": first.get("chronological_order", 0),
+                "recording_datetime": first.get("recording_datetime", ""),
+                "segments": items,
+            })
+        self._json_response({"ok": True, "pages": pages, "total": len(entries)})
+
+    def _compilation_list_get(self):
+        """GET /api/compilations — list existing compilation HTML files."""
+        out_dir = self._compilation_paths()["out_dir"]
+        items = []
+        if out_dir.is_dir():
+            for fp in sorted(out_dir.glob("*.html")):
+                items.append({
+                    "name": fp.stem,
+                    "filename": fp.name,
+                    "bytes": fp.stat().st_size,
+                    "url": "/case_files/02-transcripts/transcripts_rendered/compilations/" + fp.name,
+                })
+        self._json_response({"ok": True, "compilations": items})
+
+    def _compilation_create_post(self):
+        """POST /api/compilations — create a compilation from chosen picks.
+
+        Body: {name, title?, picks: [{stem, segment}, ...]}. Only the picked
+        marked segments are included; they are re-ordered chronologically.
+        """
+        body = self._read_body()
+        name = str(body.get("name", "")).strip()
+        title = str(body.get("title", "")).strip() or name
+        picks = body.get("picks")
+        if not name:
+            self._json_response({"ok": False, "error": "name is required"}, 400)
+            return
+        if not isinstance(picks, list) or not picks:
+            self._json_response({"ok": False, "error": "picks (list of {stem, segment}) is required"}, 400)
+            return
+        marks_by_stem: dict = {}
+        for pick in picks:
+            if not isinstance(pick, dict):
+                continue
+            stem = str(pick.get("stem", "")).strip()
+            seg = str(pick.get("segment", "")).strip()
+            if stem and seg.isdigit():
+                marks_by_stem.setdefault(stem, []).append(seg)
+        if not marks_by_stem:
+            self._json_response({"ok": False, "error": "no valid picks provided"}, 400)
+            return
+        paths = self._compilation_paths()
+        audio_map = self._compilation_audio_map()
+        entries = collect_marked_entries(paths["source_dir"], audio_map, marks_by_stem)
+        if not entries:
+            self._json_response({"ok": False, "error": "no marked segments matched the picks"}, 400)
+            return
+        created_label = datetime.now(timezone.utc).strftime("%B %d, %Y")
+        html_str = build_compilation_html(
+            entries, compilation_title=title, created_label=created_label, audio_map=audio_map
+        )
+        safe_name = re.sub(r"[^\w\-]+", "_", name).strip("_") or "compilation"
+        out_dir = paths["out_dir"]
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_path = out_dir / f"{safe_name}.html"
+        out_path.write_text(html_str, encoding="utf-8")
+        url = "/case_files/02-transcripts/transcripts_rendered/compilations/" + out_path.name
+        self._json_response({"ok": True, "name": safe_name, "url": url, "segments": len(entries)})
+
+    def _compilation_delete(self, name: str):
+        """DELETE /api/compilations/<name> — delete a compilation file."""
+        safe = re.sub(r"[^\w\-]+", "_", name).strip("_")
+        if not safe:
+            self._json_response({"ok": False, "error": "invalid name"}, 400)
+            return
+        out_dir = self._compilation_paths()["out_dir"]
+        target = out_dir / f"{safe}.html"
+        if not target.is_file():
+            self._json_response({"ok": False, "error": "compilation not found"}, 404)
+            return
+        target.unlink()
+        self._json_response({"ok": True, "deleted": safe})
 
     # ── RunPod Workspace API ───────────────────────────────────────────────────
     def _runpod_create_workspace_post(self):

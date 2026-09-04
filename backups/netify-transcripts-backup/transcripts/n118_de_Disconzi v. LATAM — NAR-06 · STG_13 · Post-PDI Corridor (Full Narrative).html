@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="clean-professional">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disconzi v. LATAM — NAR-06 · STG_13 · Post-PDI Corridor (Full Narrative)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8f7f4; --bg-card: #ffffff; --bg-card-hover: #f2f0ea; --bg-surface: #f1efe8;
+            --border: #e1ddd1; --border-strong: #c7c1b0; --text-primary: #1b1c1e; --text-secondary: #52555c;
+            --text-muted: #8a8b87; --accent: #24405f; --accent-dim: rgba(36, 64, 95, 0.07);
+            --status-flag: #7a3733; --status-flag-dim: rgba(122, 55, 51, 0.08); --status-analysis: #8a6a2c;
+            --status-analysis-dim: rgba(138, 106, 44, 0.09); --status-note: #3f6b4f; --status-note-dim: rgba(63, 107, 79, 0.08);
+            --mono: 'JetBrains Mono', monospace; --serif: 'Source Serif 4', Georgia, serif; --sans: 'Inter', -apple-system, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--sans); background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; padding-bottom: 60px; }
+        a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+        code { font-family: var(--mono); font-size: 0.85em; color: var(--accent); background: var(--bg-surface); padding: 1px 6px; border-radius: 2px; }
+        .masthead { border-bottom: 1px solid var(--border); padding: 44px 0 32px; }
+        .masthead-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .masthead-back { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; display: inline-block; }
+        .masthead-back:hover { color: var(--accent); text-decoration: none; }
+        .masthead-badge { display: inline-block; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-strong); padding: 5px 12px; border-radius: 2px; margin-bottom: 20px; }
+        .masthead h1 { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 600; line-height: 1.25; margin-bottom: 10px; color: var(--text-primary); }
+        .masthead-sub { font-size: 0.96rem; color: var(--text-secondary); max-width: 760px; line-height: 1.7; }
+        .stats-bar { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stats-inner { max-width: 1180px; margin: 0 auto; padding: 0 32px; display: flex; gap: 0; flex-wrap: wrap; }
+        .stat-item { flex: 1 1 180px; padding: 18px 14px; border-right: 1px solid var(--border); }
+        .stat-item:last-child { border-right: none; }
+        .stat-val { font-family: var(--mono); font-size: 0.92rem; font-weight: 500; color: var(--text-primary); word-break: break-word; }
+        .stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 5px; }
+        .main { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+        .section-head { padding: 44px 0 18px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+        .section-head h2 { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; padding-bottom: 14px; }
+        .section-head p { color: var(--text-secondary); font-size: 0.9rem; padding-bottom: 16px; max-width: 760px; }
+        .transcript-list { display: flex; flex-direction: column; gap: 6px; padding-bottom: 8px; }
+        .cluster-block { margin-bottom: 20px; }
+        .cluster-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); }
+        .cluster-title.flag { color: var(--status-flag); }
+        .cluster-title.analysis { color: var(--status-analysis); }
+        .transcript-segment { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 13px 18px; }
+        .transcript-segment.seg-passenger { border-left-color: var(--accent); }
+        .transcript-segment.seg-other { border-left-style: dashed; border-left-color: var(--status-analysis); }
+        .transcript-segment.seg-staff { border-left-color: var(--status-flag); }
+        .transcript-segment .seg-time { font-family: var(--mono); font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.02em; }
+        .transcript-segment .seg-speaker { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+        .transcript-segment .seg-text { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65; font-style: italic; }
+        .transcript-segment .seg-actions { margin-top: 8px; display: flex; gap: 8px; }
+        .transcript-segment .seg-play-btn { font-family: var(--mono); font-size: 0.65rem; padding: 3px 9px; border-radius: 2px; background: transparent; color: var(--accent); border: 1px solid var(--accent); cursor: pointer; transition: background-color 0.15s, color 0.15s; font-weight: 500; margin-right: 8px; line-height: 1.4; }
+        .transcript-segment .seg-play-btn:hover { background-color: var(--accent-dim); color: var(--accent); }
+        .cluster-reasoning { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; margin-top: 8px; padding: 10px 14px; background: var(--bg-surface); border-left: 3px solid var(--accent); border-radius: 3px; }
+        .evidence-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .evidence-card { display: grid; grid-template-columns: 100px 1fr 150px; align-items: start; gap: 20px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 18px 22px; }
+        .ev-time-col { padding-top: 2px; }
+        .ev-time { font-family: var(--mono); font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
+        .ev-duration { font-family: var(--mono); font-size: 0.66rem; color: var(--text-muted); margin-top: 4px; }
+        .ev-body h3 { font-size: 0.94rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+        .ev-body .ev-summary { font-size: 0.86rem; color: var(--text-secondary); line-height: 1.68; }
+        .ev-provisions { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); margin-top: 10px; }
+        .ev-meta-col { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; text-align: right; }
+        .ev-type { font-family: var(--mono); font-size: 0.63rem; padding: 4px 9px; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; white-space: nowrap; }
+        .type-primary { background: var(--status-flag-dim); color: var(--status-flag); }
+        .type-procedural { background: var(--status-analysis-dim); color: var(--status-analysis); }
+        .type-analysis { background: var(--accent-dim); color: var(--accent); }
+        .notes-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px; margin-top: 12px; }
+        .notes-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+        .notes-label { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); }
+        .notes-count { font-family: var(--mono); font-size: 0.68rem; padding: 3px 9px; border-radius: 2px; border: 1px solid var(--border-strong); color: var(--text-muted); }
+        .notes-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .note-card { background: var(--bg-surface); border: 1px solid var(--border); border-left: 3px solid var(--border-strong); border-radius: 3px; padding: 13px 16px; }
+        .note-card.note-admission { border-left-color: var(--status-flag); }
+        .note-card.note-xref { border-left-color: var(--accent); }
+        .note-meta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 7px; }
+        .note-type { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 2px; background: var(--bg-card); border: 1px solid var(--border-strong); color: var(--text-muted); }
+        .note-card.note-admission .note-type { color: var(--status-flag); border-color: var(--status-flag); }
+        .note-card.note-xref .note-type { color: var(--accent); border-color: var(--accent); }
+        .note-author { font-size: 0.86rem; font-weight: 600; color: var(--text-primary); }
+        .note-seg { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); margin-left: auto; }
+        .note-body { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; white-space: pre-wrap; }
+        .page-footer { border-top: 1px solid var(--border); padding: 28px 0; text-align: center; margin-top: 48px; }
+        .page-footer p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.8; }
+        .page-footer .mono { font-family: var(--mono); }
+        @media (max-width: 900px) { .evidence-card { grid-template-columns: 1fr; gap: 8px; } }
+        @media (max-width: 600px) { .masthead { padding: 28px 0 22px; } .masthead-inner, .main { padding: 0 16px; } }
+    </style>
+  <meta name="n118-translation" content="true">
+  <meta name="translation-language" content="de">
+  <meta name="translation-label" content="N118 German translation copy">
+</head>
+<body>
+  <div style="position:sticky;top:0;z-index:999;background:#f4efe6;border-bottom:1px solid #d7cdb9;padding:10px 16px;font:600 12px 'Inter',sans-serif;letter-spacing:0.08em;text-transform:uppercase;color:#4a3b2a;">N118 German translation copy</div>
+
+<div class="page">
+    <header class="masthead">
+        <div class="masthead-inner">
+            <a class="masthead-back" href="../index.html">&larr; Evidence Archive · Index</a>
+            <div class="masthead-badge">Narrative · NAR-06 · STG_13 · Post-PDI Corridor</div>
+            <h1>Recommitting to a Manufactured Pretext: The Corridor Confrontation After PDI</h1>
+            <p class="masthead-sub">Full narrative integrating transcript, legal reasoning, and documentary significance. This recording occurs immediately after the PDI office phase and captures the LATAM security chief re-committing to a new explanation while refusing written reasons and denying the passenger's right to challenge the basis of the removal.</p>
+        </div>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stats-inner">
+            <div class="stat-item"><div class="stat-val">aeropuerto_STG_13</div><div class="stat-label">Audio file</div></div>
+            <div class="stat-item"><div class="stat-val">~2 min</div><div class="stat-label">Duration</div></div>
+            <div class="stat-item"><div class="stat-val">2024-07-05 · 15:50</div><div class="stat-label">Date</div></div>
+            <div class="stat-item"><div class="stat-val">SCL · corridor, post-PDI office</div><div class="stat-label">Location</div></div>
+            <div class="stat-item"><div class="stat-val">es-CL</div><div class="stat-label">Language</div></div>
+        </div>
+    </div>
+
+    <main class="main">
+        <div class="section-head">
+            <h2>Recording identification & purpose</h2>
+            <p>STG-13 is the corridor confrontation that follows the PDI review. It is not a new independent event so much as the airline-side ratification of the same failed narrative. Barraza shifts from the earlier aggression theory to a new ground — “usted ingresó a la fuerza al avión” — while refusing to produce any written reason and denying the passenger any meaningful route to challenge it.</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:32px;">
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; padding:18px 22px;">
+                <div style="font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Case / Narrative ID</div>
+                <div><strong>LA8159</strong> · <code>I-002_07_NAR-06_STG_13_post_PDI_corridor</code> · Source: <code>_shared/cases/la8159/02-transcripts/I-002/I-002_07_NAR-06_STG_13_post_PDI_corridor.json</code></div>
+            </div>
+            <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:4px; padding:18px 22px;">
+                <div style="font-family:var(--mono); font-size:0.7rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Key evidentiary fact</div>
+                <p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.7;">After the PDI review has already undermined the aggression narrative, Barraza tells the passenger that no document exists, denies the passenger a written explanation, and gives yet another reason: that he “ingresó a la fuerza al avión.” This is a manufactured pretext layered over a refusal to explain and a refusal to disclose evidence.</p>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>Methodology binding</h2>
+            <p>The page reads the corridor exchange as a continuation of the same chain: false accusation, institutional reframe, refusal to disclose evidence, and denial of a written basis. Sentence fragments are preserved in source form and contextualized with the prior exculpatory record, including PDI review of the camera and the earlier denial of aggression.</p>
+        </div>
+
+        <div class="section-head">
+            <h2>Segment-by-segment forensic walk-through</h2>
+            <p>Chronological analysis of the core exchange: the arrival of new pretext, the camera claim, the reduction to “porque tú no colaboraste,” the denial of written reasons, and the attempt to impose a ban without lawful basis.</p>
+        </div>
+
+        <div class="transcript-list">
+            <div class="cluster-block">
+                <h3 class="cluster-title flag">Sub-segment 1 — The new reason appears after the PDI phase</h3>
+                <div class="transcript-segment seg-passenger" id="seg-1">
+                    <div class="seg-time">90.0s → 103.2s</div>
+                    <div class="seg-speaker">Leandro Disconzi</div>
+                    <p class="seg-text">“No, no, porque necesito algo por escrito para saber por qué me sacaron del vuelo. Porque ahora voy a ir atrás de un otro pasaje.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-2">
+                    <div class="seg-time">103.8s → 105.5s</div>
+                    <div class="seg-speaker">Joaquín Barraza</div>
+                    <p class="seg-text">“¿Porque no respetó las instrucciones del personal?”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="cluster-reasoning">
+                    <strong>Forensic reasoning:</strong> This is the first clear evidence that the removal rationale is shifting again. The passenger seeks a written basis; Barraza responds with a new and unstable reason, replacing the earlier aggression theory with a vague claim that the passenger failed to comply with staff instructions. That is a classic post-hoc rationalization pattern.
+                </div>
+            </div>
+
+            <div class="cluster-block">
+                <h3 class="cluster-title analysis">Sub-segment 2 — The “camera” claim is asserted without disclosure</h3>
+                <div class="transcript-segment seg-staff" id="seg-3">
+                    <div class="seg-time">109.7s → 110.5s</div>
+                    <div class="seg-speaker">Joaquín Barraza</div>
+                    <p class="seg-text">“Yo lo vi en cámara.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-other" id="seg-4">
+                    <div class="seg-time">113.8s → 117.0s</div>
+                    <div class="seg-speaker">Leandro Disconzi</div>
+                    <p class="seg-text">“Yo creo que tenemos que volver a hablar con la policía, porque la policía la checo.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-5">
+                    <div class="seg-time">117.0s → 130.0s</div>
+                    <div class="seg-speaker">Joaquín Barraza</div>
+                    <p class="seg-text">“No te puedo mostrar la cámara.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="cluster-reasoning">
+                    <strong>Forensic reasoning:</strong> Barraza claims to have seen the conduct on camera, then refuses to show the footage. This is a textbook asymmetry of access: the decision-maker asserts an evidentiary basis but denies the passenger the chance to inspect or test it. In the prior record, PDI had already reviewed camera footage and found no aggression. This claim is therefore not a basis; it is a barrier.
+                </div>
+            </div>
+
+            <div class="cluster-block">
+                <h3 class="cluster-title flag">Sub-segment 3 — “No hay nada por escrito” and the refusal to document</h3>
+                <div class="transcript-segment seg-passenger" id="seg-6">
+                    <div class="seg-time">126.5s → 130.9s</div>
+                    <div class="seg-speaker">Leandro Disconzi</div>
+                    <p class="seg-text">“Sí, sí. Espera. Yo quiero por escrito por qué me sacaron del vuelo.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-7">
+                    <div class="seg-time">136.0s → 145.0s</div>
+                    <div class="seg-speaker">Joaquín Barraza</div>
+                    <p class="seg-text">“No hay nada por escrito.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-8">
+                    <div class="seg-time">145.0s → 170.0s</div>
+                    <div class="seg-speaker">Joaquín Barraza</div>
+                    <p class="seg-text">“No tengo nada que probarte.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="cluster-reasoning">
+                    <strong>Forensic reasoning:</strong> This is the central legal pivot. The passenger seeks a document, and the airline’s chief security person denies the existence of any written basis, then says there is nothing to prove. That is a burdenshift: the airline invokes a power asymmetry and attempts to convert the consumer’s demand for reason into an obligation to prove a negative. It is not a legal explanation; it is a refusal to explain.
+                </div>
+            </div>
+
+            <div class="cluster-block">
+                <h3 class="cluster-title analysis">Sub-segment 4 — The false pretext is reformulated as “ingresó a la fuerza”</h3>
+                <div class="transcript-segment seg-staff" id="seg-9">
+                    <div class="seg-time">198.0s → 205.0s</div>
+                    <div class="seg-speaker">Joaquín Barraza</div>
+                    <p class="seg-text">“Porque usted ingresó a la fuerza al avión.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-10">
+                    <div class="seg-time">205.0s → 210.0s</div>
+                    <div class="seg-speaker">Leandro Disconzi</div>
+                    <p class="seg-text">“Pruebame eso, pruebame.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="cluster-reasoning">
+                    <strong>Forensic reasoning:</strong> After several earlier justifications, the airline now anchors on a specifically different explanation: the passenger “ingresó a la fuerza al avión.” This is not a neutral procedural description. It is a re-labeled pretext designed to preserve the original removal decision after the earlier aggression theory has already been discredited. It is a manufactured explanation.
+                </div>
+            </div>
+
+            <div class="cluster-block">
+                <h3 class="cluster-title flag">Sub-segment 5 — The speaker attempts to punish and silence the passenger</h3>
+                <div class="transcript-segment seg-staff" id="seg-11">
+                    <div class="seg-time">214.0s → 223.0s</div>
+                    <div class="seg-speaker">Joaquín Barraza</div>
+                    <p class="seg-text">“Usted no entiende lo ridículo que usted está haciendo. 40 minutos. Usted es el ridículo que está haciendo el ridículo acá.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-passenger" id="seg-12">
+                    <div class="seg-time">224.0s → 232.0s</div>
+                    <div class="seg-speaker">Leandro Disconzi</div>
+                    <p class="seg-text">“¿Eso es porque yo soy inmigrante? … ¿Eso es racismo?”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="transcript-segment seg-staff" id="seg-13">
+                    <div class="seg-time">232.0s → 240.0s</div>
+                    <div class="seg-speaker">Joaquín Barraza</div>
+                    <p class="seg-text">“No tiene nada que ver con inmigrante. Pasamos 40 minutos arriba del avión explicándote y aun así quieres más explicaciones.”</p>
+                    <div class="seg-actions"><button type="button" class="seg-play-btn">▶ Play</button></div>
+                </div>
+                <div class="cluster-reasoning">
+                    <strong>Forensic reasoning:</strong> The refusal is not limited to the documents. The interaction becomes personal and dismissive. The passenger raises a discrimination question in the moment, and Barraza answers by once again reducing the passenger to ridicule rather than engaging the issue in good faith. Evidence of the asymmetry of power is in the tone itself.
+                </div>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>Evidence grid</h2>
+            <p>Core findings derived from the recorded corridor confrontation.</p>
+        </div>
+
+        <div class="evidence-grid">
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">103.8s</div><div class="ev-duration">~1.7s</div></div>
+                <div class="ev-body">
+                    <h3>New pretext appears after PDI review</h3>
+                    <div class="ev-summary">Barraza introduces a fresh ground — “porque no respetó las instrucciones del personal” — after the prior aggression theory already failed. This is a post-hoc shift designed to maintain the removal decision.</div>
+                    <div class="ev-provisions">CACH Art. 133 · LPDC Art. 3(e)</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-primary">Primary</div></div>
+            </div>
+
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">109–117s</div><div class="ev-duration">~7s</div></div>
+                <div class="ev-body">
+                    <h3>Camera claim asserted but not disclosed</h3>
+                    <div class="ev-summary">Barraza says he saw the conduct on camera, yet refuses to show it. The denial prevents assessment, testing, or rebuttal, which compounds the asymmetry in the process.</div>
+                    <div class="ev-provisions">LPDC Art. 50 · ACHR Art. 8</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-procedural">Procedural</div></div>
+            </div>
+
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">126–170s</div><div class="ev-duration">~44s</div></div>
+                <div class="ev-body">
+                    <h3>Documentation refusal and burden inversion</h3>
+                    <div class="ev-summary">The passenger asks for the written explanation and a copy; Barraza responds with “no hay nada por escrito” and “no tengo nada que probarte.” This is a refusal to document and a direct burden inversion.</div>
+                    <div class="ev-provisions">LPDC Art. 23 bis · CACH Art. 133B</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-analysis">Analysis</div></div>
+            </div>
+
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">198–240s</div><div class="ev-duration">~42s</div></div>
+                <div class="ev-body">
+                    <h3>Manufactured pretext is re-anchored and the passenger is dismissed</h3>
+                    <div class="ev-summary">Barraza narrows the case to “ingresó a la fuerza al avión,” then dismisses the passenger’s challenge and the discrimination question. This is a continuation of the same engineered position, not a proven legal basis.</div>
+                    <div class="ev-provisions">CONST Art. 19 Nº2 · Ley 20.609</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-primary">Primary</div></div>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>Key findings</h2>
+            <p>The most significant evidentiary point is that STG-13 is a corridor-level reassertion of the same narrative through a different formulation. It does not produce a valid lawful reason. It produces a series of refusals: camera refusal, written-document refusal, and symbolic intimidation.</p>
+        </div>
+
+        <div class="notes-panel">
+            <div class="notes-head">
+                <div class="notes-label">Forensic notes</div>
+                <div class="notes-count">5</div>
+            </div>
+            <div class="notes-list">
+                <div class="note-card note-admission">
+                    <div class="note-meta">
+                        <div class="note-type">Admission</div>
+                        <div class="note-author">Pretext switch</div>
+                        <div class="note-seg">103.8s</div>
+                    </div>
+                    <div class="note-body">Barraza introduces a fresh reason after the earlier aggression theory failed. That alone shows the rationale is not stable, canonical, or proven.</div>
+                </div>
+                <div class="note-card note-xref">
+                    <div class="note-meta">
+                        <div class="note-type">Evidence</div>
+                        <div class="note-author">Camera assertion</div>
+                        <div class="note-seg">109–117s</div>
+                    </div>
+                    <div class="note-body">The claim “yo lo vi en cámara” is rendered suspect because it is followed by a refusal to show the same footage.</div>
+                </div>
+                <div class="note-card note-admission">
+                    <div class="note-meta">
+                        <div class="note-type">Reason</div>
+                        <div class="note-author">Passenger</div>
+                        <div class="note-seg">126–170s</div>
+                    </div>
+                    <div class="note-body">The passenger formally requests the written explanation and a copy. The answer is not a document but a denial of the existence of any written basis.</div>
+                </div>
+                <div class="note-card note-xref">
+                    <div class="note-meta">
+                        <div class="note-type">Pattern</div>
+                        <div class="note-author">Institutional logic</div>
+                        <div class="note-seg">198–240s</div>
+                    </div>
+                    <div class="note-body">The narrative is re-centered around a new reason (“ingresó a la fuerza”) and then the passenger is dismissed and mocked rather than answered.</div>
+                </div>
+                <div class="note-card note-admission">
+                    <div class="note-meta">
+                        <div class="note-type">Outcome</div>
+                        <div class="note-author">Narrative synthesis</div>
+                        <div class="note-seg">Whole file</div>
+                    </div>
+                    <div class="note-body">STG-13 demonstrates that the airline’s removal narrative survives only by repeatedly changing form, denying material evidence, and refusing to document the basis of the action.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-head">
+            <h2>Legal summary</h2>
+            <p>This recording matters because it shows the airline-side narrative persisting after PDI review has already undermined the aggression theory. The legal defect is not simply the wrong reason; it is the refusal to show the evidence, the refusal to provide a written basis, and the refusal to allow the passenger to test the basis in a fair way.</p>
+        </div>
+
+        <div class="evidence-grid">
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">Core</div><div class="ev-duration">summary</div></div>
+                <div class="ev-body">
+                    <h3>Counter narrative survives by shifting grounds</h3>
+                    <div class="ev-summary">The reason changes from aggression to non-compliance to forced entry. The record shows a moving target, not a stable factual basis.</div>
+                    <div class="ev-provisions">LPDC Art. 3(e) · CACH Art. 133</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-primary">Primary</div></div>
+            </div>
+            <div class="evidence-card">
+                <div class="ev-time-col"><div class="ev-time">Process</div><div class="ev-duration">summary</div></div>
+                <div class="ev-body">
+                    <h3>Written basis is denied</h3>
+                    <div class="ev-summary">The passenger demands the reason and a copy. The answer is a flat denial, not a document. That omission is itself legally significant because it means the basis cannot be tested or responded to.</div>
+                    <div class="ev-provisions">LPDC Art. 23 bis · CONST Art. 19 N°3</div>
+                </div>
+                <div class="ev-meta-col"><div class="ev-type type-procedural">Procedural</div></div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <p class="mono">Narrative synthesis prepared from STG-13 transcript evidence, camera-review context, and corridor confrontation analysis.</p>
+            <p>Disconzi v. LATAM · LA8159 · NAR-06 · STG_13 · Post-PDI Corridor</p>
+        </div>
+    </main>
+</div>
+</body>
+</html>

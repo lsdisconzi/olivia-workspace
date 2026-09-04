@@ -15,10 +15,20 @@ Two modes:
 
 import json
 import os
+import re
 import sys
 import html
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
+
+LANGUAGE_OPTIONS = [
+    ("en", "English"),
+    ("es", "Español"),
+    ("it", "Italiano"),
+    ("pt-BR", "Português (Brasil)"),
+    ("de", "Deutsch"),
+    ("pl", "Polski"),
+]
 
 
 # ---------------------------------------------------------------------------
@@ -95,18 +105,86 @@ CSS_BODY = """
       padding: 0 32px;
     }
 
+    .masthead-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
     .masthead-back {
       font-family: var(--mono);
       font-size: 0.7rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 18px;
       display: inline-block;
     }
 
     .masthead-back:hover {
       color: var(--accent);
+      text-decoration: none;
+    }
+
+    .masthead-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
+
+    .language-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 4px;
+      padding: 6px 10px;
+      min-height: 36px;
+    }
+
+    .language-toggle label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .language-toggle select {
+      appearance: none;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 4px 18px 4px 4px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .masthead-full-narrative {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 9px 12px;
+      border-radius: 3px;
+      border: 1px solid var(--border-strong);
+      color: var(--accent);
+      background: var(--bg-card);
+      text-decoration: none;
+    }
+
+    .masthead-full-narrative:hover {
+      background: var(--accent-dim);
       text-decoration: none;
     }
 
@@ -239,6 +317,13 @@ CSS_BODY = """
       letter-spacing: 0.02em;
     }
 
+    .transcript-segment .seg-datetime {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--status-analysis);
+      margin-bottom: 5px;
+    }
+
     .transcript-segment .seg-speaker {
       font-size: 0.8rem;
       font-weight: 600;
@@ -276,6 +361,30 @@ CSS_BODY = """
       border-color: var(--accent);
     }
 
+    .transcript-segment .seg-mark-btn {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 3px 9px;
+      border-radius: 2px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+    }
+
+    .transcript-segment .seg-mark-btn:hover,
+    .transcript-segment .seg-mark-btn.is-marked {
+      color: var(--status-analysis);
+      border-color: var(--status-analysis);
+      background: var(--status-analysis-dim);
+    }
+
+    .transcript-segment.is-marked {
+      background: var(--status-analysis-dim);
+      border-left-color: var(--status-analysis);
+    }
+
     .transcript-segment .seg-play-btn {
       font-family: var(--mono);
       font-size: 0.65rem;
@@ -287,6 +396,8 @@ CSS_BODY = """
       cursor: pointer;
       transition: background-color 0.15s, color 0.15s;
       font-weight: 500;
+      margin-right: 8px;
+      line-height: 1.4;
     }
 
     .transcript-segment .seg-play-btn:hover {
@@ -798,7 +909,6 @@ CSS_BODY = """
       }
     }
 
-    @media (max-width: 600px) {
       .masthead {
         padding: 28px 0 22px;
       }
@@ -806,6 +916,15 @@ CSS_BODY = """
       .masthead-inner,
       .main {
         padding: 0 16px;
+      }
+
+      .masthead-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .language-toggle {
+        flex: 1;
       }
 
       .modal-overlay {
@@ -864,7 +983,6 @@ CSS_BODY = """
           display: none;
         }
       }
-    }
 """
 
 
@@ -947,6 +1065,33 @@ def format_timestamp(dt_str):
         return dt.strftime("%B %d, %Y &middot; %H:%M:%S")
     except (ValueError, TypeError):
         return dt_str
+
+
+def format_quote_datetime(dt_str, start_seconds=0):
+    """Format recording time in the local quote style.
+
+    If ``start_seconds`` is provided, it is added to the recording datetime so
+    each segment reflects the actual local time at which it was spoken.
+    """
+    if not dt_str:
+        return "Unknown date"
+    try:
+        dt = datetime.fromisoformat(str(dt_str).replace("Z", "+00:00"))
+        if start_seconds:
+            try:
+                dt = dt + timedelta(seconds=float(start_seconds))
+            except (ValueError, TypeError):
+                pass
+        hour = dt.strftime("%I").lstrip("0")
+        suffix = dt.strftime("%p").lower()
+        day = dt.day
+        if 10 <= day % 100 <= 20:
+            ordinal = "th"
+        else:
+            ordinal = {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+        return f"{day}{ordinal} {dt.strftime('%B %Y')} @ {hour}:{dt:%M}{suffix}"
+    except (ValueError, TypeError):
+        return str(dt_str)
 
 
 def get_jurisdiction_label(vid):
@@ -1119,9 +1264,193 @@ def build_violation_modal_entry(violation, vid, data):
 # HTML template builders
 # ---------------------------------------------------------------------------
 
-def build_head(title_text):
+def normalize_doc_key(text):
+    if not text:
+        return ""
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    text = re.sub(r"\b0+(\d+)\b", r"\1", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def build_match_tokens(text):
+    value = normalize_doc_key(text)
+    if not value:
+        return set()
+    tokens = value.split()
+    stop_words = {
+        "i", "disconzi", "v", "latam", "html", "full", "narrative",
+        "n118", "en", "es", "de", "it", "pl", "pt", "br", "stg", "nar",
+    }
+    cleaned = []
+    for token in tokens:
+        if token in stop_words:
+            continue
+        if token.isdigit():
+            cleaned.append(token)
+        elif token and token not in stop_words:
+            cleaned.append(token)
+    return set(cleaned)
+
+
+def compare_aliases(narrative_id, candidate_name):
+    narrative_norm = normalize_doc_key(narrative_id)
+    candidate_norm = normalize_doc_key(candidate_name)
+    if not narrative_norm or not candidate_norm:
+        return False
+
+    if narrative_norm in candidate_norm or candidate_norm in narrative_norm:
+        return True
+
+    narrative_tokens = build_match_tokens(narrative_id)
+    candidate_tokens = build_match_tokens(candidate_name)
+    if not narrative_tokens or not candidate_tokens:
+        return False
+
+    narrative_lower = narrative_norm.lower()
+    candidate_lower = candidate_norm.lower()
+
+    if "terminal" in narrative_lower and "terminal" in candidate_lower and "t2" in narrative_lower and "t2" in candidate_lower:
+        return True
+
+    if "pdi" in narrative_lower and "pdi" in candidate_lower and "8" in narrative_lower and "8" in candidate_lower:
+        if any(term in candidate_lower for term in ["identity", "control", "processing"]):
+            return True
+        if "processing" in narrative_lower and any(term in candidate_lower for term in ["identity", "control"]):
+            return True
+
+    aliases = {
+        "pdi processing": {"pdi", "processing"},
+        "pdi identity control": {"pdi", "identity", "control"},
+        "terminal internacional t2": {"terminal", "internacional", "t2"},
+        "terminal t2": {"terminal", "t2"},
+    }
+
+    for alias, alias_tokens in aliases.items():
+        if alias in narrative_lower and alias_tokens.issubset(candidate_tokens):
+            return True
+        if alias_tokens.issubset(narrative_tokens) and alias_tokens.issubset(candidate_tokens):
+            return True
+
+    if "counter" in narrative_lower and "counter" in candidate_lower and "terminal" not in narrative_lower and "terminal" not in candidate_lower:
+        return True
+
+    return narrative_tokens.issubset(candidate_tokens) or candidate_tokens.issubset(narrative_tokens)
+
+
+def is_narrative_page_name(name):
+    candidate = (name or "").lower()
+    if not candidate:
+        return False
+    if "full narrative" in candidate:
+        return True
+    if "narrative" in candidate:
+        return True
+    if "nar" in candidate and "story" not in candidate:
+        return True
+    return False
+
+
+def find_full_narrative_link(data, output_dir):
+    narrative_id = (data.get("narrative_id") or data.get("audio_id") or "").strip()
+    audio_id = (data.get("audio_id") or data.get("stem") or data.get("audio_file") or "").strip()
+    narrative_key = normalize_doc_key(narrative_id)
+    audio_key = normalize_doc_key(audio_id)
+    if not narrative_key and not audio_key:
+        return "../index.html"
+
+    narrative_tokens = build_match_tokens(narrative_id)
+    audio_tokens = build_match_tokens(audio_id)
+    if not narrative_tokens and not audio_tokens:
+        return "../index.html"
+
+    base_dir = Path(output_dir).resolve()
+    case_dir = next(
+      (candidate for candidate in [base_dir, *base_dir.parents] if candidate.parent.name == "cases"),
+      None,
+    )
+    search_dirs = [base_dir, base_dir.parent]
+    if case_dir:
+      search_dirs.extend([
+        case_dir / "02-transcripts" / "transcripts_rendered",
+        case_dir / "07-narratives",
+      ])
+
+    seen_dirs = set()
+    for search_dir in search_dirs:
+        resolved = str(search_dir.resolve())
+        if resolved in seen_dirs:
+            continue
+        seen_dirs.add(resolved)
+
+        candidates = sorted(
+            search_dir.rglob("*.html"),
+            key=lambda p: (0 if ("nar" in p.name.lower() or "narrative" in p.name.lower()) else 1, p.name.lower()),
+        )
+
+        for candidate in candidates:
+            if candidate.name.startswith("n118_"):
+                continue
+            if not is_narrative_page_name(candidate.name):
+                continue
+            if compare_aliases(narrative_id, candidate.name):
+                return f"./{candidate.relative_to(search_dir).as_posix()}"
+
+            if audio_key and (audio_key in normalize_doc_key(candidate.name) or normalize_doc_key(candidate.name) in audio_key):
+                return f"./{candidate.relative_to(search_dir).as_posix()}"
+
+            if audio_tokens and audio_tokens.issubset(build_match_tokens(candidate.name)):
+                return f"./{candidate.relative_to(search_dir).as_posix()}"
+
+        for candidate in candidates:
+            if candidate.name.startswith("n118_"):
+                continue
+            if not is_narrative_page_name(candidate.name):
+                continue
+            candidate_key = normalize_doc_key(candidate.name)
+            candidate_tokens = build_match_tokens(candidate.name)
+            matches = (
+                narrative_key and (narrative_key in candidate_key or candidate_key in narrative_key)
+            ) or (
+                audio_key and (audio_key in candidate_key or candidate_key in audio_key)
+            ) or (
+                narrative_tokens and narrative_tokens.issubset(candidate_tokens)
+            ) or (
+                audio_tokens and audio_tokens.issubset(candidate_tokens)
+            )
+            if matches:
+                return f"./{candidate.relative_to(search_dir).as_posix()}"
+
+    return "../index.html"
+
+
+def build_language_toggle(current_file_name, current_locale="en"):
+    current_name = current_file_name or ""
+    if current_name.startswith("n118_"):
+        for locale, _ in LANGUAGE_OPTIONS:
+            prefix = f"n118_{locale}_"
+            if current_name.startswith(prefix):
+                current_locale = locale
+                current_name = current_name[len(prefix):]
+                break
+
+    options = []
+    for locale, label in LANGUAGE_OPTIONS:
+        target_name = f"n118_{locale}_{current_name}" if current_name else f"n118_{locale}_document.html"
+        selected = " selected" if locale == current_locale or (not current_name.startswith("n118_") and locale == "en") else ""
+        options.append(f'<option value="{escape_html(target_name)}"{selected}>{escape_html(label)}</option>')
+
+    return f"""<div class="language-toggle">
+      <label for="lang-select">Language</label>
+      <select id="lang-select" aria-label="Select language" onchange="if (this.value) window.location.href = this.value;">
+        {''.join(options)}
+      </select>
+    </div>"""
+
+
+def build_head(title_text, locale="en"):
     return f"""<!DOCTYPE html>
-<html lang="en" data-theme="clean-professional">
+<html lang="{escape_html(locale)}" data-theme="clean-professional">
 
 <head>
   <meta charset="UTF-8">
@@ -1138,12 +1467,21 @@ def build_head(title_text):
 """
 
 
-def build_masthead(data):
+def build_masthead(data, output_path=None, full_narrative_href=None, locale="en"):
     audio_id = data.get("audio_id", "unknown")
     subtitle = data.get("subtitle", "")
+    current_name = Path(output_path).name if output_path else ""
+    language_toggle = build_language_toggle(current_name, locale)
+    narrative_link = full_narrative_href or "../index.html"
     return f"""  <header class="masthead">
     <div class="masthead-inner">
-      <a class="masthead-back" href="../index.html">&larr; Evidence Archive &middot; Index</a>
+      <div class="masthead-row">
+        <a class="masthead-back" href="../index.html">&larr; Evidence Archive &middot; Index</a>
+        <div class="masthead-actions">
+          {language_toggle}
+          <a class="masthead-full-narrative" href="{escape_html(narrative_link)}">Full Narrative</a>
+        </div>
+      </div>
       <div class="masthead-badge">Audio Evidence &middot; {escape_html(audio_id)}</div>
       <h1>{escape_html(audio_id)}</h1>
       <p class="masthead-sub">{escape_html(subtitle)}</p>
@@ -1226,12 +1564,13 @@ def build_stats_bar(data):
 """
 
 
-def build_transcript_segment(seg, idx):
+def build_transcript_segment(seg, idx, recording_dt_str):
     speaker = seg.get("speaker", "Unknown")
     text = seg.get("text", "")
     start = seg.get("start", 0)
     end = seg.get("end", 0)
     seg_class = classify_speaker(speaker)
+    quote_datetime = format_quote_datetime(recording_dt_str, start)
 
     def fmt_time(seconds):
         if isinstance(seconds, (int, float)):
@@ -1245,19 +1584,25 @@ def build_transcript_segment(seg, idx):
     text_escaped = escape_html(text)
 
     return f"""        <div class="transcript-segment {seg_class}" id="seg-{idx}">
+          <div class="seg-datetime">{escape_html(quote_datetime)}</div>
           <div class="seg-time">{time_str}</div>
           <div class="seg-speaker">{speaker_escaped}</div>
           <p class="seg-text">"{text_escaped}"</p>
-          <div class="seg-actions"><button type="button" class="seg-note-btn" onclick="{note_onclick}">+ add note</button></div>
+          <div class="seg-actions">
+            <button type="button" class="seg-play-btn" data-seg-index="{idx}" data-start="{start}" data-end="{end}">▶ Play</button>
+            <button type="button" class="seg-mark-btn" data-seg-index="{idx}" aria-pressed="false">Mark</button>
+            <button type="button" class="seg-note-btn" onclick="{note_onclick}">+ add note</button>
+          </div>
         </div>
 """
 
 
 def build_transcript_list(data):
     segments = data.get("segments", [])
+    recording_dt_str = data.get("recording_datetime", "")
     lines = ['      <div class="transcript-list">\n']
     for idx, seg in enumerate(segments):
-        lines.append(build_transcript_segment(seg, idx))
+        lines.append(build_transcript_segment(seg, idx, recording_dt_str))
     lines.append("      </div>\n")
     return "".join(lines)
 
@@ -1495,14 +1840,6 @@ def build_modal_and_js(data, violation_dir):
       document.addEventListener('keydown', function (e) {{
         if (e.key === 'Escape') window.closeModal();
       }});
-
-      // Audio player integration (optional)
-      var player = new AudioPlayer({{
-        container: '.audio-player-container',
-        src: '{js_escape(audio_file)}',
-        audioId: '{js_escape(audio_id)}',
-        segments: {json.dumps(data.get('segments', []), ensure_ascii=False)}
-      }});
     }})();
   </script>
 """
@@ -1525,14 +1862,16 @@ def render_transcript(json_path, output_path, violation_dir=None):
 
     audio_file, audio_id, stem = get_audio_info(data)
     title_text = f"Disconzi v. LATAM — {stem}"
+    map_key = re.sub(r"[^a-z0-9]+", "_", Path(json_path).stem.lower()).strip("_")
 
     html_parts = []
-    html_parts.append(build_head(title_text))
-    html_parts.append(f'<body data-audio-stem="{html.escape(stem)}">\n')
+    full_narrative_href = find_full_narrative_link(data, Path(output_path).parent)
+    html_parts.append(build_head(title_text, locale="en"))
+    html_parts.append(f'<body data-audio-stem="{html.escape(stem)}" data-audio-map-key="{html.escape(map_key)}">\n')
     html_parts.append('  <div class="page">\n')
 
     # Masthead
-    html_parts.append(build_masthead(data))
+    html_parts.append(build_masthead(data, output_path=output_path, full_narrative_href=full_narrative_href, locale="en"))
 
     # Stats bar
     html_parts.append(build_stats_bar(data))
@@ -1572,7 +1911,7 @@ def render_transcript(json_path, output_path, violation_dir=None):
     html_parts.append(build_modal_and_js(data, violation_dir))
 
     # Pinned nav
-    html_parts.append('  <script src="../audio_player.js"></script>\n')
+    html_parts.append('  <script src="/case_files/02-transcripts/transcripts_rendered/audio_player.js"></script>\n')
     html_parts.append('  <div class="pinned-nav"><a class="pinned-nav-link" href="../index.html">&larr; Case Index</a><span class="pinned-nav-label">Disconzi v. LATAM Airlines</span></div>\n')
     html_parts.append('</body>\n\n</html>\n')
 
@@ -1613,7 +1952,7 @@ def process_folder(input_dir, output_dir, violation_dir=None, recursive=False):
     for json_file in json_files:
         try:
             # Determine relative path to preserve structure if recursive
-            rel_path = json_file.relative_to(input_path) if recursive else json_file.name
+            rel_path = json_file.relative_to(input_path) if recursive else Path(json_file.name)
             out_file = output_path / rel_path.with_suffix(".html")
             out_file.parent.mkdir(parents=True, exist_ok=True)
 
