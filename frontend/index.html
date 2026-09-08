@@ -323,10 +323,8 @@
     <a class="nav-logo" href="/olivia/">Olivia <span class="nav-logo-sub" id="navWorkspaceLabel"
         onclick="resetToWelcome(event)"><span data-i18n="navWorkspace">Workspace</span></span></a>
     <div class="nav-links-desktop">
-      <select aria-label="Language" class="vw-lang-select" id="langSelect"
-        style="margin-left:14px;background:#10141c;color:#cfe3ff;border:1px solid #2a3550;border-radius:6px;padding:3px 6px;font-size:12px;cursor:pointer;"></select>
       <div class="desktop-mode-toggle agent" id="desktopModeToggle" title="Settings" onclick="toggleSettingsSidebar()">
-        <span class="mode-label" id="desktopModeLabel"><span data-i18n="apiAgent">Agent</span></span>
+        <span class="mode-label" id="desktopModeLabel"></span>
         <span class="mode-dot"></span>
       </div>
     </div>
@@ -2379,7 +2377,7 @@
             </div>
             <textarea class="compose-textarea" id="chatInput" name="chatInput" oninput="autoGrow(this)"
               onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"
-              placeholder="Send a message to OliviaLegal..." rows="1"></textarea>
+              placeholder="send a message to Olivia..." rows="1"></textarea>
             <button class="compose-send compose-stop" id="stopBtn" onclick="stopActiveStream()"
               style="display:none;background:#c0392b" title="Stop agent"><i class="fas fa-stop"></i></button>
             <button class="compose-send" id="sendBtn" onclick="sendMessage()" title="Send"><i
@@ -6816,6 +6814,21 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
         aria-label="Close settings">&times;</button>
     </div>
     <div class="settings-sidebar-body">
+      <!-- Profile -->
+      <div class="settings-section">
+        <div class="settings-section-label">Profile</div>
+        <div class="settings-toggle-row" style="flex-direction:column;align-items:flex-start;gap:6px">
+          <label class="settings-toggle-label" for="settingsUserName"><i class="fas fa-user"></i> Your Name</label>
+          <input id="settingsUserName" name="settingsUserName" type="text" placeholder="Your name…" autocomplete="off"
+            oninput="_oliviaUpdateUserName(this.value)"
+            style="width:100%;padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--white);font-size:12px;font-family:inherit;outline:none" />
+        </div>
+        <div class="settings-toggle-row" style="flex-direction:column;align-items:flex-start;gap:6px;margin-top:8px">
+          <span class="settings-toggle-label"><i class="fas fa-globe"></i> Language</span>
+          <select id="langSelect" aria-label="Language"
+            style="width:100%;padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--white);font-size:12px;cursor:pointer;"></select>
+        </div>
+      </div>
       <!-- Navigation -->
       <div class="settings-section">
         <div class="settings-section-label">Navigation</div>
@@ -8034,6 +8047,41 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
       var overlay = document.getElementById('setupOverlay');
       if (overlay) overlay.classList.remove('open');
     }
+
+    // ── User name in nav ─────────────────────────────────────────
+    function _oliviaGetUserName() {
+      return localStorage.getItem('olivia_user_name') || '';
+    }
+
+    function _oliviaSetNavUserName(name) {
+      var label = document.getElementById('desktopModeLabel');
+      if (!label) return;
+      name = (name || '').trim();
+      label.textContent = name || 'Settings';
+      label.style.opacity = name ? '1' : '0.55';
+    }
+
+    function _oliviaUpdateUserName(name) {
+      localStorage.setItem('olivia_user_name', (name || '').trim());
+      _oliviaSetNavUserName(name);
+    }
+
+    function _oliviaPrefillSettingsName() {
+      var inp = document.getElementById('settingsUserName');
+      if (inp && !inp.value) inp.value = _oliviaGetUserName();
+    }
+
+    window.addEventListener('load', function () {
+      _oliviaSetNavUserName(_oliviaGetUserName());
+      // Wrap toggleSettingsSidebar to prefill name on open
+      var _orig = window.toggleSettingsSidebar;
+      if (typeof _orig === 'function') {
+        window.toggleSettingsSidebar = function () {
+          _orig();
+          requestAnimationFrame(_oliviaPrefillSettingsName);
+        };
+      }
+    });
   </script>
 </body>
 
