@@ -648,7 +648,9 @@
                 </div>
                 <!-- CONTEXT CONFIG PANEL (Context Injection) -->
                 <div class="context-config-section" style="margin-top:12px">
-                  <div class="context-config-header" role="button" tabindex="0" aria-controls="contextConfigBody" aria-expanded="false" onclick="toggleContextConfigPanel()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleContextConfigPanel();}"
+                  <div class="context-config-header" role="button" tabindex="0" aria-controls="contextConfigBody"
+                    aria-expanded="false" onclick="toggleContextConfigPanel()"
+                    onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleContextConfigPanel();}"
                     style="cursor:pointer;padding:8px 12px;background:var(--bg2);border-radius:6px;display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600;color:var(--purple)">
                     <span><i class="fas fa-sliders"></i> Context Injection</span>
                     <i class="fas fa-chevron-down" id="contextConfigChevron"></i>
@@ -709,7 +711,11 @@
                     style="opacity:0.6"><span data-i18n="0_1">(0)</span></span>
                 </div>
                 <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap">
-                  <button data-session-files-permission-toggle data-active="false" data-active-label="<i class='fas fa-shield-check'></i> Allow tools" data-inactive-label="<i class='fas fa-shield-alt'></i> Allow tools" onclick="setSessionFilesToolPermissionMode(this.getAttribute('data-active') !== 'true')" style="font-size:10px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--white);cursor:pointer">
+                  <button data-session-files-permission-toggle data-active="false"
+                    data-active-label="<i class='fas fa-shield-check'></i> Allow tools"
+                    data-inactive-label="<i class='fas fa-shield-alt'></i> Allow tools"
+                    onclick="setSessionFilesToolPermissionMode(this.getAttribute('data-active') !== 'true')"
+                    style="font-size:10px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg2);color:var(--white);cursor:pointer">
                     <i class="fas fa-shield-alt"></i> Allow tools
                   </button>
                 </div>
@@ -744,9 +750,11 @@
                   projects...</span></p>
             </div>
             <div style="padding:0 8px 8px;display:flex;gap:6px;flex-wrap:wrap">
-              <button class="add-agent-btn" onclick="createProject()" style="flex:1 1 100%"><i class="fas fa-plus"></i> New
+              <button class="add-agent-btn" onclick="createProject()" style="flex:1 1 100%"><i class="fas fa-plus"></i>
+                New
                 Project</button>
-              <button class="add-agent-btn" onclick="openProjectImportModal()" style="flex:1 1 calc(50% - 3px)"><i class="fas fa-file-import"></i> Import Archived</button>
+              <button class="add-agent-btn" onclick="openProjectImportModal()" style="flex:1 1 calc(50% - 3px)"><i
+                  class="fas fa-file-import"></i> Import Archived</button>
               <button class="add-agent-btn" onclick="loadProjects()" style="flex:0 0 auto;padding:8px 10px"
                 title="Reload projects"><i class="fas fa-sync-alt"></i></button>
             </div>
@@ -1481,7 +1489,8 @@
                 style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:5px">
                 <i class="fas fa-cube" style="color:var(--amber)"></i> ComfyUI
               </div>
-              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Importe, visualize e refine
+              <p style="font-size:12px;color:var(--gray-hi);line-height:1.6;margin-bottom:14px">Importe, visualize e
+                refine
                 workflows ComfyUI — nós, máscaras e parâmetros com edição granular.</p>
               <button class="btn" onclick="comfyuiShowView()" style="width:100%;justify-content:center"><i
                   class="fas fa-cube"></i> Open ComfyUI</button>
@@ -1565,12 +1574,14 @@
               title="Session cost — click to reset"></span>
             <button class="btn btn-sm header-opt" id="chatCtxPreviewToggleBtn"
               onclick="toggleAssistantContextPreviewDebug()" title="Enable context debug for this conversation."><i
-                class="fas fa-bug"></i> <span id="chatCtxPreviewToggleLabel"><span data-i18n="ctxdbg_off">CtxDbg
-                  off</span></span></button>
+                class="fas fa-bug"></i> <span id="chatCtxPreviewToggleLabel"><span
+                  data-i18n="ctxdbg_off">off</span></span></button>
             <button class="btn btn-sm header-opt" onclick="toggleFocusMode()" title="Focus mode"><i
                 class="fas fa-expand-alt"></i></button>
-            <button class="btn btn-sm header-opt panel-toggle" id="outputToggleBtn" onclick="toggleOutputPanel()" title="Output panel"><i
-                class="fas fa-columns"></i></button>
+            <button class="btn btn-sm header-opt panel-toggle" id="previewToggleBtn" onclick="togglePreviewPanel()"
+              title="Preview panel"><i class="fas fa-eye"></i></button>
+            <button class="btn btn-sm header-opt panel-toggle" id="outputToggleBtn" onclick="toggleOutputPanel()"
+              title="Output panel"><i class="fas fa-columns"></i></button>
             <button class="btn btn-sm header-opt panel-toggle" id="browserToggleBtn" onclick="toggleBrowserPanel()"
               title="Browser view"><i class="fas fa-globe"></i></button>
             <button class="btn btn-sm header-opt" onclick="clearChat()"><i class="fas fa-trash"></i></button>
@@ -2008,45 +2019,49 @@
         <div class="chat-compose" id="chatCompose">
           <div class="pinned-paths-bar" id="pinnedPathsBar" style="display:none"></div>
           <div class="compose-row">
-            <button class="compose-voice-btn" id="voiceInputBtn" onclick="voiceToggleQuick()"
-              title="Tap to start/stop recording"><i class="fas fa-microphone"></i></button>
-            <textarea class="compose-textarea" id="chatInput" name="chatInput" oninput="autoGrow(this)"
-              onkeydown="if(event.key==='Enter'&amp;&amp;!event.shiftKey){event.preventDefault();sendMessage()}"
-              placeholder="Send a message to OliviaLegal..." rows="1"></textarea>
-            <button class="compose-send compose-stop" id="stopBtn" onclick="stopActiveStream()"
-              style="display:none;background:#c0392b" title="Stop agent"><i class="fas fa-stop"></i></button>
-            <button class="compose-send" id="sendBtn" onclick="sendMessage()" title="Send"><i
-                class="fas fa-arrow-up"></i></button>
-          </div>
-        </div>
-        <div class="chat-toolbar" id="chatToolbar" style="display:none">
-          <div class="toolbar-group">
-            <button class="tbtn" data-tip="Save" onclick="saveChat()"><i class="fas fa-floppy-disk"></i></button>
-            <button class="tbtn" data-tip="Copy last response" onclick="copyLastAssistantMessage()"><i
-                class="fas fa-copy"></i></button>
-            <button class="tbtn" data-tip="Export last response" onclick="exportLastMessageTxt()"><i
-                class="fas fa-file-arrow-down"></i></button>
-            <button class="tbtn" data-tip="Export" onclick="exportChatJson()"><i class="fas fa-download"></i></button>
-            <label class="tbtn" data-tip="Add Context"><i class="fas fa-paperclip"></i><input
-                accept=".md,.txt,.pdf,.docx,.json,.csv,.html,.htm,.css,.js,.py,.ts,.yaml,.yml,.toml,.xml,.log,.sh,.sql,.env,.cfg,.ini,.rst,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp"
-                id="contextFileUpload" multiple="" name="contextFileUpload"
-                onchange="handleContextFileImport(event.target.files);this.value=''" style="display:none"
-                type="file" /></label>
-            <button class="tbtn" data-tip="+ Print Screen" onclick="capturePrintScreenFromClipboard()"><i
-                class="fas fa-camera"></i></button>
-            <label class="tbtn" data-tip="+ Image"><i class="fas fa-image"></i><input
-                accept="image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp" id="chatImageUpload" multiple=""
-                name="chatImageUpload" onchange="handleChatImageImport(event.target.files);this.value=''"
-                style="display:none" type="file" /></label>
-            <button class="tbtn" data-tip="Read last response" onclick="ttsReadLastAssistant()"><i
-                class="fas fa-volume-up"></i></button>
-            <span class="tts-auto-badge" id="ttsAutoBadge" onclick="ttsToggleAutoRead()"
-              title="Auto-read new responses"><i class="fas fa-headphones"></i> Auto</span>
-          </div>
-          <div class="toolbar-group">
-            <button class="tbtn panel-toggle" id="sidebarOutputToggleBtn" data-tip="Output Panel" onclick="toggleOutputPanel()"><i
-                class="fas fa-columns"></i></button>
-            <button class="tbtn danger" data-tip="Clear" onclick="clearChat()"><i class="fas fa-trash"></i></button>
+            <div class="chat-toolbar" id="chatToolbar" style="display:none">
+              <div class="toolbar-group expandable-toolbar">
+                <button class="tbtn" id="toolbarToggleBtn" onclick="this.parentElement.classList.toggle('expanded')"
+                  data-tip="Options">
+                  <i class="fas fa-plus" style="transition: transform 0.2s"></i>
+                </button>
+                <div class="toolbar-menu">
+                  <button class="tbtn" data-tip="Save" onclick="saveChat()"><i class="fas fa-floppy-disk"></i></button>
+                  <button class="tbtn" data-tip="Copy last response" onclick="copyLastAssistantMessage()"><i
+                      class="fas fa-copy"></i></button>
+                  <button class="tbtn" data-tip="Export last response" onclick="exportLastMessageTxt()"><i
+                      class="fas fa-file-arrow-down"></i></button>
+                  <button class="tbtn" data-tip="Download as PDF" onclick="downloadLastResponseAsPdf()"><i
+                      class="fas fa-file-pdf"></i></button>
+                  <button class="tbtn" data-tip="Export" onclick="exportChatJson()"><i
+                      class="fas fa-download"></i></button>
+                  <label class="tbtn" data-tip="Add Context"><i class="fas fa-paperclip"></i><input
+                      accept=".md,.txt,.pdf,.docx,.json,.csv,.html,.htm,.css,.js,.py,.ts,.yaml,.yml,.toml,.xml,.log,.sh,.sql,.env,.cfg,.ini,.rst,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp"
+                      id="contextFileUpload" multiple="" name="contextFileUpload"
+                      onchange="handleContextFileImport(event.target.files);this.value=''" style="display:none"
+                      type="file" /></label>
+                  <button class="tbtn" data-tip="+ Print Screen" onclick="capturePrintScreenFromClipboard()"><i
+                      class="fas fa-camera"></i></button>
+                  <label class="tbtn" data-tip="+ Image"><i class="fas fa-image"></i><input
+                      accept="image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp" id="chatImageUpload" multiple=""
+                      name="chatImageUpload" onchange="handleChatImageImport(event.target.files);this.value='''"
+                      style="display:none" type="file" /></label>
+                  <button class="tbtn" data-tip="Read last response" onclick="ttsReadLastAssistant()"><i
+                      class="fas fa-volume-up"></i></button>
+                  <button class="compose-voice-btn" id="voiceInputBtn" onclick="voiceToggleQuick()"
+                    title="Tap to start/stop recording"><i class="fas fa-microphone"></i></button>
+                  <span class="tts-auto-badge" id="ttsAutoBadge" onclick="ttsToggleAutoRead()"
+                    title="Auto-read new responses"><i class="fas fa-headphones"></i> Auto</span>
+                  <textarea class="compose-textarea" id="chatInput" name="chatInput" oninput="autoGrow(this)"
+                    onkeydown="if(event.key==='Enter'&amp;&amp;!event.shiftKey){event.preventDefault();sendMessage()}"
+                    placeholder="Send a message to OliviaLegal..." rows="1"></textarea>
+                  <button class="compose-send compose-stop" id="stopBtn" onclick="stopActiveStream()"
+                    style="display:none;background:#c0392b" title="Stop agent"><i class="fas fa-stop"></i></button>
+                  <button class="compose-send" id="sendBtn" onclick="sendMessage()" title="Send"><i
+                      class="fas fa-arrow-up"></i></button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2081,8 +2096,8 @@
             <button class="btn btn-sm" onclick="studioOpenCfgModal()"
               style="background:rgba(28,69,50,.1);border-color:rgba(28,69,50,.3);color:var(--amber)"><i
                 class="fas fa-cog"></i> AI</button>
-            <button class="btn btn-sm panel-toggle" id="studioAiFabBtn" onclick="studioToggleAiPanel()" title="AI Assistant"><i
-                class="fas fa-wand-magic-sparkles"></i></button>
+            <button class="btn btn-sm panel-toggle" id="studioAiFabBtn" onclick="studioToggleAiPanel()"
+              title="AI Assistant"><i class="fas fa-wand-magic-sparkles"></i></button>
             <button class="btn btn-sm" id="studioSidebarBtn" onclick="studioToggleMainSidebar()"
               title="Show/hide the trunk (sidebar menu)"><i class="fas fa-bars"></i></button>
             <button class="btn btn-sm" onclick="studioHideView()" title="Close Web Builder"><i
@@ -2145,7 +2160,9 @@
                     class="fas fa-desktop"></i></button>
                 <button class="studio-mode-btn" onclick="studioRefreshPreview()" title="Refresh"><i
                     class="fas fa-sync-alt"></i></button>
-                <button class="studio-mode-btn studio-inspect-btn" id="studioInspectBtn" onclick="studioToggleInspectMode()" title="Click elements in the preview to capture for the agent"><i class="fas fa-mouse-pointer"></i></button>
+                <button class="studio-mode-btn studio-inspect-btn" id="studioInspectBtn"
+                  onclick="studioToggleInspectMode()" title="Click elements in the preview to capture for the agent"><i
+                    class="fas fa-mouse-pointer"></i></button>
               </div>
             </div>
             <div class="studio-preview-stage">
@@ -3193,7 +3210,8 @@
             </div>
             <div style="border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
               <div id="mvStatCollCount"
-                style="font-family:var(--mono);font-size:18px;font-weight:500;color:var(--white)">—</div>
+                style="font-family:var(--mono);font-size:18px;font-weight:500;color:var(--white)">
+                —</div>
               <div style="font-size:10px;color:var(--gray);margin-top:2px"><span
                   data-i18n="memoryCollections">Collections</span></div>
             </div>
@@ -3222,7 +3240,8 @@
           <div style="display:flex;gap:6px"><input class="memory-search-input" id="mvSearchInput" name="mvSearchInput"
               onkeydown="if(event.key==='Enter')mvSearch()" placeholder="Search memory..." style="flex:1"
               type="text" /><button class="memory-search-btn" onclick="mvSearch()"><i
-                class="fas fa-search"></i></button></div>
+                class="fas fa-search"></i></button>
+          </div>
           <div id="mvSearchFilters" style="display:flex;flex-wrap:wrap;gap:4px"></div>
           <div id="mvSearchResults" style="flex:1;overflow-y:auto">
             <div class="mv-empty"><i class="fas fa-search" style="font-size:22px;color:var(--border-hi)"></i>
@@ -3313,7 +3332,8 @@
               </select>
               <button class="memory-ingest-btn" id="mvIngestViolationBtn" onclick="mvDoIngestViolation()"
                 style="border-color:var(--red);color:var(--red);background:rgba(158,74,74,.06)"><i
-                  class="fas fa-bug"></i> Ingest Violation</button>
+                  class="fas fa-bug"></i>
+                Ingest Violation</button>
             </div>
             <div id="mvIngestViolationStatus"
               style="display:none;font-size:11px;margin-top:4px;font-family:var(--mono);padding:4px 6px;border-radius:4px">
@@ -3650,7 +3670,8 @@
       <div class="output-panel" id="previewPanel">
         <div class="output-header">
           <h3 id="previewPanelTitle"><i class="fas fa-eye"
-              style="margin-right:6px;font-size:12px;color:var(--blue)"></i> File Preview</h3>
+              style="margin-right:6px;font-size:12px;color:var(--blue)"></i>
+            File Preview</h3>
           <div style="display:flex;gap:4px;align-items:center">
             <label class="panel-context-option panel-context-inline" id="panelCtxOptionPreview"
               title="Include Preview panel in chat context">
@@ -3736,7 +3757,8 @@
               id="sharedLawCompareTitle"><span data-i18n="parsing_comparison">Parsing Comparison</span></span></h3>
           <div class="artifact-modal-actions">
             <button class="view-toggle-btn" onclick="downloadSharedLawCompare('markdown')"><i
-                class="fas fa-download"></i> MD</button>
+                class="fas fa-download"></i>
+              MD</button>
             <button class="view-toggle-btn" onclick="downloadSharedLawCompare('html')"><i class="fas fa-download"></i>
               HTML</button>
             <button class="view-toggle-btn" onclick="maximizeSharedLawCompare('preview')"><i class="fas fa-expand"></i>
@@ -3860,7 +3882,8 @@
               <button class="sh-content-tab active" data-tab="preview" onclick="shSwitchTab('preview')"><i
                   class="fas fa-eye"></i> Preview</button>
               <button class="sh-content-tab" data-tab="editor" onclick="shSwitchTab('editor')"><i
-                  class="fas fa-code"></i> Editor</button>
+                  class="fas fa-code"></i>
+                Editor</button>
               <button class="sh-content-tab" data-tab="brainstorm" onclick="shSwitchTab('brainstorm')"><i
                   class="fas fa-lightbulb"></i> Brainstorm</button>
               <button class="sh-content-tab" data-tab="settings" onclick="shSwitchTab('settings')"><i
@@ -3993,7 +4016,8 @@
                       <input autocomplete="off" class="meshy-studio-input" id="meshyStudioAnimSearch"
                         placeholder="Search: walk, run, dance, sword, clap..." />
                       <div aria-label="Animation preset gallery" class="meshy-studio-anim-grid"
-                        id="meshyStudioAnimGrid"></div>
+                        id="meshyStudioAnimGrid">
+                      </div>
                       <div class="meshy-studio-anim-meta">Selected: <strong id="meshyStudioAnimSelected"><span
                             data-i18n="walking">Walking</span></strong></div>
                       <input id="meshyStudioAnimPreset" type="hidden" value="Walking" />
@@ -4003,7 +4027,8 @@
                       <input class="meshy-studio-input" id="meshyStudioAnimCustom"
                         placeholder="e.g. stylish moonwalk then wave with right hand" />
                       <label class="meshy-studio-lbl" for="meshyStudioAnimDuration"><span
-                          data-i18n="duration_s">Duration (s)</span></label>
+                          data-i18n="duration_s">Duration
+                          (s)</span></label>
                       <input class="meshy-studio-input" id="meshyStudioAnimDuration" max="30" min="1" step="0.5"
                         type="number" value="3" />
                       <label class="meshy-studio-chk"><input checked="" id="meshyStudioAnimLoop" type="checkbox" />
@@ -4084,7 +4109,8 @@
                     <button class="btn btn-xs" onclick="shFsConfigReset()"><i class="fas fa-undo"></i> Reset
                       default</button>
                     <button class="btn btn-xs btn-primary" onclick="shFsConfigToggle(false)"><i
-                        class="fas fa-check"></i> OK</button>
+                        class="fas fa-check"></i>
+                      OK</button>
                   </div>
                 </div>
                 <!-- Floating fullscreen control bar (built dynamically when fullscreen on) -->
@@ -4658,7 +4684,8 @@
                     <div class="sh-toggle-row"><span class="sh-form-label"><span data-i18n="auto_erasepia">Auto
                           era-sepia</span></span>
                       <div class="sh-toggle" id="shEnvToggle_autoEraSepia"
-                        onclick="shToggleEnvFlag('autoEraSepia',this)"></div>
+                        onclick="shToggleEnvFlag('autoEraSepia',this)">
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -5004,7 +5031,8 @@
                           data-i18n="autorotate_3d">Auto-rotate
                           (3D)</span></span>
                       <div class="sh-toggle" id="as_shEnvToggle_autoRotate"
-                        onclick="shToggleEnvFlag('autoRotate',this)"></div>
+                        onclick="shToggleEnvFlag('autoRotate',this)">
+                      </div>
                     </div>
                     <div class="sh-toggle-row"><span class="sh-form-label" title="Continuous day↔night cycle"><span
                           data-i18n="auto_daynight">Auto
@@ -5135,7 +5163,8 @@
                     style="padding:6px 8px;font-size:11px;border:1px solid var(--border,#3a3a3a);border-radius:4px;background:var(--bg,transparent);color:var(--gray-hi,#e5e2dc)">
                     <option value="uploads"><span data-i18n="uploads">uploads/</span></option>
                     <option selected="" value="gbl_assets"><span
-                        data-i18n="examplesgblassets">examples/gbl-assets/</span></option>
+                        data-i18n="examplesgblassets">examples/gbl-assets/</span>
+                    </option>
                   </select>
                   <input id="shStoredModelsSearch" oninput="shRenderStoredModelsDirectory()"
                     placeholder="Search saved model (.glb/.gltf)"
@@ -5210,7 +5239,8 @@
                       class="fas fa-object-group"></i> Overlay 3D on SVG scene</button>
                 </div>
                 <div class="sh-ctrl-hint"><span
-                    data-i18n="transparent_3d_canvas_over_the_2d_svg_scene_useful">Transparent 3D canvas over the 2D SVG
+                    data-i18n="transparent_3d_canvas_over_the_2d_svg_scene_useful">Transparent
+                    3D canvas over the 2D SVG
                     scene — useful for placing a GLB model
                     inside an illustrated setting.</span></div>
               </div>
@@ -5776,11 +5806,8 @@ https://.../side.png" rows="3"
           type="button">
           <i class="fas fa-upload"></i>
         </button>
-        <button class="btn btn-xs btn-icon-reveal"
-          onclick="openAgentAIBuilderModal()"
-          type="button"
-          id="agentAIBuilderBtn"
-          title="Criar agente com ajuda da IA">
+        <button class="btn btn-xs btn-icon-reveal" onclick="openAgentAIBuilderModal()" type="button"
+          id="agentAIBuilderBtn" title="Criar agente com ajuda da IA">
           <i class="fas fa-robot"></i>
         </button>
         <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
@@ -6207,11 +6234,14 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
     </div>
     <div style="padding:12px 0">
       <div style="margin-bottom:14px">
-        <label class="config-label" for="agentAIBuilderDesc"><span data-i18n="agent_description_prompt">Descrição do Agente</span></label>
+        <label class="config-label" for="agentAIBuilderDesc"><span data-i18n="agent_description_prompt">Descrição do
+            Agente</span></label>
         <textarea class="config-textarea" id="agentAIBuilderDesc" name="agentAIBuilderDesc"
-          placeholder="Descreva o tipo de agente que você quer criar. Ex: 'Um agente de análise de dados que conecta ao BigQuery e gera relatórios semanais'" rows="4"></textarea>
+          placeholder="Descreva o tipo de agente que você quer criar. Ex: 'Um agente de análise de dados que conecta ao BigQuery e gera relatórios semanais'"
+          rows="4"></textarea>
         <div style="margin-top:6px;font-size:10px;color:var(--gray)">
-          <i class="fas fa-info-circle"></i> Descreva com detalhes o propósito, habilidades e comportamento desejado. A IA preencherá todos os campos do formulário automaticamente.
+          <i class="fas fa-info-circle"></i> Descreva com detalhes o propósito, habilidades e comportamento desejado. A
+          IA preencherá todos os campos do formulário automaticamente.
         </div>
       </div>
       <div id="agentAIBuilderStatus" style="display:none;margin-bottom:12px">
@@ -6220,7 +6250,8 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
           <span>Gerando configuração do agente...</span>
         </div>
       </div>
-      <div id="agentAIBuilderError" style="display:none;margin-bottom:12px;padding:8px;border-radius:6px;background:rgba(239,68,68,0.1);border:1px solid var(--red);color:var(--red);font-size:12px">
+      <div id="agentAIBuilderError"
+        style="display:none;margin-bottom:12px;padding:8px;border-radius:6px;background:rgba(239,68,68,0.1);border:1px solid var(--red);color:var(--red);font-size:12px">
         <i class="fas fa-exclamation-triangle" style="margin-right:6px"></i>
         <span id="agentAIBuilderErrorMsg"></span>
       </div>
@@ -6375,7 +6406,8 @@ agent_custom_collection" rows="2" style="display:none"></textarea>
   <div class="settings-sidebar" id="settingsSidebar">
     <div class="settings-sidebar-header">
       <h3>Settings</h3>
-      <button class="settings-sidebar-close" onclick="toggleSettingsSidebar()" aria-label="Close settings">&times;</button>
+      <button class="settings-sidebar-close" onclick="toggleSettingsSidebar()"
+        aria-label="Close settings">&times;</button>
     </div>
     <div class="settings-sidebar-body">
       <!-- Navigation -->

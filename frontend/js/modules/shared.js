@@ -244,7 +244,7 @@ function _sessionBulkDelete() {
   _sessionBulkSelection.forEach(name => {
     const file = _importedFiles.get(name);
     if (file && file.url && String(file.url).startsWith('blob:')) {
-      try { URL.revokeObjectURL(file.url); } catch (_) {}
+      try { URL.revokeObjectURL(file.url); } catch (_) { }
     }
     _importedFiles.delete(name);
     _contextSessionFiles.delete(name);
@@ -380,7 +380,7 @@ function onCaseUploadTargetChanged(rawValue) {
   const normalized = _normalizeCaseUploadSubpath(rawValue);
   try {
     localStorage.setItem(CASE_UPLOAD_TARGET_STORAGE_KEY, normalized);
-  } catch (_e) {}
+  } catch (_e) { }
   const caseProfile = _getSectionProfile('case', 'case_files');
   _refreshCaseUploadTargetHint(caseProfile.workspace_folder || 'case_files');
 }
@@ -413,7 +413,7 @@ function getImportedFilesContext() {
   for (const [name, info] of _importedFiles) {
     if (useSessionFileSelection && !_contextSessionFiles.has(name)) continue;
     if (info.type === 'text' && info.content) {
-      textParts.push(`--- ${name} (${(info.size/1024).toFixed(1)} KB) ---\n${info.content}`);
+      textParts.push(`--- ${name} (${(info.size / 1024).toFixed(1)} KB) ---\n${info.content}`);
       continue;
     }
 
@@ -469,7 +469,7 @@ async function getSharedContext() {
       if (!text) continue;
       const label = (info && info.name) ? info.name : (targetPath.split('/').pop() || targetPath);
       parts.push(`--- ${label} (${targetPath}) ---\n${text}`);
-    } catch(e) { /* skip failed loads */ }
+    } catch (e) { /* skip failed loads */ }
   }
   if (!parts.length) return '';
   return `\n\n[CONTEXT FROM _SHARED DATA (${parts.length} file${parts.length !== 1 ? 's' : ''})]\n\n${parts.join('\n\n')}`;
@@ -505,7 +505,7 @@ function addSharedContextItem(item) {
   updateSharedContextBar();
   if (typeof updateComposeContextBar === 'function') updateComposeContextBar();
   if (typeof window.oliviaRefreshSectionRuntimeUi === 'function') {
-    try { window.oliviaRefreshSectionRuntimeUi(); } catch (_e) {}
+    try { window.oliviaRefreshSectionRuntimeUi(); } catch (_e) { }
   }
   return true;
 }
@@ -517,7 +517,7 @@ function addArtifactToContext(artifactId) {
     addSystemBubble('Artefato não tem conteúdo de texto para adicionar ao contexto.');
     return;
   }
-  
+
   // Add to imported files with a unique name
   const contextName = `[Generated] ${art.name}`;
   _importedFiles.set(contextName, {
@@ -525,7 +525,7 @@ function addArtifactToContext(artifactId) {
     content: art.raw,
     size: new Blob([art.raw]).size
   });
-  
+
   updateComposeContextBar();
   renderSessionFiles();
   addSystemBubble(`Artefato "${art.name}" adicionado ao contexto como "${contextName}"`);
@@ -536,23 +536,23 @@ async function addTranscriptToContext(filename) {
   try {
     const res = await fetch(`${API_BASE}/api/transcripts/list`);
     if (!res.ok) throw new Error('Failed to fetch transcript data');
-    
+
     const data = await res.json();
     const transcript = data.transcripts.find(t => t.filename === filename);
     if (!transcript) throw new Error('Transcript not found');
-    
+
     // Fetch the full transcript file
     const fileRes = await fetch(`${API_BASE}/api/shared/file?path=${encodeURIComponent(transcript.path)}`);
     if (!fileRes.ok) throw new Error('Failed to fetch transcript file');
-    
+
     const transcriptData = await fileRes.json();
-    
+
     // Format transcript as text for context
     let textContent = `Transcrição: ${transcript.original_filename}\n`;
     textContent += `Duração: ${formatDuration(transcript.duration)}\n`;
     textContent += `Idioma: ${transcript.language}\n`;
     textContent += `Segmentos: ${transcript.segments}\n\n`;
-    
+
     if (transcriptData.segments) {
       textContent += transcriptData.segments.map(seg => {
         const time = formatDuration(seg.start);
@@ -560,7 +560,7 @@ async function addTranscriptToContext(filename) {
         return `[${time}] ${speaker}: ${seg.text}`;
       }).join('\n\n');
     }
-    
+
     // Add to imported files
     const contextName = `[Transcrição] ${transcript.original_filename}`;
     _importedFiles.set(contextName, {
@@ -569,7 +569,7 @@ async function addTranscriptToContext(filename) {
       size: new Blob([textContent]).size,
       type: 'text'
     });
-    
+
     updateComposeContextBar();
     renderSessionFiles();
     addSystemBubble(`Transcrição "${transcript.original_filename}" adicionada ao contexto`);
@@ -669,7 +669,7 @@ function handleBundleFile(bundleInput) {
   }
 
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = function (e) {
     try {
       const content = e.target.result;
       const data = JSON.parse(content);
@@ -679,7 +679,7 @@ function handleBundleFile(bundleInput) {
         window.previewBundle(data);
         return;
       }
-      
+
       if (data.type === 'agent-bundle' && data.agent) {
         addSystemBubble(`Importando agente "${data.agent.name || 'bundle'}"...`);
         if (typeof window.previewBundle === 'function') {
@@ -702,7 +702,7 @@ function handleBundleFile(bundleInput) {
     }
   };
 
-  reader.onerror = function() {
+  reader.onerror = function () {
     if (summaryEl) {
       summaryEl.innerHTML = '<div style="color:var(--red);font-size:12px"><i class="fas fa-exclamation-circle"></i> Falha ao ler arquivo.</div>';
     }
@@ -716,7 +716,7 @@ function handleBundleFile(bundleInput) {
 // Handle case files
 function handleCaseFiles(files) {
   if (!files || !files.length) return;
-  
+
   Array.from(files).forEach(file => {
     if (_isCaseSystemFile(file)) {
       addSystemBubble(`Arquivo de sistema ignorado: ${file.name}`);
@@ -737,7 +737,7 @@ function handleCaseFiles(files) {
 
     if (!caseFiles) caseFiles = [];
 
-    const finalizeCaseFile = function(caseFile, message) {
+    const finalizeCaseFile = function (caseFile, message) {
       caseFiles.push(caseFile);
       renderCaseFiles();
       addSystemBubble(message || `Arquivo de caso "${caseFile.name}" carregado`);
@@ -745,7 +745,7 @@ function handleCaseFiles(files) {
 
     if (_isCaseTextLike(file)) {
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         try {
           const raw = String((e && e.target && e.target.result) || '');
           const sanitized = _sanitizeCaseIngestContent(raw);
@@ -771,7 +771,7 @@ function handleCaseFiles(files) {
           );
         }
       };
-      reader.onerror = function() {
+      reader.onerror = function () {
         finalizeCaseFile(
           Object.assign({}, baseCaseFile, { ingestReason: 'read-error' }),
           `Falha ao ler "${file.name}"`
@@ -783,7 +783,7 @@ function handleCaseFiles(files) {
 
     if (_isCaseDocx(file)) {
       const reader = new FileReader();
-      reader.onload = async function(e) {
+      reader.onload = async function (e) {
         try {
           const buffer = e && e.target ? e.target.result : null;
           if (window.mammoth && typeof window.mammoth.extractRawText === 'function' && buffer) {
@@ -813,7 +813,7 @@ function handleCaseFiles(files) {
           );
         }
       };
-      reader.onerror = function() {
+      reader.onerror = function () {
         finalizeCaseFile(
           Object.assign({}, baseCaseFile, { ingestReason: 'read-error' }),
           `Falha ao ler DOCX "${file.name}"`
@@ -867,7 +867,7 @@ async function _uploadCaseFilesToProject(sectionFolder) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ agent_id: selectedAgent.agent_id, agent_name: selectedAgent.name || '' })
-    }).catch(() => {});
+    }).catch(() => { });
   }
   return data;
 }
@@ -956,7 +956,7 @@ function handleContextFileImport(files) {
     const isTextLike = textLikeFile(file);
     const isImage = _isImageContextFile(file) || previewType === 'image';
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       const content = e.target.result;
       const fileInfo = {
         name: file.name,
@@ -1099,20 +1099,20 @@ function handleFileUpload(files) {
       || mimeType === 'text/csv'
       || /\.(txt|md|json|yaml|yml|toml|py|js|ts|tsx|jsx|html|htm|css|csv|sh|xml|rst|cfg|ini|log|sql|env)$/i.test(fileName);
   };
-  
+
   Array.from(files).forEach(file => {
     const previewType = (typeof window.resolvePreviewFileType === 'function')
       ? window.resolvePreviewFileType(file.name, { mimeType: file.type })
       : 'file';
     const isTextLike = textLikeFile(file);
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       const content = e.target.result;
-      
+
       // Determine file type
       let fileType = isTextLike ? 'text' : previewType;
       if (!isTextLike && !fileType) fileType = 'binary';
-      
+
       const fileInfo = {
         name: file.name,
         size: file.size,
@@ -1120,7 +1120,7 @@ function handleFileUpload(files) {
         content: content,
         lastModified: file.lastModified
       };
-      
+
       // Add to appropriate storage
       if (fileType === 'text') {
         _importedFiles.set(file.name, fileInfo);
@@ -1147,7 +1147,7 @@ function handleFileUpload(files) {
         addSystemBubble(`Arquivo "${file.name}" adicionado como artefato`);
       }
     };
-    
+
     if (isTextLike || !file.type) {
       reader.readAsText(file);
     } else {
@@ -1203,7 +1203,7 @@ function previewImportedWorkspaceFile(name) {
 // Render case files
 function renderCaseFiles() {
   const container = document.getElementById('caseFileList');
-  const actions   = document.getElementById('caseActions');
+  const actions = document.getElementById('caseActions');
   if (!container) return;
 
   if (!caseFiles || caseFiles.length === 0) {
@@ -1213,10 +1213,10 @@ function renderCaseFiles() {
   }
 
   const html = caseFiles.map((file, i) => {
-    const ext  = (file.name.split('.').pop() || '').toLowerCase();
+    const ext = (file.name.split('.').pop() || '').toLowerCase();
     const icon = ['pdf'].includes(ext) ? '📄'
-      : ['jpg','jpeg','png','gif','webp'].includes(ext) ? '🖼️'
-      : ['mp3','wav','m4a'].includes(ext) ? '🎵' : '📝';
+      : ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext) ? '🖼️'
+        : ['mp3', 'wav', 'm4a'].includes(ext) ? '🎵' : '📝';
     const label = file.relativePath || file.name;
     return `
       <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--border);border-radius:5px;margin-bottom:4px;font-size:11px">
@@ -1274,19 +1274,19 @@ function renderSessionFiles() {
     const safeName = file.name;
     const safeId = JSON.stringify(safeName);
     const clickJs = `previewImportedWorkspaceFile(${safeId})`;
-    const ext  = (safeName.split('.').pop() || '').toLowerCase();
+    const ext = (safeName.split('.').pop() || '').toLowerCase();
     const isImage = file.type === 'image' || file.previewType === 'image';
 
     // Richer type icon (6.5)
     let icon;
     if (isImage) icon = '<i class="fas fa-image" style="color:var(--green)"></i>';
     else if (['pdf'].includes(ext)) icon = '<i class="fas fa-file-pdf" style="color:var(--red)"></i>';
-    else if (['doc','docx'].includes(ext)) icon = '<i class="fas fa-file-word" style="color:var(--blue)"></i>';
-    else if (['xls','xlsx','csv'].includes(ext)) icon = '<i class="fas fa-file-excel" style="color:var(--green)"></i>';
-    else if (['json','js','py','html','css','ts','jsx','tsx','go','rs','rb','php','java','c','cpp','h','hpp'].includes(ext)) icon = '<i class="fas fa-file-code" style="color:var(--amber)"></i>';
-    else if (['txt','md'].includes(ext)) icon = '<i class="fas fa-file-lines" style="color:var(--purple)"></i>';
-    else if (['mp3','wav','ogg','m4a','flac'].includes(ext)) icon = '<i class="fas fa-file-audio" style="color:var(--cyan)"></i>';
-    else if (['mp4','avi','mov','webm'].includes(ext)) icon = '<i class="fas fa-file-video" style="color:var(--pink)"></i>';
+    else if (['doc', 'docx'].includes(ext)) icon = '<i class="fas fa-file-word" style="color:var(--blue)"></i>';
+    else if (['xls', 'xlsx', 'csv'].includes(ext)) icon = '<i class="fas fa-file-excel" style="color:var(--green)"></i>';
+    else if (['json', 'js', 'py', 'html', 'css', 'ts', 'jsx', 'tsx', 'go', 'rs', 'rb', 'php', 'java', 'c', 'cpp', 'h', 'hpp'].includes(ext)) icon = '<i class="fas fa-file-code" style="color:var(--amber)"></i>';
+    else if (['txt', 'md'].includes(ext)) icon = '<i class="fas fa-file-lines" style="color:var(--purple)"></i>';
+    else if (['mp3', 'wav', 'ogg', 'm4a', 'flac'].includes(ext)) icon = '<i class="fas fa-file-audio" style="color:var(--cyan)"></i>';
+    else if (['mp4', 'avi', 'mov', 'webm'].includes(ext)) icon = '<i class="fas fa-file-video" style="color:var(--pink)"></i>';
     else icon = '<i class="fas fa-file" style="color:var(--gray)"></i>';
 
     // Section tag (6.5)
@@ -1330,7 +1330,7 @@ function renderSessionFiles() {
         </div>
       </div>`;
   }).join('');
-  
+
   container.innerHTML = html;
 }
 
@@ -1341,13 +1341,13 @@ function _openImportedFileInPreview(name) {
   window._previewState = { url: null, name };
   const titleEl = document.getElementById('previewPanelTitle');
   if (titleEl) titleEl.innerHTML = `<i class="fas fa-file-lines" style="margin-right:6px;font-size:12px;color:var(--blue)"></i> ${escapeHtml(name)}`;
-  const dlBtn  = document.getElementById('previewDownloadBtn');
+  const dlBtn = document.getElementById('previewDownloadBtn');
   const maxBtn = document.getElementById('previewMaximizeBtn');
   // For inline content, set up a blob URL so download/maximize work
-  const blob    = new Blob([file.content], { type: 'text/plain' });
+  const blob = new Blob([file.content], { type: 'text/plain' });
   const blobUrl = URL.createObjectURL(blob);
   window._previewState = { url: blobUrl, name, _revokeOnClose: true };
-  if (dlBtn)  { dlBtn.style.display = ''; }
+  if (dlBtn) { dlBtn.style.display = ''; }
   if (maxBtn) { maxBtn.style.display = ''; }
   const body = document.getElementById('previewBody');
   if (!body) return;
@@ -1360,7 +1360,7 @@ function _openImportedFileInPreview(name) {
       const rendered = marked.parse(file.content);
       body.innerHTML = `<div style="padding:16px;color:var(--text);font-family:var(--font-sans);line-height:1.6;overflow-y:auto;height:100%;box-sizing:border-box;">${rendered}</div>`;
     }
-  } else if (['json','js','py','html','css','ts','txt','md'].includes(ext)) {
+  } else if (['json', 'js', 'py', 'html', 'css', 'ts', 'txt', 'md'].includes(ext)) {
     if (typeof window.renderRichTextCardHtml === 'function') {
       body.innerHTML = `<div class="output-rich-scroll">${window.renderRichTextCardHtml(file.content, { title: name, kind: ext })}</div>`;
     } else {
@@ -1388,14 +1388,14 @@ function selectMemoryFilesFromTree() {
   // This function opens the docs tree for file selection for memory ingestion
   const sidebar = document.getElementById('sidebarEl');
   if (sidebar) sidebar.classList.remove('collapsed');
-  
+
   const tabs = document.querySelector('.sidebar-tabs');
   if (tabs) {
     tabs.querySelectorAll('.sidebar-tab-btn').forEach(btn => btn.classList.remove('active'));
     const docsTab = document.querySelector('[data-tab="docs"]');
     if (docsTab) docsTab.classList.add('active');
   }
-  
+
   const contents = document.querySelectorAll('.sidebar-tab-content');
   contents.forEach(c => c.classList.remove('active'));
   const docsContent = document.getElementById('sidebarTab-docs');
@@ -1406,13 +1406,13 @@ function selectMemoryFilesFromTree() {
 function viewImportedFile(name) {
   const file = _importedFiles.get(name);
   if (!file) return;
-  
+
   const modal = document.getElementById('importedFileModal');
   const content = document.getElementById('importedFileContent');
   if (!modal || !content) return;
-  
+
   modal.classList.add('show');
-  
+
   if (file.type === 'text' && file.content) {
     content.innerHTML = `
       <div class="imported-file-header">
@@ -1439,7 +1439,7 @@ function viewImportedFile(name) {
 function clearCaseFiles() {
   caseFiles = [];
   renderCaseFiles();
-  ['stage-intake','stage-organize','stage-understand','stage-goal','stage-gaps','stage-build','stage-output'].forEach(id => {
+  ['stage-intake', 'stage-organize', 'stage-understand', 'stage-goal', 'stage-gaps', 'stage-build', 'stage-output'].forEach(id => {
     const dot = document.getElementById(id);
     if (dot) dot.className = 'stage-dot';
   });
@@ -1497,7 +1497,7 @@ function clearSessionFiles() {
 function _doClearSessionFiles() {
   for (const [, file] of _importedFiles) {
     if (file && file.url && String(file.url).startsWith('blob:')) {
-      try { URL.revokeObjectURL(file.url); } catch (_) {}
+      try { URL.revokeObjectURL(file.url); } catch (_) { }
     }
   }
   _importedFiles.clear();
@@ -1524,7 +1524,7 @@ function removeFileContext(name) {
   if (_importedFiles.has(name)) {
     const file = _importedFiles.get(name);
     if (file && file.url && String(file.url).startsWith('blob:')) {
-      try { URL.revokeObjectURL(file.url); } catch (_) {}
+      try { URL.revokeObjectURL(file.url); } catch (_) { }
     }
     _importedFiles.delete(name);
     _contextSessionFiles.delete(name);
@@ -1565,16 +1565,16 @@ async function startBridgeScan() {
     return;
   }
 
-  const btn     = document.getElementById('btnScanExtract');
-  const status  = document.getElementById('bridgeStatus');
+  const btn = document.getElementById('btnScanExtract');
+  const status = document.getElementById('bridgeStatus');
   const results = document.getElementById('bridgeResults');
   const agentAc = document.getElementById('bridgeAgentActions');
 
-  if (btn)     { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando…'; }
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando…'; }
   if (results) { results.style.display = 'none'; results.innerHTML = ''; }
-  if (agentAc)   agentAc.style.display = 'none';
+  if (agentAc) agentAc.style.display = 'none';
 
-  const stageIds = ['stage-intake','stage-organize','stage-understand','stage-goal','stage-gaps','stage-build','stage-output'];
+  const stageIds = ['stage-intake', 'stage-organize', 'stage-understand', 'stage-goal', 'stage-gaps', 'stage-build', 'stage-output'];
   stageIds.forEach(s => _setCaseStage(s, ''));
   const caseProfile = _getSectionProfile('case', 'case_files');
   const caseUploadSection = _resolveCaseUploadSection(caseProfile.workspace_folder || 'case_files');
@@ -1629,7 +1629,7 @@ async function startBridgeScan() {
           })
         });
         if (res.ok) ingested++; else errors.push(f.name);
-      } catch(e) { errors.push(f.name); }
+      } catch (e) { errors.push(f.name); }
       setStatus(`Indexando… ${ingested + skipped + errors.length}/${caseFiles.length}`);
     }
     _setCaseStage('stage-organize', ingested === 0 && errors.length > 0 ? 'error' : 'done');
@@ -1662,7 +1662,7 @@ async function startBridgeScan() {
       }
     }
 
-    for (const s of ['stage-goal','stage-gaps','stage-build','stage-output']) {
+    for (const s of ['stage-goal', 'stage-gaps', 'stage-build', 'stage-output']) {
       _setCaseStage(s, 'done');
       await new Promise(r => setTimeout(r, 120));
     }
@@ -1681,10 +1681,10 @@ async function startBridgeScan() {
       results.style.display = '';
     }
     if (agentAc) agentAc.style.display = '';
-    if (status)  status.innerHTML = '';
+    if (status) status.innerHTML = '';
     addSystemBubble(`Pipeline concluído: ${ingested} ingerido(s), ${skipped} pulado(s), ${errors.length} com erro.`);
 
-  } catch(err) {
+  } catch (err) {
     stageIds.forEach(s => _setCaseStage(s, ''));
     setStatus(`<span style="color:var(--red)">Erro: ${escapeHtml(err.message)}</span>`);
     addSystemBubble(`Erro no pipeline: ${err.message}`);
@@ -1784,7 +1784,7 @@ function sendBridgeDataToAgent() {
   const prompt = _buildCasePrompt(
     'Analise os arquivos de caso ingeridos na memória. Forneça uma análise completa com entidades principais, relacionamentos e próximos passos recomendados.'
   );
-  const input  = document.getElementById('chatInput') || document.getElementById('msgInput');
+  const input = document.getElementById('chatInput') || document.getElementById('msgInput');
   if (input) { input.value = prompt; input.dispatchEvent(new Event('input')); input.focus(); }
 }
 
@@ -1794,7 +1794,7 @@ function runBridgeIntelligence() {
   const prompt = _buildCasePrompt(
     'Execute análise profunda L5-L7 nos arquivos de caso. Inclua: violações identificadas, lacunas, cronologia, narrativa e recomendações priorizadas.'
   );
-  const input  = document.getElementById('chatInput') || document.getElementById('msgInput');
+  const input = document.getElementById('chatInput') || document.getElementById('msgInput');
   if (input) { input.value = prompt; input.dispatchEvent(new Event('input')); input.focus(); }
 }
 
@@ -1834,7 +1834,7 @@ function updateComposeContextBar() {
   if (typeof getPanelContextSelectionSummary === 'function') {
     const selectedPanels = getPanelContextSelectionSummary();
     selectedPanels.forEach(name => {
-      badges.push(`<span class="context-badge context-badge-panel" data-badge-type="panel" data-name="${escapeHtml(name)}"><i class="fas fa-panels"></i> Painel: ${escapeHtml(name)}</span>`);
+      badges.push(`<span class="context-badge context-badge-panel" data-badge-type="panel" data-name="${escapeHtml(name)}"><i class="fas fa-panels"></i> ${escapeHtml(name)}</span>`);
     });
   }
   if (typeof getAssistantContextPreviewDebugEnabled === 'function' && getAssistantContextPreviewDebugEnabled()) {
@@ -1989,8 +1989,8 @@ function showContextBadgeModal(badge, event, persistent = false) {
       }
       break;
     case 'panel':
-      title = 'Painel: ' + panelName;
-      content = '<div class="context-modal-file"><i class="fas fa-panels"></i> <span>Painel de contexto ativo</span></div>';
+      title = panelName;
+      content = '<div class="context-modal-file"><i class="fas fa-panels"></i> <span></span></div>';
       break;
     default:
       return;
@@ -2051,7 +2051,7 @@ function hideContextBadgeModal(badge) {
   if (_modalPersistent) {
     return; // Don't auto-hide when modal was opened by click
   }
-  
+
   if (_contextBadgeModalTimer) {
     clearTimeout(_contextBadgeModalTimer);
   }
@@ -2106,7 +2106,7 @@ window.showContextBadgeModal = showContextBadgeModal;
 window.hideContextBadgeModal = hideContextBadgeModal;
 window.closeContextBadgeModal = closeContextBadgeModal;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   _initCaseUploadTargetInput();
   _bindChatImagePasteHook();
 });

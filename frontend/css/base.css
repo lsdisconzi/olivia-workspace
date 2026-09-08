@@ -2439,6 +2439,31 @@ html.dark body {
     align-items: center
 }
 
+/* Expandable toolbar menu */
+.expandable-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+.expandable-toolbar.expanded #toolbarToggleBtn i {
+    transform: rotate(45deg);
+}
+.toolbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    white-space: nowrap;
+}
+.expandable-toolbar.expanded .toolbar-menu {
+    max-width: 500px;
+    opacity: 1;
+    overflow: visible;
+}
+
 /* Ghost icon toolbar buttons */
 
 .tbtn {

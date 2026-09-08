@@ -1895,10 +1895,12 @@
               title="Session cost — click to reset"></span>
             <button class="btn btn-sm header-opt" id="chatCtxPreviewToggleBtn"
               onclick="toggleAssistantContextPreviewDebug()" title="Enable context debug for this conversation."><i
-                class="fas fa-bug"></i> <span id="chatCtxPreviewToggleLabel"><span data-i18n="ctxdbg_off">CtxDbg
-                  off</span></span></button>
+                class="fas fa-bug"></i> <span id="chatCtxPreviewToggleLabel"><span
+                  data-i18n="ctxdbg_off">off</span></span></button>
             <button class="btn btn-sm header-opt" onclick="toggleFocusMode()" title="Focus mode"><i
                 class="fas fa-expand-alt"></i></button>
+            <button class="btn btn-sm header-opt panel-toggle" id="previewToggleBtn" onclick="togglePreviewPanel()"
+              title="Preview panel"><i class="fas fa-eye"></i></button>
             <button class="btn btn-sm header-opt panel-toggle" id="outputToggleBtn" onclick="toggleOutputPanel()"
               title="Output panel"><i class="fas fa-columns"></i></button>
             <button class="btn btn-sm header-opt panel-toggle" id="browserToggleBtn" onclick="toggleBrowserPanel()"
@@ -2339,8 +2341,42 @@
           <div class="pinned-paths-bar" id="pinnedPathsBar" style="display:none"></div>
           <div class="compose-context-bar" id="composeContextBar" style="display:none"></div>
           <div class="compose-row">
-            <button class="compose-voice-btn" id="voiceInputBtn" onclick="voiceToggleQuick()"
-              title="Tap to start/stop recording"><i class="fas fa-microphone"></i></button>
+            <div class="chat-toolbar" id="chatToolbar" style="display:none">
+              <div class="toolbar-group expandable-toolbar">
+                <button class="tbtn" id="toolbarToggleBtn" onclick="this.parentElement.classList.toggle('expanded')"
+                  data-tip="Options">
+                  <i class="fas fa-plus" style="transition: transform 0.2s"></i>
+                </button>
+                <div class="toolbar-menu">
+                  <button class="tbtn" data-tip="Save" onclick="saveChat()"><i class="fas fa-floppy-disk"></i></button>
+                  <button class="tbtn" data-tip="Copy last response" onclick="copyLastAssistantMessage()"><i
+                      class="fas fa-copy"></i></button>
+                  <button class="tbtn" data-tip="Export last response" onclick="exportLastMessageTxt()"><i
+                      class="fas fa-file-arrow-down"></i></button>
+                  <button class="tbtn" data-tip="Download as PDF" onclick="downloadLastResponseAsPdf()"><i
+                      class="fas fa-file-pdf"></i></button>
+                  <button class="tbtn" data-tip="Export" onclick="exportChatJson()"><i
+                      class="fas fa-download"></i></button>
+                  <label class="tbtn" data-tip="Add Context"><i class="fas fa-paperclip"></i><input
+                      accept=".md,.txt,.pdf,.docx,.json,.csv,.html,.htm,.css,.js,.py,.ts,.yaml,.yml,.toml,.xml,.log,.sh,.sql,.env,.cfg,.ini,.rst,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp"
+                      id="contextFileUpload" multiple="" name="contextFileUpload"
+                      onchange="handleContextFileImport(event.target.files);this.value=''" style="display:none"
+                      type="file" /></label>
+                  <button class="tbtn" data-tip="+ Print Screen" onclick="capturePrintScreenFromClipboard()"><i
+                      class="fas fa-camera"></i></button>
+                  <label class="tbtn" data-tip="+ Image"><i class="fas fa-image"></i><input
+                      accept="image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp" id="chatImageUpload" multiple=""
+                      name="chatImageUpload" onchange="handleChatImageImport(event.target.files);this.value='''"
+                      style="display:none" type="file" /></label>
+                  <button class="tbtn" data-tip="Read last response" onclick="ttsReadLastAssistant()"><i
+                      class="fas fa-volume-up"></i></button>
+                  <span class="tts-auto-badge" id="ttsAutoBadge" onclick="ttsToggleAutoRead()"
+                    title="Auto-read new responses"><i class="fas fa-headphones"></i> Auto</span>
+                  <button class="compose-voice-btn" id="voiceInputBtn" onclick="voiceToggleQuick()"
+                    title="Tap to start/stop recording"><i class="fas fa-microphone"></i></button>
+                </div>
+              </div>
+            </div>
             <textarea class="compose-textarea" id="chatInput" name="chatInput" oninput="autoGrow(this)"
               onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"
               placeholder="Send a message to OliviaLegal..." rows="1"></textarea>
@@ -2348,38 +2384,6 @@
               style="display:none;background:#c0392b" title="Stop agent"><i class="fas fa-stop"></i></button>
             <button class="compose-send" id="sendBtn" onclick="sendMessage()" title="Send"><i
                 class="fas fa-arrow-up"></i></button>
-          </div>
-        </div>
-        <div class="chat-toolbar" id="chatToolbar" style="display:none">
-          <div class="toolbar-group">
-            <button class="tbtn" data-tip="Save" onclick="saveChat()"><i class="fas fa-floppy-disk"></i></button>
-            <button class="tbtn" data-tip="Copy last response" onclick="copyLastAssistantMessage()"><i
-                class="fas fa-copy"></i></button>
-            <button class="tbtn" data-tip="Export last response" onclick="exportLastMessageTxt()"><i
-                class="fas fa-file-arrow-down"></i></button>
-            <button class="tbtn" data-tip="Download as PDF" onclick="downloadLastResponseAsPdf()"><i
-                class="fas fa-file-pdf"></i></button>
-            <button class="tbtn" data-tip="Export" onclick="exportChatJson()"><i class="fas fa-download"></i></button>
-            <label class="tbtn" data-tip="Add Context"><i class="fas fa-paperclip"></i><input
-                accept=".md,.txt,.pdf,.docx,.json,.csv,.html,.htm,.css,.js,.py,.ts,.yaml,.yml,.toml,.xml,.log,.sh,.sql,.env,.cfg,.ini,.rst,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp"
-                id="contextFileUpload" multiple="" name="contextFileUpload"
-                onchange="handleContextFileImport(event.target.files);this.value=''" style="display:none"
-                type="file" /></label>
-            <button class="tbtn" data-tip="+ Print Screen" onclick="capturePrintScreenFromClipboard()"><i
-                class="fas fa-camera"></i></button>
-            <label class="tbtn" data-tip="+ Image"><i class="fas fa-image"></i><input
-                accept="image/*,.png,.jpg,.jpeg,.gif,.webp,.svg,.bmp" id="chatImageUpload" multiple=""
-                name="chatImageUpload" onchange="handleChatImageImport(event.target.files);this.value=''"
-                style="display:none" type="file" /></label>
-            <button class="tbtn" data-tip="Read last response" onclick="ttsReadLastAssistant()"><i
-                class="fas fa-volume-up"></i></button>
-            <span class="tts-auto-badge" id="ttsAutoBadge" onclick="ttsToggleAutoRead()"
-              title="Auto-read new responses"><i class="fas fa-headphones"></i> Auto</span>
-          </div>
-          <div class="toolbar-group">
-            <button class="tbtn panel-toggle" id="sidebarOutputToggleBtn" data-tip="Output Panel"
-              onclick="toggleOutputPanel()"><i class="fas fa-columns"></i></button>
-            <button class="tbtn danger" data-tip="Clear" onclick="clearChat()"><i class="fas fa-trash"></i></button>
           </div>
         </div>
       </div>
@@ -6055,153 +6059,153 @@ https://.../side.png" rows="3"
         <div class="vw-edge-resize" id="masterIndexEdgeResize" title="Drag to resize the view"></div>
         <div class="vw-hbar">
           <div class="vw-hbar-title">
-          <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#4b3b22 0%,#2d785a 100%)"><i
-              class="fas fa-landmark"></i></div>
-          <div>
-            <h1><span data-i18n="master_jurisprudence_index">Master Jurisprudence Index</span></h1>
-            <p><span data-i18n="consolidated_search_statistics_and_indexed_documen">Consolidated search, statistics,
-                and indexed documents</span></p>
+            <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#4b3b22 0%,#2d785a 100%)"><i
+                class="fas fa-landmark"></i></div>
+            <div>
+              <h1><span data-i18n="master_jurisprudence_index">Master Jurisprudence Index</span></h1>
+              <p><span data-i18n="consolidated_search_statistics_and_indexed_documen">Consolidated search, statistics,
+                  and indexed documents</span></p>
+            </div>
+            <div></div>
           </div>
-          <div></div>
-        </div>
-        <div class="vw-hbar-actions">
-          <button class="btn btn-sm" onclick="if(typeof masterIndexRefresh==='function')masterIndexRefresh()"
-            title="Refresh"><i class="fas fa-sync-alt"></i></button>
-          <button class="btn btn-sm" onclick="if(typeof masterIndexHideView==='function')masterIndexHideView()"
-            title="Close"><i class="fas fa-times"></i></button>
-        </div>
-      </div>
-      <div class="vw-layout">
-        <div class="vw-sidebar" id="masterIndexSidebar">
-          <div class="vw-sidebar-head">
-            <input id="masterIndexSearchInput"
-              oninput="if(typeof masterIndexSearch==='function')masterIndexSearch(this.value)"
-              placeholder="Search by process, judge, court..." type="search" />
-            <div class="vw-chips" id="masterIndexCourtChips"></div>
-          </div>
-          <div class="vw-tree" id="masterIndexTree">
-            <div class="vw-tree-empty"><span data-i18n="driveAuthStatus">Loading…</span></div>
+          <div class="vw-hbar-actions">
+            <button class="btn btn-sm" onclick="if(typeof masterIndexRefresh==='function')masterIndexRefresh()"
+              title="Refresh"><i class="fas fa-sync-alt"></i></button>
+            <button class="btn btn-sm" onclick="if(typeof masterIndexHideView==='function')masterIndexHideView()"
+              title="Close"><i class="fas fa-times"></i></button>
           </div>
         </div>
-        <div class="vw-resize-handle" id="masterIndexResize"></div>
-        <div class="vw-main">
-          <div class="vw-status" id="masterIndexStatus">—</div>
-          <div class="vw-viewer" id="masterIndexViewer">
-            <div class="vw-empty"><span data-i18n="select_an_entry_from_the_sidebar">Select an entry from the
-                sidebar.</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- ═══════ CASE DOSSIER VIEW — Consolidated case documentation ═══════ -->
-    <div class="vw-view" id="caseDossierView">
-      <div class="vw-edge-resize" id="caseDossierEdgeResize" title="Drag to resize the view"></div>
-      <div class="vw-hbar">
-        <div class="vw-hbar-title">
-          <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#4b3b22 0%,#a13a2c 100%)"><i
-              class="fas fa-folder-open"></i></div>
-          <div>
-            <h1><span data-i18n="case_dossier_la8159">Case Dossier · LA8159</span></h1>
-            <p><span data-i18n="consolidated_documentation_master_report_indexes_f">Consolidated documentation: master
-                report, indexes, final exhibits, frameworks, and timelines</span></p>
-          </div>
-          <div></div>
-        </div>
-        <div class="vw-hbar-actions">
-          <button class="btn btn-sm" onclick="if(typeof caseDossierRefresh==='function')caseDossierRefresh()"
-            title="Refresh"><i class="fas fa-sync-alt"></i></button>
-          <button class="btn btn-sm" onclick="if(typeof caseDossierHideView==='function')caseDossierHideView()"
-            title="Close"><i class="fas fa-times"></i></button>
-        </div>
-      </div>
-      <div class="vw-layout">
-        <div class="vw-sidebar" id="caseDossierSidebar">
-          <div class="vw-tree" id="caseDossierTree">
-            <div class="vw-tree-empty"><span data-i18n="driveAuthStatus">Loading…</span></div>
-          </div>
-        </div>
-        <div class="vw-resize-handle" id="caseDossierResize"></div>
-        <div class="vw-main">
-          <div class="vw-status" id="caseDossierStatus">—</div>
-          <div class="vw-viewer" id="caseDossierViewer" style="height:calc(100% - 32px)">
-            <div class="vw-empty"><span data-i18n="select_a_document_from_the_sidebar">Select a document from the
-                sidebar.</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- ═══════ LEGAL ROUTER VIEW — Olivia ═══════ -->
-    <div class="vw-view" id="legalRouterView">
-      <div class="vw-edge-resize" id="legalRouterEdgeResize" title="Drag to resize the view"></div>
-      <div class="vw-hbar">
-        <div class="vw-hbar-title">
-          <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#5a2d78 0%,#a13a2c 100%)"><i
-              class="fas fa-route"></i></div>
-          <div>
-            <h1><span data-i18n="Olivia_legal_router">Olivia Legal Router</span></h1>
-            <p><span data-i18n="resolves_violation_ids_frameworks_and_personnel">Resolves violation IDs, frameworks,
-                and personnel</span></p>
-          </div>
-          <div></div>
-        </div>
-        <div class="vw-hbar-actions">
-          <button class="btn btn-sm" onclick="if(typeof legalRouterRefresh==='function')legalRouterRefresh()"
-            title="Refresh"><i class="fas fa-sync-alt"></i></button>
-          <button class="btn btn-sm" onclick="if(typeof legalRouterHideView==='function')legalRouterHideView()"
-            title="Close"><i class="fas fa-times"></i></button>
-        </div>
-      </div>
-      <div class="vw-layout">
-        <div class="vw-sidebar" id="legalRouterSidebar">
-          <div class="vw-sidebar-head">
-            <input id="legalRouterQuery"
-              onkeydown="if(event.key==='Enter'&& typeof legalRouterResolve==='function')legalRouterResolve()"
-              placeholder="BR-014, sandra-assali, MC99…" type="search" />
-            <div class="vw-chips" id="legalRouterRoleChips">
-              <span class="vw-chip active" data-role="all"
-                onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('all',this)"><span
-                  data-i18n="all_roles">All
-                  roles</span></span>
-              <span class="vw-chip" data-role="primary"
-                onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('primary',this)"><span
-                  data-i18n="primary">Primary</span></span>
-              <span class="vw-chip" data-role="supporting"
-                onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('supporting',this)"><span
-                  data-i18n="supporting">Supporting</span></span>
-              <span class="vw-chip" data-role="router"
-                onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('router',this)"><span
-                  data-i18n="router">Router</span></span>
-              <span class="vw-chip" data-role="person"
-                onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('person',this)"><span
-                  data-i18n="personnel">Personnel</span></span>
+        <div class="vw-layout">
+          <div class="vw-sidebar" id="masterIndexSidebar">
+            <div class="vw-sidebar-head">
+              <input id="masterIndexSearchInput"
+                oninput="if(typeof masterIndexSearch==='function')masterIndexSearch(this.value)"
+                placeholder="Search by process, judge, court..." type="search" />
+              <div class="vw-chips" id="masterIndexCourtChips"></div>
+            </div>
+            <div class="vw-tree" id="masterIndexTree">
+              <div class="vw-tree-empty"><span data-i18n="driveAuthStatus">Loading…</span></div>
             </div>
           </div>
-          <div class="vw-tree" id="legalRouterTree">
-            <div class="vw-tree-empty"><span data-i18n="enter_an_id_or_term_above">Enter an ID or term above.</span>
+          <div class="vw-resize-handle" id="masterIndexResize"></div>
+          <div class="vw-main">
+            <div class="vw-status" id="masterIndexStatus">—</div>
+            <div class="vw-viewer" id="masterIndexViewer">
+              <div class="vw-empty"><span data-i18n="select_an_entry_from_the_sidebar">Select an entry from the
+                  sidebar.</span></div>
             </div>
           </div>
         </div>
-        <div class="vw-resize-handle" id="legalRouterResize"></div>
-        <div class="vw-main">
-          <div class="vw-status" id="legalRouterStatus">—</div>
-          <div class="vw-viewer" id="legalRouterResults">
-            <div class="vw-empty"><span data-i18n="resolution_result_appears_here">Resolution result appears
-                here.</span></div>
+      </div>
+      <!-- ═══════ CASE DOSSIER VIEW — Consolidated case documentation ═══════ -->
+      <div class="vw-view" id="caseDossierView">
+        <div class="vw-edge-resize" id="caseDossierEdgeResize" title="Drag to resize the view"></div>
+        <div class="vw-hbar">
+          <div class="vw-hbar-title">
+            <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#4b3b22 0%,#a13a2c 100%)"><i
+                class="fas fa-folder-open"></i></div>
+            <div>
+              <h1><span data-i18n="case_dossier_la8159">Case Dossier · LA8159</span></h1>
+              <p><span data-i18n="consolidated_documentation_master_report_indexes_f">Consolidated documentation: master
+                  report, indexes, final exhibits, frameworks, and timelines</span></p>
+            </div>
+            <div></div>
+          </div>
+          <div class="vw-hbar-actions">
+            <button class="btn btn-sm" onclick="if(typeof caseDossierRefresh==='function')caseDossierRefresh()"
+              title="Refresh"><i class="fas fa-sync-alt"></i></button>
+            <button class="btn btn-sm" onclick="if(typeof caseDossierHideView==='function')caseDossierHideView()"
+              title="Close"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="vw-layout">
+          <div class="vw-sidebar" id="caseDossierSidebar">
+            <div class="vw-tree" id="caseDossierTree">
+              <div class="vw-tree-empty"><span data-i18n="driveAuthStatus">Loading…</span></div>
+            </div>
+          </div>
+          <div class="vw-resize-handle" id="caseDossierResize"></div>
+          <div class="vw-main">
+            <div class="vw-status" id="caseDossierStatus">—</div>
+            <div class="vw-viewer" id="caseDossierViewer" style="height:calc(100% - 32px)">
+              <div class="vw-empty"><span data-i18n="select_a_document_from_the_sidebar">Select a document from the
+                  sidebar.</span></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- ═══════ API EXPLORER — MAIN VIEW ═══════ -->
-    <div class="aex-main-view" id="aexMainView">
-      <div class="aex-main-header">
-        <i class="fas fa-plug" style="color:var(--amber);font-size:12px"></i>
-        <span class="aex-main-title">API Explorer <span style="font-size:10px;color:var(--gray);font-weight:400"><span
-              data-i18n="full_function_registry">— full function registry</span></span></span>
-        <button class="btn btn-sm" onclick="aexToggleMain()" style="font-size:10px;padding:3px 10px"
-          title="Minimize to sidebar"><i class="fas fa-compress-alt"></i> Minimize</button>
+      <!-- ═══════ LEGAL ROUTER VIEW — Olivia ═══════ -->
+      <div class="vw-view" id="legalRouterView">
+        <div class="vw-edge-resize" id="legalRouterEdgeResize" title="Drag to resize the view"></div>
+        <div class="vw-hbar">
+          <div class="vw-hbar-title">
+            <div class="vw-hbar-icon" style="background:linear-gradient(135deg,#5a2d78 0%,#a13a2c 100%)"><i
+                class="fas fa-route"></i></div>
+            <div>
+              <h1><span data-i18n="Olivia_legal_router">Olivia Legal Router</span></h1>
+              <p><span data-i18n="resolves_violation_ids_frameworks_and_personnel">Resolves violation IDs, frameworks,
+                  and personnel</span></p>
+            </div>
+            <div></div>
+          </div>
+          <div class="vw-hbar-actions">
+            <button class="btn btn-sm" onclick="if(typeof legalRouterRefresh==='function')legalRouterRefresh()"
+              title="Refresh"><i class="fas fa-sync-alt"></i></button>
+            <button class="btn btn-sm" onclick="if(typeof legalRouterHideView==='function')legalRouterHideView()"
+              title="Close"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="vw-layout">
+          <div class="vw-sidebar" id="legalRouterSidebar">
+            <div class="vw-sidebar-head">
+              <input id="legalRouterQuery"
+                onkeydown="if(event.key==='Enter'&& typeof legalRouterResolve==='function')legalRouterResolve()"
+                placeholder="BR-014, sandra-assali, MC99…" type="search" />
+              <div class="vw-chips" id="legalRouterRoleChips">
+                <span class="vw-chip active" data-role="all"
+                  onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('all',this)"><span
+                    data-i18n="all_roles">All
+                    roles</span></span>
+                <span class="vw-chip" data-role="primary"
+                  onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('primary',this)"><span
+                    data-i18n="primary">Primary</span></span>
+                <span class="vw-chip" data-role="supporting"
+                  onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('supporting',this)"><span
+                    data-i18n="supporting">Supporting</span></span>
+                <span class="vw-chip" data-role="router"
+                  onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('router',this)"><span
+                    data-i18n="router">Router</span></span>
+                <span class="vw-chip" data-role="person"
+                  onclick="if(typeof legalRouterFilterRole==='function')legalRouterFilterRole('person',this)"><span
+                    data-i18n="personnel">Personnel</span></span>
+              </div>
+            </div>
+            <div class="vw-tree" id="legalRouterTree">
+              <div class="vw-tree-empty"><span data-i18n="enter_an_id_or_term_above">Enter an ID or term above.</span>
+              </div>
+            </div>
+          </div>
+          <div class="vw-resize-handle" id="legalRouterResize"></div>
+          <div class="vw-main">
+            <div class="vw-status" id="legalRouterStatus">—</div>
+            <div class="vw-viewer" id="legalRouterResults">
+              <div class="vw-empty"><span data-i18n="resolution_result_appears_here">Resolution result appears
+                  here.</span></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- #aexPanel is relocated here by JS when in main mode -->
-    </div>
+      <!-- ═══════ API EXPLORER — MAIN VIEW ═══════ -->
+      <div class="aex-main-view" id="aexMainView">
+        <div class="aex-main-header">
+          <i class="fas fa-plug" style="color:var(--amber);font-size:12px"></i>
+          <span class="aex-main-title">API Explorer <span style="font-size:10px;color:var(--gray);font-weight:400"><span
+                data-i18n="full_function_registry">— full function registry</span></span></span>
+          <button class="btn btn-sm" onclick="aexToggleMain()" style="font-size:10px;padding:3px 10px"
+            title="Minimize to sidebar"><i class="fas fa-compress-alt"></i> Minimize</button>
+        </div>
+        <!-- #aexPanel is relocated here by JS when in main mode -->
+      </div>
     </div>
   </main>
   <!-- ═══════ CREATE AGENT MODAL ═══════ -->

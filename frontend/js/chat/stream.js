@@ -530,7 +530,7 @@ function _renderAssistantContextPreviewDebugUi() {
   const label = document.getElementById('chatCtxPreviewToggleLabel');
   const enabled = !!_assistantDebugContextPreview;
   if (label) {
-    label.textContent = enabled ? _t('chat.debug.ctxOn', 'CtxDbg on') : _t('chat.debug.ctxOff', 'CtxDbg off');
+    label.textContent = enabled ? _t('chat.debug.ctxOn', 'on') : _t('chat.debug.ctxOff', 'off');
   }
   if (btn) {
     btn.classList.toggle('active', enabled);
@@ -3403,7 +3403,7 @@ function _fallbackCopyLink(url) {
   ta.style.opacity = '0';
   document.body.appendChild(ta);
   ta.select();
-  try { document.execCommand('copy'); } catch (e) {}
+  try { document.execCommand('copy'); } catch (e) { }
   document.body.removeChild(ta);
 }
 
@@ -3540,7 +3540,7 @@ function onToolCall(toolName, args) {
         if (runId) {
           try {
             _toolResults.set(runId, r);
-          } catch (_) {}
+          } catch (_) { }
         }
       }).catch(function (e) {
         addSystemBubble('Browser tool error: ' + String(e));

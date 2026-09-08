@@ -47,7 +47,7 @@
   }
 
   // Create Floating Action Button
-  function createFAB() {
+  /*  function createFAB() {
     var fab = document.createElement('button');
     fab.id = 'runpod-fab';
     fab.className = 'ep-gear';
@@ -60,7 +60,7 @@
       openModal();
     };
     document.body.appendChild(fab);
-  }
+  }*/
 
   // Create workspace configuration modal
   function createModal() {
