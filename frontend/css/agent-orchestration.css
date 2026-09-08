@@ -336,3 +336,7 @@
   border-style: dashed;
   color: var(--gray);
 }
+
+#oliviaHeaderBadgeMain {
+  display: none !important;
+}
