@@ -133,11 +133,18 @@ function createWindow() {
     }
   });
 
-  // Inject custom titlebar on successful page loads
-  mainWindow.webContents.on('did-finish-load', () => {
-    const currentURL = mainWindow?.webContents?.getURL() || '';
-    // Only inject on app pages, not chrome-error:// or chrome:// pages
-    if (currentURL.startsWith('chrome')) return;
+  // Inject custom titlebar after every committed navigation.
+  // 'did-navigate' fires after the URL has fully changed (including JS-driven
+  // redirects like mode-select → workspace), so we never inject into a page
+  // that is about to navigate away immediately.
+  mainWindow.webContents.on('did-navigate', (_event, url) => {
+    if (url.startsWith('chrome')) return;
+    injectTitleBar(mainWindow);
+  });
+  // Also cover in-page navigations (hash changes, history.pushState)
+  mainWindow.webContents.on('did-navigate-in-page', (_event, url, isMainFrame) => {
+    if (!isMainFrame) return;
+    if (url.startsWith('chrome')) return;
     injectTitleBar(mainWindow);
   });
 
@@ -220,30 +227,32 @@ function injectTitleBar(win) {
     win.webContents.insertCSS(titlebarCSS);
   }
 
-  if (titlebarHTML) {
-    // Escape for JS string
-    const escaped = titlebarHTML
-      .replace(/\\/g, '\\\\')
-      .replace(/`/g, '\\`')
-      .replace(/\$/g, '\\$');
-    win.webContents.executeJavaScript(`
-      (function() {
-        if (document.getElementById('ol-titlebar')) return;
+  if (!titlebarHTML) return;
+
+  // Escape for JS string
+  const escaped = titlebarHTML
+    .replace(/\\/g, '\\\\')
+    .replace(/`/g, '\\`')
+    .replace(/\$/g, '\\$');
+
+  win.webContents.executeJavaScript(`
+    (function() {
+      // ── helpers ──────────────────────────────────────────────────
+      function _olCreateBar() {
         const bar = document.createElement('div');
         bar.id = 'ol-titlebar';
         bar.innerHTML = \`${escaped}\`;
         bar.setAttribute('data-platform', '${process.platform}');
         document.body.prepend(bar);
-        // Push body content down
         document.body.style.paddingTop = '14px';
         // Wire buttons via electronAPI
         const minBtn = bar.querySelector('#ol-titlebar-minimize');
         const maxBtn = bar.querySelector('#ol-titlebar-maximize');
         const closeBtn = bar.querySelector('#ol-titlebar-close');
-        if (minBtn) minBtn.onclick = () => window.electronAPI?.minimize();
-        if (maxBtn) maxBtn.onclick = () => window.electronAPI?.maximize();
+        if (minBtn)   minBtn.onclick   = () => window.electronAPI?.minimize();
+        if (maxBtn)   maxBtn.onclick   = () => window.electronAPI?.maximize();
         if (closeBtn) closeBtn.onclick = () => window.electronAPI?.close();
-        // Maximize toggle icon
+
         if (window.electronAPI?.onMaximizeChange) {
           window.electronAPI.onMaximizeChange((isMax) => {
             const svg = maxBtn?.querySelector('svg');
@@ -254,9 +263,34 @@ function injectTitleBar(win) {
             }
           });
         }
-      })();
-    `);
-  }
+      }
+
+      function _olEnsureBar() {
+        if (!document.getElementById('ol-titlebar')) {
+          _olCreateBar();
+        }
+      }
+
+      // ── initial injection ─────────────────────────────────────────
+      _olEnsureBar();
+
+      // ── polling guard: keep the bar alive for the first 10 s ─────
+      // This covers the case where the SPA wipes the DOM after did-navigate
+      // fires. We stop polling once the bar has been stable for 10 s.
+      if (window.__olTitlebarPoller) {
+        clearInterval(window.__olTitlebarPoller);
+      }
+      const _olStart = Date.now();
+      window.__olTitlebarPoller = setInterval(function() {
+        if (Date.now() - _olStart > 10000) {
+          clearInterval(window.__olTitlebarPoller);
+          window.__olTitlebarPoller = null;
+          return;
+        }
+        _olEnsureBar();
+      }, 200);
+    })();
+  `);
 }
 
 // ── IPC handlers ──────────────────────────────────────────────────────
