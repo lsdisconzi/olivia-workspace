@@ -1838,7 +1838,61 @@ html.dark body {
     border-radius: 12px;
     font-size: 14px;
     line-height: 1.7;
-    border: 1px solid var(--border)
+    border: 1px solid var(--border);
+    position: relative;
+}
+
+/* Chat bubble hover controls */
+.msg-hover-controls {
+    position: absolute;
+    top: -12px;
+    right: 8px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    z-index: 10;
+}
+
+.chat-bubble:hover .msg-hover-controls {
+    opacity: 1;
+}
+
+.msg-ctrl-btn {
+    background: transparent;
+    border: none;
+    color: var(--gray-hi);
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.msg-ctrl-btn:hover {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.chat-bubble.collapsed > *:not(.msg-hover-controls) {
+    display: none !important;
+}
+
+.chat-bubble.collapsed::after {
+    content: 'Mensagem recolhida';
+    color: var(--gray-hi);
+    font-style: italic;
+    font-size: 12px;
+    display: block;
+    opacity: 0.7;
 }
 
 .chat-bubble.user {

@@ -1279,7 +1279,16 @@ function addBubble(role, html, skipHistory) {
   const log = document.getElementById('chatLog');
   const div = document.createElement('div');
   div.className = `chat-bubble ${role}`;
-  div.innerHTML = html;
+  
+  const collapseTitle = typeof window.t === 'function' ? window.t('chat.collapse', 'Recolher/Expandir') : 'Recolher/Expandir';
+  const deleteTitle = typeof window.t === 'function' ? window.t('chat.delete', 'Excluir') : 'Excluir';
+  const controlsHtml = `
+    <div class="msg-hover-controls">
+      <button class="msg-ctrl-btn" onclick="this.closest('.chat-bubble').classList.toggle('collapsed')" title="${collapseTitle}"><i class="fas fa-compress-alt"></i></button>
+      <button class="msg-ctrl-btn" onclick="this.closest('.chat-bubble').remove()" title="${deleteTitle}"><i class="fas fa-trash-alt"></i></button>
+    </div>
+  `;
+  div.innerHTML = controlsHtml + html;
   log.appendChild(div);
   _bindChatFileLinkInteractions(div);
   log.scrollTop = log.scrollHeight;
@@ -1636,7 +1645,17 @@ async function sendAssistantMessage(message, opts) {
     log.appendChild(progressUi.root);
     bubble = document.createElement('div');
     bubble.className = 'chat-bubble agent';
-    bubble.innerHTML = `<div class="answer-md"><div class="LA8159-inline-loading">${_t('assistantProgress.awaitingTokens', 'Aguardando os primeiros tokens da resposta...')}</div></div>`;
+    
+    const collapseTitle = typeof window.t === 'function' ? window.t('chat.collapse', 'Recolher/Expandir') : 'Recolher/Expandir';
+    const deleteTitle = typeof window.t === 'function' ? window.t('chat.delete', 'Excluir') : 'Excluir';
+    const controlsHtml = `
+      <div class="msg-hover-controls">
+        <button class="msg-ctrl-btn" onclick="this.closest('.chat-bubble').classList.toggle('collapsed')" title="${collapseTitle}"><i class="fas fa-compress-alt"></i></button>
+        <button class="msg-ctrl-btn" onclick="this.closest('.chat-bubble').remove()" title="${deleteTitle}"><i class="fas fa-trash-alt"></i></button>
+      </div>
+    `;
+    
+    bubble.innerHTML = controlsHtml + `<div class="answer-md"><div class="LA8159-inline-loading">${_t('assistantProgress.awaitingTokens', 'Aguardando os primeiros tokens da resposta...')}</div></div>`;
     log.appendChild(bubble);
     contentEl = bubble.querySelector('.answer-md');
     log.scrollTop = log.scrollHeight;
