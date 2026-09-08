@@ -5956,7 +5956,8 @@ body:has(.workspace.focus-mode) .focus-exit-btn {
 .nav-links-desktop {
     display: flex;
     gap: 28px;
-    align-items: center
+    align-items: center;
+    margin-left: auto
 }
 
 .mobile-menu-btn {
