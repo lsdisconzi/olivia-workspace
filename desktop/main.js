@@ -147,6 +147,27 @@ function createWindow() {
     if (url.startsWith('chrome')) return;
     injectTitleBar(mainWindow);
   });
+  // Also hook dom-ready to be robust against timing issues on initial load
+  mainWindow.webContents.on('dom-ready', () => {
+    const url = mainWindow.webContents.getURL();
+    if (url.startsWith('chrome')) return;
+    injectTitleBar(mainWindow);
+  });
+  // Also hook did-finish-load just in case
+  let hasReloaded = false;
+  mainWindow.webContents.on('did-finish-load', () => {
+    const url = mainWindow.webContents.getURL();
+    // Quick fix: The titlebar works reliably after a reload.
+    // Trigger a single reload on the first successful app load.
+    if (!hasReloaded && !url.includes('waiting.html')) {
+      hasReloaded = true;
+      mainWindow.webContents.reload();
+      return;
+    }
+
+    if (url.startsWith('chrome')) return;
+    injectTitleBar(mainWindow);
+  });
 
   // Handle page load failures gracefully
   mainWindow.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL) => {
@@ -237,37 +258,53 @@ function injectTitleBar(win) {
 
   win.webContents.executeJavaScript(`
     (function() {
+      console.log('[TitleBar] Injected script started');
       // ── helpers ──────────────────────────────────────────────────
       function _olCreateBar() {
-        const bar = document.createElement('div');
-        bar.id = 'ol-titlebar';
-        bar.innerHTML = \`${escaped}\`;
-        bar.setAttribute('data-platform', '${process.platform}');
-        document.body.prepend(bar);
-        document.body.style.paddingTop = '14px';
-        // Wire buttons via electronAPI
-        const minBtn = bar.querySelector('#ol-titlebar-minimize');
-        const maxBtn = bar.querySelector('#ol-titlebar-maximize');
-        const closeBtn = bar.querySelector('#ol-titlebar-close');
-        if (minBtn)   minBtn.onclick   = () => window.electronAPI?.minimize();
-        if (maxBtn)   maxBtn.onclick   = () => window.electronAPI?.maximize();
-        if (closeBtn) closeBtn.onclick = () => window.electronAPI?.close();
+        try {
+          console.log('[TitleBar] Creating bar...');
+          const bar = document.createElement('div');
+          bar.id = 'ol-titlebar';
+          bar.innerHTML = \`${escaped}\`;
+          bar.setAttribute('data-platform', '${process.platform}');
+          document.documentElement.appendChild(bar);
+          document.body.style.paddingTop = '14px';
+          // Wire buttons via electronAPI
+          const minBtn = bar.querySelector('#ol-titlebar-minimize');
+          const maxBtn = bar.querySelector('#ol-titlebar-maximize');
+          const closeBtn = bar.querySelector('#ol-titlebar-close');
+          if (minBtn)   minBtn.onclick   = () => window.electronAPI?.minimize();
+          if (maxBtn)   maxBtn.onclick   = () => window.electronAPI?.maximize();
+          if (closeBtn) closeBtn.onclick = () => window.electronAPI?.close();
 
-        if (window.electronAPI?.onMaximizeChange) {
-          window.electronAPI.onMaximizeChange((isMax) => {
-            const svg = maxBtn?.querySelector('svg');
-            if (svg) {
-              svg.innerHTML = isMax
-                ? '<rect x="6" y="6" width="10" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2" fill="none" stroke="currentColor" stroke-width="1.5"/>'
-                : '<rect x="4" y="6" width="14" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>';
-            }
-          });
+          if (window.electronAPI?.onMaximizeChange) {
+            window.electronAPI.onMaximizeChange((isMax) => {
+              const svg = maxBtn?.querySelector('svg');
+              if (svg) {
+                svg.innerHTML = isMax
+                  ? '<rect x="6" y="6" width="10" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+                  : '<rect x="4" y="6" width="14" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>';
+              }
+            });
+          }
+          console.log('[TitleBar] Bar created successfully');
+        } catch (e) {
+          console.error('[TitleBar] Failed to create bar:', e);
         }
       }
 
       function _olEnsureBar() {
+        if (!document.body) {
+          console.log('[TitleBar] _olEnsureBar: no body yet');
+          return;
+        }
         if (!document.getElementById('ol-titlebar')) {
           _olCreateBar();
+        } else {
+          // Ensure padding is maintained if SPA resets body styles
+          if (document.body.style.paddingTop !== '14px') {
+            document.body.style.paddingTop = '14px';
+          }
         }
       }
 
@@ -285,12 +322,16 @@ function injectTitleBar(win) {
         if (Date.now() - _olStart > 10000) {
           clearInterval(window.__olTitlebarPoller);
           window.__olTitlebarPoller = null;
+          console.log('[TitleBar] Poller finished (10s elapsed)');
           return;
         }
         _olEnsureBar();
       }, 200);
+      console.log('[TitleBar] Poller started');
     })();
-  `);
+  `).catch(err => {
+    console.error('Failed to inject title bar script:', err);
+  });
 }
 
 // ── IPC handlers ──────────────────────────────────────────────────────
