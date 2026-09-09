@@ -1,7 +1,7 @@
 {
   "$schema": "Generated from frontend code inspection \u2014 Phase 2 deliverable",
   "generated_at": "2026-08-11",
-  "repository_root": "/Users/dev/_sell/olivia",
+  "repository_root": "/Users/leandrodisconzi/repos/olivia",
   "total_modules": 62,
   "load_order_source": "frontend/index.html script tags (normalized)",
   "modules": [

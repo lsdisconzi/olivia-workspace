@@ -7,9 +7,9 @@ Two modes:
   2. Batch folder: python3 render_transcript.py --input-dir <input_dir> --output-dir <output_dir> [--violation-dir DIR] [--recursive]
   3. all
   python3 scripts/render_transcript.py \
-  --input-dir /Users/dev/_sell/olivia/_shared/cases/la8159/02-transcripts/I-002 \
-  --output-dir /Users/dev/_sell/olivia/_shared/cases/la8159/02-transcripts/transcripts_rendered/I-002 \
-  --violation-dir /Users/dev/_sell/olivia/_shared/cases/la8159/01-violations/_json/EN \
+  --input-dir /Users/leandrodisconzi/repos/olivia/_shared/cases/la8159/02-transcripts/I-002 \
+  --output-dir /Users/leandrodisconzi/repos/olivia/_shared/cases/la8159/02-transcripts/transcripts_rendered/I-002 \
+  --violation-dir /Users/leandrodisconzi/repos/olivia/_shared/cases/la8159/01-violations/_json/EN \
   --recursive
 """
 

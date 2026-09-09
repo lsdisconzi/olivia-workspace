@@ -296,12 +296,12 @@ terminal log: [api][cid=-] "GET /api/memory/collections HTTP/1.1" 200 -
 ^C
 leandrodisconzi@MacBook-Pro-de-Leandro olivia % ./runtime/start-all.sh
 ✓  node v24.1.0
-⚠  openclaude/dist/cli.mjs not found at /Users/dev/_sell/olivia/openclaude
-✓  openclaude  → /Users/dev/_sell/olivia/.openclaude-runtime/node_modules/@gitlawb/openclaude/dist/cli.mjs (npm prebuilt fallback)
-✓  python      → /Users/dev/_sell/olivia/.venv/bin/python  (Python 3.14.6)
+⚠  openclaude/dist/cli.mjs not found at /Users/leandrodisconzi/repos/olivia/openclaude
+✓  openclaude  → /Users/leandrodisconzi/repos/olivia/.openclaude-runtime/node_modules/@gitlawb/openclaude/dist/cli.mjs (npm prebuilt fallback)
+✓  python      → /Users/leandrodisconzi/repos/olivia/.venv/bin/python  (Python 3.14.6)
    ollama      → not running (add --ollama to auto-start)
   Running config doctor...
-[config-doctor] /Users/dev/_sell/olivia/.env
+[config-doctor] /Users/leandrodisconzi/repos/olivia/.env
 Info:
   - OLLAMA_HOST: not set (will use default http://127.0.0.1:11434)
   - OLLAMA_KV_CACHE_TYPE: not set, defaults to FP16 (high memory usage)
@@ -378,7 +378,7 @@ Traceback (most recent call last):
   File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 362, in finish_request
     self.RequestHandlerClass(request, client_address, self)
     ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/dev/_sell/olivia/serve.py", line 11247, in __init__
+  File "/Users/leandrodisconzi/repos/olivia/serve.py", line 11247, in __init__
     super().__init__(*args, directory=str(Olivia_ROOT), **kwargs)
     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 732, in __init__
@@ -393,22 +393,22 @@ Traceback (most recent call last):
   File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 484, in handle_one_request
     method()
     ~~~~~~^^
-  File "/Users/dev/_sell/olivia/serve.py", line 12958, in do_GET
+  File "/Users/leandrodisconzi/repos/olivia/serve.py", line 12958, in do_GET
     self._api_get(raw_path)
     ~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/dev/_sell/olivia/serve.py", line 18305, in _api_get
+  File "/Users/leandrodisconzi/repos/olivia/serve.py", line 18305, in _api_get
     self._projects_api_get(path)
     ~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Users/dev/_sell/olivia/serve.py", line 21355, in _projects_api_get
+  File "/Users/leandrodisconzi/repos/olivia/serve.py", line 21355, in _projects_api_get
     "files_count": len(_case_file_entries()),
                        ~~~~~~~~~~~~~~~~~~^^
-  File "/Users/dev/_sell/olivia/serve.py", line 7677, in _case_file_entries
+  File "/Users/leandrodisconzi/repos/olivia/serve.py", line 7677, in _case_file_entries
     f.stat().st_mtime, tz=timezone.utc
     ~~~~~~^^
   File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 654, in stat
     return os.stat(self, follow_symlinks=follow_symlinks)
            ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: '/Users/dev/_sell/olivia/uploads/Olivia_workspace.db-wal'
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/leandrodisconzi/repos/olivia/uploads/Olivia_workspace.db-wal'
 ----------------------------------------
 [api][cid=-] "GET /api/projects/agent/5e61142e-651c-4730-9dfd-dbbceff5c715 HTTP/1.1" 200 -
 [api][cid=-] "GET /api/user/me HTTP/1.1" 200 -

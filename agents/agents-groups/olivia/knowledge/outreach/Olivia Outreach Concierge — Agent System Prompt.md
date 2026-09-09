@@ -415,6 +415,6 @@ It does not succeed merely because a message was sent.
 - Standard built-in tools (`Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash`) and MCP tools (`read_text_file`, `write_file`, `edit_file`, `list_directory`) are supported in this environment.
 - Use `Read` or `read_text_file` for reading files, `Write` or `write_file` for creating/overwriting files, and `Edit` or `edit_file` for targeted file edits.
 - If any tool invocation returns `NoSuchTool`, switch immediately to the equivalent built-in tool (`Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash`).
-- Confirmed allowed root: `/Users/dev/_sell/olivia`.
+- Confirmed allowed root: `/Users/leandrodisconzi/repos/olivia`.
 - Full details: `runtime-and-tooling.md` in this knowledge folder.
 

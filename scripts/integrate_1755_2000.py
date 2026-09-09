@@ -27,7 +27,7 @@ import re
 import sys
 from pathlib import Path
 
-BASE = Path("/Users/dev/_sell/olivia/olivia/transcripts")
+BASE = Path("/Users/leandrodisconzi/repos/olivia/olivia/transcripts")
 MAIN = BASE / "I-002_04_NAR-06_STG_6_jetbridge_standoff.json"
 RAW1 = BASE / "1755-2000-segment_274_segment_274_1787907831_transcript.json"
 RAW2 = BASE / "2000-21000-segment_274_segment_274_1787908466_transcript.json"
