@@ -42,3 +42,9 @@
 - Added `violationIndexToMap(violations)` for arrays and `{meta, entries}` index imports, which lays out each violation's cluster side-by-side horizontally so clusters don't overlap.
 - `importData` now routes single violations, arrays of violations, and `{meta, entries}` indexes through the map decomposition.
 - Validation: CL-001.json decomposes into 38 events + 37 links (1 central, 4 legal basis, 18 elements, 4 admissions, 4 evidence, 7 related); array of 2 violations → 76 events + 74 links; no NaN coordinates; no dangling links; `node --check` and editor diagnostics passed.
+
+## 2026-09-09 (LA8159 incident review compilation)
+- Added a responsive Detailed Review Sourcebook to the incident HTML page, linking all 22 requested detailed review files.
+- Added a runtime Reviewed Detail Addenda loader that fetches the linked fragments, de-duplicates repeated raw/code-fenced groups, and appends 16 reviewed groups with 125 segment cards.
+- Validation: two inline scripts parsed with `new Function`; browser runtime loaded all 22 review files, reported 16 groups, found no duplicate IDs, and found 125 valid reviewed audio URLs.
+- Note: the generated `_shared` HTML is intentionally ignored by `.gitignore`; the on-disk page was updated successfully.
