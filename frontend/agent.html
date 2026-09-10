@@ -1674,7 +1674,7 @@
 
       // Get active provider and model from user prefs
       const provider = window.OliviaUserPrefs ? OliviaUserPrefs.getProvider() : 'deepseek';
-      const model = window.OliviaUserPrefs ? OliviaUserPrefs.getModel() : 'deepseek-v4-flash';
+      const model = window.OliviaUserPrefs ? OliviaUserPrefs.getModel() : 'deepseek-flash';
       const apiKey = window.OliviaUserPrefs ? OliviaUserPrefs.getApiKey(provider) : '';
 
       if (presetObj && presetObj.newSession) { sessionId = null; workspaceContextSent = false }

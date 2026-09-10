@@ -1532,7 +1532,7 @@ async function sendMessage(presetText) {
 
   // Send the full model ID for Ollama so the backend can extract port info
   // from the "ollama|port|raw_id" prefix. For all other providers, send the
-  // normalized runtime model (e.g. "deepseek-v4-flash" or "qwen3.5:9b").
+  // normalized runtime model (e.g. "deepseek-flash" or "qwen3.5:9b").
   const sendModel = (config.provider === 'ollama' && config.model) ? config.model : runtimeModel;
   if (sendModel) body.model = sendModel;
   if (config.provider) body.provider = config.provider;
@@ -1583,7 +1583,7 @@ async function sendAssistantMessage(message, opts) {
   // strip any internal prefix via normalizeRuntimeModelForProvider.
   const model = (config.provider === 'ollama' && config.model)
     ? config.model
-    : (normalizeRuntimeModelForProvider(config.model, config.provider) || 'deepseek-v4-flash');
+    : (normalizeRuntimeModelForProvider(config.model, config.provider) || 'deepseek-flash');
   const provider = config.provider || 'deepseek';
   const temperature = config.temperature;
   const maxTokensRaw = config.max_tokens;

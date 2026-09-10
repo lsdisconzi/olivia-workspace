@@ -1373,7 +1373,7 @@ window.lsSetAiPrompt = function(text){
 
 window.lsRunAiAnalysis = async function(){
   var endpoint = (document.getElementById('lsAiEndpoint')||{}).value;
-  var model = (document.getElementById('lsAiModel')||{}).value || 'deepseek-v4-flash';
+  var model = (document.getElementById('lsAiModel')||{}).value || 'deepseek-flash';
   var prompt = (document.getElementById('lsAiPrompt')||{}).value;
   var output = document.getElementById('lsAiOutput');
   if(!endpoint) return lsToast('Configure o endpoint da IA');

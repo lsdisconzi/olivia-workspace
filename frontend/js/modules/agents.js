@@ -2457,7 +2457,7 @@ async function showCreateModal() {
   document.getElementById('modalScopePermissions').value = 'read_write';
   document.getElementById('modalPathLayout').value = 'strict';
   document.getElementById('modalManagedRoot').value = 'workbench';
-  document.getElementById('modalPreferredModel').value = 'deepseek-v4-pro';
+  document.getElementById('modalPreferredModel').value = 'deepseek-flash';
   document.getElementById('modalTemperature').value = '0.1';
   document.getElementById('modalUnrestrictedTools').checked = false;
   toggleModalUnrestrictedToolsDisplay();
@@ -2575,7 +2575,7 @@ async function showEditModal(agentId) {
     document.getElementById('modalDescobertaQdrantCollection').value = descobertaProfile.qdrant_collection || '';
     document.getElementById('modalDescobertaQdrantCollection').dataset.auto = descobertaProfile.qdrant_collection ? '0' : '1';
     document.getElementById('modalDescobertaGraphEnabled').checked = !!descobertaProfile.graph_enabled;
-    document.getElementById('modalPreferredModel').value = (cfg.model === 'deepseek-v4-flash' ? 'deepseek-v4-flash' : 'deepseek-v4-pro');
+    document.getElementById('modalPreferredModel').value = (cfg.model === 'deepseek-flash' ? 'deepseek-flash' : 'deepseek-flash');
     document.getElementById('modalTemperature').value = (cfg.temperature === 0 || cfg.temperature) ? String(cfg.temperature) : '';
     document.getElementById('modalUnrestrictedTools').checked = !!cfg.unrestricted_tools;
     toggleModalUnrestrictedToolsDisplay();
@@ -2662,7 +2662,7 @@ function closeModal() {
   document.getElementById('modalCustomSharedPaths').value = '';
   document.getElementById('modalSkills').value = '';
   document.getElementById('modalQdrantCollections').value = '';
-  document.getElementById('modalPreferredModel').value = 'deepseek-v4-pro';
+  document.getElementById('modalPreferredModel').value = 'deepseek-flash';
   document.getElementById('modalTemperature').value = '';
   document.getElementById('modalUnrestrictedTools').checked = false;
   toggleModalUnrestrictedToolsDisplay();
@@ -2793,7 +2793,7 @@ function _composeAgentSystemPrompt(basePrompt) {
 function prepareAgentFormAssistantPrompt() {
   const name = (document.getElementById('modalAgentName')?.value || '').trim() || '(sem nome)';
   const desc = (document.getElementById('modalAgentDesc')?.value || '').trim() || '(sem descrição)';
-  const model = (document.getElementById('modalPreferredModel')?.value || 'deepseek-v4-pro').trim();
+  const model = (document.getElementById('modalPreferredModel')?.value || 'deepseek-flash').trim();
   const unrestrictedTools = !!document.getElementById('modalUnrestrictedTools')?.checked;
   const workspaceScope = (document.getElementById('modalWorkspaceScope')?.value || 'workspace').trim();
   const sharedScopes = Array.from(document.querySelectorAll('.modal-scope:checked')).map(cb => cb.value);
@@ -2927,7 +2927,7 @@ function _populateAgentFormFromAI(config) {
   setVal('modalAgentName', config.name || '');
   setVal('modalAgentDesc', config.description || '');
   setVal('modalAgentGroup', config.group || '');
-  setSelect('modalPreferredModel', config.preferred_model || 'deepseek-v4-pro');
+  setSelect('modalPreferredModel', config.preferred_model || 'deepseek-flash');
   setChecked('modalUnrestrictedTools', config.unrestricted_tools);
 
   // Workspace scope

@@ -35,8 +35,8 @@ const ALLOWED_XAI_MODELS = new Set([
 // --- DeepSeek (fallback LLM provider, OpenAI‑compatible) ---------------------
 // Only the models actually configured in the environment
 const ALLOWED_DEEPSEEK_MODELS = new Set([
-  'deepseek-v4-flash',    // default LLM_MODEL
-  'deepseek-v4-pro',      // higher‑tier option
+  'deepseek-flash',    // default LLM_MODEL
+  'deepseek-flash',      // higher‑tier option
 ]);
 
 // --- Gemini (Google AI Studio direct API) ------------------------------------
@@ -156,7 +156,7 @@ function _isModelInCatalog(rawModel) {
 }
 
 function normalizeWorkspaceModel(rawModel, fallback) {
-  const fb = String(fallback || 'deepseek-v4-flash').trim() || 'deepseek-v4-flash';
+  const fb = String(fallback || 'deepseek-flash').trim() || 'deepseek-flash';
   const model = String(rawModel || '').trim();
   if (!model) return fb;
 
@@ -186,7 +186,7 @@ function normalizeWorkspaceModel(rawModel, fallback) {
   // Some agent modes surface external IDs (e.g. github:copilot) that are
   // not accepted by the DeepSeek-compatible endpoint used by /api/assistant/chat.
   if (lower.startsWith('github:') || lower.startsWith('copilot') || lower.startsWith('claude')) {
-    return 'deepseek-v4-pro';
+    return 'deepseek-flash';
   }
   return fb;
 }
@@ -194,23 +194,23 @@ function normalizeWorkspaceModel(rawModel, fallback) {
 function normalizeRuntimeModelForProvider(rawModel, provider) {
   const model = String(rawModel || '').trim();
   const providerName = String(provider || '').trim().toLowerCase();
-  if (!model) return 'deepseek-v4-flash';
+  if (!model) return 'deepseek-flash';
 
   if (providerName === 'ollama' && model.includes('|')) {
     const parts = model.split('|');
     if (parts.length >= 3) {
-      return parts[2].trim() || 'deepseek-v4-flash';
+      return parts[2].trim() || 'deepseek-flash';
     }
   }
 
   if (model.includes('|')) {
     const parts = model.split('|');
     if (parts.length >= 3) {
-      return parts[2].trim() || 'deepseek-v4-flash';
+      return parts[2].trim() || 'deepseek-flash';
     }
   }
 
-  return normalizeWorkspaceModel(model, 'deepseek-v4-flash');
+  return normalizeWorkspaceModel(model, 'deepseek-flash');
 }
 
 function _providerMeta(provider) {
@@ -1080,7 +1080,7 @@ function removeProviderKey(provider) {
 
 // ── Switch model
 function switchModel(modelId) {
-  const normalizedModel = normalizeWorkspaceModel(modelId, 'deepseek-v4-flash');
+  const normalizedModel = normalizeWorkspaceModel(modelId, 'deepseek-flash');
 
   // Look up which provider this model belongs to in the catalog
   let detectedProvider = null;
@@ -1088,7 +1088,7 @@ function switchModel(modelId) {
     for (const provider in window._modelCatalog) {
       const models = window._modelCatalog[provider];
       if (!Array.isArray(models)) continue;
-      if (models.some(m => normalizeWorkspaceModel(m.id, 'deepseek-v4-flash') === normalizedModel)) {
+      if (models.some(m => normalizeWorkspaceModel(m.id, 'deepseek-flash') === normalizedModel)) {
         detectedProvider = provider;
         break;
       }
@@ -1375,7 +1375,7 @@ function restoreWorkspaceConfigUI() {
 function getConfig() {
   try {
     const saved = JSON.parse(localStorage.getItem('OliviaLegal.workspace.config') || '{}');
-    const model = normalizeWorkspaceModel(saved.model, 'deepseek-v4-flash');
+    const model = normalizeWorkspaceModel(saved.model, 'deepseek-flash');
     if (saved.model !== model) {
       saved.model = model;
       localStorage.setItem('OliviaLegal.workspace.config', JSON.stringify(saved));
@@ -1405,7 +1405,7 @@ function getConfig() {
     };
   } catch (e) {
     return {
-      model: 'deepseek-v4-flash',
+      model: 'deepseek-flash',
       provider: 'deepseek',
       base_url: '',
       guided: false,

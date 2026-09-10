@@ -212,12 +212,12 @@ let _studioProject = null;   // { files: Map<path, content>, rootName: string }
 
 const STUDIO_FALLBACK_MODELS = {
   deepseek: [
-    { v: 'deepseek-v4-pro', l: 'DeepSeek V4 Pro' },
-    { v: 'deepseek-v4-flash', l: 'DeepSeek V4 Flash' }
+    { v: 'deepseek-flash', l: 'DeepSeek V4 Pro' },
+    { v: 'deepseek-flash', l: 'DeepSeek V4 Flash' }
   ],
   anthropic: [
-    { v: 'deepseek-v4-pro', l: 'DeepSeek V4 Pro (Anthropic-compatible)' },
-    { v: 'deepseek-v4-flash', l: 'DeepSeek V4 Flash (Anthropic-compatible)' }
+    { v: 'deepseek-flash', l: 'DeepSeek V4 Pro (Anthropic-compatible)' },
+    { v: 'deepseek-flash', l: 'DeepSeek V4 Flash (Anthropic-compatible)' }
   ],
   openai: [
     { v: 'gpt-4o', l: 'GPT-4o' },
@@ -1854,7 +1854,7 @@ function studioSaveCfg() {
     return;
   }
   const cfg = {
-    ai_model: modelSel ? modelSel.value : 'deepseek-v4-pro',
+    ai_model: modelSel ? modelSel.value : 'deepseek-flash',
     ai_provider: provider
   };
   localStorage.setItem('OliviaLegal.studio.config', JSON.stringify(cfg));
@@ -2183,7 +2183,7 @@ async function _studioCallLLM(prompt, context) {
 
   const message = chunks.join('\n\n');
   const modelSel = document.getElementById('studioModelSelect');
-  const model = (modelSel && modelSel.value) ? modelSel.value : 'deepseek-v4-pro';
+  const model = (modelSel && modelSel.value) ? modelSel.value : 'deepseek-flash';
 
   const combinedSystem = [
     system,
@@ -2298,7 +2298,7 @@ function studioBuildConversationPayload() {
   const modelSel = document.getElementById('studioModelSelect');
   const provCard = document.querySelector('.studio-provider-card.active');
   const provider = provCard ? provCard.dataset.sprovider : 'deepseek';
-  const model = (modelSel && modelSel.value) ? modelSel.value : 'deepseek-v4-pro';
+  const model = (modelSel && modelSel.value) ? modelSel.value : 'deepseek-flash';
   const now = new Date();
   const safeStamp = now.toISOString().replace(/[:]/g, '-').replace(/\..+$/, '');
   const humanStamp = now.toLocaleString('pt-BR');

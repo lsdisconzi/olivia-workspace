@@ -1,7 +1,7 @@
 {
   "added": [
     {
-      "id": "accounts/fireworks/models/deepseek-v4-flash",
+      "id": "accounts/fireworks/models/deepseek-flash",
       "name": "DeepSeek V4 Flash (Fireworks)",
       "provider": "fireworks",
       "base_url": "https://api.fireworks.ai/inference/v1",
@@ -14,7 +14,7 @@
       "supports_thinking": true
     },
     {
-      "id": "accounts/fireworks/models/deepseek-v4-pro",
+      "id": "accounts/fireworks/models/deepseek-flash",
       "name": "DeepSeek V4 Pro (Fireworks)",
       "provider": "fireworks",
       "base_url": "https://api.fireworks.ai/inference/v1",
@@ -230,11 +230,11 @@
     }
   ],
   "overrides": {
-    "deepseek-v4-flash": {
+    "deepseek-flash": {
       "hidden": false,
       "name": "DeepSeek V4 Flash"
     },
-    "deepseek-v4-pro": {
+    "deepseek-flash": {
       "hidden": false,
       "name": "DeepSeek V4 Pro"
     }

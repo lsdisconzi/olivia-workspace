@@ -101,7 +101,7 @@ def run_pipeline(input_dir, output_root, llm_provider=None, llm_model=None, ocr_
     effective_llm_model = llm_model
     if not effective_llm_model and llm_provider and llm_provider != "none":
         if llm_provider == "deepseek":
-            effective_llm_model = os.getenv("LLM_MODEL", "deepseek-v4-flash")
+            effective_llm_model = os.getenv("LLM_MODEL", "deepseek-flash")
         else:
             effective_llm_model = os.getenv("LLM_MODEL", "")
 
@@ -299,7 +299,7 @@ def main():
                         help="Optional LLM provider for profile analysis + refinement "
                              "(LinkedIn-style structured extraction). Default: off.")
     parser.add_argument("--llm-model", default=None,
-                        help="LLM model id used for profile analysis (e.g. deepseek-v4-flash, "
+                        help="LLM model id used for profile analysis (e.g. deepseek-flash, "
                              "gpt-4o-mini, or an Ollama model). Defaults to the LLM_MODEL env var "
                              "for deepseek, otherwise the provider's default.")
     parser.add_argument("--ocr-lang", default="por+eng", help="Tesseract language(s), e.g. por+eng")

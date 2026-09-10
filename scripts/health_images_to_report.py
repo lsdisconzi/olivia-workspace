@@ -90,7 +90,7 @@ DEFAULT_CONFIG = {
     "working_dir": "image_processing_workspace",
     "supported_extensions": [".heic", ".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".tif"],
     "llm_provider": os.getenv("LLM_PROVIDER", "deepseek"),
-    "llm_model": os.getenv("LLM_MODEL", "deepseek-v4-flash"),
+    "llm_model": os.getenv("LLM_MODEL", "deepseek-flash"),
     "ollama_model": os.getenv("OLLAMA_MODEL", "llama3.1"),
     "ollama_base_url": os.getenv("OLLAMA_BASE_URL", "http://localhost:11436/v1"),
     "llm_temperature": 0.1,

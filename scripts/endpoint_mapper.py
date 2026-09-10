@@ -251,7 +251,7 @@ class EndpointAnalyzer:
             api_key=resolved_key,
             base_url=resolved_base,
         )
-        self.model = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash")
+        self.model = os.environ.get("DEEPSEEK_MODEL", "deepseek-flash")
     
     def _extract_js_from_html(self, content: str) -> str:
         """Extract only <script> block content from HTML to reduce token usage."""

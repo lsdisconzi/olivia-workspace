@@ -1177,7 +1177,7 @@
 
     function askTopic(key) {
       const prompt = TOPIC_QUERIES[key] || 'Fale sobre a Olivia Workspace.';
-      sendAgentMessage({ message: prompt, model: 'deepseek-v4-flash', newSession: true });
+      sendAgentMessage({ message: prompt, model: 'deepseek-flash', newSession: true });
     }
 
     /* ── STATE ── */
@@ -1328,7 +1328,7 @@
         comparar: 'Compare dois módulos que você mencionou e explique quando usar cada um.',
       };
       const prompt = p[kind] || 'Pode elaborar?';
-      sendAgentMessage({ message: prompt, model: 'deepseek-v4-flash', newSession: true });
+      sendAgentMessage({ message: prompt, model: 'deepseek-flash', newSession: true });
     }
 
     /* ── RENDER ── */

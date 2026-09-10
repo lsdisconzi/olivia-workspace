@@ -1148,7 +1148,7 @@
         function askTopic(key) {
             const prompt = TOPIC_QUERIES[key] || 'Explique a frontpage Painel em portugues do Brasil.';
             // Quick-start chips favor lower-latency answers and start a fresh session.
-            sendAgentMessage({ message: prompt, model: 'deepseek-v4-flash', newSession: true });
+            sendAgentMessage({ message: prompt, model: 'deepseek-flash', newSession: true });
         }
 
         /* ── STATE ── */
@@ -1254,7 +1254,7 @@
             };
             const prompt = p[kind] || 'Pode elaborar?';
             // Follow-up shortcuts also use low-latency model routing.
-            sendAgentMessage({ message: prompt, model: 'deepseek-v4-flash', newSession: true });
+            sendAgentMessage({ message: prompt, model: 'deepseek-flash', newSession: true });
         }
 
         /* ── RENDER ── */

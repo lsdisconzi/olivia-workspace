@@ -335,7 +335,7 @@ Result: PASS (errors=0, warnings=3)
 Olivia   →  http://localhost:3229/olivia/
 Gateway →  http://localhost:8183
 │ Provider  OpenRouter                                 │
-│ Model     deepseek-v4-flash                          │
+│ Model     deepseek-flash                          │
 │ Endpoint  https://openrouter.ai/api/v1               │
 Press Ctrl+C to stop.
 

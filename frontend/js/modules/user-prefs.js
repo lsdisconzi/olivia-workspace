@@ -82,7 +82,7 @@
       if (config.model) return config.model;
     } catch (err) {}
 
-    return 'deepseek-v4-flash';
+    return 'deepseek-flash';
   }
 
   // Set active model

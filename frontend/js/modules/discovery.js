@@ -1684,7 +1684,7 @@ async function discRunIntelPipeline() {
   const provider = cfg.provider || 'anthropic';
   const apiKey = savedKeys[provider] || prompt(`Chave ${provider} para Inteligência L5-L7:`);
   if (!apiKey) return;
-  const model = cfg.model || 'deepseek-v4-pro';
+  const model = cfg.model || 'deepseek-flash';
   const btn = document.getElementById('discBtnRunIntel');
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rodando…'; }
   await _discStreamPipeline({
@@ -1708,7 +1708,7 @@ async function discRunComprehension() {
   const provider = cfg.provider || 'anthropic';
   const apiKey = savedKeys[provider] || prompt(`Chave ${provider} para Compreensão:`);
   if (!apiKey) return;
-  const model = cfg.model || 'deepseek-v4-pro';
+  const model = cfg.model || 'deepseek-flash';
   const btn = document.getElementById('discBtnRunComprehend');
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rodando…'; }
   await _discStreamPipeline({

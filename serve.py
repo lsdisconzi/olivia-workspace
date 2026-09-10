@@ -143,7 +143,7 @@ def _get_gemini_access_token() -> str:
 # LLM provider (OpenAI-compatible endpoint) — used as fallback when openclaude unavailable
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
 LLM_BASE_URL     = os.environ.get("LLM_BASE_URL", "https://api.deepseek.com")
-LLM_MODEL        = os.environ.get("LLM_MODEL", "deepseek-v4-flash")
+LLM_MODEL        = os.environ.get("LLM_MODEL", "deepseek-flash")
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 OPENROUTER_BASE_URL = os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
 FIREWORKS_API_KEY   = os.environ.get("FIREWORKS_API_KEY", "")
@@ -2117,7 +2117,7 @@ OLIVIA_ORCHESTRATOR_DEFAULT_CONFIG = {
     "output_folder": "outputs/",  # Resolved relative to project root when project_id is bound
     "scope_permissions": "read_write",
     "unrestricted_tools": True,
-    "model": "deepseek-v4-pro",
+    "model": "deepseek-flash",
     "temperature": 0.1,
     "section_profiles": {
         "case": {
@@ -3334,7 +3334,7 @@ def _generate_fallback_agent_config(description: str) -> dict:
     # Determine agent type based on keywords
     if any(kw in desc_lower for kw in ["analise", "análise", "dados", "relatório", "relatorio"]):
         agent_type = "Analysis"
-        model = "deepseek-v4-pro"
+        model = "deepseek-flash"
         skills = ["analysis/quality-review", "research/docs-explorer"]
         collections = ["uploads-global"]
         mcp_servers = ["brave-search", "filesystem"]
@@ -3342,7 +3342,7 @@ def _generate_fallback_agent_config(description: str) -> dict:
         system_prompt = f"Você é um agente de análise de dados especializado. Sua função é analisar dados, identificar padrões e gerar relatórios claros e acionáveis. Trabalhe com precisão e sempre cite suas fontes."
     elif any(kw in desc_lower for kw in ["pesquisa", "research", "documento", "documentos"]):
         agent_type = "Research"
-        model = "deepseek-v4-pro"
+        model = "deepseek-flash"
         skills = ["research/docs-explorer", "analysis/quality-review"]
         collections = ["uploads-global", "agent_custom_collection"]
         mcp_servers = ["brave-search", "filesystem", "notion"]
@@ -3350,7 +3350,7 @@ def _generate_fallback_agent_config(description: str) -> dict:
         system_prompt = f"Você é um agente de pesquisa especializado. Sua função é coletar, organizar e sintetizar informações de diversas fontes. Trabalhe de forma metódica e sempre verifique a confiabilidade das fontes."
     elif any(kw in desc_lower for kw in ["operação", "operacional", "workflow", "processo"]):
         agent_type = "Operations"
-        model = "deepseek-v4-pro"
+        model = "deepseek-flash"
         skills = ["analysis/quality-review"]
         collections = ["uploads-global"]
         mcp_servers = ["brave-search", "filesystem"]
@@ -3358,7 +3358,7 @@ def _generate_fallback_agent_config(description: str) -> dict:
         system_prompt = f"Você é um agente de operações especializado. Sua função é otimizar processos, gerenciar workflows e garantir a eficiência operacional. Trabalhe com foco em resultados e melhoria contínua."
     else:
         agent_type = "General"
-        model = "deepseek-v4-pro"
+        model = "deepseek-flash"
         skills = ["research/docs-explorer"]
         collections = ["uploads-global"]
         mcp_servers = ["brave-search", "filesystem"]
@@ -8557,7 +8557,7 @@ def _openclaude_env(provider: str | None = None, model: str | None = None,
                 env.pop(_k, None)
 
         # For Ollama, extract the raw model name (strip "ollama|port|" prefix)
-        target_model = model or env.get("LLM_MODEL", "deepseek-v4-flash")
+        target_model = model or env.get("LLM_MODEL", "deepseek-flash")
         if is_ollama:
             parts = str(model or "").split("|", 2)
             if len(parts) == 3:
@@ -9877,8 +9877,8 @@ def _build_model_overlay(m: dict, ov: dict | None, source: str) -> dict:
 
 def _build_models_catalog_payload() -> dict:
     models = [
-        {"id": "deepseek-v4-flash", "name": "DeepSeek V4 Flash", "provider": "deepseek", "cost_per_1k": 0.0014, "base_url": "https://api.deepseek.com"},
-        {"id": "deepseek-v4-pro", "name": "DeepSeek V4 Pro", "provider": "deepseek", "cost_per_1k": 0.0055, "base_url": "https://api.deepseek.com"},
+        {"id": "deepseek-flash", "name": "DeepSeek V4 Flash", "provider": "deepseek", "cost_per_1k": 0.0014, "base_url": "https://api.deepseek.com"},
+        {"id": "deepseek-flash", "name": "DeepSeek V4 Pro", "provider": "deepseek", "cost_per_1k": 0.0055, "base_url": "https://api.deepseek.com"},
     ]
 
     if _openclaude_available and os.environ.get("ANTHROPIC_API_KEY"):
@@ -10237,13 +10237,13 @@ def _stream_llm(
     if not target_base:
         target_base = "https://api.deepseek.com"
 
-    # DeepSeek's Anthropic-compatible endpoint accepts only deepseek-v4-pro/flash.
+    # DeepSeek's Anthropic-compatible endpoint accepts only deepseek-flash/flash.
     # Guard against UI/runtime model IDs like github:copilot leaking into this path.
     if "deepseek.com" in target_base:
         model_lower = str(effective_model or "").strip().lower()
-        if model_lower not in {"deepseek-v4-pro", "deepseek-v4-flash"}:
+        if model_lower not in {"deepseek-flash", "deepseek-flash"}:
             fallback = str(LLM_MODEL or "").strip().lower()
-            effective_model = fallback if fallback in {"deepseek-v4-pro", "deepseek-v4-flash"} else "deepseek-v4-flash"
+            effective_model = fallback if fallback in {"deepseek-flash", "deepseek-flash"} else "deepseek-flash"
 
     url = _build_llm_request_url(target_base, effective_model)
     payload = {
@@ -21023,7 +21023,7 @@ Gere um objeto JSON com as seguintes chaves:
 - "name": nome do agente (formato kebab-case, sem espaços)
 - "description": descrição curta do propósito do agente
 - "group": grupo/categoria do agente (ex: "Research", "Operations", "Analysis")
-- "preferred_model": modelo de IA recomendado (ex: "deepseek-v4-pro", "gpt-4o", "claude-3-5-sonnet")
+- "preferred_model": modelo de IA recomendado (ex: "deepseek-flash", "gpt-4o", "claude-3-5-sonnet")
 - "unrestricted_tools": booleano indicando se precisa de acesso irrestrito a ferramentas
 - "workspace_scope": escopo do workspace ("workspace", "uploads_projects", "own", "parent")
 - "system_prompt": prompt de sistema detalhado para o agente (2-3 parágrafos)
@@ -21038,7 +21038,7 @@ Exemplo de formato:
   "name": "data-analysis-agent",
   "description": "Agente para análise de dados e geração de relatórios",
   "group": "Analysis",
-  "preferred_model": "deepseek-v4-pro",
+  "preferred_model": "deepseek-flash",
   "unrestricted_tools": false,
   "workspace_scope": "workspace",
   "system_prompt": "Você é um agente de análise de dados especializado...",
@@ -21675,7 +21675,7 @@ Exemplo de formato:
             auth = str(self.headers.get("Authorization") or "").strip()
             if auth.lower().startswith("bearer "):
                 api_key = auth.split(" ", 1)[1].strip()
-        model = str((qs.get("model") or ["deepseek-v4-flash"])[0] or "deepseek-v4-flash").strip()
+        model = str((qs.get("model") or ["deepseek-flash"])[0] or "deepseek-flash").strip()
         try:
             concurrency = int((qs.get("concurrency") or [3])[0] or 3)
         except Exception:

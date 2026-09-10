@@ -39,7 +39,7 @@
     trafficKey: 'OliviaLegal.endpoints.traffic',
     gatewayUrl: null,
     aiEndpoint: null,       // LLM chat endpoint — auto-detected if null
-    aiModel: 'deepseek-v4-flash', // model for chat responses
+    aiModel: 'deepseek-flash', // model for chat responses
     trafficCapture: true,
     aiEnabled: true,
     autoFetchCatalog: true
@@ -897,7 +897,7 @@
           message: msgWithContext,
           system: systemPrompt,
           history: history,
-          model: config.aiModel || 'deepseek-v4-flash'
+          model: config.aiModel || 'deepseek-flash'
         })
       });
 
