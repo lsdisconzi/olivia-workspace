@@ -1100,6 +1100,7 @@
   "permission.awaiting": "In attesa di decisione per {tool}.",
   "permission.deny": "Nega",
   "permission.loadingSuggestion": "Caricamento suggerimento...",
+  "permission.moreParams": "+{n} altri",
   "permission.noSuggestion": "Nessun suggerimento disponibile.",
   "permission.requiredPrefix": "Autorizzazione necessaria:",
   "permission.suggestion": "Suggerimento: in base al tuo utilizzo ({allows} consentite, {denies} negazioni), considera di consentire sempre questo strumento.",

@@ -374,6 +374,7 @@ async function loadLocalSavedChatByName(name) {
   const log = document.getElementById('chatLog');
   if (log) log.innerHTML = '';
   chatHistory.length = 0;
+  if (typeof window.chatResetAutoScroll === 'function') window.chatResetAutoScroll();
 
   chat.messages.forEach((msg) => {
     const role = msg.role || 'agent';
@@ -532,6 +533,7 @@ async function loadSavedChatByName(name) {
     showChatView();
     document.getElementById('chatLog').innerHTML = '';
     chatHistory.length = 0;
+    if (typeof window.chatResetAutoScroll === 'function') window.chatResetAutoScroll();
     data.messages.forEach(msg => addBubble(msg.role, msg.content || msg.html || '', true));
     addSystemBubble(`Conversa "${name.replace(/\.json$/, '')}" carregada.`);
   } catch (e) {

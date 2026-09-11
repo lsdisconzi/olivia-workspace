@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@gitlawb/openclaude": "^0.24.0"
+    "@gitlawb/openclaude": "^0.24.0",
+    "sharp": "^0.35.4"
   }
 }

@@ -100,6 +100,15 @@ const _agentRunSessions = new Map();
 let _stopDecisionPending = false;
 let _pendingDecisionRun = null;
 let _lastRunContext = null;
+// A run is "pending" from dispatch until the fetch resolves and activeStream is
+// assigned. Without these, the composer stop button is a no-op for the whole
+// request-latency window (backend/agent startup can take seconds).
+let _pendingRunAbort = null;
+let _pendingRunId = null;
+// True while an /api/assistant/chat stream is in flight. Assistant mode has no
+// activeStream/runId, so the composer stop button needs this flag to reach it.
+let _assistantStreamBusy = false;
+let _assistantRunSeq = 0;
 const CHAT_MESSAGE_MAX_CHARS = 240000;
 const ASSISTANT_CHAT_MESSAGE_MAX_CHARS = 120000;
 const ASSISTANT_HISTORY_ENTRY_MAX_CHARS = 24000;
@@ -1170,6 +1179,7 @@ function showWelcomeView() {
   if (typeof legalRouterHideView === 'function') legalRouterHideView();
   if (welcome) welcome.classList.remove('hidden');
   if (chatLog) { chatLog.classList.remove('visible'); chatLog.innerHTML = ''; }
+  resetChatAutoScroll();
   if (chatHeader) chatHeader.classList.remove('visible');
   if (chatToolbar) chatToolbar.style.display = 'none';
   chatHistory.length = 0;
@@ -1200,6 +1210,7 @@ function resetToWelcome(event) {
   const chatLog = document.getElementById('chatLog');
   if (chatLog) chatLog.innerHTML = '';
   chatLog.classList.remove('visible');
+  resetChatAutoScroll();
 
   // Show welcome state
   const welcomeState = document.getElementById('welcomeState');
@@ -1273,6 +1284,64 @@ function scrollHintsCarousel(direction) {
   });
 }
 
+// ── Chat auto-scroll ("stick to bottom") ─────────────────────────────────
+// The main chat log follows new content while the user remains near the
+// bottom. As soon as the user scrolls up to re-read earlier responses,
+// auto-scroll is suspended so the reading position is never yanked away.
+// It re-arms automatically when the user scrolls back to the bottom.
+const CHAT_AUTOSCROLL_BOTTOM_THRESHOLD_PX = 80;
+let _chatAutoScrollPinned = true; // true => follow new content
+let _chatAutoScrollBound = false; // scroll listener attached once
+
+function _chatLogEl() {
+  return document.getElementById('chatLog');
+}
+
+// "At bottom" = within the threshold, or no scrollbar at all.
+function _isChatNearBottom(el, threshold) {
+  if (!el) return true;
+  const t = (typeof threshold === 'number') ? threshold : CHAT_AUTOSCROLL_BOTTOM_THRESHOLD_PX;
+  return (el.scrollHeight - el.scrollTop - el.clientHeight) <= t;
+}
+
+// Attach the scroll listener once. Any scroll that leaves the bottom zone
+// (a genuine user scroll, or programmatic) suspends auto-scroll; returning
+// to the bottom re-arms it.
+function _bindChatAutoScroll(el) {
+  if (_chatAutoScrollBound || !el || typeof el.addEventListener !== 'function') return;
+  el.addEventListener('scroll', function () {
+    _chatAutoScrollPinned = _isChatNearBottom(el);
+  }, { passive: true });
+  _chatAutoScrollBound = true;
+}
+
+// Scroll the chat log to the newest content. Respects the user's reading
+// position unless force=true (used for the user's own message and for
+// blocking prompts that require an answer before the run continues).
+function scrollChatToBottom(force) {
+  const el = _chatLogEl();
+  if (!el) return;
+  _bindChatAutoScroll(el);
+  if (!force && !_chatAutoScrollPinned) return;
+  el.scrollTop = el.scrollHeight;
+  _chatAutoScrollPinned = true;
+}
+
+// Re-arm auto-scroll (e.g., brand new conversation / jump to latest).
+function resetChatAutoScroll() {
+  _chatAutoScrollPinned = true;
+}
+
+// Bind as soon as the chat log exists so user scrolls are tracked even
+// before the first message of a session.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function () { _bindChatAutoScroll(_chatLogEl()); }, { once: true });
+} else {
+  _bindChatAutoScroll(_chatLogEl());
+}
+window.chatScrollToBottom = scrollChatToBottom;
+window.chatResetAutoScroll = resetChatAutoScroll;
+
 // Add chat bubble to log
 function addBubble(role, html, skipHistory) {
   showChatView();
@@ -1291,7 +1360,9 @@ function addBubble(role, html, skipHistory) {
   div.innerHTML = controlsHtml + html;
   log.appendChild(div);
   _bindChatFileLinkInteractions(div);
-  log.scrollTop = log.scrollHeight;
+  // Reveal the user's own outgoing message; respect the reading position
+  // for agent/system content the user may be scrolling back through.
+  scrollChatToBottom(role === 'user');
   if (!skipHistory) chatHistory.push({ role, html, timestamp: new Date().toISOString() });
   return div;
 }
@@ -1315,22 +1386,25 @@ function addThinkingBubble() {
   const phrase = phrases[Math.floor(Math.random() * phrases.length)];
   div.innerHTML = `${phrase} <span class="chat-thinking-dots"><span></span><span></span><span></span></span>`;
   log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
+  scrollChatToBottom();
   return div;
 }
 
 // Set thinking indicator in UI
 function setThinking(active) {
-  document.getElementById('chatThinkingBadge').style.display = active ? 'inline' : 'none';
+  const badge = document.getElementById('chatThinkingBadge');
+  if (badge) badge.style.display = active ? 'inline' : 'none';
   const btn = document.getElementById('sendBtn');
-  btn.disabled = active;
+  if (btn) {
+    btn.disabled = active;
+    btn.style.display = active ? 'none' : 'inline-flex';
+  }
   const stopBtn = document.getElementById('stopBtn');
   if (stopBtn) {
     stopBtn.style.display = active ? 'inline-flex' : 'none';
     stopBtn.disabled = false;
     stopBtn.innerHTML = '<i class="fas fa-stop"></i>';
   }
-  if (btn) btn.style.display = active ? 'none' : 'inline-flex';
   // Update sidebar status
   const sidebarStatus = document.getElementById('sidebarStatus');
   const sidebarDot = document.getElementById('sidebarAgentDot');
@@ -1342,16 +1416,60 @@ function setThinking(active) {
 // Stop whichever stream is currently active (wired to composer stop button),
 // then ask the user whether to continue or not.
 function stopActiveStream() {
-  if (!activeStream || !activeStream.id) return;
-  _stopDecisionPending = true;
-  _pendingDecisionRun = activeStream.id;
-  try { stopStream(activeStream.id, activeStream.type === 'guided'); } catch (e) { console.warn('[Stream] stopActiveStream:', e); }
+  const hasActive = !!(activeStream && activeStream.id);
+  const pendingAbort = _pendingRunAbort;
+  const assistantBusy = _assistantStreamBusy &&
+    typeof window.LA8159API !== 'undefined' &&
+    window.LA8159API.assistant &&
+    typeof window.LA8159API.assistant.stop === 'function';
+
+  // Nothing in flight — keep the button inert.
+  if (!hasActive && !pendingAbort && !assistantBusy) return;
+
+  // The run id is available as soon as runStream() dispatches, even before the
+  // response arrives, so the resume decision can target its log bubble.
+  const runId = (hasActive && activeStream.id) ? activeStream.id : _pendingRunId;
+  if (runId) {
+    _stopDecisionPending = true;
+    _pendingDecisionRun = runId;
+  }
+
   const stopBtn = document.getElementById('stopBtn');
   if (stopBtn) {
     stopBtn.disabled = true;
     stopBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
   }
-  _showResumeDecision(activeStream.id);
+
+  // Assistant mode: no activeStream/runId and no resume-decision concept.
+  if (assistantBusy && !hasActive) {
+    // Invalidate this run so its late finally() cannot re-arm/disable the
+    // composer after a subsequent message has started.
+    _assistantRunSeq++;
+    _assistantStreamBusy = false;
+    try { window.LA8159API.assistant.stop(); }
+    catch (e) { console.warn('[Stream] assistant stop failed:', e); }
+    setThinking(false);
+    return;
+  }
+
+  if (hasActive) {
+    try { stopStream(activeStream.id, activeStream.type === 'guided'); } catch (e) { console.warn('[Stream] stopActiveStream:', e); }
+  } else if (pendingAbort) {
+    // Request dispatched but response not yet received: tell the backend to kill
+    // the subprocess it may already have started, then sever the connection.
+    // Scope the kill to this run's id so concurrent runs in other sections
+    // are left untouched.
+    fetch(`${API_BASE}/api/agent/stop`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ run_id: String(_pendingRunId || '') }),
+      keepalive: true,
+    }).catch((err) => console.warn('[Stream] stopStream (pending) failed:', (err && err.message) || err));
+    _pendingRunAbort = null;
+    try { pendingAbort.abort(); } catch (e) { console.warn('[Stream] abort (pending) failed:', e); }
+  }
+
+  if (runId) _showResumeDecision(runId);
 }
 
 // Inline "continue or not" prompt shown after the user stops the agent.
@@ -1370,8 +1488,8 @@ function _showResumeDecision(runId) {
     `<button class="resume-stop-btn" onclick="resumeStoppedAgent('stop')"><i class="fas fa-ban"></i> ${_t('chat.resume.stop', 'Encerrar')}</button>` +
     `</div>`;
   host.appendChild(bar);
-  const chatLog = document.getElementById('chatLog');
-  if (chatLog) chatLog.scrollTop = chatLog.scrollHeight;
+  // Blocking prompt: the run waits for an answer, so bring it into view.
+  scrollChatToBottom(true);
 }
 
 // User decision after stopping: resume the same task or leave it stopped.
@@ -1636,8 +1754,12 @@ async function sendAssistantMessage(message, opts) {
   let contentEl = null;
   let progressUi = null;
   let sawAssistantToken = false;
+  // Identifies this assistant run so a late finally() from a previously stopped
+  // run cannot clear the busy flag / composer state of a newer run.
+  const assistantRunSeq = ++_assistantRunSeq;
 
   try {
+    _assistantStreamBusy = true;
     if (thinkingBubble && thinkingBubble.parentNode) {
       thinkingBubble.parentNode.removeChild(thinkingBubble);
     }
@@ -1658,7 +1780,7 @@ async function sendAssistantMessage(message, opts) {
     bubble.innerHTML = controlsHtml + `<div class="answer-md"><div class="LA8159-inline-loading">${_t('assistantProgress.awaitingTokens', 'Aguardando os primeiros tokens da resposta...')}</div></div>`;
     log.appendChild(bubble);
     contentEl = bubble.querySelector('.answer-md');
-    log.scrollTop = log.scrollHeight;
+    scrollChatToBottom();
 
     if (!window.LA8159API || !window.LA8159API.assistant || typeof window.LA8159API.assistant.chat !== 'function') {
       throw new Error('Assistant API client unavailable (expected LA8159API.assistant.chat).');
@@ -1695,7 +1817,7 @@ async function sendAssistantMessage(message, opts) {
         const hintSlice = String(accumulated || '').slice(-800);
         updateRuntimeRouteFromTokenHint(hintSlice);
         contentEl.innerHTML = marked.parse(accumulated);
-        log.scrollTop = log.scrollHeight;
+        scrollChatToBottom();
       }
     );
 
@@ -1743,6 +1865,11 @@ async function sendAssistantMessage(message, opts) {
     if (wsLabel) wsLabel.classList.add('replied');
 
   } catch (error) {
+    // User pressed Stop — not an error, just end the stream quietly.
+    if (error && error.userStopped) {
+      finalizeAssistantProgressUi(progressUi, _t('assistantProgress.stopped', 'Resposta interrompida.'), false);
+      return;
+    }
     var _aMsg = (error && error.message) || String(error);
     var _missingKeyMatch = _aMsg.match(/^MISSING_API_KEY:([^:]+):(.+)$/);
     if (_missingKeyMatch) {
@@ -1783,7 +1910,10 @@ async function sendAssistantMessage(message, opts) {
     }
     finalizeAssistantProgressUi(progressUi, _t('assistantProgress.error', 'Falha ao gerar resposta.'), true);
   } finally {
-    setThinking(false);
+    if (assistantRunSeq === _assistantRunSeq) {
+      _assistantStreamBusy = false;
+      setThinking(false);
+    }
   }
 }
 
@@ -1866,8 +1996,7 @@ function upsertAssistantStep(ui, key, payload) {
     item.detailsEl.style.display = '';
   }
 
-  const log = document.getElementById('chatLog');
-  if (log) log.scrollTop = log.scrollHeight;
+  scrollChatToBottom();
 }
 
 function _filesContextRootsInfo(roots) {
@@ -2179,6 +2308,10 @@ async function runStream(url, body, isGuided, thinkingBubble) {
   const log = document.getElementById('chatLog');
   const startTime = Date.now();
   const runId = 'run-' + Date.now();
+  _pendingRunId = runId;
+  // Register this run's id with the backend so the stop button can terminate
+  // exactly this subprocess (scoped /api/agent/stop) without touching others.
+  body.client_run_id = runId;
   setChatRuntimeRoute('detecting', 'Mensagem enviada para /run.');
   currentRunId = runId;
   stepCount = 0;
@@ -2214,7 +2347,7 @@ async function runStream(url, body, isGuided, thinkingBubble) {
   let logReady = false;
   const logEl = () => document.getElementById(`log-${runId}`);
   function initLog() { const el = logEl(); if (!logReady && el) { el.innerHTML = ''; logReady = true; } }
-  function logAppend(el) { initLog(); const l = logEl(); if (l) { l.appendChild(el); } log.scrollTop = log.scrollHeight; }
+  function logAppend(el) { initLog(); const l = logEl(); if (l) { l.appendChild(el); } scrollChatToBottom(); }
   function makeEl(tag, cls, html) { const e = document.createElement(tag); e.className = cls; if (html !== undefined) e.innerHTML = html; return e; }
 
   // Remove thinking bubble if present
@@ -2222,7 +2355,7 @@ async function runStream(url, body, isGuided, thinkingBubble) {
     thinkingBubble.parentNode.removeChild(thinkingBubble);
   }
   log.appendChild(streamWrap);
-  log.scrollTop = log.scrollHeight;
+  scrollChatToBottom();
 
   // Timer update
   const timerEl = document.getElementById(`timer-${runId}`);
@@ -2235,6 +2368,7 @@ async function runStream(url, body, isGuided, thinkingBubble) {
 
   // Prepare event source or fetch with streaming
   let eventSource = null;
+  let abortController = null;
   try {
     console.log('🌐 Starting stream to', url);
     const runHeaders = { 'Content-Type': 'application/json' };
@@ -2244,7 +2378,8 @@ async function runStream(url, body, isGuided, thinkingBubble) {
         runHeaders.Authorization = 'Bearer ' + streamKey;
       }
     }
-    const abortController = new AbortController();
+    abortController = new AbortController();
+    _pendingRunAbort = abortController;
     const response = await fetch(url, {
       method: 'POST',
       headers: runHeaders,
@@ -2259,6 +2394,7 @@ async function runStream(url, body, isGuided, thinkingBubble) {
 
     activeStream = {
       id: runId,
+      runId: runId,
       abort: abortController,
       type: body.agent_mode || 'general',
       sessionKey: String(body.agent_id || _selectedAgentSessionKey()),
@@ -2315,6 +2451,8 @@ async function runStream(url, body, isGuided, thinkingBubble) {
     clearInterval(timerInterval);
     if (eventSource) eventSource.close();
     activeStream = null;
+    if (_pendingRunAbort === abortController) _pendingRunAbort = null;
+    if (_pendingRunId === runId) _pendingRunId = null;
     setThinking(false);
   }
 }
@@ -2362,8 +2500,7 @@ function onAgentStatus(data) {
   }
 
   log.appendChild(el);
-  const chatLog = document.getElementById('chatLog');
-  if (chatLog) chatLog.scrollTop = chatLog.scrollHeight;
+  scrollChatToBottom();
 }
 
 function onCheckpoint(step) {
@@ -2416,6 +2553,32 @@ function onAwaitingInput(toolName) {
 }
 
 // ── Permission-request dialog ──────────────────────────────────────────────
+// Render one tool-input value as a compact, human-readable single-line preview.
+// Objects and arrays MUST be serialized here: a bare String(value) collapses them
+// to "[object Object]" (e.g. the `edits` array of mcp__filesystem__edit_file).
+function _permissionInputPreview(value, maxLen) {
+  const limit = Number.isFinite(maxLen) ? maxLen : 200;
+  let text;
+  if (typeof value === 'string') {
+    text = value;
+  } else if (value === null || value === undefined) {
+    text = String(value);
+  } else if (typeof value === 'object') {
+    try {
+      text = JSON.stringify(value);
+    } catch (_) {
+      text = '[unserializable]';
+    }
+    // JSON.stringify returns undefined for values it cannot represent.
+    if (typeof text !== 'string' || !text) text = '[unserializable]';
+  } else {
+    text = String(value);
+  }
+  // Collapse whitespace so a multi-line value cannot break the compact card.
+  text = text.replace(/\s+/g, ' ').trim();
+  return text.length > limit ? text.slice(0, limit) + '…' : text;
+}
+
 // Called when the backend emits a `permission_request` SSE event.
 // Shows an inline allow/deny card in the chat log or assistant progress UI.
 function onPermissionRequest(evt, targetEl) {
@@ -2434,9 +2597,15 @@ function onPermissionRequest(evt, targetEl) {
   const inputObj = evt.input || {};
 
   // Build a short summary of the tool input
-  const inputLines = Object.entries(inputObj)
-    .slice(0, 5)
-    .map(([k, v]) => `<span class="perm-key">${escapeHtml(k)}:</span> ${escapeHtml(String(v).slice(0, 200))}`);
+  const MAX_INPUT_LINES = 5;
+  const inputEntries = Object.entries(inputObj);
+  const inputLines = inputEntries
+    .slice(0, MAX_INPUT_LINES)
+    .map(([k, v]) => `<span class="perm-key">${escapeHtml(k)}:</span> ${escapeHtml(_permissionInputPreview(v, 200))}`);
+  const hiddenCount = inputEntries.length - inputLines.length;
+  if (hiddenCount > 0) {
+    inputLines.push(`<span class="perm-key">${escapeHtml(_tpl('permission.moreParams', '+{n} more', { n: hiddenCount }))}</span>`);
+  }
   const inputSummary = inputLines.length ? `<div class="perm-input">${inputLines.join('<br>')}</div>` : '';
 
   const cardId = `perm-card-${requestId}`;
@@ -3592,8 +3761,8 @@ function onToolCall(toolName, args) {
       </div>
     `;
     log.appendChild(el);
-    const chatLog = document.getElementById('chatLog');
-    if (chatLog) chatLog.scrollTop = chatLog.scrollHeight;
+    // Blocking prompt: the agent waits for the user's answer.
+    scrollChatToBottom(true);
     return;
   }
 
@@ -3628,8 +3797,7 @@ function onToolCall(toolName, args) {
   log.appendChild(el);
   _lastToolCallsMap[runId] = el;
 
-  const chatLog = document.getElementById('chatLog');
-  if (chatLog) chatLog.scrollTop = chatLog.scrollHeight;
+  scrollChatToBottom();
 }
 
 function onToolResult(toolName, result) {
@@ -3706,8 +3874,7 @@ function onToolResult(toolName, result) {
 
   // response/final are model-text channels; avoid rendering one "Resultado" block per token.
   if (normalizedToolName === 'response' || normalizedToolName === 'final') {
-    const chatLog = document.getElementById('chatLog');
-    if (chatLog) chatLog.scrollTop = chatLog.scrollHeight;
+    scrollChatToBottom();
     return;
   }
 
@@ -3763,8 +3930,7 @@ function onToolResult(toolName, result) {
     log.appendChild(el);
   }
 
-  const chatLog = document.getElementById('chatLog');
-  if (chatLog) chatLog.scrollTop = chatLog.scrollHeight;
+  scrollChatToBottom();
 }
 
 function onDone(runId, isGuided) {
@@ -4118,8 +4284,14 @@ function stopStream(runId, isGuided) {
   } else {
     stopEndpoint = `${API_BASE}/api/agent/stop`;
   }
-  fetch(stopEndpoint, { method: 'POST' })
-    .catch(function (err) { console.warn('[Stream] stopStream failed:', err && err.message || err); });
+  // Scope the kill to this run's id so concurrent runs in other sections are
+  // not terminated by a single stop click.
+  fetch(stopEndpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ run_id: String(activeStream.runId || runId || '') }),
+    keepalive: true,
+  }).catch(function (err) { console.warn('[Stream] stopStream failed:', err && err.message || err); });
 
   // Sever the SSE connection so the run stops instead of silently continuing
   // in the background. The backend also kills the run on the stop endpoint.

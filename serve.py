@@ -6264,6 +6264,16 @@ _PROJECT_RENDERABLE_EXTS = frozenset({
 # the index small and prevents a single big file from weighing down the UI.
 _PROJECT_RENDERABLE_MAX_BYTES = 250_000
 
+# Binary assets (images, PDFs) are listed so folders like `uploads/` show the
+# files the user actually uploaded. They are previewed through the `/raw`
+# endpoint rather than rendered as text, so the text size cap above does not
+# apply; they get their own (much larger) cap instead.
+_PROJECT_ASSET_EXTS = frozenset({
+    ".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".ico", ".avif",
+    ".tif", ".tiff", ".heic", ".heif", ".pdf",
+})
+_PROJECT_ASSET_MAX_BYTES = 25_000_000
+
 
 def _is_renderable_project_file(rel_path: str, size: int) -> bool:
     """Return True only for files the workspace should list/render.
@@ -6285,16 +6295,24 @@ def _is_renderable_project_file(rel_path: str, size: int) -> bool:
     # is already excluded by callers; treat them as non-renderable anyway.
     if name in ("project.json", "index.json"):
         return False
-    if size is not None and size > _PROJECT_RENDERABLE_MAX_BYTES:
-        return False
     # A leading-dot file without a known extension (e.g. `.gitignore`) is
     # renderable as text; otherwise require a known text/code extension.
-    suffix = ("." + name.split(".", 1)[1]) if "." in name and not name.startswith(".") else ""
-    if name.startswith(".") and suffix.lower() not in _PROJECT_RENDERABLE_EXTS:
+    # Use the LAST dot: names with dots inside them (e.g. timestamps like
+    # `19.45.42.png` or `img.backup.md`) must still resolve their real suffix.
+    _dot = name.rfind(".")
+    suffix = name[_dot:].lower() if _dot > 0 else ""
+    suffix_l = suffix
+    # Binary assets are previewed, not rendered as text: allow them up to the
+    # asset cap before the (much smaller) text cap rejects them.
+    if suffix_l in _PROJECT_ASSET_EXTS:
+        return size is None or size <= _PROJECT_ASSET_MAX_BYTES
+    if size is not None and size > _PROJECT_RENDERABLE_MAX_BYTES:
+        return False
+    if name.startswith(".") and suffix_l not in _PROJECT_RENDERABLE_EXTS:
         # Dotfiles with no extension (e.g. .gitignore, .env) are text.
         # Dotfiles with an unknown extension (e.g. .woff2) are not.
         return name not in {".gitignore", ".gitattributes", ".gitmodules", ".env", ".editorconfig"}
-    return suffix.lower() in _PROJECT_RENDERABLE_EXTS
+    return suffix_l in _PROJECT_RENDERABLE_EXTS
 
 
 def _list_archived_projects() -> list[dict]:
@@ -6538,6 +6556,74 @@ def _sync_project_index_map(project_id: str) -> None:
         )
     except Exception:
         pass
+
+
+def _rebuild_project_index(pid: str) -> dict:
+    """Rebuild a project's index.json (non-case projects) and return the payload.
+
+    Single source of truth shared by ``POST /index/refresh`` and by project
+    uploads so the workspace docs tree always reflects what is actually on
+    disk. Uploads wrote files to ``<project>/uploads/`` but never touched
+    ``index.json``; because the docs tree reads only ``index.json`` (via
+    ``/files``), freshly uploaded files -- and therefore the whole ``uploads/``
+    folder -- were invisible until an explicit index refresh.
+    """
+    project_root = _project_root_for_id(pid)
+    if not project_root:
+        return {
+            "status": "skipped",
+            "detail": "project not found",
+            "project": {"project_id": pid, "name": pid},
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "total_files": 0,
+            "sections": {},
+        }
+
+    sections: dict = {}
+    section_names = _case_sections() if _is_case_project(pid) else PROJECT_SECTION_FOLDERS
+    for section_name in section_names:
+        section_dir = project_root / section_name
+        files = []
+        if section_dir.is_dir():
+            for f in sorted(section_dir.rglob("*")):
+                if f.is_file():
+                    rel = str(f.relative_to(section_dir))
+                    size = f.stat().st_size
+                    # Only index files the workspace viewer can render
+                    # (skips node_modules, dist, caches, binaries, ...).
+                    if not _is_renderable_project_file(rel, size):
+                        continue
+                    files.append({
+                        "name": rel,
+                        "size": size,
+                        "modified_at": datetime.fromtimestamp(
+                            f.stat().st_mtime, tz=timezone.utc
+                        ).isoformat(),
+                    })
+        sections[section_name] = {"count": len(files), "files": files}
+
+    total = sum(s["count"] for s in sections.values())
+    meta = {}
+    if (project_root / "project.json").is_file():
+        try:
+            meta = json.loads((project_root / "project.json").read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    index = {
+        "project": {
+            "project_id": CASE_PROJECT_ID if _is_case_project(pid) else meta.get("project_id", pid),
+            "name": CASE_PROJECT_NAME if _is_case_project(pid) else meta.get("name", pid),
+            "path": str(project_root),
+        },
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "total_files": total,
+        "sections": sections,
+    }
+    if not _is_case_project(pid):
+        (project_root / "index.json").write_text(json.dumps(index, indent=2), encoding="utf-8")
+    _write_projects_manifest()
+    _sync_project_index_map(pid)
+    return index
 
 
 def _write_projects_manifest() -> dict:
@@ -8741,12 +8827,14 @@ def _stream_openclaude(
     mcp_servers: list[str] | None = None,
     api_key: str | None = None,
     base_url: str | None = None,
+    run_id: str | None = None,
 ):
     """Yield SSE-ready dicts from openclaude — handles both chat and agent tool-use turns.
-    
+
     session_id  — if provided, openclaude resumes that session (conversation memory)
     out_session_id — a list; after streaming, [0] will contain the session_id openclaude used
     fork_session — if True and session_id is set, uses --fork-session (new ID, keeps history)
+    run_id — client-supplied run identifier; lets /api/agent/stop target this run alone
     """
     # With --input-format=stream-json the prompt must arrive as a user message on
     # stdin; we always keep stdin as PIPE so we can send control_response later.
@@ -8783,7 +8871,7 @@ def _stream_openclaude(
         env=env,
         cwd=str(PLANNING_DIR),
     )
-    _register_agent_process(proc)
+    _register_agent_process(proc, run_id)
 
     # Send the prompt as a stream-json user message on stdin.
     # The stdin channel stays open so we can later send control_response messages.
@@ -9087,6 +9175,9 @@ def _stream_openclaude(
 # Registry of live openclaude agent subprocesses so the frontend stop button
 # (/api/agent/stop, /api/guided/stop, /api/auditor/stop) can terminate the run
 # instead of leaving it executing in the background.
+# Entries are {"proc": Popen, "run_id": str}. run_id is the client-supplied
+# identifier for a single chat/agent run; it lets a stop request target exactly
+# one run so concurrent runs in other sections are not killed.
 _AGENT_PROCESSES: list = []
 _AGENT_PROCESSES_LOCK = threading.Lock()
 
@@ -9116,10 +9207,10 @@ def _drain_stdout_to_queue(proc, stdout_q: "queue.Queue") -> None:
             pass
 
 
-def _register_agent_process(proc) -> None:
+def _register_agent_process(proc, run_id: str | None = None) -> None:
     try:
         with _AGENT_PROCESSES_LOCK:
-            _AGENT_PROCESSES.append(proc)
+            _AGENT_PROCESSES.append({"proc": proc, "run_id": str(run_id or "")})
     except Exception:
         pass
 
@@ -9127,20 +9218,35 @@ def _register_agent_process(proc) -> None:
 def _unregister_agent_process(proc) -> None:
     try:
         with _AGENT_PROCESSES_LOCK:
-            if proc in _AGENT_PROCESSES:
-                _AGENT_PROCESSES.remove(proc)
+            _AGENT_PROCESSES[:] = [
+                e for e in _AGENT_PROCESSES
+                if (e.get("proc") if isinstance(e, dict) else e) is not proc
+            ]
     except Exception:
         pass
 
 
-def _stop_active_agent_processes() -> int:
-    """Terminate every live openclaude agent subprocess; returns kill count."""
+def _stop_active_agent_processes(run_id: str | None = None) -> int:
+    """Terminate live openclaude agent subprocesses; returns kill count.
+
+    When ``run_id`` is given, only the subprocess registered for that run is
+    terminated, so stopping one run never kills a concurrent run in another
+    section. Without it, every registered subprocess is terminated (legacy
+    global behaviour, kept for backward compatibility).
+    """
+    wanted = str(run_id or "").strip()
     killed = 0
     try:
         with _AGENT_PROCESSES_LOCK:
-            procs = list(_AGENT_PROCESSES)
-            _AGENT_PROCESSES.clear()
-        for proc in procs:
+            entries = list(_AGENT_PROCESSES)
+            if wanted:
+                matched = [e for e in entries if str(e.get("run_id") or "") == wanted]
+                _AGENT_PROCESSES[:] = [e for e in entries if str(e.get("run_id") or "") != wanted]
+            else:
+                matched = entries
+                _AGENT_PROCESSES.clear()
+        for entry in matched:
+            proc = entry.get("proc") if isinstance(entry, dict) else entry
             try:
                 if proc is not None and proc.poll() is None:
                     proc.terminate()
@@ -9164,6 +9270,7 @@ def _run_openclaude_agent(
     base_url: str | None = None,
     system_prompt: str | None = None,
     denied_tools: list[str] | None = None,
+    run_id: str | None = None,
 ):
     """Run openclaude as an autonomous agent; push Olivia-format events onto event_q."""
     use_stdin = _prompt_too_big_for_argv(prompt)
@@ -9194,7 +9301,7 @@ def _run_openclaude_agent(
         env=env,
         cwd=str(PLANNING_DIR),
     )
-    _register_agent_process(proc)
+    _register_agent_process(proc, run_id)
     if use_stdin:
         try:
             proc.stdin.write(prompt.encode("utf-8", errors="replace"))
@@ -13444,6 +13551,9 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             user_email = self._auth_current_email()
             custom_api_key = _resolve_user_api_key(user_email, provider=provider, model=model)
         session_id = body.get("session_id")
+        # Client-supplied run id: lets the stop button terminate exactly this
+        # run's subprocess (scoped /api/agent/stop) instead of every live run.
+        client_run_id = str(body.get("client_run_id") or "").strip()
         project_id = _resolve_context_project_id(body.get("project_id"), agent_id)
         wants_ollama = _is_ollama_request(provider, model)
         has_selected_agent = bool(str(agent_id or "").strip())
@@ -13484,13 +13594,13 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
 
         # Priority: OpenClaude with any provider (including Ollama) > direct LLM fallback
         if wants_ollama and _openclaude_available:
-            self._agent_run_openclaude(user_prompt, model, provider="ollama", session_id=session_id, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url)
+            self._agent_run_openclaude(user_prompt, model, provider="ollama", session_id=session_id, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url, run_id=client_run_id)
         elif wants_ollama:
             self._agent_run_llm(user_prompt, model, provider="ollama", project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url)
         elif force_openclaude_agent:
-            self._agent_run_openclaude(user_prompt, model, provider, session_id=session_id, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url)
+            self._agent_run_openclaude(user_prompt, model, provider, session_id=session_id, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url, run_id=client_run_id)
         elif _openclaude_available and _should_use_openclaude_chat(provider, model):
-            self._agent_run_openclaude(user_prompt, model, provider, session_id=session_id, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url)
+            self._agent_run_openclaude(user_prompt, model, provider, session_id=session_id, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url, run_id=client_run_id)
         else:
             self._agent_run_llm(user_prompt, model, provider=provider, project_id=project_id, agent_id=agent_id, custom_api_key=custom_api_key, base_url=base_url)
 
@@ -13504,6 +13614,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         agent_id: str = "",
         custom_api_key: str | None = None,
         base_url: str | None = None,
+        run_id: str | None = None,
     ):
         """Run via local openclaude subprocess — full tool use with SSE events."""
         self._sse_start()
@@ -13556,10 +13667,13 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         agent_denied_tools = _agent_mcp_denied_tool_names(str(agent_id or "")) if agent_id else []
 
         event_q = queue.Queue()
+        agent_kwargs = {"denied_tools": agent_denied_tools, "run_id": run_id}
+        if oc_system:
+            agent_kwargs["system_prompt"] = oc_system
         thread = threading.Thread(
             target=_run_openclaude_agent,
             args=(full_prompt, event_q, model, provider, MAX_AGENT_TURNS, session_id, selected_mcp_servers, custom_api_key, base_url),
-            kwargs={"system_prompt": oc_system, "denied_tools": agent_denied_tools} if oc_system else {"denied_tools": agent_denied_tools},
+            kwargs=agent_kwargs,
             daemon=True,
         )
         thread.start()
@@ -13758,6 +13872,11 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
         import time as _time
         t0 = _time.monotonic()
         body = self._read_body()
+
+        # Client-supplied run id: lets the composer stop button terminate this
+        # exact run server-side (scoped /api/agent/stop) without touching
+        # concurrent runs in other sections.
+        client_run_id = str(body.get("client_run_id") or "").strip()
 
         # Read per-provider API key from Authorization header (sent by frontend)
         auth_header = str(self.headers.get("Authorization") or "").strip()
@@ -14264,6 +14383,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                     mcp_servers=selected_mcp_servers,
                     api_key=custom_api_key,
                     base_url=base_url,
+                    run_id=client_run_id or context_run_id,
                 ):
                     self._sse_send(chunk)
                     if chunk.get("type") == "token":
@@ -14293,6 +14413,7 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
                         mcp_servers=selected_mcp_servers,
                         api_key=custom_api_key,
                         base_url=base_url,
+                        run_id=client_run_id or context_run_id,
                     ):
                         self._sse_send(chunk)
                         if chunk.get("type") == "token":
@@ -18738,9 +18859,22 @@ class KoutHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         # Run-control: composer stop button terminates live agent subprocesses.
+        # Optional body {"run_id": "..."} scopes the kill to a single run so
+        # concurrent runs in other sections keep executing. Omitting run_id
+        # preserves the legacy global-stop behaviour.
         if path in {"/api/agent/stop", "/api/guided/stop", "/api/auditor/stop"}:
-            killed = _stop_active_agent_processes()
-            self._json_response({"status": "stopped", "killed": killed})
+            try:
+                body = self._read_body()
+            except Exception:
+                body = {}
+            stop_run_id = str((body or {}).get("run_id") or "").strip()
+            killed = _stop_active_agent_processes(stop_run_id or None)
+            self._json_response({
+                "status": "stopped",
+                "killed": killed,
+                "scope": "run" if stop_run_id else "all",
+                "run_id": stop_run_id,
+            })
             return
 
         # Permission bridge: frontend sends allow/deny for a pending tool-use request.
@@ -22402,64 +22536,7 @@ Exemplo de formato:
             return
 
         if sub == "index/refresh":
-            project_root = _project_root_for_id(pid)
-            if not project_root:
-                self._json_response(
-                    {
-                        "status": "skipped",
-                        "detail": "project not found",
-                        "project": {"project_id": pid, "name": pid},
-                        "updated_at": datetime.now(timezone.utc).isoformat(),
-                        "total_files": 0,
-                        "sections": {},
-                    }
-                )
-                return
-            # Rebuild index.json
-            sections = {}
-            section_names = _case_sections() if _is_case_project(pid) else PROJECT_SECTION_FOLDERS
-            for section_name in section_names:
-                section_dir = project_root / section_name
-                files = []
-                if section_dir.is_dir():
-                    for f in sorted(section_dir.rglob("*")):
-                        if f.is_file():
-                            rel = str(f.relative_to(section_dir))
-                            size = f.stat().st_size
-                            # Only index files the workspace viewer can render
-                            # (skips node_modules, dist, caches, binaries, ...).
-                            if not _is_renderable_project_file(rel, size):
-                                continue
-                            files.append({
-                                "name": rel,
-                                "size": size,
-                                "modified_at": datetime.fromtimestamp(
-                                    f.stat().st_mtime, tz=timezone.utc
-                                ).isoformat(),
-                            })
-                sections[section_name] = {"count": len(files), "files": files}
-            total = sum(s["count"] for s in sections.values())
-            meta = {}
-            if (project_root / "project.json").is_file():
-                try:
-                    meta = json.loads((project_root / "project.json").read_text(encoding="utf-8"))
-                except Exception:
-                    pass
-            index = {
-                "project": {
-                    "project_id": CASE_PROJECT_ID if _is_case_project(pid) else meta.get("project_id", pid),
-                    "name": CASE_PROJECT_NAME if _is_case_project(pid) else meta.get("name", pid),
-                    "path": str(project_root),
-                },
-                "updated_at": datetime.now(timezone.utc).isoformat(),
-                "total_files": total,
-                "sections": sections,
-            }
-            if not _is_case_project(pid):
-                (project_root / "index.json").write_text(json.dumps(index, indent=2), encoding="utf-8")
-            _write_projects_manifest()
-            _sync_project_index_map(pid)
-            self._json_response(index)
+            self._json_response(_rebuild_project_index(pid))
             return
 
         # ── Rename file within project ──────────────────────────────────────
@@ -22659,7 +22736,14 @@ Exemplo de formato:
             dest = target_dir / safe_fn
             dest.write_bytes(body_data)
             saved.append(safe_fn)
-        _sync_project_index_map(str(project_dir.resolve().name))
+        project_id = str(project_dir.resolve().name)
+        # Refresh index.json so the newly uploaded files -- and the section
+        # folder itself (e.g. `uploads/`) -- appear in the workspace docs tree
+        # immediately, without waiting for a manual index refresh.
+        if saved:
+            _rebuild_project_index(project_id)
+        else:
+            _sync_project_index_map(project_id)
         self._json_response({"saved": saved, "count": len(saved)})
 
     def _handle_project_convert(self) -> None:

@@ -14,6 +14,40 @@
   // onToken(tokenText, fullText) is called for every streamed token.
   // Returns the full accumulated response string.
   const _sessionIds = new Map(); // openclaude session continuity (keyed)
+
+  // Handle to the in-flight /api/assistant/chat stream so the composer stop
+  // button can cancel it. Without this, stopActiveStream() has no way to reach
+  // the AbortController owned by streamChat (assistant mode has no activeStream).
+  let _activeChatController = null;
+  let _activeChatAbortedByUser = false;
+  // Run id of the in-flight assistant stream. Sent to the backend as
+  // client_run_id so a stop request can target this run's subprocess only.
+  let _activeChatRunId = null;
+
+  // Best-effort scoped server-side stop: terminate only `runId`'s subprocess.
+  // Aborting the fetch alone closes the connection but lets openclaude keep
+  // generating until the next SSE write fails, so we signal explicitly.
+  function stopRun(runId) {
+    if (!runId) return;
+    try {
+      fetch(`${API_BASE}/api/agent/stop`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ run_id: String(runId) }),
+        keepalive: true,
+      }).catch(function () { /* best-effort */ });
+    } catch (_e) { /* ignore */ }
+  }
+
+  function stopChat() {
+    _activeChatAbortedByUser = true;
+    const runId = _activeChatRunId;
+    try {
+      if (_activeChatController) _activeChatController.abort('assistant_user_stop');
+    } catch (_e) { /* ignore */ }
+    stopRun(runId);
+  }
+
   async function streamChat(message, opts, onToken) {
     const cfg = opts || {};
     const onEvent = typeof cfg.onEvent === 'function' ? cfg.onEvent : null;
@@ -22,6 +56,24 @@
       ? Math.max(15000, Number(cfg.streamIdleTimeoutMs))
       : 600000;
     const controller = new AbortController();
+    _activeChatController = controller;
+    _activeChatAbortedByUser = false;
+    // Stable id for this run; reused as the backend's client_run_id so the
+    // stop button can terminate exactly this run.
+    const clientRunId = String(cfg.runId || ('asst-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10)));
+    _activeChatRunId = clientRunId;
+    // Allow callers (e.g. the composer stop button) to cancel the stream.
+    if (cfg.signal) {
+      if (cfg.signal.aborted) {
+        _activeChatAbortedByUser = true;
+        try { controller.abort('assistant_user_stop'); } catch (_e) { /* ignore */ }
+      } else {
+        cfg.signal.addEventListener('abort', function () {
+          _activeChatAbortedByUser = true;
+          try { controller.abort('assistant_user_stop'); } catch (_e) { /* ignore */ }
+        }, { once: true });
+      }
+    }
     let idleTimer = null;
 
     function resetIdleTimer() {
@@ -34,7 +86,7 @@
 
     resetIdleTimer();
 
-    const body = { message };
+    const body = { message, client_run_id: clientRunId };
     if (cfg.model) body.model = cfg.model;
     if (cfg.provider) body.provider = cfg.provider;
     if (cfg.baseUrl) body.base_url = cfg.baseUrl;
@@ -79,6 +131,12 @@
       });
     } catch (err) {
       if (idleTimer) clearTimeout(idleTimer);
+      if (_activeChatAbortedByUser) {
+        const stopErr = new Error('assistant_stream_stopped');
+        stopErr.name = 'AbortError';
+        stopErr.userStopped = true;
+        throw stopErr;
+      }
       if (err && (err.name === 'AbortError' || String(err).includes('assistant_stream_idle_timeout'))) {
         throw new Error(`Tempo limite do stream (${Math.round(streamIdleTimeoutMs / 1000)}s sem atividade).`);
       }
@@ -134,6 +192,12 @@
         try {
           packet = await reader.read();
         } catch (err) {
+          if (_activeChatAbortedByUser) {
+            const stopErr = new Error('assistant_stream_stopped');
+            stopErr.name = 'AbortError';
+            stopErr.userStopped = true;
+            throw stopErr;
+          }
           if (err && (err.name === 'AbortError' || String(err).includes('assistant_stream_idle_timeout'))) {
             throw new Error(`Tempo limite do stream (${Math.round(streamIdleTimeoutMs / 1000)}s sem atividade).`);
           }
@@ -157,6 +221,10 @@
       return fullContent;
     } finally {
       if (idleTimer) clearTimeout(idleTimer);
+      if (_activeChatController === controller) {
+        _activeChatController = null;
+        _activeChatRunId = null;
+      }
     }
   }
 
@@ -223,8 +291,11 @@
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r;
   }
-  async function agentStop() {
-    const r = await fetch(`${API_BASE}/api/agent/stop`, { method: 'POST' });
+  async function agentStop(runId) {
+    const r = await fetch(`${API_BASE}/api/agent/stop`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(runId ? { run_id: String(runId) } : {}),
+    });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
@@ -244,8 +315,11 @@
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
-  async function guidedStop() {
-    const r = await fetch(`${API_BASE}/api/guided/stop`, { method: 'POST' });
+  async function guidedStop(runId) {
+    const r = await fetch(`${API_BASE}/api/guided/stop`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(runId ? { run_id: String(runId) } : {}),
+    });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
@@ -257,8 +331,11 @@
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
-  async function auditorStop() {
-    const r = await fetch(`${API_BASE}/api/auditor/stop`, { method: 'POST' });
+  async function auditorStop(runId) {
+    const r = await fetch(`${API_BASE}/api/auditor/stop`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(runId ? { run_id: String(runId) } : {}),
+    });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   }
@@ -485,6 +562,8 @@
   window.LA8159API = {
     assistant: {
       chat: streamChat,   // streamChat(message, opts, onToken) → Promise<string>
+      stop: stopChat,     // cancel the in-flight assistant stream
+      stopRun: stopRun,   // terminate a specific run's subprocess server-side
       models: getModels,
       resetSession: resetSession, // clear openclaude session_id (new conversation)
     },

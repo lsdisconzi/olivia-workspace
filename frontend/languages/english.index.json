@@ -1127,6 +1127,7 @@
   "permission.awaiting": "Waiting for a decision on {tool}.",
   "permission.deny": "Deny",
   "permission.loadingSuggestion": "Loading suggestion...",
+  "permission.moreParams": "+{n} more",
   "permission.noSuggestion": "No suggestion available.",
   "permission.requiredPrefix": "Permission required:",
   "permission.suggestion": "Suggestion: Based on your usage ({allows} allows, {denies} denials), consider allowing this tool always.",
